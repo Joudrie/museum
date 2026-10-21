@@ -18,6 +18,8 @@ const game = new Phaser.Game({
   scene: [RoomScene],
 });
 
+window.__game = game; // handy for debugging in the console
+
 window.addEventListener('resize', () => {
   game.scale.resize(...size());
   game.scale.refresh();

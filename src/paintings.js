@@ -1,12 +1,12 @@
 // Starting paintings. `wall` is 'left' or 'right'; `slot` is the position
-// along that wall (0 = top of the hall, 2 = nearest the entrance).
+// along that wall (0 = top of the hall, 5 = nearest the entrance).
 // `ratio` is width / height of the real canvas.
 // Images are public domain, served from Wikimedia Commons.
 export const PAINTINGS = [
   {
     id: 'harvesters',
     wall: 'left',
-    slot: 2,
+    slot: 5,
     title: 'The Harvesters',
     artist: 'Pieter Bruegel the Elder',
     year: '1565',
@@ -19,7 +19,7 @@ export const PAINTINGS = [
   {
     id: 'horse-fair',
     wall: 'right',
-    slot: 2,
+    slot: 5,
     title: 'The Horse Fair',
     artist: 'Rosa Bonheur',
     year: '1852–55',
