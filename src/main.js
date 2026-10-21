@@ -1,15 +1,24 @@
 import Phaser from 'phaser';
 import { RoomScene } from './RoomScene.js';
 
-new Phaser.Game({
+// Render at device resolution so pixel art stays sharp on phones.
+const parent = document.getElementById('game');
+const dpr = Math.min(window.devicePixelRatio || 1, 3);
+const size = () => [Math.round(parent.clientWidth * dpr), Math.round(parent.clientHeight * dpr)];
+const [width, height] = size();
+
+const game = new Phaser.Game({
   type: Phaser.AUTO,
-  parent: 'game',
-  backgroundColor: '#1d1714',
+  parent,
+  width,
+  height,
+  backgroundColor: '#1d1512',
   pixelArt: true,
-  scale: {
-    mode: Phaser.Scale.RESIZE,
-    width: '100%',
-    height: '100%',
-  },
+  scale: { mode: Phaser.Scale.NONE },
   scene: [RoomScene],
+});
+
+window.addEventListener('resize', () => {
+  game.scale.resize(...size());
+  game.scale.refresh();
 });

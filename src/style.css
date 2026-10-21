@@ -34,6 +34,11 @@ body {
   width: min(100vw, calc(100dvh * 9 / 16));
   touch-action: none;
 }
+#game canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
 
 #hud {
   position: fixed;
