@@ -25,6 +25,8 @@ A cozy, top-down, faux-16-bit pixel tycoon game (Stardew / Pokémon B&W vibe). Y
 - Start: one small room, ~3 paintings per wall, gray tile, cracks and grime.
 - Clean up first (mini-games), then decorate.
 - Buy new rooms: choose size/shape (long, wide, big). Each room costs more than the last.
+- **Construction takes real time:** small rooms are quick, big rooms ~1 day. **2 builders** (2 builds at once). Gems can speed it up. No Clash-style two-week waits.
+- Everything else is **instant**: hanging paintings, decorating, mini-games.
 - Customize floors (patterns, colors), walls, frames, lighting, plants, carpets, benches.
 - **Full freedom:** any painting in any room. The museum is yours.
 - **Optional themed bonus:** a room that's all one section (e.g. all Impressionism) gets 1.5× income. Nice, not a game changer.
@@ -37,11 +39,12 @@ A cozy, top-down, faux-16-bit pixel tycoon game (Stardew / Pokémon B&W vibe). Y
 ## Collection
 - **Rarity by fame:** Common → Rare → Epic → Legendary (Starry Night, Mona Lisa).
 - **Sets:** complete an artist (0/12 van Gogh) or a movement → big bonuses / unlocks.
-- **Codex:** everything you've found or completed.
-- **Fair crates:** odds shown, pity guarantee, duplicates → coins.
-- **One of a kind:** you own *the* Starry Night. No duplicates. (If a crate ever rolls one, it converts to coins.)
+- **Codex = passport.** Once you collect a painting, it's stamped forever and always counts toward set/artist progress, even if you sell it.
 - **Inventory vs Codex:** inventory = what you own now. Codex = everything you've ever collected.
-- **Selling:** you can sell paintings for coins. A sold painting goes back into the loot pool. It stays in your Codex.
+- **Fair crates:** odds shown, pity guarantee. **Crates never give duplicates** — they only draw paintings you don't own. If nothing is left in that pool, you get a **huge coin payout** instead (worth it even when rich).
+- **One of a kind:** you own *the* Starry Night.
+- **Selling:** sell for **50%** of value. The painting goes back into the loot pool.
+- **Buy-back:** after a **1-week cooldown** you can buy a sold painting back at a premium price (e.g. to finish a themed room).
 - **No condition/leveling:** all paintings are in good condition.
 - Paintings go to inventory; place them on any wall slot.
 
@@ -78,7 +81,7 @@ A cozy, top-down, faux-16-bit pixel tycoon game (Stardew / Pokémon B&W vibe). Y
 - Paparazzi — block photographers when a famous artist visits
 
 **Art-themed**
-- Restoration — scrub grime off to reveal the HD painting
+- Restoration — scrub grime off to reveal the HD painting (grime exists only in the mini-game; real paintings stay perfect)
 - Crate Tetris — pack art crates into the delivery truck
 - Hang it Straight — timing game
 - Tour Guide — lead a tourist line through your museum (snake-style)
@@ -91,6 +94,20 @@ A cozy, top-down, faux-16-bit pixel tycoon game (Stardew / Pokémon B&W vibe). Y
 **MVP picks:** Mop Rush, No Flash!, Restoration, Crate Tetris.
 
 ## Economy & monetization
+**Currencies**
+- **Gold coins** — main currency (not dollars; keep it a bit removed from reality).
+- **Gems** — premium currency. Buy with real money, or earn from rare quests / special mini-games.
+
+**Gems = time (keeps purchases fair at every stage)**
+- Coin value explodes over time (1M coins is huge on day 1, nothing at month 3), so never sell flat coin amounts.
+- Instead, gems buy **time**: skip construction, or buy "**X days of income**" based on *your* average daily earnings.
+- A first big room takes the same time and the same gems for a week-one player and a three-month player.
+- A dedicated free player can save quest gems for a week of income.
+
+**Progression gate (idea)**
+- A Clash-of-Clans-Town-Hall-style building/level that unlocks crate tiers and new sections/wings.
+
+**Income**
 - Income = painting popularity × decor multiplier × visitors.
 - Offline earnings stop at **8 hours** → reason to open the app.
 - Coins pile up around the museum; walk to collect. A few "collect all" pads, rising cost.
@@ -123,4 +140,6 @@ A cozy, top-down, faux-16-bit pixel tycoon game (Stardew / Pokémon B&W vibe). Y
 - Exact crate odds / pity numbers.
 - Free-with-ads vs one-time purchase.
 - Reward drop-off curve for repeated mini-games.
-- Sell price vs buy price for paintings.
+- Buy-back price after the 1-week cooldown.
+- Gem pricing model.
+- What the Town Hall equivalent is and what it gates.
