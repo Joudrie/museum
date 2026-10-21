@@ -56,7 +56,7 @@ The office is run down. Start its repair — the first construction, ~30 minutes
 - New guests every day.
 
 ## Days 2–3 (sketch)
-- **Day 2:** streak bonus, a guest with a gift, unlock No Flash!, Curator's Office level 1 → second builder / first new room.
+- **Day 2:** streak bonus, a guest with a gift, unlock No Flash!, Curator's Office level 1 → first new room.
 - **Day 3:** unlock Restoration, Gallery Shop fully open, first quest chain ("Collect 3 van Goghs").
 
 ## Open questions
