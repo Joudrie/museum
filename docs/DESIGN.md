@@ -45,6 +45,8 @@ A cozy, top-down, faux-16-bit pixel tycoon game (Stardew / Pokémon B&W vibe). Y
 - **One of a kind:** you own *the* Starry Night.
 - **Selling:** sell for **50%** of value. The painting goes back into the loot pool.
 - **Buy-back:** after a **1-week cooldown** you can buy a sold painting back at a premium price (e.g. to finish a themed room).
+- **Gallery Shop:** rotating stock of 3–5 specific paintings, refreshes daily. Buy directly with coins.
+- **Codex milestones:** rewards at 10%, 25%, 50%, 75%, 100% of the full Codex.
 - **No condition/leveling:** all paintings are in good condition.
 - Paintings go to inventory; place them on any wall slot.
 
@@ -57,7 +59,7 @@ A cozy, top-down, faux-16-bit pixel tycoon game (Stardew / Pokémon B&W vibe). Y
 ## Visitors & famous artists
 - Guests wander around and change daily. Talking to some gives small rewards → reason to check in.
 - **Visitor counter:** no reviews. Just a popularity number (monthly / yearly visitors) that grows with your collection. Flavor more than metric; can hit trillions after months of grinding.
-- **Famous visitors:** each painting you own by an artist raises their daily visit odds (0.001% → 0.01% → 0.1% → 1% → 5%).
+- **Famous visitors:** each painting of theirs in your **Codex** (owned or sold) raises their daily visit odds (0.001% → 0.01% → 0.1% → 1% → 5%).
 - Once met, they become a **regular**: many dialogue lines.
 - **Reward:** a permanent income boost (or another booster, e.g. XP, if we add more stats).
 - Include non-painters (Socrates, Shakespeare, Cleopatra…).
@@ -104,15 +106,16 @@ A cozy, top-down, faux-16-bit pixel tycoon game (Stardew / Pokémon B&W vibe). Y
 - A first big room takes the same time and the same gems for a week-one player and a three-month player.
 - A dedicated free player can save quest gems for a week of income.
 
-**Progression gate (idea)**
-- A Clash-of-Clans-Town-Hall-style building/level that unlocks crate tiers and new sections/wings.
+**Progression gate: Curator's Office**
+- Town-Hall-style building, upgraded with coins.
+- Each level unlocks crate tiers, new wings/sections, and eventually a 3rd builder.
 
 **Income**
 - Income = painting popularity × decor multiplier × visitors.
 - Offline earnings stop at **8 hours** → reason to open the app.
 - Coins pile up around the museum; walk to collect. A few "collect all" pads, rising cost.
-- **Pricing (TBD between):** free with ads, or one-time purchase. Either way, optional purchases are cosmetic / non-game-breaking. **No pay-to-win.**
-- Revenue ideas: rewarded ads (coins), cosmetics, seasonal exhibition pass.
+- **Pricing: free + ads + gems.** Gems speed progress but are always earnable in-game. **No pay-to-win.**
+- Revenue: rewarded ads (coins), gem packs, cosmetics, seasonal exhibition pass.
 
 ## Retention & sharing
 - Daily: new guests, Painting of the Day, daily quests.
@@ -138,8 +141,7 @@ A cozy, top-down, faux-16-bit pixel tycoon game (Stardew / Pokémon B&W vibe). Y
 ## Open questions
 - Engine choice for phone-first (decide when coding starts).
 - Exact crate odds / pity numbers.
-- Free-with-ads vs one-time purchase.
 - Reward drop-off curve for repeated mini-games.
 - Buy-back price after the 1-week cooldown.
 - Gem pricing model.
-- What the Town Hall equivalent is and what it gates.
+- Curator's Office level costs and exact unlocks per level.
