@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#1d1714" />
+    <title>Curation</title>
+    <link rel="stylesheet" href="./src/style.css" />
+  </head>
+  <body>
+    <div id="game"></div>
+
+    <div id="hud">
+      <span class="museum-name">Your Museum</span>
+    </div>
+
+    <div id="stick"><div class="knob"></div></div>
+
+    <div id="rotate">Turn your phone upright to keep curating.</div>
+
+    <div id="viewer" class="hidden" aria-hidden="true">
+      <button class="viewer-close" aria-label="Close">✕</button>
+      <div class="viewer-scroll">
+        <div class="wall-track"></div>
+        <div class="viewer-dots"></div>
+        <div class="viewer-info">
+          <h2 class="info-title"></h2>
+          <p class="info-meta"></p>
+          <p class="info-blurb"></p>
+          <div class="info-rating" role="radiogroup" aria-label="Your rating"></div>
+          <textarea class="info-note" rows="3" placeholder="Your journal note…"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>

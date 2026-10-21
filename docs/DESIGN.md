@@ -8,7 +8,8 @@ A cozy, top-down, faux-16-bit pixel tycoon game (Stardew / Pokémon B&W vibe). Y
 **Hook:** "Stardew, but the paintings are real." Old masterworks are public domain.
 
 ## Basics
-- **Platform:** phone first. Web later.
+- **Platform:** phone first, **portrait only** (never sideways). Web later.
+- **Room proportions:** character = 1 tile. First room is a top-to-bottom hallway: 5-tile floor, 2-tile side walls (9 tiles = screen width), short back wall at the top, entrance at the bottom. Paintings hang on the side walls (3 per wall), drawn slightly narrowed to fake the angle.
 - **Team:** solo dev.
 - **Player:** one character, the curator. Customizable look. No backstory.
 - **Controls:** tap where you want to walk, plus free movement: hold anywhere and drag to walk in any direction (diagonals allowed).
