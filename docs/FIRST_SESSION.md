@@ -14,11 +14,14 @@ Goal: ~10 minutes, one new idea at a time, the **HD painting reveal within 90 se
 The outside of the museum: boarded windows, weeds, a faded sign. "Loading…"
 
 **1. Welcome (0:00–0:30)**
-Pop-up: "Congratulations! The museum is yours." Name your museum. Quick character creator (skippable; editable later).
+The **old caretaker** greets you (old, charming, loves the place even though it's fallen apart):
+> "We're so excited you're the new owner of our town's museum! Back in the day we showed local artists, but lately we just can't compete with the big museums. It's been in disrepair for years. Really hoping you can breathe some new life into this place."
+
+Name your museum. Quick character creator (skippable; editable later). The caretaker guides the rest of the tutorial.
 
 **2. The dusty room (0:30–1:30)**
-One small gray room, cracked tiles, dirty walls. Two paintings left behind, leaning against the wall.
-- Learn to move.
+One small gray room, cracked tiles, dirty walls. Two paintings left behind, leaning against the wall: **The Harvesters** (Pieter Bruegel the Elder, 1565) and **The Horse Fair** (Rosa Bonheur, 1852–55). Both vaguely familiar but not most people's favorites; both CC0 at the Met.
+- Learn to move (tap to walk, or hold and drag).
 - Hang the first painting → **painting viewer reveal**: the camera turns to the wall and the HD painting appears. Swipe to the second painting.
 - Prompt: rate it / add a note (optional).
 
@@ -57,6 +60,5 @@ The office is run down. Start its repair — the first construction, ~30 minutes
 - **Day 3:** unlock Restoration, Gallery Shop fully open, first quest chain ("Collect 3 van Goghs").
 
 ## Open questions
-- Controls: tap-to-move or virtual joystick?
-- Which two paintings are left in the dusty room?
-- A guide character for the tutorial (e.g. a caretaker), or just pop-ups?
+- Caretaker's name and look.
+- Which van Gogh the starter crate gives.

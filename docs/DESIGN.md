@@ -11,6 +11,8 @@ A cozy, top-down, faux-16-bit pixel tycoon game (Stardew / Pokémon B&W vibe). Y
 - **Platform:** phone first. Web later.
 - **Team:** solo dev.
 - **Player:** one character, the curator. Customizable look. No backstory.
+- **Controls:** tap where you want to walk, plus free movement: hold anywhere and drag to walk in any direction (diagonals allowed).
+- **Caretaker:** an old, charming NPC who stayed with the museum. Gives the one line of exposition and guides the tutorial.
 - **Opening:** the loading screen shows the outside of the run-down museum. "Congrats on your new museum!" Then the first room: gray, cracked, dirty.
 - **Style:** warm lighting, cozy, a little extravagant/bourgeois. Pixel world, HD paintings.
 
