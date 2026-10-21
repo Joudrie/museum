@@ -9,6 +9,7 @@ A cozy, top-down, faux-16-bit pixel tycoon game (Stardew / Pokémon B&W vibe). Y
 
 ## Basics
 - **Platform:** phone first. Web later.
+- **Team:** solo dev.
 - **Player:** one character, the curator. Customizable look. No backstory.
 - **Opening:** the loading screen shows the outside of the run-down museum. "Congrats on your new museum!" Then the first room: gray, cracked, dirty.
 - **Style:** warm lighting, cozy, a little extravagant/bourgeois. Pixel world, HD paintings.
@@ -25,7 +26,11 @@ A cozy, top-down, faux-16-bit pixel tycoon game (Stardew / Pokémon B&W vibe). Y
 - Clean up first (mini-games), then decorate.
 - Buy new rooms: choose size/shape (long, wide, big). Each room costs more than the last.
 - Customize floors (patterns, colors), walls, frames, lighting, plants, carpets, benches.
-- **Themed wings:** Japanese (cherry blossoms, ukiyo-e), Chinese (ink scrolls), Egyptian/relics, etc. Counters Eurocentric bias.
+- **Full freedom:** any painting in any room. The museum is yours.
+- **Optional themed bonus:** a room that's all one section (e.g. all Impressionism) gets 1.5× income. Nice, not a game changer.
+- **Themed wings:** Japanese (cherry blossoms, ukiyo-e), Chinese (ink scrolls), etc. Counters Eurocentric bias.
+- **No relics at launch** (paintings only). Relics/sculpture later.
+- **Rooms are unlimited.** Cost scales each time (eventually "a zillion"). Use this to find where performance breaks.
 - Late-game sink: frame your own artwork (very expensive).
 - Future: visit friends' museums.
 
@@ -34,6 +39,10 @@ A cozy, top-down, faux-16-bit pixel tycoon game (Stardew / Pokémon B&W vibe). Y
 - **Sets:** complete an artist (0/12 van Gogh) or a movement → big bonuses / unlocks.
 - **Codex:** everything you've found or completed.
 - **Fair crates:** odds shown, pity guarantee, duplicates → coins.
+- **One of a kind:** you own *the* Starry Night. No duplicates. (If a crate ever rolls one, it converts to coins.)
+- **Inventory vs Codex:** inventory = what you own now. Codex = everything you've ever collected.
+- **Selling:** you can sell paintings for coins. A sold painting goes back into the loot pool. It stays in your Codex.
+- **No condition/leveling:** all paintings are in good condition.
 - Paintings go to inventory; place them on any wall slot.
 
 ## Viewing a painting
@@ -44,12 +53,21 @@ A cozy, top-down, faux-16-bit pixel tycoon game (Stardew / Pokémon B&W vibe). Y
 
 ## Visitors & famous artists
 - Guests wander around and change daily. Talking to some gives small rewards → reason to check in.
+- **Visitor counter:** no reviews. Just a popularity number (monthly / yearly visitors) that grows with your collection. Flavor more than metric; can hit trillions after months of grinding.
 - **Famous visitors:** each painting you own by an artist raises their daily visit odds (0.001% → 0.01% → 0.1% → 1% → 5%).
-- Once met, they become a **regular**: many dialogue lines, exclusive rewards.
+- Once met, they become a **regular**: many dialogue lines.
+- **Reward:** a permanent income boost (or another booster, e.g. XP, if we add more stats).
 - Include non-painters (Socrates, Shakespeare, Cleopatra…).
 - Meta goal: 0/12 artists met.
 
-## Mini-games (brainstorm)
+## Mini-games
+**Rules**
+- **Unlimited plays.** Rewards drop off the more you play in a session (big payouts first, smaller later).
+- **First game of the day** bonus + **streak** bonus.
+- **Daily wheel spin** — the only once-a-day item.
+- Start a game from the **menu** or from its **spot in the museum** (mop closet, security desk). The character only runs around inside the mini-game itself.
+
+**Ideas (brainstorm)**
 **Maintenance — "after hours, 30 seconds"** (mess exists only in the mini-game; the museum always looks clean)
 - Mop Rush — clean spills before time runs out
 - Weed the Lawn / Pigeon Chase
@@ -76,7 +94,8 @@ A cozy, top-down, faux-16-bit pixel tycoon game (Stardew / Pokémon B&W vibe). Y
 - Income = painting popularity × decor multiplier × visitors.
 - Offline earnings stop at **8 hours** → reason to open the app.
 - Coins pile up around the museum; walk to collect. A few "collect all" pads, rising cost.
-- Revenue: rewarded ads (coins), cosmetics, seasonal exhibition pass. **No pay-to-win.**
+- **Pricing (TBD between):** free with ads, or one-time purchase. Either way, optional purchases are cosmetic / non-game-breaking. **No pay-to-win.**
+- Revenue ideas: rewarded ads (coins), cosmetics, seasonal exhibition pass.
 
 ## Retention & sharing
 - Daily: new guests, Painting of the Day, daily quests.
@@ -102,4 +121,6 @@ A cozy, top-down, faux-16-bit pixel tycoon game (Stardew / Pokémon B&W vibe). Y
 ## Open questions
 - Engine choice for phone-first (decide when coding starts).
 - Exact crate odds / pity numbers.
-- How many paintings per wall as rooms grow.
+- Free-with-ads vs one-time purchase.
+- Reward drop-off curve for repeated mini-games.
+- Sell price vs buy price for paintings.
