@@ -5,7 +5,7 @@
 import { bakeFloor, bakeWalls, bakeFront } from './art.js';
 import { SIZES, SIZE_LABELS, EXITS, exitLabel, layout, paintingsFor, slotStates, placeArt, wallItems } from './rooms.js';
 import { paintArt } from './walldraw.js';
-import { coins, spend, roomCost } from './wallet.js';
+import { coins, spend, roomCost, FREE } from './wallet.js';
 
 const el = document.getElementById('build');
 const preview = el.querySelector('.build-preview');
@@ -75,9 +75,9 @@ function render() {
   });
   const cost = roomCost(rooms.length, orient, size);
   const buy = el.querySelector('.build-buy');
-  const short = cost - coins();
+  const short = FREE ? 0 : cost - coins();
   buy.disabled = short > 0;
-  buy.textContent = short > 0 ? `Need ${short.toLocaleString()} more gold` : `Build room · ${cost.toLocaleString()} gold`;
+  buy.textContent = short > 0 ? `Need ${short.toLocaleString()} more gold` : FREE ? `Build room · free while testing (${cost.toLocaleString()} gold)` : `Build room · ${cost.toLocaleString()} gold`;
 
   const options = EXITS[orient];
   const drawn = options.map((exit) => drawRoom(scene, rooms, { orient, size, exit }, decor));

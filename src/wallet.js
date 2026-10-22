@@ -22,8 +22,13 @@ export function addCoins(n) {
   window.dispatchEvent(new Event('coins'));
 }
 
+// Everything is free while testing: prices still show, nothing is charged.
+export const FREE = true;
+export const canAfford = (n) => FREE || coins() >= n;
+
 // Spend if we can afford it. Returns true on success.
 export function spend(n) {
+  if (FREE) return true;
   if (coins() < n) return false;
   addCoins(-n);
   return true;

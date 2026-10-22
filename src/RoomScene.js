@@ -28,7 +28,7 @@ import { loadRooms, addRoom, resetRooms, updateRoom, swapRooms, roomName, layout
 import { openSlotMenu } from './slotmenu.js';
 import { ITEMS, loadItems, saveItems, resetItems, footprint, countPlaced } from './items.js';
 import { roomDirt, removeDirt, resetDirt, covered, janitors } from './staff.js';
-import { coins, addCoins, spend, resetWallet, museumIncome, museumVisitors, coffeeIncome, roomIncome, pile, settle, collect, sellPrice } from './wallet.js';
+import { coins, canAfford, addCoins, spend, resetWallet, museumIncome, museumVisitors, coffeeIncome, roomIncome, pile, settle, collect, sellPrice } from './wallet.js';
 import { openToolkit, hideToolkit, showBar, hideBar } from './toolkit.js';
 import { artBounds, paintArt } from './walldraw.js';
 import { PERSONALITIES, lineFor } from './lines.js';
@@ -1017,11 +1017,11 @@ export class RoomScene extends Phaser.Scene {
     this.cameras.main.startFollow(this.player, true, 0.2, 0.2);
     openToolkit({
       icon: (type) => this.textures.get(this.itemKey(type, 0)).getSourceImage().toDataURL(),
-      coins: () => coins(),
+      canAfford,
       onPick: (type) => {
         const max = ITEMS[type].max;
         if (max && countPlaced(type, this.rooms.length) >= max) return this.toast(`Only ${max} allowed in the museum`);
-        if (coins() < ITEMS[type].price) return this.toast(`Need ${(ITEMS[type].price - coins()).toLocaleString()} more gold`);
+        if (!canAfford(ITEMS[type].price)) return this.toast(`Need ${(ITEMS[type].price - coins()).toLocaleString()} more gold`);
         this.startPlacing({ type, rot: 0 });
       },
       onDone: () => this.exitBuild(),

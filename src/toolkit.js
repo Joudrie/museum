@@ -31,7 +31,7 @@ function render() {
       .filter(([, def]) => def.cat === cat)
       .map(([type, def]) => {
         const b = document.createElement('button');
-        b.className = state.coins() < def.price ? 'tool-item poor' : 'tool-item';
+        b.className = !state.canAfford(def.price) ? 'tool-item poor' : 'tool-item';
         // Scale the icon up, but keep tall or wide items inside the tile.
         const iw = def.plant ? 24 : def.w * 32;
         const ih = def.plant ? 34 : def.h * 32 + def.rise;
@@ -47,7 +47,7 @@ function render() {
 
 el.querySelector('.toolkit-done').addEventListener('click', () => state.onDone());
 
-// opts: { icon(type) -> image url, coins() -> wallet, onPick(type), onDone() }
+// opts: { icon(type) -> image url, canAfford(price), onPick(type), onDone() }
 export function openToolkit(opts) {
   state = opts;
   render();
