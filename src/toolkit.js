@@ -31,13 +31,15 @@ function render() {
       .filter(([, def]) => def.cat === cat)
       .map(([type, def]) => {
         const b = document.createElement('button');
-        b.className = !state.canAfford(def.price) ? 'tool-item poor' : 'tool-item';
+        const lvl = def.lvl || 1;
+        const locked = lvl > state.level();
+        b.className = locked ? 'tool-item locked' : !state.canAfford(def.price) ? 'tool-item poor' : 'tool-item';
         // Scale the icon up, but keep tall or wide items inside the tile.
         const iw = def.plant ? 24 : def.w * 32;
         const ih = def.plant ? 34 : def.h * 32 + def.rise;
         const k = Math.min(1.4, 56 / ih, 76 / iw);
         b.innerHTML = `<span class="ti-icon"><img alt="" src="${state.icon(type)}" style="width:${iw * k}px;height:${ih * k}px" /></span>
-          <b>${def.name}</b><span class="ti-meta"><i class="coin"></i> ${def.price.toLocaleString()}</span><span class="ti-meta">${def.note || `+${def.income}/hr`}</span>
+          <b>${def.name}</b><span class="ti-meta">${locked ? `Office Lv ${lvl}` : `<i class="coin"></i> ${def.price.toLocaleString()}`}</span><span class="ti-meta">${def.note || `+${def.income}/hr`}</span>
           <span class="ti-size">${def.w}×${def.h} tiles</span>`;
         b.onclick = () => state.onPick(type);
         return b;
@@ -47,7 +49,7 @@ function render() {
 
 el.querySelector('.toolkit-done').addEventListener('click', () => state.onDone());
 
-// opts: { icon(type) -> image url, canAfford(price), onPick(type), onDone() }
+// opts: { icon(type) -> image url, canAfford(price), level() -> office level, onPick(type), onDone() }
 export function openToolkit(opts) {
   state = opts;
   render();

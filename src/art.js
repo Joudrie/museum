@@ -1323,6 +1323,26 @@ export function bakeItem(scene, key, type, def, rot) {
       });
       break;
     }
+    case 'desk':
+      shadow(32, gy, 30, 4);
+      box(3, gy - 22, 58, 21, WOOD_D, OUT); // front
+      R(8, gy - 18, 20, 13, WOOD);
+      R(36, gy - 18, 20, 13, WOOD);
+      R(17, gy - 12, 2, 2, BRASS);
+      R(45, gy - 12, 2, 2, BRASS);
+      box(1, gy - 27, 62, 5, WOOD_L, OUT); // top
+      R(1, gy - 22, 62, 1, WOOD);
+      // Green banker's lamp, papers, a bell and a nameplate.
+      R(10, gy - 40, 2, 13, BRASS);
+      box(5, gy - 44, 12, 5, '#2f6a44', OUT);
+      R(6, gy - 44, 10, 1, '#4f9a64');
+      box(24, gy - 31, 12, 4, '#f4f0e8', OUT);
+      R(26, gy - 30, 8, 1, '#a09a8a');
+      E(46, gy - 30, 4, 3, BRASS_L);
+      R(45, gy - 35, 2, 2, BRASS);
+      box(52, gy - 31, 9, 4, '#3a2a20', OUT);
+      R(53, gy - 30, 7, 1, BRASS);
+      break;
     case 'closet':
       shadow(16, gy, 13, 3);
       box(4, gy - 64, 24, 62, '#5d6f8a', OUT);

@@ -39,7 +39,8 @@
 - Coffee shop room: visitors buy coffee; decorate it (bookshelves etc.).
 - Done: real gold. Start with 300. Each room earns gold/hr (5 per painting + each item's income); it piles up as a coin heap near the room's entrance (max 8 hours' worth). Walk up and Interact to collect. Items cost gold (sell for half back); each new room costs more (bigger rooms cost more). Testing button: +1,000 gold.
 - Done: **Services** in the toolkit. Coffee counter (1 per museum, barista behind it) earns 1 gold/hr per 100 monthly visitors. Rooms collect puddles and litter (one per 90 min, max 3, each -10% room income; Interact to mop). Janitor closets (up to 3) each hire a janitor who keeps 3 rooms spotless and is sometimes seen with a mop.
-- Next: Curator's Office (level up to unlock more).
+- Done: **Curator's Office**: a desk in the first room run by Edmund the caretaker. 5 levels (500 / 2,000 / 8,000 / 30,000 gold) raise the room cap (3 → 5 → 8 → 12 → unlimited) and janitor cap (1 → 3), and unlock relics, statues, the coffee counter, big halls, science pieces and the T-rex. Everything is free while testing.
+- Next: see the vision doc (designed map, staff v2, ratings).
 - Janitor break room: hire janitors who keep the place clean (rarely seen holding a mop by a puddle).
 
 ## Someday

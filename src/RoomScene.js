@@ -28,7 +28,9 @@ import { loadRooms, addRoom, resetRooms, updateRoom, swapRooms, roomName, layout
 import { openSlotMenu } from './slotmenu.js';
 import { ITEMS, loadItems, saveItems, resetItems, footprint, countPlaced } from './items.js';
 import { roomDirt, removeDirt, resetDirt, covered, janitors } from './staff.js';
-import { coins, canAfford, addCoins, spend, resetWallet, museumIncome, museumVisitors, coffeeIncome, roomIncome, pile, settle, collect, sellPrice } from './wallet.js';
+import { officeLevel, setOfficeLevel, resetOffice, perks, itemLevel, LEVELS, MAX_LEVEL } from './office.js';
+import { openOffice } from './officemenu.js';
+import { FREE, coins, canAfford, addCoins, spend, resetWallet, museumIncome, museumVisitors, coffeeIncome, roomIncome, pile, settle, collect, sellPrice } from './wallet.js';
 import { openToolkit, hideToolkit, showBar, hideBar } from './toolkit.js';
 import { artBounds, paintArt } from './walldraw.js';
 import { PERSONALITIES, lineFor } from './lines.js';
@@ -69,6 +71,7 @@ const OUTFITS = {
   couple: ['#a03040', '#2e4a7a', '#f0e0c0', '#6a8a4a'],
   historian: ['#6a5a3a', '#4a3a2a', '#5a5a4a'],
   barista: ['#2f5d46'],
+  caretaker: ['#7a5a3a'],
   janitor: ['#4a5f80'],
 };
 
@@ -109,6 +112,11 @@ function visitorLook(kind, r) {
     colors.p = '#2e3a4e';
   }
   if (kind === 'barista') colors.p = '#2a2420';
+  if (kind === 'caretaker') {
+    colors.h = '#d8d8d8';
+    look.glasses = true;
+    colors.p = '#3a3028';
+  }
   return { colors, look, scale };
 }
 const KINDS = Object.keys(PERSONALITIES).filter((k) => !PERSONALITIES[k].staff);
@@ -156,6 +164,7 @@ export class RoomScene extends Phaser.Scene {
       bakeDirt(this, 'dirt_puddle', 'puddle');
       bakeDirt(this, 'dirt_litter', 'litter');
       bakeMop(this, 'mop');
+      bakeItem(this, 'desk', 'desk', { w: 2, h: 1, rise: 24 }, 0);
     }
 
     this.arches = { exit: !!this.room.arch, entrance: this.roomIndex > 0 && !!this.rooms[this.roomIndex - 1].arch };
@@ -168,6 +177,8 @@ export class RoomScene extends Phaser.Scene {
     this.blocks = exit?.block ? [exit.block] : [];
     this.decorObjects = [];
     this.placeDecor();
+    this.deskSpot = this.roomIndex === 0 ? this.findDeskSpot() : null;
+    if (this.deskSpot) this.placeDesk();
     this.pileTile = this.findPileTile();
     this.pileSprite = this.add.image(0, 0, 'coins_1').setOrigin(0.5, 1).setVisible(false);
     this.items = [];
@@ -382,6 +393,7 @@ export class RoomScene extends Phaser.Scene {
       this.npcs.push(n);
       return n;
     };
+    if (this.deskSpot) make('caretaker', 900, g.xL + this.deskSpot.c * T + T, g.y0 + this.deskSpot.r * T + 2).fixed = true;
     const counter = this.items.find((it) => it.type === 'counter');
     if (counter) {
       make('barista', 700 + this.roomIndex, g.xL + counter.c * T + 60, g.y0 + counter.r * T + 2).fixed = true;
@@ -629,6 +641,7 @@ export class RoomScene extends Phaser.Scene {
           resetItems();
           resetWallet();
           resetDirt();
+          resetOffice();
           save(DECOR_KEY, { 0: load(DECOR_KEY, {})[0] }); // built rooms are gone, so is their decor
           this.travel(0, 'start');
         },
@@ -735,6 +748,7 @@ export class RoomScene extends Phaser.Scene {
     for (const m of this.mess) {
       consider(Math.hypot(x - m.ax, y - 4 - m.ay), { mess: m, icon: { crack: 'repair', stain: 'clean', cobweb: 'sweep', puddle: 'clean', litter: 'sweep' }[m.kind] });
     }
+    if (this.deskFront) consider(Math.hypot(x - this.deskFront.x, y - this.deskFront.y) - 6, { office: true, icon: 'office' });
     if (this.pileSprite.visible) consider(Math.hypot(x - this.pileSprite.x, y - this.pileSprite.y + 6) - 4, { coins: true, icon: 'coins' });
     for (const n of this.npcs) consider(Math.hypot(x - n.s.x, y - n.s.y) - 2, { npc: n, icon: 'talk' });
     const { exit, entrance } = this.L;
@@ -754,6 +768,7 @@ export class RoomScene extends Phaser.Scene {
     else if (f.slot) this.editSlot(f.slot);
     else if (f.mess) this.clean(f.mess);
     else if (f.coins) this.collectPile();
+    else if (f.office) this.openOfficePanel();
     else if (f.npc) (this.talkingTo === f.npc ? this.endTalk() : this.talkTo(f.npc));
     else if (f.entrance) this.travel(this.roomIndex - 1, 'exit');
     else if (f.exit) {
@@ -764,6 +779,8 @@ export class RoomScene extends Phaser.Scene {
   }
 
   openBuildMenu() {
+    const max = perks().rooms;
+    if (this.rooms.length >= max) return this.toast(`Upgrade the Curator’s Office to build more than ${max} rooms`);
     this.pause(true);
     openBuild(this, this.rooms, NEW_ROOM_DECOR, {
       onBuild: (room) => {
@@ -895,6 +912,45 @@ export class RoomScene extends Phaser.Scene {
 
   // ---------- Coin piles ----------
 
+  // ---------- Curator's Office (desk in the first room) ----------
+
+  findDeskSpot() {
+    const { fw, fd, vertical } = this.g;
+    this.deskSpot = null;
+    const taken = this.reservedTiles(false);
+    const tries = vertical ? [{ c: 0, r: fd - 4 }, { c: fw - 2, r: fd - 4 }, { c: 0, r: 2 }] : [{ c: 2, r: 1 }, { c: 4, r: 1 }, { c: 6, r: 1 }];
+    return tries.find((t) => t.c >= 0 && t.r >= 1 && t.c + 1 < fw && !taken.has(`${t.c},${t.r}`) && !taken.has(`${t.c + 1},${t.r}`)) || null;
+  }
+
+  placeDesk() {
+    const { c, r } = this.deskSpot;
+    const x = this.g.xL + c * T;
+    const y = this.g.y0 + (r + 1) * T;
+    this.add.image(x + T, y, 'desk').setOrigin(0.5, 1).setDepth(y - 1);
+    this.blocks.push({ x0: x + 4, x1: x + 2 * T - 4, y0: y - T + 2, y1: y - 8 });
+    this.deskFront = { x: x + T, y: y + 10 };
+  }
+
+  openOfficePanel() {
+    this.pause(true);
+    const lines = PERSONALITIES.caretaker.generic;
+    openOffice({
+      lvl: officeLevel(),
+      who: 'Edmund the caretaker',
+      say: lines[Math.floor(Math.random() * lines.length)],
+      free: FREE,
+      canAfford,
+      onUpgrade: () => {
+        const lvl = officeLevel();
+        if (lvl >= MAX_LEVEL || !spend(LEVELS[lvl + 1].cost)) return lvl;
+        setOfficeLevel(lvl + 1);
+        this.toast(`Curator’s Office level ${lvl + 1}!`);
+        return lvl + 1;
+      },
+      onClose: () => this.pause(false),
+    });
+  }
+
   // A free floor tile near the entrance for this room's coin pile.
   findPileTile() {
     const { fw, fd, vertical } = this.g;
@@ -969,6 +1025,7 @@ export class RoomScene extends Phaser.Scene {
     }
     if (this.decor.plant !== 'none') plantSpots(this.L).forEach(({ x, y }) => add(this.tileOf(x, y - 4)));
     if (withPile && this.pileTile) add(this.pileTile);
+    if (this.deskSpot) [0, 1].forEach((k) => add({ c: this.deskSpot.c + k, r: this.deskSpot.r }));
     return set;
   }
 
@@ -1018,8 +1075,10 @@ export class RoomScene extends Phaser.Scene {
     openToolkit({
       icon: (type) => this.textures.get(this.itemKey(type, 0)).getSourceImage().toDataURL(),
       canAfford,
+      level: () => officeLevel(),
       onPick: (type) => {
-        const max = ITEMS[type].max;
+        if (itemLevel(type) > officeLevel()) return this.toast(`Unlocks at Curator’s Office level ${itemLevel(type)}`);
+        const max = type === 'closet' ? Math.min(ITEMS.closet.max, perks().janitors) : ITEMS[type].max;
         if (max && countPlaced(type, this.rooms.length) >= max) return this.toast(`Only ${max} allowed in the museum`);
         if (!canAfford(ITEMS[type].price)) return this.toast(`Need ${(ITEMS[type].price - coins()).toLocaleString()} more gold`);
         this.startPlacing({ type, rot: 0 });

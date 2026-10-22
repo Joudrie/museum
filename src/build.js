@@ -6,6 +6,7 @@ import { bakeFloor, bakeWalls, bakeFront } from './art.js';
 import { SIZES, SIZE_LABELS, EXITS, exitLabel, layout, paintingsFor, slotStates, placeArt, wallItems } from './rooms.js';
 import { paintArt } from './walldraw.js';
 import { coins, spend, roomCost, FREE } from './wallet.js';
+import { officeLevel, BIG_HALL_LEVEL } from './office.js';
 
 const el = document.getElementById('build');
 const preview = el.querySelector('.build-preview');
@@ -69,6 +70,9 @@ function crop(src, x, y, w, h, scale, target = document.createElement('canvas'))
 function render() {
   const { scene, rooms, decor, orient, size } = state;
   el.querySelectorAll('[data-orient]').forEach((b) => b.classList.toggle('on', b.dataset.orient === orient));
+  const hall = el.querySelector('[data-orient="square"]');
+  hall.disabled = officeLevel() < BIG_HALL_LEVEL;
+  hall.textContent = hall.disabled ? `Big hall · Lv ${BIG_HALL_LEVEL}` : 'Big hall';
   el.querySelectorAll('[data-size]').forEach((b) => {
     b.classList.toggle('on', b.dataset.size === size);
     b.textContent = SIZE_LABELS[orient][b.dataset.size];
