@@ -29,9 +29,31 @@ export const FLOOR_PATTERNS = {
   marble: 'Marble',
   mosaic: 'Mosaic',
   sand: 'Sand',
+  wide: 'Wide planks',
+  diagonal: 'Diagonal planks',
+  hex: 'Hex tile',
+  terrazzo: 'Terrazzo',
+  cobble: 'Cobblestone',
+  flagstone: 'Flagstone',
+  brickfloor: 'Brick',
+  penny: 'Penny tile',
+  slate: 'Slate',
+  concrete: 'Concrete',
+  encaustic: 'Patterned tile',
+  tatami: 'Tatami',
+  carpetfloor: 'Carpet',
+  grass: 'Grass',
 };
 // Which floor patterns take a wood color (the rest take a stone color).
-export const WOOD_FLOORS = ['planks', 'herringbone', 'parquet'];
+export const WOOD_FLOORS = ['planks', 'herringbone', 'parquet', 'wide', 'diagonal'];
+// Floors drawn in two colors (checker color 1 and 2).
+export const TWO_COLOR_FLOORS = ['checker', 'checker-angled', 'encaustic'];
+// A fitting starting color when switching to a stone-colored floor.
+export const FLOOR_DEFAULTS = {
+  stone: '#9a968f', tile: '#e9e6df', marble: '#e9e6df', mosaic: '#c8c4bc', sand: '#d9c7a8', hex: '#e9e6df', terrazzo: '#d9d4c8',
+  cobble: '#8a8580', flagstone: '#a89a80', brickfloor: '#8a4a3a', penny: '#e9e6df', slate: '#4a4a4f', concrete: '#a8a6a1',
+  tatami: '#c8b878', carpetfloor: '#7a2232', grass: '#5a8a3a',
+};
 
 export const WALL_PATTERNS = {
   plain: 'Plain',
@@ -41,6 +63,41 @@ export const WALL_PATTERNS = {
   sakura: 'Cherry blossom',
   brick: 'Brick',
   marble: 'Marble',
+  wood: 'Wood paneling',
+  shiplap: 'Shiplap',
+  subway: 'Subway tile',
+  ashlar: 'Stone blocks',
+  concrete: 'Concrete',
+  pinstripe: 'Pinstripe',
+  bold: 'Bold stripes',
+  dots: 'Polka dots',
+  fleur: 'Fleur-de-lis',
+  trellis: 'Trellis',
+  zigzag: 'Zigzag',
+  plaid: 'Plaid',
+  deco: 'Art deco fans',
+  waves: 'Waves (seigaiha)',
+  leaves: 'Leaves',
+  stars: 'Stars',
+  greek: 'Greek key',
+  hexagons: 'Hexagons',
+};
+
+export const WAINSCOT_STYLES = {
+  none: 'None',
+  panels: 'Wood panels',
+  tall: 'Tall panels',
+  beadboard: 'Beadboard',
+  batten: 'Board & batten',
+  shiplap: 'Shiplap',
+  subway: 'Subway tile',
+  stone: 'Stone',
+  marble: 'Marble',
+  harlequin: 'Harlequin',
+  lattice: 'Lattice',
+  tiles: 'Checker tiles',
+  greek: 'Greek key',
+  bands: 'Painted bands',
 };
 
 export const LIGHTS = { warm: 'Warm', day: 'Daylight', cool: 'Cool', moody: 'Moody' };
@@ -117,12 +174,11 @@ function bake(scene, key, w, h, fn) {
 
 // ---------- Floors ----------
 // Planks: vertical wood planks with staggered ends.
-function planks(w, h, decor) {
+function planks(w, h, decor, PW = 8) {
   const base = hex(decor.floor);
   const tones = [1, 1.07, 0.92, 1.12, 0.97].map((k) => shade(base, k));
   const seam = shade(base, 0.5);
   const grain = shade(base, 0.78);
-  const PW = 8; // plank width
   const cols = [];
   for (let c = 0; c * PW < w; c++) {
     const list = [];
@@ -144,7 +200,7 @@ function planks(w, h, decor) {
     let col = plank.tone;
     if (lx === PW - 1 || ly === 0) return seam;
     if (ly === 1 || lx === 0) col = mix(col, [255, 230, 190], 0.12);
-    if ((lx === 2 || lx === 5) && hash(c * 8 + lx, Math.floor(y / 5), 4) > 0.55) col = mix(col, grain, 0.6);
+    if ((lx === 2 || lx === PW - 3) && hash(c * 8 + lx, Math.floor(y / 5), 4) > 0.55) col = mix(col, grain, 0.6);
     if (hash(c, plank.n, 5) > 0.82) {
       const ky = Math.floor(hash(c, plank.n, 6) * (plank.y1 - plank.y0 - 8)) + 4;
       if (Math.abs(ly - ky) <= 1 && lx >= 2 && lx <= 4) col = mix(col, seam, ly === ky && lx === 3 ? 0.9 : 0.5);
@@ -289,8 +345,235 @@ function sand(decor) {
   };
 }
 
+
+const mod = (a, n) => ((a % n) + n) % n;
+
+// Nearest and second-nearest jittered grid points (for stones and cells).
+function cells(x, y, size, seed) {
+  const gx = Math.floor(x / size);
+  const gy = Math.floor(y / size);
+  let d1 = 1e9;
+  let d2 = 1e9;
+  let id = 0;
+  for (let j = -1; j <= 1; j++) {
+    for (let i = -1; i <= 1; i++) {
+      const cx = gx + i;
+      const cy = gy + j;
+      const px = (cx + 0.15 + hash(cx, cy, seed) * 0.7) * size;
+      const py = (cy + 0.15 + hash(cx, cy, seed + 1) * 0.7) * size;
+      const d = Math.hypot(x - px, y - py);
+      if (d < d1) {
+        d2 = d1;
+        d1 = d;
+        id = cx * 977 + cy;
+      } else if (d < d2) d2 = d;
+    }
+  }
+  return { d1, d2, id };
+}
+
+// Planks laid at 45 degrees.
+function diagonal(w, h, decor) {
+  const size = w + h + 64;
+  const base = planks(size, size, decor);
+  return (x, y) => base(mod(Math.floor((x + y) * 0.7), size), mod(Math.floor((x - y) * 0.7) + h, size));
+}
+
+// Nearest pointy-top hexagon of radius R: its cell (q, r), center y and how close
+// to its edge the point is (e: 0 at the center, 1 on the edge).
+function hexCell(x, y, R) {
+  const fq = ((Math.sqrt(3) / 3) * x - y / 3) / R;
+  const fr = ((2 / 3) * y) / R;
+  const fs = -fq - fr;
+  let q = Math.round(fq);
+  let r = Math.round(fr);
+  const s = Math.round(fs);
+  const dq = Math.abs(q - fq);
+  const dr = Math.abs(r - fr);
+  const ds = Math.abs(s - fs);
+  if (dq > dr && dq > ds) q = -r - s;
+  else if (dr > ds) r = -q - s;
+  const cx = R * Math.sqrt(3) * (q + r / 2);
+  const cy = R * 1.5 * r;
+  const dx = Math.abs(x + 0.5 - cx);
+  const dy = Math.abs(y + 0.5 - cy);
+  return { q, r, cy, e: Math.max(dx, dx * 0.5 + dy * 0.866) / (0.866 * R) };
+}
+
+// Hexagon tiles with grout.
+function hexTile(decor) {
+  const base = hex(decor.floor);
+  return (x, y) => {
+    const h = hexCell(x, y, 9);
+    if (h.e > 0.88) return shade(base, 0.68);
+    const c = shade(base, 0.93 + hash(h.q, h.r, 31) * 0.14);
+    return h.e > 0.76 && y < h.cy ? mix(c, WHITE, 0.12) : c;
+  };
+}
+
+// Terrazzo: chips of stone set in a pale base.
+function terrazzo(decor) {
+  const base = hex(decor.floor);
+  const chips = [shade(base, 0.55), hex('#c06a4a'), hex('#5a7a6a'), mix(base, WHITE, 0.5), hex('#2a2a2e')];
+  return (x, y) => {
+    if (x % 64 === 0 || y % 64 === 0) return hex('#c9a23f'); // brass divider strips
+    const cell = cells(x, y, 7, 32);
+    if (cell.d1 < 2 && hash(cell.id, 0, 33) > 0.35) return chips[Math.floor(hash(cell.id, 1, 34) * chips.length)];
+    return hash(x, y, 35) > 0.94 ? shade(base, 0.92) : base;
+  };
+}
+
+// Rounded cobblestones.
+function cobble(decor) {
+  const base = hex(decor.floor);
+  return (x, y) => {
+    const c = cells(x, y, 10, 36);
+    const edge = c.d2 - c.d1;
+    if (edge < 1.6) return shade(base, 0.45);
+    let col = shade(base, 0.82 + hash(c.id, 0, 37) * 0.3);
+    if (edge < 3) col = shade(col, 0.85);
+    else if (c.d1 < 2.5) col = mix(col, WHITE, 0.14);
+    return col;
+  };
+}
+
+// Large irregular flagstones.
+function flagstone(decor) {
+  const base = hex(decor.floor);
+  return (x, y) => {
+    const c = cells(x, y, 24, 38);
+    const edge = c.d2 - c.d1;
+    if (edge < 2) return shade(base, 0.5);
+    let col = mix(base, hash(c.id, 0, 39) > 0.5 ? hex('#7a6a5a') : hex('#b0a890'), 0.25);
+    col = shade(col, 0.9 + hash(c.id, 1, 40) * 0.2);
+    if (edge < 3) col = mix(col, WHITE, 0.1);
+    const n = smoothNoise(x / 5, y / 5, 41);
+    return n > 0.75 ? shade(col, 0.93) : col;
+  };
+}
+
+// Brick pavers in a running bond.
+function brickFloor(decor) {
+  const base = hex(decor.floor);
+  return (x, y) => {
+    const row = Math.floor(y / 8);
+    const off = row % 2 ? 8 : 0;
+    const lx = (x + off) % 16;
+    const ly = y % 8;
+    if (lx === 0 || ly === 0) return hex('#b8ad98');
+    let c = shade(base, 0.85 + hash(Math.floor((x + off) / 16), row, 42) * 0.3);
+    if (ly === 1) c = mix(c, WHITE, 0.1);
+    if (ly === 7) c = shade(c, 0.85);
+    return hash(x, y, 43) > 0.92 ? shade(c, 0.88) : c;
+  };
+}
+
+// Little round penny tiles.
+function penny(decor) {
+  const base = hex(decor.floor);
+  return (x, y) => {
+    const row = Math.floor(y / 5);
+    const off = row % 2 ? 2.5 : 0;
+    const cx = (Math.floor((x - off) / 5) + 0.5) * 5 + off;
+    const cy = (row + 0.5) * 5;
+    const d = Math.hypot(x + 0.5 - cx, y + 0.5 - cy);
+    if (d > 2.3) return shade(base, 0.62);
+    const c = shade(base, 0.93 + hash(Math.floor(cx), row, 44) * 0.14);
+    return d < 1 && x < cx ? mix(c, WHITE, 0.25) : c;
+  };
+}
+
+// Slate: dark tiles with layered, flaky texture.
+function slate(decor) {
+  const base = hex(decor.floor);
+  return (x, y) => {
+    const row = Math.floor(y / 24);
+    const off = row % 2 ? 16 : 0;
+    if ((x + off) % 32 === 0 || y % 24 === 0) return shade(base, 0.55);
+    const t = Math.floor(hash(Math.floor((x + off) / 32), row, 45) * 3);
+    const n = smoothNoise(x / 9, y / 3, 46 + t);
+    let c = shade(base, 0.88 + t * 0.07);
+    if (n > 0.7) c = mix(c, WHITE, 0.08);
+    else if (n < 0.25) c = shade(c, 0.9);
+    return c;
+  };
+}
+
+// Polished concrete with saw-cut joints.
+function concrete(decor) {
+  const base = hex(decor.floor);
+  return (x, y) => {
+    if (x % 96 === 0 || y % 96 === 0) return shade(base, 0.75);
+    const n = smoothNoise(x / 24, y / 24, 47);
+    let c = shade(base, 0.94 + n * 0.12);
+    if (hash(x, y, 48) > 0.97) c = shade(c, 0.85);
+    return c;
+  };
+}
+
+// Encaustic tiles: a two-color star and border in every tile.
+function encaustic(decor) {
+  const a = hex(decor.checkA);
+  const b = hex(decor.checkB);
+  return (x, y) => {
+    const lx = x % 16;
+    const ly = y % 16;
+    if (lx === 0 || ly === 0) return shade(b, 0.8);
+    const dx = Math.abs(lx - 8);
+    const dy = Math.abs(ly - 8);
+    if (dx + dy <= 3) return a; // center diamond
+    if (dx === dy && dx < 7) return a; // diagonals
+    if ((lx === 1 || lx === 15 || ly === 1 || ly === 15) && (lx + ly) % 2) return a; // dotted border
+    if (dx + dy === 7) return mix(a, b, 0.5);
+    return b;
+  };
+}
+
+// Tatami mats with dark cloth borders.
+function tatami(decor) {
+  const base = hex(decor.floor);
+  const band = hex('#2f3a2a');
+  return (x, y) => {
+    const col = Math.floor(x / 32);
+    const off = col % 2 ? 32 : 0;
+    const lx = x % 32;
+    const ly = (y + off) % 64;
+    if (lx < 2 || lx > 29) return lx === 0 ? shade(band, 0.7) : band;
+    if (ly === 0) return shade(base, 0.6);
+    let c = ly % 2 ? base : shade(base, 0.93); // woven rush
+    if (hash(x, Math.floor(y / 2), 49) > 0.9) c = shade(c, 0.9);
+    return c;
+  };
+}
+
+// Wall-to-wall carpet with a small repeating figure.
+function carpetFloor(decor) {
+  const base = hex(decor.floor);
+  return (x, y) => {
+    const lx = x % 12;
+    const ly = y % 12;
+    const d = Math.abs(lx - 6) + Math.abs(ly - 6);
+    let c = d === 3 ? mix(base, hex('#c9a23f'), 0.5) : d === 0 ? mix(base, WHITE, 0.3) : base;
+    if (hash(x, y, 50) > 0.85) c = shade(c, 0.92);
+    return c;
+  };
+}
+
+// Grass for gardens: blades and a few flowers.
+function grass(decor) {
+  const base = hex(decor.floor);
+  return (x, y) => {
+    const n = smoothNoise(x / 12, y / 12, 51);
+    let c = shade(base, 0.85 + n * 0.3);
+    if (hash(x, Math.floor(y / 3), 52) > 0.82) c = mix(c, hex('#c8e070'), 0.25);
+    if (hash(x, y, 53) > 0.88) c = shade(c, 0.8);
+    if (hash(Math.floor(x / 3), Math.floor(y / 3), 54) > 0.993) return hash(x, y, 55) > 0.5 ? hex('#f4f0e6') : hex('#f2d36b');
+    return c;
+  };
+}
+
 export function bakeFloor(scene, key, w, h, decor) {
-  const pattern = {
+  const pattern = ({
     herringbone: () => herringbone(decor),
     parquet: () => parquet(decor),
     marble: () => marble(decor),
@@ -301,7 +584,21 @@ export function bakeFloor(scene, key, w, h, decor) {
     'checker-angled': () => checker(decor, true),
     stone: () => stone(decor),
     tile: () => tile(decor),
-  }[decor.pattern || 'planks']();
+    wide: () => planks(w, h, decor, 12),
+    diagonal: () => diagonal(w, h, decor),
+    hex: () => hexTile(decor),
+    terrazzo: () => terrazzo(decor),
+    cobble: () => cobble(decor),
+    flagstone: () => flagstone(decor),
+    brickfloor: () => brickFloor(decor),
+    penny: () => penny(decor),
+    slate: () => slate(decor),
+    concrete: () => concrete(decor),
+    encaustic: () => encaustic(decor),
+    tatami: () => tatami(decor),
+    carpetfloor: () => carpetFloor(decor),
+    grass: () => grass(decor),
+  }[decor.pattern || 'planks'] || (() => planks(w, h, decor)))();
   const dust = hex('#b9a58a');
   return bake(scene, key, w, h, (x, y) => {
     let col = pattern(x, y);
@@ -429,7 +726,11 @@ function wallPalette(decor) {
     plainPaper: decor.paperStyle === 'plain',
     style: decor.paperStyle || 'stripes',
     accent: mix(w, hex('#c9a23f'), 0.55),
+    deep: shade(w, 0.82),
+    light: mix(w, WHITE, 0.16),
     panels: decor.wainscotStyle !== 'none',
+    wStyle: decor.wainscotStyle || 'panels',
+    wTop: decor.wainscotStyle === 'tall' ? 34 : 22, // where the chair rail sits
   };
 }
 
@@ -520,17 +821,91 @@ function wallMaterial(u, v, D, items, seed, P) {
   if (v < 1) c = P.base0;
   else if (v < 5) c = v === 4 ? P.base2 : P.base1;
   else if (!P.panels && v < D - 6) c = P.plainPaper ? P.paper : wallpaper(u, v, P);
-  else if (v < 22) {
-    const pu = ((u % 40) + 40) % 40;
-    if (v < 7 || v >= 20) c = P.panelLight;
-    else if (pu < 2) c = P.panelDark;
-    else if (pu === 2 || v === 7) c = mix(P.panel, P.panelDark, 0.6);
-    else if (pu === 39 || v === 19) c = P.panelLight;
-    else c = P.panel;
-  } else if (v < 25) c = v === 24 ? P.railLight : P.rail;
+  else if (v < P.wTop) c = wainscot(u, v, P);
+  else if (v < P.wTop + 3) c = v === P.wTop + 2 ? P.railLight : P.rail;
   else if (v < D - 6) c = P.plainPaper ? P.paper : wallpaper(u, v, P);
   else c = P.crown[v - (D - 6)];
   return c;
+}
+
+
+// The lower wall between the baseboard (v < 5) and the chair rail (v = P.wTop).
+function wainscot(u, v, P) {
+  const top = P.wTop;
+  const lv = v - 5; // height inside the wainscot
+  const h = top - 5;
+  switch (P.wStyle) {
+    case 'beadboard': {
+      const bu = mod(u, 4);
+      return bu === 0 ? P.panelDark : bu === 1 ? P.panelLight : P.panel;
+    }
+    case 'batten': {
+      const bu = mod(u, 14);
+      if (bu < 3) return bu === 0 ? P.panelDark : P.panelLight; // raised batten
+      return bu === 3 ? mix(P.panel, P.panelDark, 0.6) : P.panel;
+    }
+    case 'shiplap': {
+      const bv = lv % 4;
+      return bv === 0 ? P.panelDark : bv === 1 ? P.panelLight : P.panel;
+    }
+    case 'subway': {
+      const row = Math.floor(lv / 4);
+      const bu = mod(u + (row % 2 ? 4 : 0), 8);
+      if (lv % 4 === 0 || bu === 0) return P.panelDark;
+      return lv % 4 === 1 ? P.panelLight : P.panel;
+    }
+    case 'stone': {
+      const row = Math.floor(lv / 6);
+      const bu = mod(u + (row % 2 ? 6 : 0), 12);
+      if (lv % 6 === 0 || bu === 0) return P.base0;
+      return shade(P.panel, 0.9 + hash(Math.floor((u + (row % 2 ? 6 : 0)) / 12), row, 60) * 0.2);
+    }
+    case 'marble': {
+      const n = smoothNoise(u / 8, v / 8, 61) * 5;
+      const t = Math.abs(Math.sin((u + v * 0.7) / 7 + n));
+      if (lv === 0 || lv === h - 1) return P.panelDark;
+      return t < 0.08 ? P.panelDark : t < 0.16 ? mix(P.panel, P.panelDark, 0.4) : P.panelLight;
+    }
+    case 'harlequin': {
+      const cu = mod(u, 12);
+      const d = Math.abs(cu - 6) / 6 + Math.abs(lv - h / 2) / (h / 2);
+      const alt = Math.floor(u / 12) % 2;
+      if (lv === 0 || lv === h - 1) return P.panelDark;
+      return d < 1 ? (alt ? P.panel : P.panelLight) : alt ? P.panelLight : P.panel;
+    }
+    case 'lattice': {
+      const a = mod(u + lv, 8);
+      const b = mod(u - lv, 8);
+      if (lv === 0 || lv === h - 1) return P.panelDark;
+      return a === 0 || b === 0 ? P.panelLight : P.panelDark;
+    }
+    case 'tiles': {
+      const t = (Math.floor(u / 4) + Math.floor(lv / 4)) % 2;
+      return t ? P.panel : P.panelLight;
+    }
+    case 'greek': {
+      // a meander band through the middle, plain panel above and below
+      const mid = Math.floor(h / 2) - 4;
+      const gv = lv - mid;
+      if (gv < 0 || gv >= 8) return lv === 0 ? P.panelDark : P.panel;
+      const KEY = ['########', '#.......', '#.#####.', '#.#...#.', '#.#.#.#.', '#...#.#.', '#####.#.', '......#.'];
+      return KEY[gv][mod(u, 8)] === '#' ? P.panelLight : P.panelDark;
+    }
+    case 'bands': {
+      const k = Math.floor((lv / h) * 6);
+      return [P.panelDark, P.panel, P.accent, P.panel, P.panelLight, P.panelDark][k] || P.panel;
+    }
+    default: {
+      // raised wood panels (also the tall version)
+      const pu = mod(u, 40);
+      const lastV = top - 3;
+      if (v < 7 || v >= lastV + 1) return P.panelLight;
+      if (pu < 2) return P.panelDark;
+      if (pu === 2 || v === 7) return mix(P.panel, P.panelDark, 0.6);
+      if (pu === 39 || v === lastV) return P.panelLight;
+      return P.panel;
+    }
+  }
 }
 
 // Small 3x5 glyphs for the hieroglyph wallpaper.
@@ -590,6 +965,121 @@ function wallpaper(u, v, P) {
       const n = smoothNoise(u / 10, v / 10, 30) * 5;
       const t = Math.abs(Math.sin((uu + v * 0.8) / 9 + n));
       return t < 0.07 ? shade(P.paper, 0.78) : P.paper;
+    }
+    case 'wood': {
+      const bu = mod(u, 10);
+      if (bu === 0) return P.deep;
+      const knot = hash(Math.floor(u / 10), Math.floor(v / 9), 62) > 0.93 && mod(v, 9) === 4 && bu === 5;
+      return knot ? P.deep : (bu === 3 || bu === 7) && hash(Math.floor(u / 10) * 10 + bu, Math.floor(v / 4), 63) > 0.6 ? mix(P.paper, P.deep, 0.5) : P.paper;
+    }
+    case 'shiplap': {
+      const bv = v % 6;
+      return bv === 0 ? P.deep : bv === 1 ? P.light : P.paper;
+    }
+    case 'subway': {
+      const row = Math.floor(v / 5);
+      const bu = mod(u + (row % 2 ? 5 : 0), 10);
+      if (v % 5 === 0 || bu === 0) return P.deep;
+      return v % 5 === 1 ? P.light : P.paper;
+    }
+    case 'ashlar': {
+      const row = Math.floor(v / 9);
+      const bu = mod(u + (row % 2 ? 9 : 0), 18);
+      if (v % 9 === 0 || bu === 0) return shade(P.paper, 0.7);
+      const c = shade(P.paper, 0.9 + hash(Math.floor((u + (row % 2 ? 9 : 0)) / 18), row, 64) * 0.18);
+      return v % 9 === 1 || bu === 1 ? mix(c, WHITE, 0.1) : c;
+    }
+    case 'concrete': {
+      const n = smoothNoise(u / 14, v / 14, 65);
+      if (mod(u, 48) === 0 || v % 32 === 0) return P.deep;
+      if (mod(u, 24) === 12 && v % 16 === 8) return shade(P.paper, 0.7); // form-tie holes
+      return shade(P.paper, 0.94 + n * 0.1);
+    }
+    case 'pinstripe':
+      return mod(u, 6) === 0 ? P.deep : P.paper;
+    case 'bold':
+      return mod(u, 16) < 8 ? P.paper : P.deep;
+    case 'dots': {
+      const row = Math.floor(v / 8);
+      const lu = mod(u + (row % 2 ? 4 : 0), 8);
+      const lv = v % 8;
+      return Math.abs(lu - 4) + Math.abs(lv - 4) <= 1 ? P.dot : P.paper;
+    }
+    case 'fleur': {
+      const row = Math.floor(v / 12);
+      const lu = mod(u + (row % 2 ? 6 : 0), 12);
+      const lv = v % 12;
+      const F = ['..#..', '.###.', '#.#.#', '.###.', '..#..', '.#.#.'];
+      const fx = lu - 3;
+      const fy = lv - 3;
+      return fy >= 0 && fy < 6 && fx >= 0 && fx < 5 && F[5 - fy][fx] === '#' ? P.accent : P.paper;
+    }
+    case 'trellis': {
+      const a = mod(u + v, 10);
+      const b = mod(u - v, 10);
+      if (a === 0 || b === 0) return P.deep;
+      return (a === 5 && b === 5) ? P.accent : P.paper;
+    }
+    case 'zigzag': {
+      const z = mod(v + Math.abs(mod(u, 8) - 4), 8);
+      return z < 2 ? P.deep : P.paper;
+    }
+    case 'plaid': {
+      const a = mod(u, 16) < 3;
+      const b = v % 16 < 3;
+      if (a && b) return shade(P.paper, 0.7);
+      if (a || b) return P.deep;
+      return mod(u, 16) === 9 || v % 16 === 9 ? P.accent : P.paper;
+    }
+    case 'deco': {
+      const row = Math.floor(v / 10);
+      const cx = mod(u + (row % 2 ? 8 : 0), 16) - 8;
+      const cy = v % 10;
+      const r = Math.hypot(cx, cy);
+      if (r > 9.5) return P.paper;
+      if (Math.round(r) % 3 === 0) return P.accent;
+      return Math.abs(cx) < 1 ? P.accent : P.light;
+    }
+    case 'waves': {
+      // seigaiha: overlapping fans of rings; each row sits in front of the one above
+      for (const k of [0, 1]) {
+        const row = Math.floor(v / 8) - k;
+        const cx = mod(u + (mod(row, 2) ? 8 : 0), 16) - 8;
+        const r = Math.hypot(cx, v - (row * 8 + 8));
+        if (v <= row * 8 + 8 && r < 8.5) return Math.round(r) % 3 === 0 ? P.deep : P.paper;
+      }
+      return P.paper;
+    }
+    case 'leaves': {
+      const cx = Math.floor(u / 14);
+      const cy = Math.floor(v / 14);
+      const lu = mod(u, 14) - 7;
+      const lv = (v % 14) - 7;
+      const flip = hash(cx, cy, 66) > 0.5 ? 1 : -1;
+      const ru = lu * 0.7 + lv * 0.7 * flip;
+      const rv = -lu * 0.7 * flip + lv * 0.7;
+      const inLeaf = (ru / 5) ** 2 + (rv / 2.4) ** 2 <= 1;
+      if (inLeaf) return Math.abs(rv) < 0.6 ? mix(hex('#3a6a3a'), P.paper, 0.3) : mix(hex('#4f8a4a'), P.paper, 0.25);
+      return P.paper;
+    }
+    case 'stars': {
+      const cx = Math.floor(u / 10);
+      const cy = Math.floor(v / 10);
+      if (hash(cx, cy, 67) < 0.5) return P.paper;
+      const lu = mod(u, 10) - 5;
+      const lv = (v % 10) - 5;
+      return (lu === 0 && Math.abs(lv) <= 2) || (lv === 0 && Math.abs(lu) <= 2) || (Math.abs(lu) === 1 && Math.abs(lv) === 1) ? P.accent : P.paper;
+    }
+    case 'greek': {
+      const band = v % 20;
+      if (band >= 10) return P.paper;
+      if (band === 0 || band === 9) return P.accent;
+      const KEY = ['########', '#.......', '#.#####.', '#.#...#.', '#.#.#.#.', '#...#.#.', '#####.#.', '......#.'];
+      return KEY[band - 1][mod(u, 8)] === '#' ? P.accent : P.paper;
+    }
+    case 'hexagons': {
+      const h = hexCell(u + 1000, v, 6);
+      return h.e > 0.82 ? P.deep : P.paper;
     }
     default: {
       const su = ((u % 10) + 10) % 10;

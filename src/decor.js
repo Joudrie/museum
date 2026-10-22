@@ -1,7 +1,7 @@
 // Customize panel (home button). "This room" recolors only the room you're in;
 // "Character" changes the curator. Each color row is a swipeable strip of
 // swatches, ending in a + that opens a full color picker.
-import { PALETTES, FLOOR_PATTERNS, WOOD_FLOORS, WALL_PATTERNS, LIGHTS, PLANTS } from './art.js';
+import { PALETTES, FLOOR_PATTERNS, WOOD_FLOORS, TWO_COLOR_FLOORS, FLOOR_DEFAULTS, WALL_PATTERNS, WAINSCOT_STYLES, LIGHTS, PLANTS } from './art.js';
 import { TRACKS, isMuted, setMuted } from './music.js';
 
 // One-tap room styles. Each sets floor, walls, lighting and music.
@@ -145,7 +145,7 @@ function renderRoom() {
   const pickPattern = (pattern) => {
     const wood = WOOD_FLOORS.includes(pattern);
     const pal = wood ? PALETTES.wood : PALETTES.stone;
-    const fallback = wood ? '#8f5e3c' : { stone: '#9a968f', tile: '#e9e6df', marble: '#e9e6df', mosaic: '#c8c4bc', sand: '#d9c7a8' }[pattern];
+    const fallback = wood ? '#8f5e3c' : FLOOR_DEFAULTS[pattern];
     set({ pattern, ...(fallback && !pal.includes(d.floor) ? { floor: fallback } : {}) });
   };
   const themes = Object.fromEntries(Object.entries(THEMES).map(([id, t]) => [id, t.name]));
@@ -154,16 +154,16 @@ function renderRoom() {
     section('Theme (one tap)', choices(themes, null, (id) => set(THEMES[id].decor))),
     section('Floor pattern', choices(FLOOR_PATTERNS, d.pattern, pickPattern)),
   ];
-  if (d.pattern.startsWith('checker')) {
-    parts.push(section('Checker color 1', strip(PALETTES.stone, d.checkA, (checkA, live) => set({ checkA }, live))));
-    parts.push(section('Checker color 2', strip(PALETTES.stone, d.checkB, (checkB, live) => set({ checkB }, live))));
+  if (TWO_COLOR_FLOORS.includes(d.pattern)) {
+    parts.push(section('Floor color 1', strip(PALETTES.stone, d.checkA, (checkA, live) => set({ checkA }, live))));
+    parts.push(section('Floor color 2', strip(PALETTES.stone, d.checkB, (checkB, live) => set({ checkB }, live))));
   } else {
     const pal = WOOD_FLOORS.includes(d.pattern) ? PALETTES.wood : PALETTES.stone;
     parts.push(section('Floor color', strip(pal, d.floor, (floor, live) => set({ floor }, live))));
   }
   parts.push(section('Wall pattern', choices(WALL_PATTERNS, d.paperStyle || 'stripes', (paperStyle) => set({ paperStyle }))));
   parts.push(section('Wall color', strip(PALETTES.paper, d.paper, (paper, live) => set({ paper }, live))));
-  parts.push(section('Wainscot', choices({ none: 'None', panels: 'Wood panels' }, d.wainscotStyle || 'panels', (wainscotStyle) => set({ wainscotStyle }))));
+  parts.push(section('Wainscot', choices(WAINSCOT_STYLES, d.wainscotStyle || 'panels', (wainscotStyle) => set({ wainscotStyle }))));
   parts.push(section('Trim & wainscot color', strip(PALETTES.wainscot, d.wainscot, (wainscot, live) => set({ wainscot }, live))));
   parts.push(section('Carpet', choices({ off: 'None', on: 'Runner' }, d.carpet ? 'on' : 'off', (v) => set({ carpet: v === 'on' }))));
   if (d.carpet) parts.push(section('Carpet color', strip(PALETTES.carpet, d.carpetColor, (carpetColor, live) => set({ carpetColor }, live))));
