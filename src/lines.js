@@ -81,6 +81,13 @@ export const PERSONALITIES = {
     generic: ['Latte art is art. Hang one of mine.', 'Every visitor wants a coffee. More visitors, more cups.', 'We have a croissant named after Monet. It’s blurry.'],
     about: [],
   },
+  caretaker: {
+    label: 'Caretaker',
+    staff: true,
+    names: ['Edmund'],
+    generic: ['I’ve looked after this place for forty years. It’s good to see it alive again.', 'Upgrade the office and the board will let us grow.', 'In my day we had one painting and a very nice chair.', 'Every great museum started with one room. And a mop.'],
+    about: [],
+  },
   janitor: {
     label: 'Janitor',
     staff: true,

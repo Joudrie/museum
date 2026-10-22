@@ -1,6 +1,7 @@
 // Decor items placed on the floor grid with the toolkit. Each item has a
 // footprint in tiles (w x h), a price and a daily income in gold coins.
-// `rise` is how many px the sprite sticks up above its footprint.
+// `rise` is how many px the sprite sticks up above its footprint; `lvl` is the
+// Curator's Office level that unlocks it (default 1).
 import { load, save } from './decor.js';
 
 export const CATEGORIES = {
@@ -26,27 +27,27 @@ export const ITEMS = {
   lamp: { name: 'Floor lamp', cat: 'lights', w: 1, h: 1, rise: 38, price: 30, income: 3 },
   candelabra: { name: 'Candelabra', cat: 'lights', w: 1, h: 1, rise: 30, price: 60, income: 5 },
   bust: { name: 'Marble bust', cat: 'sculpture', w: 1, h: 1, rise: 28, price: 120, income: 10 },
-  statue: { name: 'Classical statue', cat: 'sculpture', w: 1, h: 1, rise: 50, price: 300, income: 25 },
-  armor: { name: 'Suit of armor', cat: 'sculpture', w: 1, h: 1, rise: 40, price: 250, income: 20 },
-  vase: { name: 'Ancient vase (case)', cat: 'relics', w: 1, h: 1, rise: 30, price: 200, income: 15 },
-  sarcophagus: { name: 'Sarcophagus', cat: 'relics', w: 2, h: 1, rise: 10, price: 500, income: 40 },
-  skull: { name: 'Dinosaur skull', cat: 'science', w: 2, h: 1, rise: 24, price: 1000, income: 80 },
+  statue: { name: 'Classical statue', cat: 'sculpture', w: 1, h: 1, rise: 50, price: 300, income: 25, lvl: 2 },
+  armor: { name: 'Suit of armor', cat: 'sculpture', w: 1, h: 1, rise: 40, price: 250, income: 20, lvl: 2 },
+  vase: { name: 'Ancient vase (case)', cat: 'relics', w: 1, h: 1, rise: 30, price: 200, income: 15, lvl: 2 },
+  sarcophagus: { name: 'Sarcophagus', cat: 'relics', w: 2, h: 1, rise: 10, price: 500, income: 40, lvl: 2 },
+  skull: { name: 'Dinosaur skull', cat: 'science', w: 2, h: 1, rise: 24, price: 1000, income: 80, lvl: 3 },
   globe: { name: 'Antique globe', cat: 'science', w: 1, h: 1, rise: 26, price: 90, income: 7 },
   bookshelf: { name: 'Bookshelf', cat: 'features', w: 2, h: 1, rise: 40, price: 70, income: 5 },
-  fountain: { name: 'Fountain', cat: 'features', w: 2, h: 2, rise: 14, price: 800, income: 60 },
+  fountain: { name: 'Fountain', cat: 'features', w: 2, h: 2, rise: 14, price: 800, income: 60, lvl: 3 },
   sofa: { name: 'Velvet sofa', cat: 'seating', w: 2, h: 1, rise: 14, price: 150, income: 10 },
   bonsai: { name: 'Bonsai', cat: 'plants', w: 1, h: 1, rise: 14, price: 50, income: 4 },
   cherry: { name: 'Cherry blossom tree', cat: 'plants', w: 1, h: 1, rise: 42, price: 80, income: 6 },
   lantern: { name: 'Stone lantern', cat: 'lights', w: 1, h: 1, rise: 32, price: 70, income: 6 },
-  obelisk: { name: 'Obelisk', cat: 'relics', w: 1, h: 1, rise: 58, price: 350, income: 28 },
-  canopic: { name: 'Canopic jars', cat: 'relics', w: 1, h: 1, rise: 14, price: 150, income: 12 },
-  trex: { name: 'T-rex skeleton', cat: 'science', w: 3, h: 2, rise: 34, price: 2500, income: 200 },
-  meteorite: { name: 'Meteorite', cat: 'science', w: 1, h: 1, rise: 20, price: 400, income: 30 },
-  telescope: { name: 'Telescope', cat: 'science', w: 1, h: 1, rise: 30, price: 180, income: 14 },
-  specimens: { name: 'Specimen jars', cat: 'science', w: 1, h: 1, rise: 30, price: 120, income: 10 },
-  counter: { name: 'Coffee counter', cat: 'services', w: 3, h: 1, rise: 22, price: 400, income: 0, max: 1, note: 'Sells coffee' },
+  obelisk: { name: 'Obelisk', cat: 'relics', w: 1, h: 1, rise: 58, price: 350, income: 28, lvl: 3 },
+  canopic: { name: 'Canopic jars', cat: 'relics', w: 1, h: 1, rise: 14, price: 150, income: 12, lvl: 2 },
+  trex: { name: 'T-rex skeleton', cat: 'science', w: 3, h: 2, rise: 34, price: 2500, income: 200, lvl: 4 },
+  meteorite: { name: 'Meteorite', cat: 'science', w: 1, h: 1, rise: 20, price: 400, income: 30, lvl: 3 },
+  telescope: { name: 'Telescope', cat: 'science', w: 1, h: 1, rise: 30, price: 180, income: 14, lvl: 3 },
+  specimens: { name: 'Specimen jars', cat: 'science', w: 1, h: 1, rise: 30, price: 120, income: 10, lvl: 3 },
+  counter: { name: 'Coffee counter', cat: 'services', w: 3, h: 1, rise: 22, price: 400, income: 0, max: 1, note: 'Sells coffee', lvl: 2 },
   closet: { name: 'Janitor closet', cat: 'services', w: 1, h: 1, rise: 42, price: 300, income: 0, max: 3, note: 'Hires a janitor' },
-  geode: { name: 'Geode', cat: 'science', w: 1, h: 1, rise: 20, price: 220, income: 18 },
+  geode: { name: 'Geode', cat: 'science', w: 1, h: 1, rise: 20, price: 220, income: 18, lvl: 3 },
 };
 
 const ITEMS_KEY = 'curation.items'; // { [roomIndex]: [{ type, c, r, rot }] }
