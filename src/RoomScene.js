@@ -53,9 +53,9 @@ const CLEANED_KEY = 'curation.cleaned';
 
 // Visitor looks match who they are: grumps are older (gray or bald), nerds wear
 // glasses, tourists wear sun hats, kids are smaller and dress brightly...
-const SKINS = ['#f2c6a0', '#e0ac80', '#c68a5e', '#9a6440', '#6e4428', '#ffe0c8'];
-const HAIRS = ['#4a2e20', '#1e1410', '#d9b45a', '#a0522d', '#2b1a10', '#c0703f'];
-const PANTS = ['#2f2b3d', '#3b3a48', '#5a4632', '#3c4a63', '#4a3a2a'];
+const SKINS = ['#f2c6a0', '#e0ac80', '#c68a5e', '#9a6440', '#6e4428', '#ffe0c8', '#b57850', '#583420'];
+const HAIRS = ['#4a2e20', '#1e1410', '#d9b45a', '#a0522d', '#2b1a10', '#c0703f', '#e8d8a8', '#8a3a2a', '#3a2a50', '#d06a9a', '#4a8ab0'];
+const PANTS = ['#2f2b3d', '#3b3a48', '#5a4632', '#3c4a63', '#4a3a2a', '#6a5a40', '#7a2a2a', '#2a4a3a'];
 const OUTFITS = {
   casual: ['#3d6fb6', '#4f7a3a', '#c27a2c', '#2e7d7a', '#b0413e', '#6a4c93'],
   grump: ['#5a4632', '#3b3a48', '#6b5a4a', '#4a4a4f', '#5a5a3a'],
@@ -64,6 +64,10 @@ const OUTFITS = {
   snob: ['#1e1e22', '#5a1f2a', '#2a2a3a', '#3a2a4a'],
   tourist: ['#2e9e8a', '#e88a3a', '#e85a7a', '#f0c040'],
   fanboy: ['#6a4c93', '#c0392b', '#2e5a8a', '#d35400'],
+  artist: ['#c24a3a', '#3a8a8a', '#e0a030', '#5a4a8a'],
+  influencer: ['#f08ab0', '#f4f0e6', '#9ad0e0', '#d0b0f0'],
+  couple: ['#a03040', '#2e4a7a', '#f0e0c0', '#6a8a4a'],
+  historian: ['#6a5a3a', '#4a3a2a', '#5a5a4a'],
   barista: ['#2f5d46'],
   janitor: ['#4a5f80'],
 };
@@ -85,6 +89,20 @@ function visitorLook(kind, r) {
     colors.T = pick(['#e8d8a0', '#f4f0e6', '#d9a04a'], 8);
   }
   if (kind === 'casual' && r(9) < 0.2) look.glasses = true;
+  if (kind === 'historian') {
+    colors.h = pick(['#8a8a8a', '#c8c8c8', '#e8e8e8', '#4a2e20'], 2);
+    look.glasses = r(10) < 0.7;
+    look.bald = r(6) < 0.3;
+  }
+  if (kind === 'artist' && r(7) < 0.5) {
+    look.hat = true; // a beret
+    colors.T = pick(['#2a2a2a', '#a02a2a', '#2a3a6a'], 8);
+  }
+  if (kind === 'influencer') look.glasses = r(10) < 0.5; // sunglasses indoors
+  if (['casual', 'couple', 'fanboy'].includes(kind) && r(11) < 0.15) {
+    look.hat = true;
+    colors.T = pick(['#3d6fb6', '#b0413e', '#2a2a2a', '#e0a030'], 12);
+  }
   if (kind === 'janitor') {
     look.hat = true;
     colors.T = '#4a5f80';
