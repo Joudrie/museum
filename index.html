@@ -137,6 +137,22 @@
       </div>
     </div>
 
+    <script>
+      // If the game crashes (e.g. an old save it can't read), show what broke and offer a reset.
+      window.addEventListener('error', (e) => {
+        if (document.getElementById('crash')) return;
+        const d = document.createElement('div');
+        d.id = 'crash';
+        d.style.cssText = 'position:fixed;inset:0;z-index:99;display:grid;place-content:center;gap:12px;padding:24px;background:#1d1512;color:#f4ead8;font:15px sans-serif;text-align:center';
+        d.innerHTML = '<b>Something broke.</b><small style="opacity:.6;word-break:break-word"></small><button style="padding:12px;font:inherit">Reset save &amp; reload</button>';
+        d.querySelector('small').textContent = e.message || 'Unknown error';
+        d.querySelector('button').onclick = () => {
+          Object.keys(localStorage).filter((k) => k.startsWith('curation.')).forEach((k) => localStorage.removeItem(k));
+          location.reload();
+        };
+        document.body.appendChild(d);
+      });
+    </script>
     <script type="module" src="./src/main.js"></script>
   </body>
 </html>
