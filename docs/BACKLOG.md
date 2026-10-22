@@ -32,6 +32,7 @@
 - Far more floors and wall materials: many woods, patterns, tiles (Pinterest research for references).
 - Per-room music; different lights.
 - Done: one-tap themes (Classical, Egyptian, Japanese, Natural history, Modern, Moody), wall patterns (damask, hieroglyphs, sakura, brick, marble), floors (herringbone, parquet, marble, mosaic, sand), per-room lighting (warm/day/cool/moody), generated per-room music + mute, 11 new items (obelisk, canopic jars, cherry tree, stone lantern, bonsai, T-rex, meteorite, telescope, specimen jars, geode, velvet sofa).
+- Texture update: 24 floors (adds wide and diagonal planks, hex tile, terrazzo, cobblestone, flagstone, brick, penny tile, slate, concrete, patterned tile, tatami, carpet, grass), 25 wallpapers (adds wood paneling, shiplap, subway, stone blocks, concrete, pinstripe, bold stripes, dots, fleur-de-lis, trellis, zigzag, plaid, art deco, seigaiha waves, leaves, stars, Greek key, hexagons), 14 wainscot designs (panels, tall panels, beadboard, board & batten, shiplap, subway, stone, marble, harlequin, lattice, checker tiles, Greek key, painted bands).
 - Still to do: a big outdoor garden room; more relics/artifacts.
 
 ## Phase 6: Economy (in progress)
