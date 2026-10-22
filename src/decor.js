@@ -1,7 +1,18 @@
 // Customize panel (home button). "This room" recolors only the room you're in;
 // "Character" changes the curator. Each color row is a swipeable strip of
 // swatches, ending in a + that opens a full color picker.
-import { PALETTES, FLOOR_PATTERNS, PLANTS } from './art.js';
+import { PALETTES, FLOOR_PATTERNS, WOOD_FLOORS, WALL_PATTERNS, LIGHTS, PLANTS } from './art.js';
+import { TRACKS, isMuted, setMuted } from './music.js';
+
+// One-tap room styles. Each sets floor, walls, lighting and music.
+export const THEMES = {
+  classical: { name: 'Classical gallery', decor: { pattern: 'marble', floor: '#e9e6df', paperStyle: 'damask', paper: '#7a3a3e', wainscotStyle: 'panels', wainscot: '#3e2a20', carpet: true, carpetColor: '#7a2232', light: 'warm', music: 'gallery' } },
+  egyptian: { name: 'Egyptian', decor: { pattern: 'sand', floor: '#d9c7a8', paperStyle: 'hieroglyph', paper: '#d9b878', wainscotStyle: 'none', wainscot: '#a8862e', carpet: false, light: 'warm', music: 'egypt' } },
+  japanese: { name: 'Japanese', decor: { pattern: 'parquet', floor: '#cfae80', paperStyle: 'sakura', paper: '#f0ece2', wainscotStyle: 'panels', wainscot: '#5c3a26', carpet: false, light: 'day', music: 'japan' } },
+  science: { name: 'Natural history', decor: { pattern: 'stone', floor: '#9a968f', paperStyle: 'plain', paper: '#8a9a8a', wainscotStyle: 'panels', wainscot: '#3e2a20', carpet: false, light: 'cool', music: 'science' } },
+  modern: { name: 'Modern white', decor: { pattern: 'tile', floor: '#e9e6df', paperStyle: 'plain', paper: '#f0ece2', wainscotStyle: 'none', wainscot: '#cfcfcf', carpet: false, light: 'day', music: 'none' } },
+  moody: { name: 'Moody', decor: { pattern: 'herringbone', floor: '#5c3a26', paperStyle: 'stripes', paper: '#2f4a3a', wainscotStyle: 'panels', wainscot: '#1e1e22', carpet: true, carpetColor: '#c9a23f', light: 'moody', music: 'gallery' } },
+};
 import { SIZE_LABELS, ORIENT_LABELS, roomName } from './rooms.js';
 
 export const CHARACTER_PALETTES = {
@@ -132,25 +143,34 @@ function renderRoom() {
   };
   // Switching between wood and stone patterns starts from a fitting color.
   const pickPattern = (pattern) => {
-    const pal = pattern === 'planks' ? PALETTES.wood : PALETTES.stone;
-    const fallback = { planks: '#8f5e3c', stone: '#9a968f', tile: '#e9e6df' }[pattern];
+    const wood = WOOD_FLOORS.includes(pattern);
+    const pal = wood ? PALETTES.wood : PALETTES.stone;
+    const fallback = wood ? '#8f5e3c' : { stone: '#9a968f', tile: '#e9e6df', marble: '#e9e6df', mosaic: '#c8c4bc', sand: '#d9c7a8' }[pattern];
     set({ pattern, ...(fallback && !pal.includes(d.floor) ? { floor: fallback } : {}) });
   };
-  const parts = [...renderRoomSettings(), section('Floor pattern', choices(FLOOR_PATTERNS, d.pattern, pickPattern))];
+  const themes = Object.fromEntries(Object.entries(THEMES).map(([id, t]) => [id, t.name]));
+  const parts = [
+    ...renderRoomSettings(),
+    section('Theme (one tap)', choices(themes, null, (id) => set(THEMES[id].decor))),
+    section('Floor pattern', choices(FLOOR_PATTERNS, d.pattern, pickPattern)),
+  ];
   if (d.pattern.startsWith('checker')) {
     parts.push(section('Checker color 1', strip(PALETTES.stone, d.checkA, (checkA, live) => set({ checkA }, live))));
     parts.push(section('Checker color 2', strip(PALETTES.stone, d.checkB, (checkB, live) => set({ checkB }, live))));
   } else {
-    const pal = d.pattern === 'planks' ? PALETTES.wood : PALETTES.stone;
+    const pal = WOOD_FLOORS.includes(d.pattern) ? PALETTES.wood : PALETTES.stone;
     parts.push(section('Floor color', strip(pal, d.floor, (floor, live) => set({ floor }, live))));
   }
-  parts.push(section('Wall', choices({ plain: 'Plain', stripes: 'Striped' }, d.paperStyle || 'stripes', (paperStyle) => set({ paperStyle }))));
+  parts.push(section('Wall pattern', choices(WALL_PATTERNS, d.paperStyle || 'stripes', (paperStyle) => set({ paperStyle }))));
   parts.push(section('Wall color', strip(PALETTES.paper, d.paper, (paper, live) => set({ paper }, live))));
   parts.push(section('Wainscot', choices({ none: 'None', panels: 'Wood panels' }, d.wainscotStyle || 'panels', (wainscotStyle) => set({ wainscotStyle }))));
   parts.push(section('Trim & wainscot color', strip(PALETTES.wainscot, d.wainscot, (wainscot, live) => set({ wainscot }, live))));
   parts.push(section('Carpet', choices({ off: 'None', on: 'Runner' }, d.carpet ? 'on' : 'off', (v) => set({ carpet: v === 'on' }))));
   if (d.carpet) parts.push(section('Carpet color', strip(PALETTES.carpet, d.carpetColor, (carpetColor, live) => set({ carpetColor }, live))));
   parts.push(section('Plants (between paintings)', choices(PLANTS, d.plant, (plant) => set({ plant }), state.plantIcon)));
+  parts.push(section('Lighting', choices(LIGHTS, d.light || 'warm', (light) => set({ light }))));
+  parts.push(section('Music in this room', choices(TRACKS, d.music || 'none', (music) => set({ music }))));
+  parts.push(section('Sound', choices({ on: 'On', off: 'Muted' }, isMuted() ? 'off' : 'on', (v) => (setMuted(v === 'off'), render()))));
   return parts;
 }
 

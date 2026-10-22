@@ -20,11 +20,31 @@ export const PALETTES = {
 
 export const FLOOR_PATTERNS = {
   planks: 'Planks',
+  herringbone: 'Herringbone',
+  parquet: 'Parquet',
   checker: 'Checker',
   'checker-angled': 'Checker (angled)',
   stone: 'Stone brick',
   tile: 'Tile',
+  marble: 'Marble',
+  mosaic: 'Mosaic',
+  sand: 'Sand',
 };
+// Which floor patterns take a wood color (the rest take a stone color).
+export const WOOD_FLOORS = ['planks', 'herringbone', 'parquet'];
+
+export const WALL_PATTERNS = {
+  plain: 'Plain',
+  stripes: 'Striped',
+  damask: 'Damask',
+  hieroglyph: 'Hieroglyphs',
+  sakura: 'Cherry blossom',
+  brick: 'Brick',
+  marble: 'Marble',
+};
+
+export const LIGHTS = { warm: 'Warm', day: 'Daylight', cool: 'Cool', moody: 'Moody' };
+export const LIGHT_TINTS = { warm: 0xfff0dc, day: 0xffffff, cool: 0xdfe8ff, moody: 0xb8a08c };
 
 export const PLANTS = { none: 'None', fern: 'Fern', monstera: 'Monstera', cactus: 'Cactus', tree: 'Little tree' };
 
@@ -40,6 +60,8 @@ export const DEFAULT_DECOR = {
   plant: 'none',
   paperStyle: 'stripes',
   wainscotStyle: 'panels',
+  light: 'warm',
+  music: 'gallery',
 };
 
 // Freshly built rooms start plain: light gray walls with no texture, wood floor.
@@ -49,6 +71,8 @@ export const NEW_ROOM_DECOR = {
   paperStyle: 'plain',
   wainscot: '#a8a6a1',
   wainscotStyle: 'none',
+  light: 'day',
+  music: 'none',
 };
 
 // Deterministic hash noise in [0, 1).
@@ -188,8 +212,90 @@ function tile(decor) {
   };
 }
 
+// Herringbone-style chevrons: plank columns whose seams slant opposite ways.
+function herringbone(decor) {
+  const base = hex(decor.floor);
+  const seam = shade(base, 0.55);
+  return (x, y) => {
+    const c = Math.floor(x / 8);
+    const lx = x % 8;
+    const slant = c % 2 ? lx : 7 - lx;
+    const k = y + slant;
+    const n = Math.floor(k / 24);
+    if (lx === 7 || k % 24 === 0) return seam;
+    let col = shade(base, 0.9 + hash(c, n, 16) * 0.2);
+    if (k % 24 === 1 || lx === 0) col = mix(col, WHITE, 0.1);
+    if ((lx === 3) && hash(c * 8, Math.floor(y / 5), 17) > 0.6) col = shade(col, 0.88);
+    return col;
+  };
+}
+
+// Parquet basket weave: 16px squares of strips, alternating direction.
+function parquet(decor) {
+  const base = hex(decor.floor);
+  const seam = shade(base, 0.55);
+  return (x, y) => {
+    const i = Math.floor(x / 16);
+    const j = Math.floor(y / 16);
+    const lx = x % 16;
+    const ly = y % 16;
+    if (lx === 15 || ly === 15) return seam;
+    const across = (i + j) % 2 ? lx : ly;
+    const strip = Math.floor(across / 4);
+    if (across % 4 === 3) return shade(base, 0.72);
+    let col = shade(base, 0.9 + hash(i * 4 + strip, j, 18) * 0.2);
+    if (across % 4 === 0) col = mix(col, WHITE, 0.08);
+    return col;
+  };
+}
+
+// Marble: large slabs with soft veins.
+function marble(decor) {
+  const base = hex(decor.floor);
+  const vein = shade(base, 0.7);
+  return (x, y) => {
+    if (x % 64 === 0 || y % 64 === 0) return shade(base, 0.86);
+    const n = smoothNoise(x / 18, y / 18, 19) * 6 + smoothNoise(x / 6, y / 6, 20);
+    const t = Math.abs(Math.sin((x + y * 0.6) / 14 + n));
+    let col = t < 0.06 ? vein : t < 0.12 ? mix(base, vein, 0.4) : base;
+    if (hash(x, y, 21) > 0.97) col = mix(col, WHITE, 0.2);
+    return col;
+  };
+}
+
+// Mosaic: tiny tiles in slightly varied tones.
+function mosaic(decor) {
+  const base = hex(decor.floor);
+  return (x, y) => {
+    const i = Math.floor(x / 6);
+    const j = Math.floor(y / 6);
+    if (x % 6 === 0 || y % 6 === 0) return shade(base, 0.6);
+    const r = hash(i, j, 22);
+    const col = r > 0.92 ? mix(base, hex('#c9a23f'), 0.6) : r < 0.08 ? shade(base, 0.7) : shade(base, 0.9 + r * 0.2);
+    return (x % 6 === 1 || y % 6 === 1) ? mix(col, WHITE, 0.1) : col;
+  };
+}
+
+// Sand: speckled with faint ripples.
+function sand(decor) {
+  const base = hex(decor.floor);
+  return (x, y) => {
+    const ripple = Math.sin((y + smoothNoise(x / 20, y / 20, 23) * 18) / 5);
+    let col = ripple > 0.85 ? mix(base, WHITE, 0.08) : ripple < -0.9 ? shade(base, 0.93) : base;
+    const n = hash(x, y, 24);
+    if (n > 0.92) col = shade(col, 0.85);
+    else if (n < 0.04) col = mix(col, WHITE, 0.2);
+    return col;
+  };
+}
+
 export function bakeFloor(scene, key, w, h, decor) {
   const pattern = {
+    herringbone: () => herringbone(decor),
+    parquet: () => parquet(decor),
+    marble: () => marble(decor),
+    mosaic: () => mosaic(decor),
+    sand: () => sand(decor),
     planks: () => planks(w, h, decor),
     checker: () => checker(decor, false),
     'checker-angled': () => checker(decor, true),
@@ -321,6 +427,8 @@ function wallPalette(decor) {
     dot: dark ? mix(w, WHITE, 0.18) : shade(w, 0.9),
     faded: mix(w, WHITE, 0.3),
     plainPaper: decor.paperStyle === 'plain',
+    style: decor.paperStyle || 'stripes',
+    accent: mix(w, hex('#c9a23f'), 0.55),
     panels: decor.wainscotStyle !== 'none',
   };
 }
@@ -425,9 +533,69 @@ function wallMaterial(u, v, D, items, seed, P) {
   return c;
 }
 
+// Small 3x5 glyphs for the hieroglyph wallpaper.
+const GLYPHS = [
+  ['.#.', '###', '.#.', '.#.', '#.#'],
+  ['##.', '#.#', '##.', '#..', '#..'],
+  ['.#.', '#.#', '###', '#.#', '#.#'],
+  ['###', '..#', '.#.', '#..', '###'],
+  ['#.#', '###', '#.#', '.#.', '.#.'],
+  ['.##', '#..', '.#.', '..#', '##.'],
+];
+
 function wallpaper(u, v, P) {
-  const su = ((u % 10) + 10) % 10;
-  return su < 2 ? P.stripe : su === 5 && v % 8 === 3 ? P.dot : P.paper;
+  const uu = ((u % 64) + 64) % 64;
+  switch (P.style) {
+    case 'damask': {
+      const cu = ((u % 16) + 16) % 16;
+      const cv = v % 16;
+      const ox = (Math.floor(v / 16) % 2) * 8;
+      const dx = Math.abs(((cu + ox) % 16) - 8);
+      const dy = Math.abs(cv - 8);
+      const d = dx + dy;
+      return d === 5 || (d < 2) || (dx === 0 && dy < 6) ? P.dot : P.paper;
+    }
+    case 'hieroglyph': {
+      // bands of glyphs between gold lines
+      const band = v % 14;
+      if (band === 0 || band === 13) return P.accent;
+      if (band < 4 || band > 9) return P.paper;
+      const cell = Math.floor(u / 6);
+      const g = GLYPHS[Math.floor(hash(cell, Math.floor(v / 14), 25) * GLYPHS.length)];
+      const gx = ((u % 6) + 6) % 6;
+      const row = g[band - 4];
+      return row && gx < 3 && row[gx] === '#' ? shade(P.paper, 0.55) : P.paper;
+    }
+    case 'sakura': {
+      const cx = Math.floor(u / 12);
+      const cy = Math.floor(v / 12);
+      const fx = 3 + Math.floor(hash(cx, cy, 26) * 6);
+      const fy = 3 + Math.floor(hash(cx, cy, 27) * 6);
+      const lx = ((u % 12) + 12) % 12 - fx;
+      const ly = (v % 12) - fy;
+      if (hash(cx, cy, 28) < 0.55) {
+        if (lx === 0 && ly === 0) return hex('#f2d36b');
+        if (Math.abs(lx) + Math.abs(ly) === 1) return hex('#f2a8bc');
+      }
+      return P.paper;
+    }
+    case 'brick': {
+      const row = Math.floor(v / 6);
+      const off = row % 2 ? 7 : 0;
+      const bu = (((u + off) % 14) + 14) % 14;
+      if (v % 6 === 0 || bu === 0) return mix(P.paper, WHITE, 0.25);
+      return shade(P.paper, 0.9 + hash(Math.floor((u + off) / 14), row, 29) * 0.15);
+    }
+    case 'marble': {
+      const n = smoothNoise(u / 10, v / 10, 30) * 5;
+      const t = Math.abs(Math.sin((uu + v * 0.8) / 9 + n));
+      return t < 0.07 ? shade(P.paper, 0.78) : P.paper;
+    }
+    default: {
+      const su = ((u % 10) + 10) % 10;
+      return su < 2 ? P.stripe : su === 5 && v % 8 === 3 ? P.dot : P.paper;
+    }
+  }
 }
 
 // g: room geometry. items: { left, right, back } lists with rects in wall space.
@@ -936,6 +1104,132 @@ export function bakeItem(scene, key, type, def, rot) {
       E(32, gy - 50, 9, 3, '#c8c4bc');
       E(32, gy - 51, 6, 2, '#5aa0c8');
       [[30, -56], [34, -58], [32, -61], [28, -54], [36, -55]].forEach(([x, y]) => R(x, gy + y, 1, 2, '#d8f0ff'));
+      break;
+    case 'obelisk': {
+      const SAND = '#d9b878';
+      const SAND_D = '#a8864a';
+      shadow(16, gy, 10, 3);
+      box(7, gy - 8, 18, 8, SAND_D, OUT);
+      for (let y = gy - 62; y < gy - 8; y++) {
+        const t = (y - (gy - 62)) / 54;
+        const hw = 3 + t * 4;
+        R(16 - hw, y, hw * 2, 1, SAND);
+        R(16 + hw - 2, y, 2, 1, SAND_D);
+      }
+      R(14, gy - 66, 4, 4, '#e0bc55');
+      [[14, 24], [13, 36], [15, 46]].forEach(([x, dy]) => R(x, gy - dy, 3, 2, '#7a5a2a'));
+      break;
+    }
+    case 'canopic':
+      shadow(16, gy, 13, 3);
+      R(3, gy - 6, 26, 5, WOOD_D);
+      [5, 11, 17, 23].forEach((x, i) => {
+        R(x, gy - 18, 5, 12, '#e8dcc0');
+        R(x + 3, gy - 18, 2, 12, '#c4b48c');
+        R(x - 1, gy - 22, 7, 4, ['#3d6fb6', '#c9a23f', '#4f8a3a', '#b0413e'][i]);
+      });
+      break;
+    case 'cherry':
+      for (let y = gy - 30; y < gy - 9; y++) R(15, y, 3, 1, '#5c3a26');
+      E(16, gy - 40, 13, 11, '#d47a96');
+      E(12, gy - 43, 7, 5, '#f2a8bc');
+      E(21, gy - 37, 5, 4, '#f2a8bc');
+      for (let k = 0; k < 14; k++) R(4 + hash(k, 1, 33) * 24, gy - 50 + hash(k, 2, 33) * 20, 1, 1, '#fff0f4');
+      box(9, gy - 9, 14, 9, '#a85a32', '#7a3f22');
+      break;
+    case 'lantern': {
+      const G = '#9a968f';
+      const GL = '#c8c4bc';
+      const GD = '#6b6862';
+      shadow(16, gy, 9, 3);
+      R(10, gy - 6, 12, 5, GD);
+      R(14, gy - 18, 4, 12, G);
+      R(8, gy - 21, 16, 3, GL);
+      box(10, gy - 31, 12, 10, G, OUT);
+      R(13, gy - 28, 6, 5, '#ffcf70');
+      E(16, gy - 26, 10, 7, 'rgba(255,200,110,0.18)');
+      for (let y = 0; y < 5; y++) R(6 + y, gy - 36 + y, 20 - 2 * y, 1, y ? G : GL);
+      R(15, gy - 39, 2, 3, GD);
+      break;
+    }
+    case 'bonsai':
+      shadow(16, gy, 12, 3);
+      box(5, gy - 6, 22, 5, '#3d5a7a', OUT);
+      R(15, gy - 14, 2, 8, '#5c3a26');
+      R(12, gy - 12, 4, 2, '#5c3a26');
+      E(11, gy - 16, 6, 3, '#4f8a3a');
+      E(20, gy - 18, 6, 3, '#2f5a24');
+      E(16, gy - 21, 5, 3, '#7cb85a');
+      break;
+    case 'trex': {
+      const B = '#e8dcc0';
+      const BD = '#b8a888';
+      shadow(48, gy - 4, 46, 8);
+      box(4, gy - 10, 88, 8, '#6b6862', OUT);
+      // legs
+      [[40, 0], [52, 0]].forEach(([x]) => {
+        R(x, gy - 34, 4, 24, B);
+        R(x - 2, gy - 12, 8, 2, BD);
+      });
+      // spine and tail
+      for (let x = 10; x < 70; x++) {
+        const y = gy - 40 - Math.sin(((x - 10) / 60) * Math.PI) * 8 + (x < 30 ? (30 - x) * 0.3 : 0);
+        R(x, y, 1, 3, B);
+        if (x % 4 === 0 && x > 28) R(x, y + 3, 1, 8, BD); // ribs
+      }
+      // skull
+      box(66, gy - 58, 22, 12, B, OUT);
+      R(80, gy - 50, 8, 4, BD);
+      for (let x = 70; x < 88; x += 3) R(x, gy - 46, 1, 2, '#fffaf0');
+      R(70, gy - 55, 4, 3, '#3a2a1a');
+      R(62, gy - 48, 6, 6, B); // neck
+      R(62, gy - 38, 8, 2, BD); // tiny arm
+      break;
+    }
+    case 'meteorite':
+      shadow(16, gy, 10, 3);
+      box(9, gy - 14, 14, 14, MARBLE, OUT);
+      R(19, gy - 14, 4, 14, MARBLE_D);
+      E(16, gy - 20, 9, 7, '#2a2a2e');
+      E(14, gy - 22, 4, 3, '#4a4a52');
+      R(19, gy - 19, 2, 2, '#6a6a76');
+      R(12, gy - 17, 1, 1, '#c9a23f');
+      break;
+    case 'telescope':
+      shadow(16, gy, 11, 3);
+      [[8, 1], [16, 0], [24, -1]].forEach(([x]) => {
+        for (let t = 0; t < 18; t++) R(x + (16 - x) * (t / 18), gy - 2 - t, 1, 1, WOOD_D);
+      });
+      for (let t = 0; t < 26; t++) R(6 + t, gy - 22 - t * 0.5, 4, 4, t > 20 ? '#7a5a1e' : BRASS);
+      R(4, gy - 24, 3, 6, '#5b4216');
+      break;
+    case 'specimens':
+      box(4, gy - 36, 24, 34, WOOD_D, OUT);
+      R(4, gy - 20, 24, 2, WOOD);
+      [[7, gy - 34], [15, gy - 34], [22, gy - 33], [7, gy - 18], [14, gy - 18], [21, gy - 17]].forEach(([x, y], i) => {
+        R(x, y, 5, 12, ['#7ab870', '#c8b860', '#8ab0c0', '#b8c870', '#c89070', '#90c0a0'][i]);
+        R(x, y, 5, 2, '#d8d0c0');
+        R(x + 1, y + 4, 2, 3, 'rgba(60,40,30,0.5)');
+      });
+      break;
+    case 'geode':
+      shadow(16, gy, 10, 3);
+      R(12, gy - 8, 8, 7, WOOD_D);
+      E(16, gy - 18, 10, 9, '#6b6862');
+      E(16, gy - 18, 8, 7, '#7a4fa0');
+      E(16, gy - 18, 5, 4, '#b48ad8');
+      [[13, -20], [18, -17], [15, -15]].forEach(([x, y]) => R(x, gy + y, 2, 2, '#efe0ff'));
+      break;
+    case 'sofa':
+      shadow(32, gy, 30, 4);
+      R(6, gy - 6, 4, 5, WOOD_D);
+      R(54, gy - 6, 4, 5, WOOD_D);
+      box(4, gy - 24, 56, 10, '#7a2232', OUT); // back
+      box(4, gy - 16, 56, 10, '#9a2e40', OUT); // seat
+      R(4, gy - 16, 56, 2, '#b8485a');
+      box(2, gy - 20, 6, 14, '#7a2232', OUT);
+      box(56, gy - 20, 6, 14, '#7a2232', OUT);
+      [16, 32, 48].forEach((x) => R(x, gy - 21, 1, 1, '#e0bc55'));
       break;
   }
   tex.refresh();

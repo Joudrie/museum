@@ -26,11 +26,13 @@
 - Done: resize any room (decor kept; items nudged to the nearest free spot), big halls (7×7 / 9×9 / 12×12), door or archway exits (archways walk straight through, no fade), rename rooms, reorder rooms (decor moves with them).
 - Still to do: corner/L-shaped rooms; truly seamless archways that show both rooms at once.
 
-## Phase 5: A proper museum
+## Phase 5: A proper museum ✅ (first pass)
 - Beyond paintings: relics, artifacts, science (dinosaur hall), a big garden.
 - Themed rooms and wallpapers (e.g. an Egyptian room with hieroglyph wallpaper).
 - Far more floors and wall materials: many woods, patterns, tiles (Pinterest research for references).
 - Per-room music; different lights.
+- Done: one-tap themes (Classical, Egyptian, Japanese, Natural history, Modern, Moody), wall patterns (damask, hieroglyphs, sakura, brick, marble), floors (herringbone, parquet, marble, mosaic, sand), per-room lighting (warm/day/cool/moody), generated per-room music + mute, 11 new items (obelisk, canopic jars, cherry tree, stone lantern, bonsai, T-rex, meteorite, telescope, specimen jars, geode, velvet sofa).
+- Still to do: a big outdoor garden room; more relics/artifacts.
 
 ## Phase 6: Economy
 - Goal: get the most visitors. More paintings → more visitors; complete sets → big bonus; every decoration adds a little income.
