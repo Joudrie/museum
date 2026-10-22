@@ -20,7 +20,7 @@
       </svg>
     </button>
 
-    <button id="interact" class="pixel-btn hidden"><span class="bang">!</span>Interact</button>
+    <button id="interact" class="pixel-btn hidden"><span class="bang"></span>Interact</button>
 
     <div id="decor" class="hidden" role="dialog" aria-label="Customize">
       <div class="decor-sheet">
@@ -29,7 +29,38 @@
           <button class="decor-close pixel-btn" aria-label="Close">✕</button>
         </div>
         <div class="decor-body"></div>
-        <button class="decor-reset">Reset mess (testing)</button>
+        <button class="decor-reset">Reset mess &amp; rooms (testing)</button>
+      </div>
+    </div>
+
+    <div id="talk" class="hidden">
+      <svg class="talk-tail" aria-hidden="true"><polygon points="0,0 0,0 0,0" /></svg>
+      <div class="talk-box">
+        <div class="talk-who"></div>
+        <p class="talk-text"></p>
+      </div>
+    </div>
+
+    <div id="build" class="hidden" role="dialog" aria-label="Build a room">
+      <div class="build-sheet">
+        <div class="decor-head">
+          <h2>New room</h2>
+          <button class="build-cancel pixel-btn" aria-label="Cancel">✕</button>
+        </div>
+        <div class="build-row">
+          <button data-orient="vertical">Vertical</button>
+          <button data-orient="horizontal">Horizontal</button>
+        </div>
+        <div class="build-row">
+          <button data-size="short">Short</button>
+          <button data-size="medium">Medium</button>
+          <button data-size="long">Long</button>
+        </div>
+        <p class="build-capacity"></p>
+        <div class="build-track"></div>
+        <div class="build-dots viewer-dots"></div>
+        <p class="build-caption"></p>
+        <button class="build-buy pixel-btn">Build room · free while testing</button>
       </div>
     </div>
 

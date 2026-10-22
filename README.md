@@ -7,7 +7,7 @@ A cozy pixel-art museum tycoon game with real masterpieces. Phone first, portrai
 
 ## Prototype
 
-The first room: walk around (tap to walk, or hold and drag), tap a painting to view it.
+Walk around (press and drag), use the Interact button to view paintings, clean up, talk to visitors and build new rooms.
 
 ```sh
 npm install

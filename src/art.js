@@ -1,6 +1,6 @@
 // Placeholder pixel art, generated in code. 32px tiles.
 // The room is drawn with a fake-3D "looking down into a box" projection:
-// the back wall is a trapezoid, the side walls lean outward at 45°, and
+// the back wall faces the camera, the side walls lean outward at 45°, and
 // everything on a wall (wallpaper, panels, paintings) follows its angle.
 export const T = 32;
 
@@ -227,22 +227,16 @@ function wallMaterial(u, v, D, items, seed, P) {
 export function bakeWalls(scene, key, g, items, decor) {
   const { w, h, xL, xR, y0, y1, D } = g;
   const P = wallPalette(decor);
-  const cx = (xL + xR) / 2;
-  const k = D / ((xR - xL) / 2); // how much the back wall widens per unit height
   const mat = (u, v, list, seed) => wallMaterial(u, v, D, list, seed, P) ?? shade(wallMaterial(u, v, D, [], seed, P), 0.75);
 
   return bake(scene, key, w, h, (sx, sy) => {
     if (sx >= xL && sx < xR && sy >= y0 && sy < y1) return null; // floor
     if (sy >= y1) return null;
 
-    // back wall (trapezoid)
+    // back wall, seen straight on
     const t = (y0 - sy) / D;
-    if (t > 0 && t <= 1) {
-      const bx = cx + (sx + 0.5 - cx) / (1 + k * t);
-      if (bx >= xL && bx < xR) {
-        if (bx < xL + 1 || bx >= xR - 1) return FIX.edge;
-        return mat(Math.floor(bx - xL), Math.floor(t * D - 0.001), items.back, 11);
-      }
+    if (t > 0 && t <= 1 && sx >= xL && sx < xR) {
+      return mat(sx - xL, Math.floor(t * D - 0.001), items.back, 11);
     }
 
     // side walls (parallelograms leaning out at 45°)
@@ -252,6 +246,7 @@ export function bakeWalls(scene, key, g, items, decor) {
       const baseY = sy + v;
       if (v < D && baseY >= y0 && baseY < y1) {
         if (baseY >= y1 - 2) return FIX.edge; // wall end cap
+        if (baseY < y0 + 1) return FIX.edge; // corner where it meets the back wall
         const c = mat(baseY - y0, v, left ? items.left : items.right, left ? 21 : 31);
         return shade(c, left ? 0.92 : 0.84);
       }
@@ -419,5 +414,45 @@ export function makeBubble(scene) {
   bake(scene, 'bubble', 11, BUBBLE.length, (x, y) => {
     const ch = BUBBLE[y][x];
     return ch === 'o' ? hex('#1d1714') : ch === 'w' ? hex('#fff3c4') : null;
+  });
+}
+
+// ---------- Exits: stairs ----------
+const STEP = hex('#8a5a3b');
+const STEP_LIGHT = hex('#a8754d');
+const STEP_DARK = hex('#5c3a26');
+const RAIL = hex('#4a2f22');
+const RAIL_LIGHT = hex('#7a4f39');
+
+// Stairs going up into the back wall. 60x128; bottom half on the floor,
+// top half climbs the wall into a dark opening.
+export function bakeStairsUp(scene, key) {
+  const w = 60;
+  const h = 128;
+  return bake(scene, key, w, h, (x, y) => {
+    if (x >= w - 5) return x === w - 5 || x === w - 1 ? RAIL : (y % 10 < 2 ? RAIL : RAIL_LIGHT); // banister
+    if (y < 18) return FIX.void; // opening at the top
+    const step = Math.floor((h - y) / 11);
+    const ly = (h - y) % 11;
+    const k = 0.75 + Math.min(step, 9) * 0.03;
+    if (ly === 10) return shade(STEP_LIGHT, k);
+    if (ly < 3) return shade(STEP_DARK, k);
+    return shade(STEP, k);
+  });
+}
+
+// Stairwell going down through the floor, with a railing. 60x78.
+export function bakeStairsDown(scene, key) {
+  const w = 60;
+  const h = 78;
+  return bake(scene, key, w, h, (x, y) => {
+    const rail = x >= w - 4 || y >= h - 4;
+    if (rail) return (x + y) % 8 < 2 ? RAIL_LIGHT : RAIL;
+    const step = Math.floor(y / 12);
+    const ly = y % 12;
+    const k = 1 - step * 0.14; // darker the deeper it goes
+    if (ly === 0) return shade(STEP_LIGHT, k);
+    if (ly > 8) return shade(STEP_DARK, k);
+    return shade(STEP, k);
   });
 }

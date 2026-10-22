@@ -13,7 +13,10 @@ A cozy, top-down, faux-16-bit pixel tycoon game (Stardew / Pokémon B&W vibe). Y
 - **Look:** 32px tiles for finer detail. Fake-3D "looking down into a box": side walls lean outward at 45°, back wall is a trapezoid, and paintings sit on the wall at the wall's angle. The straight-on view only appears when you walk up and select a painting. Floors are continuous patterns (e.g. staggered wood planks), not grid squares.
 - **Repair-first start:** cracks, stains and cobwebs sit on top of the room. Walk up, press **Interact** (bottom-right button, only shown when something is in reach) and they disappear.
 - **Customize (home button):** recolor the floor, wainscot and wallpaper (same textures, different colors).
-- **Slots:** 6 painting slots per side wall. An oak door at the end of the hall hints at expansion.
+- **First room:** small on purpose (5 × 12 tiles, 3 slots per side wall) so you want to expand.
+- **Controls:** press and drag only (no tap-to-walk). The Interact button shows an icon for what you're about to interact with.
+- **Building rooms:** walk to an unbuilt exit → Interact → pick vertical/horizontal, short/medium/long (shows painting capacity), then swipe between far-end exits (door on a wall, stairs up, stairs down, no exit) and build. The new room's exit becomes the next build spot. Vertical rooms hang paintings on the side walls; horizontal rooms on the back wall.
+- **Visitors:** each has a personality (nerd, casual, superfan, snob, kid, grump, tourist). Talk to them for one or two lines, often about the painting they're near (jokes and facts). Speech bubble sits at the top or bottom of the screen with a tail pointing at them.
 - **Team:** solo dev.
 - **Player:** one character, the curator. Customizable look. No backstory.
 - **Controls:** tap where you want to walk, plus free movement: hold anywhere and drag to walk in any direction (diagonals allowed).
