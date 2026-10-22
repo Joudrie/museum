@@ -16,18 +16,21 @@ export const SIZES = {
 
 export const EXITS = {
   vertical: ['door-back', 'door-left', 'door-right', 'stairs-up', 'stairs-down', 'none'],
-  horizontal: ['door-back', 'door-end', 'stairs-up', 'stairs-down', 'none'],
+  horizontal: ['stairs-up', 'door-back', 'door-end', 'stairs-down', 'none'],
 };
 
-export const EXIT_LABELS = {
-  'door-back': 'Door on the far wall',
-  'door-left': 'Door on the left wall',
-  'door-right': 'Door on the right wall',
-  'door-end': 'Door on the end wall',
-  'stairs-up': 'Stairs up',
-  'stairs-down': 'Stairs down',
-  none: 'No exit',
-};
+export function exitLabel(orient, kind) {
+  const labels = {
+    'door-back': orient === 'horizontal' ? 'Door on the main wall' : 'Door on the far wall',
+    'door-left': 'Door on the left wall',
+    'door-right': 'Door on the right wall',
+    'door-end': 'Door on the end wall',
+    'stairs-up': 'Stairs up',
+    'stairs-down': 'Stairs down',
+    none: 'No exit',
+  };
+  return labels[kind];
+}
 
 const FIRST_ROOM = { orient: 'vertical', size: 'medium', exit: 'door-back' };
 
@@ -44,6 +47,8 @@ export function resetRooms() {
 }
 
 // Full layout for a room: geometry, painting slots, exit, entrance.
+// Vertical rooms: enter at the bottom (doormat), the exit is at the top end.
+// Horizontal rooms: enter through a door on the left end wall, the exit is at the right end.
 export function layout(room) {
   const vertical = room.orient === 'vertical';
   const fw = vertical ? 5 : SIZES.horizontal[room.size];
@@ -64,24 +69,45 @@ export function layout(room) {
     });
   } else {
     for (let u = 2 * T; u < fw * T - T; u += 3 * T) {
-      if (exit?.blocks?.('back', u)) continue;
-      slots.push({ wall: 'back', u });
+      if (!exit?.blocks?.('back', u)) slots.push({ wall: 'back', u });
     }
   }
-  // Entrance doormat on the front edge: centered, or at the right end of a horizontal room.
-  const doorCol = vertical ? 2 + Math.floor(fw / 2) : 2 + fw - 2;
-  const entrance = { x0: doorCol * T, x1: (doorCol + 1) * T, ax: doorCol * T + T / 2, ay: y1 - 10 };
-  return { g, slots, exit, entrance };
+
+  let entrance;
+  if (vertical) {
+    const col = 2 + Math.floor(fw / 2);
+    entrance = { mat: true, x0: col * T, x1: (col + 1) * T, ax: col * T + T / 2, ay: y1 - 10 };
+  } else {
+    const u0 = (fd * T) / 2 - 18;
+    entrance = { wall: 'left', rect: { u0, u1: u0 + 36, v0: 0, v1: 48 }, ax: xL + 10, ay: y0 + u0 + 24 };
+  }
+  // Where the build menu cuts the room: the last 3 tiles before the exit end.
+  const split = vertical ? { y: y0 + 3 * T } : { x: xR - 3 * T };
+  return { g, slots, exit, entrance, split };
 }
 
 function exitLayout(kind, g) {
   const { xL, xR, y0, fw, fd, vertical } = g;
   const W = fw * T;
   const L = fd * T;
+  // Stairs sit in the corner at the exit end: top-left for vertical rooms, top-right for horizontal.
+  const stairs = (key, depth) => {
+    const x0 = vertical ? xL : xR - 60;
+    const blocks = vertical ? (w, u) => (w === 'left' || w === 'back') && u < 110 : (w, u) => w === 'back' && u > W - 110;
+    return {
+      kind,
+      sprite: { key, x: x0, y: key === 'stairs_up' ? y0 + 64 - 128 : y0, flip: !vertical },
+      block: { x0, y0, x1: x0 + 60, y1: y0 + depth },
+      ax: x0 + 30,
+      ay: y0 + depth + 14,
+      blocks,
+    };
+  };
   switch (kind) {
     case 'door-back': {
-      const u0 = vertical ? W / 2 - 18 : 24;
-      return { kind, wall: 'back', rect: { u0, u1: u0 + 36, v0: 0, v1: 48 }, ax: xL + u0 + 18, ay: y0 + 12, blocks: (w, u) => w === 'back' && u < u0 + 70 };
+      const u0 = vertical ? W / 2 - 18 : W - 60;
+      const blocks = vertical ? (w, u) => w === 'back' && u < u0 + 70 : (w, u) => w === 'back' && u > u0 - 34;
+      return { kind, wall: 'back', rect: { u0, u1: u0 + 36, v0: 0, v1: 48 }, ax: xL + u0 + 18, ay: y0 + 12, blocks };
     }
     case 'door-left':
     case 'door-right': {
@@ -90,12 +116,12 @@ function exitLayout(kind, g) {
     }
     case 'door-end': {
       const u0 = L / 2 - 18;
-      return { kind, wall: 'left', rect: { u0, u1: u0 + 36, v0: 0, v1: 48 }, ax: xL + 10, ay: y0 + u0 + 24 };
+      return { kind, wall: 'right', rect: { u0, u1: u0 + 36, v0: 0, v1: 48 }, ax: xR - 10, ay: y0 + u0 + 24 };
     }
     case 'stairs-up':
-      return { kind, ax: xL + 30, ay: y0 + 80, block: { x0: xL, y0: y0, x1: xL + 60, y1: y0 + 64 }, blocks: (w, u) => (w === 'left' || w === 'back') && u < 110 };
+      return stairs('stairs_up', 64);
     case 'stairs-down':
-      return { kind, ax: xL + 30, ay: y0 + 92, block: { x0: xL, y0: y0, x1: xL + 60, y1: y0 + 78 }, blocks: (w, u) => (w === 'left' || w === 'back') && u < 110 };
+      return stairs('stairs_down', 78);
     default:
       return null;
   }
@@ -123,10 +149,11 @@ export function placeArt(p) {
   return { ...p, art, frame };
 }
 
-// Everything drawn into the wall texture: frames, empty slots, exit door.
+// Everything drawn into the wall texture: frames, empty slots, doors.
 export function wallItems(L, hung) {
   const items = { left: [], right: [], back: [] };
   if (L.exit?.rect) items[L.exit.wall].push({ door: true, rect: L.exit.rect });
+  if (L.entrance.rect) items[L.entrance.wall].push({ door: true, rect: L.entrance.rect });
   hung.forEach((p) => items[p.wall].push({ rect: p.frame }));
   L.slots.forEach((s) => {
     if (hung.some((p) => p.wall === s.wall && p.u === s.u)) return;
