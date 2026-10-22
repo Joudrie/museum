@@ -1,6 +1,6 @@
 # Curation — Game Design Doc (v0.1)
 
-> Concept stage. No code yet. See also: [First Session Walkthrough](FIRST_SESSION.md).
+> See also: [First Session Walkthrough](FIRST_SESSION.md) · [Backlog](BACKLOG.md).
 
 ## Pitch
 A cozy, top-down, faux-16-bit pixel tycoon game (Stardew / Pokémon B&W vibe). You get a run-down museum and grow it into a world-class one by collecting **real masterpieces shown in HD**.
