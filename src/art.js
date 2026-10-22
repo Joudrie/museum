@@ -9,26 +9,36 @@ const shade = (c, k) => [c[0] * k, c[1] * k, c[2] * k];
 const mix = (a, b, k) => [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k, a[2] + (b[2] - a[2]) * k];
 const WHITE = [255, 255, 255];
 
-// Decor color options. Same textures, different colors.
-export const FLOORS = {
-  oak: { name: 'Oak', color: '#8f5e3c' },
-  birch: { name: 'Birch', color: '#cfae80' },
-  spruce: { name: 'Spruce', color: '#b0814f' },
-  walnut: { name: 'Walnut', color: '#5c3a26' },
+// Decor: each room has its own. Colors are free-form hex; these are the swatches offered.
+export const PALETTES = {
+  wood: ['#8f5e3c', '#cfae80', '#b0814f', '#5c3a26', '#a0522d', '#6b4a3a', '#d8c3a0', '#7a5a48', '#3e2a20', '#c08a5a'],
+  stone: ['#e9e6df', '#c8c4bc', '#9a968f', '#6b6862', '#4a4a4f', '#2a2a2e', '#d9c7a8', '#a88f6a', '#6f7d8a', '#8a5a4a', '#3d5a4a', '#7a2e3a'],
+  wainscot: ['#6e4430', '#98663f', '#cfc5b0', '#3c4a63', '#2f4a3a', '#5a2a2e', '#1e1e22', '#e8e2d4', '#7a6a58', '#4a3a52'],
+  paper: ['#e2d3b4', '#bcc6a5', '#dcb7aa', '#7a3a3e', '#b3c3cf', '#2f4a3a', '#3c4a63', '#f0ece2', '#c9a86a', '#5a4a6a', '#8a9a8a', '#1e2a3a'],
+  carpet: ['#7a2232', '#2a3a6a', '#2f5a3a', '#c9a23f', '#5a2a5a', '#3a2a22', '#b0413e', '#e8dcc0', '#1e1e22', '#4a7a8a'],
 };
-export const WAINSCOTS = {
-  walnut: { name: 'Walnut', color: '#6e4430' },
-  oak: { name: 'Oak', color: '#98663f' },
-  ivory: { name: 'Ivory', color: '#cfc5b0' },
-  navy: { name: 'Navy', color: '#3c4a63' },
+
+export const FLOOR_PATTERNS = {
+  planks: 'Planks',
+  checker: 'Checker',
+  'checker-angled': 'Checker (angled)',
+  stone: 'Stone brick',
+  tile: 'Tile',
 };
-export const PAPERS = {
-  cream: { name: 'Cream', color: '#e2d3b4' },
-  sage: { name: 'Sage', color: '#bcc6a5' },
-  rose: { name: 'Rose', color: '#dcb7aa' },
-  burgundy: { name: 'Burgundy', color: '#7a3a3e' },
+
+export const PLANTS = { none: 'None', fern: 'Fern', monstera: 'Monstera', cactus: 'Cactus', tree: 'Little tree' };
+
+export const DEFAULT_DECOR = {
+  pattern: 'planks',
+  floor: '#8f5e3c',
+  checkA: '#4a4a4f',
+  checkB: '#e9e6df',
+  wainscot: '#6e4430',
+  paper: '#e2d3b4',
+  carpet: false,
+  carpetColor: '#7a2232',
+  plant: 'none',
 };
-export const DEFAULT_DECOR = { floor: 'oak', wainscot: 'walnut', paper: 'cream' };
 
 // Deterministic hash noise in [0, 1).
 export const hash = (x, y, s = 0) => {
@@ -70,48 +80,114 @@ function bake(scene, key, w, h, fn) {
   return tex;
 }
 
-// ---------- Floor: vertical wood planks with staggered ends ----------
-export function bakeFloor(scene, key, w, h, floorId) {
-  const base = hex(FLOORS[floorId].color);
+// ---------- Floors ----------
+// Planks: vertical wood planks with staggered ends.
+function planks(w, h, decor) {
+  const base = hex(decor.floor);
   const tones = [1, 1.07, 0.92, 1.12, 0.97].map((k) => shade(base, k));
   const seam = shade(base, 0.5);
   const grain = shade(base, 0.78);
-  const dust = hex('#b9a58a');
   const PW = 8; // plank width
-
   const cols = [];
   for (let c = 0; c * PW < w; c++) {
-    const planks = [];
+    const list = [];
     let y = -Math.floor(hash(c, 0, 1) * 80);
     let n = 0;
     while (y < h) {
       const len = 48 + Math.floor(hash(c, n, 2) * 56);
-      planks.push({ y0: y, y1: y + len, tone: tones[Math.floor(hash(c, n, 3) * tones.length)], n });
+      list.push({ y0: y, y1: y + len, tone: tones[Math.floor(hash(c, n, 3) * tones.length)], n });
       y += len;
       n++;
     }
-    cols.push(planks);
+    cols.push(list);
   }
-
-  return bake(scene, key, w, h, (x, y) => {
+  return (x, y) => {
     const c = Math.floor(x / PW);
     const lx = x % PW;
     const plank = cols[c].find((p) => y >= p.y0 && y < p.y1);
     const ly = y - plank.y0;
     let col = plank.tone;
-
-    if (lx === PW - 1 || ly === 0) col = seam;
-    else {
-      if (ly === 1 || lx === 0) col = mix(col, [255, 230, 190], 0.12);
-      // grain: broken vertical streaks
-      if ((lx === 2 || lx === 5) && hash(c * 8 + lx, Math.floor(y / 5), 4) > 0.55) col = mix(col, grain, 0.6);
-      // knots
-      if (hash(c, plank.n, 5) > 0.82) {
-        const ky = Math.floor(hash(c, plank.n, 6) * (plank.y1 - plank.y0 - 8)) + 4;
-        if (Math.abs(ly - ky) <= 1 && lx >= 2 && lx <= 4) col = mix(col, seam, ly === ky && lx === 3 ? 0.9 : 0.5);
-      }
+    if (lx === PW - 1 || ly === 0) return seam;
+    if (ly === 1 || lx === 0) col = mix(col, [255, 230, 190], 0.12);
+    if ((lx === 2 || lx === 5) && hash(c * 8 + lx, Math.floor(y / 5), 4) > 0.55) col = mix(col, grain, 0.6);
+    if (hash(c, plank.n, 5) > 0.82) {
+      const ky = Math.floor(hash(c, plank.n, 6) * (plank.y1 - plank.y0 - 8)) + 4;
+      if (Math.abs(ly - ky) <= 1 && lx >= 2 && lx <= 4) col = mix(col, seam, ly === ky && lx === 3 ? 0.9 : 0.5);
     }
+    return col;
+  };
+}
 
+// Checkerboard, either flush squares or angled (diamonds).
+function checker(decor, angled) {
+  const a = hex(decor.checkA);
+  const b = hex(decor.checkB);
+  const S = 32;
+  return (x, y) => {
+    const p = angled ? x + y : x;
+    const q = angled ? x - y + 4096 : y;
+    const i = Math.floor(p / S);
+    const j = Math.floor(q / S);
+    let col = (i + j) % 2 ? a : b;
+    const lp = p % S;
+    const lq = q % S;
+    if (lp === 0 || lq === 0) col = shade(col, 0.82); // grout line
+    else if (lp === 1 || lq === 1) col = mix(col, WHITE, 0.1); // bevel highlight
+    if (hash(x, y, 12) > 0.93) col = shade(col, 0.95);
+    return col;
+  };
+}
+
+// Stone brick: offset rows of rough rectangular stones.
+function stone(decor) {
+  const base = hex(decor.floor);
+  const SW = 32;
+  const SH = 16;
+  return (x, y) => {
+    const row = Math.floor(y / SH);
+    const ox = row % 2 ? SW / 2 : 0;
+    const col = Math.floor((x + ox) / SW);
+    const lx = (x + ox) % SW;
+    const ly = y % SH;
+    if (lx < 2 || ly < 2) return shade(base, 0.55); // grout
+    let c = shade(base, 0.86 + hash(col, row, 13) * 0.24);
+    if (lx === 2 || ly === 2) c = mix(c, WHITE, 0.12);
+    if (lx === SW - 1 || ly === SH - 1) c = shade(c, 0.85);
+    const n = hash(x, y, 14);
+    if (n > 0.9) c = shade(c, 0.9);
+    else if (n < 0.06) c = mix(c, WHITE, 0.08);
+    return c;
+  };
+}
+
+// Tile: small square tiles with thin grout.
+function tile(decor) {
+  const base = hex(decor.floor);
+  const S = 16;
+  return (x, y) => {
+    const i = Math.floor(x / S);
+    const j = Math.floor(y / S);
+    const lx = x % S;
+    const ly = y % S;
+    if (lx === 0 || ly === 0) return shade(base, 0.72);
+    let c = shade(base, 0.95 + hash(i, j, 15) * 0.1);
+    if (lx === 1 || ly === 1) c = mix(c, WHITE, 0.14);
+    if (lx === 3 && ly === 3) c = mix(c, WHITE, 0.35); // glaze glint
+    return c;
+  };
+}
+
+export function bakeFloor(scene, key, w, h, decor) {
+  const pattern = {
+    planks: () => planks(w, h, decor),
+    checker: () => checker(decor, false),
+    'checker-angled': () => checker(decor, true),
+    stone: () => stone(decor),
+    tile: () => tile(decor),
+  }[decor.pattern || 'planks']();
+  const dust = hex('#b9a58a');
+  return bake(scene, key, w, h, (x, y) => {
+    let col = pattern(x, y);
     // dust, dithered so it stays pixel-crisp
     const d = smoothNoise(x / 26, y / 26, 8);
     if (d > 0.66 && hash(x, y, 9) < (d - 0.66) * 3) col = mix(col, dust, 0.22);
@@ -123,10 +199,101 @@ export function bakeFloor(scene, key, w, h, floorId) {
   });
 }
 
+// Carpet runner with a border, a gold stripe and fringed ends.
+// `alongY`: the runner runs top-to-bottom (fringe on the short top/bottom ends).
+export function bakeCarpet(scene, key, w, h, color, alongY) {
+  const c = hex(color);
+  const dark = shade(c, 0.62);
+  const gold = mix(c, hex('#e0bc55'), 0.55);
+  const light = mix(c, WHITE, 0.12);
+  const fringe = hex('#efe4c8');
+  return bake(scene, key, w, h, (x, y) => {
+    const along = alongY ? y : x;
+    const across = alongY ? x : y;
+    const len = alongY ? h : w;
+    const wid = alongY ? w : h;
+    const fromEnd = Math.min(along, len - 1 - along);
+    if (fromEnd < 4) return across % 3 === 0 ? fringe : null;
+    const e = Math.min(fromEnd - 4, across, wid - 1 - across);
+    if (e < 3) return dark;
+    if (e === 4 || e === 5) return gold;
+    if (e < 7) return dark;
+    // small diamond motif
+    const m = (Math.abs((across % 16) - 8) + Math.abs((along % 16) - 8)) === 5;
+    return m ? light : c;
+  });
+}
+
+// ---------- Plants (sit on the floor between paintings) ----------
+export function bakePlant(scene, key, type) {
+  const W = 24;
+  const H = 34;
+  const px = new Map();
+  const put = (x, y, col) => {
+    x = Math.round(x);
+    y = Math.round(y);
+    if (x >= 0 && y >= 0 && x < W && y < H) px.set(`${x},${y}`, col);
+  };
+  const ellipse = (cx, cy, rx, ry, col, colEdge) => {
+    for (let y = -ry; y <= ry; y++)
+      for (let x = -rx; x <= rx; x++) {
+        const d = (x * x) / (rx * rx) + (y * y) / (ry * ry);
+        if (d <= 1) put(cx + x, cy + y, d > 0.7 && colEdge ? colEdge : col);
+      }
+  };
+  const G = hex('#4f8a3a');
+  const GD = hex('#2f5a24');
+  const GL = hex('#7cb85a');
+
+  if (type === 'fern') {
+    for (let k = 0; k < 7; k++) {
+      const a = -Math.PI / 2 + (k - 3) * 0.42;
+      for (let t = 0; t < 14; t++) {
+        const r = t;
+        const x = 12 + Math.cos(a) * r;
+        const y = 22 + Math.sin(a) * r + (t * t) / 28;
+        put(x, y, GD);
+        if (t > 2 && t % 2 === 0) {
+          put(x + Math.cos(a + 1.4) * 2, y + Math.sin(a + 1.4) * 2, G);
+          put(x + Math.cos(a - 1.4) * 2, y + Math.sin(a - 1.4) * 2, GL);
+        }
+      }
+    }
+  } else if (type === 'monstera') {
+    [[7, 12, 6, 4], [16, 10, 6, 4], [12, 5, 5, 4], [12, 16, 5, 3]].forEach(([x, y, rx, ry], i) => {
+      ellipse(x, y, rx, ry, i % 2 ? G : GL, GD);
+      put(x, y + 1, GD);
+      put(x + 1, y - 1, hex('#f0ead8')); // the holes
+    });
+    for (let y = 16; y < 23; y++) put(12, y, GD);
+  } else if (type === 'cactus') {
+    for (let y = 4; y < 23; y++) for (let x = 9; x < 15; x++) put(x, y, x === 9 || x === 14 ? GD : x === 11 ? GL : G);
+    for (let y = 9; y < 15; y++) for (let x = 4; x < 7; x++) put(x, y, x === 4 ? GD : G);
+    for (let x = 6; x < 9; x++) put(x, 14, G);
+    for (let y = 7; y < 12; y++) for (let x = 17; x < 20; x++) put(x, y, x === 19 ? GD : G);
+    for (let x = 15; x < 17; x++) put(x, 11, G);
+    put(12, 3, hex('#e85a7a')); // flower
+  } else if (type === 'tree') {
+    for (let y = 12; y < 23; y++) put(11, y, hex('#5c3a26')), put(12, y, hex('#74492f'));
+    ellipse(12, 9, 9, 8, G, GD);
+    ellipse(9, 6, 3, 2, GL);
+    ellipse(15, 11, 2, 2, GL);
+  }
+  // terracotta pot
+  for (let y = 22; y < H; y++) {
+    const inset = Math.floor((y - 22) / 4);
+    for (let x = 5 + inset; x < 19 - inset; x++) {
+      const edge = x === 5 + inset || x === 18 - inset || y === H - 1;
+      put(x, y, y < 25 ? hex('#c0703f') : edge ? hex('#7a3f22') : hex('#a85a32'));
+    }
+  }
+  return bake(scene, key, W, H, (x, y) => px.get(`${x},${y}`) || null);
+}
+
 // ---------- Walls ----------
 function wallPalette(decor) {
-  const p = hex(WAINSCOTS[decor.wainscot].color);
-  const w = hex(PAPERS[decor.paper].color);
+  const p = hex(decor.wainscot);
+  const w = hex(decor.paper);
   const dark = (w[0] + w[1] + w[2]) / 3 < 140;
   return {
     base0: shade(p, 0.5),
@@ -393,12 +560,14 @@ function sprite(scene, key, rows, pal) {
 // One character = three textures: `${prefix}_down`, `_up`, `_side` (faces right).
 export function makeCharacter(scene, prefix, colors = {}) {
   const pal = { ...PAL, ...colors };
+  const toHex = (v) => '#' + v.map((n) => Math.round(Math.min(255, n)).toString(16).padStart(2, '0')).join('');
+  // Shading shades are derived from the main colors.
   if (colors.c) {
-    const c = hex(colors.c);
-    const toHex = (v) => '#' + v.map((n) => Math.round(Math.min(255, n)).toString(16).padStart(2, '0')).join('');
-    pal.C = toHex(mix(c, WHITE, 0.2));
-    pal.d = toHex(shade(c, 0.75));
+    pal.C = toHex(mix(hex(colors.c), WHITE, 0.2));
+    pal.d = toHex(shade(hex(colors.c), 0.75));
   }
+  if (colors.h && !colors.H) pal.H = toHex(mix(hex(colors.h), WHITE, 0.22));
+  if (colors.s && !colors.S) pal.S = toHex(shade(hex(colors.s), 0.85));
   sprite(scene, `${prefix}_down`, FRONT, pal);
   sprite(scene, `${prefix}_up`, BACK, pal);
   sprite(scene, `${prefix}_side`, SIDE, pal);

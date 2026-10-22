@@ -10,16 +10,19 @@ import {
   bakeCobweb,
   bakeStairsUp,
   bakeStairsDown,
+  bakeCarpet,
+  bakePlant,
+  PLANTS,
   makeCharacter,
   makeBubble,
   DEFAULT_DECOR,
 } from './art.js';
-import { loadRooms, addRoom, resetRooms, layout, paintingsFor, placeArt, wallItems } from './rooms.js';
+import { loadRooms, addRoom, resetRooms, layout, paintingsFor, placeArt, wallItems, plantSpots, carpetRect } from './rooms.js';
 import { artBounds, paintArt } from './walldraw.js';
 import { PERSONALITIES, lineFor } from './lines.js';
 import { iconSvg } from './icons.js';
 import { openViewer } from './viewer.js';
-import { openDecor, load, save } from './decor.js';
+import { openDecor, load, save, DEFAULT_CHARACTER } from './decor.js';
 import { openBuild } from './build.js';
 import { showTalk, hideTalk, talking } from './talk.js';
 
@@ -32,7 +35,8 @@ const PLAYER_SCALE = 1.15;
 const REACH = 26; // how close you need to be to interact
 const HD = 4; // resolution multiplier for paintings on the wall
 
-const DECOR_KEY = 'curation.decor';
+const DECOR_KEY = 'curation.roomDecor'; // { [roomIndex]: decor }
+const CHARACTER_KEY = 'curation.character';
 const CLEANED_KEY = 'curation.cleaned';
 
 const LOOKS = [
@@ -69,10 +73,12 @@ export class RoomScene extends Phaser.Scene {
   create() {
     const { g, exit, entrance } = this.L;
     this.g = g;
-    this.decor = { ...DEFAULT_DECOR, ...load(DECOR_KEY, {}) };
+    this.decor = { ...DEFAULT_DECOR, ...(load(DECOR_KEY, {})[this.roomIndex] || {}) };
+    this.character = { ...DEFAULT_CHARACTER, ...load(CHARACTER_KEY, {}) };
+    makeCharacter(this, 'player', this.character);
 
-    if (!this.textures.exists('player_down')) {
-      makeCharacter(this, 'player');
+    if (!this.textures.exists('bubble')) {
+      Object.keys(PLANTS).forEach((k) => k !== 'none' && bakePlant(this, `plant_${k}`, k));
       LOOKS.forEach((v, i) => makeCharacter(this, `npc${i}`, v));
       makeBubble(this);
       for (let i = 0; i < 4; i++) bakeCrack(this, `crack_${i}`, i + 1);
@@ -83,12 +89,14 @@ export class RoomScene extends Phaser.Scene {
     }
 
     this.wallItems = wallItems(this.L, this.hung);
-    this.floorImg = this.add.image(g.xL, g.y0, bakeFloor(this, 'floor', g.xR - g.xL, g.y1 - g.y0, this.decor.floor).key).setOrigin(0);
+    this.floorImg = this.add.image(g.xL, g.y0, bakeFloor(this, 'floor', g.xR - g.xL, g.y1 - g.y0, this.decor).key).setOrigin(0);
     this.wallImg = this.add.image(0, 0, bakeWalls(this, 'walls', g, this.wallItems, this.decor).key).setOrigin(0);
     this.add.image(0, g.y1, bakeFront(this, 'front', g.w, entrance.mat ? entrance.x0 : -1, entrance.mat ? entrance.x1 : -1).key).setOrigin(0);
     if (exit?.sprite) this.add.image(exit.sprite.x, exit.sprite.y, exit.sprite.key).setOrigin(0).setFlipX(exit.sprite.flip).setDepth(2);
     this.hung.forEach((p) => this.drawPainting(p));
     this.blocks = exit?.block ? [exit.block] : [];
+    this.decorObjects = [];
+    this.placeDecor();
 
     this.mess = [];
     if (this.roomIndex === 0) this.spawnMess();
@@ -394,11 +402,17 @@ export class RoomScene extends Phaser.Scene {
     document.getElementById('home-btn').onclick = () => {
       if (!this.input.enabled) return;
       this.pause(true);
-      openDecor(this.decor, {
-        onChange: (decor) => this.applyDecor(decor),
+      openDecor({
+        decor: this.decor,
+        character: this.character,
+        onDecor: (decor) => this.applyDecor(decor),
+        onCharacter: (character) => this.applyCharacter(character),
+        plantIcon: (id) => (id === 'none' ? null : this.textures.get(`plant_${id}`).getSourceImage().toDataURL()),
+        characterPreview: () => this.characterPreview(),
         onReset: () => {
           this.resetMess();
           resetRooms();
+          save(DECOR_KEY, { 0: load(DECOR_KEY, {})[0] }); // built rooms are gone, so is their decor
           if (this.roomIndex !== 0) this.travel(0, 'start');
         },
         onClose: () => this.pause(false),
@@ -417,13 +431,52 @@ export class RoomScene extends Phaser.Scene {
     }
   }
 
+  // Carpet and plants for this room. Rebuilt whenever the decor changes.
+  placeDecor() {
+    this.decorObjects.forEach((o) => o.destroy());
+    this.decorObjects = [];
+    this.blocks = this.blocks.filter((b) => !b.plant);
+    if (this.decor.carpet) {
+      const c = carpetRect(this.L);
+      bakeCarpet(this, 'carpet', c.w, c.h, this.decor.carpetColor, c.alongY);
+      this.decorObjects.push(this.add.image(c.x, c.y, 'carpet').setOrigin(0).setDepth(0.5));
+    }
+    if (this.decor.plant !== 'none') {
+      plantSpots(this.L).forEach(({ x, y }) => {
+        this.decorObjects.push(this.add.image(x, y, `plant_${this.decor.plant}`).setOrigin(0.5, 1).setDepth(y));
+        this.blocks.push({ plant: true, x0: x - 8, x1: x + 8, y0: y - 10, y1: y - 2 });
+      });
+    }
+  }
+
   applyDecor(decor) {
     this.decor = decor;
-    save(DECOR_KEY, decor);
-    bakeFloor(this, 'floor', this.g.xR - this.g.xL, this.g.y1 - this.g.y0, decor.floor);
+    save(DECOR_KEY, { ...load(DECOR_KEY, {}), [this.roomIndex]: decor });
+    bakeFloor(this, 'floor', this.g.xR - this.g.xL, this.g.y1 - this.g.y0, decor);
     this.floorImg.setTexture('floor');
     bakeWalls(this, 'walls', this.g, this.wallItems, decor);
     this.wallImg.setTexture('walls');
+    this.placeDecor();
+  }
+
+  applyCharacter(character) {
+    this.character = character;
+    save(CHARACTER_KEY, character);
+    const key = this.player.texture.key;
+    makeCharacter(this, 'player', character);
+    this.player.setTexture(key);
+  }
+
+  // Big front/side/back views of the curator for the Character tab.
+  characterPreview() {
+    return ['player_down', 'player_side', 'player_up'].map((k) => {
+      const src = this.textures.get(k).getSourceImage();
+      const c = document.createElement('canvas');
+      c.width = src.width;
+      c.height = src.height;
+      c.getContext('2d').drawImage(src, 0, 0);
+      return c;
+    });
   }
 
   // ---------- Interaction ----------
@@ -476,7 +529,7 @@ export class RoomScene extends Phaser.Scene {
 
   openBuildMenu() {
     this.pause(true);
-    openBuild(this, this.rooms, this.decor, {
+    openBuild(this, this.rooms, DEFAULT_DECOR, {
       onBuild: (room) => {
         addRoom(room);
         this.travel(this.roomIndex + 1, 'entrance');
