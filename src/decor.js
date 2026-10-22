@@ -100,8 +100,10 @@ function renderRoom() {
     const pal = d.pattern === 'planks' ? PALETTES.wood : PALETTES.stone;
     parts.push(section('Floor color', strip(pal, d.floor, (floor, live) => set({ floor }, live))));
   }
-  parts.push(section('Wainscot', strip(PALETTES.wainscot, d.wainscot, (wainscot, live) => set({ wainscot }, live))));
-  parts.push(section('Wallpaper', strip(PALETTES.paper, d.paper, (paper, live) => set({ paper }, live))));
+  parts.push(section('Wall', choices({ plain: 'Plain', stripes: 'Striped' }, d.paperStyle || 'stripes', (paperStyle) => set({ paperStyle }))));
+  parts.push(section('Wall color', strip(PALETTES.paper, d.paper, (paper, live) => set({ paper }, live))));
+  parts.push(section('Wainscot', choices({ none: 'None', panels: 'Wood panels' }, d.wainscotStyle || 'panels', (wainscotStyle) => set({ wainscotStyle }))));
+  parts.push(section('Trim & wainscot color', strip(PALETTES.wainscot, d.wainscot, (wainscot, live) => set({ wainscot }, live))));
   parts.push(section('Carpet', choices({ off: 'None', on: 'Runner' }, d.carpet ? 'on' : 'off', (v) => set({ carpet: v === 'on' }))));
   if (d.carpet) parts.push(section('Carpet color', strip(PALETTES.carpet, d.carpetColor, (carpetColor, live) => set({ carpetColor }, live))));
   parts.push(section('Plants (between paintings)', choices(PLANTS, d.plant, (plant) => set({ plant }), state.plantIcon)));

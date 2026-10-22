@@ -1,12 +1,12 @@
 # Curation: Backlog (base-building first, mini-games later)
 
-## Phase 1: Polish the base
+## Phase 1: Polish the base ✅
 - Walking animation (a small bounce/shuffle) for player and visitors.
 - Remove dirt stains from walls.
-- New rooms start plain: light gray walls with no texture; plain floor (color TBD).
+- New rooms start plain: light gray walls with no texture; normal wood floor.
 - Visitors: many more looks; name, look and personality match (e.g. older visitors are gray or bald).
 
-## Phase 2: Wall slots
+## Phase 2: Wall slots ✅
 - Every slot starts as a painting outline. Interact → **Place painting / Plain wall / Door**.
 - A plain wall hides the outline but stays interactable, so you can add a painting later.
 

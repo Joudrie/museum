@@ -14,6 +14,7 @@ const note = el.querySelector('.info-note');
 let list = [];
 let current = -1;
 let onClose = null;
+let onChange = null;
 
 function loadJournal() {
   try {
@@ -102,14 +103,23 @@ function close() {
 }
 
 el.querySelector('.viewer-close').addEventListener('click', close);
+el.querySelector('.viewer-change').addEventListener('click', () => {
+  const p = list[current];
+  const cb = onChange;
+  onClose = null;
+  close();
+  cb?.(p);
+});
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && !el.classList.contains('hidden')) close();
 });
 
-export function openViewer(paintings, index, closeCb) {
+// changeCb(painting): the player wants to change the wall spot this painting hangs in.
+export function openViewer(paintings, index, closeCb, changeCb) {
   list = paintings;
   current = -1;
   onClose = closeCb;
+  onChange = changeCb;
   track.replaceChildren(...paintings.map(slide));
   dots.replaceChildren(...paintings.map(() => document.createElement('span')));
   el.querySelector('.viewer-scroll').scrollTop = 0;

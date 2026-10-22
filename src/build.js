@@ -3,7 +3,7 @@
 // is a vertical carousel: swipe up or down to choose how the room ends.
 // There is no horizontal scrolling on this page.
 import { bakeFloor, bakeWalls, bakeFront } from './art.js';
-import { SIZES, EXITS, exitLabel, layout, paintingsFor, placeArt, wallItems } from './rooms.js';
+import { SIZES, EXITS, exitLabel, layout, paintingsFor, slotStates, placeArt, wallItems } from './rooms.js';
 import { paintArt } from './walldraw.js';
 
 const el = document.getElementById('build');
@@ -21,7 +21,8 @@ let state = null;
 function drawRoom(scene, rooms, room, decor) {
   const L = layout(room);
   const { g } = L;
-  const hung = paintingsFor([...rooms, room], rooms.length).filter(Boolean).map(placeArt);
+  const all = [...rooms, room];
+  const hung = paintingsFor(all, rooms.length).map(placeArt);
   const canvas = document.createElement('canvas');
   canvas.width = g.w;
   canvas.height = g.h;
@@ -31,7 +32,7 @@ function drawRoom(scene, rooms, room, decor) {
   const mat = L.entrance.mat;
 
   ctx.drawImage(src(bakeFloor(scene, '_pv_floor', g.xR - g.xL, g.y1 - g.y0, decor)), g.xL, g.y0);
-  ctx.drawImage(src(bakeWalls(scene, '_pv_walls', g, wallItems(L, hung), decor)), 0, 0);
+  ctx.drawImage(src(bakeWalls(scene, '_pv_walls', g, wallItems(L, hung, slotStates(all, rooms.length)), decor)), 0, 0);
   ctx.drawImage(src(bakeFront(scene, '_pv_front', g.w, mat ? L.entrance.x0 : -1, mat ? L.entrance.x1 : -1)), 0, g.y1);
   const sp = L.exit?.sprite;
   if (sp && scene.textures.exists(sp.key)) {

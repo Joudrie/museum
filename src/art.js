@@ -13,8 +13,8 @@ const WHITE = [255, 255, 255];
 export const PALETTES = {
   wood: ['#8f5e3c', '#cfae80', '#b0814f', '#5c3a26', '#a0522d', '#6b4a3a', '#d8c3a0', '#7a5a48', '#3e2a20', '#c08a5a'],
   stone: ['#e9e6df', '#c8c4bc', '#9a968f', '#6b6862', '#4a4a4f', '#2a2a2e', '#d9c7a8', '#a88f6a', '#6f7d8a', '#8a5a4a', '#3d5a4a', '#7a2e3a'],
-  wainscot: ['#6e4430', '#98663f', '#cfc5b0', '#3c4a63', '#2f4a3a', '#5a2a2e', '#1e1e22', '#e8e2d4', '#7a6a58', '#4a3a52'],
-  paper: ['#e2d3b4', '#bcc6a5', '#dcb7aa', '#7a3a3e', '#b3c3cf', '#2f4a3a', '#3c4a63', '#f0ece2', '#c9a86a', '#5a4a6a', '#8a9a8a', '#1e2a3a'],
+  wainscot: ['#a8a6a1', '#6e4430', '#98663f', '#cfc5b0', '#3c4a63', '#2f4a3a', '#5a2a2e', '#1e1e22', '#e8e2d4', '#7a6a58', '#4a3a52'],
+  paper: ['#d3d2ce', '#e2d3b4', '#bcc6a5', '#dcb7aa', '#7a3a3e', '#b3c3cf', '#2f4a3a', '#3c4a63', '#f0ece2', '#c9a86a', '#5a4a6a', '#8a9a8a', '#1e2a3a'],
   carpet: ['#7a2232', '#2a3a6a', '#2f5a3a', '#c9a23f', '#5a2a5a', '#3a2a22', '#b0413e', '#e8dcc0', '#1e1e22', '#4a7a8a'],
 };
 
@@ -38,6 +38,17 @@ export const DEFAULT_DECOR = {
   carpet: false,
   carpetColor: '#7a2232',
   plant: 'none',
+  paperStyle: 'stripes',
+  wainscotStyle: 'panels',
+};
+
+// Freshly built rooms start plain: light gray walls with no texture, wood floor.
+export const NEW_ROOM_DECOR = {
+  ...DEFAULT_DECOR,
+  paper: '#d3d2ce',
+  paperStyle: 'plain',
+  wainscot: '#a8a6a1',
+  wainscotStyle: 'none',
 };
 
 // Deterministic hash noise in [0, 1).
@@ -309,7 +320,8 @@ function wallPalette(decor) {
     stripe: dark ? mix(w, WHITE, 0.1) : shade(w, 0.94),
     dot: dark ? mix(w, WHITE, 0.18) : shade(w, 0.9),
     faded: mix(w, WHITE, 0.3),
-    stain: hex('#8a6c44'),
+    plainPaper: decor.paperStyle === 'plain',
+    panels: decor.wainscotStyle !== 'none',
   };
 }
 
@@ -373,6 +385,7 @@ function wallMaterial(u, v, D, items, seed, P) {
   let c;
   if (v < 1) c = P.base0;
   else if (v < 5) c = v === 4 ? P.base2 : P.base1;
+  else if (!P.panels && v < D - 6) c = P.plainPaper ? P.paper : wallpaper(u, v, P);
   else if (v < 22) {
     const pu = ((u % 40) + 40) % 40;
     if (v < 7 || v >= 20) c = P.panelLight;
@@ -381,13 +394,14 @@ function wallMaterial(u, v, D, items, seed, P) {
     else if (pu === 39 || v === 19) c = P.panelLight;
     else c = P.panel;
   } else if (v < 25) c = v === 24 ? P.railLight : P.rail;
-  else if (v < D - 6) {
-    const su = ((u % 10) + 10) % 10;
-    c = su < 2 ? P.stripe : su === 5 && v % 8 === 3 ? P.dot : P.paper;
-    const n = smoothNoise(u / 14, v / 9, seed);
-    if (n > 0.74) c = mix(c, P.stain, n > 0.82 ? 0.28 : 0.14);
-  } else c = P.crown[v - (D - 6)];
+  else if (v < D - 6) c = P.plainPaper ? P.paper : wallpaper(u, v, P);
+  else c = P.crown[v - (D - 6)];
   return c;
+}
+
+function wallpaper(u, v, P) {
+  const su = ((u % 10) + 10) % 10;
+  return su < 2 ? P.stripe : su === 5 && v % 8 === 3 ? P.dot : P.paper;
 }
 
 // g: room geometry. items: { left, right, back } lists with rects in wall space.
@@ -557,9 +571,38 @@ function sprite(scene, key, rows, pal) {
   });
 }
 
+// Optional looks: bald, glasses, sun hat. Each returns new row maps.
+function withLooks(rows, view, look) {
+  let out = rows.map((r) => [...r]);
+  const inner = (r, from, to, test, ch) => {
+    for (let i = from; i < out[r].length - to; i++) if (test(out[r][i])) out[r][i] = ch;
+  };
+  if (look.bald) {
+    const last = view === 'up' ? 6 : 3;
+    for (let r = 1; r <= last; r++) inner(r, view === 'side' ? 4 : 2, 2, (c) => c === 'h' || c === 'H', 's');
+    out[1][Math.floor(out[1].length / 2) - 1] = 'w'; // shine
+  }
+  if (look.glasses && view !== 'up') {
+    for (const r of [6, 7]) {
+      out[r].forEach((c, i) => {
+        if (c !== 'e') return;
+        [i - 1, i + 1].forEach((j) => out[r][j] === 's' && (out[r][j] = 'k'));
+        if (r === 6) [i - 1, i, i + 1].forEach((j) => out[5][j] === 's' && (out[5][j] = 'k'));
+      });
+    }
+  }
+  out = out.map((r) => r.join(''));
+  if (look.hat) {
+    out[0] = 'oooooooo';
+    out[1] = 'oTTTTTTTTo';
+    out[2] = 'oTTTTTTTTTTTTTTo';
+  }
+  return out;
+}
+
 // One character = three textures: `${prefix}_down`, `_up`, `_side` (faces right).
-export function makeCharacter(scene, prefix, colors = {}) {
-  const pal = { ...PAL, ...colors };
+export function makeCharacter(scene, prefix, colors = {}, look = {}) {
+  const pal = { ...PAL, k: '#1d1714', T: '#e8d8a0', ...colors };
   const toHex = (v) => '#' + v.map((n) => Math.round(Math.min(255, n)).toString(16).padStart(2, '0')).join('');
   // Shading shades are derived from the main colors.
   if (colors.c) {
@@ -568,9 +611,9 @@ export function makeCharacter(scene, prefix, colors = {}) {
   }
   if (colors.h && !colors.H) pal.H = toHex(mix(hex(colors.h), WHITE, 0.22));
   if (colors.s && !colors.S) pal.S = toHex(shade(hex(colors.s), 0.85));
-  sprite(scene, `${prefix}_down`, FRONT, pal);
-  sprite(scene, `${prefix}_up`, BACK, pal);
-  sprite(scene, `${prefix}_side`, SIDE, pal);
+  sprite(scene, `${prefix}_down`, withLooks(FRONT, 'down', look), pal);
+  sprite(scene, `${prefix}_up`, withLooks(BACK, 'up', look), pal);
+  sprite(scene, `${prefix}_side`, withLooks(SIDE, 'side', look), pal);
 }
 
 // "!" bubble shown when something is in reach.
