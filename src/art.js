@@ -716,6 +716,41 @@ export function bakeCobweb(scene, key) {
   return bake(scene, key, S, S, (x, y) => set.get(`${x},${y}`) || null);
 }
 
+// Pile of gold coins waiting to be collected. stage 1 = a few, 3 = a heap.
+export function bakeCoins(scene, key, stage) {
+  const W = 30;
+  const H = 22;
+  const set = new Map();
+  const rim = [160, 112, 30];
+  const face = [232, 184, 64];
+  const shine = [255, 238, 150];
+  const shadow = [40, 26, 14, 90];
+  const coin = (cx, cy) => {
+    // A coin seen from above at an angle: 8x4 face over a 2px rim.
+    for (let y = -2; y <= 3; y++) {
+      for (let x = -4; x <= 4; x++) {
+        const fy = y <= 1 ? y + 0.5 : y - 1.5;
+        if ((x / 4.5) ** 2 + (fy / 2.2) ** 2 > 1) continue;
+        const top = y <= 1 && (x / 4.5) ** 2 + ((y + 0.5) / 2.2) ** 2 <= 1;
+        let c = top ? face : rim;
+        if (top && y === -1 && x >= -2 && x <= 0) c = shine;
+        if (top && ((x / 3.4) ** 2 + ((y + 0.5) / 1.5) ** 2 > 1)) c = top && y < 0 ? face : [196, 146, 44];
+        set.set(`${cx + x},${cy + y}`, c);
+      }
+    }
+  };
+  const spots = {
+    1: [[10, 16], [18, 17], [14, 13]],
+    2: [[7, 17], [15, 18], [22, 16], [11, 14], [19, 13], [15, 10]],
+    3: [[5, 18], [12, 19], [20, 19], [26, 17], [8, 15], [16, 15], [23, 14], [11, 11], [19, 11], [15, 8], [15, 5]],
+  }[stage];
+  // Soft shadow under the pile.
+  for (let y = 15; y < H; y++)
+    for (let x = 0; x < W; x++) if (((x - 15) / 14) ** 2 + ((y - 19) / 3.2) ** 2 <= 1) set.set(`${x},${y}`, shadow);
+  spots.forEach(([x, y]) => coin(x, y));
+  return bake(scene, key, W, H, (x, y) => set.get(`${x},${y}`) || null);
+}
+
 // ---------- Characters (20x27 drawn into a 32x32 tile) ----------
 const PAL = {
   o: '#2a1a14',

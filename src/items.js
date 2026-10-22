@@ -65,11 +65,3 @@ export function footprint(item) {
   const def = ITEMS[item.type];
   return item.rot ? { w: def.h, h: def.w } : { w: def.w, h: def.h };
 }
-
-// Daily income of everything placed across the museum.
-export function itemIncome(roomCount) {
-  const all = load(ITEMS_KEY, {});
-  let total = 0;
-  for (let i = 0; i < roomCount; i++) (all[i] || []).forEach((it) => (total += ITEMS[it.type]?.income || 0));
-  return total;
-}

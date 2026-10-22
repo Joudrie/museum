@@ -34,9 +34,11 @@
 - Done: one-tap themes (Classical, Egyptian, Japanese, Natural history, Modern, Moody), wall patterns (damask, hieroglyphs, sakura, brick, marble), floors (herringbone, parquet, marble, mosaic, sand), per-room lighting (warm/day/cool/moody), generated per-room music + mute, 11 new items (obelisk, canopic jars, cherry tree, stone lantern, bonsai, T-rex, meteorite, telescope, specimen jars, geode, velvet sofa).
 - Still to do: a big outdoor garden room; more relics/artifacts.
 
-## Phase 6: Economy
+## Phase 6: Economy (in progress)
 - Goal: get the most visitors. More paintings → more visitors; complete sets → big bonus; every decoration adds a little income.
 - Coffee shop room: visitors buy coffee; decorate it (bookshelves etc.).
+- Done: real gold. Start with 300. Each room earns gold/hr (5 per painting + each item's income); it piles up as a coin heap near the room's entrance (max 8 hours' worth). Walk up and Interact to collect. Items cost gold (sell for half back); each new room costs more (bigger rooms cost more). Testing button: +1,000 gold.
+- Next: coffee shop, janitors, Curator's Office.
 - Janitor break room: hire janitors who keep the place clean (rarely seen holding a mop by a puddle).
 
 ## Someday

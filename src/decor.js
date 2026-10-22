@@ -215,13 +215,14 @@ el.querySelector('.decor-close').addEventListener('click', () => {
   state.onClose?.();
 });
 el.querySelector('.decor-reset').addEventListener('click', () => state.onReset?.());
+el.querySelector('.decor-coins').addEventListener('click', () => state.onAddCoins?.(1000));
 
 export function closeDecor() {
   el.classList.add('hidden');
 }
 
 // opts: { decor, character, room, index, rooms, onDecor, onCharacter, onRoom(patch), onMoveRoom(i, j),
-//         onGoRoom(i), onReset, onClose, plantIcon(id), characterPreview() }
+//         onGoRoom(i), onReset, onAddCoins(n), onClose, plantIcon(id), characterPreview() }
 export function openDecor(opts) {
   state = { ...opts };
   render();
