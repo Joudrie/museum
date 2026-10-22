@@ -18,7 +18,9 @@ import {
   makeBubble,
   DEFAULT_DECOR,
   NEW_ROOM_DECOR,
+  LIGHT_TINTS,
 } from './art.js';
+import { setTrack } from './music.js';
 import { loadRooms, addRoom, resetRooms, updateRoom, swapRooms, roomName, layout, paintingsFor, slotStates, setSlot, hungAnywhere, placeArt, wallItems, plantSpots, carpetRect } from './rooms.js';
 import { openSlotMenu } from './slotmenu.js';
 import { ITEMS, loadItems, saveItems, resetItems, footprint, itemIncome } from './items.js';
@@ -519,6 +521,14 @@ export class RoomScene extends Phaser.Scene {
     this.decorObjects.forEach((o) => o.destroy());
     this.decorObjects = [];
     this.blocks = this.blocks.filter((b) => !b.plant);
+    // Lighting: a tint multiplied over the whole room (people included).
+    const tint = LIGHT_TINTS[this.decor.light || 'warm'];
+    if (tint !== 0xffffff) {
+      this.decorObjects.push(
+        this.add.rectangle(0, 0, this.g.w, this.g.h + T, tint).setOrigin(0).setDepth(4999).setBlendMode(Phaser.BlendModes.MULTIPLY),
+      );
+    }
+    setTrack(this.decor.music || 'none');
     if (this.decor.carpet) {
       const c = carpetRect(this.L);
       bakeCarpet(this, 'carpet', c.w, c.h, this.decor.carpetColor, c.alongY);

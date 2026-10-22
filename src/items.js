@@ -8,7 +8,8 @@ export const CATEGORIES = {
   plants: 'Plants',
   lights: 'Lights',
   sculpture: 'Sculpture',
-  relics: 'Relics & science',
+  relics: 'Relics',
+  science: 'Science',
   features: 'Features',
 };
 
@@ -28,10 +29,21 @@ export const ITEMS = {
   armor: { name: 'Suit of armor', cat: 'sculpture', w: 1, h: 1, rise: 40, price: 250, income: 20 },
   vase: { name: 'Ancient vase (case)', cat: 'relics', w: 1, h: 1, rise: 30, price: 200, income: 15 },
   sarcophagus: { name: 'Sarcophagus', cat: 'relics', w: 2, h: 1, rise: 10, price: 500, income: 40 },
-  skull: { name: 'Dinosaur skull', cat: 'relics', w: 2, h: 1, rise: 24, price: 1000, income: 80 },
-  globe: { name: 'Antique globe', cat: 'relics', w: 1, h: 1, rise: 26, price: 90, income: 7 },
+  skull: { name: 'Dinosaur skull', cat: 'science', w: 2, h: 1, rise: 24, price: 1000, income: 80 },
+  globe: { name: 'Antique globe', cat: 'science', w: 1, h: 1, rise: 26, price: 90, income: 7 },
   bookshelf: { name: 'Bookshelf', cat: 'features', w: 2, h: 1, rise: 40, price: 70, income: 5 },
   fountain: { name: 'Fountain', cat: 'features', w: 2, h: 2, rise: 14, price: 800, income: 60 },
+  sofa: { name: 'Velvet sofa', cat: 'seating', w: 2, h: 1, rise: 14, price: 150, income: 10 },
+  bonsai: { name: 'Bonsai', cat: 'plants', w: 1, h: 1, rise: 14, price: 50, income: 4 },
+  cherry: { name: 'Cherry blossom tree', cat: 'plants', w: 1, h: 1, rise: 42, price: 80, income: 6 },
+  lantern: { name: 'Stone lantern', cat: 'lights', w: 1, h: 1, rise: 32, price: 70, income: 6 },
+  obelisk: { name: 'Obelisk', cat: 'relics', w: 1, h: 1, rise: 58, price: 350, income: 28 },
+  canopic: { name: 'Canopic jars', cat: 'relics', w: 1, h: 1, rise: 14, price: 150, income: 12 },
+  trex: { name: 'T-rex skeleton', cat: 'science', w: 3, h: 2, rise: 34, price: 2500, income: 200 },
+  meteorite: { name: 'Meteorite', cat: 'science', w: 1, h: 1, rise: 20, price: 400, income: 30 },
+  telescope: { name: 'Telescope', cat: 'science', w: 1, h: 1, rise: 30, price: 180, income: 14 },
+  specimens: { name: 'Specimen jars', cat: 'science', w: 1, h: 1, rise: 30, price: 120, income: 10 },
+  geode: { name: 'Geode', cat: 'science', w: 1, h: 1, rise: 20, price: 220, income: 18 },
 };
 
 const ITEMS_KEY = 'curation.items'; // { [roomIndex]: [{ type, c, r, rot }] }
