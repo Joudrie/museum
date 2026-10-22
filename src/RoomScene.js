@@ -14,6 +14,8 @@ import {
   bakePlant,
   bakeItem,
   bakeCoins,
+  bakeDirt,
+  bakeMop,
   PLANTS,
   makeCharacter,
   makeBubble,
@@ -24,8 +26,9 @@ import {
 import { setTrack } from './music.js';
 import { loadRooms, addRoom, resetRooms, updateRoom, swapRooms, roomName, layout, paintingsFor, slotStates, setSlot, hungAnywhere, placeArt, wallItems, plantSpots, carpetRect } from './rooms.js';
 import { openSlotMenu } from './slotmenu.js';
-import { ITEMS, loadItems, saveItems, resetItems, footprint } from './items.js';
-import { coins, addCoins, spend, resetWallet, museumIncome, roomIncome, pile, settle, collect, sellPrice } from './wallet.js';
+import { ITEMS, loadItems, saveItems, resetItems, footprint, countPlaced } from './items.js';
+import { roomDirt, removeDirt, resetDirt, covered, janitors } from './staff.js';
+import { coins, addCoins, spend, resetWallet, museumIncome, museumVisitors, coffeeIncome, roomIncome, pile, settle, collect, sellPrice } from './wallet.js';
 import { openToolkit, hideToolkit, showBar, hideBar } from './toolkit.js';
 import { artBounds, paintArt } from './walldraw.js';
 import { PERSONALITIES, lineFor } from './lines.js';
@@ -61,6 +64,8 @@ const OUTFITS = {
   snob: ['#1e1e22', '#5a1f2a', '#2a2a3a', '#3a2a4a'],
   tourist: ['#2e9e8a', '#e88a3a', '#e85a7a', '#f0c040'],
   fanboy: ['#6a4c93', '#c0392b', '#2e5a8a', '#d35400'],
+  barista: ['#2f5d46'],
+  janitor: ['#4a5f80'],
 };
 
 function visitorLook(kind, r) {
@@ -80,9 +85,15 @@ function visitorLook(kind, r) {
     colors.T = pick(['#e8d8a0', '#f4f0e6', '#d9a04a'], 8);
   }
   if (kind === 'casual' && r(9) < 0.2) look.glasses = true;
+  if (kind === 'janitor') {
+    look.hat = true;
+    colors.T = '#4a5f80';
+    colors.p = '#2e3a4e';
+  }
+  if (kind === 'barista') colors.p = '#2a2420';
   return { colors, look, scale };
 }
-const KINDS = Object.keys(PERSONALITIES);
+const KINDS = Object.keys(PERSONALITIES).filter((k) => !PERSONALITIES[k].staff);
 
 export class RoomScene extends Phaser.Scene {
   constructor() {
@@ -124,6 +135,9 @@ export class RoomScene extends Phaser.Scene {
       bakeStairsUp(this, 'stairs_up');
       bakeStairsDown(this, 'stairs_down');
       for (let i = 1; i <= 3; i++) bakeCoins(this, `coins_${i}`, i);
+      bakeDirt(this, 'dirt_puddle', 'puddle');
+      bakeDirt(this, 'dirt_litter', 'litter');
+      bakeMop(this, 'mop');
     }
 
     this.arches = { exit: !!this.room.arch, entrance: this.roomIndex > 0 && !!this.rooms[this.roomIndex - 1].arch };
@@ -152,6 +166,8 @@ export class RoomScene extends Phaser.Scene {
     this.player = this.add.sprite(start.x, start.y, start.face).setOrigin(0.5, 1).setScale(PLAYER_SCALE);
     const count = Math.min(5, 3 + Math.floor(this.L.slots.length / 6));
     this.npcs = Array.from({ length: count }, (_, i) => this.spawnVisitor(i));
+    this.spawnStaff();
+    this.refreshDirt();
     this.bubble = this.add.image(0, 0, 'bubble').setOrigin(0.5, 1).setDepth(5000).setVisible(false);
 
     this.setupCamera();
@@ -160,6 +176,7 @@ export class RoomScene extends Phaser.Scene {
     this.updateHud();
     this.updatePile();
     this.pileTimer = this.time.addEvent({ delay: 1000, loop: true, callback: () => this.updatePile() });
+    this.dirtTimer = this.time.addEvent({ delay: 30000, loop: true, callback: () => this.refreshDirt() });
     const onCoins = () => this.updateHud();
     window.addEventListener('coins', onCoins);
     this.events.once('shutdown', () => window.removeEventListener('coins', onCoins));
@@ -251,9 +268,42 @@ export class RoomScene extends Phaser.Scene {
     });
   }
 
+  // Puddles and litter on the floor (only in rooms no janitor looks after).
+  refreshDirt() {
+    const { g } = this;
+    const reserved = this.reservedTiles();
+    const free = (c, r) =>
+      !reserved.has(`${c},${r}`) &&
+      !this.items.some((it) => {
+        const f = footprint(it);
+        return c >= it.c && c < it.c + f.w && r >= it.r && r < it.r + f.h;
+      });
+    const spots = roomDirt(this.rooms, this.roomIndex, g.fw, g.fd, free);
+    spots.forEach((sp) => {
+      if (this.mess.some((m) => m.id === sp.id)) return;
+      const x = g.xL + (sp.c + 0.5) * T;
+      const y = g.y0 + (sp.r + 0.5) * T;
+      const m = { id: sp.id, kind: sp.kind, dirt: true, ax: x, ay: y + 6 };
+      m.sprite = this.add.image(x, y, `dirt_${sp.kind}`).setDepth(1);
+      this.mess.push(m);
+    });
+    // A janitor arrived (or rooms moved): clear what's no longer there.
+    this.mess
+      .filter((m) => m.dirt && !spots.some((sp) => sp.id === m.id))
+      .forEach((m) => {
+        m.sprite.destroy();
+        this.mess = this.mess.filter((x) => x !== m);
+      });
+    this.updateHud();
+  }
+
   clean(m) {
     this.mess = this.mess.filter((x) => x !== m);
-    save(CLEANED_KEY, [...new Set([...load(CLEANED_KEY, []), m.id])]);
+    if (m.dirt) {
+      settle(this.rooms, this.roomIndex);
+      removeDirt(this.roomIndex, m.id);
+      this.updateHud();
+    } else save(CLEANED_KEY, [...new Set([...load(CLEANED_KEY, []), m.id])]);
 
     const b = m.sprite.getBounds();
     const color = m.kind === 'cobweb' ? 0xf4f2ec : m.kind === 'crack' ? 0xf1dfb0 : 0xd8e4ea;
@@ -301,8 +351,49 @@ export class RoomScene extends Phaser.Scene {
     return { s, prefix, kind, name: names[Math.floor(hash(seed, 6, 50) * names.length)], wait: 400 + Math.random() * 1500, target: null };
   }
 
+  // The barista behind a coffee counter, and sometimes a janitor on their rounds.
+  spawnStaff() {
+    const { g } = this;
+    const make = (kind, seed, x, y) => {
+      const { colors, look, scale } = visitorLook(kind, (k) => hash(seed, k, 53));
+      const prefix = `staff${seed}`;
+      makeCharacter(this, prefix, colors, look);
+      const names = PERSONALITIES[kind].names;
+      const s = this.add.sprite(x, y, `${prefix}_down`).setOrigin(0.5, 1).setScale(scale);
+      const n = { s, prefix, kind, staff: true, name: names[Math.floor(hash(seed, 6, 50) * names.length)], wait: 1000, target: null };
+      this.npcs.push(n);
+      return n;
+    };
+    const counter = this.items.find((it) => it.type === 'counter');
+    if (counter) {
+      make('barista', 700 + this.roomIndex, g.xL + counter.c * T + 60, g.y0 + counter.r * T + 2).fixed = true;
+    }
+    if (covered(this.rooms, this.roomIndex) && Math.random() < 0.5) {
+      let x = g.xL + T * 1.5;
+      let y = g.y0 + T * 3;
+      for (let tries = 0; tries < 20 && this.blocked(x, y); tries++) {
+        x = g.xL + (Math.floor(Math.random() * g.fw) + 0.5) * T;
+        y = g.y0 + (1 + Math.floor(Math.random() * (g.fd - 2))) * T + T - 4;
+      }
+      const n = make('janitor', 800 + this.roomIndex, x, y);
+      n.mop = this.add.image(x + 12, y, 'mop').setOrigin(0.5, 1);
+    }
+  }
+
+  // Services changed (counter or closet placed, moved or sold): respawn staff, recheck dirt.
+  refreshStaff() {
+    this.endTalk();
+    this.npcs.filter((n) => n.staff).forEach((n) => {
+      n.s.destroy();
+      n.mop?.destroy();
+    });
+    this.npcs = this.npcs.filter((n) => !n.staff);
+    this.spawnStaff();
+    this.refreshDirt();
+  }
+
   updateVisitor(n, dt) {
-    if (n.talking) return;
+    if (n.talking || n.fixed) return;
     if (n.target) {
       const dx = n.target.x - n.s.x;
       const dy = n.target.y - n.s.y;
@@ -350,7 +441,14 @@ export class RoomScene extends Phaser.Scene {
   }
 
   talkTo(n) {
-    const line = lineFor(n.kind, this.paintingNear(n.s.x, n.s.y));
+    let line = lineFor(n.kind, this.paintingNear(n.s.x, n.s.y));
+    if (n.kind === 'barista' && Math.random() < 0.5) {
+      line = `Coffee’s flowing! ${museumVisitors(this.rooms).toLocaleString()} visitors a month means ${coffeeIncome(this.rooms)} gold an hour from cups.`;
+    }
+    if (n.kind === 'janitor' && Math.random() < 0.4) {
+      const j = janitors(this.rooms);
+      line = `There ${j === 1 ? 'is 1 of us' : `are ${j} of us`}. Each janitor keeps 3 rooms spotless.`;
+    }
     n.talking = true;
     n.target = null;
     this.faceSprite(n.s, n.prefix, this.player.x - n.s.x, this.player.y - n.s.y);
@@ -508,6 +606,7 @@ export class RoomScene extends Phaser.Scene {
           resetRooms();
           resetItems();
           resetWallet();
+          resetDirt();
           save(DECOR_KEY, { 0: load(DECOR_KEY, {})[0] }); // built rooms are gone, so is their decor
           this.travel(0, 'start');
         },
@@ -612,7 +711,7 @@ export class RoomScene extends Phaser.Scene {
       if (along < 22 && across < 16) consider(across + along / 4 + 1, { slot: sl, icon: sl.kind === 'door' ? 'door' : 'build' });
     }
     for (const m of this.mess) {
-      consider(Math.hypot(x - m.ax, y - 4 - m.ay), { mess: m, icon: { crack: 'repair', stain: 'clean', cobweb: 'sweep' }[m.kind] });
+      consider(Math.hypot(x - m.ax, y - 4 - m.ay), { mess: m, icon: { crack: 'repair', stain: 'clean', cobweb: 'sweep', puddle: 'clean', litter: 'sweep' }[m.kind] });
     }
     if (this.pileSprite.visible) consider(Math.hypot(x - this.pileSprite.x, y - this.pileSprite.y + 6) - 4, { coins: true, icon: 'coins' });
     for (const n of this.npcs) consider(Math.hypot(x - n.s.x, y - n.s.y) - 2, { npc: n, icon: 'talk' });
@@ -766,11 +865,10 @@ export class RoomScene extends Phaser.Scene {
 
   // Coins in the wallet, museum gold per hour and visitors per month.
   updateHud() {
-    const paintings = this.rooms.reduce((n, _, i) => n + paintingsFor(this.rooms, i).length, 0);
     const income = museumIncome(this.rooms);
     document.querySelector('.hud-coins').textContent = coins().toLocaleString();
     document.querySelector('.hud-income').textContent = `+${income}`;
-    document.querySelector('.hud-visitors').textContent = (50 + paintings * 150 + (income - paintings * 5) * 25).toLocaleString();
+    document.querySelector('.hud-visitors').textContent = museumVisitors(this.rooms).toLocaleString();
   }
 
   // ---------- Coin piles ----------
@@ -899,6 +997,8 @@ export class RoomScene extends Phaser.Scene {
       icon: (type) => this.textures.get(this.itemKey(type, 0)).getSourceImage().toDataURL(),
       coins: () => coins(),
       onPick: (type) => {
+        const max = ITEMS[type].max;
+        if (max && countPlaced(type, this.rooms.length) >= max) return this.toast(`Only ${max} allowed in the museum`);
         if (coins() < ITEMS[type].price) return this.toast(`Need ${(ITEMS[type].price - coins()).toLocaleString()} more gold`);
         this.startPlacing({ type, rot: 0 });
       },
@@ -988,11 +1088,12 @@ export class RoomScene extends Phaser.Scene {
     const { type, c, r, rot, orig } = this.ghost;
     if (!orig) {
       if (!spend(ITEMS[type].price)) return this.toast('Not enough gold');
-      settle(this.rooms, this.roomIndex);
+      this.settleAll();
     }
     this.items.push({ type, c, r, rot });
     saveItems(this.roomIndex, this.items);
     this.placeItems();
+    if (ITEMS[type].cat === 'services') this.refreshStaff();
     this.updateHud();
     this.browse();
   }
@@ -1024,7 +1125,7 @@ export class RoomScene extends Phaser.Scene {
       {
         label: `Sell +${sellPrice(hit.type)}`,
         onClick: () => {
-          settle(this.rooms, this.roomIndex);
+          this.settleAll();
           addCoins(sellPrice(hit.type));
           this.toast(`Sold for ${sellPrice(hit.type)} gold`);
           this.updateItem(hit, null);
@@ -1039,6 +1140,7 @@ export class RoomScene extends Phaser.Scene {
     if (replacement) this.items.push(replacement);
     saveItems(this.roomIndex, this.items);
     this.placeItems();
+    if (ITEMS[item.type].cat === 'services') this.refreshStaff();
     this.updateHud();
     this.browse();
   }
@@ -1068,6 +1170,7 @@ export class RoomScene extends Phaser.Scene {
       this.updateVisitor(n, dt);
       this.animate(n.s, !!n.target && !n.talking, dt);
       n.s.setDepth(n.s.y);
+      n.mop?.setPosition(n.s.x + 12, n.s.y).setDepth(n.s.y - 1);
     });
     if (this.mode) return this.drawOverlay(); // toolkit open: no walking
     if (!this.input.enabled) return; // a panel is open

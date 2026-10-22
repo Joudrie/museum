@@ -751,6 +751,38 @@ export function bakeCoins(scene, key, stage) {
   return bake(scene, key, W, H, (x, y) => set.get(`${x},${y}`) || null);
 }
 
+// Floor dirt: a puddle or a bit of litter.
+export function bakeDirt(scene, key, kind) {
+  if (kind === 'puddle') {
+    return bake(scene, key, 26, 12, (x, y) => {
+      const d = ((x - 12.5) / 12.5) ** 2 + ((y - 6) / 5.5) ** 2;
+      const blob = d + 0.18 * Math.sin(x * 0.9) * Math.cos(y * 1.3);
+      if (blob > 1) return null;
+      if ((x - 8) ** 2 / 9 + (y - 4) ** 2 < 1.2) return [235, 245, 250, 200];
+      return blob > 0.72 ? [60, 100, 140, 190] : [100, 150, 195, 165];
+    });
+  }
+  const set = new Map();
+  const P = (x, y, c) => set.set(`${x},${y}`, c);
+  // Crumpled paper ball.
+  for (let y = 0; y < 7; y++) for (let x = 0; x < 7; x++) if ((x - 3) ** 2 + (y - 3) ** 2 <= 10) P(x + 1, y + 2, (x + y) % 3 ? [236, 232, 220] : [196, 190, 176]);
+  // Candy wrapper.
+  for (let x = 10; x < 16; x++) for (let y = 6; y < 9; y++) P(x, y, x === 10 || x === 15 ? [200, 60, 60] : [230, 90, 70]);
+  P(12, 7, [250, 220, 120]);
+  return bake(scene, key, 17, 11, (x, y) => set.get(`${x},${y}`) || null);
+}
+
+// A janitor's mop and bucket.
+export function bakeMop(scene, key) {
+  const set = new Map();
+  const P = (x, y, c) => set.set(`${x},${y}`, c);
+  for (let y = 0; y < 24; y++) P(13 - Math.floor(y / 6), y, [140, 96, 56]); // handle
+  for (let y = 22; y < 30; y++) for (let x = 6; x < 15; x++) if ((x + y) % 2 || y > 26) P(x, y, [214, 210, 196]); // mop head
+  for (let y = 24; y < 33; y++) for (let x = 14; x < 24; x++) P(x, y, y === 24 || x === 14 || x === 23 ? [150, 110, 20] : [232, 186, 40]); // bucket
+  for (let x = 15; x < 23; x++) P(x, 25, [120, 160, 190]);
+  return bake(scene, key, 24, 33, (x, y) => set.get(`${x},${y}`) || null);
+}
+
 // ---------- Characters (20x27 drawn into a 32x32 tile) ----------
 const PAL = {
   o: '#2a1a14',
@@ -1265,6 +1297,42 @@ export function bakeItem(scene, key, type, def, rot) {
       box(2, gy - 20, 6, 14, '#7a2232', OUT);
       box(56, gy - 20, 6, 14, '#7a2232', OUT);
       [16, 32, 48].forEach((x) => R(x, gy - 21, 1, 1, '#e0bc55'));
+      break;
+    case 'counter': {
+      shadow(48, gy, 46, 4);
+      box(3, gy - 26, 90, 25, WOOD_D, OUT); // front
+      for (let x = 8; x < 90; x += 14) R(x, gy - 22, 10, 17, WOOD); // panels
+      box(1, gy - 31, 94, 6, MARBLE, OUT); // top
+      R(1, gy - 26, 94, 1, MARBLE_D);
+      // Espresso machine.
+      box(8, gy - 48, 24, 17, '#b8bcc4', OUT);
+      R(9, gy - 47, 22, 3, '#e4e6ea');
+      R(12, gy - 41, 4, 6, '#3a3a40');
+      R(22, gy - 41, 4, 6, '#3a3a40');
+      R(13, gy - 35, 2, 3, '#f4f0e8');
+      R(23, gy - 35, 2, 3, '#f4f0e8');
+      R(28, gy - 46, 2, 2, '#e05a40');
+      // Pastry case.
+      box(68, gy - 44, 25, 13, 'rgba(200,230,240,0.55)', OUT);
+      [[71, '#d89a50'], [78, '#8a4a2a'], [85, '#e8c070']].forEach(([x, c]) => E(x + 2, gy - 35, 3, 2, c));
+      R(69, gy - 43, 23, 1, 'rgba(255,255,255,0.7)');
+      // Cups (the barista stands in the gap between the cups and the case).
+      [37, 44].forEach((x) => {
+        box(x, gy - 37, 5, 6, '#f4f0e8', OUT);
+        R(x + 1, gy - 37, 3, 1, '#6a3a20');
+      });
+      break;
+    }
+    case 'closet':
+      shadow(16, gy, 13, 3);
+      box(4, gy - 64, 24, 62, '#5d6f8a', OUT);
+      R(5, gy - 63, 22, 2, '#7d90ab');
+      R(15, gy - 63, 1, 60, '#3f4d63');
+      [8, 19].forEach((x) => [0, 3, 6].forEach((k) => R(x, gy - 58 + k, 6, 1, '#3f4d63')));
+      R(12, gy - 34, 2, 5, BRASS);
+      R(17, gy - 34, 2, 5, BRASS);
+      box(8, gy - 48, 16, 6, '#f4f0e8', OUT); // sign
+      R(10, gy - 46, 12, 2, '#5d6f8a');
       break;
   }
   tex.refresh();

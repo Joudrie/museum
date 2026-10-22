@@ -38,7 +38,8 @@
 - Goal: get the most visitors. More paintings → more visitors; complete sets → big bonus; every decoration adds a little income.
 - Coffee shop room: visitors buy coffee; decorate it (bookshelves etc.).
 - Done: real gold. Start with 300. Each room earns gold/hr (5 per painting + each item's income); it piles up as a coin heap near the room's entrance (max 8 hours' worth). Walk up and Interact to collect. Items cost gold (sell for half back); each new room costs more (bigger rooms cost more). Testing button: +1,000 gold.
-- Next: coffee shop, janitors, Curator's Office.
+- Done: **Services** in the toolkit. Coffee counter (1 per museum, barista behind it) earns 1 gold/hr per 100 monthly visitors. Rooms collect puddles and litter (one per 90 min, max 3, each -10% room income; Interact to mop). Janitor closets (up to 3) each hire a janitor who keeps 3 rooms spotless and is sometimes seen with a mop.
+- Next: Curator's Office (level up to unlock more).
 - Janitor break room: hire janitors who keep the place clean (rarely seen holding a mop by a puddle).
 
 ## Someday

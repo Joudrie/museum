@@ -11,6 +11,7 @@ export const CATEGORIES = {
   relics: 'Relics',
   science: 'Science',
   features: 'Features',
+  services: 'Services',
 };
 
 export const ITEMS = {
@@ -43,6 +44,8 @@ export const ITEMS = {
   meteorite: { name: 'Meteorite', cat: 'science', w: 1, h: 1, rise: 20, price: 400, income: 30 },
   telescope: { name: 'Telescope', cat: 'science', w: 1, h: 1, rise: 30, price: 180, income: 14 },
   specimens: { name: 'Specimen jars', cat: 'science', w: 1, h: 1, rise: 30, price: 120, income: 10 },
+  counter: { name: 'Coffee counter', cat: 'services', w: 3, h: 1, rise: 22, price: 400, income: 0, max: 1, note: 'Sells coffee' },
+  closet: { name: 'Janitor closet', cat: 'services', w: 1, h: 1, rise: 42, price: 300, income: 0, max: 3, note: 'Hires a janitor' },
   geode: { name: 'Geode', cat: 'science', w: 1, h: 1, rise: 20, price: 220, income: 18 },
 };
 
@@ -64,4 +67,11 @@ export function resetItems() {
 export function footprint(item) {
   const def = ITEMS[item.type];
   return item.rot ? { w: def.h, h: def.w } : { w: def.w, h: def.h };
+}
+
+// How many of an item are placed across the museum (for items with a max).
+export function countPlaced(type, roomCount) {
+  let n = 0;
+  for (let i = 0; i < roomCount; i++) loadItems(i).forEach((it) => it.type === type && n++);
+  return n;
 }
