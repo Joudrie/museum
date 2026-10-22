@@ -16,6 +16,7 @@ A cozy, top-down, faux-16-bit pixel tycoon game (Stardew / Pokémon B&W vibe). Y
 - **First room:** small on purpose (5 × 12 tiles, 3 slots per side wall) so you want to expand.
 - **Controls:** press and drag only (no tap-to-walk). The Interact button shows an icon for what you're about to interact with.
 - **Building rooms:** walk to an unbuilt exit → Interact → pick vertical/horizontal and short/medium/long (shows painting capacity). The preview is cut by a dotted line near the exit end; the room body stays still and the end piece is a vertical carousel (swipe up/down): stairs up, door on the main wall, door on the end wall/side wall, stairs down, no exit. The new room's exit becomes the next build spot. Vertical rooms hang paintings on the side walls and you enter at the bottom; horizontal rooms hang them on the back wall and you enter through a door on the left end wall.
+- **Toolkit (hammer button):** pick a decor item and drag it onto the floor grid (green = fits, red = blocked); tap placed items to move, rotate or remove. Every item earns gold per day; the HUD shows museum gold/day and visitors/month. Relics and science pieces (vase, sarcophagus, dinosaur skull, globe) are in.
 - **Visitors:** each has a personality (nerd, casual, superfan, snob, kid, grump, tourist). Talk to them for one or two lines, often about the painting they're near (jokes and facts). Speech bubble sits at the top or bottom of the screen with a tail pointing at them.
 - **Team:** solo dev.
 - **Player:** one character, the curator. Customizable look. No backstory.

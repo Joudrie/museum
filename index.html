@@ -12,6 +12,7 @@
 
     <div id="hud">
       <span class="museum-name">Your Museum</span>
+      <span class="hud-stats"><i class="coin"></i> <span><b class="hud-income">+0</b>/day</span> · <span><b class="hud-visitors">0</b> visitors/mo</span></span>
     </div>
 
     <button id="home-btn" class="pixel-btn" aria-label="Customize">
@@ -19,6 +20,27 @@
         <g fill="currentColor"><rect x="5" y="0" width="1" height="1" /><rect x="4" y="1" width="3" height="1" /><rect x="3" y="2" width="5" height="1" /><rect x="2" y="3" width="7" height="1" /><rect x="1" y="4" width="9" height="1" /><rect x="0" y="5" width="11" height="1" /><rect x="2" y="6" width="7" height="1" /><rect x="2" y="7" width="3" height="3" /><rect x="6" y="7" width="3" height="3" /></g>
       </svg>
     </button>
+
+    <button id="build-btn" class="pixel-btn" aria-label="Toolkit">
+      <svg viewBox="0 0 16 11" width="24" height="18" shape-rendering="crispEdges" aria-hidden="true"><g fill="currentColor"><rect x="6" y="0" width="5" height="1" /><rect x="5" y="1" width="7" height="1" /><rect x="5" y="2" width="7" height="1" /><rect x="6" y="3" width="5" height="1" /><rect x="8" y="4" width="2" height="7" /></g></svg>
+    </button>
+
+    <div id="toolkit" class="hidden" role="dialog" aria-label="Toolkit">
+      <div class="toolkit-sheet">
+        <div class="decor-head">
+          <h2>Toolkit</h2>
+          <button class="toolkit-done pixel-btn">Done</button>
+        </div>
+        <p class="toolkit-note">Pick an item, then drag it into place. Tap an item in the room to move or remove it. Free while testing.</p>
+        <div class="choices toolkit-cats"></div>
+        <div class="toolkit-grid"></div>
+      </div>
+    </div>
+
+    <div id="placebar" class="hidden">
+      <div class="placebar-info"><b class="pb-name"></b><span class="pb-meta"></span></div>
+      <div class="placebar-buttons"></div>
+    </div>
 
     <button id="interact" class="pixel-btn hidden"><span class="bang"></span>Interact</button>
 
