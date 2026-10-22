@@ -30,7 +30,7 @@ function drawRoom(scene, rooms, room, decor) {
   const src = (t) => t.getSourceImage();
   const mat = L.entrance.mat;
 
-  ctx.drawImage(src(bakeFloor(scene, '_pv_floor', g.xR - g.xL, g.y1 - g.y0, decor.floor)), g.xL, g.y0);
+  ctx.drawImage(src(bakeFloor(scene, '_pv_floor', g.xR - g.xL, g.y1 - g.y0, decor)), g.xL, g.y0);
   ctx.drawImage(src(bakeWalls(scene, '_pv_walls', g, wallItems(L, hung), decor)), 0, 0);
   ctx.drawImage(src(bakeFront(scene, '_pv_front', g.w, mat ? L.entrance.x0 : -1, mat ? L.entrance.x1 : -1)), 0, g.y1);
   const sp = L.exit?.sprite;

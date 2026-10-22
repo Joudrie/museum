@@ -161,3 +161,25 @@ export function wallItems(L, hung) {
   });
   return items;
 }
+
+// Plants stand on the floor between each pair of neighboring painting slots.
+export function plantSpots(L) {
+  const { g } = L;
+  const spots = [];
+  ['left', 'right', 'back'].forEach((wall) => {
+    const us = L.slots.filter((s) => s.wall === wall).map((s) => s.u).sort((a, b) => a - b);
+    for (let i = 1; i < us.length; i++) {
+      const u = (us[i - 1] + us[i]) / 2;
+      if (wall === 'back') spots.push({ x: g.xL + u, y: g.y0 + 18 });
+      else spots.push({ x: wall === 'left' ? g.xL + 12 : g.xR - 12, y: g.y0 + u + 8 });
+    }
+  });
+  return spots;
+}
+
+// The carpet runner covers the middle of the floor, one tile in from each edge.
+export function carpetRect(L) {
+  const { g } = L;
+  if (g.vertical) return { x: g.xL + T, y: g.y0 + T, w: g.xR - g.xL - 2 * T, h: g.y1 - g.y0 - 2 * T, alongY: true };
+  return { x: g.xL + T, y: g.y0 + T, w: g.xR - g.xL - 2 * T, h: g.y1 - g.y0 - 2 * T, alongY: false };
+}
