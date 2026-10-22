@@ -423,17 +423,21 @@ body {
 #talk.hidden .talk-box {
   pointer-events: none;
 }
-.talk-tail {
+.talk-shape {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
 }
-.talk-tail polygon {
+.talk-body {
   fill: #fff8e6;
   stroke: #1d1714;
   stroke-width: 3;
   stroke-linejoin: miter;
+}
+.talk-shadow {
+  fill: #1d1714;
+  transform: translateY(4px);
 }
 .talk-box {
   position: absolute;
@@ -442,9 +446,6 @@ body {
   transform: translateX(-50%);
   width: min(86vw, 360px);
   padding: 12px 16px 14px;
-  background: #fff8e6;
-  border: 3px solid #1d1714;
-  box-shadow: 0 4px 0 #1d1714;
   color: #2a1a12;
   pointer-events: auto;
 }

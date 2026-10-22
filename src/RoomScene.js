@@ -26,6 +26,8 @@ import { showTalk, hideTalk, talking } from './talk.js';
 const VIEW_TILES = 9; // the camera always shows 9 tiles across
 const SPEED = 176; // px per second
 const NPC_SPEED = 70;
+const NPC_SLOW = 0.35; // visitors slow down near the player so they're easy to talk to
+const BODY = { w: 13, h: 9 }; // half-size of a character's footprint, for bumping
 const PLAYER_SCALE = 1.15;
 const REACH = 26; // how close you need to be to interact
 const HD = 4; // resolution multiplier for paintings on the wall
@@ -235,7 +237,11 @@ export class RoomScene extends Phaser.Scene {
     if (n.target) {
       const dx = n.target.x - n.s.x;
       const dy = n.target.y - n.s.y;
-      const step = NPC_SPEED * dt;
+      const near = Math.hypot(this.player.x - n.s.x, this.player.y - n.s.y) < 48;
+      const step = NPC_SPEED * dt * (near ? NPC_SLOW : 1);
+      const sx = dx ? Math.sign(dx) * Math.min(step, Math.abs(dx)) : 0;
+      const sy = dx ? 0 : Math.sign(dy) * Math.min(step, Math.abs(dy));
+      if (this.overlapsPlayer(n.s.x + sx, n.s.y + sy)) return; // wait for the player to move
       if (Math.abs(dx) + Math.abs(dy) <= step) {
         n.s.setPosition(n.target.x, n.target.y);
         n.target = null;
@@ -304,6 +310,15 @@ export class RoomScene extends Phaser.Scene {
 
   blocked(x, y) {
     return this.blocks.some((b) => x > b.x0 - 6 && x < b.x1 + 6 && y > b.y0 && y < b.y1 + 8);
+  }
+
+  // Characters bump into each other instead of walking through.
+  hitsVisitor(x, y) {
+    return this.npcs.some((n) => Math.abs(x - n.s.x) < 2 * BODY.w && Math.abs(y - n.s.y) < 2 * BODY.h);
+  }
+
+  overlapsPlayer(x, y) {
+    return Math.abs(x - this.player.x) < 2 * BODY.w && Math.abs(y - this.player.y) < 2 * BODY.h;
   }
 
   // ---------- Camera & input ----------
@@ -508,8 +523,9 @@ export class RoomScene extends Phaser.Scene {
       const b = this.bounds();
       const nx = Phaser.Math.Clamp(this.player.x + (vx / len) * SPEED * dt, b.x0, b.x1);
       const ny = Phaser.Math.Clamp(this.player.y + (vy / len) * SPEED * dt, b.y0, b.y1);
-      if (!this.blocked(nx, this.player.y)) this.player.x = nx;
-      if (!this.blocked(this.player.x, ny)) this.player.y = ny;
+      const free = (x, y, ox, oy) => !this.blocked(x, y) && (!this.hitsVisitor(x, y) || this.hitsVisitor(ox, oy));
+      if (free(nx, this.player.y, this.player.x, this.player.y)) this.player.x = nx;
+      if (free(this.player.x, ny, this.player.x, this.player.y)) this.player.y = ny;
       this.faceSprite(this.player, 'player', vx, vy);
     }
     this.player.setDepth(this.player.y);

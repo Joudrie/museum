@@ -233,20 +233,20 @@ export function bakeWalls(scene, key, g, items, decor) {
     if (sx >= xL && sx < xR && sy >= y0 && sy < y1) return null; // floor
     if (sy >= y1) return null;
 
-    // back wall, seen straight on
-    const t = (y0 - sy) / D;
-    if (t > 0 && t <= 1 && sx >= xL && sx < xR) {
-      return mat(sx - xL, Math.floor(t * D - 0.001), items.back, 11);
+    // Back wall, seen straight on. It also fills the corner triangles up to
+    // the 45° seam, so the walls always meet with no gap.
+    const d = y0 - sy;
+    if (d > 0 && d <= D && sx >= xL - d && sx < xR + d) {
+      return mat(sx - xL, Math.floor(d - 0.001), items.back, 11);
     }
 
-    // side walls (parallelograms leaning out at 45°)
+    // Side walls lean out at 45° and run all the way down to the front edge.
     const left = sx < xL;
     if (left || sx >= xR) {
       const v = left ? xL - 1 - sx : sx - xR;
       const baseY = sy + v;
-      if (v < D && baseY >= y0 && baseY < y1) {
-        if (baseY >= y1 - 2) return FIX.edge; // wall end cap
-        if (baseY < y0 + 1) return FIX.edge; // corner where it meets the back wall
+      if (v < D && baseY >= y0) {
+        if (baseY < y0 + 1) return FIX.edge; // corner seam with the back wall
         const c = mat(baseY - y0, v, left ? items.left : items.right, left ? 21 : 31);
         return shade(c, left ? 0.92 : 0.84);
       }
