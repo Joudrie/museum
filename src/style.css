@@ -767,3 +767,167 @@ body {
   color: var(--ink);
   font: inherit;
 }
+
+/* ---------- HUD stats ---------- */
+#hud {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  border-radius: 14px;
+}
+.hud-stats {
+  white-space: nowrap;
+  font-family: ui-monospace, 'Courier New', monospace;
+  font-size: 11px;
+  letter-spacing: 0;
+  color: var(--muted);
+}
+.hud-stats b {
+  color: var(--ink);
+  font-weight: normal;
+}
+.coin {
+  display: inline-block;
+  vertical-align: -1px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fff0a0, #e0b040 55%, #a07a20);
+  box-shadow: 0 0 0 1px #5b4216;
+}
+
+/* ---------- Toolkit ---------- */
+#build-btn {
+  position: fixed;
+  top: max(10px, env(safe-area-inset-top));
+  left: max(12px, calc((100vw - min(100vw, 100dvh * 9 / 16)) / 2 + 12px));
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+}
+#toolkit {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 18;
+  display: flex;
+  justify-content: center;
+  transition: transform 0.2s, opacity 0.2s;
+}
+#toolkit.hidden {
+  transform: translateY(30px);
+  opacity: 0;
+  pointer-events: none;
+}
+.toolkit-sheet {
+  width: min(100vw, 100dvh * 9 / 16);
+  max-height: 46dvh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: var(--panel);
+  border-top: 3px solid var(--gold);
+  padding: 12px 14px max(16px, env(safe-area-inset-bottom));
+}
+.toolkit-done {
+  padding: 8px 14px;
+}
+.toolkit-note {
+  margin: 6px 0 10px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.toolkit-cats button {
+  flex: 1 1 calc(33% - 8px);
+  font-size: 12px;
+  padding: 7px 4px;
+}
+.toolkit-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 10px;
+}
+.tool-item {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  padding: 8px 4px;
+  border: 2px solid var(--gold-dark);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--ink);
+  font: inherit;
+  font-size: 12px;
+  text-align: center;
+}
+.ti-icon {
+  display: grid;
+  place-items: end center;
+  height: 56px;
+}
+.ti-icon img {
+  image-rendering: pixelated;
+}
+.ti-meta {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-family: ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--muted);
+}
+.ti-size {
+  font-size: 10px;
+  color: var(--muted);
+}
+
+/* ---------- Place / edit bar ---------- */
+#placebar {
+  position: fixed;
+  left: 50%;
+  bottom: max(16px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 18;
+  width: min(94vw, 380px);
+  padding: 10px 12px;
+  background: var(--panel);
+  border: 3px solid var(--gold-dark);
+  box-shadow: 0 4px 0 #1d1714;
+}
+#placebar.hidden {
+  display: none;
+}
+.placebar-info {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+.placebar-info span {
+  color: var(--muted);
+  font-size: 12px;
+}
+.placebar-buttons {
+  display: flex;
+  gap: 8px;
+}
+.placebar-buttons .pixel-btn {
+  flex: 1;
+  padding: 10px 4px;
+  font-size: 13px;
+  text-transform: uppercase;
+}
+.placebar-buttons .pixel-btn:not(.primary) {
+  background: #d8cfbc;
+  box-shadow:
+    inset -3px -3px 0 #a89f8c,
+    inset 3px 3px 0 #f4ecdc,
+    0 3px 0 #1d1714;
+}
+.placebar-buttons .pixel-btn:disabled {
+  opacity: 0.45;
+}

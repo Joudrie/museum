@@ -12,6 +12,7 @@ import {
   bakeStairsDown,
   bakeCarpet,
   bakePlant,
+  bakeItem,
   PLANTS,
   makeCharacter,
   makeBubble,
@@ -20,6 +21,8 @@ import {
 } from './art.js';
 import { loadRooms, addRoom, resetRooms, layout, paintingsFor, slotStates, setSlot, hungAnywhere, placeArt, wallItems, plantSpots, carpetRect } from './rooms.js';
 import { openSlotMenu } from './slotmenu.js';
+import { ITEMS, loadItems, saveItems, resetItems, footprint, itemIncome } from './items.js';
+import { openToolkit, hideToolkit, showBar, hideBar } from './toolkit.js';
 import { artBounds, paintArt } from './walldraw.js';
 import { PERSONALITIES, lineFor } from './lines.js';
 import { iconSvg } from './icons.js';
@@ -126,6 +129,11 @@ export class RoomScene extends Phaser.Scene {
     this.blocks = exit?.block ? [exit.block] : [];
     this.decorObjects = [];
     this.placeDecor();
+    this.items = loadItems(this.roomIndex);
+    this.itemSprites = [];
+    this.placeItems();
+    this.overlay = this.add.graphics().setDepth(6000);
+    this.mode = null; // toolkit: null | 'browse' | 'place' | 'edit'
 
     this.mess = [];
     if (this.roomIndex === 0) this.spawnMess();
@@ -139,6 +147,7 @@ export class RoomScene extends Phaser.Scene {
     this.setupCamera();
     this.setupInput();
     this.setupButtons();
+    this.updateHud();
     this.cameras.main.fadeIn(250, 29, 21, 18);
   }
 
@@ -393,12 +402,18 @@ export class RoomScene extends Phaser.Scene {
     this.input.on('pointerdown', (p) => {
       this.press = this.toCss(p);
       this.dragging = false;
+      if (this.mode === 'place') this.ghostDrag = { c: this.ghost.c, r: this.ghost.r };
     });
     this.input.on('pointermove', (p) => {
       if (!this.press || !p.isDown) return;
       const at = this.toCss(p);
       const dx = at.x - this.press.x;
       const dy = at.y - this.press.y;
+      if (this.mode) {
+        if (this.mode === 'place' && this.ghostDrag) this.dragGhost(dx, dy);
+        if (Math.hypot(dx, dy) > 10) this.dragging = true;
+        return;
+      }
       if (!this.dragging && Math.hypot(dx, dy) > 10) {
         this.dragging = true;
         this.stick.style.left = `${this.press.x}px`;
@@ -407,7 +422,9 @@ export class RoomScene extends Phaser.Scene {
       }
       if (this.dragging) this.moveKnob(dx, dy);
     });
-    this.input.on('pointerup', () => {
+    this.input.on('pointerup', (p) => {
+      if (this.mode && this.mode !== 'place' && this.press && !this.dragging) this.tapItem(p.worldX, p.worldY);
+      this.ghostDrag = null;
       this.press = null;
       this.dragging = false;
       this.stick.classList.remove('active');
@@ -428,11 +445,15 @@ export class RoomScene extends Phaser.Scene {
   }
 
   setupButtons() {
+    document.getElementById('build-btn').onclick = () => {
+      if (this.mode) this.exitBuild();
+      else if (this.input.enabled) this.enterBuild();
+    };
     this.interactBtn = document.getElementById('interact');
     this.interactIcon = this.interactBtn.querySelector('.bang');
     this.interactBtn.onclick = () => this.interact();
     document.getElementById('home-btn').onclick = () => {
-      if (!this.input.enabled) return;
+      if (!this.input.enabled || this.mode) return;
       this.pause(true);
       openDecor({
         decor: this.decor,
@@ -444,8 +465,9 @@ export class RoomScene extends Phaser.Scene {
         onReset: () => {
           this.resetMess();
           resetRooms();
+          resetItems();
           save(DECOR_KEY, { 0: load(DECOR_KEY, {})[0] }); // built rooms are gone, so is their decor
-          if (this.roomIndex !== 0) this.travel(0, 'start');
+          this.travel(0, 'start');
         },
         onClose: () => this.pause(false),
       });
@@ -635,6 +657,238 @@ export class RoomScene extends Phaser.Scene {
     else if (vy !== 0) s.setTexture(vy < 0 ? `${prefix}_up` : `${prefix}_down`).setFlipX(false);
   }
 
+  // ---------- HUD ----------
+
+  // Gold per day and visitors per month across the whole museum (flavor numbers for now).
+  updateHud() {
+    const paintings = this.rooms.reduce((n, _, i) => n + paintingsFor(this.rooms, i).length, 0);
+    const decor = itemIncome(this.rooms.length);
+    document.querySelector('.hud-income').textContent = `+${paintings * 5 + decor}`;
+    document.querySelector('.hud-visitors').textContent = (50 + paintings * 150 + decor * 25).toLocaleString();
+  }
+
+  // ---------- Decor items (toolkit) ----------
+
+  itemKey(type, rot) {
+    const def = ITEMS[type];
+    if (def.plant) return `plant_${def.plant}`;
+    const key = `item_${type}_${rot ? 1 : 0}`;
+    if (!this.textures.exists(key)) bakeItem(this, key, type, def, rot);
+    return key;
+  }
+
+  tileOf(x, y) {
+    return { c: Math.floor((x - this.g.xL) / T), r: Math.floor((y - this.g.y0) / T) };
+  }
+
+  // Tiles items can't cover: doorways, stairs, exits and auto-placed plants.
+  reservedTiles() {
+    const { g, exit, entrance } = this.L;
+    const set = new Set();
+    const add = ({ c, r }) => set.add(`${c},${r}`);
+    if (entrance.mat) add({ c: Math.floor(g.fw / 2), r: g.fd - 1 });
+    else add(this.tileOf(entrance.ax, entrance.ay));
+    if (exit) add(this.tileOf(exit.ax, exit.ay - 4));
+    if (exit?.block) {
+      for (let x = exit.block.x0; x < exit.block.x1; x += T / 2)
+        for (let y = exit.block.y0; y < exit.block.y1; y += T / 2) add(this.tileOf(x, y));
+    }
+    if (this.decor.plant !== 'none') plantSpots(this.L).forEach(({ x, y }) => add(this.tileOf(x, y - 4)));
+    return set;
+  }
+
+  canPlace(item, ignore) {
+    const { w, h } = footprint(item);
+    if (item.c < 0 || item.r < 0 || item.c + w > this.g.fw || item.r + h > this.g.fd) return false;
+    const reserved = this.reservedTiles();
+    for (let c = item.c; c < item.c + w; c++) for (let r = item.r; r < item.r + h; r++) if (reserved.has(`${c},${r}`)) return false;
+    return !this.items.some((o) => {
+      if (o === ignore) return false;
+      const f = footprint(o);
+      return item.c < o.c + f.w && o.c < item.c + w && item.r < o.r + f.h && o.r < item.r + h;
+    });
+  }
+
+  // (Re)create sprites and collision for the room's items.
+  placeItems() {
+    this.itemSprites.forEach((sp) => sp.destroy());
+    this.blocks = this.blocks.filter((b) => !b.item);
+    const { g } = this;
+    this.itemSprites = this.items.map((it) => {
+      const { w, h } = footprint(it);
+      const x = g.xL + it.c * T;
+      const y = g.y0 + (it.r + h) * T;
+      this.blocks.push({ item: true, x0: x + 4, x1: x + w * T - 4, y0: y - h * T + 2, y1: y - 8 });
+      const key = this.itemKey(it.type, it.rot);
+      const sp = this.add.image(x + (w * T) / 2, y, key).setOrigin(0.5, 1).setDepth(y - 1);
+      return sp;
+    });
+  }
+
+  enterBuild() {
+    this.endTalk();
+    this.bubble.setVisible(false);
+    this.interactBtn.classList.add('hidden');
+    this.stick.classList.remove('active');
+    this.dragging = false;
+    this.browse();
+  }
+
+  browse() {
+    this.mode = 'browse';
+    this.selected = null;
+    this.clearGhost();
+    hideBar();
+    this.cameras.main.startFollow(this.player, true, 0.2, 0.2);
+    openToolkit({
+      icon: (type) => this.textures.get(this.itemKey(type, 0)).getSourceImage().toDataURL(),
+      onPick: (type) => this.startPlacing({ type, rot: 0 }),
+      onDone: () => this.exitBuild(),
+    });
+  }
+
+  exitBuild() {
+    this.mode = null;
+    this.selected = null;
+    this.clearGhost();
+    hideToolkit();
+    hideBar();
+    this.overlay.clear();
+    this.cameras.main.startFollow(this.player, true, 0.2, 0.2);
+  }
+
+  clearGhost() {
+    this.ghostSprite?.destroy();
+    this.ghostSprite = null;
+    this.ghost = null;
+  }
+
+  // Start placing an item (new, or moved: `orig` is put back on cancel).
+  startPlacing(item, orig) {
+    hideToolkit();
+    this.mode = 'place';
+    const { w, h } = footprint(item);
+    const view = this.cameras.main.worldView;
+    const at = this.tileOf(view.centerX, view.centerY - view.height * 0.1);
+    this.ghost = {
+      ...item,
+      c: item.c ?? Phaser.Math.Clamp(at.c, 0, this.g.fw - w),
+      r: item.r ?? Phaser.Math.Clamp(at.r, 0, this.g.fd - h),
+      orig,
+    };
+    this.ghostSprite = this.add.image(0, 0, this.itemKey(item.type, item.rot)).setOrigin(0.5, 1).setDepth(6001).setAlpha(0.85);
+    this.cameras.main.startFollow(this.ghostSprite, true, 0.2, 0.2);
+    this.refreshGhost();
+  }
+
+  dragGhost(dx, dy) {
+    const k = this.scale.gameSize.width / this.game.canvas.getBoundingClientRect().width / this.cameras.main.zoom;
+    const { w, h } = footprint(this.ghost);
+    const c = Phaser.Math.Clamp(this.ghostDrag.c + Math.round((dx * k) / T), 0, this.g.fw - w);
+    const r = Phaser.Math.Clamp(this.ghostDrag.r + Math.round((dy * k) / T), 0, this.g.fd - h);
+    if (c !== this.ghost.c || r !== this.ghost.r) {
+      this.ghost.c = c;
+      this.ghost.r = r;
+      this.refreshGhost();
+    }
+  }
+
+  refreshGhost() {
+    const gh = this.ghost;
+    const def = ITEMS[gh.type];
+    const { w, h } = footprint(gh);
+    this.ghostSprite.setTexture(this.itemKey(gh.type, gh.rot));
+    this.ghostSprite.setPosition(this.g.xL + (gh.c + w / 2) * T, this.g.y0 + (gh.r + h) * T);
+    const ok = this.canPlace(gh);
+    const buttons = [];
+    if (def.rotatable) buttons.push({ label: 'Rotate', onClick: () => this.rotateGhost() });
+    buttons.push({ label: 'Cancel', onClick: () => this.cancelPlacing() });
+    buttons.push({ label: 'Place', primary: true, disabled: !ok, onClick: () => this.confirmPlacing() });
+    showBar(def.name, ok ? `${def.price} gold · +${def.income}/day · drag to move` : 'Blocked here · drag to move', buttons);
+  }
+
+  rotateGhost() {
+    this.ghost.rot = this.ghost.rot ? 0 : 1;
+    const { w, h } = footprint(this.ghost);
+    this.ghost.c = Math.min(this.ghost.c, this.g.fw - w);
+    this.ghost.r = Math.min(this.ghost.r, this.g.fd - h);
+    this.refreshGhost();
+  }
+
+  cancelPlacing() {
+    if (this.ghost?.orig) {
+      this.items.push(this.ghost.orig);
+      this.placeItems();
+    }
+    this.browse();
+  }
+
+  confirmPlacing() {
+    const { type, c, r, rot } = this.ghost;
+    this.items.push({ type, c, r, rot });
+    saveItems(this.roomIndex, this.items);
+    this.placeItems();
+    this.updateHud();
+    this.browse();
+  }
+
+  // Tap an item in the room (while the toolkit is open) to move, rotate or remove it.
+  tapItem(wx, wy) {
+    const hit = [...this.items].reverse().find((it, i) => {
+      const sp = this.itemSprites[this.items.length - 1 - i];
+      return sp && sp.getBounds().contains(wx, wy);
+    });
+    if (!hit) return;
+    this.mode = 'edit';
+    this.selected = hit;
+    hideToolkit();
+    const def = ITEMS[hit.type];
+    const rotated = { ...hit, rot: hit.rot ? 0 : 1 };
+    showBar(def.name, `+${def.income}/day`, [
+      {
+        label: 'Move',
+        onClick: () => {
+          this.items = this.items.filter((o) => o !== hit);
+          this.placeItems();
+          this.startPlacing({ ...hit }, hit);
+        },
+      },
+      ...(def.rotatable
+        ? [{ label: 'Rotate', disabled: !this.canPlace(rotated, hit), onClick: () => this.updateItem(hit, rotated) }]
+        : []),
+      { label: 'Remove', onClick: () => this.updateItem(hit, null) },
+      { label: 'Back', primary: true, onClick: () => this.browse() },
+    ]);
+  }
+
+  updateItem(item, replacement) {
+    this.items = this.items.filter((o) => o !== item);
+    if (replacement) this.items.push(replacement);
+    saveItems(this.roomIndex, this.items);
+    this.placeItems();
+    this.updateHud();
+    this.browse();
+  }
+
+  // Grid over the floor plus the footprint of the item being placed or edited.
+  drawOverlay() {
+    const o = this.overlay;
+    const { g } = this;
+    o.clear();
+    o.fillStyle(0xffffff, 0.12);
+    for (let c = 0; c <= g.fw; c++) o.fillRect(g.xL + c * T, g.y0, 1, g.y1 - g.y0);
+    for (let r = 0; r <= g.fd; r++) o.fillRect(g.xL, g.y0 + r * T, g.xR - g.xL, 1);
+    const mark = (it, color) => {
+      const { w, h } = footprint(it);
+      o.fillStyle(color, 0.35);
+      o.fillRect(g.xL + it.c * T, g.y0 + it.r * T, w * T, h * T);
+      o.lineStyle(2, color, 0.9);
+      o.strokeRect(g.xL + it.c * T, g.y0 + it.r * T, w * T, h * T);
+    };
+    if (this.mode === 'place' && this.ghost) mark(this.ghost, this.canPlace(this.ghost) ? 0x4fd06a : 0xe0503c);
+    if (this.mode === 'edit' && this.selected) mark(this.selected, 0xe8c867);
+  }
+
   update(_, dtMs) {
     const dt = Math.min(dtMs, 50) / 1000;
     this.npcs.forEach((n) => {
@@ -642,6 +896,7 @@ export class RoomScene extends Phaser.Scene {
       this.animate(n.s, !!n.target && !n.talking, dt);
       n.s.setDepth(n.s.y);
     });
+    if (this.mode) return this.drawOverlay(); // toolkit open: no walking
     if (!this.input.enabled) return; // a panel is open
 
     const k = this.keys;
@@ -655,7 +910,8 @@ export class RoomScene extends Phaser.Scene {
       const nx = Phaser.Math.Clamp(this.player.x + (vx / len) * SPEED * dt, b.x0, b.x1);
       const ny = Phaser.Math.Clamp(this.player.y + (vy / len) * SPEED * dt, b.y0, b.y1);
       const free = (x, y, ox, oy) => !this.blocked(x, y) && (!this.hitsVisitor(x, y) || this.hitsVisitor(ox, oy));
-      if (free(nx, this.player.y, this.player.x, this.player.y)) this.player.x = nx;
+      // (if already stuck inside something, e.g. a new item, let the player walk out)
+      if (free(nx, this.player.y, this.player.x, this.player.y) || this.blocked(this.player.x, this.player.y)) this.player.x = nx;
       if (free(this.player.x, ny, this.player.x, this.player.y)) this.player.y = ny;
       this.faceSprite(this.player, 'player', vx, vy);
     }

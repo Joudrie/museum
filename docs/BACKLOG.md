@@ -10,10 +10,11 @@
 - Every slot starts as a painting outline. Interact → **Place painting / Plain wall / Door**.
 - A plain wall hides the outline but stays interactable, so you can add a painting later.
 
-## Phase 3: Decor toolkit
+## Phase 3: Decor toolkit ✅ (first pass)
 - Toolkit menu: pick an item, drag it onto the tile grid, see its footprint in tiles, place it.
 - Every placed item earns a little money (even a cheap stool).
 - Items: lots of plants, benches/stools, lights, statues, suits of armor, relics, dinosaur bones, waterfalls/fountains, bookshelves.
+- Done: 19 items in 6 categories (seating, plants, lights, sculpture, relics & science, features), grid snapping with green/red footprint, move/rotate/remove, collision, gold-per-day income + visitors in the HUD. Next: more items, real coin spending once the economy lands.
 
 ## Phase 4: Rooms v2
 - Resize any room at any time (e.g. short → long) without losing its decor. Geometry may overlap; it's a game.

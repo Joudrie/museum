@@ -668,3 +668,250 @@ export function bakeStairsDown(scene, key) {
     return shade(STEP, k);
   });
 }
+
+// ---------- Decor items (toolkit) ----------
+// Drawn on a canvas sized to the footprint (w x h tiles) plus `rise` px above it.
+export function bakeItem(scene, key, type, def, rot) {
+  const fw = (rot ? def.h : def.w) * T;
+  const fh = (rot ? def.w : def.h) * T;
+  const W = fw;
+  const H = fh + def.rise;
+  if (scene.textures.exists(key)) scene.textures.remove(key);
+  const tex = scene.textures.createCanvas(key, W, H);
+  const ctx = tex.getContext();
+  const R = (x, y, w, h, c) => {
+    ctx.fillStyle = c;
+    ctx.fillRect(Math.round(x), Math.round(y), Math.round(w), Math.round(h));
+  };
+  const E = (cx, cy, rx, ry, c) => {
+    ctx.fillStyle = c;
+    for (let y = -ry; y <= ry; y++) {
+      const half = Math.round(rx * Math.sqrt(Math.max(0, 1 - (y * y) / (ry * ry))));
+      ctx.fillRect(Math.round(cx - half), Math.round(cy + y), half * 2, 1);
+    }
+  };
+  const box = (x, y, w, h, fill, edge) => {
+    R(x - 1, y - 1, w + 2, h + 2, edge);
+    R(x, y, w, h, fill);
+  };
+  const shadow = (cx, cy, rx, ry) => E(cx, cy, rx, ry, 'rgba(0,0,0,0.22)');
+  const OUT = '#2a1a12';
+  const WOOD = '#a0703f';
+  const WOOD_L = '#c08a5a';
+  const WOOD_D = '#6e4430';
+  const MARBLE = '#ece8de';
+  const MARBLE_D = '#c8c2b4';
+  const BRASS = '#c9a23f';
+  const BRASS_L = '#ecd078';
+  const gy = H - 4; // ground line near the front of the footprint
+
+  switch (type) {
+    case 'stool':
+      shadow(16, gy, 11, 3);
+      [9, 21, 15].forEach((x, i) => R(x, gy - 16 + (i === 2 ? 2 : 0), 2, 14, WOOD_D));
+      E(16, gy - 18, 11, 5, OUT);
+      E(16, gy - 18, 10, 4, WOOD);
+      E(15, gy - 19, 6, 2, WOOD_L);
+      break;
+    case 'bench':
+      if (!rot) {
+        shadow(32, gy, 30, 4);
+        [6, 54].forEach((x) => R(x, gy - 14, 4, 13, WOOD_D));
+        box(3, gy - 22, 58, 9, WOOD, OUT);
+        R(3, gy - 22, 58, 2, WOOD_L);
+        R(3, gy - 15, 58, 2, WOOD_D);
+      } else {
+        shadow(16, H / 2 + 6, 10, H / 2 - 10);
+        [def.rise + 6, H - 10].forEach((y) => R(10, y, 12, 4, WOOD_D));
+        box(9, def.rise, 14, fh - 8, WOOD, OUT);
+        R(9, def.rise, 3, fh - 8, WOOD_L);
+        R(20, def.rise, 3, fh - 8, WOOD_D);
+      }
+      break;
+    case 'rope': {
+      const post = (x, y) => {
+        E(x, y, 5, 2, '#7a5a1e');
+        box(x - 2, y - 24, 4, 24, BRASS, OUT);
+        R(x - 2, y - 24, 1, 24, BRASS_L);
+        E(x, y - 26, 3, 3, BRASS_L);
+      };
+      const rope = (pts) => pts.forEach(([x, y]) => (R(x - 1, y - 1, 3, 3, '#6a1420'), R(x, y - 1, 1, 1, '#b8404e')));
+      if (!rot) {
+        shadow(32, gy, 30, 3);
+        const pts = [];
+        for (let x = 8; x <= 56; x++) pts.push([x, gy - 20 + Math.sin(((x - 8) / 48) * Math.PI) * 7]);
+        post(6, gy);
+        rope(pts);
+        post(58, gy);
+      } else {
+        const top = def.rise + 10;
+        const pts = [];
+        for (let y = top - 20; y <= gy - 20; y++) pts.push([16 - Math.sin(((y - top + 20) / (gy - top)) * Math.PI) * 5, y]);
+        post(16, top);
+        rope(pts);
+        post(16, gy);
+      }
+      break;
+    }
+    case 'palm':
+      for (let y = gy - 40; y < gy - 10; y++) R(15, y, 3, 1, (y % 4 === 0) ? '#5c3a26' : '#8a5a3b');
+      for (let k = 0; k < 7; k++) {
+        const a = -Math.PI + (k / 6) * Math.PI;
+        for (let t = 0; t < 14; t++) R(16 + Math.cos(a) * t, gy - 42 + Math.sin(a) * t * 0.7 + (t * t) / 30, 2, 2, t % 3 ? '#4f8a3a' : '#2f5a24');
+      }
+      box(9, gy - 10, 14, 10, '#a85a32', '#7a3f22');
+      R(9, gy - 10, 14, 3, '#c0703f');
+      break;
+    case 'lamp':
+      shadow(16, gy, 8, 3);
+      E(16, gy - 1, 7, 3, OUT);
+      E(16, gy - 1, 6, 2, '#4a3a2a');
+      R(15, gy - 44, 2, 43, BRASS);
+      E(16, gy - 52, 15, 15, 'rgba(255,220,140,0.16)');
+      for (let y = 0; y < 13; y++) R(16 - 6 - y / 3, gy - 58 + y, 12 + (2 * y) / 3, 1, y < 2 ? '#fff4d6' : y > 10 ? '#c8b088' : '#efe0b8');
+      break;
+    case 'candelabra':
+      shadow(16, gy, 8, 3);
+      E(16, gy - 1, 6, 2, '#7a5a1e');
+      R(15, gy - 26, 2, 25, BRASS);
+      R(7, gy - 26, 18, 2, BRASS);
+      [7, 15, 23].forEach((x) => {
+        R(x, gy - 30, 2, 4, BRASS);
+        R(x, gy - 38, 2, 8, '#f4eee0');
+        R(x, gy - 41, 2, 3, '#ffb23a');
+        R(x, gy - 40, 1, 1, '#fff2a0');
+      });
+      E(16, gy - 40, 12, 6, 'rgba(255,200,120,0.15)');
+      break;
+    case 'bust':
+      shadow(16, gy, 10, 3);
+      box(9, gy - 26, 14, 26, MARBLE, OUT);
+      R(19, gy - 26, 4, 26, MARBLE_D);
+      box(7, gy - 30, 18, 4, MARBLE, OUT);
+      E(16, gy - 34, 9, 4, MARBLE_D);
+      E(16, gy - 35, 8, 3, MARBLE);
+      R(14, gy - 42, 4, 6, MARBLE_D);
+      E(16, gy - 47, 6, 7, OUT);
+      E(16, gy - 47, 5, 6, MARBLE);
+      R(18, gy - 50, 2, 8, MARBLE_D);
+      break;
+    case 'statue':
+      shadow(16, gy, 11, 3);
+      box(8, gy - 18, 16, 18, MARBLE_D, OUT);
+      R(8, gy - 18, 16, 3, MARBLE);
+      R(12, gy - 38, 3, 20, MARBLE);
+      R(17, gy - 38, 3, 20, MARBLE_D);
+      box(11, gy - 56, 10, 18, MARBLE, OUT);
+      R(18, gy - 56, 3, 18, MARBLE_D);
+      R(7, gy - 54, 3, 13, MARBLE);
+      R(22, gy - 62, 3, 10, MARBLE_D);
+      E(16, gy - 61, 4, 4, OUT);
+      E(16, gy - 61, 3, 3, MARBLE);
+      break;
+    case 'armor': {
+      const S = '#8a929c';
+      const SL = '#c8d0d8';
+      const SD = '#5a626c';
+      shadow(16, gy, 11, 3);
+      R(6, gy - 4, 20, 4, WOOD_D);
+      R(11, gy - 24, 4, 20, S);
+      R(17, gy - 24, 4, 20, SD);
+      box(9, gy - 42, 14, 18, S, OUT);
+      R(11, gy - 40, 4, 10, SL);
+      E(8, gy - 41, 3, 3, SD);
+      E(24, gy - 41, 3, 3, SD);
+      box(11, gy - 54, 10, 12, S, OUT);
+      R(12, gy - 49, 8, 2, '#1d1714');
+      R(12, gy - 54, 3, 4, SL);
+      R(15, gy - 60, 2, 6, '#b0413e');
+      break;
+    }
+    case 'vase':
+      shadow(16, gy, 12, 3);
+      box(5, gy - 12, 22, 12, WOOD_D, OUT);
+      R(5, gy - 12, 22, 2, WOOD);
+      E(16, gy - 22, 6, 7, '#c0703f');
+      R(14, gy - 34, 4, 6, '#c0703f');
+      R(13, gy - 35, 6, 2, '#a85a32');
+      R(10, gy - 24, 12, 2, '#2a1a12');
+      R(12, gy - 20, 8, 1, '#2a1a12');
+      ctx.fillStyle = 'rgba(190,225,240,0.28)';
+      ctx.fillRect(6, gy - 44, 20, 32);
+      ctx.strokeStyle = '#e6f4fa';
+      ctx.strokeRect(6.5, gy - 43.5, 19, 31);
+      R(8, gy - 42, 2, 10, 'rgba(255,255,255,0.6)');
+      break;
+    case 'sarcophagus':
+      shadow(32, gy, 30, 4);
+      box(4, gy - 30, 56, 24, '#d9b44a', OUT);
+      for (let x = 24; x < 58; x += 6) R(x, gy - 28, 3, 20, '#2e4a8a');
+      E(14, gy - 18, 7, 10, '#c8a060');
+      R(11, gy - 21, 2, 2, OUT);
+      R(16, gy - 21, 2, 2, OUT);
+      R(4, gy - 7, 56, 5, '#a8862e');
+      R(4, gy - 30, 56, 2, '#f0d27a');
+      break;
+    case 'skull': {
+      const B = '#e8dcc0';
+      const BD = '#c4b48c';
+      shadow(32, gy, 28, 3);
+      R(10, gy - 4, 44, 4, WOOD_D);
+      R(19, gy - 18, 3, 14, WOOD_D);
+      R(43, gy - 18, 3, 14, WOOD_D);
+      E(22, gy - 32, 15, 11, OUT);
+      E(22, gy - 32, 14, 10, B);
+      for (let x = 28; x < 58; x++) {
+        const t = (x - 28) / 30;
+        const top = gy - 38 + t * 6;
+        R(x, top, 1, 12 - t * 4, x % 5 ? B : BD);
+        R(x, top - 1, 1, 1, OUT);
+      }
+      R(30, gy - 24, 24, 4, BD);
+      for (let x = 31; x < 53; x += 3) R(x, gy - 26, 1, 3, '#fffaf0');
+      E(22, gy - 34, 5, 4, '#3a2a1a');
+      R(52, gy - 36, 2, 2, '#3a2a1a');
+      R(12, gy - 30, 6, 4, BD);
+      break;
+    }
+    case 'globe':
+      shadow(16, gy, 9, 3);
+      R(10, gy - 4, 12, 3, WOOD_D);
+      R(15, gy - 18, 2, 14, WOOD_D);
+      E(16, gy - 30, 10, 10, BRASS);
+      E(16, gy - 30, 9, 9, '#3d6fb6');
+      E(13, gy - 33, 3, 4, '#4f8a3a');
+      E(20, gy - 27, 3, 2, '#4f8a3a');
+      R(12, gy - 36, 2, 2, '#8fc0f0');
+      break;
+    case 'bookshelf': {
+      const top = 4;
+      box(4, top, 56, H - top - 4, WOOD_D, OUT);
+      R(7, top + 3, 50, H - top - 12, '#3e2a20');
+      const colors = ['#7a2232', '#2a3a6a', '#2f5a3a', '#c9a23f', '#5a2a5a', '#b0413e', '#e8dcc0'];
+      for (let sy = top + 3, n = 0; sy + 12 < H - 10; sy += 14) {
+        for (let x = 8; x < 55; n++) {
+          const bw = 3 + Math.floor(hash(n, sy, 30) * 3);
+          const bh = 8 + Math.floor(hash(n, sy, 31) * 4);
+          R(x, sy + 12 - bh, bw, bh, colors[Math.floor(hash(n, sy, 32) * colors.length)]);
+          x += bw + 1;
+        }
+        R(7, sy + 12, 50, 2, WOOD);
+      }
+      break;
+    }
+    case 'fountain':
+      shadow(32, gy - 26, 31, 19);
+      E(32, gy - 28, 31, 19, '#8a867e');
+      E(32, gy - 29, 29, 17, '#c8c4bc');
+      E(32, gy - 30, 25, 13, '#4a8ab0');
+      E(32, gy - 31, 23, 11, '#5aa0c8');
+      [[20, -30, 6], [42, -26, 5], [30, -22, 7]].forEach(([x, y, r]) => R(x - r / 2, gy + y, r, 1, '#a8d8f0'));
+      box(29, gy - 50, 6, 20, '#b8b4ac', OUT);
+      E(32, gy - 50, 9, 3, '#c8c4bc');
+      E(32, gy - 51, 6, 2, '#5aa0c8');
+      [[30, -56], [34, -58], [32, -61], [28, -54], [36, -55]].forEach(([x, y]) => R(x, gy + y, 1, 2, '#d8f0ff'));
+      break;
+  }
+  tex.refresh();
+  return key;
+}
