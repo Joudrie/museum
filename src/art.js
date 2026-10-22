@@ -341,6 +341,27 @@ const FIX = {
   brass: hex('#e0bc55'),
 };
 
+// Open archway: a trimmed frame around a dark opening with a rounded top.
+function archMaterial(u, v, r) {
+  const w = r.u1 - r.u0;
+  const cx = r.u0 + w / 2;
+  const rad = w / 2 - 3;
+  const springAt = r.v1 - 3 - rad; // where the curve starts
+  const inside = (pad) => {
+    if (u < r.u0 + 3 + pad || u >= r.u1 - 3 - pad) return false;
+    if (v < springAt) return true;
+    return Math.hypot(u + 0.5 - cx, v + 0.5 - springAt) <= rad - pad;
+  };
+  const inFrame = (() => {
+    if (u < r.u0 || u >= r.u1) return false;
+    if (v < springAt) return true;
+    return Math.hypot(u + 0.5 - cx, v + 0.5 - springAt) <= rad + 3;
+  })();
+  if (!inFrame) return undefined;
+  if (inside(0)) return mix(hex('#1e1612'), hex('#5a4434'), Math.max(0, 1 - v / 14)); // floor glow beyond
+  return inside(-2) ? FIX.doorTrim : FIX.doorFrame;
+}
+
 function doorMaterial(u, v, r) {
   const du = Math.min(u - r.u0, r.u1 - 1 - u);
   const top = r.v1 - 1 - v;
@@ -365,6 +386,11 @@ function wallMaterial(u, v, D, items, seed, P) {
   for (const it of items) {
     const { u0, u1, v0, v1 } = it.rect;
     if (u >= u0 && u < u1 && v >= v0 && v < v1) {
+      if (it.door && it.arch) {
+        const c = archMaterial(u, v, it.rect);
+        if (c !== undefined) return c;
+        continue; // outside the arch's rounded corners: plain wall
+      }
       if (it.door) return doorMaterial(u, v, it.rect);
       if (it.empty) {
         const border = u === u0 || u === u1 - 1 || v === v0 || v === v1 - 1;

@@ -931,3 +931,74 @@ body {
 .placebar-buttons .pixel-btn:disabled {
   opacity: 0.45;
 }
+
+/* ---------- Room settings & list ---------- */
+.room-name {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--gold-dark);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--ink);
+  font: inherit;
+  font-size: 16px;
+}
+.room-list {
+  display: grid;
+  gap: 8px;
+}
+.room-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  border: 2px solid var(--gold-dark);
+  border-radius: 6px;
+}
+.room-row.on {
+  border-color: var(--gold);
+  background: rgba(201, 162, 63, 0.12);
+}
+.rr-num {
+  width: 24px;
+  text-align: center;
+  color: var(--muted);
+}
+.rr-name {
+  flex: 1;
+  display: grid;
+  font-size: 14px;
+}
+.rr-name i {
+  color: var(--muted);
+  font-size: 12px;
+}
+.room-row button {
+  min-width: 36px;
+  height: 36px;
+  border: 1px solid var(--gold-dark);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--ink);
+  font: inherit;
+}
+.room-row button:disabled {
+  opacity: 0.3;
+}
+#toast {
+  position: fixed;
+  top: max(84px, calc(env(safe-area-inset-top) + 76px));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 12;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(29, 23, 20, 0.85);
+  border: 1px solid var(--gold);
+  font-size: 14px;
+  pointer-events: none;
+  transition: opacity 0.4s;
+}
+#toast.hidden {
+  opacity: 0;
+}

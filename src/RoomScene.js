@@ -19,7 +19,7 @@ import {
   DEFAULT_DECOR,
   NEW_ROOM_DECOR,
 } from './art.js';
-import { loadRooms, addRoom, resetRooms, layout, paintingsFor, slotStates, setSlot, hungAnywhere, placeArt, wallItems, plantSpots, carpetRect } from './rooms.js';
+import { loadRooms, addRoom, resetRooms, updateRoom, swapRooms, roomName, layout, paintingsFor, slotStates, setSlot, hungAnywhere, placeArt, wallItems, plantSpots, carpetRect } from './rooms.js';
 import { openSlotMenu } from './slotmenu.js';
 import { ITEMS, loadItems, saveItems, resetItems, footprint, itemIncome } from './items.js';
 import { openToolkit, hideToolkit, showBar, hideBar } from './toolkit.js';
@@ -27,7 +27,7 @@ import { artBounds, paintArt } from './walldraw.js';
 import { PERSONALITIES, lineFor } from './lines.js';
 import { iconSvg } from './icons.js';
 import { openViewer } from './viewer.js';
-import { openDecor, load, save, DEFAULT_CHARACTER } from './decor.js';
+import { openDecor, closeDecor, load, save, DEFAULT_CHARACTER } from './decor.js';
 import { openBuild } from './build.js';
 import { showTalk, hideTalk, talking } from './talk.js';
 
@@ -88,6 +88,7 @@ export class RoomScene extends Phaser.Scene {
   init(data) {
     this.roomIndex = data?.room ?? 0;
     this.spawnAt = data?.spawn ?? 'start';
+    this.instant = !!data?.instant; // walked through an archway: no fade
   }
 
   preload() {
@@ -120,7 +121,8 @@ export class RoomScene extends Phaser.Scene {
       bakeStairsDown(this, 'stairs_down');
     }
 
-    this.wallItems = wallItems(this.L, this.hung, this.states);
+    this.arches = { exit: !!this.room.arch, entrance: this.roomIndex > 0 && !!this.rooms[this.roomIndex - 1].arch };
+    this.wallItems = wallItems(this.L, this.hung, this.states, this.arches);
     this.floorImg = this.add.image(g.xL, g.y0, bakeFloor(this, 'floor', g.xR - g.xL, g.y1 - g.y0, this.decor).key).setOrigin(0);
     this.wallImg = this.add.image(0, 0, bakeWalls(this, 'walls', g, this.wallItems, this.decor).key).setOrigin(0);
     this.add.image(0, g.y1, bakeFront(this, 'front', g.w, entrance.mat ? entrance.x0 : -1, entrance.mat ? entrance.x1 : -1).key).setOrigin(0);
@@ -129,7 +131,8 @@ export class RoomScene extends Phaser.Scene {
     this.blocks = exit?.block ? [exit.block] : [];
     this.decorObjects = [];
     this.placeDecor();
-    this.items = loadItems(this.roomIndex);
+    this.items = [];
+    this.fitItems();
     this.itemSprites = [];
     this.placeItems();
     this.overlay = this.add.graphics().setDepth(6000);
@@ -148,12 +151,17 @@ export class RoomScene extends Phaser.Scene {
     this.setupInput();
     this.setupButtons();
     this.updateHud();
-    this.cameras.main.fadeIn(250, 29, 21, 18);
+    if (!this.instant) this.cameras.main.fadeIn(250, 29, 21, 18);
+    this.archLock = true; // don't bounce straight back through the doorway we arrived by
+    if (typeof this.spawnAt !== 'object') this.toast(roomName(this.room, this.roomIndex));
   }
 
   spawnPoint() {
     const { g, exit, entrance } = this.L;
-    if (typeof this.spawnAt === 'object') return this.spawnAt;
+    if (typeof this.spawnAt === 'object') {
+      const b = this.bounds();
+      return { ...this.spawnAt, x: Phaser.Math.Clamp(this.spawnAt.x, b.x0, b.x1), y: Phaser.Math.Clamp(this.spawnAt.y, b.y0, b.y1) };
+    }
     if (this.spawnAt === 'exit' && exit) return { x: exit.ax, y: exit.ay + 14, face: 'player_down' };
     if (this.spawnAt === 'entrance' && !entrance.mat) return { x: entrance.ax + 6, y: entrance.ay + 4, face: 'player_side' };
     if (this.spawnAt === 'entrance') return { x: entrance.ax, y: g.y1 - 16, face: 'player_up' };
@@ -458,6 +466,27 @@ export class RoomScene extends Phaser.Scene {
       openDecor({
         decor: this.decor,
         character: this.character,
+        room: this.room,
+        index: this.roomIndex,
+        rooms: this.rooms,
+        onRoom: (patch) => {
+          updateRoom(this.roomIndex, patch);
+          if ('name' in patch) {
+            this.rooms = loadRooms();
+            this.room = this.rooms[this.roomIndex];
+            return;
+          }
+          this.rebuild();
+        },
+        onMoveRoom: (i, j) => {
+          swapRooms(i, j);
+          const here = this.roomIndex === i ? j : this.roomIndex === j ? i : this.roomIndex;
+          this.rebuild(here);
+        },
+        onGoRoom: (i) => {
+          closeDecor();
+          this.travel(i, 'entrance');
+        },
         onDecor: (decor) => this.applyDecor(decor),
         onCharacter: (character) => this.applyCharacter(character),
         plantIcon: (id) => (id === 'none' ? null : this.textures.get(`plant_${id}`).getSourceImage().toDataURL()),
@@ -600,12 +629,63 @@ export class RoomScene extends Phaser.Scene {
     });
   }
 
-  travel(room, spawn) {
+  travel(room, spawn, instant) {
     this.input.enabled = false;
     this.interactBtn.classList.add('hidden');
     hideTalk();
+    if (instant) return this.scene.restart({ room, spawn, instant });
     this.cameras.main.fadeOut(220, 29, 21, 18);
     this.cameras.main.once('camerafadeoutcomplete', () => this.scene.restart({ room, spawn }));
+  }
+
+  // Rebuild this room in place (after resizing etc.), keeping the player where they are.
+  rebuild(room = this.roomIndex) {
+    closeDecor();
+    const spawn = { x: this.player.x, y: this.player.y, face: this.player.texture.key };
+    this.scene.restart({ room, spawn, instant: true });
+  }
+
+  toast(text) {
+    const el = document.getElementById('toast');
+    el.textContent = text;
+    el.classList.remove('hidden');
+    clearTimeout(this.toastTimer);
+    this.toastTimer = setTimeout(() => el.classList.add('hidden'), 1600);
+  }
+
+  // Load saved items, nudging ones that no longer fit (after a resize) back inside.
+  fitItems() {
+    const saved = loadItems(this.roomIndex);
+    let changed = false;
+    saved.forEach((it) => {
+      if (this.canPlace(it)) return this.items.push(it);
+      // Find the nearest free spot; only drop the item if the room has none.
+      const { w, h } = footprint(it);
+      const spots = [];
+      for (let c = 0; c <= this.g.fw - w; c++) for (let r = 0; r <= this.g.fd - h; r++) spots.push({ ...it, c, r });
+      spots.sort((a, b) => Math.hypot(a.c - it.c, a.r - it.r) - Math.hypot(b.c - it.c, b.r - it.r));
+      const fit = spots.find((sp) => this.canPlace(sp));
+      if (fit) this.items.push(fit);
+      changed = true;
+    });
+    if (changed) saveItems(this.roomIndex, this.items);
+  }
+
+  // Archways: walk straight through, no button and no fade.
+  checkArches() {
+    const { x, y } = this.player;
+    const { exit, entrance } = this.L;
+    const near = (a) => a && Math.hypot(x - a.ax, y - a.ay) < 12;
+    const builtNext = this.roomIndex + 1 < this.rooms.length;
+    const exitArch = this.arches.exit && builtNext && exit?.rect;
+    const entranceArch = this.arches.entrance;
+    const touching = (exitArch && near(exit)) || (entranceArch && near(entrance));
+    if (this.archLock) {
+      if (!touching) this.archLock = false;
+      return;
+    }
+    if (exitArch && near(exit)) this.travel(this.roomIndex + 1, 'entrance', true);
+    else if (entranceArch && near(entrance)) this.travel(this.roomIndex - 1, 'exit', true);
   }
 
   view(p) {
@@ -917,6 +997,7 @@ export class RoomScene extends Phaser.Scene {
     }
     this.animate(this.player, len > 0, dt);
     this.player.setDepth(this.player.y);
+    this.checkArches();
 
     if (this.talkingTo && (!talking() || Math.hypot(this.player.x - this.talkingTo.s.x, this.player.y - this.talkingTo.s.y) > 60)) {
       this.endTalk();

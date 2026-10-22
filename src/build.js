@@ -3,7 +3,7 @@
 // is a vertical carousel: swipe up or down to choose how the room ends.
 // There is no horizontal scrolling on this page.
 import { bakeFloor, bakeWalls, bakeFront } from './art.js';
-import { SIZES, EXITS, exitLabel, layout, paintingsFor, slotStates, placeArt, wallItems } from './rooms.js';
+import { SIZES, SIZE_LABELS, EXITS, exitLabel, layout, paintingsFor, slotStates, placeArt, wallItems } from './rooms.js';
 import { paintArt } from './walldraw.js';
 
 const el = document.getElementById('build');
@@ -68,7 +68,10 @@ function crop(src, x, y, w, h, scale, target = document.createElement('canvas'))
 function render() {
   const { scene, rooms, decor, orient, size } = state;
   el.querySelectorAll('[data-orient]').forEach((b) => b.classList.toggle('on', b.dataset.orient === orient));
-  el.querySelectorAll('[data-size]').forEach((b) => b.classList.toggle('on', b.dataset.size === size));
+  el.querySelectorAll('[data-size]').forEach((b) => {
+    b.classList.toggle('on', b.dataset.size === size);
+    b.textContent = SIZE_LABELS[orient][b.dataset.size];
+  });
 
   const options = EXITS[orient];
   const drawn = options.map((exit) => drawRoom(scene, rooms, { orient, size, exit }, decor));
@@ -79,7 +82,7 @@ function render() {
   const availW = preview.clientWidth - 28;
   const availH = window.innerHeight * 0.44;
   const scale = Math.min(availW / g.w, availH / g.h);
-  const vertical = orient === 'vertical';
+  const vertical = orient !== 'horizontal'; // big halls end at the top like vertical rooms
   preview.classList.toggle('vertical', vertical);
 
   let pieceW;
@@ -112,7 +115,7 @@ function showExit(i) {
   state.exit = i;
   caption.textContent = exitLabel(state.orient, EXITS[state.orient][i]);
   const tiles = SIZES[state.orient][state.size];
-  const dims = state.orient === 'vertical' ? `5 × ${tiles}` : `${tiles} × 5`;
+  const dims = { vertical: `5 × ${tiles}`, horizontal: `${tiles} × 5`, square: `${tiles} × ${tiles}` }[state.orient];
   capacity.textContent = `${dims} tiles · holds ${state.slots[i]} paintings`;
   [...dots.children].forEach((d, j) => d.classList.toggle('on', j === i));
 }
