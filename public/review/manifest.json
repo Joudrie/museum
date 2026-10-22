@@ -1,0 +1,322 @@
+[
+ {
+  "id": "ingame-stool",
+  "name": "stool",
+  "cat": "In-game (ours)",
+  "src": "sprites/ingame-stool.png",
+  "source": "Drawn in code for Curation",
+  "license": "Ours"
+ },
+ {
+  "id": "ingame-bench",
+  "name": "bench",
+  "cat": "In-game (ours)",
+  "src": "sprites/ingame-bench.png",
+  "source": "Drawn in code for Curation",
+  "license": "Ours"
+ },
+ {
+  "id": "ingame-rope",
+  "name": "rope",
+  "cat": "In-game (ours)",
+  "src": "sprites/ingame-rope.png",
+  "source": "Drawn in code for Curation",
+  "license": "Ours"
+ },
+ {
+  "id": "ingame-fern",
+  "name": "fern",
+  "cat": "In-game (ours)",
+  "src": "sprites/ingame-fern.png",
+  "source": "Drawn in code for Curation",
+  "license": "Ours"
+ },
+ {
+  "id": "ingame-monstera",
+  "name": "monstera",
+  "cat": "In-game (ours)",
+  "src": "sprites/ingame-monstera.png",
+  "source": "Drawn in code for Curation",
+  "license": "Ours"
+ },
+ {
+  "id": "ingame-cactus",
+  "name": "cactus",
+  "cat": "In-game (ours)",
+  "src": "sprites/ingame-cactus.png",
+  "source": "Drawn in code for Curation",
+  "license": "Ours"
+ },
+ {
+  "id": "ingame-tree",
+  "name": "tree",
+  "cat": "In-game (ours)",
+  "src": "sprites/ingame-tree.png",
+  "source": "Drawn in code for Curation",
+  "license": "Ours"
+ },
+ {
+  "id": "ingame-palm",
+  "name": "palm",
+  "cat": "In-game (ours)",
+  "src": "sprites/ingame-palm.png",
+  "source": "Drawn in code for Curation",
+  "license": "Ours"
+ },
+ {
+  "id": "ingame-lamp",
+  "name": "lamp",
+  "cat": "In-game (ours)",
+  "src": "sprites/ingame-lamp.png",
+  "source": "Drawn in code for Curation",
+  "license": "Ours"
+ },
+ {
+  "id": "ingame-candelabra",
+  "name": "candelabra",
+  "cat": "In-game (ours)",
+  "src": "sprites/ingame-candelabra.png",
+  "source": "Drawn in code for Curation",
+  "license": "Ours"
+ },
+ {
+  "id": "ingame-bust",
+  "name": "bust",
+  "cat": "In-game (ours)",
+  "src": "sprites/ingame-bust.png",
+  "source": "Drawn in code for Curation",
+  "license": "Ours"
+ },
+ {
+  "id": "ingame-statue",
+  "name": "statue",
+  "cat": "In-game (ours)",
+  "src": "sprites/ingame-statue.png",
+  "source": "Drawn in code for Curation",
+  "license": "Ours"
+ },
+ {
+  "id": "ingame-armor",
+  "name": "armor",
+  "cat": "In-game (ours)",
+  "src": "sprites/ingame-armor.png",
+  "source": "Drawn in code for Curation",
+  "license": "Ours"
+ },
+ {
+  "id": "ingame-vase",
+  "name": "vase",
+  "cat": "In-game (ours)",
+  "src": "sprites/ingame-vase.png",
+  "source": "Drawn in code for Curation",
+  "license": "Ours"
+ },
+ {
+  "id": "ingame-sarcophagus",
+  "name": "sarcophagus",
+  "cat": "In-game (ours)",
+  "src": "sprites/ingame-sarcophagus.png",
+  "source": "Drawn in code for Curation",
+  "license": "Ours"
+ },
+ {
+  "id": "ingame-skull",
+  "name": "skull",
+  "cat": "In-game (ours)",
+  "src": "sprites/ingame-skull.png",
+  "source": "Drawn in code for Curation",
+  "license": "Ours"
+ },
+ {
+  "id": "ingame-globe",
+  "name": "globe",
+  "cat": "In-game (ours)",
+  "src": "sprites/ingame-globe.png",
+  "source": "Drawn in code for Curation",
+  "license": "Ours"
+ },
+ {
+  "id": "ingame-bookshelf",
+  "name": "bookshelf",
+  "cat": "In-game (ours)",
+  "src": "sprites/ingame-bookshelf.png",
+  "source": "Drawn in code for Curation",
+  "license": "Ours"
+ },
+ {
+  "id": "ingame-fountain",
+  "name": "fountain",
+  "cat": "In-game (ours)",
+  "src": "sprites/ingame-fountain.png",
+  "source": "Drawn in code for Curation",
+  "license": "Ours"
+ },
+ {
+  "id": "ingame-sofa",
+  "name": "sofa",
+  "cat": "In-game (ours)",
+  "src": "sprites/ingame-sofa.png",
+  "source": "Drawn in code for Curation",
+  "license": "Ours"
+ },
+ {
+  "id": "ingame-bonsai",
+  "name": "bonsai",
+  "cat": "In-game (ours)",
+  "src": "sprites/ingame-bonsai.png",
+  "source": "Drawn in code for Curation",
+  "license": "Ours"
+ },
+ {
+  "id": "ingame-cherry",
+  "name": "cherry",
+  "cat": "In-game (ours)",
+  "src": "sprites/ingame-cherry.png",
+  "source": "Drawn in code for Curation",
+  "license": "Ours"
+ },
+ {
+  "id": "ingame-lantern",
+  "name": "lantern",
+  "cat": "In-game (ours)",
+  "src": "sprites/ingame-lantern.png",
+  "source": "Drawn in code for Curation",
+  "license": "Ours"
+ },
+ {
+  "id": "ingame-obelisk",
+  "name": "obelisk",
+  "cat": "In-game (ours)",
+  "src": "sprites/ingame-obelisk.png",
+  "source": "Drawn in code for Curation",
+  "license": "Ours"
+ },
+ {
+  "id": "ingame-canopic",
+  "name": "canopic",
+  "cat": "In-game (ours)",
+  "src": "sprites/ingame-canopic.png",
+  "source": "Drawn in code for Curation",
+  "license": "Ours"
+ },
+ {
+  "id": "ingame-trex",
+  "name": "trex",
+  "cat": "In-game (ours)",
+  "src": "sprites/ingame-trex.png",
+  "source": "Drawn in code for Curation",
+  "license": "Ours"
+ },
+ {
+  "id": "ingame-meteorite",
+  "name": "meteorite",
+  "cat": "In-game (ours)",
+  "src": "sprites/ingame-meteorite.png",
+  "source": "Drawn in code for Curation",
+  "license": "Ours"
+ },
+ {
+  "id": "ingame-telescope",
+  "name": "telescope",
+  "cat": "In-game (ours)",
+  "src": "sprites/ingame-telescope.png",
+  "source": "Drawn in code for Curation",
+  "license": "Ours"
+ },
+ {
+  "id": "ingame-specimens",
+  "name": "specimens",
+  "cat": "In-game (ours)",
+  "src": "sprites/ingame-specimens.png",
+  "source": "Drawn in code for Curation",
+  "license": "Ours"
+ },
+ {
+  "id": "ingame-geode",
+  "name": "geode",
+  "cat": "In-game (ours)",
+  "src": "sprites/ingame-geode.png",
+  "source": "Drawn in code for Curation",
+  "license": "Ours"
+ },
+ {
+  "id": "ingame-counter",
+  "name": "counter",
+  "cat": "In-game (ours)",
+  "src": "sprites/ingame-counter.png",
+  "source": "Drawn in code for Curation",
+  "license": "Ours"
+ },
+ {
+  "id": "ingame-closet",
+  "name": "closet",
+  "cat": "In-game (ours)",
+  "src": "sprites/ingame-closet.png",
+  "source": "Drawn in code for Curation",
+  "license": "Ours"
+ },
+ {
+  "id": "ingame-desk",
+  "name": "desk",
+  "cat": "In-game (ours)",
+  "src": "sprites/ingame-desk.png",
+  "source": "Drawn in code for Curation",
+  "license": "Ours"
+ },
+ {
+  "id": "ingame-mop",
+  "name": "mop",
+  "cat": "In-game (ours)",
+  "src": "sprites/ingame-mop.png",
+  "source": "Drawn in code for Curation",
+  "license": "Ours"
+ },
+ {
+  "id": "ingame-coins_3",
+  "name": "coins_3",
+  "cat": "In-game (ours)",
+  "src": "sprites/ingame-coins_3.png",
+  "source": "Drawn in code for Curation",
+  "license": "Ours"
+ },
+ {
+  "id": "ingame-dirt_puddle",
+  "name": "dirt_puddle",
+  "cat": "In-game (ours)",
+  "src": "sprites/ingame-dirt_puddle.png",
+  "source": "Drawn in code for Curation",
+  "license": "Ours"
+ },
+ {
+  "id": "ingame-dirt_litter",
+  "name": "dirt_litter",
+  "cat": "In-game (ours)",
+  "src": "sprites/ingame-dirt_litter.png",
+  "source": "Drawn in code for Curation",
+  "license": "Ours"
+ },
+ {
+  "id": "ingame-stairs_up",
+  "name": "stairs_up",
+  "cat": "In-game (ours)",
+  "src": "sprites/ingame-stairs_up.png",
+  "source": "Drawn in code for Curation",
+  "license": "Ours"
+ },
+ {
+  "id": "ingame-stairs_down",
+  "name": "stairs_down",
+  "cat": "In-game (ours)",
+  "src": "sprites/ingame-stairs_down.png",
+  "source": "Drawn in code for Curation",
+  "license": "Ours"
+ },
+ {
+  "id": "ingame-cobweb",
+  "name": "cobweb",
+  "cat": "In-game (ours)",
+  "src": "sprites/ingame-cobweb.png",
+  "source": "Drawn in code for Curation",
+  "license": "Ours"
+ }
+]

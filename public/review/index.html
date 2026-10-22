@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta name="robots" content="noindex" />
+    <title>Sprite Review</title>
+    <style>
+      :root {
+        --bg: #1d1714;
+        --panel: #2a211c;
+        --ink: #f4ead8;
+        --muted: #b8a890;
+        --gold: #c9a23f;
+        --yes: #4fa25e;
+        --no: #c0503c;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; height: 100%; overflow-x: hidden; }
+      body {
+        background: var(--bg);
+        color: var(--ink);
+        font: 15px Georgia, serif;
+        display: flex;
+        flex-direction: column;
+        padding: max(12px, env(safe-area-inset-top)) 16px 16px;
+        gap: 10px;
+      }
+      header { display: flex; justify-content: space-between; align-items: baseline; }
+      h1 { margin: 0; font-size: 20px; font-weight: normal; }
+      .count { color: var(--muted); font: 12px ui-monospace, monospace; }
+      .tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+      .tabs button, .cats button {
+        padding: 8px 4px; border: 1px solid #5b4216; border-radius: 6px;
+        background: none; color: var(--muted); font: inherit; font-size: 13px;
+      }
+      .tabs button.on, .cats button.on { border-color: var(--gold); color: var(--ink); background: rgba(201, 162, 63, 0.15); }
+      .cats { display: flex; flex-wrap: wrap; gap: 6px; }
+      .cats button { padding: 4px 8px; font-size: 12px; }
+      .card {
+        position: relative; flex: 1; min-height: 300px;
+        border: 2px solid #5b4216; border-radius: 10px; overflow: hidden;
+        background: var(--panel); touch-action: pan-y; user-select: none;
+        display: flex; flex-direction: column; transition: transform 0.15s;
+      }
+      .stage {
+        flex: 1; display: grid; place-items: center;
+        /* wood-floor backdrop so sprites are judged in context */
+        background: repeating-linear-gradient(90deg, #8f5e3c 0 22px, #7e5233 22px 24px);
+      }
+      .stage img { image-rendering: pixelated; max-width: 90%; }
+      .meta { padding: 10px 12px; border-top: 1px solid #5b4216; }
+      .meta b { display: block; font-size: 17px; text-transform: capitalize; }
+      .meta small { color: var(--muted); }
+      .stamp {
+        position: absolute; top: 14px; padding: 4px 10px; border: 3px solid; border-radius: 6px;
+        font: bold 22px ui-monospace, monospace; opacity: 0; transform: rotate(-12deg);
+      }
+      .stamp.yes { left: 14px; color: var(--yes); }
+      .stamp.no { right: 14px; color: var(--no); transform: rotate(12deg); }
+      textarea {
+        width: 100%; min-height: 44px; padding: 8px; border: 1px solid #5b4216; border-radius: 6px;
+        background: var(--panel); color: var(--ink); font: inherit; font-size: 14px; resize: vertical;
+      }
+      .vote { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+      .vote button {
+        padding: 14px; border: none; border-radius: 8px; font: bold 17px Georgia, serif; color: #fff;
+      }
+      .vote .no { background: var(--no); }
+      .vote .yes { background: var(--yes); }
+      .row { display: flex; gap: 8px; }
+      .row button {
+        flex: 1; padding: 10px; border: 1px dashed var(--muted); border-radius: 6px;
+        background: none; color: var(--muted); font: inherit; font-size: 13px;
+      }
+      .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+      .tile {
+        border: 1px solid #5b4216; border-radius: 6px; padding: 6px; background: var(--panel);
+        display: grid; gap: 4px; justify-items: center; text-align: center; font-size: 12px;
+      }
+      .tile img { image-rendering: pixelated; max-width: 100%; height: 60px; object-fit: contain; }
+      .tile em { color: var(--muted); font-size: 11px; }
+      .tile button { font-size: 11px; padding: 3px 6px; border-radius: 4px; border: 1px solid var(--muted); background: none; color: var(--muted); }
+      .empty { color: var(--muted); text-align: center; padding: 40px 0; }
+      .hidden { display: none !important; }
+      #toast {
+        position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%);
+        background: #000c; padding: 8px 14px; border-radius: 20px; font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Sprite review</h1>
+      <span class="count"></span>
+    </header>
+    <div class="tabs">
+      <button data-tab="todo" class="on">To review</button>
+      <button data-tab="yes">Yes pile</button>
+      <button data-tab="no">No pile</button>
+    </div>
+    <div class="cats"></div>
+
+    <section id="swipe">
+      <div class="card">
+        <span class="stamp yes">YES</span>
+        <span class="stamp no">NO</span>
+        <div class="stage"><img alt="" /></div>
+        <div class="meta"><b class="name"></b><small class="info"></small></div>
+      </div>
+    </section>
+    <textarea class="note" placeholder="Feedback on this one (optional)…"></textarea>
+    <div class="vote">
+      <button class="no">✕ No</button>
+      <button class="yes">✓ Yes</button>
+    </div>
+    <div class="row">
+      <button class="undo">Undo last</button>
+      <button class="copy">Copy results for Claude</button>
+    </div>
+    <div class="grid hidden"></div>
+    <div class="empty hidden"></div>
+    <div id="toast" class="hidden"></div>
+
+    <script>
+      // Dev-only page: swipe or tap Yes / No on each sprite. Nothing is ever deleted;
+      // the No pile is kept for feedback. Votes stay in this browser.
+      const KEY = 'spriteReview.votes'; // not 'curation.' so a game save reset never wipes votes
+      const read = () => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch { return {}; } };
+      const write = (v) => { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch {} };
+      let votes = read(); // { id: { v: 'yes' | 'no', note } }
+      let items = [];
+      let tab = 'todo';
+      let cat = 'All';
+      const history = [];
+      const $ = (s) => document.querySelector(s);
+      // Show sprites at a whole-number zoom so pixels stay crisp.
+      $('.stage img').onload = (e) => {
+        const im = e.target;
+        const k = Math.max(1, Math.floor(Math.min(260 / im.naturalWidth, 240 / im.naturalHeight)));
+        im.style.width = `${im.naturalWidth * k}px`;
+      };
+
+      const visible = () => items.filter((it) => cat === 'All' || it.cat === cat);
+      const todo = () => visible().filter((it) => !votes[it.id]);
+
+      function toast(t) {
+        const el = $('#toast');
+        el.textContent = t;
+        el.classList.remove('hidden');
+        clearTimeout(toast.t);
+        toast.t = setTimeout(() => el.classList.add('hidden'), 1400);
+      }
+
+      function render() {
+        document.querySelectorAll('.tabs button').forEach((b) => b.classList.toggle('on', b.dataset.tab === tab));
+        const cats = ['All', ...new Set(items.map((it) => it.cat))];
+        $('.cats').replaceChildren(...cats.map((c) => {
+          const b = document.createElement('button');
+          b.textContent = c;
+          b.className = c === cat ? 'on' : '';
+          b.onclick = () => { cat = c; render(); };
+          return b;
+        }));
+        const yes = items.filter((it) => votes[it.id]?.v === 'yes').length;
+        const no = items.filter((it) => votes[it.id]?.v === 'no').length;
+        $('.count').textContent = `${items.length - yes - no} left · ${yes} yes · ${no} no`;
+
+        const swiping = tab === 'todo';
+        ['#swipe', '.note', '.vote'].forEach((s) => $(s).classList.toggle('hidden', !swiping || !todo().length));
+        $('.grid').classList.toggle('hidden', swiping);
+        $('.empty').classList.add('hidden');
+
+        if (swiping) {
+          const next = todo()[0];
+          if (!next) {
+            $('.empty').textContent = 'All reviewed here. Tap “Copy results for Claude” and paste them in chat.';
+            $('.empty').classList.remove('hidden');
+            return;
+          }
+          $('.stage img').src = next.src;
+          $('.name').textContent = next.name;
+          $('.info').textContent = `${next.cat} · ${next.source} · ${next.license}`;
+          $('.note').value = '';
+          return;
+        }
+        const pile = visible().filter((it) => votes[it.id]?.v === tab);
+        if (!pile.length) {
+          $('.empty').textContent = 'Nothing here yet.';
+          $('.empty').classList.remove('hidden');
+        }
+        $('.grid').replaceChildren(...pile.map((it) => {
+          const d = document.createElement('div');
+          d.className = 'tile';
+          d.innerHTML = `<img alt="" src="${it.src}" /><span></span><em></em><button>Move to ${tab === 'yes' ? 'No' : 'Yes'}</button>`;
+          d.querySelector('span').textContent = it.name;
+          d.querySelector('em').textContent = votes[it.id].note || '';
+          d.querySelector('button').onclick = () => {
+            votes[it.id].v = tab === 'yes' ? 'no' : 'yes';
+            write(votes);
+            render();
+          };
+          return d;
+        }));
+      }
+
+      function vote(v) {
+        const it = todo()[0];
+        if (!it) return;
+        votes[it.id] = { v, note: $('.note').value.trim() || undefined };
+        history.push(it.id);
+        write(votes);
+        const card = $('.card');
+        card.style.transform = `translateX(${v === 'yes' ? 120 : -120}%) rotate(${v === 'yes' ? 12 : -12}deg)`;
+        setTimeout(() => {
+          card.style.transition = 'none';
+          card.style.transform = '';
+          resetStamps();
+          render();
+          requestAnimationFrame(() => (card.style.transition = ''));
+        }, 160);
+      }
+
+      function resetStamps() {
+        document.querySelectorAll('.stamp').forEach((s) => (s.style.opacity = 0));
+      }
+
+      // Swipe the card: right = yes, left = no.
+      let startX = null;
+      const card = $('.card');
+      card.addEventListener('pointerdown', (e) => { startX = e.clientX; card.style.transition = 'none'; });
+      window.addEventListener('pointermove', (e) => {
+        if (startX === null) return;
+        const dx = e.clientX - startX;
+        card.style.transform = `translateX(${dx}px) rotate(${dx / 20}deg)`;
+        $('.stamp.yes').style.opacity = Math.max(0, dx / 100);
+        $('.stamp.no').style.opacity = Math.max(0, -dx / 100);
+      });
+      window.addEventListener('pointerup', (e) => {
+        if (startX === null) return;
+        const dx = e.clientX - startX;
+        startX = null;
+        card.style.transition = '';
+        if (Math.abs(dx) > 90) vote(dx > 0 ? 'yes' : 'no');
+        else { card.style.transform = ''; resetStamps(); }
+      });
+
+      $('.vote .yes').onclick = () => vote('yes');
+      $('.vote .no').onclick = () => vote('no');
+      $('.undo').onclick = () => {
+        const id = history.pop();
+        if (!id) return toast('Nothing to undo');
+        delete votes[id];
+        write(votes);
+        tab = 'todo';
+        render();
+      };
+      $('.copy').onclick = async () => {
+        const out = { yes: [], no: [] };
+        items.forEach((it) => {
+          const v = votes[it.id];
+          if (v) out[v.v].push(v.note ? `${it.id} (${v.note})` : it.id);
+        });
+        const text = `Sprite review results\nYES: ${out.yes.join(', ') || '-'}\nNO: ${out.no.join(', ') || '-'}`;
+        try {
+          await navigator.clipboard.writeText(text);
+          toast('Copied. Paste it to Claude.');
+        } catch {
+          prompt('Copy this:', text);
+        }
+      };
+      document.querySelectorAll('.tabs button').forEach((b) => (b.onclick = () => { tab = b.dataset.tab; render(); }));
+
+      fetch('manifest.json')
+        .then((r) => r.json())
+        .then((list) => { items = list; render(); })
+        .catch(() => { $('.empty').textContent = 'Could not load the sprite list.'; $('.empty').classList.remove('hidden'); });
+    </script>
+  </body>
+</html>
