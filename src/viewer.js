@@ -40,7 +40,7 @@ function slide(p) {
     <div class="slide-wall"></div>
     <div class="spotlight"></div>
     <figure class="frame" style="aspect-ratio:${p.ratio}">
-      <img alt="${p.title}, ${p.artist}" draggable="false" />
+      <img alt="${p.title}, ${p.by}" draggable="false" />
     </figure>`;
   const img = s.querySelector('img');
   img.onerror = () => {
@@ -61,7 +61,7 @@ function show(i) {
   current = i;
   const p = list[i];
   title.textContent = p.title;
-  meta.textContent = `${p.artist} · ${p.year}`;
+  meta.textContent = `${p.by} · ${p.year}`;
   blurb.textContent = p.blurb;
   const entry = loadJournal()[p.id] || {};
   note.value = entry.note || '';

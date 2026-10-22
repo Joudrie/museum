@@ -21,7 +21,7 @@ Name your museum. Quick character creator (skippable; editable later). The caret
 
 **2. The dusty room (0:30–1:30)**
 One small gray room, cracked tiles, dirty walls. Two paintings left behind, leaning against the wall: **The Harvesters** (Pieter Bruegel the Elder, 1565) and **The Horse Fair** (Rosa Bonheur, 1852–55). Both vaguely familiar but not most people's favorites; both CC0 at the Met.
-- Learn to move (tap to walk, or hold and drag).
+- Learn to move (press and drag).
 - Hang the first painting → **painting viewer reveal**: the camera turns to the wall and the HD painting appears. Swipe to the second painting.
 - Prompt: rate it / add a note (optional).
 
