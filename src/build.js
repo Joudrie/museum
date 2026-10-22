@@ -5,6 +5,7 @@
 import { bakeFloor, bakeWalls, bakeFront } from './art.js';
 import { SIZES, SIZE_LABELS, EXITS, exitLabel, layout, paintingsFor, slotStates, placeArt, wallItems } from './rooms.js';
 import { paintArt } from './walldraw.js';
+import { coins, spend, roomCost } from './wallet.js';
 
 const el = document.getElementById('build');
 const preview = el.querySelector('.build-preview');
@@ -72,6 +73,11 @@ function render() {
     b.classList.toggle('on', b.dataset.size === size);
     b.textContent = SIZE_LABELS[orient][b.dataset.size];
   });
+  const cost = roomCost(rooms.length, orient, size);
+  const buy = el.querySelector('.build-buy');
+  const short = cost - coins();
+  buy.disabled = short > 0;
+  buy.textContent = short > 0 ? `Need ${short.toLocaleString()} more gold` : `Build room · ${cost.toLocaleString()} gold`;
 
   const options = EXITS[orient];
   const drawn = options.map((exit) => drawRoom(scene, rooms, { orient, size, exit }, decor));
@@ -141,6 +147,7 @@ el.querySelector('.build-cancel').addEventListener('click', () => {
   state.onCancel();
 });
 el.querySelector('.build-buy').addEventListener('click', () => {
+  if (!spend(roomCost(state.rooms.length, state.orient, state.size))) return;
   el.classList.add('hidden');
   state.onBuild({ orient: state.orient, size: state.size, exit: EXITS[state.orient][state.exit] });
 });

@@ -31,13 +31,13 @@ function render() {
       .filter(([, def]) => def.cat === cat)
       .map(([type, def]) => {
         const b = document.createElement('button');
-        b.className = 'tool-item';
+        b.className = state.coins() < def.price ? 'tool-item poor' : 'tool-item';
         // Scale the icon up, but keep tall or wide items inside the tile.
         const iw = def.plant ? 24 : def.w * 32;
         const ih = def.plant ? 34 : def.h * 32 + def.rise;
         const k = Math.min(1.4, 56 / ih, 76 / iw);
         b.innerHTML = `<span class="ti-icon"><img alt="" src="${state.icon(type)}" style="width:${iw * k}px;height:${ih * k}px" /></span>
-          <b>${def.name}</b><span class="ti-meta"><i class="coin"></i>${def.price} · +${def.income}/day</span>
+          <b>${def.name}</b><span class="ti-meta"><i class="coin"></i> ${def.price.toLocaleString()}</span><span class="ti-meta">+${def.income}/hr</span>
           <span class="ti-size">${def.w}×${def.h} tiles</span>`;
         b.onclick = () => state.onPick(type);
         return b;
@@ -47,7 +47,7 @@ function render() {
 
 el.querySelector('.toolkit-done').addEventListener('click', () => state.onDone());
 
-// opts: { icon(type) -> image url, onPick(type), onDone() }
+// opts: { icon(type) -> image url, coins() -> wallet, onPick(type), onDone() }
 export function openToolkit(opts) {
   state = opts;
   render();

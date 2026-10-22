@@ -13,6 +13,7 @@ import {
   bakeCarpet,
   bakePlant,
   bakeItem,
+  bakeCoins,
   PLANTS,
   makeCharacter,
   makeBubble,
@@ -23,7 +24,8 @@ import {
 import { setTrack } from './music.js';
 import { loadRooms, addRoom, resetRooms, updateRoom, swapRooms, roomName, layout, paintingsFor, slotStates, setSlot, hungAnywhere, placeArt, wallItems, plantSpots, carpetRect } from './rooms.js';
 import { openSlotMenu } from './slotmenu.js';
-import { ITEMS, loadItems, saveItems, resetItems, footprint, itemIncome } from './items.js';
+import { ITEMS, loadItems, saveItems, resetItems, footprint } from './items.js';
+import { coins, addCoins, spend, resetWallet, museumIncome, roomIncome, pile, settle, collect, sellPrice } from './wallet.js';
 import { openToolkit, hideToolkit, showBar, hideBar } from './toolkit.js';
 import { artBounds, paintArt } from './walldraw.js';
 import { PERSONALITIES, lineFor } from './lines.js';
@@ -121,6 +123,7 @@ export class RoomScene extends Phaser.Scene {
       bakeCobweb(this, 'cobweb');
       bakeStairsUp(this, 'stairs_up');
       bakeStairsDown(this, 'stairs_down');
+      for (let i = 1; i <= 3; i++) bakeCoins(this, `coins_${i}`, i);
     }
 
     this.arches = { exit: !!this.room.arch, entrance: this.roomIndex > 0 && !!this.rooms[this.roomIndex - 1].arch };
@@ -133,6 +136,8 @@ export class RoomScene extends Phaser.Scene {
     this.blocks = exit?.block ? [exit.block] : [];
     this.decorObjects = [];
     this.placeDecor();
+    this.pileTile = this.findPileTile();
+    this.pileSprite = this.add.image(0, 0, 'coins_1').setOrigin(0.5, 1).setVisible(false);
     this.items = [];
     this.fitItems();
     this.itemSprites = [];
@@ -153,6 +158,11 @@ export class RoomScene extends Phaser.Scene {
     this.setupInput();
     this.setupButtons();
     this.updateHud();
+    this.updatePile();
+    this.pileTimer = this.time.addEvent({ delay: 1000, loop: true, callback: () => this.updatePile() });
+    const onCoins = () => this.updateHud();
+    window.addEventListener('coins', onCoins);
+    this.events.once('shutdown', () => window.removeEventListener('coins', onCoins));
     if (!this.instant) this.cameras.main.fadeIn(250, 29, 21, 18);
     this.archLock = true; // don't bounce straight back through the doorway we arrived by
     if (typeof this.spawnAt !== 'object') this.toast(roomName(this.room, this.roomIndex));
@@ -497,9 +507,11 @@ export class RoomScene extends Phaser.Scene {
           this.resetMess();
           resetRooms();
           resetItems();
+          resetWallet();
           save(DECOR_KEY, { 0: load(DECOR_KEY, {})[0] }); // built rooms are gone, so is their decor
           this.travel(0, 'start');
         },
+        onAddCoins: (n) => addCoins(n),
         onClose: () => this.pause(false),
       });
     };
@@ -602,6 +614,7 @@ export class RoomScene extends Phaser.Scene {
     for (const m of this.mess) {
       consider(Math.hypot(x - m.ax, y - 4 - m.ay), { mess: m, icon: { crack: 'repair', stain: 'clean', cobweb: 'sweep' }[m.kind] });
     }
+    if (this.pileSprite.visible) consider(Math.hypot(x - this.pileSprite.x, y - this.pileSprite.y + 6) - 4, { coins: true, icon: 'coins' });
     for (const n of this.npcs) consider(Math.hypot(x - n.s.x, y - n.s.y) - 2, { npc: n, icon: 'talk' });
     const { exit, entrance } = this.L;
     if (exit) {
@@ -619,6 +632,7 @@ export class RoomScene extends Phaser.Scene {
     if (f.painting) this.view(f.painting);
     else if (f.slot) this.editSlot(f.slot);
     else if (f.mess) this.clean(f.mess);
+    else if (f.coins) this.collectPile();
     else if (f.npc) (this.talkingTo === f.npc ? this.endTalk() : this.talkTo(f.npc));
     else if (f.entrance) this.travel(this.roomIndex - 1, 'exit');
     else if (f.exit) {
@@ -719,6 +733,7 @@ export class RoomScene extends Phaser.Scene {
       current: slot,
       hungIn: hungAnywhere(this.rooms),
       onPick: (value) => {
+        this.settleAll(); // paintings can move between rooms
         setSlot(this.roomIndex, slot, value);
         const spawn = { x: this.player.x, y: this.player.y, face: this.player.texture.key };
         this.scene.restart({ room: this.roomIndex, spawn });
@@ -749,12 +764,61 @@ export class RoomScene extends Phaser.Scene {
 
   // ---------- HUD ----------
 
-  // Gold per day and visitors per month across the whole museum (flavor numbers for now).
+  // Coins in the wallet, museum gold per hour and visitors per month.
   updateHud() {
     const paintings = this.rooms.reduce((n, _, i) => n + paintingsFor(this.rooms, i).length, 0);
-    const decor = itemIncome(this.rooms.length);
-    document.querySelector('.hud-income').textContent = `+${paintings * 5 + decor}`;
-    document.querySelector('.hud-visitors').textContent = (50 + paintings * 150 + decor * 25).toLocaleString();
+    const income = museumIncome(this.rooms);
+    document.querySelector('.hud-coins').textContent = coins().toLocaleString();
+    document.querySelector('.hud-income').textContent = `+${income}`;
+    document.querySelector('.hud-visitors').textContent = (50 + paintings * 150 + (income - paintings * 5) * 25).toLocaleString();
+  }
+
+  // ---------- Coin piles ----------
+
+  // A free floor tile near the entrance for this room's coin pile.
+  findPileTile() {
+    const { fw, fd, vertical } = this.g;
+    const taken = this.reservedTiles(false);
+    const tries = vertical
+      ? [{ c: fw - 1, r: fd - 1 }, { c: 0, r: fd - 1 }, { c: fw - 1, r: fd - 2 }]
+      : [{ c: 1, r: fd - 1 }, { c: 0, r: fd - 1 }, { c: 2, r: fd - 1 }];
+    return tries.find((t) => !taken.has(`${t.c},${t.r}`)) || tries[0];
+  }
+
+  updatePile() {
+    const n = pile(this.rooms, this.roomIndex);
+    const sp = this.pileSprite;
+    sp.amount = n;
+    if (n < 1) return sp.setVisible(false);
+    const rate = Math.max(1, roomIncome(this.rooms, this.roomIndex));
+    const stage = n >= rate * 4 ? 3 : n >= rate ? 2 : 1; // a heap after 4 hours
+    const { c, r } = this.pileTile;
+    const y = this.g.y0 + (r + 1) * T - 5;
+    sp.setTexture(`coins_${stage}`).setPosition(this.g.xL + (c + 0.5) * T, y).setDepth(y).setVisible(true);
+  }
+
+  collectPile() {
+    const sp = this.pileSprite;
+    const n = collect(this.rooms, this.roomIndex);
+    if (n > 0) {
+      this.toast(`+${n.toLocaleString()} gold`);
+      for (let i = 0; i < 8; i++) {
+        const c = this.add.image(sp.x + (Math.random() - 0.5) * 16, sp.y - 8, 'coins_1').setScale(0.35).setDepth(5001);
+        this.tweens.add({
+          targets: c,
+          y: c.y - 30 - Math.random() * 20,
+          x: c.x + (Math.random() - 0.5) * 30,
+          alpha: 0,
+          duration: 500 + Math.random() * 200,
+          onComplete: () => c.destroy(),
+        });
+      }
+    }
+    this.updatePile();
+  }
+
+  settleAll() {
+    this.rooms.forEach((_, i) => settle(this.rooms, i));
   }
 
   // ---------- Decor items (toolkit) ----------
@@ -772,7 +836,7 @@ export class RoomScene extends Phaser.Scene {
   }
 
   // Tiles items can't cover: doorways, stairs, exits and auto-placed plants.
-  reservedTiles() {
+  reservedTiles(withPile = true) {
     const { g, exit, entrance } = this.L;
     const set = new Set();
     const add = ({ c, r }) => set.add(`${c},${r}`);
@@ -784,6 +848,7 @@ export class RoomScene extends Phaser.Scene {
         for (let y = exit.block.y0; y < exit.block.y1; y += T / 2) add(this.tileOf(x, y));
     }
     if (this.decor.plant !== 'none') plantSpots(this.L).forEach(({ x, y }) => add(this.tileOf(x, y - 4)));
+    if (withPile && this.pileTile) add(this.pileTile);
     return set;
   }
 
@@ -832,7 +897,11 @@ export class RoomScene extends Phaser.Scene {
     this.cameras.main.startFollow(this.player, true, 0.2, 0.2);
     openToolkit({
       icon: (type) => this.textures.get(this.itemKey(type, 0)).getSourceImage().toDataURL(),
-      onPick: (type) => this.startPlacing({ type, rot: 0 }),
+      coins: () => coins(),
+      onPick: (type) => {
+        if (coins() < ITEMS[type].price) return this.toast(`Need ${(ITEMS[type].price - coins()).toLocaleString()} more gold`);
+        this.startPlacing({ type, rot: 0 });
+      },
       onDone: () => this.exitBuild(),
     });
   }
@@ -890,11 +959,13 @@ export class RoomScene extends Phaser.Scene {
     this.ghostSprite.setTexture(this.itemKey(gh.type, gh.rot));
     this.ghostSprite.setPosition(this.g.xL + (gh.c + w / 2) * T, this.g.y0 + (gh.r + h) * T);
     const ok = this.canPlace(gh);
+    const cost = gh.orig ? 0 : def.price;
     const buttons = [];
     if (def.rotatable) buttons.push({ label: 'Rotate', onClick: () => this.rotateGhost() });
     buttons.push({ label: 'Cancel', onClick: () => this.cancelPlacing() });
     buttons.push({ label: 'Place', primary: true, disabled: !ok, onClick: () => this.confirmPlacing() });
-    showBar(def.name, ok ? `${def.price} gold · +${def.income}/day · drag to move` : 'Blocked here · drag to move', buttons);
+    const price = cost ? `${cost} gold · ` : '';
+    showBar(def.name, ok ? `${price}+${def.income}/hr · drag to move` : 'Blocked here · drag to move', buttons);
   }
 
   rotateGhost() {
@@ -914,7 +985,11 @@ export class RoomScene extends Phaser.Scene {
   }
 
   confirmPlacing() {
-    const { type, c, r, rot } = this.ghost;
+    const { type, c, r, rot, orig } = this.ghost;
+    if (!orig) {
+      if (!spend(ITEMS[type].price)) return this.toast('Not enough gold');
+      settle(this.rooms, this.roomIndex);
+    }
     this.items.push({ type, c, r, rot });
     saveItems(this.roomIndex, this.items);
     this.placeItems();
@@ -934,7 +1009,7 @@ export class RoomScene extends Phaser.Scene {
     hideToolkit();
     const def = ITEMS[hit.type];
     const rotated = { ...hit, rot: hit.rot ? 0 : 1 };
-    showBar(def.name, `+${def.income}/day`, [
+    showBar(def.name, `+${def.income}/hr`, [
       {
         label: 'Move',
         onClick: () => {
@@ -946,7 +1021,15 @@ export class RoomScene extends Phaser.Scene {
       ...(def.rotatable
         ? [{ label: 'Rotate', disabled: !this.canPlace(rotated, hit), onClick: () => this.updateItem(hit, rotated) }]
         : []),
-      { label: 'Remove', onClick: () => this.updateItem(hit, null) },
+      {
+        label: `Sell +${sellPrice(hit.type)}`,
+        onClick: () => {
+          settle(this.rooms, this.roomIndex);
+          addCoins(sellPrice(hit.type));
+          this.toast(`Sold for ${sellPrice(hit.type)} gold`);
+          this.updateItem(hit, null);
+        },
+      },
       { label: 'Back', primary: true, onClick: () => this.browse() },
     ]);
   }
