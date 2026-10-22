@@ -37,7 +37,7 @@ function render() {
         const ih = def.plant ? 34 : def.h * 32 + def.rise;
         const k = Math.min(1.4, 56 / ih, 76 / iw);
         b.innerHTML = `<span class="ti-icon"><img alt="" src="${state.icon(type)}" style="width:${iw * k}px;height:${ih * k}px" /></span>
-          <b>${def.name}</b><span class="ti-meta"><i class="coin"></i> ${def.price.toLocaleString()}</span><span class="ti-meta">+${def.income}/hr</span>
+          <b>${def.name}</b><span class="ti-meta"><i class="coin"></i> ${def.price.toLocaleString()}</span><span class="ti-meta">${def.note || `+${def.income}/hr`}</span>
           <span class="ti-size">${def.w}×${def.h} tiles</span>`;
         b.onclick = () => state.onPick(type);
         return b;

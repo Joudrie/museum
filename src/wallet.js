@@ -3,9 +3,10 @@
 import { load, save } from './decor.js';
 import { paintingsFor } from './rooms.js';
 import { ITEMS, loadItems } from './items.js';
+import { dirtCount, DIRT_PENALTY } from './staff.js';
 
 const COINS_KEY = 'curation.coins';
-const PILES_KEY = 'curation.piles'; // { [roomIndex]: last collected (ms) }
+const PILES_KEY = 'curation.piles'; // { [roomIndex]: { t, b } }
 
 export const START_COINS = 300;
 export const PAINTING_INCOME = 5;
@@ -33,10 +34,27 @@ export function resetWallet() {
   save(PILES_KEY, {});
 }
 
-// Gold per hour earned by one room.
+// Visitors per month: paintings draw the crowds, decor helps.
+export function museumVisitors(rooms) {
+  let paintings = 0;
+  let decor = 0;
+  rooms.forEach((_, i) => {
+    paintings += paintingsFor(rooms, i).length;
+    loadItems(i).forEach((it) => (decor += ITEMS[it.type]?.income || 0));
+  });
+  return 50 + paintings * 150 + decor * 25;
+}
+
+// A coffee counter earns 1 gold an hour per 100 monthly visitors.
+export const coffeeIncome = (rooms) => Math.round(museumVisitors(rooms) / 100);
+
+// Gold per hour earned by one room (dirt on the floor cuts it).
 export function roomIncome(rooms, i) {
-  const decor = loadItems(i).reduce((n, it) => n + (ITEMS[it.type]?.income || 0), 0);
-  return paintingsFor(rooms, i).length * PAINTING_INCOME + decor;
+  const items = loadItems(i);
+  let gold = paintingsFor(rooms, i).length * PAINTING_INCOME;
+  items.forEach((it) => (gold += ITEMS[it.type]?.income || 0));
+  if (items.some((it) => it.type === 'counter')) gold += coffeeIncome(rooms);
+  return Math.floor(gold * (1 - DIRT_PENALTY * dirtCount(rooms, i)));
 }
 
 export function museumIncome(rooms) {

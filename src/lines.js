@@ -49,6 +49,21 @@ export const PERSONALITIES = {
     generic: ['Where is the bathroom?', 'Is the gift shop open?', 'My guidebook said this place was in ruins. It’s getting better!'],
     about: ['Excuse me, can you take my photo with {title}?', 'This is on my list! Check.'],
   },
+  // Staff (not random visitors).
+  barista: {
+    label: 'Barista',
+    staff: true,
+    names: ['Nico', 'Rosa', 'Theo', 'Ivy'],
+    generic: ['Latte art is art. Hang one of mine.', 'Every visitor wants a coffee. More visitors, more cups.', 'We have a croissant named after Monet. It’s blurry.'],
+    about: [],
+  },
+  janitor: {
+    label: 'Janitor',
+    staff: true,
+    names: ['Gus', 'Marisol', 'Earl', 'Dot'],
+    generic: ['Spotless. Just how I like it.', 'You wouldn’t believe what people drop in here.', 'Thirty years with a mop. Still undefeated.', 'Somebody spilled a smoothie by the sculptures. Handled.'],
+    about: [],
+  },
 };
 
 // Painting-specific jokes and facts, by artist.
@@ -101,7 +116,7 @@ const pick = (list, r) => list[Math.floor(r * list.length) % list.length];
 
 export function lineFor(personality, painting, r1 = Math.random(), r2 = Math.random()) {
   const p = PERSONALITIES[personality];
-  if (painting && r1 < 0.75) {
+  if (painting && !p.staff && r1 < 0.75) {
     const facts = ABOUT_ARTIST[painting.artist] || [];
     const pool = r2 < 0.65 && facts.length ? facts : p.about;
     return pick(pool, Math.random()).replace('{title}', painting.title).replace('{by}', painting.by).replace('{year}', painting.year);
