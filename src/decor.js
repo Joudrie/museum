@@ -2,6 +2,7 @@
 // "Character" changes the curator. Each color row is a swipeable strip of
 // swatches, ending in a + that opens a full color picker.
 import { PALETTES, FLOOR_PATTERNS, PLANTS } from './art.js';
+import { SIZE_LABELS, ORIENT_LABELS, roomName } from './rooms.js';
 
 export const CHARACTER_PALETTES = {
   h: { label: 'Hair', colors: ['#4a2e20', '#1e1410', '#d9b45a', '#a0522d', '#8a8a8a', '#e8e0d0', '#c0392b', '#2e5a8a', '#6a4c93'] },
@@ -79,6 +80,49 @@ function choices(options, value, onPick, icon) {
   return row;
 }
 
+// Room settings at the top of "This room": name, size, doorway style.
+function renderRoomSettings() {
+  const { room, index } = state;
+  const name = document.createElement('input');
+  name.className = 'room-name';
+  name.value = roomName(room, index);
+  name.maxLength = 24;
+  name.addEventListener('change', () => state.onRoom({ name: name.value.trim() || undefined }));
+  const parts = [section(`${ORIENT_LABELS[room.orient]} room · name`, name)];
+  parts.push(section('Size (decor stays)', choices(SIZE_LABELS[room.orient], room.size, (size) => size !== room.size && state.onRoom({ size }))));
+  if (room.exit && room.exit.startsWith('door')) {
+    parts.push(section('Exit doorway', choices({ door: 'Door', arch: 'Archway' }, room.arch ? 'arch' : 'door', (v) => state.onRoom({ arch: v === 'arch' }))));
+  }
+  return parts;
+}
+
+// Every room in the chain: move rooms up or down, or go to one.
+function renderRooms() {
+  const list = document.createElement('div');
+  list.className = 'room-list';
+  state.rooms.forEach((room, i) => {
+    const row = document.createElement('div');
+    row.className = 'room-row' + (i === state.index ? ' on' : '');
+    row.innerHTML = `<span class="rr-num">${i + 1}</span><span class="rr-name"><b>${roomName(room, i)}</b><i>${ORIENT_LABELS[room.orient]} · ${SIZE_LABELS[room.orient][room.size]}</i></span>`;
+    const btn = (label, aria, onClick, disabled) => {
+      const b = document.createElement('button');
+      b.textContent = label;
+      b.setAttribute('aria-label', aria);
+      b.disabled = disabled;
+      b.onclick = onClick;
+      row.appendChild(b);
+    };
+    btn('↑', 'Move up', () => state.onMoveRoom(i, i - 1), i === 0);
+    btn('↓', 'Move down', () => state.onMoveRoom(i, i + 1), i === state.rooms.length - 1);
+    btn('Go', 'Go to room', () => state.onGoRoom(i), i === state.index);
+    list.appendChild(row);
+  });
+  const note = document.createElement('p');
+  note.className = 'toolkit-note';
+  note.textContent = 'Rooms connect in this order: each room’s exit leads to the next one. Moving a room takes its decor with it.';
+  return [note, list];
+}
+
 function renderRoom() {
   const d = state.decor;
   const set = (patch, live) => {
@@ -92,7 +136,7 @@ function renderRoom() {
     const fallback = { planks: '#8f5e3c', stone: '#9a968f', tile: '#e9e6df' }[pattern];
     set({ pattern, ...(fallback && !pal.includes(d.floor) ? { floor: fallback } : {}) });
   };
-  const parts = [section('Floor pattern', choices(FLOOR_PATTERNS, d.pattern, pickPattern))];
+  const parts = [...renderRoomSettings(), section('Floor pattern', choices(FLOOR_PATTERNS, d.pattern, pickPattern))];
   if (d.pattern.startsWith('checker')) {
     parts.push(section('Checker color 1', strip(PALETTES.stone, d.checkA, (checkA, live) => set({ checkA }, live))));
     parts.push(section('Checker color 2', strip(PALETTES.stone, d.checkB, (checkB, live) => set({ checkB }, live))));
@@ -135,7 +179,7 @@ function renderCharacter() {
 function render() {
   const scroll = body.scrollTop;
   tabs.forEach((t) => t.classList.toggle('on', t.dataset.tab === tab));
-  body.replaceChildren(...(tab === 'room' ? renderRoom() : renderCharacter()));
+  body.replaceChildren(...({ room: renderRoom, rooms: renderRooms, character: renderCharacter }[tab] || renderRoom)());
   body.scrollTop = scroll;
 }
 
@@ -152,7 +196,12 @@ el.querySelector('.decor-close').addEventListener('click', () => {
 });
 el.querySelector('.decor-reset').addEventListener('click', () => state.onReset?.());
 
-// opts: { decor, character, onDecor, onCharacter, onReset, onClose, plantIcon(id), characterPreview() }
+export function closeDecor() {
+  el.classList.add('hidden');
+}
+
+// opts: { decor, character, room, index, rooms, onDecor, onCharacter, onRoom(patch), onMoveRoom(i, j),
+//         onGoRoom(i), onReset, onClose, plantIcon(id), characterPreview() }
 export function openDecor(opts) {
   state = { ...opts };
   render();

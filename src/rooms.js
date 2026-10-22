@@ -6,19 +6,36 @@ import { load, save } from './decor.js';
 
 export const D = 2 * T; // wall height on screen
 const SLOT_GAP = 4 * T;
-const ROOMS_KEY = 'curation.rooms';
+const ROOMS_KEY = 'curation.rooms'; // (old) rooms after the first
+const ROOM_LIST_KEY = 'curation.roomList'; // every room, including the first
+// Per-room data stored by room index; moved along when rooms are reordered.
+const PER_ROOM_KEYS = ['curation.roomDecor', 'curation.items', 'curation.slots'];
 const SLOTS_KEY = 'curation.slots'; // { [roomIndex]: { 'wall:u': { kind, id } } }
 
-// Floor size in tiles. Vertical rooms are 5 wide; horizontal rooms are 5 deep.
+// Floor size in tiles. Vertical rooms are 5 wide; horizontal rooms are 5 deep;
+// big halls are square.
 export const SIZES = {
   vertical: { short: 8, medium: 12, long: 18 },
   horizontal: { short: 9, medium: 13, long: 18 },
+  square: { short: 7, medium: 9, long: 12 },
+};
+
+export const ORIENT_LABELS = { vertical: 'Vertical', horizontal: 'Horizontal', square: 'Big hall' };
+export const SIZE_LABELS = {
+  vertical: { short: 'Short', medium: 'Medium', long: 'Long' },
+  horizontal: { short: 'Short', medium: 'Medium', long: 'Long' },
+  square: { short: 'Small', medium: 'Medium', long: 'Large' },
 };
 
 export const EXITS = {
   vertical: ['door-back', 'door-left', 'door-right', 'stairs-up', 'stairs-down', 'none'],
   horizontal: ['stairs-up', 'door-back', 'door-end', 'stairs-down', 'none'],
+  square: ['door-back', 'door-left', 'door-right', 'stairs-up', 'stairs-down', 'none'],
 };
+
+export function roomName(room, i) {
+  return room.name || (i === 0 ? 'Entrance hall' : `Room ${i + 1}`);
+}
 
 export function exitLabel(orient, kind) {
   const labels = {
@@ -36,15 +53,44 @@ export function exitLabel(orient, kind) {
 const FIRST_ROOM = { orient: 'vertical', size: 'medium', exit: 'door-back' };
 
 export function loadRooms() {
-  return [FIRST_ROOM, ...load(ROOMS_KEY, [])];
+  return load(ROOM_LIST_KEY, null) || [FIRST_ROOM, ...load(ROOMS_KEY, [])];
+}
+
+function saveRooms(list) {
+  save(ROOM_LIST_KEY, list);
 }
 
 export function addRoom(room) {
-  save(ROOMS_KEY, [...load(ROOMS_KEY, []), room]);
+  saveRooms([...loadRooms(), room]);
+}
+
+// Change a room in place (size, name, exit style...). Its decor stays.
+export function updateRoom(i, patch) {
+  const list = loadRooms();
+  list[i] = { ...list[i], ...patch };
+  saveRooms(list);
+}
+
+// Swap two rooms in the chain, taking their decor, items and wall spots along.
+export function swapRooms(i, j) {
+  const list = loadRooms();
+  if (i < 0 || j < 0 || i >= list.length || j >= list.length) return;
+  [list[i], list[j]] = [list[j], list[i]];
+  saveRooms(list);
+  PER_ROOM_KEYS.forEach((key) => {
+    const all = load(key, {});
+    const a = all[i];
+    const b = all[j];
+    if (b === undefined) delete all[i];
+    else all[i] = b;
+    if (a === undefined) delete all[j];
+    else all[j] = a;
+    save(key, all);
+  });
 }
 
 export function resetRooms() {
-  save(ROOMS_KEY, []);
+  saveRooms([loadRooms()[0]]);
   save(SLOTS_KEY, { 0: load(SLOTS_KEY, {})[0] || {} });
 }
 
@@ -52,9 +98,12 @@ export function resetRooms() {
 // Vertical rooms: enter at the bottom (doormat), the exit is at the top end.
 // Horizontal rooms: enter through a door on the left end wall, the exit is at the right end.
 export function layout(room) {
-  const vertical = room.orient === 'vertical';
-  const fw = vertical ? 5 : SIZES.horizontal[room.size];
-  const fd = vertical ? SIZES.vertical[room.size] : 5;
+  const square = room.orient === 'square';
+  // Big halls behave like vertical rooms (enter at the bottom, exit at the top).
+  const vertical = room.orient !== 'horizontal';
+  const n = SIZES[room.orient][room.size];
+  const fw = square ? n : vertical ? 5 : n;
+  const fd = square ? n : vertical ? n : 5;
   const xL = 2 * T;
   const xR = xL + fw * T;
   const y0 = T + D;
@@ -69,7 +118,8 @@ export function layout(room) {
         if (!exit?.blocks?.(wall, u)) slots.push({ wall, u });
       }
     });
-  } else {
+  }
+  if (!vertical || square) {
     for (let u = 2 * T; u < fw * T - T; u += 3 * T) {
       if (!exit?.blocks?.('back', u)) slots.push({ wall: 'back', u });
     }
@@ -108,7 +158,7 @@ function exitLayout(kind, g) {
   switch (kind) {
     case 'door-back': {
       const u0 = vertical ? W / 2 - 18 : W - 60;
-      const blocks = vertical ? (w, u) => w === 'back' && u < u0 + 70 : (w, u) => w === 'back' && u > u0 - 34;
+      const blocks = vertical ? (w, u) => w === 'back' && Math.abs(u - (u0 + 18)) < 52 : (w, u) => w === 'back' && u > u0 - 34;
       return { kind, wall: 'back', rect: { u0, u1: u0 + 36, v0: 0, v1: 48 }, ax: xL + u0 + 18, ay: y0 + 12, blocks };
     }
     case 'door-left':
@@ -178,10 +228,11 @@ export function placeArt(p) {
 }
 
 // Everything drawn into the wall texture: frames, empty outlines, doors.
-export function wallItems(L, hung, states) {
+// arches: { exit, entrance } — draw those doorways as open archways.
+export function wallItems(L, hung, states, arches = {}) {
   const items = { left: [], right: [], back: [] };
-  if (L.exit?.rect) items[L.exit.wall].push({ door: true, rect: L.exit.rect });
-  if (L.entrance.rect) items[L.entrance.wall].push({ door: true, rect: L.entrance.rect });
+  if (L.exit?.rect) items[L.exit.wall].push({ door: true, arch: !!arches.exit, rect: L.exit.rect });
+  if (L.entrance.rect) items[L.entrance.wall].push({ door: true, arch: !!arches.entrance, rect: L.entrance.rect });
   hung.forEach((p) => items[p.wall].push({ rect: p.frame }));
   states.forEach((s) => {
     if (s.kind === 'empty') items[s.wall].push({ empty: true, rect: { u0: s.u - 14, u1: s.u + 14, v0: ART_V0 - 2, v1: ART_V1 + 2 } });

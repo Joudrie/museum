@@ -16,13 +16,15 @@
 - Items: lots of plants, benches/stools, lights, statues, suits of armor, relics, dinosaur bones, waterfalls/fountains, bookshelves.
 - Done: 19 items in 6 categories (seating, plants, lights, sculpture, relics & science, features), grid snapping with green/red footprint, move/rotate/remove, collision, gold-per-day income + visitors in the HUD. Next: more items, real coin spending once the economy lands.
 
-## Phase 4: Rooms v2
+## Phase 4: Rooms v2 ✅ (first pass)
 - Resize any room at any time (e.g. short → long) without losing its decor. Geometry may overlap; it's a game.
 - More room shapes: big rooms, square rooms, corner/L-shaped rooms.
 - Door frames are customizable; a door can become an **archway**.
 - Same-axis rooms joined by an archway: walk straight through with no fade/black screen.
 - Re-shuffle and repurpose rooms (e.g. turn the first room into a front desk).
 - Elevators and stairs to other floors.
+- Done: resize any room (decor kept; items nudged to the nearest free spot), big halls (7×7 / 9×9 / 12×12), door or archway exits (archways walk straight through, no fade), rename rooms, reorder rooms (decor moves with them).
+- Still to do: corner/L-shaped rooms; truly seamless archways that show both rooms at once.
 
 ## Phase 5: A proper museum
 - Beyond paintings: relics, artifacts, science (dinosaur hall), a big garden.

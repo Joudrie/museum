@@ -11,7 +11,7 @@
 - **Portrait only.** The phone is never held sideways.
 - **No black gaps between walls, ever.** Walls must always meet: the back wall
   and side walls share a 45° corner seam, and side walls run down to the front
-  edge. Check every room shape (vertical and horizontal, all sizes) for void
+  edge. Check every room shape (vertical, horizontal and big hall, all sizes) for void
   pixels between wall planes before shipping.
 - Pixel art stays on the 32px tile grid; paintings render in HD on the wall.
 - Movement is press-and-drag only (no tap-to-walk).
