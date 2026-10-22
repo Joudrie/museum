@@ -42,7 +42,7 @@ const VIEW_TILES = 9; // the camera always shows 9 tiles across
 const SPEED = 176; // px per second
 const NPC_SPEED = 70;
 const NPC_SLOW = 0.35; // visitors slow down near the player so they're easy to talk to
-const BODY = { w: 13, h: 9 }; // half-size of a character's footprint, for bumping
+const BODY = { w: 7, h: 5 }; // half-size of a character's feet, for bumping
 const PLAYER_SCALE = 1.15;
 const REACH = 26; // how close you need to be to interact
 const HD = 4; // resolution multiplier for paintings on the wall
@@ -481,7 +481,11 @@ export class RoomScene extends Phaser.Scene {
 
   // Characters bump into each other instead of walking through.
   hitsVisitor(x, y) {
-    return this.npcs.some((n) => Math.abs(x - n.s.x) < 2 * BODY.w && Math.abs(y - n.s.y) < 2 * BODY.h);
+    return !!this.visitorAt(x, y);
+  }
+
+  visitorAt(x, y) {
+    return this.npcs.find((n) => Math.abs(x - n.s.x) < 2 * BODY.w && Math.abs(y - n.s.y) < 2 * BODY.h);
   }
 
   overlapsPlayer(x, y) {
@@ -1189,6 +1193,21 @@ export class RoomScene extends Phaser.Scene {
       // (if already stuck inside something, e.g. a new item, let the player walk out)
       if (free(nx, this.player.y, this.player.x, this.player.y) || this.blocked(this.player.x, this.player.y)) this.player.x = nx;
       if (free(this.player.x, ny, this.player.x, this.player.y)) this.player.y = ny;
+      // Bumped into someone head-on: slide around them instead of stopping dead.
+      const ahead = this.visitorAt(nx, ny);
+      if (ahead && !this.hitsVisitor(this.player.x, this.player.y)) {
+        const step = SPEED * dt;
+        const b2 = this.bounds();
+        if (Math.abs(vy) >= Math.abs(vx)) {
+          const dir = Math.sign(this.player.x - ahead.s.x) || (this.player.x < (b2.x0 + b2.x1) / 2 ? 1 : -1);
+          const sx = Phaser.Math.Clamp(this.player.x + dir * step, b2.x0, b2.x1);
+          if (free(sx, this.player.y, this.player.x, this.player.y)) this.player.x = sx;
+        } else {
+          const dir = Math.sign(this.player.y - ahead.s.y) || 1;
+          const sy = Phaser.Math.Clamp(this.player.y + dir * step, b2.y0, b2.y1);
+          if (free(this.player.x, sy, this.player.x, this.player.y)) this.player.y = sy;
+        }
+      }
       this.faceSprite(this.player, 'player', vx, vy);
     }
     this.animate(this.player, len > 0, dt);
