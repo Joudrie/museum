@@ -15,3 +15,13 @@
   pixels between wall planes before shipping.
 - Pixel art stays on the 32px tile grid; paintings render in HD on the wall.
 - Movement is press-and-drag only (no tap-to-walk).
+
+## Build-room page (from the user's blueprint)
+- Pick Vertical/Horizontal and Short/Medium/Long at the top.
+- The preview is one room cut by a **dotted line** near the exit end. The room
+  body stays still; the **end piece is a vertical carousel**: swipe up/down to
+  see one ending at a time, attached to the room like two pieces snapped
+  together.
+- **Never use horizontal scrolling on this page.**
+- Horizontal rooms: enter through a door on the left end wall; the end piece is
+  the right end. Vertical rooms: enter at the bottom; the end piece is the top.

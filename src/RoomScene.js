@@ -85,9 +85,8 @@ export class RoomScene extends Phaser.Scene {
     this.wallItems = wallItems(this.L, this.hung);
     this.floorImg = this.add.image(g.xL, g.y0, bakeFloor(this, 'floor', g.xR - g.xL, g.y1 - g.y0, this.decor.floor).key).setOrigin(0);
     this.wallImg = this.add.image(0, 0, bakeWalls(this, 'walls', g, this.wallItems, this.decor).key).setOrigin(0);
-    this.add.image(0, g.y1, bakeFront(this, 'front', g.w, entrance.x0, entrance.x1).key).setOrigin(0);
-    if (exit?.kind === 'stairs-up') this.add.image(g.xL, g.y0 + 64, 'stairs_up').setOrigin(0, 1).setDepth(2);
-    if (exit?.kind === 'stairs-down') this.add.image(g.xL, g.y0, 'stairs_down').setOrigin(0).setDepth(2);
+    this.add.image(0, g.y1, bakeFront(this, 'front', g.w, entrance.mat ? entrance.x0 : -1, entrance.mat ? entrance.x1 : -1).key).setOrigin(0);
+    if (exit?.sprite) this.add.image(exit.sprite.x, exit.sprite.y, exit.sprite.key).setOrigin(0).setFlipX(exit.sprite.flip).setDepth(2);
     this.hung.forEach((p) => this.drawPainting(p));
     this.blocks = exit?.block ? [exit.block] : [];
 
@@ -109,6 +108,7 @@ export class RoomScene extends Phaser.Scene {
   spawnPoint() {
     const { g, exit, entrance } = this.L;
     if (this.spawnAt === 'exit' && exit) return { x: exit.ax, y: exit.ay + 14, face: 'player_down' };
+    if (this.spawnAt === 'entrance' && !entrance.mat) return { x: entrance.ax + 6, y: entrance.ay + 4, face: 'player_side' };
     if (this.spawnAt === 'entrance') return { x: entrance.ax, y: g.y1 - 16, face: 'player_up' };
     return { x: entrance.ax, y: g.y1 - 24, face: 'player_up' };
   }
