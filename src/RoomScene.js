@@ -16,8 +16,10 @@ import {
   makeCharacter,
   makeBubble,
   DEFAULT_DECOR,
+  NEW_ROOM_DECOR,
 } from './art.js';
-import { loadRooms, addRoom, resetRooms, layout, paintingsFor, placeArt, wallItems, plantSpots, carpetRect } from './rooms.js';
+import { loadRooms, addRoom, resetRooms, layout, paintingsFor, slotStates, setSlot, hungAnywhere, placeArt, wallItems, plantSpots, carpetRect } from './rooms.js';
+import { openSlotMenu } from './slotmenu.js';
 import { artBounds, paintArt } from './walldraw.js';
 import { PERSONALITIES, lineFor } from './lines.js';
 import { iconSvg } from './icons.js';
@@ -39,14 +41,40 @@ const DECOR_KEY = 'curation.roomDecor'; // { [roomIndex]: decor }
 const CHARACTER_KEY = 'curation.character';
 const CLEANED_KEY = 'curation.cleaned';
 
-const LOOKS = [
-  { h: '#d9b45a', H: '#efd27e', c: '#3d6fb6', p: '#3b3a48' },
-  { h: '#1e1410', H: '#3a2a20', c: '#4f7a3a', p: '#5a4632' },
-  { h: '#a0522d', H: '#c0704a', c: '#c27a2c', p: '#2f2b3d' },
-  { h: '#8a8a8a', H: '#b0b0b0', c: '#6a4c93', p: '#2f2b3d' },
-  { h: '#2b1a10', H: '#4a3020', c: '#b0413e', p: '#3b3a48' },
-  { h: '#e8d8a8', H: '#fff0c8', c: '#2e7d7a', p: '#4a3a2a' },
-];
+// Visitor looks match who they are: grumps are older (gray or bald), nerds wear
+// glasses, tourists wear sun hats, kids are smaller and dress brightly...
+const SKINS = ['#f2c6a0', '#e0ac80', '#c68a5e', '#9a6440', '#6e4428', '#ffe0c8'];
+const HAIRS = ['#4a2e20', '#1e1410', '#d9b45a', '#a0522d', '#2b1a10', '#c0703f'];
+const PANTS = ['#2f2b3d', '#3b3a48', '#5a4632', '#3c4a63', '#4a3a2a'];
+const OUTFITS = {
+  casual: ['#3d6fb6', '#4f7a3a', '#c27a2c', '#2e7d7a', '#b0413e', '#6a4c93'],
+  grump: ['#5a4632', '#3b3a48', '#6b5a4a', '#4a4a4f', '#5a5a3a'],
+  kid: ['#e74c3c', '#f1c40f', '#3498db', '#2ecc71', '#e67e22'],
+  nerd: ['#7a8a5a', '#8a6a4a', '#5a6a8a', '#8a7a5a'],
+  snob: ['#1e1e22', '#5a1f2a', '#2a2a3a', '#3a2a4a'],
+  tourist: ['#2e9e8a', '#e88a3a', '#e85a7a', '#f0c040'],
+  fanboy: ['#6a4c93', '#c0392b', '#2e5a8a', '#d35400'],
+};
+
+function visitorLook(kind, r) {
+  const pick = (arr, k) => arr[Math.floor(r(k) * arr.length) % arr.length];
+  const colors = { s: pick(SKINS, 1), h: pick(HAIRS, 2), c: pick(OUTFITS[kind] || OUTFITS.casual, 3), p: pick(PANTS, 4) };
+  const look = {};
+  let scale = PLAYER_SCALE;
+  if (kind === 'grump') {
+    colors.h = pick(['#8a8a8a', '#c8c8c8', '#e8e8e8'], 2);
+    look.bald = r(6) < 0.5;
+  }
+  if (kind === 'kid') scale = PLAYER_SCALE * 0.85;
+  if (kind === 'nerd') look.glasses = true;
+  if (kind === 'snob') colors.p = '#1e1e22';
+  if (kind === 'tourist' && r(7) < 0.75) {
+    look.hat = true;
+    colors.T = pick(['#e8d8a0', '#f4f0e6', '#d9a04a'], 8);
+  }
+  if (kind === 'casual' && r(9) < 0.2) look.glasses = true;
+  return { colors, look, scale };
+}
 const KINDS = Object.keys(PERSONALITIES);
 
 export class RoomScene extends Phaser.Scene {
@@ -63,7 +91,8 @@ export class RoomScene extends Phaser.Scene {
     this.rooms = loadRooms();
     this.room = this.rooms[this.roomIndex];
     this.L = layout(this.room);
-    this.hung = paintingsFor(this.rooms, this.roomIndex).filter(Boolean).map(placeArt);
+    this.states = slotStates(this.rooms, this.roomIndex);
+    this.hung = paintingsFor(this.rooms, this.roomIndex).map(placeArt);
     this.load.setCORS('anonymous');
     this.hung.forEach((p) => {
       if (!this.textures.exists(`art_${p.id}`)) this.load.image(`art_${p.id}`, p.src);
@@ -73,13 +102,13 @@ export class RoomScene extends Phaser.Scene {
   create() {
     const { g, exit, entrance } = this.L;
     this.g = g;
-    this.decor = { ...DEFAULT_DECOR, ...(load(DECOR_KEY, {})[this.roomIndex] || {}) };
+    const base = this.roomIndex === 0 ? DEFAULT_DECOR : NEW_ROOM_DECOR;
+    this.decor = { ...base, ...(load(DECOR_KEY, {})[this.roomIndex] || {}) };
     this.character = { ...DEFAULT_CHARACTER, ...load(CHARACTER_KEY, {}) };
     makeCharacter(this, 'player', this.character);
 
     if (!this.textures.exists('bubble')) {
       Object.keys(PLANTS).forEach((k) => k !== 'none' && bakePlant(this, `plant_${k}`, k));
-      LOOKS.forEach((v, i) => makeCharacter(this, `npc${i}`, v));
       makeBubble(this);
       for (let i = 0; i < 4; i++) bakeCrack(this, `crack_${i}`, i + 1);
       for (let i = 0; i < 3; i++) bakeStain(this, `stain_${i}`, i + 1);
@@ -88,7 +117,7 @@ export class RoomScene extends Phaser.Scene {
       bakeStairsDown(this, 'stairs_down');
     }
 
-    this.wallItems = wallItems(this.L, this.hung);
+    this.wallItems = wallItems(this.L, this.hung, this.states);
     this.floorImg = this.add.image(g.xL, g.y0, bakeFloor(this, 'floor', g.xR - g.xL, g.y1 - g.y0, this.decor).key).setOrigin(0);
     this.wallImg = this.add.image(0, 0, bakeWalls(this, 'walls', g, this.wallItems, this.decor).key).setOrigin(0);
     this.add.image(0, g.y1, bakeFront(this, 'front', g.w, entrance.mat ? entrance.x0 : -1, entrance.mat ? entrance.x1 : -1).key).setOrigin(0);
@@ -115,6 +144,7 @@ export class RoomScene extends Phaser.Scene {
 
   spawnPoint() {
     const { g, exit, entrance } = this.L;
+    if (typeof this.spawnAt === 'object') return this.spawnAt;
     if (this.spawnAt === 'exit' && exit) return { x: exit.ax, y: exit.ay + 14, face: 'player_down' };
     if (this.spawnAt === 'entrance' && !entrance.mat) return { x: entrance.ax + 6, y: entrance.ay + 4, face: 'player_side' };
     if (this.spawnAt === 'entrance') return { x: entrance.ax, y: g.y1 - 16, face: 'player_up' };
@@ -226,8 +256,10 @@ export class RoomScene extends Phaser.Scene {
   spawnVisitor(i) {
     const { g } = this;
     const seed = this.roomIndex * 10 + i;
-    const look = Math.floor(hash(seed, 4, 50) * LOOKS.length);
     const kind = KINDS[Math.floor(hash(seed, 5, 50) * KINDS.length)];
+    const { colors, look, scale } = visitorLook(kind, (k) => hash(seed, k, 53));
+    const prefix = `visitor${seed}`;
+    makeCharacter(this, prefix, colors, look);
     const names = PERSONALITIES[kind].names;
     let x;
     let y;
@@ -236,8 +268,8 @@ export class RoomScene extends Phaser.Scene {
       y = g.y0 + (1 + Math.floor(hash(seed, 2 + tries, 52) * (g.fd - 2))) * T + T - 4;
       if (!this.blocked(x, y)) break;
     }
-    const s = this.add.sprite(x, y, `npc${look}_down`).setOrigin(0.5, 1).setScale(PLAYER_SCALE);
-    return { s, prefix: `npc${look}`, kind, name: names[Math.floor(hash(seed, 6, 50) * names.length)], wait: 400 + Math.random() * 1500, target: null };
+    const s = this.add.sprite(x, y, `${prefix}_down`).setOrigin(0.5, 1).setScale(scale);
+    return { s, prefix, kind, name: names[Math.floor(hash(seed, 6, 50) * names.length)], wait: 400 + Math.random() * 1500, target: null };
   }
 
   updateVisitor(n, dt) {
@@ -499,6 +531,13 @@ export class RoomScene extends Phaser.Scene {
       const across = p.wall === 'back' ? Math.abs(y - s.y) : Math.abs(x - s.x);
       if (along < half + 14 && across < 16) consider(across + along / 4, { painting: p, icon: 'look' });
     }
+    for (const sl of this.states) {
+      if (sl.kind === 'painting') continue;
+      const st = this.standFor(sl);
+      const along = sl.wall === 'back' ? Math.abs(x - st.x) : Math.abs(y - st.y);
+      const across = sl.wall === 'back' ? Math.abs(y - st.y) : Math.abs(x - st.x);
+      if (along < 22 && across < 16) consider(across + along / 4 + 1, { slot: sl, icon: sl.kind === 'door' ? 'door' : 'build' });
+    }
     for (const m of this.mess) {
       consider(Math.hypot(x - m.ax, y - 4 - m.ay), { mess: m, icon: { crack: 'repair', stain: 'clean', cobweb: 'sweep' }[m.kind] });
     }
@@ -517,6 +556,7 @@ export class RoomScene extends Phaser.Scene {
     const f = this.focus;
     if (!f || !this.input.enabled) return;
     if (f.painting) this.view(f.painting);
+    else if (f.slot) this.editSlot(f.slot);
     else if (f.mess) this.clean(f.mess);
     else if (f.npc) (this.talkingTo === f.npc ? this.endTalk() : this.talkTo(f.npc));
     else if (f.entrance) this.travel(this.roomIndex - 1, 'exit');
@@ -529,7 +569,7 @@ export class RoomScene extends Phaser.Scene {
 
   openBuildMenu() {
     this.pause(true);
-    openBuild(this, this.rooms, DEFAULT_DECOR, {
+    openBuild(this, this.rooms, NEW_ROOM_DECOR, {
       onBuild: (room) => {
         addRoom(room);
         this.travel(this.roomIndex + 1, 'entrance');
@@ -550,7 +590,44 @@ export class RoomScene extends Phaser.Scene {
     const s = this.standFor(p);
     this.faceSprite(this.player, 'player', s.fx, s.fy);
     this.pause(true);
-    openViewer(this.hung, this.hung.indexOf(p), () => this.pause(false));
+    openViewer(
+      this.hung,
+      this.hung.indexOf(p),
+      () => this.pause(false),
+      (q) => this.editSlot(this.states.find((sl) => sl.wall === q.wall && sl.u === q.u)),
+    );
+  }
+
+  // Change what's in a wall slot, then rebuild the room around the player.
+  editSlot(slot) {
+    this.pause(true);
+    const st = this.standFor(slot);
+    this.faceSprite(this.player, 'player', st.fx, st.fy);
+    openSlotMenu({
+      current: slot,
+      hungIn: hungAnywhere(this.rooms),
+      onPick: (value) => {
+        setSlot(this.roomIndex, slot, value);
+        const spawn = { x: this.player.x, y: this.player.y, face: this.player.texture.key };
+        this.scene.restart({ room: this.roomIndex, spawn });
+      },
+      onClose: () => this.pause(false),
+    });
+  }
+
+  // Walking: a small bounce, and the legs swap when walking up or down.
+  animate(s, moving, dt) {
+    const front = !s.texture.key.endsWith('_side');
+    if (!moving) {
+      s.walkT = 0;
+      s.setOrigin(0.5, 1);
+      if (front) s.setFlipX(false);
+      return;
+    }
+    s.walkT = (s.walkT || 0) + dt;
+    const phase = Math.floor(s.walkT * 8) % 2;
+    s.setOrigin(0.5, 1 + phase / 32);
+    if (front) s.setFlipX(phase === 1);
   }
 
   faceSprite(s, prefix, vx, vy) {
@@ -562,6 +639,7 @@ export class RoomScene extends Phaser.Scene {
     const dt = Math.min(dtMs, 50) / 1000;
     this.npcs.forEach((n) => {
       this.updateVisitor(n, dt);
+      this.animate(n.s, !!n.target && !n.talking, dt);
       n.s.setDepth(n.s.y);
     });
     if (!this.input.enabled) return; // a panel is open
@@ -581,6 +659,7 @@ export class RoomScene extends Phaser.Scene {
       if (free(this.player.x, ny, this.player.x, this.player.y)) this.player.y = ny;
       this.faceSprite(this.player, 'player', vx, vy);
     }
+    this.animate(this.player, len > 0, dt);
     this.player.setDepth(this.player.y);
 
     if (this.talkingTo && (!talking() || Math.hypot(this.player.x - this.talkingTo.s.x, this.player.y - this.talkingTo.s.y) > 60)) {

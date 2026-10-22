@@ -7,6 +7,7 @@ import { load, save } from './decor.js';
 export const D = 2 * T; // wall height on screen
 const SLOT_GAP = 4 * T;
 const ROOMS_KEY = 'curation.rooms';
+const SLOTS_KEY = 'curation.slots'; // { [roomIndex]: { 'wall:u': { kind, id } } }
 
 // Floor size in tiles. Vertical rooms are 5 wide; horizontal rooms are 5 deep.
 export const SIZES = {
@@ -44,6 +45,7 @@ export function addRoom(room) {
 
 export function resetRooms() {
   save(ROOMS_KEY, []);
+  save(SLOTS_KEY, { 0: load(SLOTS_KEY, {})[0] || {} });
 }
 
 // Full layout for a room: geometry, painting slots, exit, entrance.
@@ -127,12 +129,38 @@ function exitLayout(kind, g) {
   }
 }
 
-// Assign paintings to every other slot, continuing through the pool room by room.
+// What's in each wall slot: 'painting', 'empty' (outline), 'plain' (no outline,
+// still interactable) or 'door'. Unchanged slots default to every other slot
+// holding the next painting from the pool, continuing room by room.
+export function slotStates(rooms, index) {
+  let base = 0;
+  for (let i = 0; i < index; i++) base += Math.ceil(layout(rooms[i]).slots.length / 2);
+  const saved = load(SLOTS_KEY, {})[index] || {};
+  return layout(rooms[index]).slots.map((s, i) => {
+    const o = saved[`${s.wall}:${s.u}`];
+    if (o) return { ...s, kind: o.kind, painting: o.kind === 'painting' ? PAINTINGS.find((p) => p.id === o.id) : null };
+    if (i % 2 === 0) return { ...s, kind: 'painting', painting: PAINTINGS[(base + i / 2) % PAINTINGS.length] };
+    return { ...s, kind: 'empty', painting: null };
+  });
+}
+
+export function setSlot(index, slot, value) {
+  const all = load(SLOTS_KEY, {});
+  save(SLOTS_KEY, { ...all, [index]: { ...(all[index] || {}), [`${slot.wall}:${slot.u}`]: value } });
+}
+
+// Paintings hung in a room, with their wall position.
 export function paintingsFor(rooms, index) {
-  let next = 0;
-  for (let i = 0; i < index; i++) next += Math.ceil(layout(rooms[i]).slots.length / 2);
-  const { slots } = layout(rooms[index]);
-  return slots.map((s, i) => (i % 2 === 0 ? { ...PAINTINGS[next++ % PAINTINGS.length], ...s } : null));
+  return slotStates(rooms, index)
+    .filter((s) => s.kind === 'painting' && s.painting)
+    .map((s) => ({ ...s.painting, wall: s.wall, u: s.u }));
+}
+
+// Where each painting hangs across the whole museum: id -> room index.
+export function hungAnywhere(rooms) {
+  const where = new Map();
+  rooms.forEach((_, i) => paintingsFor(rooms, i).forEach((p) => where.set(p.id, i)));
+  return where;
 }
 
 // Painting size on the wall, in wall space (u along the wall, v up the wall).
@@ -149,15 +177,15 @@ export function placeArt(p) {
   return { ...p, art, frame };
 }
 
-// Everything drawn into the wall texture: frames, empty slots, doors.
-export function wallItems(L, hung) {
+// Everything drawn into the wall texture: frames, empty outlines, doors.
+export function wallItems(L, hung, states) {
   const items = { left: [], right: [], back: [] };
   if (L.exit?.rect) items[L.exit.wall].push({ door: true, rect: L.exit.rect });
   if (L.entrance.rect) items[L.entrance.wall].push({ door: true, rect: L.entrance.rect });
   hung.forEach((p) => items[p.wall].push({ rect: p.frame }));
-  L.slots.forEach((s) => {
-    if (hung.some((p) => p.wall === s.wall && p.u === s.u)) return;
-    items[s.wall].push({ empty: true, rect: { u0: s.u - 14, u1: s.u + 14, v0: ART_V0 - 2, v1: ART_V1 + 2 } });
+  states.forEach((s) => {
+    if (s.kind === 'empty') items[s.wall].push({ empty: true, rect: { u0: s.u - 14, u1: s.u + 14, v0: ART_V0 - 2, v1: ART_V1 + 2 } });
+    if (s.kind === 'door') items[s.wall].push({ door: true, rect: { u0: s.u - 18, u1: s.u + 18, v0: 0, v1: 48 } });
   });
   return items;
 }
