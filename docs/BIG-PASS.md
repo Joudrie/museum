@@ -94,3 +94,24 @@ PW=/opt/node-tools/node_modules/playwright node tests/gaps.cjs    # wall gaps, 5
   - picking a painting that hangs elsewhere moves it here, instead of being greyed out.
 - Toolkit: categories show an item icon; locked items are greyed with a lock and the office level they need.
 - Room transitions take a little step forward (zoom) with the fade. Toasts drop in under the HUD. The ad has a progress bar. Speech bubbles say "tap to close".
+
+## Phase 5: Features and flow
+- 33 more public-domain paintings (49 in all), including:
+  - The Arnolfini Portrait, Las Meninas, The Garden of Earthly Delights, Hunters in the Snow, The Tower of Babel
+  - Water Lilies, Sunflowers, The Bedroom, The School of Athens, The Creation of Adam, Lady with an Ermine
+  - Liberty Leading the People, The Third of May, The Fighting Temeraire, The Hay Wain, Washington Crossing the Delaware, The Ambassadors, and more
+  - Each has a blurb, plus visitor facts for 13 new artists.
+  - Image links are built from Commons file names (Wikimedia is blocked here, so they weren't loaded). Any that fail fall back to a colored placeholder.
+- 8 new decor items: grand piano, golden harp, artist's easel, grandfather clock, aquarium (glows at night), canary cage, Greek urn, carved mask. They carry a "NEW" tag in the toolkit until seen; categories with something new get a red dot.
+- Goals (journal, book button under the hammer):
+  - 19 goals with gold rewards (cleaning, opening the hall, hanging paintings, placing decor, meeting famous visitors, hiring staff, building rooms, ratings, income...).
+  - Three are shown at a time, with progress bars. A toast, sound and red badge tell you when one is ready to claim; claiming plays a gold celebration.
+  - The caretaker's walkthrough now points to the journal.
+- Collection book (journal tabs):
+  - every painting, on display (and where) or in storage, with its era; tap for the blurb
+  - every famous visitor: portrait, name and a line once met, a silhouette until then.
+- Game feel:
+  - coins jump to you from closer and fly up to the coin counter with sparkles; the counter pops
+  - confetti and a celebration card for opening the main hall, building a room and office level-ups (with fanfare sounds)
+  - the HUD rating pops (with a chime when it goes up).
+- Visitor love: every heart a visitor shows in a room adds love that fades over time. A loved room earns up to +10%, shown in the HUD breakdown.

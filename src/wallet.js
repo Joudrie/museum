@@ -6,6 +6,7 @@ import { ITEMS, loadItems } from './items.js';
 import { dirtCount, DIRT_PENALTY, guides, GUIDE_BOOST } from './staff.js';
 import { museumRating } from './rating.js';
 import { famousBoost } from './famous.js';
+import { loveBoost } from './love.js';
 
 const COINS_KEY = 'curation.coins';
 const PILES_KEY = 'curation.piles'; // { [roomIndex]: { t, b } }
@@ -57,8 +58,8 @@ export function museumVisitors(rooms) {
 export const coffeeIncome = (rooms) => Math.round(museumVisitors(rooms) / 100);
 
 // What a room's income is multiplied by: dirt cuts it, famous visitors raise it.
-// Tour guides raise it too.
-const roomMult = (rooms, i) => (1 - DIRT_PENALTY * dirtCount(rooms, i)) * famousBoost() * (1 + GUIDE_BOOST * guides());
+// Tour guides raise it too, and so does visitor love.
+const roomMult = (rooms, i) => (1 - DIRT_PENALTY * dirtCount(rooms, i)) * famousBoost() * (1 + GUIDE_BOOST * guides()) * loveBoost(i);
 
 // Gold per hour from one painting, and from a room's decor (items + coffee).
 const artRate = (rooms, i) => PAINTING_INCOME * roomMult(rooms, i);

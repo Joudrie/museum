@@ -2243,6 +2243,118 @@ export function bakeItem(scene, key, type, def, rot) {
         R(x + 1, y + 4, 2, 3, 'rgba(60,40,30,0.5)');
       });
       break;
+    case 'piano':
+      // a grand piano, lid up
+      shadow(32, gy, 30, 4);
+      [8, 52, 30].forEach((x) => R(x, gy - 10, 3, 9, '#141014'));
+      box(4, gy - 20, 56, 10, '#1e1a20', OUT);
+      R(6, gy - 19, 52, 2, '#3a3440');
+      box(4, gy - 24, 34, 4, '#f4f0e6', OUT); // keys
+      for (let x = 6; x < 38; x += 3) R(x, gy - 24, 1, 2, '#1e1a20');
+      ctx.fillStyle = '#1e1a20';
+      ctx.beginPath();
+      ctx.moveTo(38, gy - 22);
+      ctx.lineTo(60, gy - 40);
+      ctx.lineTo(62, gy - 38);
+      ctx.lineTo(60, gy - 20);
+      ctx.closePath();
+      ctx.fill();
+      R(39, gy - 23, 20, 1, '#5a5060');
+      R(16, gy - 30, 10, 6, '#f4f0e6'); // sheet music
+      R(17, gy - 28, 8, 1, '#3a3440');
+      break;
+    case 'harp':
+      shadow(16, gy, 9, 3);
+      R(10, gy - 4, 13, 3, BRASS);
+      R(10, gy - 44, 3, 41, BRASS);
+      for (let k = 0; k < 12; k++) R(12 + k, gy - 44 + k * 2.4, 1, 1, BRASS_L);
+      ctx.fillStyle = BRASS;
+      ctx.beginPath();
+      ctx.moveTo(11, gy - 46);
+      ctx.quadraticCurveTo(20, gy - 50, 24, gy - 40);
+      ctx.lineTo(24, gy - 4);
+      ctx.lineTo(22, gy - 4);
+      ctx.lineTo(22, gy - 40);
+      ctx.quadraticCurveTo(18, gy - 46, 11, gy - 44);
+      ctx.fill();
+      for (let x = 14; x < 22; x += 2) R(x, gy - 40 + (x - 14), 1, 36 - (x - 14), 'rgba(255,248,220,0.8)');
+      break;
+    case 'easel': {
+      shadow(16, gy, 10, 3);
+      R(8, gy - 36, 2, 35, WOOD_D);
+      R(22, gy - 36, 2, 35, WOOD_D);
+      R(15, gy - 40, 2, 34, WOOD);
+      R(6, gy - 14, 20, 2, WOOD);
+      box(5, gy - 38, 22, 22, '#f4f0e6', OUT);
+      // a painting in progress
+      R(6, gy - 37, 20, 10, '#8ab0d8');
+      R(6, gy - 27, 20, 10, '#6a9a4a');
+      E(20, gy - 33, 3, 3, '#f2d36b');
+      R(9, gy - 30, 4, 6, '#5a3a2a');
+      break;
+    }
+    case 'clock':
+      shadow(16, gy, 9, 3);
+      box(8, gy - 52, 16, 51, WOOD_D, OUT);
+      R(10, gy - 50, 12, 47, WOOD);
+      E(16, gy - 42, 6, 6, OUT);
+      E(16, gy - 42, 5, 5, '#f4f0e6');
+      R(16, gy - 46, 1, 4, OUT);
+      R(16, gy - 42, 3, 1, OUT);
+      box(12, gy - 32, 8, 22, '#3a2418', OUT);
+      R(15, gy - 30, 2, 12, BRASS);
+      E(16, gy - 16, 3, 3, BRASS_L);
+      R(7, gy - 54, 18, 3, WOOD_L);
+      break;
+    case 'aquarium':
+      shadow(32, gy, 30, 4);
+      box(4, gy - 12, 56, 11, WOOD_D, OUT); // cabinet
+      box(4, gy - 36, 56, 24, 'rgba(90,170,210,0.75)', OUT);
+      R(5, gy - 35, 54, 3, 'rgba(200,240,255,0.6)');
+      R(5, gy - 15, 54, 2, '#d8c89a'); // sand
+      [[14, -24, '#f08a3a'], [34, -28, '#f2d36b'], [46, -21, '#e0506a'], [24, -19, '#f08a3a']].forEach(([x, y, c]) => {
+        E(x, gy + y, 3, 2, c);
+        R(x + 3, gy + y - 1, 2, 3, c);
+      });
+      [10, 52].forEach((x) => [0, 1, 2, 3].forEach((k) => R(x + (k % 2), gy - 16 - k * 4, 2, 4, '#3f8f4a')));
+      R(4, gy - 38, 56, 2, '#1e1a20');
+      break;
+    case 'birdcage':
+      shadow(16, gy, 8, 3);
+      R(10, gy - 4, 12, 3, BRASS);
+      R(15, gy - 20, 2, 16, BRASS);
+      E(16, gy - 30, 10, 11, 'rgba(0,0,0,0)');
+      for (let x = 7; x <= 25; x += 3) R(x, gy - 38 + Math.abs(16 - x) * 0.4, 1, 18 - Math.abs(16 - x) * 0.4, BRASS);
+      R(6, gy - 20, 21, 2, BRASS);
+      E(16, gy - 38, 9, 3, BRASS_L);
+      R(15, gy - 43, 2, 4, BRASS);
+      E(15, gy - 27, 3, 3, '#f2d36b'); // a canary
+      R(17, gy - 28, 2, 1, '#e08a2a');
+      R(13, gy - 28, 1, 1, OUT);
+      break;
+    case 'urn':
+      shadow(16, gy, 9, 3);
+      box(9, gy - 22, 14, 21, MARBLE, OUT);
+      R(10, gy - 21, 3, 19, MARBLE_D);
+      R(7, gy - 24, 18, 3, MARBLE);
+      E(16, gy - 30, 7, 6, '#3a5a7a');
+      E(16, gy - 33, 5, 3, '#5a7a9a');
+      R(12, gy - 39, 8, 3, '#3a5a7a');
+      R(10, gy - 40, 12, 2, '#2a4a6a');
+      R(13, gy - 31, 6, 1, BRASS_L);
+      break;
+    case 'mask':
+      shadow(16, gy, 8, 3);
+      box(10, gy - 14, 12, 13, '#3a2418', OUT);
+      R(15, gy - 20, 2, 6, '#3a2418');
+      E(16, gy - 30, 7, 11, OUT);
+      E(16, gy - 30, 6, 10, '#8a5a2a');
+      R(12, gy - 33, 3, 2, OUT);
+      R(17, gy - 33, 3, 2, OUT);
+      R(15, gy - 30, 2, 5, '#6a4020');
+      R(13, gy - 23, 6, 2, OUT);
+      [[11, -38], [20, -38], [16, -40]].forEach(([x, y]) => R(x, gy + y, 2, 2, '#e0506a'));
+      break;
     case 'geode':
       shadow(16, gy, 10, 3);
       R(12, gy - 8, 8, 7, WOOD_D);

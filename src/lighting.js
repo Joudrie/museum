@@ -37,6 +37,7 @@ const LAMPS = {
   fountain: { up: 10, r: 40, color: 0xbfe6ff, flicker: 0.2 },
   meteorite: { up: 14, r: 26, color: 0xa0c8ff, flicker: 0.3 },
   geode: { up: 14, r: 26, color: 0xd8a0ff, flicker: 0.3 },
+  aquarium: { up: 22, r: 44, color: 0x8ad8ff, flicker: 0.25 },
 };
 
 export function ambientAt(hour) {

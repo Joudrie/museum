@@ -51,6 +51,14 @@ export const ITEMS = {
   donuts: { name: 'Donut table', cat: 'services', w: 2, h: 1, rise: 14, price: 60, income: 0, note: 'Break room' },
   board: { name: 'Staff board', cat: 'retired', w: 1, h: 1, rise: 14, price: 0, income: 0 },
   geode: { name: 'Geode', cat: 'science', w: 1, h: 1, rise: 20, price: 220, income: 18, lvl: 3 },
+  piano: { name: 'Grand piano', cat: 'features', w: 2, h: 1, rise: 22, price: 600, income: 45, lvl: 2 },
+  harp: { name: 'Golden harp', cat: 'features', w: 1, h: 1, rise: 30, price: 260, income: 20, lvl: 2 },
+  easel: { name: 'Artist’s easel', cat: 'features', w: 1, h: 1, rise: 30, price: 60, income: 5 },
+  clock: { name: 'Grandfather clock', cat: 'features', w: 1, h: 1, rise: 34, price: 140, income: 11 },
+  aquarium: { name: 'Aquarium', cat: 'science', w: 2, h: 1, rise: 26, price: 450, income: 35, lvl: 2 },
+  birdcage: { name: 'Canary cage', cat: 'features', w: 1, h: 1, rise: 30, price: 90, income: 7 },
+  urn: { name: 'Greek urn', cat: 'relics', w: 1, h: 1, rise: 30, price: 180, income: 14, lvl: 2 },
+  mask: { name: 'Carved mask', cat: 'relics', w: 1, h: 1, rise: 30, price: 160, income: 13, lvl: 2 },
 };
 
 const ITEMS_KEY = 'curation.items'; // { [roomIndex]: [{ type, c, r, rot }] }
