@@ -77,7 +77,7 @@ function render() {
     b.classList.toggle('on', b.dataset.size === size);
     b.textContent = SIZE_LABELS[orient][b.dataset.size];
   });
-  const cost = roomCost(rooms.length, orient, size);
+  const cost = roomCost(Math.max(1, rooms.length - 1), orient, size);
   const buy = el.querySelector('.build-buy');
   const short = FREE ? 0 : cost - coins();
   buy.disabled = short > 0;
@@ -151,7 +151,7 @@ el.querySelector('.build-cancel').addEventListener('click', () => {
   state.onCancel();
 });
 el.querySelector('.build-buy').addEventListener('click', () => {
-  if (!spend(roomCost(state.rooms.length, state.orient, state.size))) return;
+  if (!spend(roomCost(Math.max(1, state.rooms.length - 1), state.orient, state.size))) return;
   el.classList.add('hidden');
   state.onBuild({ orient: state.orient, size: state.size, exit: EXITS[state.orient][state.exit] });
 });

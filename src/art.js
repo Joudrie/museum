@@ -779,6 +779,12 @@ function doorMaterial(u, v, r) {
   if (d < 4) return FIX.doorTrim;
   const iu = u - r.u0 - 4;
   const iw = r.u1 - r.u0 - 8;
+  if (iw > 34) {
+    // double doors: a seam down the middle and a knob on each leaf
+    const mid = Math.floor(iw / 2);
+    if (iu === mid || iu === mid - 1) return iu === mid ? FIX.oakDark : FIX.doorTrim;
+    if ((iu === mid - 4 || iu === mid + 3) && (v === 21 || v === 22)) return FIX.brass;
+  }
   // two raised panels
   const inPanel = (v0, v1) => iu >= 3 && iu < iw - 3 && v >= v0 && v < v1;
   if (inPanel(5, 20) || inPanel(24, r.v1 - 8)) {
@@ -1117,6 +1123,97 @@ export function bakeWalls(scene, key, g, items, decor) {
       }
     }
     return FIX.void;
+  });
+}
+
+// The main hall: the balcony's back wall, the hall's side walls, the balcony's
+// front wall (a wall standing inside the room, with gaps for the stairs), the
+// hallway's walls below the hall, and the hallway's door mat at the bottom.
+// Every wall meets its neighbor at a 45° seam or a shared edge: no gaps.
+export function bakeMainWalls(scene, key, g, items, decor) {
+  const { w, h, xL, xR, y0, yb, yf, yh, hx0, hx1, D, stairs } = g;
+  const P = wallPalette(decor);
+  const mat = (u, v, list, seed) => wallMaterial(u, v, D, list, seed, P) ?? shade(wallMaterial(u, v, D, [], seed, P), 0.75);
+  const side = (sx, sy, x, top, bottom, leftWall, list, seed) => {
+    const v = leftWall ? x - 1 - sx : sx - x;
+    const baseY = sy + v;
+    if (v < 0 || v >= D || baseY < top || sy >= bottom) return undefined; // runs right down to the front edge
+    if (baseY < top + 1 && top === y0) return FIX.edge; // corner seam with the back wall
+    return shade(mat(baseY - top, v, list, seed), leftWall ? 0.92 : 0.84);
+  };
+  const matX0 = hx0 + 2 * T;
+  const matX1 = hx0 + 3 * T;
+
+  return bake(scene, key, w, h, (sx, sy) => {
+    // Inside the hall.
+    if (sx >= xL && sx < xR && sy >= y0 && sy < yf) {
+      if (sy >= yb - D && sy < yb && !stairs.some((st) => sx >= st.x0 && sx < st.x1)) {
+        return mat(sx - xL, yb - 1 - sy, items.band, 41); // the balcony's front wall
+      }
+      return null; // floor
+    }
+    // Inside the hallway.
+    if (sx >= hx0 && sx < hx1 && sy >= yf && sy < yh) return null;
+
+    // Balcony back wall, filling the corner triangles to the 45° seams.
+    const d = y0 - sy;
+    if (d > 0 && d <= D && sx >= xL - d && sx < xR + d) return mat(sx - xL, Math.floor(d - 0.001), items.back, 11);
+
+    // The hall's side walls run down to its front edge.
+    if (sy < yf) {
+      const c = sx < xL ? side(sx, sy, xL, y0, yf, true, items.left, 21) : side(sx, sy, xR, y0, yf, false, items.right, 31);
+      if (c) return c;
+    }
+    // Below the hall's front edge: the hallway's walls, or outside.
+    if (sy >= yf && sy < yh) {
+      if (sx < hx0) {
+        const c = side(sx, sy, hx0, yf, yh, true, items.hl, 51);
+        if (c) return c;
+      } else if (sx >= hx1) {
+        const c = side(sx, sy, hx1, yf, yh, false, items.hr, 61);
+        if (c) return c;
+      }
+      if (sy === yf) return hex('#6b4530'); // the hall's front edge
+      if (sy === yf + 1) return hex('#4a2f22');
+      return FIX.void;
+    }
+    // The hallway's front edge, with a door mat where you come in from the entrance.
+    if (sy >= yh) {
+      const y = sy - yh;
+      if (sx >= matX0 && sx < matX1) {
+        if (y < 2) return FIX.edge;
+        const inMat = sx >= matX0 + 3 && sx < matX1 - 3 && y >= 5 && y < 20;
+        return inMat ? (y === 5 || y === 19 ? hex('#5a3b2c') : hex('#7a4f39')) : hex('#2a201b');
+      }
+      if (sx >= hx0 - D && sx < hx1 + D) return y === 0 ? hex('#6b4530') : y === 1 ? hex('#4a2f22') : FIX.void;
+    }
+    return FIX.void;
+  });
+}
+
+// Stairs up through the balcony's front wall: 2 tiles wide, 2 tiles tall.
+export function bakeHallStairs(scene, key, decor) {
+  const wood = hex(decor.wainscot || '#6e4430');
+  const W = 2 * T;
+  const H = 2 * T + 6; // the wall's height plus a bottom step
+  return bake(scene, key, W, H, (x, y) => {
+    if (x < 3 || x >= W - 3) return x === 0 || x === W - 1 ? FIX.edge : shade(wood, 0.8); // stringers
+    const step = Math.floor(y / 7);
+    const ly = y % 7;
+    const tread = mix(hex('#a0703f'), wood, 0.35);
+    let c = ly < 3 ? mix(tread, WHITE, 0.12) : ly === 6 ? shade(tread, 0.6) : shade(tread, 0.82);
+    c = shade(c, 0.78 + (step / (H / 7)) * 0.25); // higher steps sit in more shadow
+    return hash(x, y, 70) > 0.93 ? shade(c, 0.9) : c;
+  });
+}
+
+// The balcony's railing: posts and a handrail along its front edge.
+export function bakeRailing(scene, key, width, decor) {
+  const wood = hex(decor.wainscot || '#6e4430');
+  return bake(scene, key, width, 12, (x, y) => {
+    if (y < 2) return y === 0 ? mix(wood, WHITE, 0.3) : wood; // handrail
+    if (y >= 10) return shade(wood, 0.7); // bottom rail
+    return x % 6 < 2 ? shade(wood, x % 6 === 0 ? 0.95 : 0.75) : null; // balusters
   });
 }
 

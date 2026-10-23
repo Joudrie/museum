@@ -18,13 +18,20 @@ export const SIZES = {
   vertical: { short: 8, medium: 12, long: 18 },
   horizontal: { short: 9, medium: 13, long: 18 },
   square: { short: 7, medium: 9, long: 12 },
+  entry: { fixed: 8 },
+  main: { fixed: 15 },
 };
+// The first two rooms are fixed: the entrance (ticket desk) and the main hall.
+export const FIXED = ['entry', 'main'];
+export const isFixed = (room) => FIXED.includes(room.orient);
 
-export const ORIENT_LABELS = { vertical: 'Vertical', horizontal: 'Horizontal', square: 'Big hall' };
+export const ORIENT_LABELS = { vertical: 'Vertical', horizontal: 'Horizontal', square: 'Big hall', entry: 'Entrance', main: 'Main hall' };
 export const SIZE_LABELS = {
   vertical: { short: 'Short', medium: 'Medium', long: 'Long' },
   horizontal: { short: 'Short', medium: 'Medium', long: 'Long' },
   square: { short: 'Small', medium: 'Medium', long: 'Large' },
+  entry: { fixed: 'Fixed' },
+  main: { fixed: 'Fixed' },
 };
 
 export const EXITS = {
@@ -34,7 +41,7 @@ export const EXITS = {
 };
 
 export function roomName(room, i) {
-  return room.name || (i === 0 ? 'Entrance hall' : `Room ${i + 1}`);
+  return room.name || { entry: 'Entrance', main: 'Main hall' }[room.orient] || `Room ${i + 1}`;
 }
 
 export function exitLabel(orient, kind) {
@@ -50,10 +57,40 @@ export function exitLabel(orient, kind) {
   return labels[kind];
 }
 
-const FIRST_ROOM = { orient: 'vertical', size: 'medium', exit: 'door-back' };
+const ENTRY_ROOM = { orient: 'entry', size: 'fixed', exit: 'door-back' };
+const MAIN_ROOM = { orient: 'main', size: 'fixed', exit: 'door-back', arch: true, locked: true };
+export const MAIN_HALL_PRICE = 500;
+const ITEMS_KEY = 'curation.items';
 
 export function loadRooms() {
-  return load(ROOM_LIST_KEY, null) || [FIRST_ROOM, ...load(ROOMS_KEY, [])];
+  const saved = load(ROOM_LIST_KEY, null);
+  if (saved?.[0]?.orient === 'entry') return saved;
+  const old = load(ROOMS_KEY, []);
+  if (!saved && !old.length) {
+    // A brand-new museum: just the entrance and the (locked) main hall.
+    saveRooms([ENTRY_ROOM, MAIN_ROOM]);
+    seedEntry();
+    return [ENTRY_ROOM, MAIN_ROOM];
+  }
+  const list = saved || [{ orient: 'vertical', size: 'medium', exit: 'door-back' }, ...old];
+  // Older saves: the fixed entrance and main hall go in front; existing rooms
+  // (and their decor, items, wall spots) move back two places.
+  PER_ROOM_KEYS.forEach((key) => {
+    const all = load(key, {});
+    const moved = {};
+    Object.entries(all).forEach(([i, v]) => (moved[Number(i) + 2] = v));
+    save(key, moved);
+  });
+  const next = [ENTRY_ROOM, MAIN_ROOM, ...list];
+  saveRooms(next);
+  seedEntry();
+  return next;
+}
+
+// The entrance starts with a potted tree in each front corner.
+function seedEntry(force) {
+  const items = load(ITEMS_KEY, {});
+  if (force || !items[0]) save(ITEMS_KEY, { ...items, 0: [{ type: 'tree', c: 0, r: 6, rot: 0 }, { type: 'tree', c: 5, r: 6, rot: 0 }] });
 }
 
 function saveRooms(list) {
@@ -75,6 +112,7 @@ export function updateRoom(i, patch) {
 export function swapRooms(i, j) {
   const list = loadRooms();
   if (i < 0 || j < 0 || i >= list.length || j >= list.length) return;
+  if (isFixed(list[i]) || isFixed(list[j])) return; // the entrance and main hall stay put
   [list[i], list[j]] = [list[j], list[i]];
   saveRooms(list);
   PER_ROOM_KEYS.forEach((key) => {
@@ -90,14 +128,19 @@ export function swapRooms(i, j) {
 }
 
 export function resetRooms() {
-  saveRooms([loadRooms()[0]]);
-  save(SLOTS_KEY, { 0: load(SLOTS_KEY, {})[0] || {} });
+  saveRooms([ENTRY_ROOM, MAIN_ROOM]);
+  const slots = load(SLOTS_KEY, {});
+  save(SLOTS_KEY, { 0: slots[0] || {}, 1: slots[1] || {} });
 }
+
+export { seedEntry };
 
 // Full layout for a room: geometry, painting slots, exit, entrance.
 // Vertical rooms: enter at the bottom (doormat), the exit is at the top end.
 // Horizontal rooms: enter through a door on the left end wall, the exit is at the right end.
 export function layout(room) {
+  if (room.orient === 'main') return mainLayout();
+  if (room.orient === 'entry') return entryLayout();
   const square = room.orient === 'square';
   // Big halls behave like vertical rooms (enter at the bottom, exit at the top).
   const vertical = room.orient !== 'horizontal';
@@ -108,7 +151,7 @@ export function layout(room) {
   const xR = xL + fw * T;
   const y0 = T + D;
   const y1 = y0 + fd * T;
-  const g = { w: (fw + 4) * T, h: y1 + T, xL, xR, y0, y1, D, fw, fd, vertical };
+  const g = { w: (fw + 4) * T, h: y1 + T, xL, xR, y0, y1, D, fw, fd, vertical, refs: boxRefs(xL, xR, y0) };
 
   const exit = exitLayout(room.exit, g);
   const slots = [];
@@ -136,6 +179,88 @@ export function layout(room) {
   // Where the build menu cuts the room: the last 3 tiles before the exit end.
   const split = vertical ? { y: y0 + 3 * T } : { x: xR - 3 * T };
   return { g, slots, exit, entrance, split };
+}
+
+// Where each wall sits on screen. A 'back' face is seen straight on with its
+// base at y; a 'left'/'right' face leans at 45° from x, with u measured from y.
+function boxRefs(xL, xR, y0) {
+  return { back: { face: 'back', x: xL, y: y0 }, left: { face: 'left', x: xL, y: y0 }, right: { face: 'right', x: xR, y: y0 } };
+}
+
+// The entrance: a small hall with the ticket desk, two paintings per side wall
+// and double doors at the back into the main hall. You come in at the bottom.
+function entryLayout() {
+  const fw = 6;
+  const fd = 8;
+  const xL = 2 * T;
+  const xR = xL + fw * T;
+  const y0 = T + D;
+  const y1 = y0 + fd * T;
+  const g = { w: (fw + 4) * T, h: y1 + T, xL, xR, y0, y1, D, fw, fd, vertical: true, refs: boxRefs(xL, xR, y0) };
+  const u0 = (fw * T) / 2 - 24;
+  const exit = { kind: 'door-back', wall: 'back', rect: { u0, u1: u0 + 48, v0: 0, v1: 50 }, ax: xL + u0 + 24, ay: y0 + 12 };
+  const slots = [];
+  ['left', 'right'].forEach((wall) => [1.6 * T, 4 * T].forEach((u) => slots.push({ wall, u })));
+  const entrance = { mat: true, x0: xL + 2 * T, x1: xL + 4 * T, ax: xL + 3 * T, ay: y1 - 10 };
+  return { g, slots, exit, entrance, split: { y: y0 + 3 * T }, desk: { c: 4, r: 4 } };
+}
+
+// The main hall, from the sketch: a short hallway (break room door on the left,
+// office door on the right) opens into one wide, open room. Its ground floor
+// has paintings and arched doors along a back wall, with stairs on either side
+// of the middle arch up to a balcony that runs the full width and holds four
+// big paintings. Rows from the top: balcony, the balcony's front wall, ground
+// floor, then the hallway.
+export const HALL = { fw: 19, balcony: 3, ground: 6, hallLen: 5, hallW: 5 };
+function mainLayout() {
+  const { fw, balcony, ground, hallLen, hallW } = HALL;
+  const xL = 2 * T;
+  const xR = xL + fw * T;
+  const y0 = T + D; // balcony back wall
+  const yb = y0 + balcony * T + D; // foot of the balcony's front wall
+  const yf = yb + ground * T; // front edge of the hall
+  const yh = yf + hallLen * T; // bottom of the hallway
+  const hx0 = xL + ((fw - hallW) / 2) * T;
+  const hx1 = hx0 + hallW * T;
+  const fd = (yh - y0) / T;
+  const stairs = [6 * T, 11 * T].map((u) => ({ x0: xL + u, x1: xL + u + 2 * T }));
+  const refs = {
+    back: { face: 'back', x: xL, y: y0 },
+    left: { face: 'left', x: xL, y: y0 },
+    right: { face: 'right', x: xR, y: y0 },
+    band: { face: 'back', x: xL, y: yb },
+    hl: { face: 'left', x: hx0, y: yf },
+    hr: { face: 'right', x: hx1, y: yf },
+  };
+  const g = { w: (fw + 4) * T, h: yh + T, xL, xR, y0, y1: yh, yb, yf, yh, hx0, hx1, D, fw, fd, vertical: true, main: true, stairs, refs };
+  const slots = [
+    ...[0.2, 0.4, 0.6, 0.8].map((k) => ({ wall: 'back', u: Math.round(fw * T * k), big: true })),
+    ...[1.5, 4.7, 14.3, 17.5].map((t) => ({ wall: 'band', u: t * T })),
+    { wall: 'hl', u: 2.6 * T }, // low enough that the frame stays below the hall's edge
+    { wall: 'hr', u: 2.6 * T },
+  ];
+  const arch = (t) => ({ u0: t * T - 22, u1: t * T + 22, v0: 0, v1: 52 });
+  // The middle arch leads on to the rooms you build; the side arches are decoration.
+  const exit = { kind: 'door-back', wall: 'band', rect: arch(9.5), ax: xL + 9.5 * T, ay: yb + 12 };
+  const decorDoors = [
+    { wall: 'band', arch: true, rect: arch(3.1) },
+    { wall: 'band', arch: true, rect: arch(15.9) },
+    { wall: 'hl', rect: { u0: 3.4 * T, u1: 3.4 * T + 36, v0: 0, v1: 48 }, label: 'Break room' },
+    { wall: 'hr', rect: { u0: 3.4 * T, u1: 3.4 * T + 36, v0: 0, v1: 48 }, label: 'Office' },
+  ];
+  const entrance = { mat: true, x0: hx0 + 2 * T, x1: hx0 + 3 * T, ax: hx0 + 2.5 * T, ay: yh - 10 };
+  // Tiles nothing can stand on: the balcony's front wall (except the stairs)
+  // and the outside on either side of the hallway.
+  const blockedTiles = [];
+  for (let c = 0; c < fw; c++) {
+    for (let r = 0; r < fd; r++) {
+      const x = xL + c * T + T / 2;
+      const y = y0 + r * T + T / 2;
+      const onStairs = stairs.some((st) => x > st.x0 && x < st.x1);
+      if ((y > yb - D && y < yb && !onStairs) || (y > yf && (x < hx0 || x > hx1))) blockedTiles.push({ c, r });
+    }
+  }
+  return { g, slots, exit, entrance, split: { y: y0 + 3 * T }, decorDoors, blockedTiles };
 }
 
 function exitLayout(kind, g) {
@@ -203,7 +328,7 @@ export function setSlot(index, slot, value) {
 export function paintingsFor(rooms, index) {
   return slotStates(rooms, index)
     .filter((s) => s.kind === 'painting' && s.painting)
-    .map((s) => ({ ...s.painting, wall: s.wall, u: s.u }));
+    .map((s) => ({ ...s.painting, wall: s.wall, u: s.u, big: s.big }));
 }
 
 // Where each painting hangs across the whole museum: id -> room index.
@@ -219,10 +344,11 @@ export const ART_V1 = 54;
 const FRAME = 4;
 
 export function placeArt(p) {
-  const h = ART_V1 - ART_V0;
+  const v0 = p.big ? 14 : ART_V0; // the balcony's big paintings
+  const h = ART_V1 - v0;
   const w = Math.round(h * p.ratio);
   const u0 = Math.round(p.u - w / 2);
-  const art = { u0, u1: u0 + w, v0: ART_V0, v1: ART_V1 };
+  const art = { u0, u1: u0 + w, v0, v1: ART_V1 };
   const frame = { u0: art.u0 - FRAME, u1: art.u1 + FRAME, v0: art.v0 - FRAME, v1: art.v1 + FRAME };
   return { ...p, art, frame };
 }
@@ -230,12 +356,13 @@ export function placeArt(p) {
 // Everything drawn into the wall texture: frames, empty outlines, doors.
 // arches: { exit, entrance } — draw those doorways as open archways.
 export function wallItems(L, hung, states, arches = {}) {
-  const items = { left: [], right: [], back: [] };
+  const items = { left: [], right: [], back: [], band: [], hl: [], hr: [] };
+  (L.decorDoors || []).forEach((d) => items[d.wall].push({ door: true, arch: !!d.arch, rect: d.rect }));
   if (L.exit?.rect) items[L.exit.wall].push({ door: true, arch: !!arches.exit, rect: L.exit.rect });
   if (L.entrance.rect) items[L.entrance.wall].push({ door: true, arch: !!arches.entrance, rect: L.entrance.rect });
   hung.forEach((p) => items[p.wall].push({ rect: p.frame }));
   states.forEach((s) => {
-    if (s.kind === 'empty') items[s.wall].push({ empty: true, rect: { u0: s.u - 14, u1: s.u + 14, v0: ART_V0 - 2, v1: ART_V1 + 2 } });
+    if (s.kind === 'empty') items[s.wall].push({ empty: true, rect: { u0: s.u - 14, u1: s.u + 14, v0: (s.big ? 14 : ART_V0) - 2, v1: ART_V1 + 2 } });
     if (s.kind === 'door') items[s.wall].push({ door: true, rect: { u0: s.u - 18, u1: s.u + 18, v0: 0, v1: 48 } });
   });
   return items;
@@ -245,6 +372,7 @@ export function wallItems(L, hung, states, arches = {}) {
 export function plantSpots(L) {
   const { g } = L;
   const spots = [];
+  if (g.main) return spots; // the main hall is open plan: place plants with the toolkit
   ['left', 'right', 'back'].forEach((wall) => {
     const us = L.slots.filter((s) => s.wall === wall).map((s) => s.u).sort((a, b) => a - b);
     for (let i = 1; i < us.length; i++) {
@@ -259,6 +387,7 @@ export function plantSpots(L) {
 // The carpet runner covers the middle of the floor, one tile in from each edge.
 export function carpetRect(L) {
   const { g } = L;
+  if (g.main) return { x: g.hx0 + T, y: g.yb + T, w: g.hx1 - g.hx0 - 2 * T, h: g.yh - g.yb - 2 * T, alongY: true };
   if (g.vertical) return { x: g.xL + T, y: g.y0 + T, w: g.xR - g.xL - 2 * T, h: g.y1 - g.y0 - 2 * T, alongY: true };
   return { x: g.xL + T, y: g.y0 + T, w: g.xR - g.xL - 2 * T, h: g.y1 - g.y0 - 2 * T, alongY: false };
 }
