@@ -8,11 +8,11 @@ const OFFICE_KEY = 'curation.office';
 // Level 1 is where you start. cost = gold to reach that level.
 export const LEVELS = [
   null,
-  { cost: 0, rooms: 3, janitors: 1 },
-  { cost: 500, rooms: 5, janitors: 2, unlocks: 'Relics, statues, suits of armor and the coffee counter' },
-  { cost: 2000, rooms: 8, janitors: 3, unlocks: 'Big halls, science exhibits and fountains' },
-  { cost: 8000, rooms: 12, janitors: 3, unlocks: 'The T-rex skeleton' },
-  { cost: 30000, rooms: Infinity, janitors: 3, unlocks: 'Unlimited rooms' },
+  { cost: 0, rooms: 3 },
+  { cost: 500, rooms: 5, unlocks: 'Relics, statues, suits of armor and the coffee counter' },
+  { cost: 2000, rooms: 8, unlocks: 'Big halls, science exhibits and fountains' },
+  { cost: 8000, rooms: 12, unlocks: 'The T-rex skeleton' },
+  { cost: 30000, rooms: Infinity, unlocks: 'Unlimited rooms' },
 ];
 export const MAX_LEVEL = LEVELS.length - 1;
 export const BIG_HALL_LEVEL = 3;
@@ -32,7 +32,7 @@ export function resetOffice() {
 // Plain-language list of what a level gives.
 export function describe(lvl) {
   const p = LEVELS[lvl];
-  const lines = [p.rooms === Infinity ? 'Unlimited rooms' : `Up to ${p.rooms} rooms`, `Up to ${p.janitors} janitor${p.janitors > 1 ? 's' : ''}`];
+  const lines = [p.rooms === Infinity ? 'Unlimited rooms' : `Up to ${p.rooms} rooms`];
   if (p.unlocks && p.unlocks !== 'Unlimited rooms') lines.push(p.unlocks);
   return lines;
 }

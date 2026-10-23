@@ -125,6 +125,25 @@ function renderRating() {
   return section(`Rating ${starText(r.stars)} · ${r.score}/100`, list);
 }
 
+// This room's janitor: hire one (each costs more than the last) to keep it clean.
+function renderStaff() {
+  const j = state.janitor;
+  const b = document.createElement('button');
+  b.className = 'decor-coins';
+  if (j.hired) {
+    b.textContent = 'Janitor hired: this room stays spotless';
+    b.disabled = true;
+  } else {
+    b.textContent = j.free ? `Hire a janitor · free while testing (${j.cost} gold)` : `Hire a janitor · ${j.cost} gold`;
+    b.onclick = () => {
+      state.onHireJanitor();
+      state.janitor = { ...j, hired: true };
+      render();
+    };
+  }
+  return section('Janitor', b);
+}
+
 // Every room in the chain: move rooms up or down, or go to one.
 function renderRooms() {
   const list = document.createElement('div');
@@ -170,6 +189,7 @@ function renderRoom() {
   const themes = Object.fromEntries(Object.entries(THEMES).map(([id, t]) => [id, t.name]));
   const parts = [
     renderRating(),
+    renderStaff(),
     ...renderRoomSettings(),
     section('Theme (one tap)', choices(themes, null, (id) => set(THEMES[id].decor))),
     section('Floor pattern', choices(FLOOR_PATTERNS, d.pattern, pickPattern)),

@@ -9,7 +9,7 @@ const SLOT_GAP = 4 * T;
 const ROOMS_KEY = 'curation.rooms'; // (old) rooms after the first
 const ROOM_LIST_KEY = 'curation.roomList'; // every room, including the first
 // Per-room data stored by room index; moved along when rooms are reordered.
-const PER_ROOM_KEYS = ['curation.roomDecor', 'curation.items', 'curation.slots', 'curation.piles', 'curation.dirt'];
+const PER_ROOM_KEYS = ['curation.roomDecor', 'curation.items', 'curation.slots', 'curation.piles', 'curation.dirt', 'curation.janitor'];
 const SLOTS_KEY = 'curation.slots'; // { [roomIndex]: { 'wall:u': { kind, id } } }
 
 // Floor size in tiles. Vertical rooms are 5 wide; horizontal rooms are 5 deep;

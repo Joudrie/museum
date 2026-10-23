@@ -88,11 +88,18 @@ export const PERSONALITIES = {
     generic: ['I’ve looked after this place for forty years. It’s good to see it alive again.', 'Upgrade the office and the board will let us grow.', 'In my day we had one painting and a very nice chair.', 'Every great museum started with one room. And a mop.'],
     about: [],
   },
+  guard: {
+    label: 'Security',
+    staff: true,
+    names: ['Rex', 'Dana', 'Moe', 'Kat'],
+    generic: ['All quiet. Just how I like it.', 'Nobody touches the art on my watch.', 'I’ve been standing here so long the statues think I’m one of them.', 'Relax. I got this.', 'Saw a guy eyeing the Vermeer. Gave him the look. He left.'],
+    about: [],
+  },
   janitor: {
     label: 'Janitor',
     staff: true,
     names: ['Gus', 'Marisol', 'Earl', 'Dot'],
-    generic: ['Spotless. Just how I like it.', 'You wouldn’t believe what people drop in here.', 'Thirty years with a mop. Still undefeated.', 'Somebody spilled a smoothie by the sculptures. Handled.'],
+    generic: ['Just this one puddle. I’m on it.', 'Spotless. Just how I like it.', 'You wouldn’t believe what people drop in here.', 'Thirty years with a mop. Still undefeated.', 'Somebody spilled a smoothie by the sculptures. Handled.'],
     about: [],
   },
 };
