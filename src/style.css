@@ -1151,3 +1151,44 @@ body {
     transform: scale(1.15);
   }
 }
+
+/* ---------- Collect all + ad ---------- */
+#collect-all {
+  position: fixed;
+  top: calc(max(10px, env(safe-area-inset-top)) + 58px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 5px 12px;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+#ad {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  place-content: center;
+  gap: 14px;
+  padding: 24px;
+  text-align: center;
+  background: #0d0a08;
+  color: var(--ink);
+}
+#ad.hidden {
+  display: none;
+}
+.ad-label {
+  margin: 0;
+  color: var(--muted);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+.ad-body {
+  margin: 0;
+  font-size: 20px;
+}
+.ad-timer {
+  margin: 0;
+  color: var(--gold);
+}
