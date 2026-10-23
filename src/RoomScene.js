@@ -33,7 +33,7 @@ import { setTrack, sfx } from './music.js';
 import { BREAK, roomAt, MAIN_HALL_PRICE, seedEntry, loadRooms, addRoom, resetRooms, updateRoom, swapRooms, roomName, layout, paintingsFor, slotStates, setSlot, hungAnywhere, placeArt, wallItems, plantSpots, carpetRect } from './rooms.js';
 import { openSlotMenu } from './slotmenu.js';
 import { ITEMS, loadItems, saveItems, resetItems, footprint, countPlaced } from './items.js';
-import { roomDirt, removeDirt, resetDirt, covered, janitors, janitorCost, hireJanitor, resetJanitors, guides, maxGuides, guideCost, hireGuide, hasCarpenter, hireCarpenter, CARPENTER_COST, staffCount } from './staff.js';
+import { roomDirt, removeDirt, resetDirt, dirtCount, covered, janitors, janitorCost, hireJanitor, resetJanitors, guides, maxGuides, guideCost, hireGuide, hasCarpenter, hireCarpenter, CARPENTER_COST, staffCount } from './staff.js';
 import { openStaffMenu } from './staffmenu.js';
 import { hasCameras, buyCameras, resetSecurity, CAMERA_COST, trackSeen, maybeRob } from './security.js';
 import { officeLevel, setOfficeLevel, resetOffice, perks, itemLevel, LEVELS, MAX_LEVEL } from './office.js';
@@ -41,8 +41,8 @@ import { openOffice } from './officemenu.js';
 import { ask } from './ask.js';
 import { showAd } from './ad.js';
 import { roomRating, museumRating, starText } from './rating.js';
-import { FAMOUS, meet, resetMet } from './famous.js';
-import { FREE, coins, canAfford, addCoins, spend, resetWallet, museumIncome, museumVisitors, coffeeIncome, roomIncome, settle, sellPrice, artPile, decorPile, collectArt, collectDecor, collectAll } from './wallet.js';
+import { FAMOUS, meet, resetMet, metList, famousBoost } from './famous.js';
+import { FREE, coins, canAfford, addCoins, spend, resetWallet, museumIncome, museumVisitors, coffeeIncome, roomIncome, settle, sellPrice, artPile, decorPile, collectArt, collectDecor, collectAll, pile } from './wallet.js';
 import { openToolkit, hideToolkit, showBar, hideBar } from './toolkit.js';
 import { artBounds, paintArt, wallRef } from './walldraw.js';
 import { PERSONALITIES, lineFor, QUIPS, CONTEXT } from './lines.js';
@@ -51,7 +51,9 @@ import { openViewer } from './viewer.js';
 import { openDecor, closeDecor, load, save, DEFAULT_CHARACTER } from './decor.js';
 import { openBuild } from './build.js';
 import { showTalk, hideTalk, talking } from './talk.js';
-import { Lighting } from './lighting.js';
+import { Lighting, timeOfDay } from './lighting.js';
+import { openSettings, closeSettings } from './settingsmenu.js';
+import { openIncome } from './incomemenu.js';
 import { hourNow } from './settings.js';
 
 const VIEW_TILES = 9; // the camera always shows 9 tiles across
@@ -366,7 +368,12 @@ export class RoomScene extends Phaser.Scene {
     const onCoins = () => this.updateHud();
     window.addEventListener('coins', onCoins);
     this.events.once('shutdown', () => window.removeEventListener('coins', onCoins));
-    if (!this.instant) this.cameras.main.fadeIn(250, 29, 21, 18);
+    if (!this.instant) {
+      const cam = this.cameras.main;
+      const zoom = cam.zoom;
+      cam.setZoom(zoom * 1.05).zoomTo(zoom, 320, 'Sine.easeOut');
+      cam.fadeIn(250, 29, 21, 18);
+    }
     this.archLock = true; // don't bounce straight back through the doorway we arrived by
     if (typeof this.spawnAt !== 'object') this.toast(this.isBreak ? 'Break room · staff only' : `${roomName(this.room, this.roomIndex)} · ${starText(roomRating(this.rooms, this.roomIndex).stars)}`);
   }
@@ -1197,6 +1204,16 @@ export class RoomScene extends Phaser.Scene {
     this.interactIcon = this.interactBtn.querySelector('.bang');
     this.interactBtn.onclick = () => this.interact();
     document.getElementById('collect-all').onclick = () => this.collectEverything();
+    document.getElementById('settings-btn').onclick = () => {
+      if (!this.input.enabled || this.mode) return;
+      this.pause(true);
+      openSettings({ onAddCoins: (n) => addCoins(n), onReset: () => this.resetMuseum(), onClose: () => this.pause(false) });
+    };
+    document.getElementById('hud').onclick = () => {
+      if (!this.input.enabled || this.mode) return;
+      this.pause(true);
+      openIncome({ data: () => this.incomeData(), onGo: (i) => this.travel(i, 'entrance'), onClose: () => this.pause(false) });
+    };
     document.getElementById('home-btn').onclick = () => {
       if (!this.input.enabled || this.mode) return;
       this.pause(true);
@@ -1228,23 +1245,6 @@ export class RoomScene extends Phaser.Scene {
         onCharacter: (character) => this.applyCharacter(character),
         plantIcon: (id) => (id === 'none' ? null : this.textures.get(`plant_${id}`).getSourceImage().toDataURL()),
         characterPreview: () => this.characterPreview(),
-        onReset: () => {
-          this.resetMess();
-          resetRooms();
-          resetItems();
-          seedEntry(true);
-          resetWallet();
-          resetDirt();
-          resetOffice();
-          save(TUTORIAL_KEY, 0); // replay the walkthrough
-          resetMet();
-          resetJanitors();
-          save(BREAK_SEEDED_KEY, false);
-          resetSecurity();
-          save(DECOR_KEY, { 0: load(DECOR_KEY, {})[0] }); // built rooms are gone, so is their decor
-          this.travel(0, 'start');
-        },
-        onAddCoins: (n) => addCoins(n),
         janitor: { hired: covered(this.rooms, this.roomIndex), cost: janitorCost(), free: FREE },
         onHireJanitor: () => {
           if (!spend(janitorCost())) return this.toast(`Need ${janitorCost()} gold`);
@@ -1257,6 +1257,53 @@ export class RoomScene extends Phaser.Scene {
         },
         onClose: () => this.pause(false),
       });
+    };
+  }
+
+  // Wipe the museum back to a fresh start (testing).
+  resetMuseum() {
+    this.resetMess();
+    resetRooms();
+    resetItems();
+    seedEntry(true);
+    resetWallet();
+    resetDirt();
+    resetOffice();
+    save(TUTORIAL_KEY, 0); // replay the walkthrough
+    resetMet();
+    resetJanitors();
+    save(BREAK_SEEDED_KEY, false);
+    resetSecurity();
+    save(DECOR_KEY, { 0: load(DECOR_KEY, {})[0] }); // built rooms are gone, so is their decor
+    closeSettings();
+    this.travel(0, 'start');
+  }
+
+  // The HUD's breakdown: income per room and what boosts it.
+  incomeData() {
+    const met = metList().length;
+    const boosts = [];
+    if (met) boosts.push(`Famous visitors met: ${met} of ${Object.keys(FAMOUS).length} · +${Math.round((famousBoost() - 1) * 100)}% income`);
+    else boosts.push('Meet famous visitors in the main hall: +5% income each');
+    if (guides()) boosts.push(`Tour guides: ${guides()} · +${guides() * 10}% income`);
+    const dirty = this.rooms.filter((_, i) => dirtCount(this.rooms, i) > 0).length;
+    if (dirty) boosts.push(`${dirty} room${dirty > 1 ? 's' : ''} need${dirty > 1 ? '' : 's'} mopping (−10% per spot): hire janitors`);
+    if (this.items.some((it) => it.type === 'counter') || this.rooms.some((_, i) => loadItems(i).some((it) => it.type === 'counter'))) boosts.push(`Coffee: +${coffeeIncome(this.rooms)} gold/hr from cups`);
+    return {
+      income: museumIncome(this.rooms),
+      visitors: museumVisitors(this.rooms),
+      rating: museumRating(this.rooms) / 20,
+      boosts,
+      rooms: this.rooms.map((room, i) => ({
+        index: i,
+        name: roomName(room, i),
+        locked: !!room.locked,
+        here: i === this.roomIndex,
+        stars: starText(roomRating(this.rooms, i).stars),
+        income: roomIncome(this.rooms, i),
+        paintings: paintingsFor(this.rooms, i).length,
+        waiting: room.locked ? 0 : pile(this.rooms, i),
+      })),
     };
   }
 
@@ -1440,7 +1487,9 @@ export class RoomScene extends Phaser.Scene {
     hideTalk();
     if (instant) return this.scene.restart({ room, spawn, instant });
     sfx('door');
-    this.cameras.main.fadeOut(220, 29, 21, 18);
+    const cam = this.cameras.main;
+    cam.zoomTo(cam.zoom * 1.08, 220, 'Sine.easeIn'); // a little step forward
+    cam.fadeOut(220, 29, 21, 18);
     this.cameras.main.once('camerafadeoutcomplete', () => this.scene.restart({ room, spawn }));
   }
 
@@ -1518,6 +1567,13 @@ export class RoomScene extends Phaser.Scene {
       roomLabel: (i) => roomName(this.rooms[i], i),
       onPick: (value) => {
         this.settleAll(); // paintings can move between rooms
+        // Hanging elsewhere? Take it down there first.
+        const from = value.kind === 'painting' ? hungAnywhere(this.rooms).get(value.id) : undefined;
+        if (from !== undefined) {
+          paintingsFor(this.rooms, from)
+            .filter((p) => p.id === value.id)
+            .forEach((p) => setSlot(from, p, { kind: 'empty' }));
+        }
         setSlot(this.roomIndex, slot, value);
         const spawn = { x: this.player.x, y: this.player.y, face: this.player.texture.key };
         this.scene.restart({ room: this.roomIndex, spawn });
@@ -1556,6 +1612,10 @@ export class RoomScene extends Phaser.Scene {
     const v = museumVisitors(this.rooms); // per month, shown short: 1.3k, 2.4M
     document.querySelector('.hud-visitors').textContent = v >= 1e6 ? `${(v / 1e6).toFixed(1)}M` : v >= 1e3 ? `${(v / 1e3).toFixed(1)}k` : `${v}`;
     document.querySelector('.hud-rating').textContent = `★ ${(museumRating(this.rooms) / 20).toFixed(1)}`;
+    const tod = timeOfDay(hourNow());
+    const icon = document.querySelector('.hud-time');
+    icon.className = `hud-time ${tod}`;
+    icon.title = tod;
   }
 
   // ---------- Coin piles ----------

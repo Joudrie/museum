@@ -1,6 +1,7 @@
 // Gentle generated background music, one track per room (no audio files).
 // Audio starts after the first tap (browsers require a user gesture).
 import { load, save } from './decor.js';
+import { settings } from './settings.js';
 
 export const TRACKS = { none: 'Silence', gallery: 'Gallery piano', egypt: 'Desert', japan: 'Koto garden', science: 'Science lab' };
 
@@ -17,6 +18,8 @@ const STYLES = {
 
 let ctx = null;
 let master = null;
+let musicBus = null; // music and sound effects have their own volume
+let sfxBus = null;
 let current = 'none';
 let timer = null;
 let padNodes = [];
@@ -29,10 +32,25 @@ function ensure() {
   if (!AC) return null;
   ctx = new AC();
   master = ctx.createGain();
-  master.gain.value = muted ? 0 : 0.11;
+  master.gain.value = muted ? 0 : 1;
   master.connect(ctx.destination);
+  musicBus = ctx.createGain();
+  sfxBus = ctx.createGain();
+  musicBus.connect(master);
+  sfxBus.connect(master);
+  setVolumes();
   return ctx;
 }
+
+const MUSIC_LEVEL = 0.16;
+const SFX_LEVEL = 0.14;
+function setVolumes() {
+  if (!ctx) return;
+  const s = settings();
+  musicBus.gain.setTargetAtTime(MUSIC_LEVEL * s.music, ctx.currentTime, 0.05);
+  sfxBus.gain.setTargetAtTime(SFX_LEVEL * s.sfx / 0.8, ctx.currentTime, 0.05);
+}
+window.addEventListener('settings', (e) => ['music', 'sfx'].includes(e.detail.key) && setVolumes());
 
 function note(freq, when, style, gain = 0.5) {
   const osc = ctx.createOscillator();
@@ -51,7 +69,7 @@ function note(freq, when, style, gain = 0.5) {
     out = f;
   }
   osc.connect(g);
-  out.connect(master);
+  out.connect(musicBus);
   osc.start(when);
   osc.stop(when + style.decay + 0.05);
 }
@@ -65,7 +83,7 @@ function startPad(style) {
     g.gain.setValueAtTime(0, ctx.currentTime);
     g.gain.linearRampToValueAtTime(0.06, ctx.currentTime + 2);
     osc.connect(g);
-    g.connect(master);
+    g.connect(musicBus);
     osc.start();
     return { osc, g };
   });
@@ -114,7 +132,7 @@ function tone(freq, start, dur, { wave = 'triangle', gain = 0.35, to = null } = 
   g.gain.linearRampToValueAtTime(gain, start + 0.01);
   g.gain.exponentialRampToValueAtTime(0.0001, start + dur);
   osc.connect(g);
-  g.connect(master);
+  g.connect(sfxBus);
   osc.start(start);
   osc.stop(start + dur + 0.02);
 }
@@ -131,6 +149,16 @@ const SFX = {
   build: (t) => [523, 659, 784, 1047].forEach((f, i) => tone(f, t + i * 0.09, 0.3, { gain: 0.28 })),
   talk: (t) => tone(660 + Math.random() * 120, t, 0.06, { wave: 'square', gain: 0.05 }),
   nope: (t) => tone(196, t, 0.16, { wave: 'square', gain: 0.08, to: 150 }),
+  tap: (t) => tone(1500, t, 0.03, { wave: 'square', gain: 0.04, to: 1100 }),
+  open: (t) => tone(420, t, 0.12, { gain: 0.12, to: 640 }),
+  close: (t) => tone(560, t, 0.1, { gain: 0.1, to: 360 }),
+  unlock: (t) => [784, 988, 1175, 1568].forEach((f, i) => tone(f, t + i * 0.07, 0.25, { gain: 0.22 })),
+  levelup: (t) => {
+    [523, 659, 784, 1047, 1319].forEach((f, i) => tone(f, t + i * 0.08, 0.35, { gain: 0.22 }));
+    tone(262, t, 0.6, { wave: 'sine', gain: 0.2 });
+  },
+  star: (t) => [1568, 2093].forEach((f, i) => tone(f, t + i * 0.05, 0.2, { wave: 'sine', gain: 0.18 })),
+  quest: (t) => [659, 880, 1319].forEach((f, i) => tone(f, t + i * 0.09, 0.28, { gain: 0.24 })),
 };
 
 export function sfx(name) {
@@ -151,7 +179,7 @@ export function isMuted() {
 export function setMuted(on) {
   muted = on;
   save(MUTE_KEY, on);
-  if (master) master.gain.linearRampToValueAtTime(on ? 0 : 0.11, ctx.currentTime + 0.3);
+  if (master) master.gain.linearRampToValueAtTime(on ? 0 : 1, ctx.currentTime + 0.3);
 }
 
 // Unlock audio on the first tap anywhere.

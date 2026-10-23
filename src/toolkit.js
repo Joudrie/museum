@@ -17,7 +17,10 @@ function render() {
   cats.replaceChildren(
     ...Object.entries(CATEGORIES).map(([id, label]) => {
       const b = document.createElement('button');
-      b.textContent = label;
+      // each category shows its first item as an icon
+      const first = Object.keys(ITEMS).find((t) => ITEMS[t].cat === id);
+      b.innerHTML = `${first ? `<img alt="" src="${state.icon(first)}" />` : ''}<span></span>`;
+      b.querySelector('span').textContent = label;
       b.className = id === cat ? 'on' : '';
       b.onclick = () => {
         cat = id;
@@ -39,7 +42,7 @@ function render() {
         const ih = def.plant ? 34 : def.h * 32 + def.rise;
         const k = Math.min(1.4, 56 / ih, 76 / iw);
         b.innerHTML = `<span class="ti-icon"><img alt="" src="${state.icon(type)}" style="width:${iw * k}px;height:${ih * k}px" /></span>
-          <b>${def.name}</b><span class="ti-meta">${locked ? `Office Lv ${lvl}` : `<i class="coin"></i> ${def.price.toLocaleString()}`}</span><span class="ti-meta">${def.note || `+${def.income}/hr`}</span>
+          <b>${def.name}</b><span class="ti-meta">${locked ? `<i class="lock"></i> Office Lv ${lvl}` : `<i class="coin"></i> ${def.price.toLocaleString()}`}</span><span class="ti-meta">${def.note || `+${def.income}/hr`}</span>
           <span class="ti-size">${def.w}×${def.h} tiles</span>`;
         b.onclick = () => state.onPick(type);
         return b;

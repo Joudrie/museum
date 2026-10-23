@@ -2,7 +2,7 @@
 // "Character" changes the curator. Each color row is a swipeable strip of
 // swatches, ending in a + that opens a full color picker.
 import { HATS, FACIAL, GLASSES, HAIRSTYLES, OUTFITS, ACCESSORIES, PALETTES, FLOOR_PATTERNS, WOOD_FLOORS, TWO_COLOR_FLOORS, FLOOR_DEFAULTS, WALL_PATTERNS, WAINSCOT_STYLES, LIGHTS, PLANTS } from './art.js';
-import { TRACKS, isMuted, setMuted } from './music.js';
+import { TRACKS } from './music.js';
 
 // One-tap room styles. Each sets floor, walls, lighting and music.
 export const THEMES = {
@@ -70,7 +70,7 @@ export function save(key, value) {
 let state = null;
 let tab = 'room';
 
-const section = (label, ...children) => {
+export const section = (label, ...children) => {
   const s = document.createElement('section');
   s.innerHTML = `<h3>${label}</h3>`;
   s.append(...children);
@@ -78,7 +78,7 @@ const section = (label, ...children) => {
 };
 
 // A swipeable row of color swatches plus a custom color picker.
-function strip(colors, value, onPick) {
+export function strip(colors, value, onPick) {
   const row = document.createElement('div');
   row.className = 'strip';
   colors.forEach((c) => {
@@ -100,7 +100,7 @@ function strip(colors, value, onPick) {
 }
 
 // A row of labelled choice buttons that wraps (no scrolling).
-function choices(options, value, onPick, icon) {
+export function choices(options, value, onPick, icon) {
   const row = document.createElement('div');
   row.className = 'choices';
   Object.entries(options).forEach(([id, label]) => {
@@ -151,7 +151,7 @@ function renderRating() {
 function renderStaff() {
   const j = state.janitor;
   const b = document.createElement('button');
-  b.className = 'decor-coins';
+  b.className = 'wide-btn';
   if (j.hired) {
     b.textContent = 'Janitor hired: this room stays spotless';
     b.disabled = true;
@@ -231,7 +231,6 @@ function renderRoom() {
   parts.push(section('Plants (between paintings)', choices(PLANTS, d.plant, (plant) => set({ plant }), state.plantIcon)));
   parts.push(section('Lighting', choices(LIGHTS, d.light || 'warm', (light) => set({ light }))));
   parts.push(section('Music in this room', choices(TRACKS, d.music || 'none', (music) => set({ music }))));
-  parts.push(section('Sound', choices({ on: 'On', off: 'Muted' }, isMuted() ? 'off' : 'on', (v) => (setMuted(v === 'off'), render()))));
   return parts;
 }
 
@@ -336,8 +335,6 @@ el.querySelector('.decor-close').addEventListener('click', () => {
   el.classList.add('hidden');
   state.onClose?.();
 });
-el.querySelector('.decor-reset').addEventListener('click', () => state.onReset?.());
-el.querySelector('.decor-coins').addEventListener('click', () => state.onAddCoins?.(1000));
 
 export function closeDecor() {
   clearInterval(spin);
@@ -345,7 +342,7 @@ export function closeDecor() {
 }
 
 // opts: { decor, character, room, index, rooms, onDecor, onCharacter, onRoom(patch), onMoveRoom(i, j),
-//         onGoRoom(i), onReset, onAddCoins(n), onClose, plantIcon(id), characterPreview() }
+//         onGoRoom(i), onClose, plantIcon(id), characterPreview() }
 export function openDecor(opts) {
   state = { ...opts };
   render();
