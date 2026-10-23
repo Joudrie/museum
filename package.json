@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
-    "preview": "vite preview --host"
+    "preview": "vite preview --host",
+    "smoke": "node tests/smoke.cjs",
+    "gaps": "node tests/gaps.cjs"
   },
   "dependencies": {
     "phaser": "^3.90.0"

@@ -31,7 +31,11 @@ const tabs = el.querySelectorAll('[data-tab]');
 
 export function load(key, fallback) {
   try {
-    return JSON.parse(localStorage.getItem(key)) ?? fallback;
+    const v = JSON.parse(localStorage.getItem(key));
+    if (v === null || v === undefined) return fallback;
+    // a value of the wrong shape (from a broken save) falls back too
+    if (fallback !== null && fallback !== undefined && (typeof v !== typeof fallback || Array.isArray(v) !== Array.isArray(fallback))) return fallback;
+    return v;
   } catch {
     return fallback;
   }
