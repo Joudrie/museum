@@ -2050,3 +2050,15 @@ body {
   background: #e0405a;
   border: 2px solid #1d1714;
 }
+
+/* Outside on the island: the museum's own buttons are put away */
+body.outside #build-btn,
+body.outside #home-btn,
+body.outside #collect-all,
+body.outside #journal-btn,
+body.outside #settings-btn {
+  display: none;
+}
+body.outside #hud {
+  pointer-events: none;
+}
