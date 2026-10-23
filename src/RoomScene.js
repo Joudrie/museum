@@ -37,6 +37,7 @@ import { officeLevel, setOfficeLevel, resetOffice, perks, itemLevel, LEVELS, MAX
 import { openOffice } from './officemenu.js';
 import { ask } from './ask.js';
 import { roomRating, museumRating, starText } from './rating.js';
+import { FAMOUS, guestToday, meet, resetMet } from './famous.js';
 import { FREE, coins, canAfford, addCoins, spend, resetWallet, museumIncome, museumVisitors, coffeeIncome, roomIncome, pile, settle, collect, sellPrice } from './wallet.js';
 import { openToolkit, hideToolkit, showBar, hideBar } from './toolkit.js';
 import { artBounds, paintArt, wallRef } from './walldraw.js';
@@ -57,6 +58,8 @@ const REACH = 26; // how close you need to be to interact
 const HD = 4; // resolution multiplier for paintings on the wall
 
 const DECOR_KEY = 'curation.roomDecor'; // { [roomIndex]: decor }
+// The curator's chosen hat, facial hair and glasses.
+const lookOf = (ch) => ({ hat: ch.hat && ch.hat !== 'none' ? ch.hat : null, facial: ch.facial, glasses: ch.glasses && ch.glasses !== 'none' ? ch.glasses : null });
 const TUTORIAL_KEY = 'curation.tutorial'; // how far the first-time walkthrough has got
 const CHARACTER_KEY = 'curation.character';
 const CLEANED_KEY = 'curation.cleaned';
@@ -158,7 +161,7 @@ export class RoomScene extends Phaser.Scene {
     const base = baseDecor(this.room, this.roomIndex);
     this.decor = { ...base, ...(load(DECOR_KEY, {})[this.roomIndex] || {}) };
     this.character = { ...DEFAULT_CHARACTER, ...load(CHARACTER_KEY, {}) };
-    makeCharacter(this, 'player', this.character);
+    makeCharacter(this, 'player', this.character, lookOf(this.character));
 
     if (!this.textures.exists('bubble')) {
       Object.keys(PLANTS).forEach((k) => k !== 'none' && bakePlant(this, `plant_${k}`, k));
@@ -223,6 +226,7 @@ export class RoomScene extends Phaser.Scene {
     const count = Math.min(5, 3 + Math.floor(this.L.slots.length / 6));
     this.npcs = Array.from({ length: count }, (_, i) => this.spawnVisitor(i));
     this.spawnStaff();
+    if (this.g.main) this.spawnFamous();
     this.refreshDirt();
     this.bubble = this.add.image(0, 0, 'bubble').setOrigin(0.5, 1).setDepth(5000).setVisible(false);
 
@@ -489,6 +493,25 @@ export class RoomScene extends Phaser.Scene {
     }
   }
 
+  // A famous artist visiting the main hall, with a gold star over their head.
+  spawnFamous() {
+    const { g } = this;
+    const id = guestToday();
+    const def = FAMOUS[id];
+    makeCharacter(this, `famous_${id}`, def.colors, def.look);
+    let x = g.xL + 9.5 * T;
+    let y = g.yb + 3 * T;
+    for (let tries = 0; tries < 20 && this.blocked(x, y); tries++) {
+      x = g.xL + (1 + Math.floor(Math.random() * (g.fw - 2)) + 0.5) * T;
+      y = g.yb + (2 + Math.floor(Math.random() * 3)) * T;
+    }
+    const s = this.add.sprite(x, y, `famous_${id}_down`).setOrigin(0.5, 1).setScale(PLAYER_SCALE);
+    const n = { s, prefix: `famous_${id}`, kind: 'famous', famous: id, name: def.name, wait: 2000, target: null };
+    n.star = this.add.text(x, y - 40, '★', { fontSize: '12px', color: '#f2d36b', stroke: '#3a2a10', strokeThickness: 3 }).setOrigin(0.5, 1);
+    this.tweens.add({ targets: n.star, scale: { from: 0.9, to: 1.15 }, yoyo: true, repeat: -1, duration: 600 });
+    this.npcs.push(n);
+  }
+
   // Services changed (counter or closet placed, moved or sold): respawn staff, recheck dirt.
   refreshStaff() {
     this.endTalk();
@@ -550,6 +573,7 @@ export class RoomScene extends Phaser.Scene {
   }
 
   talkTo(n) {
+    if (n.famous) return this.talkToFamous(n);
     let line = lineFor(n.kind, this.paintingNear(n.s.x, n.s.y));
     if (n.kind === 'barista' && Math.random() < 0.5) {
       line = `Coffee’s flowing! ${museumVisitors(this.rooms).toLocaleString()} visitors a month means ${coffeeIncome(this.rooms)} gold an hour from cups.`;
@@ -565,6 +589,25 @@ export class RoomScene extends Phaser.Scene {
     sfx('talk');
     const at = this.screenAt(n.s.x, n.s.y - 34);
     showTalk(n.name, PERSONALITIES[n.kind].label, line, at);
+  }
+
+  talkToFamous(n) {
+    const def = FAMOUS[n.famous];
+    const first = meet(n.famous);
+    const near = this.paintingNear(n.s.x, n.s.y);
+    let line = def.lines[Math.floor(Math.random() * def.lines.length)];
+    if (first) line = def.hello;
+    else if (near?.artist === n.famous && Math.random() < 0.7) line = def.own.replace('{title}', near.title);
+    n.talking = true;
+    n.target = null;
+    this.faceSprite(n.s, n.prefix, this.player.x - n.s.x, this.player.y - n.s.y);
+    this.talkingTo = n;
+    sfx(first ? 'build' : 'talk');
+    showTalk(def.name, first ? 'Famous visitor · first meeting!' : 'Famous visitor', line, this.screenAt(n.s.x, n.s.y - 34), 8000);
+    if (first) {
+      this.toast(`You met ${def.name}! +5% income forever`);
+      this.updateHud();
+    }
   }
 
   // Where a point in the room is on the page (for speech bubbles).
@@ -756,6 +799,7 @@ export class RoomScene extends Phaser.Scene {
           resetDirt();
           resetOffice();
           save(TUTORIAL_KEY, 0); // replay the walkthrough
+          resetMet();
           save(DECOR_KEY, { 0: load(DECOR_KEY, {})[0] }); // built rooms are gone, so is their decor
           this.travel(0, 'start');
         },
@@ -817,7 +861,7 @@ export class RoomScene extends Phaser.Scene {
     this.character = character;
     save(CHARACTER_KEY, character);
     const key = this.player.texture.key;
-    makeCharacter(this, 'player', character);
+    makeCharacter(this, 'player', character, lookOf(character));
     this.player.setTexture(key);
   }
 
@@ -1424,6 +1468,7 @@ export class RoomScene extends Phaser.Scene {
       this.animate(n.s, !!n.target && !n.talking, dt);
       n.s.setDepth(n.s.y);
       n.mop?.setPosition(n.s.x + 12, n.s.y).setDepth(n.s.y - 1);
+      n.star?.setPosition(n.s.x, n.s.y - 38).setDepth(n.s.y + 1);
     });
     if (this.mode) return this.drawOverlay(); // toolkit open: no walking
     if (!this.input.enabled) return; // a panel is open

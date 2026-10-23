@@ -1,7 +1,7 @@
 // Customize panel (home button). "This room" recolors only the room you're in;
 // "Character" changes the curator. Each color row is a swipeable strip of
 // swatches, ending in a + that opens a full color picker.
-import { PALETTES, FLOOR_PATTERNS, WOOD_FLOORS, TWO_COLOR_FLOORS, FLOOR_DEFAULTS, WALL_PATTERNS, WAINSCOT_STYLES, LIGHTS, PLANTS } from './art.js';
+import { HATS, FACIAL, GLASSES, PALETTES, FLOOR_PATTERNS, WOOD_FLOORS, TWO_COLOR_FLOORS, FLOOR_DEFAULTS, WALL_PATTERNS, WAINSCOT_STYLES, LIGHTS, PLANTS } from './art.js';
 import { TRACKS, isMuted, setMuted } from './music.js';
 
 // One-tap room styles. Each sets floor, walls, lighting and music.
@@ -213,8 +213,27 @@ function renderCharacter() {
       ),
     );
   });
+  // Hats, facial hair and glasses.
+  const pick = (key, options) => (v) => {
+    state.character = { ...state.character, [key]: v };
+    state.onCharacter(state.character);
+    render();
+  };
+  parts.push(section('Hat', choices(HATS, ch.hat || 'none', pick('hat', HATS))));
+  if (ch.hat && ch.hat !== 'none' && ch.hat !== 'crown') {
+    parts.push(section('Hat color', strip(HAT_COLORS, ch.T || '#e8d8a0', (T, live) => {
+      state.character = { ...state.character, T };
+      state.onCharacter(state.character);
+      if (live) preview.replaceChildren(...state.characterPreview());
+      else render();
+    })));
+  }
+  parts.push(section('Facial hair', choices(FACIAL, ch.facial || 'none', pick('facial', FACIAL))));
+  parts.push(section('Glasses', choices(GLASSES, ch.glasses || 'none', pick('glasses', GLASSES))));
   return parts;
 }
+
+const HAT_COLORS = ['#e8d8a0', '#1e1e22', '#7a2232', '#3d6fb6', '#4f7a3a', '#c27a2c', '#e8e2d4', '#6a4c93'];
 
 function render() {
   const scroll = body.scrollTop;

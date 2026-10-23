@@ -5,6 +5,7 @@ import { paintingsFor } from './rooms.js';
 import { ITEMS, loadItems } from './items.js';
 import { dirtCount, DIRT_PENALTY } from './staff.js';
 import { museumRating } from './rating.js';
+import { famousBoost } from './famous.js';
 
 const COINS_KEY = 'curation.coins';
 const PILES_KEY = 'curation.piles'; // { [roomIndex]: { t, b } }
@@ -61,7 +62,8 @@ export function roomIncome(rooms, i) {
   let gold = paintingsFor(rooms, i).length * PAINTING_INCOME;
   items.forEach((it) => (gold += ITEMS[it.type]?.income || 0));
   if (items.some((it) => it.type === 'counter')) gold += coffeeIncome(rooms);
-  return Math.floor(gold * (1 - DIRT_PENALTY * dirtCount(rooms, i)));
+  // Dirt cuts it; every famous visitor you've met raises it.
+  return Math.floor(gold * (1 - DIRT_PENALTY * dirtCount(rooms, i)) * famousBoost());
 }
 
 export function museumIncome(rooms) {
