@@ -223,7 +223,11 @@ function mainLayout() {
   const hx0 = xL + ((fw - hallW) / 2) * T;
   const hx1 = hx0 + hallW * T;
   const fd = (yh - y0) / T;
-  const stairs = [6 * T, 11 * T].map((u) => ({ x0: xL + u, x1: xL + u + 2 * T }));
+  // The stairs stand out 2 tiles from the wall; columns stand 1 tile out, at the
+  // ends of each stretch of wall, holding up the balcony's railing.
+  const stairRun = 2 * T;
+  const stairs = [6 * T, 11 * T].map((u) => ({ x0: xL + u, x1: xL + u + 2 * T, foot: yb + stairRun }));
+  const columns = [0.55, 5.45, 8.55, 10.45, 13.55, 18.45].map((t) => ({ x: xL + t * T, foot: yb + T }));
   const refs = {
     back: { face: 'back', x: xL, y: y0 },
     left: { face: 'left', x: xL, y: y0 },
@@ -232,7 +236,7 @@ function mainLayout() {
     hl: { face: 'left', x: hx0, y: yf },
     hr: { face: 'right', x: hx1, y: yf },
   };
-  const g = { w: (fw + 4) * T, h: yh + T, xL, xR, y0, y1: yh, yb, yf, yh, hx0, hx1, D, fw, fd, vertical: true, main: true, stairs, refs };
+  const g = { w: (fw + 4) * T, h: yh + T, xL, xR, y0, y1: yh, yb, yf, yh, hx0, hx1, D, fw, fd, vertical: true, main: true, stairs, stairRun, columns, refs };
   const slots = [
     ...[0.2, 0.4, 0.6, 0.8].map((k) => ({ wall: 'back', u: Math.round(fw * T * k), big: true })),
     ...[1.5, 4.7, 14.3, 17.5].map((t) => ({ wall: 'band', u: t * T })),
@@ -243,8 +247,8 @@ function mainLayout() {
   // The middle arch leads on to the rooms you build; the side arches are decoration.
   const exit = { kind: 'door-back', wall: 'band', rect: arch(9.5), ax: xL + 9.5 * T, ay: yb + 12 };
   const decorDoors = [
-    { wall: 'band', arch: true, rect: arch(3.1) },
-    { wall: 'band', arch: true, rect: arch(15.9) },
+    { wall: 'band', arch: true, closed: true, rect: arch(3.1) },
+    { wall: 'band', arch: true, closed: true, rect: arch(15.9) },
     { wall: 'hl', rect: { u0: 3.4 * T, u1: 3.4 * T + 36, v0: 0, v1: 48 }, label: 'Break room' },
     { wall: 'hr', rect: { u0: 3.4 * T, u1: 3.4 * T + 36, v0: 0, v1: 48 }, label: 'Office' },
   ];
@@ -257,7 +261,10 @@ function mainLayout() {
       const x = xL + c * T + T / 2;
       const y = y0 + r * T + T / 2;
       const onStairs = stairs.some((st) => x > st.x0 && x < st.x1);
-      if ((y > yb - D && y < yb && !onStairs) || (y > yf && (x < hx0 || x > hx1))) blockedTiles.push({ c, r });
+      const wall = y > yb - D && y < yb && !onStairs;
+      const stairFoot = onStairs && y > yb - D && y < yb + stairRun; // nothing can go on the stairs
+      const column = y > yb && y < yb + T && columns.some((col) => Math.abs(x - col.x) < T / 2);
+      if (wall || stairFoot || column || (y > yf && (x < hx0 || x > hx1))) blockedTiles.push({ c, r });
     }
   }
   return { g, slots, exit, entrance, split: { y: y0 + 3 * T }, decorDoors, blockedTiles };
@@ -357,8 +364,9 @@ export function placeArt(p) {
 // arches: { exit, entrance } — draw those doorways as open archways.
 export function wallItems(L, hung, states, arches = {}) {
   const items = { left: [], right: [], back: [], band: [], hl: [], hr: [] };
-  (L.decorDoors || []).forEach((d) => items[d.wall].push({ door: true, arch: !!d.arch, rect: d.rect }));
-  if (L.exit?.rect) items[L.exit.wall].push({ door: true, arch: !!arches.exit, rect: L.exit.rect });
+  (L.decorDoors || []).forEach((d) => items[d.wall].push({ door: true, arch: !!d.arch, closed: !!d.closed, rect: d.rect }));
+  // An archway stays shut until the room behind it exists and is unlocked.
+  if (L.exit?.rect) items[L.exit.wall].push({ door: true, arch: !!arches.exit, closed: !!arches.exitClosed, rect: L.exit.rect });
   if (L.entrance.rect) items[L.entrance.wall].push({ door: true, arch: !!arches.entrance, rect: L.entrance.rect });
   hung.forEach((p) => items[p.wall].push({ rect: p.frame }));
   states.forEach((s) => {
