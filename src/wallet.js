@@ -4,6 +4,7 @@ import { load, save } from './decor.js';
 import { paintingsFor } from './rooms.js';
 import { ITEMS, loadItems } from './items.js';
 import { dirtCount, DIRT_PENALTY } from './staff.js';
+import { museumRating } from './rating.js';
 
 const COINS_KEY = 'curation.coins';
 const PILES_KEY = 'curation.piles'; // { [roomIndex]: { t, b } }
@@ -47,7 +48,8 @@ export function museumVisitors(rooms) {
     paintings += paintingsFor(rooms, i).length;
     loadItems(i).forEach((it) => (decor += ITEMS[it.type]?.income || 0));
   });
-  return 50 + paintings * 150 + decor * 25;
+  // A well-rated museum draws more people: 0.6x at a score of 0, 1.4x at 100.
+  return Math.round((50 + paintings * 150 + decor * 25) * (0.6 + (0.8 * museumRating(rooms)) / 100));
 }
 
 // A coffee counter earns 1 gold an hour per 100 monthly visitors.

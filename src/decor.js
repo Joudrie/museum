@@ -14,6 +14,7 @@ export const THEMES = {
   moody: { name: 'Moody', decor: { pattern: 'herringbone', floor: '#5c3a26', paperStyle: 'stripes', paper: '#2f4a3a', wainscotStyle: 'panels', wainscot: '#1e1e22', carpet: true, carpetColor: '#c9a23f', light: 'moody', music: 'gallery' } },
 };
 import { SIZE_LABELS, ORIENT_LABELS, roomName, isFixed } from './rooms.js';
+import { roomRating, starText } from './rating.js';
 
 export const CHARACTER_PALETTES = {
   h: { label: 'Hair', colors: ['#4a2e20', '#1e1410', '#d9b45a', '#a0522d', '#8a8a8a', '#e8e0d0', '#c0392b', '#2e5a8a', '#6a4c93'] },
@@ -108,6 +109,22 @@ function renderRoomSettings() {
   return parts;
 }
 
+// This room's rating, with what each part scored and how to raise it.
+function renderRating() {
+  const r = roomRating(state.rooms, state.index);
+  const list = document.createElement('div');
+  list.className = 'rating';
+  r.parts.forEach((p) => {
+    const row = document.createElement('div');
+    row.className = 'rating-row';
+    row.innerHTML = `<span class="rating-label"></span><span class="rating-bar"><i style="width:${(100 * p.got) / p.max}%"></i></span><b>${p.got}/${p.max}</b><small></small>`;
+    row.querySelector('.rating-label').textContent = p.label;
+    row.querySelector('small').textContent = p.tip;
+    list.appendChild(row);
+  });
+  return section(`Rating ${starText(r.stars)} · ${r.score}/100`, list);
+}
+
 // Every room in the chain: move rooms up or down, or go to one.
 function renderRooms() {
   const list = document.createElement('div');
@@ -152,6 +169,7 @@ function renderRoom() {
   };
   const themes = Object.fromEntries(Object.entries(THEMES).map(([id, t]) => [id, t.name]));
   const parts = [
+    renderRating(),
     ...renderRoomSettings(),
     section('Theme (one tap)', choices(themes, null, (id) => set(THEMES[id].decor))),
     section('Floor pattern', choices(FLOOR_PATTERNS, d.pattern, pickPattern)),

@@ -25,6 +25,7 @@ import {
   makeBubble,
   DEFAULT_DECOR,
   NEW_ROOM_DECOR,
+  baseDecor,
   LIGHT_TINTS,
 } from './art.js';
 import { setTrack } from './music.js';
@@ -35,6 +36,7 @@ import { roomDirt, removeDirt, resetDirt, covered, janitors } from './staff.js';
 import { officeLevel, setOfficeLevel, resetOffice, perks, itemLevel, LEVELS, MAX_LEVEL } from './office.js';
 import { openOffice } from './officemenu.js';
 import { ask } from './ask.js';
+import { roomRating, museumRating, starText } from './rating.js';
 import { FREE, coins, canAfford, addCoins, spend, resetWallet, museumIncome, museumVisitors, coffeeIncome, roomIncome, pile, settle, collect, sellPrice } from './wallet.js';
 import { openToolkit, hideToolkit, showBar, hideBar } from './toolkit.js';
 import { artBounds, paintArt, wallRef } from './walldraw.js';
@@ -55,8 +57,6 @@ const REACH = 26; // how close you need to be to interact
 const HD = 4; // resolution multiplier for paintings on the wall
 
 const DECOR_KEY = 'curation.roomDecor'; // { [roomIndex]: decor }
-// The main hall starts out grand: marble floor, damask walls, dark wood.
-const MAIN_DECOR = { ...DEFAULT_DECOR, pattern: 'marble', floor: '#e9e6df', paperStyle: 'damask', paper: '#7a3a3e', wainscotStyle: 'panels', wainscot: '#3e2a20', light: 'warm' };
 const CHARACTER_KEY = 'curation.character';
 const CLEANED_KEY = 'curation.cleaned';
 
@@ -154,7 +154,7 @@ export class RoomScene extends Phaser.Scene {
   create() {
     const { g, exit, entrance } = this.L;
     this.g = g;
-    const base = this.roomIndex === 0 ? DEFAULT_DECOR : this.room.orient === 'main' ? MAIN_DECOR : NEW_ROOM_DECOR;
+    const base = baseDecor(this.room, this.roomIndex);
     this.decor = { ...base, ...(load(DECOR_KEY, {})[this.roomIndex] || {}) };
     this.character = { ...DEFAULT_CHARACTER, ...load(CHARACTER_KEY, {}) };
     makeCharacter(this, 'player', this.character);
@@ -220,7 +220,7 @@ export class RoomScene extends Phaser.Scene {
     this.events.once('shutdown', () => window.removeEventListener('coins', onCoins));
     if (!this.instant) this.cameras.main.fadeIn(250, 29, 21, 18);
     this.archLock = true; // don't bounce straight back through the doorway we arrived by
-    if (typeof this.spawnAt !== 'object') this.toast(roomName(this.room, this.roomIndex));
+    if (typeof this.spawnAt !== 'object') this.toast(`${roomName(this.room, this.roomIndex)} · ${starText(roomRating(this.rooms, this.roomIndex).stars)}`);
   }
 
   spawnPoint() {
@@ -992,7 +992,9 @@ export class RoomScene extends Phaser.Scene {
     const income = museumIncome(this.rooms);
     document.querySelector('.hud-coins').textContent = coins().toLocaleString();
     document.querySelector('.hud-income').textContent = `+${income}`;
-    document.querySelector('.hud-visitors').textContent = museumVisitors(this.rooms).toLocaleString();
+    const v = museumVisitors(this.rooms); // per month, shown short: 1.3k, 2.4M
+    document.querySelector('.hud-visitors').textContent = v >= 1e6 ? `${(v / 1e6).toFixed(1)}M` : v >= 1e3 ? `${(v / 1e3).toFixed(1)}k` : `${v}`;
+    document.querySelector('.hud-rating').textContent = `★ ${(museumRating(this.rooms) / 20).toFixed(1)}`;
   }
 
   // ---------- Coin piles ----------

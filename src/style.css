@@ -1103,3 +1103,41 @@ body {
 .ask-buttons button {
   padding: 12px;
 }
+
+/* ---------- Room rating ---------- */
+.hud-rating {
+  color: var(--gold);
+}
+.rating {
+  display: grid;
+  gap: 6px;
+}
+.rating-row {
+  display: grid;
+  grid-template-columns: 70px 1fr 44px;
+  align-items: center;
+  gap: 2px 8px;
+  font-size: 13px;
+}
+.rating-row small {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  font-size: 11px;
+}
+.rating-row b {
+  text-align: right;
+  font-weight: normal;
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+}
+.rating-bar {
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+.rating-bar i {
+  display: block;
+  height: 100%;
+  background: var(--gold);
+}
