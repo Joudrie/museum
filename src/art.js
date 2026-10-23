@@ -1483,8 +1483,8 @@ function sprite(scene, key, rows, pal) {
 // 'sun' | 'cap' | 'top' | 'beret' | 'beanie' | 'straw' | 'crown', facial: 'stache' |
 // 'curly' | 'goatee' | 'beard', unibrow, earpiece }. Returns new row maps.
 // Hats are colored T (U for a band); facial hair is F.
-export const HATS = { none: 'None', hardhat: 'Hard hat', cap: 'Baseball cap', top: 'Top hat', beret: 'Beret', beanie: 'Beanie', straw: 'Straw hat', sun: 'Sun hat', crown: 'Flower crown' };
-export const FACIAL = { none: 'None', stache: 'Mustache', curly: 'Curly mustache', goatee: 'Goatee', beard: 'Beard' };
+export const HATS = { none: 'None', hardhat: 'Hard hat', cap: 'Baseball cap', top: 'Top hat', beret: 'Beret', beanie: 'Beanie', straw: 'Straw hat', sun: 'Sun hat', crown: 'Flower crown', laurel: 'Laurel wreath', bicorne: 'Bicorne' };
+export const FACIAL = { none: 'None', stache: 'Mustache', curly: 'Curly mustache', goatee: 'Goatee', vandyke: 'Mustache + goatee', chinstrap: 'Chin beard', beard: 'Beard' };
 export const GLASSES = { none: 'None', round: 'Round glasses', shades: 'Sunglasses' };
 
 function withLooks(rows, view, look) {
@@ -1544,7 +1544,18 @@ function withLooks(rows, view, look) {
         if (skin(out[8][mid + 3] || '')) out[8][mid + 3] = 'F';
       } else if (skin(out[8][mid + 2] || '')) out[8][mid + 2] = 'F';
     }
-    if (look.facial === 'goatee') for (let i = mid - 1; i < mid + 1; i++) if (skin(out[10][i] || '')) out[10][i] = 'F';
+    if (look.facial === 'goatee' || look.facial === 'vandyke') for (let i = mid - 1; i < mid + 1; i++) if (skin(out[10][i] || '')) out[10][i] = 'F';
+    if (look.facial === 'vandyke') stache(2);
+    if (look.facial === 'chinstrap') {
+      // a beard along the jaw, no mustache
+      inner(10, 0, 0, skin, 'F');
+      if (front) {
+        [8, 9].forEach((r) => {
+          set(r, 1, 'F');
+          set(r, out[r].length - 2, 'F');
+        });
+      } else [8, 9].forEach((r) => set(r, 3, 'F'));
+    }
     if (look.facial === 'beard') {
       [9, 10].forEach((r) => inner(r, 0, 0, skin, 'F'));
       [7, 8].forEach((r) => {
@@ -1556,8 +1567,27 @@ function withLooks(rows, view, look) {
       });
     }
   }
-  const hat = look.hat === true ? 'sun' : look.hat;
   let pre = [];
+  if (look.hair === 'wild') {
+    // hair sticking out every which way
+    pre = view === 'side' ? ['o.o.o.o', 'ohohohho'] : ['o.o..o.o', 'ohoohhooho'];
+    out[1] = [...'ohhhhhhhhhhhho'];
+    out[2] = [...'ohhhhhhhhhhhho'];
+  }
+  if (look.hair === 'bob' && view !== 'up') {
+    // straight black bob with a gold band and bangs
+    out[2] = [...'oUUUUUUUUUUo'];
+    if (view === 'down') out[4] = [...'ohhhhhhhhhho'];
+    for (let r = 5; r <= 10; r++) {
+      if (view === 'down') {
+        set(r, 1, 'h');
+        set(r, out[r].length - 2, 'h');
+      } else set(r, 3, 'h');
+    }
+  }
+  if (look.hair === 'bob' && view === 'up') out[2] = [...'oUUUUUUUUUUo'];
+  if (look.collar === 'ruff' && view !== 'up') out[11] = [...'owwwwwwwwwwo']; // a frilly white ruff
+  const hat = look.hat === true ? 'sun' : look.hat;
   const put = (r, row) => (out[r] = [...row]);
   if (hat === 'sun') {
     put(0, 'oooooooo');
@@ -1593,6 +1623,18 @@ function withLooks(rows, view, look) {
     put(0, 'oTTTTTTTTo');
     put(1, 'oTTTTUTTTTTo');
     put(2, 'oUUUUUUUUUUUUo');
+  } else if (hat === 'laurel') {
+    const r1 = out[1];
+    for (let i = 1; i < r1.length - 1; i++) r1[i] = i % 2 ? 'G' : 'L';
+    if (view !== 'up') {
+      set(2, 1, 'G');
+      set(2, out[2].length - 2, 'G');
+    }
+  } else if (hat === 'bicorne') {
+    pre = view === 'side' ? ['oooooo', 'oTTTTTTo', 'oTTTTTTTTo'] : ['oooooooooooo', 'oTTTTUUTTTTo', 'oTTTTTTTTTTTTTTo'];
+    put(0, view === 'side' ? 'oTTTTTTTTTTo' : 'oooooooooooooooo');
+  } else if (hat === 'topknot') {
+    pre = ['oooo', 'ohhho'];
   } else if (hat === 'crown') {
     const r1 = out[1];
     for (let i = 1; i < r1.length - 1; i++) r1[i] = ['R', 'G', 'Y', 'G'][i % 4];
@@ -1601,7 +1643,7 @@ function withLooks(rows, view, look) {
 }
 
 // Colors for the looks above.
-const LOOK_PAL = { T: '#e8d8a0', U: '#5a3b2c', R: '#e0506a', Y: '#f2d36b', G: '#4f8a4a' };
+const LOOK_PAL = { T: '#e8d8a0', U: '#5a3b2c', R: '#e0506a', Y: '#f2d36b', G: '#4f8a4a', L: '#7fb06a' };
 
 const toHexEarly = (v) => '#' + v.map((n) => Math.round(Math.min(255, n)).toString(16).padStart(2, '0')).join('');
 
