@@ -54,5 +54,18 @@
 - Next: see the vision doc (designed map, staff v2, ratings).
 - Janitor break room: hire janitors who keep the place clean (rarely seen holding a mop by a puddle).
 
+## Big pass (autonomous polish) ✅
+- Bug sweep with a repeatable smoke test, dynamic lighting with day/night, deeper characters and livelier visitors, one UI system with Settings, a HUD breakdown and a painting gallery, a journal with goals and a collection book, 49 paintings, 8 new decor items, celebrations and visitor love. Full log: `docs/BIG-PASS.md`.
+
+## Needs Sean
+- **West Wing**: waiting for your outline.
+- **Semi-mythological famous visitors** (you said maybe later).
+- **Mini-games**.
+- **Pixel packs**: allow kenney.nl, opengameart.org and itch.io under the environment's Network access, then I can pull in free assets.
+- **Break-room upgrade menu**: what should upgrades do (faster janitors, guide bonus, carpenter speed)?
+- **Collection screens / menu redo**: the journal is a first version you can redesign.
+- **Wikimedia images**: 33 new paintings' links are built from Commons file names but couldn't be tested here (Wikimedia is blocked in this environment). Any that don't load show a colored placeholder; tell me which ones and I'll fix the file names.
+- **Goals**: are the 19 goals and rewards the right pace? Want daily goals?
+
 ## Someday
 - A sequel or expansion where the museum is part of a city.
