@@ -39,7 +39,7 @@ import { openOffice } from './officemenu.js';
 import { ask } from './ask.js';
 import { showAd } from './ad.js';
 import { roomRating, museumRating, starText } from './rating.js';
-import { FAMOUS, guestToday, meet, resetMet } from './famous.js';
+import { FAMOUS, meet, resetMet } from './famous.js';
 import { FREE, coins, canAfford, addCoins, spend, resetWallet, museumIncome, museumVisitors, coffeeIncome, roomIncome, settle, sellPrice, artPile, decorPile, collectArt, collectDecor, collectAll } from './wallet.js';
 import { openToolkit, hideToolkit, showBar, hideBar } from './toolkit.js';
 import { artBounds, paintArt, wallRef } from './walldraw.js';
@@ -541,12 +541,15 @@ export class RoomScene extends Phaser.Scene {
 
   // A famous artist visiting the main hall, with a gold star over their head.
   spawnFamous() {
+    Object.keys(FAMOUS).forEach((id, k) => this.spawnFamousOne(id, k)); // for now: all of them, all the time
+  }
+
+  spawnFamousOne(id, k) {
     const { g } = this;
-    const id = guestToday();
     const def = FAMOUS[id];
     makeCharacter(this, `famous_${id}`, def.colors, def.look);
-    let x = g.xL + 9.5 * T;
-    let y = g.yb + 3 * T;
+    let x = g.xL + (2.5 + k * 4.5) * T; // spread across the hall
+    let y = g.yb + (3 + (k % 2)) * T;
     for (let tries = 0; tries < 20 && this.blocked(x, y); tries++) {
       x = g.xL + (1 + Math.floor(Math.random() * (g.fw - 2)) + 0.5) * T;
       y = g.yb + (2 + Math.floor(Math.random() * 3)) * T;
