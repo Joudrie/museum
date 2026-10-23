@@ -751,7 +751,7 @@ const FIX = {
 };
 
 // Open archway: a trimmed frame around a dark opening with a rounded top.
-function archMaterial(u, v, r) {
+function archMaterial(u, v, r, closed) {
   const w = r.u1 - r.u0;
   const cx = r.u0 + w / 2;
   const rad = w / 2 - 3;
@@ -767,7 +767,15 @@ function archMaterial(u, v, r) {
     return Math.hypot(u + 0.5 - cx, v + 0.5 - springAt) <= rad + 3;
   })();
   if (!inFrame) return undefined;
-  if (inside(0)) return mix(hex('#1e1612'), hex('#5a4434'), Math.max(0, 1 - v / 14)); // floor glow beyond
+  if (inside(0)) {
+    if (!closed) return mix(hex('#1e1612'), hex('#5a4434'), Math.max(0, 1 - v / 14)); // open: the floor beyond glows
+    // closed: arched double doors in oak, a seam down the middle and a knob on each leaf
+    const iu = Math.floor(u - cx);
+    if (iu === 0 || iu === -1) return iu === 0 ? FIX.oakDark : FIX.doorTrim;
+    if ((iu === -4 || iu === 3) && (v === 21 || v === 22)) return FIX.brass;
+    if (inside(3) && !inside(5)) return FIX.oakLight; // raised molding just inside the frame
+    return (Math.abs(iu) % 6 === 0) ? FIX.oakDark : FIX.oak;
+  }
   return inside(-2) ? FIX.doorTrim : FIX.doorFrame;
 }
 
@@ -802,7 +810,7 @@ function wallMaterial(u, v, D, items, seed, P) {
     const { u0, u1, v0, v1 } = it.rect;
     if (u >= u0 && u < u1 && v >= v0 && v < v1) {
       if (it.door && it.arch) {
-        const c = archMaterial(u, v, it.rect);
+        const c = archMaterial(u, v, it.rect, it.closed);
         if (c !== undefined) return c;
         continue; // outside the arch's rounded corners: plain wall
       }
@@ -1191,29 +1199,74 @@ export function bakeMainWalls(scene, key, g, items, decor) {
   });
 }
 
-// Stairs up through the balcony's front wall: 2 tiles wide, 2 tiles tall.
-export function bakeHallStairs(scene, key, decor) {
+// Stairs from the ground floor up to the balcony's edge: a solid flight that
+// stands out in front of the wall. W wide; its top meets the balcony edge and its
+// foot sits `run` px out on the floor, so on screen it is run + wall height tall.
+export function bakeHallStairs(scene, key, decor, run) {
   const wood = hex(decor.wainscot || '#6e4430');
   const W = 2 * T;
-  const H = 2 * T + 6; // the wall's height plus a bottom step
+  const H = run + 2 * T;
+  const tread = mix(hex('#a0703f'), wood, 0.35);
+  const marble = hex('#e4ded2');
   return bake(scene, key, W, H, (x, y) => {
-    if (x < 3 || x >= W - 3) return x === 0 || x === W - 1 ? FIX.edge : shade(wood, 0.8); // stringers
-    const step = Math.floor(y / 7);
-    const ly = y % 7;
-    const tread = mix(hex('#a0703f'), wood, 0.35);
-    let c = ly < 3 ? mix(tread, WHITE, 0.12) : ly === 6 ? shade(tread, 0.6) : shade(tread, 0.82);
-    c = shade(c, 0.78 + (step / (H / 7)) * 0.25); // higher steps sit in more shadow
-    return hash(x, y, 70) > 0.93 ? shade(c, 0.9) : c;
+    // marble stringers with a handrail on both sides
+    if (x < 5 || x >= W - 5) {
+      const e = x < 5 ? x : W - 1 - x;
+      if (e === 0) return FIX.edge;
+      if (e === 1) return mix(marble, WHITE, 0.3); // handrail
+      return shade(marble, e === 4 ? 0.7 : 0.86);
+    }
+    const step = Math.floor(y / 8);
+    const ly = y % 8;
+    let c = ly < 4 ? mix(tread, WHITE, 0.14) : ly === 7 ? shade(tread, 0.55) : shade(tread, 0.8);
+    c = shade(c, 0.8 + (step / (H / 8)) * 0.22); // the lower steps catch more light
+    if (x < 8 || x >= W - 8) c = shade(c, 0.85); // shadow along the stringers
+    return hash(x, y, 70) > 0.94 ? shade(c, 0.9) : c;
   });
 }
 
-// The balcony's railing: posts and a handrail along its front edge.
-export function bakeRailing(scene, key, width, decor) {
-  const wood = hex(decor.wainscot || '#6e4430');
-  return bake(scene, key, width, 12, (x, y) => {
-    if (y < 2) return y === 0 ? mix(wood, WHITE, 0.3) : wood; // handrail
-    if (y >= 10) return shade(wood, 0.7); // bottom rail
-    return x % 6 < 2 ? shade(wood, x % 6 === 0 ? 0.95 : 0.75) : null; // balusters
+// A marble column, base and capital, h px tall.
+export function bakeColumn(scene, key, h) {
+  const W = 22;
+  const m = hex('#e8e2d6');
+  return bake(scene, key, W, h, (x, y) => {
+    const fromBottom = h - 1 - y;
+    if (y < 7) {
+      // Ionic capital: a slab with a scroll at each end
+      if (y < 2) return x === 0 || x === W - 1 ? FIX.edge : shade(m, y === 0 ? 1 : 0.85);
+      const scroll = (x < 5 || x >= W - 5) && y < 6;
+      if (scroll) return Math.hypot(x < 5 ? x - 2.5 : x - (W - 3.5), y - 3.5) < 1.2 ? shade(m, 0.6) : shade(m, 0.9);
+      return x >= 4 && x < W - 4 ? shade(m, 0.92) : null;
+    }
+    if (fromBottom < 6) {
+      // stepped base
+      const inset = fromBottom < 3 ? 0 : 2;
+      if (x < inset || x >= W - inset) return null;
+      return fromBottom === 0 ? shade(m, 0.6) : fromBottom === 3 || fromBottom === 2 ? shade(m, 0.8) : m;
+    }
+    // fluted shaft, lit from the left
+    if (x < 5 || x >= W - 5) return null;
+    const lx = x - 5;
+    if (lx === 0 || lx === W - 11) return shade(m, 0.62);
+    return lx % 3 === 0 ? shade(m, 0.78) : lx < 4 ? mix(m, WHITE, 0.15) : shade(m, 0.9 - lx * 0.01);
+  });
+}
+
+// The balcony's railing: a marble balustrade on a beam that rests on the columns.
+export const RAIL_H = 20; // px: 12 of balusters over an 8 px beam
+export function bakeRailing(scene, key, width) {
+  const m = hex('#e8e2d6');
+  return bake(scene, key, width, RAIL_H, (x, y) => {
+    if (y < 2) return y === 0 ? mix(m, WHITE, 0.3) : m; // handrail
+    if (y < 12) {
+      const k = x % 7;
+      if (k >= 2 && k <= 4) return k === 2 ? mix(m, WHITE, 0.2) : k === 4 ? shade(m, 0.75) : m; // baluster
+      return null;
+    }
+    // the beam
+    if (y === 12) return mix(m, WHITE, 0.25);
+    if (y === RAIL_H - 1) return shade(m, 0.55);
+    return y === 15 ? shade(m, 0.82) : shade(m, 0.93);
   });
 }
 

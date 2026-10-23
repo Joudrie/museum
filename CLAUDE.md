@@ -24,7 +24,10 @@
   hallway (break room door left, office door right) opens into one wide open room.
   Ground floor back wall: painting, arch, painting, stairs, middle arch, stairs,
   painting, arch, painting. Stairs lead up to a full-width balcony with four big
-  paintings. Open plan, all in one view. The middle arch leads on to built rooms;
+  paintings. The **stairs are solid flights standing out on the floor** in front of
+  the wall (not cut into it). **Columns stand one tile in front of the wall** (you
+  can stand between a column and the wall) and the balcony railing rests on them.
+  Doors and arches stay **closed until the room behind them is unlocked**. Open plan, all in one view. The middle arch leads on to built rooms;
   the side arches are decoration for now.
 - Both keep their shape; players decorate them freely.
 

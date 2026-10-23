@@ -7,6 +7,7 @@ import {
   bakeMainWalls,
   bakeHallStairs,
   bakeRailing,
+  bakeColumn,
   bakeFront,
   bakeCrack,
   bakeStain,
@@ -173,7 +174,8 @@ export class RoomScene extends Phaser.Scene {
       bakeItem(this, 'desk', 'desk', { w: 2, h: 1, rise: 24 }, 0);
     }
 
-    this.arches = { exit: !!this.room.arch, entrance: this.roomIndex > 0 && !!this.rooms[this.roomIndex - 1].arch };
+    const next = this.rooms[this.roomIndex + 1];
+    this.arches = { exit: !!this.room.arch, exitClosed: !next || !!next.locked, entrance: this.roomIndex > 0 && !!this.rooms[this.roomIndex - 1].arch };
     this.wallItems = wallItems(this.L, this.hung, this.states, this.arches);
     this.floorImg = this.add.image(g.xL, g.y0, bakeFloor(this, 'floor', g.xR - g.xL, g.y1 - g.y0, this.decor).key).setOrigin(0);
     this.wallImg = this.add.image(0, 0, this.bakeRoomWalls(this.decor)).setOrigin(0);
@@ -240,22 +242,46 @@ export class RoomScene extends Phaser.Scene {
     return (this.g.main ? bakeMainWalls : bakeWalls)(this, 'walls', this.g, this.wallItems, decor).key;
   }
 
-  // Main hall: stairs up to the balcony, its railing, and what you can't walk through.
+  // Main hall: stairs standing out from the balcony, columns one tile in front of
+  // the wall holding up the railing, and what you can't walk through.
   placeHall() {
     const { g } = this;
     (this.hallParts || []).forEach((o) => o.destroy());
     this.hallParts = [];
-    bakeHallStairs(this, 'hall_stairs', this.decor);
-    g.stairs.forEach((st) => this.hallParts.push(this.add.image(st.x0, g.yb, 'hall_stairs').setOrigin(0, 1).setDepth(1)));
-    const edges = [g.xL, ...g.stairs.flatMap((st) => [st.x0, st.x1]), g.xR];
     this.blocks = this.blocks.filter((b) => !b.hall);
+    const top = g.yb - g.D; // the balcony's front edge, along the top of the wall
+    // Railing: one run between each pair of staircases, resting on the columns.
+    const edges = [g.xL, ...g.stairs.flatMap((st) => [st.x0, st.x1]), g.xR];
     for (let i = 0; i < edges.length; i += 2) {
       const [x0, x1] = [edges[i], edges[i + 1]];
       const key = `hall_rail_${i}`;
-      bakeRailing(this, key, x1 - x0, this.decor);
-      this.hallParts.push(this.add.image(x0, g.yb - g.D, key).setOrigin(0, 1).setDepth(g.yb - g.D));
-      this.blocks.push({ hall: true, x0, x1, y0: g.yb - g.D - 10, y1: g.yb - 8 });
+      bakeRailing(this, key, x1 - x0);
+      this.hallParts.push(this.add.image(x0, top + 8, key).setOrigin(0, 1).setDepth(top));
+      this.blocks.push({ hall: true, x0, x1, y0: top - 10, y1: g.yb - 8 }); // balcony edge + the wall below it
     }
+    // Columns: from the floor up to the underside of the railing's beam.
+    const colH = g.columns[0].foot - (top + 8);
+    bakeColumn(this, 'hall_column', colH);
+    g.columns.forEach((col) => {
+      this.hallParts.push(this.add.image(col.x, col.foot, 'hall_column').setOrigin(0.5, 1).setDepth(col.foot));
+      this.blocks.push({ hall: true, x0: col.x - 6, x1: col.x + 6, y0: col.foot - 9, y1: col.foot - 8 });
+    });
+    // Stairs: their top meets the balcony edge, their foot sits out on the floor.
+    bakeHallStairs(this, 'hall_stairs', this.decor, g.stairRun);
+    bakeColumn(this, 'hall_newel', 20);
+    const shadow = this.add.graphics().setDepth(0.5);
+    this.hallParts.push(shadow);
+    g.stairs.forEach((st) => {
+      this.hallParts.push(this.add.image(st.x0, st.foot, 'hall_stairs').setOrigin(0, 1).setDepth(1));
+      // the flight casts a wedge of shadow on the floor beside it, deepest at the wall
+      shadow.fillStyle(0x000000, 0.18);
+      shadow.fillTriangle(st.x1, g.yb, st.x1 + 12, g.yb, st.x1, st.foot);
+      // a marble newel post at each corner of the foot
+      [st.x0 + 3, st.x1 - 3].forEach((x) => this.hallParts.push(this.add.image(x, st.foot + 2, 'hall_newel').setOrigin(0.5, 1).setDepth(st.foot + 2)));
+      // the handrails: you get on at the foot, not over the side
+      this.blocks.push({ hall: true, x0: st.x0 - 3, x1: st.x0 + 1, y0: g.yb - 8, y1: st.foot - 14 });
+      this.blocks.push({ hall: true, x0: st.x1 - 1, x1: st.x1 + 3, y0: g.yb - 8, y1: st.foot - 14 });
+    });
     // Outside the hallway, below the hall's front edge.
     this.blocks.push({ hall: true, x0: 0, x1: g.hx0, y0: g.yf - 2, y1: g.h });
     this.blocks.push({ hall: true, x0: g.hx1, x1: g.w, y0: g.yf - 2, y1: g.h });
