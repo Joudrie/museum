@@ -1074,3 +1074,32 @@ body {
 .tool-item.locked {
   opacity: 0.5;
 }
+
+/* ---------- Yes/no prompt ---------- */
+#ask {
+  position: fixed;
+  inset: 0;
+  z-index: 22;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(10, 6, 4, 0.45);
+}
+#ask.hidden {
+  display: none;
+}
+.ask-title {
+  margin: 0 0 6px;
+}
+.ask-text {
+  margin: 0 0 14px;
+  color: var(--muted);
+}
+.ask-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.ask-buttons button {
+  padding: 12px;
+}

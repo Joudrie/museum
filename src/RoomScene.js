@@ -4,6 +4,9 @@ import {
   hash,
   bakeFloor,
   bakeWalls,
+  bakeMainWalls,
+  bakeHallStairs,
+  bakeRailing,
   bakeFront,
   bakeCrack,
   bakeStain,
@@ -24,15 +27,16 @@ import {
   LIGHT_TINTS,
 } from './art.js';
 import { setTrack } from './music.js';
-import { loadRooms, addRoom, resetRooms, updateRoom, swapRooms, roomName, layout, paintingsFor, slotStates, setSlot, hungAnywhere, placeArt, wallItems, plantSpots, carpetRect } from './rooms.js';
+import { MAIN_HALL_PRICE, seedEntry, loadRooms, addRoom, resetRooms, updateRoom, swapRooms, roomName, layout, paintingsFor, slotStates, setSlot, hungAnywhere, placeArt, wallItems, plantSpots, carpetRect } from './rooms.js';
 import { openSlotMenu } from './slotmenu.js';
 import { ITEMS, loadItems, saveItems, resetItems, footprint, countPlaced } from './items.js';
 import { roomDirt, removeDirt, resetDirt, covered, janitors } from './staff.js';
 import { officeLevel, setOfficeLevel, resetOffice, perks, itemLevel, LEVELS, MAX_LEVEL } from './office.js';
 import { openOffice } from './officemenu.js';
+import { ask } from './ask.js';
 import { FREE, coins, canAfford, addCoins, spend, resetWallet, museumIncome, museumVisitors, coffeeIncome, roomIncome, pile, settle, collect, sellPrice } from './wallet.js';
 import { openToolkit, hideToolkit, showBar, hideBar } from './toolkit.js';
-import { artBounds, paintArt } from './walldraw.js';
+import { artBounds, paintArt, wallRef } from './walldraw.js';
 import { PERSONALITIES, lineFor } from './lines.js';
 import { iconSvg } from './icons.js';
 import { openViewer } from './viewer.js';
@@ -50,6 +54,8 @@ const REACH = 26; // how close you need to be to interact
 const HD = 4; // resolution multiplier for paintings on the wall
 
 const DECOR_KEY = 'curation.roomDecor'; // { [roomIndex]: decor }
+// The main hall starts out grand: marble floor, damask walls, dark wood.
+const MAIN_DECOR = { ...DEFAULT_DECOR, pattern: 'marble', floor: '#e9e6df', paperStyle: 'damask', paper: '#7a3a3e', wainscotStyle: 'panels', wainscot: '#3e2a20', light: 'warm' };
 const CHARACTER_KEY = 'curation.character';
 const CLEANED_KEY = 'curation.cleaned';
 
@@ -147,7 +153,7 @@ export class RoomScene extends Phaser.Scene {
   create() {
     const { g, exit, entrance } = this.L;
     this.g = g;
-    const base = this.roomIndex === 0 ? DEFAULT_DECOR : NEW_ROOM_DECOR;
+    const base = this.roomIndex === 0 ? DEFAULT_DECOR : this.room.orient === 'main' ? MAIN_DECOR : NEW_ROOM_DECOR;
     this.decor = { ...base, ...(load(DECOR_KEY, {})[this.roomIndex] || {}) };
     this.character = { ...DEFAULT_CHARACTER, ...load(CHARACTER_KEY, {}) };
     makeCharacter(this, 'player', this.character);
@@ -170,14 +176,15 @@ export class RoomScene extends Phaser.Scene {
     this.arches = { exit: !!this.room.arch, entrance: this.roomIndex > 0 && !!this.rooms[this.roomIndex - 1].arch };
     this.wallItems = wallItems(this.L, this.hung, this.states, this.arches);
     this.floorImg = this.add.image(g.xL, g.y0, bakeFloor(this, 'floor', g.xR - g.xL, g.y1 - g.y0, this.decor).key).setOrigin(0);
-    this.wallImg = this.add.image(0, 0, bakeWalls(this, 'walls', g, this.wallItems, this.decor).key).setOrigin(0);
-    this.add.image(0, g.y1, bakeFront(this, 'front', g.w, entrance.mat ? entrance.x0 : -1, entrance.mat ? entrance.x1 : -1).key).setOrigin(0);
+    this.wallImg = this.add.image(0, 0, this.bakeRoomWalls(this.decor)).setOrigin(0);
+    if (!g.main) this.add.image(0, g.y1, bakeFront(this, 'front', g.w, entrance.mat ? entrance.x0 : -1, entrance.mat ? entrance.x1 : -1).key).setOrigin(0);
     if (exit?.sprite) this.add.image(exit.sprite.x, exit.sprite.y, exit.sprite.key).setOrigin(0).setFlipX(exit.sprite.flip).setDepth(2);
     this.hung.forEach((p) => this.drawPainting(p));
     this.blocks = exit?.block ? [exit.block] : [];
+    if (g.main) this.placeHall();
     this.decorObjects = [];
     this.placeDecor();
-    this.deskSpot = this.roomIndex === 0 ? this.findDeskSpot() : null;
+    this.deskSpot = this.L.desk ? { ...this.L.desk } : this.roomIndex === 0 ? this.findDeskSpot() : null;
     if (this.deskSpot) this.placeDesk();
     this.pileTile = this.findPileTile();
     this.pileSprite = this.add.image(0, 0, 'coins_1').setOrigin(0.5, 1).setVisible(false);
@@ -229,6 +236,31 @@ export class RoomScene extends Phaser.Scene {
   // ---------- Paintings ----------
 
   // Draw the real painting onto the angled wall at higher resolution.
+  bakeRoomWalls(decor) {
+    return (this.g.main ? bakeMainWalls : bakeWalls)(this, 'walls', this.g, this.wallItems, decor).key;
+  }
+
+  // Main hall: stairs up to the balcony, its railing, and what you can't walk through.
+  placeHall() {
+    const { g } = this;
+    (this.hallParts || []).forEach((o) => o.destroy());
+    this.hallParts = [];
+    bakeHallStairs(this, 'hall_stairs', this.decor);
+    g.stairs.forEach((st) => this.hallParts.push(this.add.image(st.x0, g.yb, 'hall_stairs').setOrigin(0, 1).setDepth(1)));
+    const edges = [g.xL, ...g.stairs.flatMap((st) => [st.x0, st.x1]), g.xR];
+    this.blocks = this.blocks.filter((b) => !b.hall);
+    for (let i = 0; i < edges.length; i += 2) {
+      const [x0, x1] = [edges[i], edges[i + 1]];
+      const key = `hall_rail_${i}`;
+      bakeRailing(this, key, x1 - x0, this.decor);
+      this.hallParts.push(this.add.image(x0, g.yb - g.D, key).setOrigin(0, 1).setDepth(g.yb - g.D));
+      this.blocks.push({ hall: true, x0, x1, y0: g.yb - g.D - 10, y1: g.yb - 8 });
+    }
+    // Outside the hallway, below the hall's front edge.
+    this.blocks.push({ hall: true, x0: 0, x1: g.hx0, y0: g.yf - 2, y1: g.h });
+    this.blocks.push({ hall: true, x0: g.hx1, x1: g.w, y0: g.yf - 2, y1: g.h });
+  }
+
   drawPainting(p) {
     const src = this.textures.exists(`art_${p.id}`) && this.textures.get(`art_${p.id}`).getSourceImage();
     const b = artBounds(p, this.g);
@@ -238,7 +270,7 @@ export class RoomScene extends Phaser.Scene {
     const ctx = tex.getContext();
     paintArt(ctx, src && src.width > 1 ? src : null, p, this.g, HD, b.x, b.y);
     // match the wall's shading
-    const shadeBy = { left: 0.1, right: 0.18, back: 0.04 }[p.wall];
+    const shadeBy = { left: 0.1, right: 0.18, back: 0.04 }[wallRef(p, this.g).face];
     ctx.globalCompositeOperation = 'source-atop';
     ctx.fillStyle = `rgba(20, 12, 8, ${shadeBy})`;
     ctx.fillRect(0, 0, b.w * HD, b.h * HD);
@@ -249,9 +281,9 @@ export class RoomScene extends Phaser.Scene {
 
   // Where to stand to look at a painting, and whether the player is there.
   standFor(p) {
-    const { g } = this;
-    if (p.wall === 'back') return { x: g.xL + p.u, y: g.y0 + 14, fx: 0, fy: -1 };
-    return { x: p.wall === 'left' ? g.xL + 10 : g.xR - 10, y: g.y0 + p.u + 10, fx: p.wall === 'left' ? -1 : 1, fy: 0 };
+    const r = wallRef(p, this.g);
+    if (r.face === 'back') return { x: r.x + p.u, y: r.y + 14, fx: 0, fy: -1 };
+    return { x: r.face === 'left' ? r.x + 10 : r.x - 10, y: r.y + p.u + 10, fx: r.face === 'left' ? -1 : 1, fy: 0 };
   }
 
   // ---------- Mess (cracks, stains, cobwebs) — first room only ----------
@@ -639,6 +671,7 @@ export class RoomScene extends Phaser.Scene {
           this.resetMess();
           resetRooms();
           resetItems();
+          seedEntry(true);
           resetWallet();
           resetDirt();
           resetOffice();
@@ -693,8 +726,9 @@ export class RoomScene extends Phaser.Scene {
     save(DECOR_KEY, { ...load(DECOR_KEY, {}), [this.roomIndex]: decor });
     bakeFloor(this, 'floor', this.g.xR - this.g.xL, this.g.y1 - this.g.y0, decor);
     this.floorImg.setTexture('floor');
-    bakeWalls(this, 'walls', this.g, this.wallItems, decor);
+    this.bakeRoomWalls(decor);
     this.wallImg.setTexture('walls');
+    if (this.g.main) this.placeHall();
     this.placeDecor();
   }
 
@@ -734,20 +768,27 @@ export class RoomScene extends Phaser.Scene {
     for (const p of this.hung) {
       const s = this.standFor(p);
       const half = (p.art.u1 - p.art.u0) / 2;
-      const along = p.wall === 'back' ? Math.abs(x - s.x) : Math.abs(y - s.y);
-      const across = p.wall === 'back' ? Math.abs(y - s.y) : Math.abs(x - s.x);
+      const flat = wallRef(p, this.g).face === 'back';
+      const along = flat ? Math.abs(x - s.x) : Math.abs(y - s.y);
+      const across = flat ? Math.abs(y - s.y) : Math.abs(x - s.x);
       if (along < half + 14 && across < 16) consider(across + along / 4, { painting: p, icon: 'look' });
     }
     for (const sl of this.states) {
       if (sl.kind === 'painting') continue;
       const st = this.standFor(sl);
-      const along = sl.wall === 'back' ? Math.abs(x - st.x) : Math.abs(y - st.y);
-      const across = sl.wall === 'back' ? Math.abs(y - st.y) : Math.abs(x - st.x);
+      const flat = wallRef(sl, this.g).face === 'back';
+      const along = flat ? Math.abs(x - st.x) : Math.abs(y - st.y);
+      const across = flat ? Math.abs(y - st.y) : Math.abs(x - st.x);
       if (along < 22 && across < 16) consider(across + along / 4 + 1, { slot: sl, icon: sl.kind === 'door' ? 'door' : 'build' });
     }
     for (const m of this.mess) {
       consider(Math.hypot(x - m.ax, y - 4 - m.ay), { mess: m, icon: { crack: 'repair', stain: 'clean', cobweb: 'sweep', puddle: 'clean', litter: 'sweep' }[m.kind] });
     }
+    (this.L.decorDoors || []).forEach((d) => {
+      if (!d.label) return;
+      const st = this.standFor({ wall: d.wall, u: (d.rect.u0 + d.rect.u1) / 2 });
+      consider(Math.hypot(x - st.x, y - st.y), { door: d, icon: 'door' });
+    });
     if (this.deskFront) consider(Math.hypot(x - this.deskFront.x, y - this.deskFront.y) - 6, { office: true, icon: 'office' });
     if (this.pileSprite.visible) consider(Math.hypot(x - this.pileSprite.x, y - this.pileSprite.y + 6) - 4, { coins: true, icon: 'coins' });
     for (const n of this.npcs) consider(Math.hypot(x - n.s.x, y - n.s.y) - 2, { npc: n, icon: 'talk' });
@@ -769,13 +810,31 @@ export class RoomScene extends Phaser.Scene {
     else if (f.mess) this.clean(f.mess);
     else if (f.coins) this.collectPile();
     else if (f.office) this.openOfficePanel();
+    else if (f.door) f.door.label === 'Office' ? this.openOfficePanel() : this.toast(`${f.door.label}: coming soon`);
     else if (f.npc) (this.talkingTo === f.npc ? this.endTalk() : this.talkTo(f.npc));
     else if (f.entrance) this.travel(this.roomIndex - 1, 'exit');
     else if (f.exit) {
-      if (this.roomIndex + 1 < this.rooms.length) this.travel(this.roomIndex + 1, 'entrance');
+      const next = this.rooms[this.roomIndex + 1];
+      if (next?.locked) this.offerMainHall();
+      else if (next) this.travel(this.roomIndex + 1, 'entrance');
       else this.openBuildMenu();
     }
     this.focus = null;
+  }
+
+  // The main hall starts locked behind the entrance's double doors.
+  offerMainHall() {
+    this.pause(true);
+    const price = FREE ? `free while testing (${MAIN_HALL_PRICE} gold)` : `${MAIN_HALL_PRICE} gold`;
+    ask(`Open the main hall?`, `A grand open hall with a balcony and room for big exhibits. ${price}.`, 'Open it', (yes) => {
+      this.pause(false);
+      if (!yes) return;
+      if (!spend(MAIN_HALL_PRICE)) return this.toast(`Need ${MAIN_HALL_PRICE.toLocaleString()} gold`);
+      updateRoom(1, { locked: false });
+      this.rooms = loadRooms();
+      this.toast('The main hall is open!');
+      this.travel(1, 'entrance');
+    });
   }
 
   openBuildMenu() {
@@ -958,7 +1017,11 @@ export class RoomScene extends Phaser.Scene {
     const tries = vertical
       ? [{ c: fw - 1, r: fd - 1 }, { c: 0, r: fd - 1 }, { c: fw - 1, r: fd - 2 }]
       : [{ c: 1, r: fd - 1 }, { c: 0, r: fd - 1 }, { c: 2, r: fd - 1 }];
-    return tries.find((t) => !taken.has(`${t.c},${t.r}`)) || tries[0];
+    const found = tries.find((t) => !taken.has(`${t.c},${t.r}`));
+    if (found) return found;
+    // Odd-shaped rooms: the free tile nearest the bottom right.
+    for (let r = fd - 1; r >= 0; r--) for (let c = fw - 1; c >= 0; c--) if (!taken.has(`${c},${r}`)) return { c, r };
+    return tries[0];
   }
 
   updatePile() {
@@ -1025,6 +1088,11 @@ export class RoomScene extends Phaser.Scene {
     }
     if (this.decor.plant !== 'none') plantSpots(this.L).forEach(({ x, y }) => add(this.tileOf(x, y - 4)));
     if (withPile && this.pileTile) add(this.pileTile);
+    (this.L.blockedTiles || []).forEach(add);
+    if (g.main) {
+      // nothing on the stairs either
+      g.stairs.forEach((st) => [0, 1].forEach((k) => [-2, -1].forEach((dr) => add(this.tileOf(st.x0 + k * T + T / 2, g.yb + dr * T + T / 2)))));
+    }
     if (this.deskSpot) [0, 1].forEach((k) => add({ c: this.deskSpot.c + k, r: this.deskSpot.r }));
     return set;
   }
@@ -1232,8 +1300,19 @@ export class RoomScene extends Phaser.Scene {
     const { g } = this;
     o.clear();
     o.fillStyle(0xffffff, 0.12);
-    for (let c = 0; c <= g.fw; c++) o.fillRect(g.xL + c * T, g.y0, 1, g.y1 - g.y0);
-    for (let r = 0; r <= g.fd; r++) o.fillRect(g.xL, g.y0 + r * T, g.xR - g.xL, 1);
+    if (g.main) {
+      const off = new Set((this.L.blockedTiles || []).map((t) => `${t.c},${t.r}`));
+      for (let c = 0; c < g.fw; c++) {
+        for (let r = 0; r < g.fd; r++) {
+          if (off.has(`${c},${r}`)) continue;
+          o.fillRect(g.xL + c * T, g.y0 + r * T, T, 1);
+          o.fillRect(g.xL + c * T, g.y0 + r * T, 1, T);
+        }
+      }
+    } else {
+      for (let c = 0; c <= g.fw; c++) o.fillRect(g.xL + c * T, g.y0, 1, g.y1 - g.y0);
+      for (let r = 0; r <= g.fd; r++) o.fillRect(g.xL, g.y0 + r * T, g.xR - g.xL, 1);
+    }
     const mark = (it, color) => {
       const { w, h } = footprint(it);
       o.fillStyle(color, 0.35);

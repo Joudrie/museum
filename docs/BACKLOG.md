@@ -35,6 +35,9 @@
 - Texture update: 24 floors (adds wide and diagonal planks, hex tile, terrazzo, cobblestone, flagstone, brick, penny tile, slate, concrete, patterned tile, tatami, carpet, grass), 25 wallpapers (adds wood paneling, shiplap, subway, stone blocks, concrete, pinstripe, bold stripes, dots, fleur-de-lis, trellis, zigzag, plaid, art deco, seigaiha waves, leaves, stars, Greek key, hexagons), 14 wainscot designs (panels, tall panels, beadboard, board & batten, shiplap, subway, stone, marble, harlequin, lattice, checker tiles, Greek key, painted bands).
 - Still to do: a big outdoor garden room; more relics/artifacts.
 
+## New start (from the sketch) ✅
+- Entrance with ticket desk, then a paid-unlock main hall: hallway (break room and office doors), open hall with two staircases up to a full-width balcony with four big paintings. Built rooms continue from the hall's middle arch. Office door opens the Curator's Office; break room is coming soon.
+
 ## Phase 6: Economy (in progress)
 - Goal: get the most visitors. More paintings → more visitors; complete sets → big bonus; every decoration adds a little income.
 - Coffee shop room: visitors buy coffee; decorate it (bookshelves etc.).

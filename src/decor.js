@@ -13,7 +13,7 @@ export const THEMES = {
   modern: { name: 'Modern white', decor: { pattern: 'tile', floor: '#e9e6df', paperStyle: 'plain', paper: '#f0ece2', wainscotStyle: 'none', wainscot: '#cfcfcf', carpet: false, light: 'day', music: 'none' } },
   moody: { name: 'Moody', decor: { pattern: 'herringbone', floor: '#5c3a26', paperStyle: 'stripes', paper: '#2f4a3a', wainscotStyle: 'panels', wainscot: '#1e1e22', carpet: true, carpetColor: '#c9a23f', light: 'moody', music: 'gallery' } },
 };
-import { SIZE_LABELS, ORIENT_LABELS, roomName } from './rooms.js';
+import { SIZE_LABELS, ORIENT_LABELS, roomName, isFixed } from './rooms.js';
 
 export const CHARACTER_PALETTES = {
   h: { label: 'Hair', colors: ['#4a2e20', '#1e1410', '#d9b45a', '#a0522d', '#8a8a8a', '#e8e0d0', '#c0392b', '#2e5a8a', '#6a4c93'] },
@@ -100,6 +100,7 @@ function renderRoomSettings() {
   name.maxLength = 24;
   name.addEventListener('change', () => state.onRoom({ name: name.value.trim() || undefined }));
   const parts = [section(`${ORIENT_LABELS[room.orient]} room · name`, name)];
+  if (isFixed(room)) return parts; // the entrance and main hall keep their shape
   parts.push(section('Size (decor stays)', choices(SIZE_LABELS[room.orient], room.size, (size) => size !== room.size && state.onRoom({ size }))));
   if (room.exit && room.exit.startsWith('door')) {
     parts.push(section('Exit doorway', choices({ door: 'Door', arch: 'Archway' }, room.arch ? 'arch' : 'door', (v) => state.onRoom({ arch: v === 'arch' }))));
@@ -123,8 +124,9 @@ function renderRooms() {
       b.onclick = onClick;
       row.appendChild(b);
     };
-    btn('↑', 'Move up', () => state.onMoveRoom(i, i - 1), i === 0);
-    btn('↓', 'Move down', () => state.onMoveRoom(i, i + 1), i === state.rooms.length - 1);
+    const fixed = isFixed(room);
+    btn('↑', 'Move up', () => state.onMoveRoom(i, i - 1), fixed || i === 0 || isFixed(state.rooms[i - 1]));
+    btn('↓', 'Move down', () => state.onMoveRoom(i, i + 1), fixed || i === state.rooms.length - 1);
     btn('Go', 'Go to room', () => state.onGoRoom(i), i === state.index);
     list.appendChild(row);
   });
