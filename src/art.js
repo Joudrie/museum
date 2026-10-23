@@ -1477,18 +1477,28 @@ function sprite(scene, key, rows, pal) {
   });
 }
 
-// Optional looks: bald, glasses, sun hat. Each returns new row maps.
+// Optional looks. look = { bald, glasses: true | 'round' | 'shades', hat: true |
+// 'sun' | 'cap' | 'top' | 'beret' | 'beanie' | 'straw' | 'crown', facial: 'stache' |
+// 'curly' | 'goatee' | 'beard', unibrow, earpiece }. Returns new row maps.
+// Hats are colored T (U for a band); facial hair is F.
+export const HATS = { none: 'None', cap: 'Baseball cap', top: 'Top hat', beret: 'Beret', beanie: 'Beanie', straw: 'Straw hat', sun: 'Sun hat', crown: 'Flower crown' };
+export const FACIAL = { none: 'None', stache: 'Mustache', curly: 'Curly mustache', goatee: 'Goatee', beard: 'Beard' };
+export const GLASSES = { none: 'None', round: 'Round glasses', shades: 'Sunglasses' };
+
 function withLooks(rows, view, look) {
   let out = rows.map((r) => [...r]);
   const inner = (r, from, to, test, ch) => {
     for (let i = from; i < out[r].length - to; i++) if (test(out[r][i])) out[r][i] = ch;
   };
+  const skin = (c) => c === 's' || c === 'S';
+  const set = (r, i, ch) => out[r] && i >= 0 && i < out[r].length && out[r][i] !== 'o' && (out[r][i] = ch);
   if (look.bald) {
     const last = view === 'up' ? 6 : 3;
     for (let r = 1; r <= last; r++) inner(r, view === 'side' ? 4 : 2, 2, (c) => c === 'h' || c === 'H', 's');
     out[1][Math.floor(out[1].length / 2) - 1] = 'w'; // shine
   }
-  if (look.glasses && view !== 'up') {
+  const glasses = look.glasses === true ? 'round' : look.glasses;
+  if (glasses === 'round' && view !== 'up') {
     for (const r of [6, 7]) {
       out[r].forEach((c, i) => {
         if (c !== 'e') return;
@@ -1497,18 +1507,100 @@ function withLooks(rows, view, look) {
       });
     }
   }
-  out = out.map((r) => r.join(''));
-  if (look.hat) {
-    out[0] = 'oooooooo';
-    out[1] = 'oTTTTTTTTo';
-    out[2] = 'oTTTTTTTTTTTTTTo';
+  if (glasses === 'shades' && view !== 'up') {
+    // dark lenses across both eyes, with a glint
+    const row = out[6];
+    const eyes = row.map((c, i) => (c === 'e' ? i : -1)).filter((i) => i >= 0);
+    if (eyes.length) {
+      for (let i = Math.max(1, eyes[0] - 1); i <= Math.min(row.length - 2, eyes.at(-1) + 1); i++) set(6, i, 'k');
+      eyes.forEach((i) => [i - 1, i, i + 1].forEach((j) => out[7][j] && skin(out[7][j]) || out[7][j] === 'e' ? set(7, j, 'k') : null));
+      set(6, eyes[0], 'w');
+    }
   }
-  return out;
+  if (look.unibrow && view !== 'up') {
+    const eyes = out[6].map((c, i) => (c === 'e' ? i : -1)).filter((i) => i >= 0);
+    if (eyes.length) for (let i = eyes[0] - 1; i <= eyes.at(-1) + 1; i++) if (skin(out[5][i] || '')) out[5][i] = 'e';
+  }
+  if (look.earpiece) {
+    if (view === 'side') set(7, 3, 'k');
+    else if (view === 'down') {
+      set(7, 1, 'k');
+      set(8, 1, 'k');
+    }
+  }
+  if (look.facial && look.facial !== 'none' && view !== 'up') {
+    const front = view === 'down';
+    const mid = front ? Math.floor(out[9].length / 2) : out[9].length - 4;
+    const stache = (w) => {
+      for (let i = mid - w; i < mid + w; i++) if (skin(out[9][i] || '')) out[9][i] = 'F';
+    };
+    if (look.facial === 'stache') stache(front ? 2 : 2);
+    if (look.facial === 'curly') {
+      stache(front ? 3 : 2);
+      if (front) {
+        if (skin(out[8][mid - 4] || '')) out[8][mid - 4] = 'F';
+        if (skin(out[8][mid + 3] || '')) out[8][mid + 3] = 'F';
+      } else if (skin(out[8][mid + 2] || '')) out[8][mid + 2] = 'F';
+    }
+    if (look.facial === 'goatee') for (let i = mid - 1; i < mid + 1; i++) if (skin(out[10][i] || '')) out[10][i] = 'F';
+    if (look.facial === 'beard') {
+      [9, 10].forEach((r) => inner(r, 0, 0, skin, 'F'));
+      [7, 8].forEach((r) => {
+        // sideburns down to the jaw
+        if (front) {
+          set(r, 1, 'F');
+          set(r, out[r].length - 2, 'F');
+        } else set(r, 3, 'F');
+      });
+    }
+  }
+  const hat = look.hat === true ? 'sun' : look.hat;
+  let pre = [];
+  const put = (r, row) => (out[r] = [...row]);
+  if (hat === 'sun') {
+    put(0, 'oooooooo');
+    put(1, 'oTTTTTTTTo');
+    put(2, 'oTTTTTTTTTTTTTTo');
+  } else if (hat === 'cap') {
+    put(0, 'oooooooo');
+    put(1, 'oTTTTTTTTo');
+    put(2, 'oTTTTTTTTTTo');
+    if (view === 'down') put(3, 'oUUUUUUUUUUo');
+    if (view === 'side') put(3, 'oTTTTTTTTUUUUo');
+  } else if (hat === 'top') {
+    pre = ['oooooooo', 'oTTTTTTo', 'oTTTTTTo', 'oUUUUUUo'];
+    put(0, 'oTTTTTTTTTTTTo');
+  } else if (hat === 'beret') {
+    pre = ['oo'];
+    put(0, 'oooooooooo');
+    put(1, 'oTTTTTTTTTTo');
+    put(2, 'oTTTTTTTTTTTTo');
+  } else if (hat === 'beanie') {
+    pre = ['oTo'];
+    put(0, 'oooooooo');
+    put(1, 'oTTTTTTTTo');
+    put(2, 'oTTTTTTTTTTo');
+    put(3, 'oUUUUUUUUUUo');
+  } else if (hat === 'straw') {
+    pre = ['oooooooo', 'oTTTTTTTTo'];
+    put(0, 'oUUUUUUUUo');
+    put(1, 'oTTTTTTTTTTTTTTTTo');
+  } else if (hat === 'crown') {
+    const r1 = out[1];
+    for (let i = 1; i < r1.length - 1; i++) r1[i] = ['R', 'G', 'Y', 'G'][i % 4];
+  }
+  return [...pre, ...out.map((r) => r.join(''))];
 }
+
+// Colors for the looks above.
+const LOOK_PAL = { T: '#e8d8a0', U: '#5a3b2c', R: '#e0506a', Y: '#f2d36b', G: '#4f8a4a' };
+
+const toHexEarly = (v) => '#' + v.map((n) => Math.round(Math.min(255, n)).toString(16).padStart(2, '0')).join('');
 
 // One character = three textures: `${prefix}_down`, `_up`, `_side` (faces right).
 export function makeCharacter(scene, prefix, colors = {}, look = {}) {
-  const pal = { ...PAL, k: '#1d1714', T: '#e8d8a0', ...colors };
+  const pal = { ...PAL, k: '#1d1714', ...LOOK_PAL, ...colors };
+  if (!pal.F) pal.F = colors.h ? toHexEarly(shade(hex(colors.h), 0.85)) : '#3a2418'; // facial hair follows the hair
   const toHex = (v) => '#' + v.map((n) => Math.round(Math.min(255, n)).toString(16).padStart(2, '0')).join('');
   // Shading shades are derived from the main colors.
   if (colors.c) {
