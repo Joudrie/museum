@@ -620,8 +620,10 @@ export class RoomScene extends Phaser.Scene {
     const { g } = this;
     const def = FAMOUS[id];
     makeCharacter(this, `famous_${id}`, def.colors, def.look);
-    let x = g.xL + (2.5 + k * 4.5) * T; // spread across the hall
-    let y = g.yb + (3 + (k % 2)) * T;
+    // Spread across the hall floor in two staggered rows.
+    const row = k % 2;
+    let x = g.xL + (1.2 + Math.floor(k / 2) * 1.8 + row * 0.9) * T;
+    let y = g.yb + (2.6 + row * 1.8) * T;
     for (let tries = 0; tries < 20 && this.blocked(x, y); tries++) {
       x = g.xL + (1 + Math.floor(Math.random() * (g.fw - 2)) + 0.5) * T;
       y = g.yb + (2 + Math.floor(Math.random() * 3)) * T;
