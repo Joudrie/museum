@@ -25,3 +25,19 @@ PW=/opt/node-tools/node_modules/playwright node tests/gaps.cjs    # wall gaps, 5
   - A corrupt save (bad items, rooms or decor) crashed the game. Loading now validates shapes and drops junk.
   - The wall-spot menu said "In room 2" for paintings in the main hall; it now uses room names.
   - Placing an item with a museum-wide max read a removed office perk (closet leftovers).
+
+## Phase 2: Lighting and atmosphere
+- New `src/lighting.js`: a darkness layer multiplied over each room. It's filled with the ambient light for the time of day, and soft pools are added for:
+  - picture lights over every painting, with a little brass fixture on back-wall paintings, a faint beam and a pool on the floor in front
+  - ceiling lamps across the floor
+  - sconces either side of back-wall doors
+  - light spilling in through open doorways and the entrance
+  - lamps, candelabras, lanterns, the coffee counter, fountains and glowing exhibits you place (with a warm glow; candles flicker)
+  - a soft glow around the curator at night
+- Day/night follows the real clock: bright midday, golden evening, dim blue night where the lamps do the work. `?hour=21` pins the hour for testing.
+- Soft shadows under everyone; reflections of picture lights on polished floors (marble, tile, terrazzo...); dust motes drifting in the picture-light beams.
+- `src/settings.js`: lighting quality (High / Low / Off) and day/night on/off. The Settings screen to change them comes in Phase 4.
+  - Low draws the light once a minute only (no flicker, motes or glow).
+  - Off skips the darkness layer.
+- The light layer only redraws when something changes, so it costs almost nothing per frame.
+- Gap check run at night: still no gaps in 54 room shapes.

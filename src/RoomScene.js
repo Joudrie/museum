@@ -50,6 +50,7 @@ import { openViewer } from './viewer.js';
 import { openDecor, closeDecor, load, save, DEFAULT_CHARACTER } from './decor.js';
 import { openBuild } from './build.js';
 import { showTalk, hideTalk, talking } from './talk.js';
+import { Lighting } from './lighting.js';
 
 const VIEW_TILES = 9; // the camera always shows 9 tiles across
 const SPEED = 176; // px per second
@@ -267,6 +268,8 @@ export class RoomScene extends Phaser.Scene {
     if (this.g.main) this.spawnFamous();
     this.refreshDirt();
     this.bubble = this.add.image(0, 0, 'bubble').setOrigin(0.5, 1).setDepth(5000).setVisible(false);
+    this.lighting = new Lighting(this);
+    this.time.addEvent({ delay: 60000, loop: true, callback: () => this.lighting.build() }); // the sun moves
 
     this.setupCamera();
     this.setupInput();
@@ -1051,6 +1054,7 @@ export class RoomScene extends Phaser.Scene {
     this.wallImg.setTexture('walls');
     if (this.g.main) this.placeHall();
     this.placeDecor();
+    this.lighting.build();
   }
 
   applyCharacter(character) {
@@ -1539,6 +1543,7 @@ export class RoomScene extends Phaser.Scene {
       const sp = this.add.image(x + (w * T) / 2, y, key).setOrigin(0.5, 1).setDepth(y - 1);
       return sp;
     });
+    this.lighting?.build();
   }
 
   enterBuild() {
@@ -1744,6 +1749,7 @@ export class RoomScene extends Phaser.Scene {
 
   update(_, dtMs) {
     const dt = Math.min(dtMs, 50) / 1000;
+    this.lighting.update(dt);
     this.npcs.forEach((n) => {
       this.updateVisitor(n, dt);
       this.animate(n.s, (!!n.target || !!n.walking) && !n.talking, dt);
