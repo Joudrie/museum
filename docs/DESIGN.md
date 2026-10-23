@@ -160,3 +160,146 @@ A cozy, top-down, faux-16-bit pixel tycoon game (Stardew / Pokémon B&W vibe). Y
 - Buy-back price after the 1-week cooldown.
 - Gem pricing model.
 - Curator's Office level costs and exact unlocks per level.
+
+---
+
+## Expansion ideas (brainstorm, Oct 2026)
+Curation grew from a painting simulator into a museum simulator. Paintings stay the core, but anything a museum holds is fair game, and the more interesting the better. Sean designs the areas; this is the list to pick from.
+
+### Areas, with Boston inspiration
+**Art (the core)**
+- Painting galleries by era: Renaissance, Dutch, Impressionist, American, Japanese prints.
+- Sculpture court: marble and plaster casts (the MFA's big courtyard).
+- **The Gardner Room**, after the Isabella Stewart Gardner Museum: salon-style walls floor to ceiling around a courtyard garden. Hook: the empty frames from the famous heist, and tracking down the stolen art is a quest line.
+- Modern wing (ICA style, a white cube), once copyright allows.
+- Prints and early photography.
+
+**Science (Museum of Science)**
+- Dinosaur hall: a big pixel T-rex skeleton as the centerpiece, plus fossil shelves you walk up to and tap to see the real fossil in HD (like the paintings).
+- Space: planetarium dome, meteorites, moon rock, rocket.
+- Electricity: a Van de Graaff generator, with a timed lightning show as an event.
+- Human body, optics, illusions: mirror maze, camera obscura.
+
+**Natural history (Harvard Museum of Natural History)**
+- Glass flowers (a perfect collectible set).
+- Minerals and gems.
+- Taxidermy dioramas.
+- Ocean hall with a whale skeleton overhead, and an aquarium wing (New England Aquarium) with a giant tank.
+
+**History and archaeology**
+- Egypt: mummies, sarcophagi, canopic jars.
+- Greek and Roman: urns, mosaics, columns.
+- Dig site: a sandbox room where you excavate (a natural mini-game).
+- Maritime (Peabody Essex, USS Constitution, Tea Party ships): ship models, figureheads.
+- Arms and armor.
+- Clocks and inventions: robots and machines (MIT Museum).
+
+**Architecture**
+- Model hall: famous buildings in miniature, Gothic arches, the column orders side by side.
+- Facade styles for the museum's own outside, so architecture changes the building itself.
+
+**Outside**
+- **Front lawn**: walk out of the entrance onto steps, banners, a fountain and the museum's sign. It's the base for seasons and exterior decorating.
+- **Garden** (huge): Arnold Arboretum, the Public Garden's swan boats, the MFA's Japanese garden. Fountains, hedge maze, greenhouse, koi pond, sculpture garden.
+- Rooftop terrace with a telescope at night.
+- Petting zoo / farm (later, its own floor).
+
+**Visitor services (they earn money)**
+- Coffee shop (built), food court, gift shop (merch of your best paintings, so a famous painting earns more).
+- Kids' discovery room (Boston Children's Museum).
+- Lecture hall / theater: events, e.g. a famous visitor gives a talk.
+- Library / archive, where the stored collection lives.
+- **Restoration studio**: finds arrive dirty or damaged; restore them, then display them.
+
+### Collecting (the Pokémon part)
+- Specimen shelves for everything, using the painting viewer: fossils, minerals, coins, butterflies, shells, glass flowers, stamps, ship models.
+- Sets ("all 6 trilobites", "every Monet") for a big bonus and a plaque.
+- Rarity, common to legendary: rare items get special frames or cases.
+- Ways to get things: expeditions, digs, donations, auctions, trades with famous visitors.
+
+### Why these games stick, and what to borrow
+- **Pokémon**: collecting, a nice world, distinct personalities. Add named regulars who come back.
+- **Animal Crossing**: real seasons and real time, decorating, characters you get attached to.
+- **Stardew Valley**: a daily rhythm, little goals, unlocking areas over time.
+- **Two Point Hospital**: funny visitor needs, staff, ratings that bring more visitors.
+
+### Systems that make expansions easy
+1. **Elevator in the lobby**: every floor is a self-contained pack (petting zoo floor, space floor), shipped without touching the rest.
+2. **Room presets**: save a room's whole layout ("Winter", "Halloween") and load it again next year.
+3. **Seasons on the real calendar**:
+   - snow on the lawn, fall leaves in the garden
+   - holiday decor and seasonal visitors (trick-or-treaters)
+   - limited-time collectibles
+   - These give a reason to ship updates.
+4. **Collections as data**: paintings, fossils and gems all share one format (title, image, blurb, set, rarity), so a new collection is just new entries.
+5. **Spinoff-ready engine**:
+   - **Shared core**: rooms, walls and floors, lighting, characters, the decor toolkit, economy, staff, menus, quests.
+   - **Museum content**: paintings, exhibits, famous visitors.
+   - A hotel or bank simulator would reuse the core and swap only the content.
+
+### Expeditions and excavations (the big one)
+The museum is home; expeditions are where the stories come from. Every painting has a "how I got it" story.
+
+**The loop**
+1. A lead shows up: a letter, a torn map, a pirate's note, a rumor from a famous visitor.
+2. Sail out: a dock on the front lawn, a short boat scene, then an island Sean designs.
+3. Explore it.
+4. Bring the treasure home. It arrives dirty or damaged, is restored in the studio, then hangs with a plaque saying where it was found ("Recovered from Skull Cove").
+
+**Kinds of levels.** Each one can be a slow puzzle, a chase with light parkour, a dig, or a mix.
+- Pirate island: jungle maze, traps, a captain's map, the stolen painting in a chest; pirates to trade with or outwit.
+- Shipwreck: dive into a sunken galleon; water-damaged paintings in crates.
+- Desert dig: Egyptian tomb, sliding stone puzzles.
+- Dinosaur badlands: brush fossils out of a cliff to build a skeleton.
+- Lost temple: pressure plates, hidden rooms.
+- Heist recovery: the thief's hideout, a stealth maze (ties into the Gardner Room).
+- Frozen north: an ice cave, a frozen mammoth, ice-sliding floors.
+
+**Puzzles (top-down, phone-friendly)**
+- Mazes with fog that clears as you walk.
+- Push-block boulders; ice sliding.
+- Pressure plates and levers that open gates.
+- A metal detector that beeps warmer or colder.
+- Map fragments (collect 4 and the X appears).
+- Riddles from NPCs (a parrot, a ghost captain).
+- Fossil brushing (swipe the dirt away without breaking the bone).
+- Mirrors and light beams.
+
+**Replay and progression**
+- Hand-made story islands give masterpieces; small random islands give common finds.
+- Bring crew: the janitor cuts vines, the guard handles pirates, the carpenter fixes bridges.
+- Ship upgrades reach farther islands, and a world map fills in as you discover more.
+- Famous visitors give quests ("Van Gogh lost a sketchbook on Sunflower Isle").
+- Live play for story islands; idle crews (back in a few hours) for common runs.
+
+**First version.** One pirate island:
+- dock on the lawn and a boat scene
+- a hedge maze, two boulder puzzles and a map-fragment hunt
+- a chest with one famous painting that arrives damaged
+- restoration in the studio, then a plaque on the wall
+
+**Tiles for it**: built (see `src/tiles.js` and the dev page `tiles.html`, below).
+
+### Open questions for Sean
+- Map: free roam (lawn → lobby → wings → elevator floors), or keep the chain of rooms with branches off the main hall?
+- Should paintings eventually come only from expeditions and digs, or should buying stay as a backup?
+- Can you fail an expedition (caught by pirates, the tide comes in), or is it relaxed?
+- Seasons: automatic from the calendar, or chosen by the player?
+- Split the shared core from the museum content now, or when a spinoff is real?
+
+### Island tileset (built)
+Outdoor tiles on the 32px grid, gen 3–5 Pokémon style, drawn in code (`src/tiles.js`). See them all animated, plus a sample island, at `tiles.html` (live: /museum/tiles.html). The page can download the whole sheet as a PNG plus a JSON of names, positions and frames.
+- **Ground**: 3 grasses, jungle grass, sand, rippled sand, wet sand, 2 dirt paths, rock ground, cave floor, cobblestone, snow, ice.
+- **Water** (animated):
+  - deep water with drifting wave crests, shallow water with moving light
+  - a bubbles overlay, a waterfall and its splash
+  - a lily pad, a rock in the water with ripples
+- **Edges**: 16 corner tiles per pair (each tile says which corners are covered, so any shape works):
+  - grass on sand, grass on dirt, grass on rock, snow on rock
+  - the shoreline, where the water's edge ebbs and flows with a foam line, wet sand and a few bubbles
+  - pond banks (water on grass).
+- **Cliffs and ledges** (facing the camera): top edge, face and foot (left, middle and right), side edges, stairs cut into the face, one-way ledges to hop down, mountain walls (plain and snowy), a 2×2 cave mouth.
+- **Plants**: tall grass you walk through (it sways, and its front row draws over the player's legs), flowers, beach grass, mushrooms, bush, palm tree (2×3), leafy tree (2×3), pine (1×2), stump, fallen log, hanging vines.
+- **Rocks**: small, big (2×2), pile, a pushable boulder, a cracked rock to smash, a beach rock, crystals.
+- **Props**: dock and bridge planks, dock post, rope bridge, sign, treasure chest (closed and open), barrel, crate, a sparkling dig spot, an X mark, a dug hole, shells and starfish, a flickering torch.
+- **Puzzles**: pressure plate (up and down), lever (off and on), iron gate, a stone head.

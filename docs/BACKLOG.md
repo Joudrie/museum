@@ -57,6 +57,16 @@
 ## Big pass (autonomous polish) ✅
 - Bug sweep with a repeatable smoke test, dynamic lighting with day/night, deeper characters and livelier visitors, one UI system with Settings, a HUD breakdown and a painting gallery, a journal with goals and a collection book, 49 paintings, 8 new decor items, celebrations and visitor love. Full log: `docs/BIG-PASS.md`.
 
+## Expansion (brainstorm in DESIGN.md → Expansion ideas)
+- Built: island tileset for expeditions (`src/tiles.js`, preview at `tiles.html`).
+- Next candidates:
+  1. Front lawn, seasons and room presets.
+  2. Dinosaur hall with fossil shelves.
+  3. Elevator and the first new floor.
+  4. Garden (Sean designs).
+  5. Gift shop and food court.
+  6. First pirate-island expedition.
+
 ## Needs Sean
 - **West Wing**: waiting for your outline.
 - **Semi-mythological famous visitors** (you said maybe later).
