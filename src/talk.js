@@ -9,7 +9,7 @@ const shadow = el.querySelector('.talk-shadow');
 
 let timer = null;
 
-export function showTalk(name, label, line, at) {
+export function showTalk(name, label, line, at, ms = 6000) {
   who.innerHTML = `${name} <span>${label}</span>`;
   text.textContent = line;
   const below = at.y < window.innerHeight / 2;
@@ -29,7 +29,7 @@ export function showTalk(name, label, line, at) {
   });
 
   clearTimeout(timer);
-  timer = setTimeout(hideTalk, 6000);
+  timer = setTimeout(hideTalk, ms);
 }
 
 export function hideTalk() {
