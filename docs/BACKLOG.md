@@ -39,6 +39,10 @@
 - Entrance with ticket desk, then a paid-unlock main hall: hallway (break room and office doors), open hall with two staircases up to a full-width balcony with four big paintings. Built rooms continue from the hall's middle arch. Office door opens the Curator's Office; break room is coming soon.
 
 ## Phase 6: Economy (in progress)
+- Done: **coin spots**. Each painting piles up its own coins on the floor in front of it; everything else (decor, coffee) piles up on a green pad near the room's entrance. Stand on a spot to collect it. "Collect all" (under the top bar) collects every room after a short ad (a placeholder for now).
+- Done: **staff and security**. One janitor per room (hire in Customize; each costs more), rarely seen mopping a single puddle. A security guard (black suit, shades, earpiece) stands by the main hall's middle arch and offers cameras; without cameras, a rare robbery pop-up takes a painting off the wall after time away.
+- Done: **famous visitors** (van Gogh, Leonardo, Monet, Frida) in the main hall: +5% income per artist met. Curator hats, facial hair and glasses.
+- Later (user): break room upgrade menu, West Wing outline, collection screens and the menu redo, mini-games, pixel packs.
 - Done: **room ratings**. Each room scores out of 100 (1-5 stars): paintings 40 (wall spots filled), decor 25 (5 per item), clean 20 (−7 per mess), style 15 (pattern, wainscot, carpet, plants). Shown when entering a room and in Customize with tips; the museum rating (average of open rooms) is in the top bar and scales visitors from 0.6× to 1.4×.
 - Goal: get the most visitors. More paintings → more visitors; complete sets → big bonus; every decoration adds a little income.
 - Coffee shop room: visitors buy coffee; decorate it (bookshelves etc.).

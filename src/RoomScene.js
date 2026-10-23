@@ -37,9 +37,10 @@ import { hasCameras, buyCameras, resetSecurity, CAMERA_COST, trackSeen, maybeRob
 import { officeLevel, setOfficeLevel, resetOffice, perks, itemLevel, LEVELS, MAX_LEVEL } from './office.js';
 import { openOffice } from './officemenu.js';
 import { ask } from './ask.js';
+import { showAd } from './ad.js';
 import { roomRating, museumRating, starText } from './rating.js';
 import { FAMOUS, guestToday, meet, resetMet } from './famous.js';
-import { FREE, coins, canAfford, addCoins, spend, resetWallet, museumIncome, museumVisitors, coffeeIncome, roomIncome, pile, settle, collect, sellPrice } from './wallet.js';
+import { FREE, coins, canAfford, addCoins, spend, resetWallet, museumIncome, museumVisitors, coffeeIncome, roomIncome, settle, sellPrice, artPile, decorPile, collectArt, collectDecor, collectAll } from './wallet.js';
 import { openToolkit, hideToolkit, showBar, hideBar } from './toolkit.js';
 import { artBounds, paintArt, wallRef } from './walldraw.js';
 import { PERSONALITIES, lineFor } from './lines.js';
@@ -202,7 +203,17 @@ export class RoomScene extends Phaser.Scene {
     this.deskSpot = this.L.desk ? { ...this.L.desk } : this.roomIndex === 0 ? this.findDeskSpot() : null;
     if (this.deskSpot) this.placeDesk();
     this.pileTile = this.findPileTile();
+    // The decor pad: a green square near the entrance where decor earnings pile up.
+    const pad = this.tileCenter(this.pileTile);
+    this.padGfx = this.add.graphics().setDepth(0.6);
+    this.padGfx.fillStyle(0x3f8f4a, 0.55).fillRect(pad.x - 13, pad.y - 13, 26, 26);
+    this.padGfx.lineStyle(2, 0x6fd07a, 0.9).strokeRect(pad.x - 13, pad.y - 13, 26, 26);
     this.pileSprite = this.add.image(0, 0, 'coins_1').setOrigin(0.5, 1).setVisible(false);
+    // Coins in front of each painting: that painting's earnings.
+    this.artSpots = this.hung.map((p) => {
+      const st = this.standFor(p);
+      return { p, x: st.x, y: st.y + 6, sprite: this.add.image(st.x, st.y + 6, 'coins_1').setOrigin(0.5, 1).setScale(0.7).setVisible(false) };
+    });
     // A twinkle on the coin pile so it catches the eye.
     if (!this.textures.exists('twinkle')) {
       const tw = this.make.graphics({ add: false });
@@ -812,6 +823,7 @@ export class RoomScene extends Phaser.Scene {
     this.interactBtn = document.getElementById('interact');
     this.interactIcon = this.interactBtn.querySelector('.bang');
     this.interactBtn.onclick = () => this.interact();
+    document.getElementById('collect-all').onclick = () => this.collectEverything();
     document.getElementById('home-btn').onclick = () => {
       if (!this.input.enabled || this.mode) return;
       this.pause(true);
@@ -980,7 +992,6 @@ export class RoomScene extends Phaser.Scene {
       consider(Math.hypot(x - st.x, y - st.y), { door: d, icon: 'door' });
     });
     if (this.deskFront) consider(Math.hypot(x - this.deskFront.x, y - this.deskFront.y) - 6, { office: true, icon: 'office' });
-    if (this.pileSprite.visible) consider(Math.hypot(x - this.pileSprite.x, y - this.pileSprite.y + 6) - 4, { coins: true, icon: 'coins' });
     for (const n of this.npcs) consider(Math.hypot(x - n.s.x, y - n.s.y) - 2, { npc: n, icon: 'talk' });
     const { exit, entrance } = this.L;
     if (exit) {
@@ -998,7 +1009,6 @@ export class RoomScene extends Phaser.Scene {
     if (f.painting) this.view(f.painting);
     else if (f.slot) this.editSlot(f.slot);
     else if (f.mess) this.clean(f.mess);
-    else if (f.coins) this.collectPile();
     else if (f.office) this.openOfficePanel();
     else if (f.door) f.door.label === 'Office' ? this.openOfficePanel() : this.toast(`${f.door.label}: coming soon`);
     else if (f.npc) (this.talkingTo === f.npc ? this.endTalk() : this.talkTo(f.npc));
@@ -1221,8 +1231,16 @@ export class RoomScene extends Phaser.Scene {
     return tries[0];
   }
 
+  tileCenter({ c, r }) {
+    return { x: this.g.xL + (c + 0.5) * T, y: this.g.y0 + (r + 0.5) * T };
+  }
+
   updatePile() {
-    const n = pile(this.rooms, this.roomIndex);
+    this.artSpots.forEach((a) => {
+      a.amount = artPile(this.rooms, this.roomIndex, a.p);
+      a.sprite.setTexture(a.amount >= 15 ? 'coins_2' : 'coins_1').setVisible(a.amount >= 1).setDepth(a.y);
+    });
+    const n = decorPile(this.rooms, this.roomIndex);
     const sp = this.pileSprite;
     sp.amount = n;
     this.twinkle.setVisible(n >= 1);
@@ -1235,9 +1253,31 @@ export class RoomScene extends Phaser.Scene {
     this.twinkle.setDepth(y + 1);
   }
 
-  collectPile() {
-    const sp = this.pileSprite;
-    const n = collect(this.rooms, this.roomIndex);
+  // Stand on a coin spot to collect it.
+  checkCoins() {
+    const { x, y } = this.player;
+    const on = (sx, sy) => Math.abs(x - sx) < 14 && Math.abs(y - sy) < 12;
+    this.artSpots.forEach((a) => {
+      if (a.sprite.visible && on(a.x, a.y)) this.coinBurst(a.x, a.y, collectArt(this.rooms, this.roomIndex, a.p));
+    });
+    if (this.pileSprite.visible && on(this.pileSprite.x, this.pileSprite.y - 8)) this.coinBurst(this.pileSprite.x, this.pileSprite.y, collectDecor(this.rooms, this.roomIndex));
+  }
+
+  // "Collect all" every room's coins, after a short ad.
+  collectEverything() {
+    if (!this.input.enabled || this.mode) return;
+    this.pause(true);
+    showAd(() => {
+      this.pause(false);
+      const n = collectAll(this.rooms);
+      sfx('coin');
+      this.toast(n > 0 ? `Collected ${n.toLocaleString()} gold from every room` : 'Nothing to collect yet');
+      this.updatePile();
+    });
+  }
+
+  coinBurst(x, y, n) {
+    const sp = { x, y };
     if (n > 0) {
       sfx('coin');
       this.toast(`+${n.toLocaleString()} gold`);
@@ -1572,6 +1612,7 @@ export class RoomScene extends Phaser.Scene {
     this.animate(this.player, len > 0, dt);
     this.player.setDepth(this.player.y);
     this.checkArches();
+    if (len > 0) this.checkCoins();
 
     if (this.talkingTo && (!talking() || Math.hypot(this.player.x - this.talkingTo.s.x, this.player.y - this.talkingTo.s.y) > 60)) {
       this.endTalk();

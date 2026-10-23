@@ -56,54 +56,120 @@ export function museumVisitors(rooms) {
 // A coffee counter earns 1 gold an hour per 100 monthly visitors.
 export const coffeeIncome = (rooms) => Math.round(museumVisitors(rooms) / 100);
 
-// Gold per hour earned by one room (dirt on the floor cuts it).
-export function roomIncome(rooms, i) {
+// What a room's income is multiplied by: dirt cuts it, famous visitors raise it.
+const roomMult = (rooms, i) => (1 - DIRT_PENALTY * dirtCount(rooms, i)) * famousBoost();
+
+// Gold per hour from one painting, and from a room's decor (items + coffee).
+const artRate = (rooms, i) => PAINTING_INCOME * roomMult(rooms, i);
+function decorRate(rooms, i) {
   const items = loadItems(i);
-  let gold = paintingsFor(rooms, i).length * PAINTING_INCOME;
+  let gold = 0;
   items.forEach((it) => (gold += ITEMS[it.type]?.income || 0));
   if (items.some((it) => it.type === 'counter')) gold += coffeeIncome(rooms);
-  // Dirt cuts it; every famous visitor you've met raises it.
-  return Math.floor(gold * (1 - DIRT_PENALTY * dirtCount(rooms, i)) * famousBoost());
+  return gold * roomMult(rooms, i);
+}
+
+// Gold per hour earned by one room.
+export function roomIncome(rooms, i) {
+  return Math.floor(paintingsFor(rooms, i).length * artRate(rooms, i) + decorRate(rooms, i));
 }
 
 export function museumIncome(rooms) {
   return rooms.reduce((n, _, i) => n + roomIncome(rooms, i), 0);
 }
 
-// Gold waiting in a room's pile (capped at 8 hours of income).
-// A pile is { t: last settled (ms), b: gold banked at that time }.
-function pileState(i, now) {
-  const piles = load(PILES_KEY, {});
-  if (!piles[i]) {
-    piles[i] = { t: now, b: 0 }; // a new room starts its pile empty
-    save(PILES_KEY, piles);
+// Coins pile up in two kinds of spot, each capped at 8 hours' worth:
+// in front of every painting (its own earnings) and on a room's decor pad
+// (everything else). Stand on a spot to collect it.
+// Stored per room: { art: { 'wall:u': { t, b } }, decor: { t, b } }
+// where t = last settled (ms) and b = gold banked at that time.
+const slotKey = (p) => `${p.wall}:${p.u}`;
+
+function room(i) {
+  const r = load(PILES_KEY, {})[i];
+  if (!r) return { art: {}, decor: null };
+  if (r.t !== undefined) return { art: {}, decor: r }; // older saves: one pile per room
+  return { art: r.art || {}, decor: r.decor || null };
+}
+
+function saveRoom(i, r) {
+  save(PILES_KEY, { ...load(PILES_KEY, {}), [i]: r });
+}
+
+const amount = (st, rate, now) => {
+  const total = st.b + (Math.max(0, now - st.t) / HOUR) * rate;
+  return Math.floor(Math.min(total, Math.max(st.b, OFFLINE_CAP_H * rate)));
+};
+
+// A pile starts empty the first time it's seen.
+function piles(rooms, i, now) {
+  const r = room(i);
+  let changed = false;
+  if (!r.decor) {
+    r.decor = { t: now, b: 0 };
+    changed = true;
   }
-  return piles[i];
+  paintingsFor(rooms, i).forEach((p) => {
+    if (!r.art[slotKey(p)]) {
+      r.art[slotKey(p)] = { t: now, b: 0 };
+      changed = true;
+    }
+  });
+  if (changed) saveRoom(i, r);
+  return r;
 }
 
+// Gold waiting in front of a painting.
+export function artPile(rooms, i, p, now = Date.now()) {
+  return amount(piles(rooms, i, now).art[slotKey(p)], artRate(rooms, i), now);
+}
+
+// Gold waiting on a room's decor pad.
+export function decorPile(rooms, i, now = Date.now()) {
+  return amount(piles(rooms, i, now).decor, decorRate(rooms, i), now);
+}
+
+// Everything waiting in a room.
 export function pile(rooms, i, now = Date.now()) {
-  const { t, b } = pileState(i, now);
-  const rate = roomIncome(rooms, i);
-  const total = b + (Math.max(0, now - t) / HOUR) * rate;
-  return Math.floor(Math.min(total, Math.max(b, OFFLINE_CAP_H * rate)));
-}
-
-function setPile(i, state) {
-  save(PILES_KEY, { ...load(PILES_KEY, {}), [i]: state });
+  return decorPile(rooms, i, now) + paintingsFor(rooms, i).reduce((n, p) => n + artPile(rooms, i, p, now), 0);
 }
 
 // Bank what a room has earned so far. Call before its income changes, so new
 // decor doesn't earn for the hours before it was placed.
 export function settle(rooms, i) {
   const now = Date.now();
-  const total = pile(rooms, i, now);
-  setPile(i, { t: now, b: total });
+  const r = piles(rooms, i, now);
+  r.decor = { t: now, b: amount(r.decor, decorRate(rooms, i), now) };
+  paintingsFor(rooms, i).forEach((p) => (r.art[slotKey(p)] = { t: now, b: amount(r.art[slotKey(p)], artRate(rooms, i), now) }));
+  saveRoom(i, r);
 }
 
-export function collect(rooms, i) {
-  const n = pile(rooms, i);
-  setPile(i, { t: Date.now(), b: 0 });
+export function collectArt(rooms, i, p) {
+  const n = artPile(rooms, i, p);
+  const r = room(i);
+  r.art[slotKey(p)] = { t: Date.now(), b: 0 };
+  saveRoom(i, r);
   if (n > 0) addCoins(n);
+  return n;
+}
+
+export function collectDecor(rooms, i) {
+  const n = decorPile(rooms, i);
+  const r = room(i);
+  r.decor = { t: Date.now(), b: 0 };
+  saveRoom(i, r);
+  if (n > 0) addCoins(n);
+  return n;
+}
+
+// Every spot in every open room (after watching an ad).
+export function collectAll(rooms) {
+  let n = 0;
+  rooms.forEach((rm, i) => {
+    if (rm.locked) return;
+    n += collectDecor(rooms, i);
+    paintingsFor(rooms, i).forEach((p) => (n += collectArt(rooms, i, p)));
+  });
   return n;
 }
 
