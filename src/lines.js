@@ -88,6 +88,20 @@ export const PERSONALITIES = {
     generic: ['I’ve looked after this place for forty years. It’s good to see it alive again.', 'Upgrade the office and the board will let us grow.', 'In my day we had one painting and a very nice chair.', 'Every great museum started with one room. And a mop.'],
     about: [],
   },
+  guide: {
+    label: 'Tour guide',
+    staff: true,
+    names: ['Penelope', 'Arturo', 'Mei', 'Bertrand'],
+    generic: ['And on your left: art! On your right: also art.', 'Stay together, everyone! No touching the masterpieces.', 'Fun fact: this hall used to be a ballroom. Probably.', 'Tips are appreciated. So is applause.'],
+    about: [],
+  },
+  carpenter: {
+    label: 'Carpenter',
+    staff: true,
+    names: ['Hank', 'Rosa', 'Big Lou', 'Tess'],
+    generic: ['Measure twice, cut once. Then build a room in a snap.', 'Patched every crack in the entrance. You’re welcome.', 'This hard hat has seen things.', 'Need another room? Point me at a wall.'],
+    about: [],
+  },
   guard: {
     label: 'Security',
     staff: true,

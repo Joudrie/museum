@@ -1192,3 +1192,43 @@ body {
   margin: 0;
   color: var(--gold);
 }
+
+/* ---------- Staff board ---------- */
+#staffmenu {
+  position: fixed;
+  inset: 0;
+  z-index: 21;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(10, 6, 4, 0.45);
+}
+#staffmenu.hidden {
+  display: none;
+}
+.staff-list {
+  display: grid;
+  gap: 10px;
+}
+.staff-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid var(--gold-dark);
+  border-radius: 6px;
+}
+.staff-row small {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+}
+.staff-row button {
+  flex: none;
+  padding: 8px 10px;
+  font-size: 12px;
+}
+.staff-row button:disabled {
+  opacity: 0.55;
+}

@@ -20,18 +20,20 @@ export const SIZES = {
   square: { short: 7, medium: 9, long: 12 },
   entry: { fixed: 8 },
   main: { fixed: 15 },
+  break: { fixed: 6 },
 };
 // The first two rooms are fixed: the entrance (ticket desk) and the main hall.
-export const FIXED = ['entry', 'main'];
+export const FIXED = ['entry', 'main', 'break'];
 export const isFixed = (room) => FIXED.includes(room.orient);
 
-export const ORIENT_LABELS = { vertical: 'Vertical', horizontal: 'Horizontal', square: 'Big hall', entry: 'Entrance', main: 'Main hall' };
+export const ORIENT_LABELS = { vertical: 'Vertical', horizontal: 'Horizontal', square: 'Big hall', entry: 'Entrance', main: 'Main hall', break: 'Break room' };
 export const SIZE_LABELS = {
   vertical: { short: 'Short', medium: 'Medium', long: 'Long' },
   horizontal: { short: 'Short', medium: 'Medium', long: 'Long' },
   square: { short: 'Small', medium: 'Medium', long: 'Large' },
   entry: { fixed: 'Fixed' },
   main: { fixed: 'Fixed' },
+  break: { fixed: 'Fixed' },
 };
 
 export const EXITS = {
@@ -41,7 +43,7 @@ export const EXITS = {
 };
 
 export function roomName(room, i) {
-  return room.name || { entry: 'Entrance', main: 'Main hall' }[room.orient] || `Room ${i + 1}`;
+  return room.name || { entry: 'Entrance', main: 'Main hall', break: 'Break room' }[room.orient] || `Room ${i + 1}`;
 }
 
 export function exitLabel(orient, kind) {
@@ -60,6 +62,11 @@ export function exitLabel(orient, kind) {
 const ENTRY_ROOM = { orient: 'entry', size: 'fixed', exit: 'door-back' };
 const MAIN_ROOM = { orient: 'main', size: 'fixed', exit: 'door-back', arch: true, locked: true };
 export const MAIN_HALL_PRICE = 500;
+// The staff break room sits off the main hall's hallway (left door), outside
+// the chain of rooms. It's stored under the room key 'break'.
+export const BREAK = 'break';
+export const BREAK_ROOM = { orient: 'break', size: 'fixed', exit: 'none' };
+export const roomAt = (rooms, i) => (i === BREAK ? BREAK_ROOM : rooms[i]);
 const ITEMS_KEY = 'curation.items';
 
 export function loadRooms() {
@@ -141,6 +148,7 @@ export { seedEntry };
 export function layout(room) {
   if (room.orient === 'main') return mainLayout();
   if (room.orient === 'entry') return entryLayout();
+  if (room.orient === 'break') return breakLayout();
   const square = room.orient === 'square';
   // Big halls behave like vertical rooms (enter at the bottom, exit at the top).
   const vertical = room.orient !== 'horizontal';
@@ -203,6 +211,20 @@ function entryLayout() {
   ['left', 'right'].forEach((wall) => [1.6 * T, 4 * T].forEach((u) => slots.push({ wall, u })));
   const entrance = { mat: true, x0: xL + 2 * T, x1: xL + 4 * T, ax: xL + 3 * T, ay: y1 - 10 };
   return { g, slots, exit, entrance, split: { y: y0 + 3 * T }, desk: { c: 4, r: 4 } };
+}
+
+// The break room: a small staff room, entered from the bottom. Lockers and a
+// donut table come with it; the staff board on the wall is where you hire.
+function breakLayout() {
+  const fw = 7;
+  const fd = 6;
+  const xL = 2 * T;
+  const xR = xL + fw * T;
+  const y0 = T + D;
+  const y1 = y0 + fd * T;
+  const g = { w: (fw + 4) * T, h: y1 + T, xL, xR, y0, y1, D, fw, fd, vertical: true, refs: boxRefs(xL, xR, y0) };
+  const entrance = { mat: true, x0: xL + 3 * T, x1: xL + 4 * T, ax: xL + 3.5 * T, ay: y1 - 10 };
+  return { g, slots: [], exit: null, entrance, split: { y: y0 + 3 * T }, board: { c: 5, r: 0 } };
 }
 
 // The main hall, from the sketch: a short hallway (break room door on the left,
@@ -315,6 +337,7 @@ function exitLayout(kind, g) {
 // still interactable) or 'door'. Unchanged slots default to every other slot
 // holding the next painting from the pool, continuing room by room.
 export function slotStates(rooms, index) {
+  if (index === BREAK) return [];
   let base = 0;
   for (let i = 0; i < index; i++) base += Math.ceil(layout(rooms[i]).slots.length / 2);
   const saved = load(SLOTS_KEY, {})[index] || {};

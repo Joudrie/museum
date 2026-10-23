@@ -135,7 +135,9 @@ export const NEW_ROOM_DECOR = {
 // The main hall starts out grand: marble floor, damask walls, dark wood.
 export const MAIN_DECOR = { ...DEFAULT_DECOR, pattern: 'marble', floor: '#e9e6df', paperStyle: 'damask', paper: '#7a3a3e', wainscotStyle: 'panels', wainscot: '#3e2a20', light: 'warm' };
 // A room's look before any customizing.
-export const baseDecor = (room, index) => (index === 0 ? DEFAULT_DECOR : room.orient === 'main' ? MAIN_DECOR : NEW_ROOM_DECOR);
+// The break room: a staff room with a checker floor and subway-tile walls.
+export const BREAK_DECOR = { ...NEW_ROOM_DECOR, pattern: 'checker', checkA: '#3c4a63', checkB: '#e9e6df', paper: '#cfd8dc', paperStyle: 'subway', wainscotStyle: 'none', light: 'day' };
+export const baseDecor = (room, index) => (index === 0 ? DEFAULT_DECOR : room.orient === 'main' ? MAIN_DECOR : room.orient === 'break' ? BREAK_DECOR : NEW_ROOM_DECOR);
 
 // Deterministic hash noise in [0, 1).
 export const hash = (x, y, s = 0) => {
@@ -1481,7 +1483,7 @@ function sprite(scene, key, rows, pal) {
 // 'sun' | 'cap' | 'top' | 'beret' | 'beanie' | 'straw' | 'crown', facial: 'stache' |
 // 'curly' | 'goatee' | 'beard', unibrow, earpiece }. Returns new row maps.
 // Hats are colored T (U for a band); facial hair is F.
-export const HATS = { none: 'None', cap: 'Baseball cap', top: 'Top hat', beret: 'Beret', beanie: 'Beanie', straw: 'Straw hat', sun: 'Sun hat', crown: 'Flower crown' };
+export const HATS = { none: 'None', hardhat: 'Hard hat', cap: 'Baseball cap', top: 'Top hat', beret: 'Beret', beanie: 'Beanie', straw: 'Straw hat', sun: 'Sun hat', crown: 'Flower crown' };
 export const FACIAL = { none: 'None', stache: 'Mustache', curly: 'Curly mustache', goatee: 'Goatee', beard: 'Beard' };
 export const GLASSES = { none: 'None', round: 'Round glasses', shades: 'Sunglasses' };
 
@@ -1585,6 +1587,12 @@ function withLooks(rows, view, look) {
     pre = ['oooooooo', 'oTTTTTTTTo'];
     put(0, 'oUUUUUUUUo');
     put(1, 'oTTTTTTTTTTTTTTTTo');
+  } else if (hat === 'hardhat') {
+    // a yellow safety helmet with a brim and a center ridge
+    pre = ['oooooo'];
+    put(0, 'oTTTTTTTTo');
+    put(1, 'oTTTTUTTTTTo');
+    put(2, 'oUUUUUUUUUUUUo');
   } else if (hat === 'crown') {
     const r1 = out[1];
     for (let i = 1; i < r1.length - 1; i++) r1[i] = ['R', 'G', 'Y', 'G'][i % 4];
@@ -2080,6 +2088,45 @@ export function bakeItem(scene, key, type, def, rot) {
       box(52, gy - 31, 9, 4, '#3a2a20', OUT);
       R(53, gy - 30, 7, 1, BRASS);
       break;
+    case 'lockers': {
+      shadow(32, gy, 30, 3);
+      [2, 22, 42].forEach((x) => {
+        box(x, gy - 58, 18, 56, '#6f8aa3', OUT);
+        R(x + 1, gy - 57, 16, 2, '#93abc0');
+        [0, 3].forEach((k) => R(x + 4, gy - 52 + k, 10, 1, '#4d6276')); // vents
+        R(x + 13, gy - 32, 2, 6, '#d8d8d8'); // handle
+      });
+      break;
+    }
+    case 'donuts': {
+      // break-room table with a box of donuts and coffee mugs
+      shadow(32, gy, 30, 4);
+      R(6, gy - 14, 3, 13, WOOD_D);
+      R(55, gy - 14, 3, 13, WOOD_D);
+      box(2, gy - 22, 60, 8, WOOD, OUT);
+      R(2, gy - 22, 60, 2, WOOD_L);
+      box(14, gy - 30, 24, 8, '#f2d8a8', OUT); // open box
+      [[18, '#d9708a'], [25, '#8a4a2a'], [32, '#f4f0e8']].forEach(([x, c]) => {
+        E(x, gy - 26, 3, 2, c);
+        R(x, gy - 26, 1, 1, '#c88a50');
+      });
+      [44, 52].forEach((x) => {
+        box(x, gy - 30, 6, 7, '#f4f0e8', OUT);
+        R(x + 1, gy - 30, 4, 1, '#6a3a20');
+      });
+      break;
+    }
+    case 'board': {
+      // the staff board: a cork board on a stand
+      shadow(16, gy, 12, 3);
+      R(8, gy - 12, 2, 11, WOOD_D);
+      R(22, gy - 12, 2, 11, WOOD_D);
+      box(3, gy - 38, 26, 26, '#b08a5a', OUT);
+      R(4, gy - 37, 24, 24, '#c9a06a');
+      [[6, 6, '#f4f0e8'], [16, 8, '#f2d36b'], [8, 18, '#9ad0e0'], [18, 20, '#f4f0e8']].forEach(([x, y, c]) => R(x, gy - 38 + y, 8, 7, c));
+      [[9, 6], [19, 8], [11, 18], [21, 20]].forEach(([x, y]) => R(x, gy - 38 + y, 2, 2, '#c0392b')); // pins
+      break;
+    }
     case 'closet':
       shadow(16, gy, 13, 3);
       box(4, gy - 64, 24, 62, '#5d6f8a', OUT);

@@ -21,7 +21,26 @@ export function hireJanitor(i) {
 
 export function resetJanitors() {
   save(JANITOR_KEY, {});
+  save(STAFF_KEY, {});
 }
+
+// Other staff, hired from the staff board in the break room.
+const STAFF_KEY = 'curation.staff'; // { guides: n, carpenter: bool }
+const staff = () => load(STAFF_KEY, {});
+export const guides = () => staff().guides || 0;
+export const maxGuides = (roomCount) => Math.floor(roomCount / 3); // one per 3 rooms
+export const guideCost = () => Math.round((300 * 1.7 ** guides()) / 10) * 10;
+export const GUIDE_BOOST = 0.1; // each tour guide: +10% income
+export const hasCarpenter = () => !!staff().carpenter;
+export const CARPENTER_COST = 300;
+export function hireGuide() {
+  save(STAFF_KEY, { ...staff(), guides: guides() + 1 });
+}
+export function hireCarpenter() {
+  save(STAFF_KEY, { ...staff(), carpenter: true });
+}
+// Everyone on the payroll (they hang out in the break room).
+export const staffCount = () => janitors() + guides() + (hasCarpenter() ? 1 : 0);
 
 function state(i) {
   return load(DIRT_KEY, {})[i] || { t: Date.now(), spots: [] };
