@@ -20,7 +20,7 @@ function render() {
     b.disabled = where !== undefined && !here;
     b.innerHTML = `
       <span class="thumb" style="background:${p.placeholder};aspect-ratio:${p.ratio}"><img alt="" src="${p.src}" /></span>
-      <span class="meta"><b>${p.title}</b><i>${p.by}</i>${b.disabled ? `<em>In room ${where + 1}</em>` : here ? '<em>Hanging here</em>' : ''}</span>`;
+      <span class="meta"><b>${p.title}</b><i>${p.by}</i>${b.disabled ? `<em>In ${state.roomLabel ? state.roomLabel(where) : `room ${where + 1}`}</em>` : here ? '<em>Hanging here</em>' : ''}</span>`;
     b.querySelector('img').onerror = (e) => e.target.remove();
     b.onclick = () => pick({ kind: 'painting', id: p.id });
     list.appendChild(b);
@@ -45,7 +45,7 @@ el.querySelector('.slot-close').addEventListener('click', () => {
   state.onClose();
 });
 
-// opts: { current: slot state, hungIn: Map(id -> room index), onPick(value), onClose() }
+// opts: { current: slot state, hungIn: Map(id -> room index), roomLabel(i), onPick(value), onClose() }
 export function openSlotMenu(opts) {
   state = { ...opts, tab: 'painting' };
   render();

@@ -675,7 +675,17 @@ export class RoomScene extends Phaser.Scene {
       const step = NPC_SPEED * dt * (near ? NPC_SLOW : 1);
       const sx = dx ? Math.sign(dx) * Math.min(step, Math.abs(dx)) : 0;
       const sy = dx ? 0 : Math.sign(dy) * Math.min(step, Math.abs(dy));
-      if (this.overlapsPlayer(n.s.x + sx, n.s.y + sy)) return; // wait for the player to move
+      if (this.overlapsPlayer(n.s.x + sx, n.s.y + sy) || this.npcBlocks(n, n.s.x + sx, n.s.y + sy)) {
+        // wait for the way to clear; give up and turn around if it takes too long
+        n.stuckFor = (n.stuckFor || 0) + dt;
+        if (n.stuckFor > 1.5) {
+          n.target = null;
+          n.stuckFor = 0;
+          n.wait = 300 + Math.random() * 800;
+        }
+        return;
+      }
+      n.stuckFor = 0;
       if (Math.abs(dx) + Math.abs(dy) <= step) {
         n.s.setPosition(n.target.x, n.target.y);
         n.target = null;
@@ -691,7 +701,7 @@ export class RoomScene extends Phaser.Scene {
     const tx = n.s.x + dx * tiles * T;
     const ty = n.s.y + dy * tiles * T;
     const b = this.bounds();
-    if (tx < b.x0 || tx > b.x1 || ty < b.y0 + 12 || ty > b.y1 - 20 || this.blocked(tx, ty)) {
+    if (tx < b.x0 || tx > b.x1 || ty < b.y0 + 12 || ty > b.y1 - 20 || this.pathBlocked(n.s.x, n.s.y, tx, ty)) {
       n.wait = 200;
       return;
     }
@@ -821,6 +831,19 @@ export class RoomScene extends Phaser.Scene {
 
   blocked(x, y) {
     return this.blocks.some((b) => x > b.x0 - 6 && x < b.x1 + 6 && y > b.y0 && y < b.y1 + 8);
+  }
+
+  // Is anything solid along a straight walk (columns and handrails are thin,
+  // so checking only the end point lets people walk through them)?
+  pathBlocked(x0, y0, x1, y1) {
+    const steps = Math.ceil(Math.hypot(x1 - x0, y1 - y0) / 4);
+    for (let i = 1; i <= steps; i++) if (this.blocked(x0 + ((x1 - x0) * i) / steps, y0 + ((y1 - y0) * i) / steps)) return true;
+    return false;
+  }
+
+  // Another person standing where this one wants to step.
+  npcBlocks(n, x, y) {
+    return this.npcs.some((o) => o !== n && !o.follow && !n.follow && Math.abs(x - o.s.x) < 2 * BODY.w && Math.abs(y - o.s.y) < 2 * BODY.h && Math.hypot(x - o.s.x, y - o.s.y) < Math.hypot(n.s.x - o.s.x, n.s.y - o.s.y));
   }
 
   // Characters bump into each other instead of walking through.
@@ -1236,6 +1259,7 @@ export class RoomScene extends Phaser.Scene {
     openSlotMenu({
       current: slot,
       hungIn: hungAnywhere(this.rooms),
+      roomLabel: (i) => roomName(this.rooms[i], i),
       onPick: (value) => {
         this.settleAll(); // paintings can move between rooms
         setSlot(this.roomIndex, slot, value);
@@ -1538,7 +1562,7 @@ export class RoomScene extends Phaser.Scene {
       level: () => officeLevel(),
       onPick: (type) => {
         if (itemLevel(type) > officeLevel()) return this.toast(`Unlocks at Curator’s Office level ${itemLevel(type)}`);
-        const max = type === 'closet' ? Math.min(ITEMS.closet.max, perks().janitors) : ITEMS[type].max;
+        const max = ITEMS[type].max;
         if (max && countPlaced(type, this.rooms.length) >= max) return this.toast(`Only ${max} allowed in the museum`);
         if (!canAfford(ITEMS[type].price)) return this.toast(`Need ${(ITEMS[type].price - coins()).toLocaleString()} more gold`);
         this.startPlacing({ type, rot: 0 });

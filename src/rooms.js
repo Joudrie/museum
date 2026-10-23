@@ -70,7 +70,9 @@ export const roomAt = (rooms, i) => (i === BREAK ? BREAK_ROOM : rooms[i]);
 const ITEMS_KEY = 'curation.items';
 
 export function loadRooms() {
-  const saved = load(ROOM_LIST_KEY, null);
+  let saved = load(ROOM_LIST_KEY, null);
+  if (!Array.isArray(saved) || !saved.length) saved = null;
+  else saved = saved.filter((r) => r && SIZES[r.orient]); // drop anything a broken save left behind
   if (saved?.[0]?.orient === 'entry') return saved;
   const old = load(ROOMS_KEY, []);
   if (!saved && !old.length) {

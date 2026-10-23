@@ -56,7 +56,9 @@ export const ITEMS = {
 const ITEMS_KEY = 'curation.items'; // { [roomIndex]: [{ type, c, r, rot }] }
 
 export function loadItems(room) {
-  return load(ITEMS_KEY, {})[room] || [];
+  const list = load(ITEMS_KEY, {})?.[room];
+  // (skip anything a broken or older save left behind)
+  return Array.isArray(list) ? list.filter((it) => it && ITEMS[it.type] && Number.isFinite(it.c) && Number.isFinite(it.r)) : [];
 }
 
 export function saveItems(room, list) {
