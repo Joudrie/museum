@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { RoomScene } from './RoomScene.js';
+import { makeCharacter } from './art.js';
 
 // Render at device resolution so pixel art stays sharp on phones.
 const parent = document.getElementById('game');
@@ -19,6 +20,7 @@ const game = new Phaser.Game({
 });
 
 window.__game = game; // handy for debugging in the console
+window.__makeCharacter = makeCharacter; // (and for sprite contact sheets in tests)
 
 window.addEventListener('resize', () => {
   game.scale.resize(...size());

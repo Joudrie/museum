@@ -473,6 +473,20 @@ body {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
 }
+.char-preview:has(.char-spin) {
+  position: sticky;
+  top: -16px;
+  z-index: 2;
+  margin: 8px -16px 0;
+  padding: 8px 0;
+  background: linear-gradient(var(--panel) 80%, rgba(42, 33, 29, 0));
+}
+.char-preview .char-spin {
+  width: 128px;
+  height: 128px;
+  background: radial-gradient(circle at 50% 70%, rgba(242, 211, 107, 0.16), rgba(255, 255, 255, 0.03) 70%);
+  border-radius: 50%;
+}
 .decor-coins {
   margin-top: 20px;
   width: 100%;

@@ -10,7 +10,7 @@ export const PERSONALITIES = {
       'I’ve read every placard in here. Twice.',
       'Did you know “museum” comes from the Muses? Greek goddesses of the arts.',
       'I brought a notebook. Don’t judge me.',
-    , 'This frame is gilded with real gold leaf. I checked. Don’t tell anyone.', 'I’m keeping a spreadsheet of every museum I visit.', 'Pigments used to be made from crushed beetles. Science!'],
+      'This frame is gilded with real gold leaf. I checked. Don’t tell anyone.', 'I’m keeping a spreadsheet of every museum I visit.', 'Pigments used to be made from crushed beetles. Science!'],
     about: ['Ah, {title}. {year}. Classic.', 'Look at the brushwork on this one. {by} was not messing around.'],
   },
   casual: {
@@ -72,6 +72,18 @@ export const PERSONALITIES = {
     names: ['Professor Hale', 'Dr. Osei', 'Agnes', 'Ignatius'],
     generic: ['Every object here survived wars, fires and clumsy movers.', 'History is just gossip that got old.', 'I wrote a 400-page book about one spoon. Ask me.'],
     about: ['{year}. Imagine what was happening in the world then.', 'When {by} painted this, nobody knew it would end up here.'],
+  },
+  student: {
+    label: 'Student',
+    names: ['Ollie', 'Zara', 'Felix', 'Imani', 'Noah', 'Luna'],
+    generic: ['Field trip! Best day of the semester.', 'My essay is due tomorrow. I’m “researching”.', 'Our teacher said there’d be a quiz. On vibes, hopefully.', 'I came for extra credit and stayed for the art.', 'This is way better than the textbook.'],
+    about: ['I have to write two pages about {title}. Help.', 'Wait, {by} was only my age once? Respect.'],
+  },
+  elder: {
+    label: 'Regular',
+    names: ['Rose', 'Albert', 'Ingrid', 'Mo', 'Pearl', 'Stanley'],
+    generic: ['I come every Tuesday. It’s good for the heart.', 'My late husband loved museums. I still bring him, in a way.', 'Take your time, dear. Paintings don’t rush.', 'I remember when this building was a bank.', 'The benches here are lovely. Thank you for the benches.'],
+    about: ['I saw {title} once, long ago. It hasn’t aged a day. I have.', 'Isn’t it wonderful? {by} gave us something to keep.'],
   },
   // Staff (not random visitors).
   barista: {
@@ -175,3 +187,30 @@ export function lineFor(personality, painting, r1 = Math.random(), r2 = Math.ran
   }
   return pick(p.generic, r2);
 }
+
+// Short things visitors say out loud while looking around (floating text).
+export const QUIPS = {
+  nerd: ['Fascinating.', 'Note to self…', 'Oil on canvas!', 'Ah, chiaroscuro.'],
+  casual: ['Nice.', 'Vibes.', 'Huh, cool.', 'Love this.'],
+  fanboy: ['AMAZING!!', 'I’m crying.', 'Iconic.', 'Best day ever!'],
+  snob: ['Hmm.', 'Passable.', 'Quaint.', 'Darling.'],
+  kid: ['Whoa!', 'Mom, look!', 'Dragons?', 'Cool!!'],
+  grump: ['Hmph.', 'Too bright.', 'Back in my day…', 'Fine.'],
+  tourist: ['*click*', 'Selfie!', 'Wow!', 'Postcard!'],
+  artist: ['That light…', 'Sketching!', 'Those hands!', 'Goals.'],
+  influencer: ['Content!', 'So aesthetic.', 'Like & share!', 'Iconic.'],
+  couple: ['Aww.', 'Our spot.', 'So romantic.', 'Holding hands!'],
+  historian: ['Remarkable.', 'Primary source!', '1600s, surely.', 'Indeed.'],
+  student: ['Essay material!', 'Wait, what?', 'So cool.', 'Taking notes.'],
+  elder: ['Lovely.', 'Oh my.', 'How nice.', 'Wonderful.'],
+  famous: ['Magnifique.', 'Hmm!', 'Bravo.', 'Splendid.'],
+};
+
+// Lines that depend on the room: its rating, its mess, the time of day.
+export const CONTEXT = {
+  dirty: ['Someone should mop that puddle.', 'Is that… litter? In a museum?', 'Watch your step, there’s a spill.'],
+  great: ['This room is stunning. Five stars.', 'Whoever decorated this has taste.', 'I could stay in this room all day.'],
+  poor: ['Bit empty in here, isn’t it?', 'This room needs some love. And paintings.', 'Nice walls. Where’s the art?'],
+  night: ['Open late! I love a museum at night.', 'It’s so cozy with the lamps on.', 'Late-night culture. Very fancy.'],
+  morning: ['First ones in! The light is lovely.', 'Morning coffee, then masterpieces.'],
+};
