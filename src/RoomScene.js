@@ -30,7 +30,7 @@ import {
   LIGHT_TINTS,
 } from './art.js';
 import { setTrack, sfx } from './music.js';
-import { BREAK, roomAt, MAIN_HALL_PRICE, seedEntry, loadRooms, addRoom, resetRooms, updateRoom, swapRooms, roomName, layout, paintingsFor, slotStates, setSlot, hungAnywhere, placeArt, wallItems, plantSpots, carpetRect } from './rooms.js';
+import { ORIENT_LABELS, SIZE_LABELS, BREAK, roomAt, MAIN_HALL_PRICE, seedEntry, loadRooms, addRoom, resetRooms, updateRoom, swapRooms, roomName, layout, paintingsFor, slotStates, setSlot, hungAnywhere, placeArt, wallItems, plantSpots, carpetRect } from './rooms.js';
 import { openSlotMenu } from './slotmenu.js';
 import { ITEMS, loadItems, saveItems, resetItems, footprint, countPlaced } from './items.js';
 import { roomDirt, removeDirt, resetDirt, dirtCount, covered, janitors, janitorCost, hireJanitor, resetJanitors, guides, maxGuides, guideCost, hireGuide, hasCarpenter, hireCarpenter, CARPENTER_COST, staffCount } from './staff.js';
@@ -54,6 +54,11 @@ import { showTalk, hideTalk, talking } from './talk.js';
 import { Lighting, timeOfDay } from './lighting.js';
 import { openSettings, closeSettings } from './settingsmenu.js';
 import { openIncome } from './incomemenu.js';
+import { openJournal } from './journal.js';
+import { activeQuests, claim, bump, stat, resetQuests } from './quests.js';
+import { celebrate } from './ui.js';
+import { addLove, loveOf, resetLove } from './love.js';
+import { hasCameras as camerasOn } from './security.js';
 import { hourNow } from './settings.js';
 
 const VIEW_TILES = 9; // the camera always shows 9 tiles across
@@ -555,6 +560,7 @@ export class RoomScene extends Phaser.Scene {
     } else save(CLEANED_KEY, [...new Set([...load(CLEANED_KEY, []), m.id])]);
     sfx('clean');
     this.tutorialCleaned();
+    this.checkQuests();
 
     const b = m.sprite.getBounds();
     const color = m.kind === 'cobweb' ? 0xf4f2ec : m.kind === 'crack' ? 0xf1dfb0 : 0xd8e4ea;
@@ -926,6 +932,7 @@ export class RoomScene extends Phaser.Scene {
     const pool = EMOTES[n.famous ? 'famous' : n.kind] || ['heart'];
     id = id || pool[Math.floor(Math.random() * pool.length)];
     n.emoteImg?.destroy();
+    if (id === 'heart' && !n.staff && !this.isBreak) addLove(this.roomIndex); // people love this room
     const img = this.add.image(n.s.x, n.s.y - 36, `emote_${id}`).setOrigin(0.5, 1).setDepth(5000).setScale(0);
     n.emoteImg = img;
     this.tweens.add({ targets: img, scale: 1, duration: 180, ease: 'Back.easeOut' });
@@ -1017,6 +1024,7 @@ export class RoomScene extends Phaser.Scene {
       buyCameras();
       sfx('build');
       this.toast('Cameras installed: no more robberies');
+      this.updateHud();
     });
   }
 
@@ -1066,7 +1074,7 @@ export class RoomScene extends Phaser.Scene {
   tutorialCleaned() {
     if (load(TUTORIAL_KEY, 0) !== 1 || this.roomIndex !== 0 || this.mess.some((m) => !m.dirt)) return;
     save(TUTORIAL_KEY, 2);
-    this.caretakerSays('Spotless! Visitors pay as they come: collect the coins that pile up by the door. When you’re ready, open the main hall through the double doors.');
+    this.caretakerSays('Spotless! Visitors pay as they come: walk over the coins by the paintings and on the green pad. Your journal (the book button) has goals with gold rewards. When you’re ready, open the main hall through the double doors.');
   }
 
   caretakerSays(line) {
@@ -1209,6 +1217,10 @@ export class RoomScene extends Phaser.Scene {
       this.pause(true);
       openSettings({ onAddCoins: (n) => addCoins(n), onReset: () => this.resetMuseum(), onClose: () => this.pause(false) });
     };
+    document.getElementById('journal-btn').onclick = () => {
+      if (!this.input.enabled || this.mode) return;
+      this.openJournalPanel();
+    };
     document.getElementById('hud').onclick = () => {
       if (!this.input.enabled || this.mode) return;
       this.pause(true);
@@ -1274,6 +1286,9 @@ export class RoomScene extends Phaser.Scene {
     resetJanitors();
     save(BREAK_SEEDED_KEY, false);
     resetSecurity();
+    resetQuests();
+    resetLove();
+    RoomScene.toldQuests = new Set();
     save(DECOR_KEY, { 0: load(DECOR_KEY, {})[0] }); // built rooms are gone, so is their decor
     closeSettings();
     this.travel(0, 'start');
@@ -1286,6 +1301,10 @@ export class RoomScene extends Phaser.Scene {
     if (met) boosts.push(`Famous visitors met: ${met} of ${Object.keys(FAMOUS).length} · +${Math.round((famousBoost() - 1) * 100)}% income`);
     else boosts.push('Meet famous visitors in the main hall: +5% income each');
     if (guides()) boosts.push(`Tour guides: ${guides()} · +${guides() * 10}% income`);
+    this.rooms.forEach((room, i) => {
+      const love = loveOf(i);
+      if (love >= 2) boosts.push(`Visitors love ${roomName(room, i)}: +${(Math.min(20, love) * 0.5).toFixed(1)}%`);
+    });
     const dirty = this.rooms.filter((_, i) => dirtCount(this.rooms, i) > 0).length;
     if (dirty) boosts.push(`${dirty} room${dirty > 1 ? 's' : ''} need${dirty > 1 ? '' : 's'} mopping (−10% per spot): hire janitors`);
     if (this.items.some((it) => it.type === 'counter') || this.rooms.some((_, i) => loadItems(i).some((it) => it.type === 'counter'))) boosts.push(`Coffee: +${coffeeIncome(this.rooms)} gold/hr from cups`);
@@ -1305,6 +1324,65 @@ export class RoomScene extends Phaser.Scene {
         waiting: room.locked ? 0 : pile(this.rooms, i),
       })),
     };
+  }
+
+  // What the goals check against.
+  questContext() {
+    const cleaned = new Set(load(CLEANED_KEY, []));
+    const all = (prefix, n) => Array.from({ length: n }, (_, i) => `${prefix}${i}`).every((id) => cleaned.has(id));
+    return {
+      entranceClean: all('stain', 4) && all('web', 6) && (hasCarpenter() || all('crack', 10)),
+      hallOpen: !!this.rooms[1] && !this.rooms[1].locked,
+      paintings: this.rooms.reduce((n, _, i) => n + paintingsFor(this.rooms, i).length, 0),
+      placed: stat('placed'),
+      collected: stat('collected'),
+      met: metList().length,
+      famous: Object.keys(FAMOUS).length,
+      janitors: janitors(),
+      guides: guides(),
+      cameras: camerasOn(),
+      rooms: this.rooms.length,
+      rating: museumRating(this.rooms) / 20,
+      office: officeLevel(),
+      income: museumIncome(this.rooms),
+    };
+  }
+
+  // Tell the player when a goal is ready to claim (once per goal).
+  checkQuests() {
+    const ready = activeQuests(this.questContext()).filter((q) => q.done);
+    document.querySelector('#journal-btn .badge').classList.toggle('hidden', !ready.length);
+    RoomScene.toldQuests = RoomScene.toldQuests || new Set();
+    const fresh = ready.find((q) => !RoomScene.toldQuests.has(q.id));
+    if (!fresh) return;
+    ready.forEach((q) => RoomScene.toldQuests.add(q.id));
+    sfx('quest');
+    this.toast(`Goal done: ${fresh.title}! Claim it in the journal`);
+  }
+
+  openJournalPanel(tab) {
+    this.pause(true);
+    openJournal(
+      {
+        ctx: () => this.questContext(),
+        onClaim: (id) => {
+          const gold = claim(id);
+          addCoins(gold);
+          sfx('coin');
+          celebrate(`+${gold.toLocaleString()} gold`, 'Goal complete');
+          this.checkQuests();
+        },
+        hungIn: () => hungAnywhere(this.rooms),
+        roomLabel: (i) => roomName(this.rooms[i], i),
+        met: () => metList(),
+        portrait: (id) => {
+          if (!this.textures.exists(`famous_${id}_down`)) makeCharacter(this, `famous_${id}`, FAMOUS[id].colors, FAMOUS[id].look);
+          return this.textures.get(`famous_${id}_down`).getSourceImage().toDataURL();
+        },
+        onClose: () => this.pause(false),
+      },
+      tab,
+    );
   }
 
   pause(on) {
@@ -1460,9 +1538,9 @@ export class RoomScene extends Phaser.Scene {
       if (!yes) return;
       if (!spend(MAIN_HALL_PRICE)) return this.toast(`Need ${MAIN_HALL_PRICE.toLocaleString()} gold`);
       updateRoom(1, { locked: false });
-      sfx('build');
+      sfx('unlock');
       this.rooms = loadRooms();
-      this.toast('The main hall is open!');
+      celebrate('The main hall is open!', 'A grand hall with a balcony, and famous faces');
       this.travel(1, 'entrance');
     });
   }
@@ -1474,7 +1552,8 @@ export class RoomScene extends Phaser.Scene {
     openBuild(this, this.rooms, NEW_ROOM_DECOR, {
       onBuild: (room) => {
         addRoom(room);
-        sfx('build');
+        sfx('unlock');
+        celebrate('New room built!', `${ORIENT_LABELS[room.orient]} · ${SIZE_LABELS[room.orient][room.size]}`);
         this.travel(this.roomIndex + 1, 'entrance');
       },
       onCancel: () => this.pause(false),
@@ -1611,7 +1690,18 @@ export class RoomScene extends Phaser.Scene {
     document.querySelector('.hud-income').textContent = `+${income}`;
     const v = museumVisitors(this.rooms); // per month, shown short: 1.3k, 2.4M
     document.querySelector('.hud-visitors').textContent = v >= 1e6 ? `${(v / 1e6).toFixed(1)}M` : v >= 1e3 ? `${(v / 1e3).toFixed(1)}k` : `${v}`;
-    document.querySelector('.hud-rating').textContent = `★ ${(museumRating(this.rooms) / 20).toFixed(1)}`;
+    const rating = (museumRating(this.rooms) / 20).toFixed(1);
+    const star = document.querySelector('.hud-rating');
+    if (RoomScene.lastRating && rating !== RoomScene.lastRating) {
+      star.classList.remove('pop');
+      void star.offsetWidth;
+      star.classList.add('pop'); // the rating changed: make it pop
+      if (Number(rating) > Number(RoomScene.lastRating)) sfx('star');
+    }
+    RoomScene.lastRating = rating;
+    star.textContent = `★ ${rating}`;
+    clearTimeout(this.questTimer);
+    this.questTimer = setTimeout(() => this.scene.isActive() && this.checkQuests(), 400);
     const tod = timeOfDay(hourNow());
     const icon = document.querySelector('.hud-time');
     icon.className = `hud-time ${tod}`;
@@ -1700,8 +1790,9 @@ export class RoomScene extends Phaser.Scene {
         const lvl = officeLevel();
         if (lvl >= MAX_LEVEL || !spend(LEVELS[lvl + 1].cost)) return lvl;
         setOfficeLevel(lvl + 1);
-        sfx('build');
-        this.toast(`Curator’s Office level ${lvl + 1}!`);
+        sfx('levelup');
+        celebrate(`Office level ${lvl + 1}!`, LEVELS[lvl + 1].unlocks || 'More rooms unlocked');
+        this.updateHud();
         return lvl + 1;
       },
       onClose: () => this.pause(false),
@@ -1747,7 +1838,7 @@ export class RoomScene extends Phaser.Scene {
   // Stand on a coin spot to collect it.
   checkCoins() {
     const { x, y } = this.player;
-    const on = (sx, sy) => Math.abs(x - sx) < 14 && Math.abs(y - sy) < 12;
+    const on = (sx, sy) => Math.abs(x - sx) < 22 && Math.abs(y - sy) < 18; // (coins jump to you when you're close)
     this.artSpots.forEach((a) => {
       if (a.sprite.visible && on(a.x, a.y)) this.coinBurst(a.x, a.y, collectArt(this.rooms, this.roomIndex, a.p));
     });
@@ -1761,28 +1852,45 @@ export class RoomScene extends Phaser.Scene {
     showAd(() => {
       this.pause(false);
       const n = collectAll(this.rooms);
+      if (n > 0) bump('collected', n);
       sfx('coin');
       this.toast(n > 0 ? `Collected ${n.toLocaleString()} gold from every room` : 'Nothing to collect yet');
       this.updatePile();
     });
   }
 
+  // Coins fly up from the spot to the coin counter, with a sparkle.
   coinBurst(x, y, n) {
-    const sp = { x, y };
+    if (n > 0) bump('collected', n);
     if (n > 0) {
       sfx('coin');
       this.toast(`+${n.toLocaleString()} gold`);
-      for (let i = 0; i < 8; i++) {
-        const c = this.add.image(sp.x + (Math.random() - 0.5) * 16, sp.y - 8, 'coins_1').setScale(0.35).setDepth(5001);
+      const view = this.cameras.main.worldView;
+      const k = this.scale.gameSize.width / this.game.canvas.getBoundingClientRect().width; // css px -> game px
+      const hud = { x: view.centerX, y: view.y + (36 * k) / this.cameras.main.zoom }; // where the coin counter is
+      const count = Math.min(12, 4 + Math.floor(Math.log2(n + 1)));
+      for (let i = 0; i < count; i++) {
+        const c = this.add.image(x + (Math.random() - 0.5) * 14, y - 6, 'coins_1').setScale(0.35).setDepth(5001);
+        const midX = c.x + (Math.random() - 0.5) * 40;
+        const midY = c.y - 20 - Math.random() * 20;
         this.tweens.add({
           targets: c,
-          y: c.y - 30 - Math.random() * 20,
-          x: c.x + (Math.random() - 0.5) * 30,
-          alpha: 0,
-          duration: 500 + Math.random() * 200,
-          onComplete: () => c.destroy(),
+          x: { value: midX, ease: 'Quad.easeOut' },
+          y: { value: midY, ease: 'Quad.easeOut' },
+          duration: 220,
+          delay: i * 25,
+          onComplete: () =>
+            this.tweens.add({ targets: c, x: hud.x, y: hud.y, scale: 0.2, alpha: 0.4, duration: 380, ease: 'Quad.easeIn', onComplete: () => c.destroy() }),
         });
       }
+      for (let i = 0; i < 6; i++) {
+        const t = this.add.image(x + (Math.random() - 0.5) * 20, y - 4 - Math.random() * 16, 'twinkle').setDepth(5001).setBlendMode(Phaser.BlendModes.ADD);
+        this.tweens.add({ targets: t, alpha: 0, scale: 1.8, duration: 500 + Math.random() * 300, onComplete: () => t.destroy() });
+      }
+      const coinsEl = document.querySelector('.hud-coins');
+      coinsEl.classList.remove('pop');
+      void coinsEl.offsetWidth;
+      coinsEl.classList.add('pop');
     }
     this.updatePile();
   }
@@ -1971,6 +2079,7 @@ export class RoomScene extends Phaser.Scene {
     if (!orig) {
       if (!spend(ITEMS[type].price)) return this.toast('Not enough gold');
       this.settleAll();
+      bump('placed');
     }
     this.items.push({ type, c, r, rot });
     sfx('place');

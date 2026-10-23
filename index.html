@@ -15,6 +15,11 @@
       <span class="hud-stats"><span><i class="coin"></i><b class="hud-coins">0</b></span><span><b class="hud-income">+0</b>/hr</span><span><i class="ppl" aria-label="visitors a month"></i><b class="hud-visitors">0</b></span><span class="hud-rating">★ 0.0</span></span>
     </button>
 
+    <button id="journal-btn" class="pixel-btn" aria-label="Journal: goals and collection">
+      <svg viewBox="0 0 10 10" width="20" height="20" shape-rendering="crispEdges" aria-hidden="true"><g fill="currentColor"><rect x="1" y="1" width="8" height="8" /></g><rect x="2" y="2" width="1" height="6" fill="#e8c867" /><rect x="4" y="3" width="4" height="1" fill="#e8c867" /><rect x="4" y="5" width="3" height="1" fill="#e8c867" /></svg>
+      <i class="badge hidden"></i>
+    </button>
+
     <button id="settings-btn" class="pixel-btn" aria-label="Settings">
       <svg viewBox="0 0 10 10" width="20" height="20" shape-rendering="crispEdges" aria-hidden="true"><g fill="currentColor"><rect x="4" y="0" width="2" height="2" /><rect x="4" y="8" width="2" height="2" /><rect x="0" y="4" width="2" height="2" /><rect x="8" y="4" width="2" height="2" /><rect x="1" y="1" width="2" height="2" /><rect x="7" y="1" width="2" height="2" /><rect x="1" y="7" width="2" height="2" /><rect x="7" y="7" width="2" height="2" /><rect x="2" y="2" width="6" height="6" /></g><rect x="4" y="4" width="2" height="2" fill="#e8c867" /></svg>
     </button>
@@ -180,6 +185,23 @@
         <div class="income-body"></div>
       </div>
     </div>
+
+    <div id="journal" class="overlay hidden" role="dialog" aria-label="Journal">
+      <div class="decor-sheet sheet">
+        <div class="decor-head">
+          <h2>Journal</h2>
+          <button class="journal-close pixel-btn decor-close" aria-label="Close">✕</button>
+        </div>
+        <div class="decor-tabs journal-tabs">
+          <button data-jtab="goals" class="on">Goals</button>
+          <button data-jtab="paintings">Paintings</button>
+          <button data-jtab="visitors">Visitors</button>
+        </div>
+        <div class="journal-body"></div>
+      </div>
+    </div>
+
+    <div id="celebrate" class="hidden" aria-live="polite"><div class="celebrate-card"><b class="celebrate-title"></b><span class="celebrate-sub"></span></div></div>
 
     <div id="toast" class="hidden"></div>
 

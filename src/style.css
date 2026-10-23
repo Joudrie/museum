@@ -1797,3 +1797,256 @@ body {
 .hud-stats > span:nth-child(2) {
   gap: 0;
 }
+
+/* Journal button (under the hammer) with a "something to claim" dot */
+#journal-btn {
+  position: fixed;
+  top: calc(max(10px, env(safe-area-inset-top)) + 54px);
+  left: max(12px, calc((100vw - min(100vw, 100dvh * 9 / 16)) / 2 + 12px));
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+}
+.badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #e0405a;
+  border: 2px solid #1d1714;
+  animation: bang-pulse 1.2s ease-in-out infinite;
+}
+.badge.hidden {
+  display: none;
+}
+
+/* Goals */
+.quest-list {
+  display: grid;
+  gap: 10px;
+}
+.quest {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 2px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
+}
+.quest.done {
+  border-color: var(--gold);
+  background: rgba(201, 162, 63, 0.12);
+}
+.quest-text {
+  flex: 1;
+  display: grid;
+  gap: 3px;
+}
+.quest-text span {
+  font-size: 13px;
+  color: var(--muted);
+}
+.quest-text small {
+  font-family: ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--muted);
+}
+.quest-bar {
+  height: 7px;
+  margin-top: 4px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+.quest-bar i {
+  display: block;
+  height: 100%;
+  background: var(--gold);
+}
+.quest-reward {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 8px;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-family: ui-monospace, monospace;
+  font-size: 13px;
+}
+.quest-claim {
+  flex: none;
+  min-height: 44px;
+  padding: 8px 10px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Collection book */
+.book .slot-painting .blurb {
+  display: none;
+  margin-top: 4px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--ink);
+}
+.book .slot-painting.open {
+  grid-column: 1 / -1;
+}
+.book .slot-painting.open .blurb {
+  display: block;
+}
+.book .slot-painting em {
+  color: var(--gold);
+}
+.book .slot-painting.elsewhere em {
+  color: var(--muted);
+}
+.famous-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.famous-card {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  padding: 8px 6px 10px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.04);
+  border: 2px solid var(--gold);
+  border-radius: 8px;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
+}
+.famous-card img {
+  width: 64px;
+  height: 64px;
+  image-rendering: pixelated;
+}
+.famous-card b {
+  font-size: 13px;
+  line-height: 1.2;
+}
+.famous-card small {
+  font-size: 10px;
+  line-height: 1.3;
+  color: var(--muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.famous-card.unknown {
+  border-color: var(--line);
+}
+.famous-card.unknown img {
+  filter: brightness(0) opacity(0.55);
+}
+
+/* Celebration: a card in the middle and confetti */
+#celebrate {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  overflow: hidden;
+}
+#celebrate.hidden {
+  display: none;
+}
+.celebrate-card {
+  display: grid;
+  gap: 4px;
+  padding: 16px 26px;
+  text-align: center;
+  background: var(--panel);
+  border: 3px solid var(--shadow);
+  border-radius: 12px;
+  box-shadow: inset 0 0 0 2px var(--gold), 0 8px 30px rgba(0, 0, 0, 0.6);
+  animation: celebrate-in 2.4s cubic-bezier(0.2, 0.9, 0.25, 1.3) forwards;
+}
+.celebrate-title {
+  font-size: 24px;
+  color: #ffe9a8;
+}
+.celebrate-sub {
+  font-size: 14px;
+  color: var(--muted);
+}
+@keyframes celebrate-in {
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  12% {
+    transform: scale(1.06);
+    opacity: 1;
+  }
+  20% {
+    transform: scale(1);
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+.confetti {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  width: 7px;
+  height: 7px;
+  animation: confetti 1.6s cubic-bezier(0.1, 0.7, 0.3, 1) forwards;
+}
+@keyframes confetti {
+  to {
+    transform: translate(var(--dx), var(--dy)) rotate(var(--rot));
+    opacity: 0;
+  }
+}
+
+/* "New" badge on toolkit items */
+.tool-item {
+  position: relative;
+}
+.new-tag {
+  position: absolute;
+  top: -6px;
+  right: -4px;
+  padding: 1px 5px;
+  border: 2px solid #1d1714;
+  background: #e0405a;
+  color: #fff;
+  font-family: ui-monospace, monospace;
+  font-size: 9px;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  transform: rotate(6deg);
+}
+.toolkit-cats button {
+  position: relative;
+}
+.cat-new {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #e0405a;
+  border: 2px solid #1d1714;
+}

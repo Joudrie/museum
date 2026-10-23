@@ -231,6 +231,29 @@ const ok = (msg) => console.log('  ✓ ' + msg);
     }
   }
 
+  // Journal: goals to claim, the collection
+  await p.click('#journal-btn');
+  await settle(400);
+  if (!(await shown('#journal'))) fail('journal did not open');
+  else {
+    const claimable = await p.$$('.quest-claim');
+    if (claimable.length) {
+      const before = await scene(() => Number(localStorage.getItem('curation.coins')));
+      await claimable[0].click();
+      await settle(300);
+      const after = await scene(() => Number(localStorage.getItem('curation.coins')));
+      if (after > before) ok(`claimed a goal (+${after - before} gold)`);
+      else fail('claiming a goal gave no gold');
+    } else fail('no goal ready to claim after cleaning and opening the hall');
+    for (const t of ['paintings', 'visitors']) {
+      await p.click(`[data-jtab="${t}"]`);
+      await settle(200);
+    }
+    ok('journal tabs open');
+    await p.click('.journal-close');
+    await settle(300);
+  }
+
   // Customize: theme, room size, reorder, character, janitor
   await p.click('#home-btn');
   await settle(300);

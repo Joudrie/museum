@@ -31,3 +31,29 @@ const watch = new MutationObserver((changes) =>
   }),
 );
 document.querySelectorAll('.overlay, #toolkit').forEach((o) => watch.observe(o, { attributes: true, attributeFilter: ['class'], attributeOldValue: true }));
+
+// A big moment: a card in the middle of the screen and a burst of confetti.
+const party = document.getElementById('celebrate');
+let partyTimer = null;
+export function celebrate(title, sub = '') {
+  party.querySelector('.celebrate-title').textContent = title;
+  party.querySelector('.celebrate-sub').textContent = sub;
+  const card = party.querySelector('.celebrate-card');
+  party.querySelectorAll('.confetti').forEach((c) => c.remove());
+  card.style.animation = 'none';
+  void card.offsetWidth; // restart the animation
+  card.style.animation = '';
+  const colors = ['#f2d36b', '#e0405a', '#6fd07a', '#5aa8e0', '#f08a3a', '#fff4d0'];
+  for (let i = 0; i < 46; i++) {
+    const c = document.createElement('i');
+    c.className = 'confetti';
+    const a = Math.random() * Math.PI * 2;
+    const d = 120 + Math.random() * 220;
+    c.style.cssText = `--dx:${Math.cos(a) * d}px;--dy:${Math.sin(a) * d + 160}px;--rot:${Math.random() * 720 - 360}deg;background:${colors[i % colors.length]};animation-delay:${Math.random() * 0.12}s`;
+    party.appendChild(c);
+  }
+  party.classList.remove('hidden');
+  haptic(30);
+  clearTimeout(partyTimer);
+  partyTimer = setTimeout(() => party.classList.add('hidden'), 2500);
+}

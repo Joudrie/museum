@@ -1,6 +1,19 @@
 // Toolkit drawer (pick a decor item) and the bar shown while placing or
 // editing an item. The room scene drives the actual placement.
 import { CATEGORIES, ITEMS } from './items.js';
+import { load, save } from './decor.js';
+
+// Items you haven't seen in the toolkit yet get a "New" tag. Items added in
+// an update count as new; everything else unlocked at first launch doesn't.
+const SEEN_KEY = 'curation.seenItems';
+const ADDED = ['piano', 'harp', 'easel', 'clock', 'aquarium', 'birdcage', 'urn', 'mask'];
+function seen(level) {
+  const list = load(SEEN_KEY, null);
+  if (list) return new Set(list);
+  const first = Object.keys(ITEMS).filter((t) => (ITEMS[t].lvl || 1) <= level && !ADDED.includes(t));
+  save(SEEN_KEY, first);
+  return new Set(first);
+}
 
 const el = document.getElementById('toolkit');
 const cats = el.querySelector('.toolkit-cats');
@@ -29,6 +42,8 @@ function render() {
       return b;
     }),
   );
+  const known = seen(state.level());
+  const fresh = [];
   grid.replaceChildren(
     ...Object.entries(ITEMS)
       .filter(([, def]) => def.cat === cat)
@@ -44,10 +59,22 @@ function render() {
         b.innerHTML = `<span class="ti-icon"><img alt="" src="${state.icon(type)}" style="width:${iw * k}px;height:${ih * k}px" /></span>
           <b>${def.name}</b><span class="ti-meta">${locked ? `<i class="lock"></i> Office Lv ${lvl}` : `<i class="coin"></i> ${def.price.toLocaleString()}`}</span><span class="ti-meta">${def.note || `+${def.income}/hr`}</span>
           <span class="ti-size">${def.w}×${def.h} tiles</span>`;
+        if (!locked && !known.has(type)) {
+          b.insertAdjacentHTML('beforeend', '<span class="new-tag">NEW</span>');
+          fresh.push(type);
+        }
         b.onclick = () => state.onPick(type);
         return b;
       }),
   );
+  // (seen now: the tag goes away next time)
+  if (fresh.length) save(SEEN_KEY, [...known, ...fresh]);
+  // categories with something new get a dot
+  [...cats.children].forEach((b, i) => {
+    const id = Object.keys(CATEGORIES)[i];
+    const has = Object.keys(ITEMS).some((t) => ITEMS[t].cat === id && (ITEMS[t].lvl || 1) <= state.level() && !known.has(t) && id !== cat);
+    if (has) b.insertAdjacentHTML('beforeend', '<i class="cat-new"></i>');
+  });
 }
 
 el.querySelector('.toolkit-done').addEventListener('click', () => state.onDone());
