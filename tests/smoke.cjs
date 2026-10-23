@@ -376,6 +376,25 @@ const ok = (msg) => console.log('  ✓ ' + msg);
     else ok('camera offer answered');
   } else fail('guard did not offer cameras');
 
+  // Out the front door to the island, and back in
+  await travel(0, 'start');
+  await p.keyboard.down('s');
+  await settle(1500);
+  await p.keyboard.up('s');
+  await settle(1200);
+  const outside = await scene(() => __game.scene.isActive('island'));
+  if (!outside) fail('walking out the front door did not reach the island');
+  else {
+    ok('walked out onto the island');
+    await scene(() => __game.scene.getScene('island').player.setPosition(12 * 32, 9 * 32 + 10));
+    await p.keyboard.down('w');
+    await settle(800);
+    await p.keyboard.up('w');
+    await settle(1500);
+    if (await scene(() => __game.scene.isActive('room') && __game.scene.getScene('room').roomIndex === 0)) ok('walked back into the museum');
+    else fail('could not get back in from the island');
+  }
+
   // Robbery pop-up
   await p.goto(URL + '?rob');
   await settle(3000);

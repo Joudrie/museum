@@ -396,6 +396,7 @@ export class RoomScene extends Phaser.Scene {
       const st = this.standFor({ wall: d.wall, u: (d.rect.u0 + d.rect.u1) / 2 });
       return { x: st.x + 10, y: st.y, face: 'player_side' };
     }
+    if (this.spawnAt === 'outside') return { x: entrance.ax, y: g.y1 - 18, face: 'player_up' }; // back in from the island
     if (this.spawnAt === 'entrance' && !entrance.mat) return { x: entrance.ax + 6, y: entrance.ay + 4, face: 'player_side' };
     if (this.spawnAt === 'entrance') return { x: entrance.ax, y: g.y1 - 16, face: 'player_up' };
     return { x: entrance.ax, y: g.y1 - 24, face: 'player_up' };
@@ -1566,6 +1567,11 @@ export class RoomScene extends Phaser.Scene {
     hideTalk();
     if (instant) return this.scene.restart({ room, spawn, instant });
     sfx('door');
+    if (room === 'island') {
+      this.cameras.main.fadeOut(220, 29, 21, 18);
+      this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start('island'));
+      return;
+    }
     const cam = this.cameras.main;
     cam.zoomTo(cam.zoom * 1.08, 220, 'Sine.easeIn'); // a little step forward
     cam.fadeOut(220, 29, 21, 18);
@@ -1614,12 +1620,15 @@ export class RoomScene extends Phaser.Scene {
     const builtNext = this.roomIndex + 1 < this.rooms.length;
     const exitArch = this.arches.exit && builtNext && exit?.rect;
     const entranceArch = this.arches.entrance;
-    const touching = (exitArch && near(exit)) || (entranceArch && near(entrance));
+    // Out the entrance's front doors: onto the island.
+    const onMat = this.roomIndex === 0 && entrance.mat && x > entrance.x0 && x < entrance.x1 && y > this.g.y1 - 8;
+    const touching = (exitArch && near(exit)) || (entranceArch && near(entrance)) || onMat;
     if (this.archLock) {
       if (!touching) this.archLock = false;
       return;
     }
-    if (exitArch && near(exit)) this.travel(this.roomIndex + 1, 'entrance', true);
+    if (onMat) this.travel('island');
+    else if (exitArch && near(exit)) this.travel(this.roomIndex + 1, 'entrance', true);
     else if (entranceArch && near(entrance)) this.travel(this.roomIndex - 1, 'exit', true);
   }
 
