@@ -41,3 +41,31 @@ PW=/opt/node-tools/node_modules/playwright node tests/gaps.cjs    # wall gaps, 5
   - Off skips the darkness layer.
 - The light layer only redraws when something changes, so it costs almost nothing per frame.
 - Gap check run at night: still no gaps in 54 room shapes.
+
+## Phase 3: Characters
+- Sprite system (`src/art.js`):
+  - 13 hairstyles: short, side part, buzz, curly, long, ponytail, bun, pigtails, bob, afro, mohawk, wild, bald.
+  - 10 outfits: suit, waistcoat, sweater, T-shirt, hoodie, long coat, apron, dress, gown, toga.
+  - Separate jacket, shirt, tie/trim, pants and shoe colors.
+  - 6 accessories (scarf, bow tie, necklace, badge, shoulder bag, camera), with their own color.
+  - Every character also gets a phone pose and a sitting pose.
+- Customize → Character, rebuilt:
+  - a big turning preview (front, side, back, side) that stays pinned at the top while you scroll
+  - only the colors an outfit actually shows (e.g. no shirt color for a hoodie)
+  - hat color, accessory color, bag color.
+- Famous visitors wear their own outfits:
+  - Socrates and Aristotle in togas with sashes
+  - Cleopatra in a white gown with a gold necklace
+  - Frida in a gown and rebozo with a bun
+  - Napoleon and Lincoln in long coats (Lincoln with a black bow tie)
+  - Mozart in a red frock coat with a ponytail
+  - Leonardo and Hokusai in robes
+  - Klimt in his blue smock, and more
+- Visitors:
+  - Two new kinds: students (backpacks, hoodies) and regulars (older, slower, love the benches).
+  - Every kind dresses the part: tourists carry cameras, art students wear smocks, snobs wear bow ties and gowns, kids are faster.
+  - Couples walk around together.
+  - People walk over to paintings and stop to look; they react with emote bubbles (heart, !, ?, zzz, music, star) and sometimes say something short out loud.
+  - They sit on stools, benches and sofas, look around, and check their phones.
+- Dialogue: more lines, plus context lines that depend on the room (mess, high or low rating, night, morning).
+- Fixed: one art-nerd line was a blank slot in the list, so that visitor could say nothing.

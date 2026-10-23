@@ -23,6 +23,7 @@ import {
   PLANTS,
   makeCharacter,
   makeBubble,
+  makeEmotes,
   DEFAULT_DECOR,
   NEW_ROOM_DECOR,
   baseDecor,
@@ -44,13 +45,14 @@ import { FAMOUS, meet, resetMet } from './famous.js';
 import { FREE, coins, canAfford, addCoins, spend, resetWallet, museumIncome, museumVisitors, coffeeIncome, roomIncome, settle, sellPrice, artPile, decorPile, collectArt, collectDecor, collectAll } from './wallet.js';
 import { openToolkit, hideToolkit, showBar, hideBar } from './toolkit.js';
 import { artBounds, paintArt, wallRef } from './walldraw.js';
-import { PERSONALITIES, lineFor } from './lines.js';
+import { PERSONALITIES, lineFor, QUIPS, CONTEXT } from './lines.js';
 import { iconSvg } from './icons.js';
 import { openViewer } from './viewer.js';
 import { openDecor, closeDecor, load, save, DEFAULT_CHARACTER } from './decor.js';
 import { openBuild } from './build.js';
 import { showTalk, hideTalk, talking } from './talk.js';
 import { Lighting } from './lighting.js';
+import { hourNow } from './settings.js';
 
 const VIEW_TILES = 9; // the camera always shows 9 tiles across
 const SPEED = 176; // px per second
@@ -63,7 +65,15 @@ const HD = 4; // resolution multiplier for paintings on the wall
 
 const DECOR_KEY = 'curation.roomDecor'; // { [roomIndex]: decor }
 // The curator's chosen hat, facial hair and glasses.
-const lookOf = (ch) => ({ hat: ch.hat && ch.hat !== 'none' ? ch.hat : null, facial: ch.facial, glasses: ch.glasses && ch.glasses !== 'none' ? ch.glasses : null });
+const lookOf = (ch) => ({
+  hat: ch.hat && ch.hat !== 'none' ? ch.hat : null,
+  facial: ch.facial,
+  glasses: ch.glasses && ch.glasses !== 'none' ? ch.glasses : null,
+  hair: ch.hair === 'bald' ? null : ch.hair,
+  bald: ch.hair === 'bald',
+  outfit: ch.outfit,
+  acc: ch.acc,
+});
 const TUTORIAL_KEY = 'curation.tutorial'; // how far the first-time walkthrough has got
 const BREAK_SEEDED_KEY = 'curation.breakSeeded';
 const CHARACTER_KEY = 'curation.character';
@@ -86,6 +96,8 @@ const OUTFITS = {
   influencer: ['#f08ab0', '#f4f0e6', '#9ad0e0', '#d0b0f0'],
   couple: ['#a03040', '#2e4a7a', '#f0e0c0', '#6a8a4a'],
   historian: ['#6a5a3a', '#4a3a2a', '#5a5a4a'],
+  student: ['#3d6fb6', '#c0392b', '#4f7a3a', '#6a4c93', '#e0a030', '#2e7d7a'],
+  elder: ['#8a6a8a', '#6a7a5a', '#a07050', '#5a6a8a', '#c8b090'],
   barista: ['#2f5d46'],
   caretaker: ['#7a5a3a'],
   guard: ['#1e1e22'],
@@ -154,8 +166,65 @@ function visitorLook(kind, r) {
     look.glasses = true;
     colors.p = '#3a3028';
   }
+  // Hair, clothes and accessories that fit each kind of visitor.
+  const any = (arr, k) => pick(arr, 20 + k);
+  const STYLE = {
+    casual: { hair: ['short', 'part', 'curly', 'long', 'ponytail', 'bun', 'buzz', 'afro'], outfit: ['tee', 'hoodie', 'sweater', 'tee', 'dress'] },
+    kid: { hair: ['short', 'pigtails', 'ponytail', 'curly', 'bob'], outfit: ['tee', 'hoodie', 'dress', 'tee'] },
+    grump: { hair: ['short', 'buzz', 'part'], outfit: ['sweater', 'coat', 'vest'] },
+    nerd: { hair: ['part', 'curly', 'short', 'bun'], outfit: ['sweater', 'vest'], acc: ['bag', 'none', 'none'] },
+    snob: { hair: ['part', 'long', 'bun', 'short'], outfit: ['suit', 'coat', 'gown', 'suit'], acc: ['bowtie', 'necklace', 'none'] },
+    tourist: { hair: ['short', 'ponytail', 'curly', 'long'], outfit: ['tee', 'tee', 'hoodie'], acc: ['camera', 'camera', 'bag'] },
+    fanboy: { hair: ['short', 'curly', 'afro', 'ponytail'], outfit: ['hoodie', 'tee'], acc: ['bag', 'none', 'none'] },
+    artist: { hair: ['bun', 'curly', 'long', 'wild', 'ponytail'], outfit: ['apron', 'apron', 'sweater'], acc: ['scarf', 'none'] },
+    influencer: { hair: ['long', 'bob', 'ponytail', 'part'], outfit: ['dress', 'tee', 'sweater', 'gown'], acc: ['necklace', 'none'] },
+    couple: { hair: ['short', 'long', 'bun', 'part', 'curly'], outfit: ['suit', 'dress', 'sweater', 'vest'] },
+    historian: { hair: ['part', 'short', 'bun'], outfit: ['vest', 'coat'], acc: ['bowtie', 'scarf', 'none'] },
+    student: { hair: ['short', 'curly', 'ponytail', 'afro', 'bun', 'buzz'], outfit: ['hoodie', 'tee', 'sweater'], acc: ['bag', 'bag', 'none'] },
+    elder: { hair: ['bun', 'short', 'part', 'curly'], outfit: ['sweater', 'coat', 'dress', 'vest'], acc: ['scarf', 'none', 'necklace'] },
+  }[kind];
+  if (STYLE) {
+    if (!look.bald) look.hair = any(STYLE.hair, 1);
+    look.outfit = any(STYLE.outfit, 2);
+    if (STYLE.acc) look.acc = any(STYLE.acc, 3);
+    colors.w = any(['#efe6d4', '#ffffff', '#cfe0f0', '#f4e0a0'], 4);
+    colors.g = any(['#c9a23f', '#b0413e', '#2e4a7a', '#e8e2d4', '#4f7a3a'], 5);
+    colors.X = any(['#c0392b', '#2e7d7a', '#c9a23f', '#3d6fb6', '#e8e2d4'], 6);
+  }
+  if (kind === 'elder') {
+    colors.h = pick(['#c8c8c8', '#e8e8e8', '#9a9a9a'], 2);
+    look.glasses = r(10) < 0.5;
+  }
+  if (kind === 'artist') colors.g = pick(['#e8e2d4', '#c8b088', '#7a9ab0'], 13); // a paint-spattered smock
+  if (kind === 'barista') {
+    look.outfit = 'apron';
+    colors.c = '#efe6d4';
+    colors.g = '#2f5d46';
+  }
+  if (kind === 'caretaker') look.outfit = 'vest';
+  if (kind === 'janitor' || kind === 'carpenter') look.outfit = 'tee';
   return { colors, look, scale };
 }
+
+// Which emotes each kind of person tends to show.
+const EMOTES = {
+  fanboy: ['heart', 'star', 'heart'],
+  kid: ['bang', 'q', 'heart', 'star'],
+  grump: ['zzz', 'q', 'zzz'],
+  snob: ['q', 'zzz', 'star'],
+  nerd: ['bang', 'star', 'q'],
+  casual: ['heart', 'note', 'star'],
+  tourist: ['bang', 'star', 'heart'],
+  artist: ['heart', 'star', 'bang'],
+  influencer: ['star', 'heart', 'note'],
+  couple: ['heart', 'heart', 'note'],
+  historian: ['bang', 'q', 'star'],
+  student: ['q', 'bang', 'zzz', 'note'],
+  elder: ['heart', 'note', 'heart'],
+  famous: ['star', 'heart', 'bang', 'note'],
+};
+const PHONE_KINDS = ['influencer', 'kid', 'casual', 'student', 'fanboy', 'tourist'];
+const SEATS = ['stool', 'bench', 'sofa'];
 const KINDS = Object.keys(PERSONALITIES).filter((k) => !PERSONALITIES[k].staff);
 
 export class RoomScene extends Phaser.Scene {
@@ -194,6 +263,7 @@ export class RoomScene extends Phaser.Scene {
     if (!this.textures.exists('bubble')) {
       Object.keys(PLANTS).forEach((k) => k !== 'none' && bakePlant(this, `plant_${k}`, k));
       makeBubble(this);
+      makeEmotes(this);
       for (let i = 0; i < 4; i++) bakeCrack(this, `crack_${i}`, i + 1);
       for (let i = 0; i < 3; i++) bakeStain(this, `stain_${i}`, i + 1);
       bakeCobweb(this, 'cobweb');
@@ -264,6 +334,7 @@ export class RoomScene extends Phaser.Scene {
     this.player = this.add.sprite(start.x, start.y, start.face).setOrigin(0.5, 1).setScale(PLAYER_SCALE);
     const count = this.isBreak ? 0 : Math.min(5, 3 + Math.floor(this.L.slots.length / 6)); // the break room is staff only
     this.npcs = Array.from({ length: count }, (_, i) => this.spawnVisitor(i));
+    this.pairCouples();
     this.spawnStaff();
     if (this.g.main) this.spawnFamous();
     this.refreshDirt();
@@ -505,10 +576,10 @@ export class RoomScene extends Phaser.Scene {
 
   // ---------- Visitors (walk Pokémon-style: straight lines, 1-2 tiles) ----------
 
-  spawnVisitor(i) {
+  spawnVisitor(i, forceKind) {
     const { g } = this;
-    const seed = this.roomIndex * 10 + i;
-    const kind = KINDS[Math.floor(hash(seed, 5, 50) * KINDS.length)];
+    const seed = (this.isBreak ? 990 : this.roomIndex * 10) + i;
+    const kind = forceKind || KINDS[Math.floor(hash(seed, 5, 50) * KINDS.length)];
     const { colors, look, scale } = visitorLook(kind, (k) => hash(seed, k, 53));
     const prefix = `visitor${seed}`;
     makeCharacter(this, prefix, colors, look);
@@ -521,7 +592,23 @@ export class RoomScene extends Phaser.Scene {
       if (!this.blocked(x, y)) break;
     }
     const s = this.add.sprite(x, y, `${prefix}_down`).setOrigin(0.5, 1).setScale(scale);
-    return { s, prefix, kind, name: names[Math.floor(hash(seed, 6, 50) * names.length)], wait: 400 + Math.random() * 1500, target: null };
+    const speed = kind === 'elder' || kind === 'grump' ? 0.65 : kind === 'kid' ? 1.25 : 1;
+    return { s, prefix, kind, speed, name: names[Math.floor(hash(seed, 6, 50) * names.length)], wait: 400 + Math.random() * 1500, target: null };
+  }
+
+  // A couple walks around together: the second one follows the first.
+  pairCouples() {
+    this.npcs
+      .filter((n) => n.kind === 'couple' && !n.follow && !n.partner)
+      .forEach((n, k) => {
+        const v = this.spawnVisitor(40 + k, 'couple');
+        v.s.setPosition(n.s.x - 14, n.s.y);
+        v.follow = n;
+        v.gap = 7;
+        n.trail = [];
+        n.partner = v;
+        this.npcs.push(v);
+      });
   }
 
   // The barista behind a coffee counter, and sometimes a janitor on their rounds.
@@ -666,7 +753,7 @@ export class RoomScene extends Phaser.Scene {
       }
       return;
     }
-    if (n.leader) {
+    if (n.trail) {
       const last = n.trail[n.trail.length - 1];
       if (!last || Math.hypot(last.x - n.s.x, last.y - n.s.y) > 1.5) n.trail.push({ x: n.s.x, y: n.s.y });
       if (n.trail.length > 60) n.trail.shift();
@@ -675,7 +762,7 @@ export class RoomScene extends Phaser.Scene {
       const dx = n.target.x - n.s.x;
       const dy = n.target.y - n.s.y;
       const near = Math.hypot(this.player.x - n.s.x, this.player.y - n.s.y) < 48;
-      const step = NPC_SPEED * dt * (near ? NPC_SLOW : 1);
+      const step = NPC_SPEED * (n.speed || 1) * dt * (near ? NPC_SLOW : 1);
       const sx = dx ? Math.sign(dx) * Math.min(step, Math.abs(dx)) : 0;
       const sy = dx ? 0 : Math.sign(dy) * Math.min(step, Math.abs(dy));
       if (this.overlapsPlayer(n.s.x + sx, n.s.y + sy) || this.npcBlocks(n, n.s.x + sx, n.s.y + sy)) {
@@ -683,6 +770,8 @@ export class RoomScene extends Phaser.Scene {
         n.stuckFor = (n.stuckFor || 0) + dt;
         if (n.stuckFor > 1.5) {
           n.target = null;
+          n.path = null;
+          n.goal = null;
           n.stuckFor = 0;
           n.wait = 300 + Math.random() * 800;
         }
@@ -693,12 +782,25 @@ export class RoomScene extends Phaser.Scene {
         n.s.setPosition(n.target.x, n.target.y);
         n.target = null;
         n.wait = 600 + Math.random() * 2200;
+        if (n.path?.length) {
+          n.target = n.path.shift();
+          this.faceSprite(n.s, n.prefix, n.target.x - n.s.x, n.target.y - n.s.y);
+        } else if (n.goal) this.arrive(n);
       } else if (dx) n.s.x += Math.sign(dx) * Math.min(step, Math.abs(dx));
       else n.s.y += Math.sign(dy) * Math.min(step, Math.abs(dy));
       return;
     }
     n.wait -= dt * 1000;
+    this.idle(n, dt);
     if (n.wait > 0) return;
+    if (n.seat) return this.standUp(n);
+    n.admiring = null;
+    if (n.s.texture.key.endsWith('_phone')) n.s.setTexture(`${n.prefix}_down`);
+    if (!n.staff) {
+      const roll = Math.random();
+      if (roll < 0.35 && this.goLookAt(n)) return;
+      if (roll < 0.43 && !n.trail && this.goSit(n)) return;
+    }
     const [dx, dy] = [[1, 0], [-1, 0], [0, 1], [0, -1]][Math.floor(Math.random() * 4)];
     const tiles = 1 + Math.floor(Math.random() * 2);
     const tx = n.s.x + dx * tiles * T;
@@ -710,6 +812,134 @@ export class RoomScene extends Phaser.Scene {
     }
     n.target = { x: tx, y: ty };
     this.faceSprite(n.s, n.prefix, dx, dy);
+  }
+
+  // Plan an L-shaped walk (people walk in straight lines, one axis at a time).
+  planWalk(n, x, y) {
+    const b = this.bounds();
+    if (x < b.x0 || x > b.x1 || y < b.y0 + 12 || y > b.y1 - 4) return false;
+    if (this.npcs.some((o) => o !== n && Math.abs(o.s.x - x) < 12 && Math.abs(o.s.y - y) < 10)) return false; // someone's there
+    const { x: x0, y: y0 } = n.s;
+    for (const corner of [{ x, y: y0 }, { x: x0, y }]) {
+      if (!this.pathBlocked(x0, y0, corner.x, corner.y) && !this.pathBlocked(corner.x, corner.y, x, y)) {
+        n.path = [{ x, y }];
+        n.target = corner;
+        this.faceSprite(n.s, n.prefix, corner.x - x0 || x - x0, corner.y - y0 || y - y0);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // Walk over to a painting and look at it for a while.
+  goLookAt(n) {
+    if (!this.hung.length) return false;
+    const p = this.hung[Math.floor(Math.random() * this.hung.length)];
+    const st = this.standFor(p);
+    const jitter = st.fy ? (Math.random() - 0.5) * 16 : 0;
+    if (!this.planWalk(n, Math.round(st.x + jitter), Math.round(st.y + 4 + (st.fy ? 0 : (Math.random() - 0.5) * 10)))) return false;
+    n.goal = { kind: 'painting', p, fx: st.fx, fy: st.fy };
+    return true;
+  }
+
+  // Find a free seat (stool, bench, sofa) and walk to the front of it.
+  goSit(n) {
+    const { g } = this;
+    const seats = [];
+    this.items.forEach((it) => {
+      if (!SEATS.includes(it.type)) return;
+      const { w, h } = footprint(it);
+      for (let k = 0; k < w; k++) {
+        const x = g.xL + (it.c + k + 0.5) * T;
+        const bottom = g.y0 + (it.r + h) * T;
+        const key = `${it.c + k},${it.r}`;
+        if (this.npcs.some((o) => o.seat?.key === key || o.goal?.key === key)) continue;
+        seats.push({ kind: 'seat', key, x, frontY: bottom + 10, seatY: bottom - 3 });
+      }
+    });
+    if (!seats.length) return false;
+    const seat = seats[Math.floor(Math.random() * seats.length)];
+    if (this.blocked(seat.x, seat.frontY) || !this.planWalk(n, seat.x, seat.frontY)) return false;
+    n.goal = seat;
+    return true;
+  }
+
+  // Reached where they were going: look at the painting, or sit down.
+  arrive(n) {
+    const goal = n.goal;
+    n.goal = null;
+    if (goal.kind === 'painting') {
+      this.faceSprite(n.s, n.prefix, goal.fx, goal.fy);
+      n.admiring = goal.p;
+      n.wait = 3000 + Math.random() * 4000;
+      if (Math.random() < 0.55) this.time.delayedCall(500 + Math.random() * 1200, () => this.emote(n));
+      else if (Math.random() < 0.4) this.time.delayedCall(800, () => this.quip(n));
+    } else if (goal.kind === 'seat') {
+      n.seat = goal;
+      n.s.setTexture(`${n.prefix}_sit`).setFlipX(false).setPosition(goal.x, goal.seatY);
+      n.lift = 5; // drawn over the seat
+      n.wait = 6000 + Math.random() * 8000;
+      if (Math.random() < 0.3) this.time.delayedCall(1500, () => this.emote(n, n.kind === 'elder' || n.kind === 'grump' ? 'zzz' : 'note'));
+    }
+  }
+
+  standUp(n) {
+    const seat = n.seat;
+    n.seat = null;
+    n.lift = 0;
+    n.s.setTexture(`${n.prefix}_down`).setPosition(seat.x, seat.frontY);
+    n.wait = 400;
+  }
+
+  // Little things people do while standing around.
+  idle(n, dt) {
+    if (n.seat || n.fixed || n.follow || n.talking) return;
+    n.lookT = (n.lookT ?? 1 + Math.random() * 2) - dt;
+    if (n.lookT > 0) return;
+    n.lookT = 1.2 + Math.random() * 2;
+    const r = Math.random();
+    if (n.admiring) {
+      if (r < 0.08) this.emote(n);
+      return;
+    }
+    if (n.s.texture.key.endsWith('_phone')) {
+      if (r < 0.5) n.s.setTexture(`${n.prefix}_down`);
+      return;
+    }
+    if (r < 0.3) {
+      const [vx, vy] = [[1, 0], [-1, 0], [0, 1], [0, -1]][Math.floor(Math.random() * 4)];
+      this.faceSprite(n.s, n.prefix, vx, vy); // look around
+    } else if (r < 0.42 && PHONE_KINDS.includes(n.kind)) n.s.setTexture(`${n.prefix}_phone`).setFlipX(false);
+    else if (r < 0.46 && !n.staff) this.emote(n);
+  }
+
+  // A pop-up bubble over someone's head.
+  emote(n, id) {
+    if (!n.s.active || n.talking) return;
+    const pool = EMOTES[n.famous ? 'famous' : n.kind] || ['heart'];
+    id = id || pool[Math.floor(Math.random() * pool.length)];
+    n.emoteImg?.destroy();
+    const img = this.add.image(n.s.x, n.s.y - 36, `emote_${id}`).setOrigin(0.5, 1).setDepth(5000).setScale(0);
+    n.emoteImg = img;
+    this.tweens.add({ targets: img, scale: 1, duration: 180, ease: 'Back.easeOut' });
+    this.tweens.add({ targets: img, alpha: 0, delay: 1500, duration: 300, onComplete: () => img.destroy() });
+  }
+
+  // Something short said out loud (floating text).
+  quip(n) {
+    if (!n.s.active || n.talking) return;
+    const pool = QUIPS[n.famous ? 'famous' : n.kind];
+    if (!pool) return;
+    n.quipText?.destroy();
+    const t = this.add
+      .text(n.s.x, n.s.y - 38, pool[Math.floor(Math.random() * pool.length)], { fontFamily: 'monospace', fontSize: '8px', color: '#fff8e6', stroke: '#1d1714', strokeThickness: 3 })
+      .setOrigin(0.5, 1)
+      .setResolution(4)
+      .setDepth(5000)
+      .setAlpha(0);
+    n.quipText = t;
+    this.tweens.add({ targets: t, alpha: 1, duration: 200 });
+    this.tweens.add({ targets: t, alpha: 0, delay: 2000, duration: 400, onComplete: () => t.destroy() });
   }
 
   // The painting a visitor is standing near, if any.
@@ -737,14 +967,34 @@ export class RoomScene extends Phaser.Scene {
       const j = janitors();
       line = `There ${j === 1 ? 'is 1 of us' : `are ${j} of us`}. One janitor per room keeps the whole place spotless.`;
     }
+    if (!n.staff && Math.random() < 0.3) line = this.contextLine() || line;
     if (n.kind === 'guard' && !hasCameras()) return this.offerCameras(n, line);
     n.talking = true;
     n.target = null;
-    this.faceSprite(n.s, n.prefix, this.player.x - n.s.x, this.player.y - n.s.y);
+    n.path = null;
+    n.goal = null;
+    if (!n.seat) this.faceSprite(n.s, n.prefix, this.player.x - n.s.x, this.player.y - n.s.y);
     this.talkingTo = n;
     sfx('talk');
     const at = this.screenAt(n.s.x, n.s.y - 34);
     showTalk(n.name, PERSONALITIES[n.kind].label, line, at);
+  }
+
+  // Something about this room right now: mess, rating, time of day.
+  contextLine() {
+    const pools = [];
+    if (this.mess.length) pools.push(CONTEXT.dirty);
+    if (!this.isBreak) {
+      const { stars } = roomRating(this.rooms, this.roomIndex);
+      if (stars >= 4) pools.push(CONTEXT.great);
+      if (stars <= 1.5) pools.push(CONTEXT.poor);
+    }
+    if (this.lighting.dark > 0.6) pools.push(CONTEXT.night);
+    const h = hourNow();
+    if (h >= 6 && h < 9.5) pools.push(CONTEXT.morning);
+    if (!pools.length) return null;
+    const pool = pools[Math.floor(Math.random() * pools.length)];
+    return pool[Math.floor(Math.random() * pool.length)];
   }
 
   // The guard offers to put up cameras (no change to how the rooms look).
@@ -772,7 +1022,9 @@ export class RoomScene extends Phaser.Scene {
     else if (near?.artist === n.famous && Math.random() < 0.7) line = def.own.replace('{title}', near.title);
     n.talking = true;
     n.target = null;
-    this.faceSprite(n.s, n.prefix, this.player.x - n.s.x, this.player.y - n.s.y);
+    n.path = null;
+    n.goal = null;
+    if (!n.seat) this.faceSprite(n.s, n.prefix, this.player.x - n.s.x, this.player.y - n.s.y);
     this.talkingTo = n;
     sfx(first ? 'build' : 'talk');
     showTalk(def.name, first ? 'Famous visitor · first meeting!' : 'Famous visitor', line, this.screenAt(n.s.x, n.s.y - 34), 8000);
@@ -1753,7 +2005,9 @@ export class RoomScene extends Phaser.Scene {
     this.npcs.forEach((n) => {
       this.updateVisitor(n, dt);
       this.animate(n.s, (!!n.target || !!n.walking) && !n.talking, dt);
-      n.s.setDepth(n.s.y);
+      n.s.setDepth(n.s.y + (n.lift || 0));
+      if (n.emoteImg?.active) n.emoteImg.setPosition(n.s.x, n.s.y - (n.seat ? 30 : 36));
+      if (n.quipText?.active) n.quipText.setPosition(n.s.x, n.s.y - (n.emoteImg?.active ? 50 : 38));
       n.mop?.setPosition(n.s.x + 12, n.s.y).setDepth(n.s.y - 1);
       n.star?.setPosition(n.s.x, n.s.y - 38).setDepth(n.s.y + 1);
     });

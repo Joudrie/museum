@@ -1487,6 +1487,144 @@ export const HATS = { none: 'None', hardhat: 'Hard hat', cap: 'Baseball cap', to
 export const FACIAL = { none: 'None', stache: 'Mustache', curly: 'Curly mustache', goatee: 'Goatee', vandyke: 'Mustache + goatee', chinstrap: 'Chin beard', beard: 'Beard' };
 export const GLASSES = { none: 'None', round: 'Round glasses', shades: 'Sunglasses' };
 
+// Hairstyles beyond the default short cut. `pre` rows sit above the head.
+export const HAIRSTYLES = { short: 'Short', part: 'Side part', buzz: 'Buzz cut', curly: 'Curly', long: 'Long', ponytail: 'Ponytail', bun: 'Bun', pigtails: 'Pigtails', bob: 'Bob', afro: 'Afro', mohawk: 'Mohawk', wild: 'Wild', bald: 'Bald' };
+const widen = (out, r, ch) => out[r] && (out[r] = ['o', ch, ...out[r].slice(1, -1), ch, 'o']);
+function hairStyle(out, view, hair, set, pre, setPre) {
+  const mid = (r) => Math.floor(out[r].length / 2);
+  const each = (r, fn) => out[r]?.forEach((c, i) => fn(c, i));
+  if (hair === 'long') {
+    if (view === 'down') {
+      for (let r = 4; r <= 10; r++) widen(out, r, 'h');
+      out[11] = [...'ohhwwwwhho'];
+      set(12, 1, 'h');
+      set(12, out[12].length - 2, 'h');
+    } else if (view === 'side') {
+      [8, 9, 10, 11].forEach((r) => [1, 2].forEach((i) => set(r, i, 'h')));
+    } else {
+      for (let r = 8; r <= 11; r++) each(r, (c, i) => c !== 'o' && (out[r][i] = 'h'));
+      each(12, (c, i) => c !== 'o' && i > 2 && i < out[12].length - 3 && (out[12][i] = 'h'));
+    }
+  }
+  if (hair === 'ponytail') {
+    if (view === 'up') for (let r = 7; r <= 13; r++) [mid(r) - 1, mid(r)].forEach((i) => set(r, i, r % 3 === 0 ? 'H' : 'h'));
+    if (view === 'side') [7, 8, 9, 10].forEach((r) => [1, 2].forEach((i) => set(r, i, 'h')));
+    if (view === 'down') {
+      set(3, 1, 'U');
+      set(3, out[3].length - 2, 'U');
+    }
+  }
+  if (hair === 'bun') setPre(view === 'side' ? ['oooo', 'ohhHo'] : ['ooooo', 'ohhHho']);
+  if (hair === 'pigtails' && view !== 'side') {
+    for (let r = 5; r <= 9; r++) widen(out, r, r === 5 ? 'U' : 'h');
+    [6, 7, 8].forEach((r) => widen(out, r, 'h'));
+  }
+  if (hair === 'pigtails' && view === 'side') [6, 7, 8].forEach((r) => set(r, 1, 'h'));
+  if (hair === 'afro') {
+    setPre(view === 'side' ? ['oooooooo', 'ohhhhhhho'] : ['oooooooo', 'ohhhhhhhho']);
+    for (let r = 0; r <= 8; r++) widen(out, r, 'h');
+    for (let r = 1; r <= 4; r++) each(r, (c, i) => c === 'h' && (r + i) % 4 === 0 && (out[r][i] = 'H'));
+  }
+  if (hair === 'curly') {
+    for (let r = 1; r <= 3; r++) widen(out, r, 'h');
+    for (let r = 1; r <= (view === 'up' ? 8 : 5); r++) each(r, (c, i) => c === 'h' && (r * 2 + i) % 3 === 0 && (out[r][i] = 'H'));
+  }
+  if (hair === 'mohawk') {
+    setPre(view === 'side' ? ['oooooo', 'ohhhho'] : ['oooo', 'ohho']);
+    for (let r = 1; r <= (view === 'up' ? 10 : 3); r++)
+      each(r, (c, i) => {
+        if (c !== 'h' && c !== 'H') return;
+        const keep = view === 'side' ? r === 1 : Math.abs(i - (out[r].length - 1) / 2) < 1.5;
+        if (!keep) out[r][i] = 's';
+      });
+    if (view === 'side') for (let r = 2; r <= 8; r++) each(r, (c, i) => (c === 'h' || c === 'H') && (out[r][i] = 's'));
+  }
+  if (hair === 'buzz') {
+    for (let r = 1; r <= (view === 'up' ? 9 : 3); r++) each(r, (c, i) => (c === 'h' || c === 'H') && (out[r][i] = (r + i) % 2 ? 'H' : 'h'));
+    if (view !== 'up') [4, 5].forEach((r) => each(r, (c, i) => c === 'h' && i > 1 && i < out[r].length - 2 && (out[r][i] = 's')));
+  }
+  if (hair === 'part' && view === 'down') {
+    set(4, 3, 'h');
+    set(4, 4, 'h');
+    set(2, 4, 'S');
+    set(1, 4, 'S');
+  }
+  void pre;
+}
+
+// Outfit styles. c = jacket or main color, w = shirt, g = tie or accent.
+export const OUTFITS = { suit: 'Suit & tie', vest: 'Waistcoat', sweater: 'Sweater', tee: 'T-shirt', hoodie: 'Hoodie', coat: 'Long coat', apron: 'Apron', dress: 'Dress', gown: 'Gown', toga: 'Toga' };
+function outfit(out, view, style, set) {
+  if (!style || style === 'suit') return;
+  const swap = (rows, from, to) => rows.forEach((r) => out[r]?.forEach((c, i) => from.includes(c) && (out[r][i] = to)));
+  const torso = [12, 13, 14, 15, 16, 17];
+  const len = (r) => out[r].length;
+  const mid = (r) => Math.floor(len(r) / 2);
+  if (['tee', 'sweater', 'hoodie', 'dress', 'gown', 'toga'].includes(style)) swap(torso, ['w', 'g'], 'c');
+  if (style === 'tee' && view !== 'up') swap([11], ['w'], 's');
+  if (style === 'sweater' && view !== 'up') swap([20], ['c'], 'd');
+  if (style === 'hoodie') {
+    swap([11], ['w'], 'c');
+    if (view === 'down') [12, 13, 14].forEach((r) => [mid(r) - 2, mid(r) + 1].forEach((i) => set(r, i, 'w')));
+    if (view === 'up') [9, 10].forEach((r) => out[r].forEach((c, i) => c === 'S' && (out[r][i] = 'c')));
+  }
+  if (style === 'vest') for (let r = 12; r <= 19; r++) [1, len(r) - 2].forEach((i) => ['C', 'd', 'c'].includes(out[r][i]) && set(r, i, 'w'));
+  if (style === 'coat') for (let r = 21; r <= 23; r++) [1, 2, len(r) - 3, len(r) - 2].forEach((i, k) => set(r, i, k === 0 ? 'C' : k === 3 ? 'd' : 'c'));
+  if (style === 'apron' && view === 'down') for (let r = 13; r <= 23; r++) for (let i = 3; i < len(r) - 3; i++) if (out[r][i] !== 'o' && out[r][i] !== 's') out[r][i] = 'g';
+  if (style === 'apron' && view === 'side') for (let r = 13; r <= 23; r++) set(r, len(r) - 2, 'g');
+  if (['dress', 'toga'].includes(style)) {
+    swap([21, 22], ['p'], 'c');
+    widen(out, 22, 'c');
+    swap([23, 24], ['p'], 's');
+  }
+  if (style === 'gown') {
+    swap([21, 22, 23, 24], ['p'], 'c');
+    [22, 23, 24].forEach((r) => widen(out, r, r === 24 ? 'd' : 'c'));
+    [22, 23, 24].forEach((r) => out[r].forEach((c, i) => c === 'o' && i > 0 && i < len(r) - 1 && (out[r][i] = 'c')));
+  }
+  if (style === 'toga') {
+    if (view !== 'side') for (let r = 12; r <= 20; r++) set(r, view === 'down' ? 3 + (r - 12) : len(r) - 4 - (r - 12), 'g'); // a sash over one shoulder
+    if (view === 'down') [12, 13].forEach((r) => [len(r) - 3, len(r) - 2].forEach((i) => set(r, i, 's')));
+    if (view === 'side') [13, 14].forEach((r) => set(r, len(r) - 3, 'g'));
+  }
+}
+
+// Accessories, in color X (bag in K).
+export const ACCESSORIES = { none: 'None', scarf: 'Scarf', bowtie: 'Bow tie', necklace: 'Necklace', badge: 'Badge', bag: 'Shoulder bag', camera: 'Camera' };
+function accessory(out, view, acc, set) {
+  if (!acc || acc === 'none') return;
+  const len = (r) => out[r].length;
+  const mid = (r) => Math.floor(len(r) / 2);
+  if (acc === 'scarf') {
+    out[11] = out[11].map((c) => (c === 'o' ? c : 'X'));
+    if (view === 'down') [12, 13, 14].forEach((r) => set(r, mid(r) - 3, 'X'));
+    if (view === 'side') [12, 13].forEach((r) => set(r, len(r) - 3, 'X'));
+  }
+  if (acc === 'bowtie' && view === 'down') {
+    [mid(11) - 1, mid(11)].forEach((i) => set(11, i, 'X'));
+    [mid(12) - 2, mid(12) + 1].forEach((i) => set(12, i, 'X'));
+    [mid(12) - 1, mid(12)].forEach((i) => set(12, i, 'w'));
+  }
+  if (acc === 'necklace' && view === 'down') {
+    [mid(12) - 2, mid(12) + 1].forEach((i) => set(12, i, 'Y'));
+    [mid(13) - 1, mid(13)].forEach((i) => set(13, i, 'Y'));
+  }
+  if (acc === 'badge' && view === 'down') [14, 15].forEach((r) => set(r, 3, 'Y'));
+  if (acc === 'bag') {
+    if (view === 'down') for (let r = 12; r <= 19; r++) set(r, len(r) - 3 - (r - 12), 'K');
+    if (view === 'up') for (let r = 12; r <= 19; r++) set(r, 2 + (r - 12), 'K');
+    if (view === 'side') [17, 18, 19, 20].forEach((r) => [1, 2, 3].forEach((i) => set(r, i, r === 17 ? 'k' : 'K')));
+  }
+  if (acc === 'camera') {
+    if (view === 'down') {
+      [15, 16].forEach((r) => [mid(r) - 2, mid(r) - 1, mid(r), mid(r) + 1].forEach((i) => set(r, i, 'k')));
+      set(15, mid(15), 'Q');
+      for (let r = 11; r <= 14; r++) [mid(r) - 3, mid(r) + 2].forEach((i) => set(r, i, 'k'));
+    }
+    if (view === 'side') [15, 16].forEach((r) => [len(r) - 3, len(r) - 2].forEach((i) => set(r, i, 'k')));
+  }
+}
+
 function withLooks(rows, view, look) {
   let out = rows.map((r) => [...r]);
   const inner = (r, from, to, test, ch) => {
@@ -1497,7 +1635,7 @@ function withLooks(rows, view, look) {
   if (look.bald) {
     const last = view === 'up' ? 6 : 3;
     for (let r = 1; r <= last; r++) inner(r, view === 'side' ? 4 : 2, 2, (c) => c === 'h' || c === 'H', 's');
-    out[1][Math.floor(out[1].length / 2) - 1] = 'w'; // shine
+    out[1][Math.floor(out[1].length / 2) - 1] = 'Q'; // shine
   }
   const glasses = look.glasses === true ? 'round' : look.glasses;
   if (glasses === 'round' && view !== 'up') {
@@ -1516,7 +1654,7 @@ function withLooks(rows, view, look) {
     if (eyes.length) {
       for (let i = Math.max(1, eyes[0] - 1); i <= Math.min(row.length - 2, eyes.at(-1) + 1); i++) set(6, i, 'k');
       eyes.forEach((i) => [i - 1, i, i + 1].forEach((j) => out[7][j] && skin(out[7][j]) || out[7][j] === 'e' ? set(7, j, 'k') : null));
-      set(6, eyes[0], 'w');
+      set(6, eyes[0], 'Q');
     }
   }
   if (look.unibrow && view !== 'up') {
@@ -1587,6 +1725,17 @@ function withLooks(rows, view, look) {
   }
   if (look.hair === 'bob' && view === 'up') out[2] = [...'oUUUUUUUUUUo'];
   if (look.collar === 'ruff' && view !== 'up') out[11] = [...'owwwwwwwwwwo']; // a frilly white ruff
+  hairStyle(out, view, look.hair, set, pre, (p) => (pre = p));
+  outfit(out, view, look.outfit, set);
+  accessory(out, view, look.acc, set);
+  if (look.phone && view === 'down') {
+    // holding a phone up to look at it
+    const mid = Math.floor(out[17].length / 2);
+    [16, 17].forEach((r) => [mid - 1, mid].forEach((i) => set(r, i, 'k')));
+    set(16, mid - 1, 'Q');
+    set(18, mid - 2, 's');
+    set(18, mid + 1, 's');
+  }
   const hat = look.hat === true ? 'sun' : look.hat;
   const put = (r, row) => (out[r] = [...row]);
   if (hat === 'sun') {
@@ -1643,7 +1792,7 @@ function withLooks(rows, view, look) {
 }
 
 // Colors for the looks above.
-const LOOK_PAL = { T: '#e8d8a0', U: '#5a3b2c', R: '#e0506a', Y: '#f2d36b', G: '#4f8a4a', L: '#7fb06a' };
+const LOOK_PAL = { T: '#e8d8a0', U: '#5a3b2c', R: '#e0506a', Y: '#f2d36b', G: '#4f8a4a', L: '#7fb06a', Q: '#ffffff', X: '#c0392b', K: '#6a4a2a' };
 
 const toHexEarly = (v) => '#' + v.map((n) => Math.round(Math.min(255, n)).toString(16).padStart(2, '0')).join('');
 
@@ -1662,6 +1811,11 @@ export function makeCharacter(scene, prefix, colors = {}, look = {}) {
   sprite(scene, `${prefix}_down`, withLooks(FRONT, 'down', look), pal);
   sprite(scene, `${prefix}_up`, withLooks(BACK, 'up', look), pal);
   sprite(scene, `${prefix}_side`, withLooks(SIDE, 'side', look), pal);
+  sprite(scene, `${prefix}_phone`, withLooks(FRONT, 'down', { ...look, phone: true }), pal);
+  // Sitting: the legs fold forward under the body.
+  const sit = withLooks(FRONT, 'down', look);
+  const legs = sit.length - 6; // the pants and shoes rows
+  sprite(scene, `${prefix}_sit`, [...sit.slice(0, legs), sit[legs], sit[legs + 1].replace(/oo(?=p)/, 'pp'), sit[sit.length - 2], sit[sit.length - 1]], pal);
 }
 
 // "!" bubble shown when something is in reach.
@@ -1669,6 +1823,29 @@ const BUBBLE = [
   '..ooooooo..', '.owwwwwwwo.', 'owwwwwwwwwo', 'owwwwoowwwwo', 'owwwwoowwwo', 'owwwwoowwwo', 'owwwwoowwwo',
   'owwwwwwwwwo', 'owwwwoowwwo', 'owwwwwwwwwo', '.owwwwwwwo.', '..oooooo...', '...ooo.....', '...oo......',
 ].map((r) => r.slice(0, 11).padEnd(11, '.'));
+
+// Little emote bubbles over people's heads: heart, !, ?, zzz, music, star.
+const EMOTE_BOX = ['.ooooooooo.', 'owwwwwwwwwo', 'owwwwwwwwwo', 'owwwwwwwwwo', 'owwwwwwwwwo', 'owwwwwwwwwo', 'owwwwwwwwwo', 'owwwwwwwwwo', 'owwwwwwwwwo', '.oooo.oooo.', '....owo....', '.....o.....'];
+const EMOTE_ICONS = {
+  heart: ['.RR.RR.', 'RRRRRRR', 'RRRRRRR', '.RRRRR.', '..RRR..', '...R...', '.......'],
+  bang: ['...k...', '...k...', '...k...', '...k...', '.......', '...k...', '.......'],
+  q: ['..kkk..', '.k...k.', '.....k.', '...kk..', '...k...', '.......', '...k...'],
+  zzz: ['kkkk...', '..k....', '.k.....', 'kkkkkk.', '....k..', '...k...', '..kkkk.'],
+  note: ['...kkk.', '...k.k.', '...k.k.', '...k.k.', '.kkk.k.', 'kkkk.k.', '.kk..k.'],
+  star: ['...Y...', '..YYY..', 'YYYYYYY', '.YYYYY.', '.YY.YY.', 'Y.....Y', '.......'],
+};
+export function makeEmotes(scene) {
+  const col = { o: '#1d1714', w: '#fff8e6', k: '#2a1a14', R: '#e0405a', Y: '#e8b02a' };
+  Object.entries(EMOTE_ICONS).forEach(([id, icon]) => {
+    if (scene.textures.exists(`emote_${id}`)) return;
+    bake(scene, `emote_${id}`, 11, EMOTE_BOX.length, (x, y) => {
+      const ic = icon[y - 1]?.[x - 2];
+      if (ic && ic !== '.' && y >= 1 && y <= 7) return hex(col[ic]);
+      const ch = EMOTE_BOX[y][x];
+      return ch && ch !== '.' ? hex(col[ch]) : null;
+    });
+  });
+}
 
 export function makeBubble(scene) {
   bake(scene, 'bubble', 11, BUBBLE.length, (x, y) => {

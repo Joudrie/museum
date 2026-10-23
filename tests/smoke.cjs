@@ -54,7 +54,7 @@ const ok = (msg) => console.log('  ✓ ' + msg);
       // NPCs wander for ~60 s of game time.
       for (let i = 0; i < 1200; i++) s.npcs.forEach((n) => s.updateVisitor(n, 0.05));
       s.npcs.forEach((n) => {
-        if (n.fixed || n.follow) return;
+        if (n.fixed || n.follow || n.seat) return; // (seated people sit on a bench, inside its footprint)
         if (s.blocked(n.s.x, n.s.y) || n.s.x < b.x0 - 1 || n.s.x > b.x1 + 1 || n.s.y < b.y0 - 1 || n.s.y > b.y1 + 1) out.inWall.push(`${n.kind}@${Math.round(n.s.x)},${Math.round(n.s.y)}${JSON.stringify(s.blocks.filter((k) => n.s.x > k.x0 - 6 && n.s.x < k.x1 + 6 && n.s.y > k.y0 && n.s.y < k.y1 + 8))}`);
       });
       const free = s.npcs.filter((n) => !n.follow);

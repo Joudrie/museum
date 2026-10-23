@@ -1,7 +1,7 @@
 // Customize panel (home button). "This room" recolors only the room you're in;
 // "Character" changes the curator. Each color row is a swipeable strip of
 // swatches, ending in a + that opens a full color picker.
-import { HATS, FACIAL, GLASSES, PALETTES, FLOOR_PATTERNS, WOOD_FLOORS, TWO_COLOR_FLOORS, FLOOR_DEFAULTS, WALL_PATTERNS, WAINSCOT_STYLES, LIGHTS, PLANTS } from './art.js';
+import { HATS, FACIAL, GLASSES, HAIRSTYLES, OUTFITS, ACCESSORIES, PALETTES, FLOOR_PATTERNS, WOOD_FLOORS, TWO_COLOR_FLOORS, FLOOR_DEFAULTS, WALL_PATTERNS, WAINSCOT_STYLES, LIGHTS, PLANTS } from './art.js';
 import { TRACKS, isMuted, setMuted } from './music.js';
 
 // One-tap room styles. Each sets floor, walls, lighting and music.
@@ -17,16 +17,34 @@ import { SIZE_LABELS, ORIENT_LABELS, roomName, isFixed } from './rooms.js';
 import { roomRating, starText } from './rating.js';
 
 export const CHARACTER_PALETTES = {
-  h: { label: 'Hair', colors: ['#4a2e20', '#1e1410', '#d9b45a', '#a0522d', '#8a8a8a', '#e8e0d0', '#c0392b', '#2e5a8a', '#6a4c93'] },
-  s: { label: 'Skin', colors: ['#f2c6a0', '#e0ac80', '#c68a5e', '#9a6440', '#6e4428', '#4a2c18', '#ffe0c8'] },
-  c: { label: 'Outfit', colors: ['#7a2e3a', '#3d6fb6', '#4f7a3a', '#c27a2c', '#6a4c93', '#2a2a2e', '#e8e2d4', '#2e7d7a', '#b0413e'] },
-  p: { label: 'Pants', colors: ['#2f2b3d', '#3b3a48', '#5a4632', '#1e1e22', '#3c4a63', '#7a6a58', '#e8e2d4'] },
-  b: { label: 'Shoes', colors: ['#1a1418', '#4a2e20', '#e8e2d4', '#7a2232', '#3c4a63'] },
+  h: { label: 'Hair color', colors: ['#4a2e20', '#1e1410', '#d9b45a', '#a0522d', '#8a8a8a', '#e8e0d0', '#c0392b', '#2e5a8a', '#6a4c93', '#d06a9a', '#4a8ab0'] },
+  s: { label: 'Skin', colors: ['#ffe0c8', '#f2c6a0', '#e0ac80', '#c68a5e', '#b57850', '#9a6440', '#6e4428', '#4a2c18'] },
+  c: { label: 'Jacket', colors: ['#7a2e3a', '#3d6fb6', '#4f7a3a', '#c27a2c', '#6a4c93', '#2a2a2e', '#e8e2d4', '#2e7d7a', '#b0413e', '#f08ab0', '#5a4632'] },
+  w: { label: 'Shirt', colors: ['#efe6d4', '#ffffff', '#cfe0f0', '#f4e0a0', '#e8c8d0', '#2a2a2e', '#c8d8b0'] },
+  g: { label: 'Tie & trim', colors: ['#c9a23f', '#b0413e', '#2e4a7a', '#2a2a2e', '#4f7a3a', '#e8e2d4', '#6a4c93'] },
+  p: { label: 'Pants', colors: ['#2f2b3d', '#3b3a48', '#5a4632', '#1e1e22', '#3c4a63', '#7a6a58', '#e8e2d4', '#6a8a4a'] },
+  b: { label: 'Shoes', colors: ['#1a1418', '#4a2e20', '#e8e2d4', '#7a2232', '#3c4a63', '#c9a23f'] },
 };
-export const DEFAULT_CHARACTER = { h: '#4a2e20', s: '#f2c6a0', c: '#7a2e3a', p: '#2f2b3d', b: '#1a1418' };
+// What the main color is called for each outfit, and which colors an outfit shows.
+const MAIN_LABEL = { suit: 'Jacket', vest: 'Waistcoat', sweater: 'Sweater', tee: 'T-shirt', hoodie: 'Hoodie', coat: 'Coat', apron: 'Shirt', dress: 'Dress', gown: 'Gown', toga: 'Toga' };
+const USES = {
+  suit: ['w', 'g', 'p'],
+  vest: ['w', 'g', 'p'],
+  sweater: ['p'],
+  tee: ['p'],
+  hoodie: ['p'],
+  coat: ['w', 'g', 'p'],
+  apron: ['g', 'p'],
+  dress: [],
+  gown: [],
+  toga: ['g'],
+};
+const ACC_COLORS = ['#c0392b', '#2e7d7a', '#c9a23f', '#3d6fb6', '#e8e2d4', '#1e1e22', '#6a4c93'];
+export const DEFAULT_CHARACTER = { h: '#4a2e20', s: '#f2c6a0', c: '#7a2e3a', p: '#2f2b3d', b: '#1a1418', w: '#efe6d4', g: '#c9a23f', hair: 'short', outfit: 'suit' };
 
 const el = document.getElementById('decor');
 const body = el.querySelector('.decor-body');
+const sheet = el.querySelector('.decor-sheet'); // (the part that scrolls)
 const tabs = el.querySelectorAll('[data-tab]');
 
 export function load(key, fallback) {
@@ -217,62 +235,104 @@ function renderRoom() {
   return parts;
 }
 
+// The curator turning on the spot: front, side, back, other side.
+let spin = null;
+function turntable(frames) {
+  clearInterval(spin);
+  const S = 5;
+  const c = document.createElement('canvas');
+  c.className = 'char-spin';
+  c.width = 32 * S;
+  c.height = 32 * S;
+  const ctx = c.getContext('2d');
+  ctx.imageSmoothingEnabled = false;
+  const order = [[0, false], [1, false], [2, false], [1, true]];
+  let k = 0;
+  let t = 0;
+  const draw = () => {
+    const [i, flip] = order[k % 4];
+    const bob = t % 2;
+    ctx.clearRect(0, 0, c.width, c.height);
+    ctx.fillStyle = 'rgba(0,0,0,0.25)';
+    ctx.beginPath();
+    ctx.ellipse(16 * S, 31 * S, 7 * S, 1.6 * S, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.save();
+    if (flip) {
+      ctx.translate(c.width, 0);
+      ctx.scale(-1, 1);
+    }
+    ctx.drawImage(frames[i], 0, -bob * S, 32 * S, 32 * S);
+    ctx.restore();
+  };
+  draw();
+  spin = setInterval(() => {
+    t++;
+    if (t % 4 === 0) k++;
+    draw();
+  }, 260);
+  return c;
+}
+
 function renderCharacter() {
   const ch = state.character;
   const preview = document.createElement('div');
   preview.className = 'char-preview';
-  preview.append(...state.characterPreview());
+  const refresh = () => preview.replaceChildren(turntable(state.characterPreview()));
+  refresh();
   const parts = [preview];
-  Object.entries(CHARACTER_PALETTES).forEach(([key, { label, colors }]) => {
-    parts.push(
-      section(
-        label,
-        strip(colors, ch[key], (color, live) => {
-          state.character = { ...state.character, [key]: color };
-          state.onCharacter(state.character);
-          if (live) preview.replaceChildren(...state.characterPreview());
-          else render();
-        }),
-      ),
-    );
-  });
-  // Hats, facial hair and glasses.
-  const pick = (key, options) => (v) => {
-    state.character = { ...state.character, [key]: v };
+  const setChar = (patch, live) => {
+    state.character = { ...state.character, ...patch };
     state.onCharacter(state.character);
-    render();
+    if (live) refresh();
+    else render();
   };
-  parts.push(section('Hat', choices(HATS, ch.hat || 'none', pick('hat', HATS))));
-  if (ch.hat && ch.hat !== 'none' && ch.hat !== 'crown') {
-    parts.push(section('Hat color', strip(HAT_COLORS, ch.T || '#e8d8a0', (T, live) => {
-      state.character = { ...state.character, T };
-      state.onCharacter(state.character);
-      if (live) preview.replaceChildren(...state.characterPreview());
-      else render();
-    })));
+  const colorRow = (key, label) => section(label || CHARACTER_PALETTES[key].label, strip(CHARACTER_PALETTES[key].colors, ch[key] || CHARACTER_PALETTES[key].colors[0], (color, live) => setChar({ [key]: color }, live)));
+  const style = ch.outfit || 'suit';
+  const pick = (key) => (v) => setChar({ [key]: v });
+  parts.push(section('Hairstyle', choices(HAIRSTYLES, ch.hair || 'short', pick('hair'))));
+  if (ch.hair !== 'bald') parts.push(colorRow('h'));
+  parts.push(colorRow('s'));
+  parts.push(section('Facial hair', choices(FACIAL, ch.facial || 'none', pick('facial'))));
+  parts.push(section('Outfit', choices(OUTFITS, style, pick('outfit'))));
+  parts.push(colorRow('c', MAIN_LABEL[style]));
+  const uses = USES[style] || [];
+  if (uses.includes('w')) parts.push(colorRow('w'));
+  if (uses.includes('g')) parts.push(colorRow('g', style === 'toga' ? 'Sash' : style === 'apron' ? 'Apron' : 'Tie & trim'));
+  if (uses.includes('p')) parts.push(colorRow('p'));
+  parts.push(colorRow('b'));
+  parts.push(section('Hat', choices(HATS, ch.hat || 'none', pick('hat'))));
+  if (ch.hat && ch.hat !== 'none' && ch.hat !== 'crown' && ch.hat !== 'laurel') {
+    parts.push(section('Hat color', strip(HAT_COLORS, ch.T || '#e8d8a0', (T, live) => setChar({ T }, live))));
   }
-  parts.push(section('Facial hair', choices(FACIAL, ch.facial || 'none', pick('facial', FACIAL))));
-  parts.push(section('Glasses', choices(GLASSES, ch.glasses || 'none', pick('glasses', GLASSES))));
+  parts.push(section('Glasses', choices(GLASSES, ch.glasses || 'none', pick('glasses'))));
+  parts.push(section('Accessory', choices(ACCESSORIES, ch.acc || 'none', pick('acc'))));
+  if (ch.acc && !['none', 'badge', 'necklace', 'camera'].includes(ch.acc)) {
+    const key = ch.acc === 'bag' ? 'K' : 'X';
+    const colors = ch.acc === 'bag' ? ['#6a4a2a', '#3a2a20', '#7a2232', '#2e4a7a', '#c27a2c', '#1e1e22'] : ACC_COLORS;
+    parts.push(section(ch.acc === 'bag' ? 'Bag color' : 'Accessory color', strip(colors, ch[key] || colors[0], (v, live) => setChar({ [key]: v }, live))));
+  }
   return parts;
 }
 
 const HAT_COLORS = ['#e8d8a0', '#1e1e22', '#7a2232', '#3d6fb6', '#4f7a3a', '#c27a2c', '#e8e2d4', '#6a4c93'];
 
 function render() {
-  const scroll = body.scrollTop;
+  const scroll = sheet.scrollTop;
   tabs.forEach((t) => t.classList.toggle('on', t.dataset.tab === tab));
   body.replaceChildren(...({ room: renderRoom, rooms: renderRooms, character: renderCharacter }[tab] || renderRoom)());
-  body.scrollTop = scroll;
+  sheet.scrollTop = scroll;
 }
 
 tabs.forEach((t) =>
   t.addEventListener('click', () => {
     tab = t.dataset.tab;
-    body.scrollTop = 0;
+    sheet.scrollTop = 0;
     render();
   }),
 );
 el.querySelector('.decor-close').addEventListener('click', () => {
+  clearInterval(spin);
   el.classList.add('hidden');
   state.onClose?.();
 });
@@ -280,6 +340,7 @@ el.querySelector('.decor-reset').addEventListener('click', () => state.onReset?.
 el.querySelector('.decor-coins').addEventListener('click', () => state.onAddCoins?.(1000));
 
 export function closeDecor() {
+  clearInterval(spin);
   el.classList.add('hidden');
 }
 

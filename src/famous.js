@@ -9,7 +9,7 @@ export const FAMOUS = {
   vangogh: {
     name: 'Vincent van Gogh',
     colors: { h: '#c0602a', F: '#b5501f', s: '#f2c6a0', c: '#3b5ba5', p: '#5a4632', b: '#3a2418', T: '#e2c36a', U: '#3b5ba5' },
-    look: { hat: 'straw', facial: 'beard' },
+    look: { hat: 'straw', facial: 'beard', outfit: 'sweater' },
     hello: 'Bonjour! I am Vincent. I paint what I feel, and today I feel… this museum is wonderful.',
     lines: [
       'The night sky is so much more alive than the day. Have you looked up lately?',
@@ -23,8 +23,8 @@ export const FAMOUS = {
   },
   leonardo: {
     name: 'Leonardo da Vinci',
-    colors: { h: '#e8e0d0', F: '#efe8dc', s: '#e0ac80', c: '#6a1f2a', p: '#3a2a22', b: '#3a2418', T: '#3a1418' },
-    look: { hat: 'beret', facial: 'beard' },
+    colors: { h: '#e8e0d0', F: '#efe8dc', s: '#e0ac80', c: '#6a1f2a', p: '#3a2a22', b: '#3a2418', T: '#3a1418', g: '#c9a23f' },
+    look: { hat: 'beret', facial: 'beard', hair: 'long', outfit: 'gown' },
     hello: 'Greetings, curator. Leonardo, painter, engineer, and inventor of several things you have not seen yet.',
     lines: [
       'I once designed a flying machine. It did not fly. Yet.',
@@ -39,7 +39,7 @@ export const FAMOUS = {
   monet: {
     name: 'Claude Monet',
     colors: { h: '#e8e0d0', F: '#f2ece2', s: '#f2c6a0', c: '#4f7a3a', p: '#3b3a48', b: '#1a1418', T: '#cfae80', U: '#4f7a3a' },
-    look: { hat: 'sun', facial: 'beard' },
+    look: { hat: 'sun', facial: 'beard', outfit: 'coat' },
     hello: 'Bonjour. Claude Monet. Your light in here is lovely, but have you tried painting it at sunset?',
     lines: [
       'I painted the same haystacks over and over. The light was different every time!',
@@ -52,8 +52,8 @@ export const FAMOUS = {
   },
   frida: {
     name: 'Frida Kahlo',
-    colors: { h: '#1e1410', s: '#c68a5e', c: '#c0392b', p: '#2e5a8a', b: '#3a2418' },
-    look: { hat: 'crown', unibrow: true },
+    colors: { h: '#1e1410', s: '#c68a5e', c: '#c0392b', p: '#2e5a8a', b: '#3a2418', X: '#2e7d7a' },
+    look: { hat: 'crown', unibrow: true, hair: 'bun', outfit: 'gown', acc: 'scarf' },
     hello: '¡Hola! I am Frida. I paint myself, because I am the subject I know best.',
     lines: [
       'Feet, what do I need them for if I have wings to fly?',
@@ -67,7 +67,7 @@ export const FAMOUS = {
   rembrandt: {
     name: 'Rembrandt',
     colors: { h: '#5a3a22', F: '#6a4a2a', s: '#e8b890', c: '#4a3020', p: '#2a1a14', b: '#2a1a14', T: '#2a1a14' },
-    look: { hat: 'beret', facial: 'vandyke' },
+    look: { hat: 'beret', facial: 'vandyke', outfit: 'coat', hair: 'curly' },
     hello: 'Rembrandt van Rijn. Forgive the gloom on my face; I painted myself nearly a hundred times.',
     lines: [
       'Light is a story. Shadow is the part you have to lean in to hear.',
@@ -80,7 +80,7 @@ export const FAMOUS = {
   vermeer: {
     name: 'Johannes Vermeer',
     colors: { h: '#5a3a22', F: '#5a3a22', s: '#f2c6a0', c: '#2a2a3a', p: '#2a2a3a', b: '#1a1418', T: '#1e1e22', U: '#3a3a4a' },
-    look: { hat: 'straw', facial: 'stache' },
+    look: { hat: 'straw', facial: 'stache', outfit: 'coat', collar: 'ruff', hair: 'long' },
     hello: 'Vermeer. I painted slowly, in one quiet room, by one window. Your hall is… a lot bigger.',
     lines: [
       'I made about thirty-five paintings in my whole life. Quality over quantity.',
@@ -92,8 +92,8 @@ export const FAMOUS = {
   },
   hokusai: {
     name: 'Katsushika Hokusai',
-    colors: { h: '#d8d8d8', F: '#e8e8e8', s: '#e8c39a', c: '#2e4a7a', p: '#1e2a3a', b: '#3a2418' },
-    look: { bald: true, hat: 'topknot', facial: 'goatee' },
+    colors: { h: '#d8d8d8', F: '#e8e8e8', s: '#e8c39a', c: '#2e4a7a', p: '#1e2a3a', b: '#3a2418', g: '#c9a23f' },
+    look: { bald: true, hat: 'topknot', facial: 'goatee', outfit: 'gown' },
     hello: 'Hokusai. I changed my name over thirty times. Today, call me “Old Man Mad About Painting.”',
     lines: [
       'I made thirty-six views of Mount Fuji. Then I made ten more. It is a very good mountain.',
@@ -105,8 +105,8 @@ export const FAMOUS = {
   },
   munch: {
     name: 'Edvard Munch',
-    colors: { h: '#8a7a6a', F: '#7a6a5a', s: '#f2d0b0', c: '#2a2a2e', p: '#2a2a2e', b: '#1a1418' },
-    look: { facial: 'stache' },
+    colors: { h: '#8a7a6a', F: '#7a6a5a', s: '#f2d0b0', c: '#2a2a2e', p: '#2a2a2e', b: '#1a1418', X: '#4a4a52' },
+    look: { facial: 'stache', outfit: 'coat', acc: 'scarf' },
     hello: 'Edvard Munch. I am fine. Mostly. The sky over the fjord was very red that evening.',
     lines: [
       'I made several versions of the same scream. Some days are like that.',
@@ -119,7 +119,7 @@ export const FAMOUS = {
   klimt: {
     name: 'Gustav Klimt',
     colors: { h: '#3a2a20', F: '#3a2a20', s: '#f2c6a0', c: '#3d6fb6', p: '#3d6fb6', b: '#3a2418' },
-    look: { bald: true, facial: 'beard' },
+    look: { bald: true, facial: 'beard', outfit: 'gown' },
     hello: 'Gustav Klimt. Excuse the smock; I work in it, I live in it, I would marry in it.',
     lines: [
       'Gold leaf! Why paint gold when you can simply use gold?',
@@ -131,8 +131,8 @@ export const FAMOUS = {
   },
   seurat: {
     name: 'Georges Seurat',
-    colors: { h: '#2a1a14', F: '#2a1a14', s: '#f2c6a0', c: '#2a2a2e', p: '#2a2a2e', b: '#1a1418', T: '#1e1e22', U: '#3a3a40' },
-    look: { hat: 'top', facial: 'beard' },
+    colors: { h: '#2a1a14', F: '#2a1a14', s: '#f2c6a0', c: '#2a2a2e', p: '#2a2a2e', b: '#1a1418', T: '#1e1e22', U: '#3a3a40', X: '#0e0e10' },
+    look: { hat: 'top', facial: 'beard', acc: 'bowtie' },
     hello: 'Georges Seurat. I paint in tiny dots. Millions of them. Please do not ask me to count.',
     lines: [
       'Up close it is dots. Step back, it is a sunny afternoon. Science!',
@@ -145,7 +145,7 @@ export const FAMOUS = {
   dali: {
     name: 'Salvador Dalí',
     colors: { h: '#1e1410', F: '#1e1410', s: '#e8b890', c: '#6a1f2a', p: '#1e1e22', b: '#1a1418' },
-    look: { facial: 'curly' },
+    look: { facial: 'curly', hair: 'part', outfit: 'vest' },
     hello: 'I am Dalí! Every morning I wake up in the supreme pleasure of being Salvador Dalí.',
     lines: [
       'Have you seen my clocks? They melted. Time is very flexible in Spain.',
@@ -158,8 +158,8 @@ export const FAMOUS = {
   },
   socrates: {
     name: 'Socrates',
-    colors: { h: '#d8d8d8', F: '#efefef', s: '#e0ac80', c: '#f0ece2', p: '#f0ece2', b: '#8a5a3a' },
-    look: { bald: true, facial: 'beard' },
+    colors: { h: '#d8d8d8', F: '#efefef', s: '#e0ac80', c: '#f0ece2', p: '#f0ece2', b: '#8a5a3a', g: '#8a6a4a' },
+    look: { bald: true, facial: 'beard', outfit: 'toga' },
     hello: 'I am Socrates. I know one thing: that I know nothing. So, curator… what is a museum?',
     lines: [
       'The unexamined life is not worth living. The unexamined painting, also not great.',
@@ -172,8 +172,8 @@ export const FAMOUS = {
   },
   aristotle: {
     name: 'Aristotle',
-    colors: { h: '#9a9a9a', F: '#9a9a9a', s: '#e0ac80', c: '#e8e2d4', p: '#e8e2d4', b: '#8a5a3a' },
-    look: { hat: 'laurel', facial: 'beard' },
+    colors: { h: '#9a9a9a', F: '#9a9a9a', s: '#e0ac80', c: '#e8e2d4', p: '#e8e2d4', b: '#8a5a3a', g: '#3a5a8a' },
+    look: { hat: 'laurel', facial: 'beard', outfit: 'toga' },
     hello: 'Aristotle. Student of Plato, teacher of Alexander the Great, and now, visitor of your museum.',
     lines: [
       'Art takes nature as its model. Your fern is very convincing.',
@@ -186,7 +186,7 @@ export const FAMOUS = {
   shakespeare: {
     name: 'William Shakespeare',
     colors: { h: '#5a3a22', F: '#5a3a22', s: '#f2c6a0', c: '#1e1e22', p: '#1e1e22', b: '#1a1418' },
-    look: { bald: true, facial: 'vandyke', collar: 'ruff' },
+    look: { bald: true, facial: 'vandyke', collar: 'ruff', outfit: 'vest' },
     hello: 'Good morrow, curator! William Shakespeare. All the world’s a stage, and this museum a fine theatre.',
     lines: [
       'To hang, or not to hang: that is the question.',
@@ -200,7 +200,7 @@ export const FAMOUS = {
   einstein: {
     name: 'Albert Einstein',
     colors: { h: '#f0ece4', F: '#e8e4dc', s: '#f2c6a0', c: '#8a8a8a', p: '#5a4632', b: '#3a2418' },
-    look: { hair: 'wild', facial: 'stache' },
+    look: { hair: 'wild', facial: 'stache', outfit: 'sweater' },
     hello: 'Hello! Albert Einstein. Imagination is more important than knowledge, and your museum has plenty of both.',
     lines: [
       'Time is relative. An hour in a museum feels like a minute.',
@@ -213,8 +213,8 @@ export const FAMOUS = {
   },
   cleopatra: {
     name: 'Cleopatra',
-    colors: { h: '#1a1410', s: '#c68a5e', c: '#f0ece2', p: '#f0ece2', b: '#c9a23f', U: '#e0bc55' },
-    look: { hair: 'bob' },
+    colors: { h: '#1a1410', s: '#c68a5e', c: '#f0ece2', p: '#f0ece2', b: '#c9a23f', U: '#e0bc55', g: '#c9a23f' },
+    look: { hair: 'bob', outfit: 'gown', acc: 'necklace' },
     hello: 'I am Cleopatra, Queen of Egypt. You may continue breathing.',
     lines: [
       'I spoke nine languages. I will say “nice museum” in all of them.',
@@ -227,7 +227,7 @@ export const FAMOUS = {
   napoleon: {
     name: 'Napoleon Bonaparte',
     colors: { h: '#3a2a20', s: '#f2c6a0', c: '#2e4a8a', p: '#f0ece2', b: '#1a1418', T: '#1e1e22', U: '#c9a23f' },
-    look: { hat: 'bicorne' },
+    look: { hat: 'bicorne', outfit: 'coat' },
     hello: 'Napoleon Bonaparte, Emperor of the French. I filled the Louvre once. Let us see what you have.',
     lines: [
       'I am not short. I was average height. Blame the English cartoonists.',
@@ -239,8 +239,8 @@ export const FAMOUS = {
   },
   lincoln: {
     name: 'Abraham Lincoln',
-    colors: { h: '#1e1410', F: '#1e1410', s: '#e0ac80', c: '#1e1e22', p: '#1e1e22', b: '#1a1418', T: '#1e1e22', U: '#2e2e34' },
-    look: { hat: 'top', facial: 'chinstrap' },
+    colors: { h: '#1e1410', F: '#1e1410', s: '#e0ac80', c: '#1e1e22', p: '#1e1e22', b: '#1a1418', T: '#1e1e22', U: '#2e2e34', X: '#0e0e10' },
+    look: { hat: 'top', facial: 'chinstrap', outfit: 'coat', acc: 'bowtie' },
     hello: 'Abraham Lincoln. Four score and seven paintings ago, you had none. Fine work, curator.',
     lines: [
       'I keep my letters in this hat. It is a very good hat.',
@@ -252,8 +252,8 @@ export const FAMOUS = {
   },
   mozart: {
     name: 'Wolfgang Amadeus Mozart',
-    colors: { h: '#f0ece4', s: '#f2d0b0', c: '#b0413e', p: '#f0ece2', b: '#1a1418' },
-    look: { collar: 'ruff' },
+    colors: { h: '#f0ece4', s: '#f2d0b0', c: '#b0413e', p: '#f0ece2', b: '#1a1418', g: '#c9a23f' },
+    look: { collar: 'ruff', hair: 'ponytail', outfit: 'coat' },
     hello: 'Mozart! Composer, prodigy, and the best dancer in Vienna. Is there music in this museum?',
     lines: [
       'I wrote my first symphony at eight. What were you doing at eight?',
