@@ -1,0 +1,68 @@
+// Settings: sound, lighting, day/night, haptics, and testing tools.
+import { section, choices } from './decor.js';
+import { settings, setSetting, LIGHT_QUALITY } from './settings.js';
+import { isMuted, setMuted } from './music.js';
+
+const el = document.getElementById('settings');
+const body = el.querySelector('.settings-body');
+let state = null;
+
+function slider(value, onInput) {
+  const wrap = document.createElement('div');
+  wrap.className = 'slider';
+  const input = document.createElement('input');
+  input.type = 'range';
+  input.min = '0';
+  input.max = '100';
+  input.value = String(Math.round(value * 100));
+  const out = document.createElement('b');
+  out.textContent = `${input.value}%`;
+  input.addEventListener('input', () => {
+    out.textContent = `${input.value}%`;
+    onInput(Number(input.value) / 100);
+  });
+  wrap.append(input, out);
+  return wrap;
+}
+
+function button(label, onClick, cls = 'wide-btn') {
+  const b = document.createElement('button');
+  b.className = cls;
+  b.textContent = label;
+  b.onclick = onClick;
+  return b;
+}
+
+function render() {
+  const s = settings();
+  const onOff = { on: 'On', off: 'Off' };
+  body.replaceChildren(
+    section('Sound', choices({ on: 'On', off: 'Muted' }, isMuted() ? 'off' : 'on', (v) => (setMuted(v === 'off'), render()))),
+    section('Music volume', slider(s.music, (v) => setSetting('music', v))),
+    section('Sound effects', slider(s.sfx, (v) => setSetting('sfx', v))),
+    section('Lighting', choices(LIGHT_QUALITY, s.lights, (v) => (setSetting('lights', v), render()))),
+    section('Day & night', choices(onOff, s.dayNight ? 'on' : 'off', (v) => (setSetting('dayNight', v === 'on'), render()))),
+    section('Vibration', choices(onOff, s.haptics ? 'on' : 'off', (v) => (setSetting('haptics', v === 'on'), render()))),
+    section('Testing', button('+1,000 gold', () => state.onAddCoins(1000)), button('Reset museum (rooms, gold, mess)', () => state.onReset(), 'wide-btn danger')),
+  );
+  const note = document.createElement('p');
+  note.className = 'toolkit-note';
+  note.textContent = 'Day and night follow your clock. Lighting “Low” saves battery; “Off” turns the lamps and shadows of the night off.';
+  body.appendChild(note);
+}
+
+el.querySelector('.settings-close').addEventListener('click', () => {
+  el.classList.add('hidden');
+  state?.onClose();
+});
+
+// opts: { onAddCoins(n), onReset(), onClose() }
+export function openSettings(opts) {
+  state = opts;
+  render();
+  el.classList.remove('hidden');
+}
+
+export function closeSettings() {
+  el.classList.add('hidden');
+}

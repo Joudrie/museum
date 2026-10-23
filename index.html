@@ -10,10 +10,14 @@
   <body>
     <div id="game"></div>
 
-    <div id="hud">
-      <span class="museum-name">Your Museum</span>
-      <span class="hud-stats"><i class="coin"></i> <b class="hud-coins">0</b> · <span><b class="hud-income">+0</b>/hr</span> · <span><b class="hud-visitors">0</b> visitors</span> · <span class="hud-rating">★ 0.0</span></span>
-    </div>
+    <button id="hud" aria-label="Museum stats: tap for income per room">
+      <span class="museum-name"><i class="hud-time" aria-hidden="true"></i><span class="hud-name">Your Museum</span></span>
+      <span class="hud-stats"><span><i class="coin"></i><b class="hud-coins">0</b></span><span><b class="hud-income">+0</b>/hr</span><span><i class="ppl" aria-label="visitors a month"></i><b class="hud-visitors">0</b></span><span class="hud-rating">★ 0.0</span></span>
+    </button>
+
+    <button id="settings-btn" class="pixel-btn" aria-label="Settings">
+      <svg viewBox="0 0 10 10" width="20" height="20" shape-rendering="crispEdges" aria-hidden="true"><g fill="currentColor"><rect x="4" y="0" width="2" height="2" /><rect x="4" y="8" width="2" height="2" /><rect x="0" y="4" width="2" height="2" /><rect x="8" y="4" width="2" height="2" /><rect x="1" y="1" width="2" height="2" /><rect x="7" y="1" width="2" height="2" /><rect x="1" y="7" width="2" height="2" /><rect x="7" y="7" width="2" height="2" /><rect x="2" y="2" width="6" height="6" /></g><rect x="4" y="4" width="2" height="2" fill="#e8c867" /></svg>
+    </button>
 
     <button id="collect-all" class="pixel-btn" aria-label="Collect all rooms">Collect all ▶</button>
 
@@ -28,7 +32,7 @@
     </button>
 
     <div id="toolkit" class="hidden" role="dialog" aria-label="Toolkit">
-      <div class="toolkit-sheet">
+      <div class="toolkit-sheet sheet">
         <div class="decor-head">
           <h2>Toolkit</h2>
           <button class="toolkit-done pixel-btn">Done</button>
@@ -46,8 +50,8 @@
 
     <button id="interact" class="pixel-btn hidden"><span class="bang"></span>Interact</button>
 
-    <div id="decor" class="hidden" role="dialog" aria-label="Customize">
-      <div class="decor-sheet">
+    <div id="decor" class="overlay hidden" role="dialog" aria-label="Customize">
+      <div class="decor-sheet sheet">
         <div class="decor-head">
           <h2>Customize</h2>
           <button class="decor-close pixel-btn" aria-label="Close">✕</button>
@@ -58,8 +62,6 @@
           <button data-tab="character">Character</button>
         </div>
         <div class="decor-body"></div>
-        <button class="decor-coins">+1,000 gold (testing)</button>
-        <button class="decor-reset">Reset mess, rooms &amp; gold (testing)</button>
       </div>
     </div>
 
@@ -71,8 +73,8 @@
       </div>
     </div>
 
-    <div id="build" class="hidden" role="dialog" aria-label="Build a room">
-      <div class="build-sheet">
+    <div id="build" class="overlay hidden" role="dialog" aria-label="Build a room">
+      <div class="build-sheet sheet">
         <div class="decor-head">
           <h2>New room</h2>
           <button class="build-cancel pixel-btn" aria-label="Cancel">✕</button>
@@ -102,8 +104,8 @@
       </div>
     </div>
 
-    <div id="slotmenu" class="hidden" role="dialog" aria-label="Wall spot">
-      <div class="decor-sheet">
+    <div id="slotmenu" class="overlay hidden" role="dialog" aria-label="Wall spot">
+      <div class="decor-sheet sheet">
         <div class="decor-head">
           <h2>Wall spot</h2>
           <button class="slot-close pixel-btn" aria-label="Close">✕</button>
@@ -117,8 +119,8 @@
       </div>
     </div>
 
-    <div id="office" class="hidden" role="dialog" aria-label="Curator's Office">
-      <div class="decor-sheet">
+    <div id="office" class="overlay hidden" role="dialog" aria-label="Curator's Office">
+      <div class="decor-sheet sheet">
         <div class="decor-head">
           <h2>Curator’s Office</h2>
           <button class="office-close pixel-btn" aria-label="Close">✕</button>
@@ -130,8 +132,8 @@
       </div>
     </div>
 
-    <div id="staffmenu" class="hidden" role="dialog" aria-label="Staff board">
-      <div class="decor-sheet">
+    <div id="staffmenu" class="overlay hidden" role="dialog" aria-label="Staff board">
+      <div class="decor-sheet sheet">
         <div class="decor-head">
           <h2>Staff board</h2>
           <button class="staff-close pixel-btn" aria-label="Close">✕</button>
@@ -141,8 +143,8 @@
       </div>
     </div>
 
-    <div id="ask" class="hidden" role="dialog">
-      <div class="decor-sheet">
+    <div id="ask" class="overlay hidden" role="dialog">
+      <div class="decor-sheet sheet">
         <h2 class="ask-title"></h2>
         <p class="ask-text"></p>
         <div class="ask-buttons">
@@ -156,6 +158,27 @@
       <p class="ad-label">Advertisement</p>
       <p class="ad-body">Your ad here. Thanks for supporting Curation!</p>
       <p class="ad-timer">Reward in <b class="ad-count">5</b></p>
+      <div class="ad-bar"><i></i></div>
+    </div>
+
+    <div id="settings" class="overlay hidden" role="dialog" aria-label="Settings">
+      <div class="decor-sheet sheet">
+        <div class="decor-head">
+          <h2>Settings</h2>
+          <button class="settings-close pixel-btn decor-close" aria-label="Close">✕</button>
+        </div>
+        <div class="settings-body"></div>
+      </div>
+    </div>
+
+    <div id="income" class="overlay hidden" role="dialog" aria-label="Income">
+      <div class="decor-sheet sheet">
+        <div class="decor-head">
+          <h2>Your museum</h2>
+          <button class="income-close pixel-btn decor-close" aria-label="Close">✕</button>
+        </div>
+        <div class="income-body"></div>
+      </div>
     </div>
 
     <div id="toast" class="hidden"></div>

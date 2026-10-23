@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { RoomScene } from './RoomScene.js';
 import { makeCharacter } from './art.js';
+import './ui.js';
 
 // Render at device resolution so pixel art stays sharp on phones.
 const parent = document.getElementById('game');

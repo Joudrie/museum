@@ -144,13 +144,24 @@ export class Lighting {
     this.motes = [];
     this.time = 0;
     const { g } = scene;
-    if (this.quality !== 'off') {
-      this.rt = scene.add.renderTexture(0, 0, g.w, g.h + T).setOrigin(0).setDepth(DEPTH).setBlendMode(Phaser.BlendModes.MULTIPLY);
-    }
-    const onSettings = () => scene.scene.restart({ room: scene.roomIndex, spawn: { x: scene.player.x, y: scene.player.y, face: scene.player.texture.key }, instant: true });
-    this.onSettings = (e) => ['lights', 'dayNight'].includes(e.detail.key) && onSettings();
+    this.makeLayer();
+    this.onSettings = (e) => ['lights', 'dayNight'].includes(e.detail.key) && this.applySettings();
     window.addEventListener('settings', this.onSettings);
     scene.events.once('shutdown', () => window.removeEventListener('settings', this.onSettings));
+    this.build();
+  }
+
+  makeLayer() {
+    const { g } = this.scene;
+    this.rt?.destroy();
+    this.rt = null;
+    if (this.quality !== 'off') this.rt = this.scene.add.renderTexture(0, 0, g.w, g.h + T).setOrigin(0).setDepth(DEPTH).setBlendMode(Phaser.BlendModes.MULTIPLY);
+  }
+
+  // Lighting quality or day/night changed in Settings.
+  applySettings() {
+    this.quality = settings().lights;
+    this.makeLayer();
     this.build();
   }
 
@@ -166,6 +177,7 @@ export class Lighting {
     const { g } = sc;
     this.extras.forEach((o) => o.destroy());
     this.extras = [];
+    this.glow = null;
     this.motes.forEach((m) => m.img.destroy());
     this.motes = [];
     this.ambient = settings().dayNight ? ambientAt(hourNow()) : DAY;

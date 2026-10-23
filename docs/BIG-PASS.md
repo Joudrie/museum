@@ -69,3 +69,28 @@ PW=/opt/node-tools/node_modules/playwright node tests/gaps.cjs    # wall gaps, 5
   - They sit on stools, benches and sofas, look around, and check their phones.
 - Dialogue: more lines, plus context lines that depend on the room (mess, high or low rating, night, morning).
 - Fixed: one art-nerd line was a blank slot in the list, so that visitor could say nothing.
+
+## Phase 4: Menus and UI
+- One UI system for every panel:
+  - each is an `.overlay` (dim, fades) holding a `.sheet` (slides up with a little overshoot)
+  - a gold-trimmed frame with rounded top corners and a grab handle
+  - diamond-marked titles and matching close buttons
+  - buttons press down when tapped, and cards share one style
+  - every tap target is at least 44px.
+- Feel (`src/ui.js`): a soft click and a tiny vibration on every button, a whoosh when a panel opens, and a softer sound when one closes.
+- New sounds for unlocks, level-ups, stars and quests (used in Phase 5).
+- Music and sound effects now have separate volumes.
+- Settings screen (gear under the house button):
+  - sound on/off, music volume, sound-effects volume
+  - lighting quality, day/night, vibration
+  - the testing tools (+1,000 gold, reset museum), moved out of Customize.
+  - Changing lighting applies instantly, without reloading the room.
+- HUD:
+  - Cleaner: coins, gold per hour, visitors (person icon) and rating, plus a sun/moon dot for the time of day.
+  - Tap it for "Your museum": gold/hour, visitors and rating; boosts (famous visitors met, tour guides, coffee, rooms that need mopping); every room with its stars, income and coins waiting. Tap a room to go there.
+- Painting picker rebuilt as a gallery:
+  - a two-column grid of framed thumbnails
+  - era filters (Renaissance, Baroque, 1700s–1850s, Impressionist, Modern, Not hung) and a search box
+  - picking a painting that hangs elsewhere moves it here, instead of being greyed out.
+- Toolkit: categories show an item icon; locked items are greyed with a lock and the office level they need.
+- Room transitions take a little step forward (zoom) with the fade. Toasts drop in under the HUD. The ad has a progress bar. Speech bubbles say "tap to close".
