@@ -46,7 +46,7 @@ export const ITEMS = {
   telescope: { name: 'Telescope', cat: 'science', w: 1, h: 1, rise: 30, price: 180, income: 14, lvl: 3 },
   specimens: { name: 'Specimen jars', cat: 'science', w: 1, h: 1, rise: 30, price: 120, income: 10, lvl: 3 },
   counter: { name: 'Coffee counter', cat: 'services', w: 3, h: 1, rise: 22, price: 400, income: 0, max: 1, note: 'Sells coffee', lvl: 2 },
-  closet: { name: 'Janitor closet', cat: 'services', w: 1, h: 1, rise: 42, price: 300, income: 0, max: 3, note: 'Hires a janitor' },
+  closet: { name: 'Mop closet', cat: 'retired', w: 1, h: 1, rise: 42, price: 300, income: 0, max: 3, note: 'Hires a janitor' },
   geode: { name: 'Geode', cat: 'science', w: 1, h: 1, rise: 20, price: 220, income: 18, lvl: 3 },
 };
 

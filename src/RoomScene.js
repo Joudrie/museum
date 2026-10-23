@@ -32,7 +32,8 @@ import { setTrack, sfx } from './music.js';
 import { MAIN_HALL_PRICE, seedEntry, loadRooms, addRoom, resetRooms, updateRoom, swapRooms, roomName, layout, paintingsFor, slotStates, setSlot, hungAnywhere, placeArt, wallItems, plantSpots, carpetRect } from './rooms.js';
 import { openSlotMenu } from './slotmenu.js';
 import { ITEMS, loadItems, saveItems, resetItems, footprint, countPlaced } from './items.js';
-import { roomDirt, removeDirt, resetDirt, covered, janitors } from './staff.js';
+import { roomDirt, removeDirt, resetDirt, covered, janitors, janitorCost, hireJanitor, resetJanitors } from './staff.js';
+import { hasCameras, buyCameras, resetSecurity, CAMERA_COST, trackSeen, maybeRob } from './security.js';
 import { officeLevel, setOfficeLevel, resetOffice, perks, itemLevel, LEVELS, MAX_LEVEL } from './office.js';
 import { openOffice } from './officemenu.js';
 import { ask } from './ask.js';
@@ -83,6 +84,7 @@ const OUTFITS = {
   historian: ['#6a5a3a', '#4a3a2a', '#5a5a4a'],
   barista: ['#2f5d46'],
   caretaker: ['#7a5a3a'],
+  guard: ['#1e1e22'],
   janitor: ['#4a5f80'],
 };
 
@@ -123,6 +125,13 @@ function visitorLook(kind, r) {
     colors.p = '#2e3a4e';
   }
   if (kind === 'barista') colors.p = '#2a2420';
+  if (kind === 'guard') {
+    colors.c = '#1e1e22';
+    colors.p = '#1e1e22';
+    colors.h = '#1e1410';
+    look.glasses = 'shades';
+    look.earpiece = true;
+  }
   if (kind === 'caretaker') {
     colors.h = '#d8d8d8';
     look.glasses = true;
@@ -237,6 +246,19 @@ export class RoomScene extends Phaser.Scene {
     this.updatePile();
     this.pileTimer = this.time.addEvent({ delay: 1000, loop: true, callback: () => this.updatePile() });
     this.tutorial();
+    if (!RoomScene.opened) {
+      RoomScene.opened = true;
+      const stolen = maybeRob(this.rooms, /[?&]rob\b/.test(location.search));
+      trackSeen();
+      if (stolen) {
+        this.time.delayedCall(700, () => {
+          this.pause(true);
+          sfx('nope');
+          ask('You were robbed!', `While you were away, a thief made off with “${stolen.title}” by ${stolen.by}. It’s back in the collection: hang it again from any empty wall spot. Security cameras would stop this (ask the guard).`, 'OK', () => this.pause(false), null);
+        });
+        if (stolen.room === this.roomIndex) this.time.delayedCall(800, () => this.rebuild());
+      }
+    }
     this.dirtTimer = this.time.addEvent({ delay: 30000, loop: true, callback: () => this.refreshDirt() });
     const onCoins = () => this.updateHud();
     window.addEventListener('coins', onCoins);
@@ -481,15 +503,28 @@ export class RoomScene extends Phaser.Scene {
     if (counter) {
       make('barista', 700 + this.roomIndex, g.xL + counter.c * T + 60, g.y0 + counter.r * T + 2).fixed = true;
     }
-    if (covered(this.rooms, this.roomIndex) && Math.random() < 0.5) {
+    // The janitor is rarely seen: now and then, mopping up the one puddle.
+    if (covered(this.rooms, this.roomIndex) && Math.random() < 0.25) {
       let x = g.xL + T * 1.5;
       let y = g.y0 + T * 3;
-      for (let tries = 0; tries < 20 && this.blocked(x, y); tries++) {
-        x = g.xL + (Math.floor(Math.random() * g.fw) + 0.5) * T;
+      for (let tries = 0; tries < 20 && (this.blocked(x, y) || this.blocked(x + 22, y)); tries++) {
+        x = g.xL + (Math.floor(Math.random() * (g.fw - 1)) + 0.5) * T;
         y = g.y0 + (1 + Math.floor(Math.random() * (g.fd - 2))) * T + T - 4;
       }
       const n = make('janitor', 800 + this.roomIndex, x, y);
+      n.fixed = true;
       n.mop = this.add.image(x + 12, y, 'mop').setOrigin(0.5, 1);
+      n.puddle = this.add.image(x + 24, y - 4, 'dirt_puddle').setDepth(1);
+    }
+    // One security guard: by the main hall's middle arch, or by the entrance's
+    // double doors while the main hall is still locked.
+    const hallOpen = this.rooms[1] && !this.rooms[1].locked;
+    if ((g.main || (this.roomIndex === 0 && !hallOpen)) && this.L.exit) {
+      // (in the main hall he stands just in front of the column beside the arch)
+      const gx = g.main ? this.L.exit.ax - 30 : this.L.exit.ax + 44;
+      const gy = g.main ? g.yb + T + 16 : g.y0 + 14;
+      const n = make('guard', 950, gx, gy);
+      n.fixed = true;
     }
   }
 
@@ -518,6 +553,7 @@ export class RoomScene extends Phaser.Scene {
     this.npcs.filter((n) => n.staff).forEach((n) => {
       n.s.destroy();
       n.mop?.destroy();
+      n.puddle?.destroy();
     });
     this.npcs = this.npcs.filter((n) => !n.staff);
     this.spawnStaff();
@@ -579,9 +615,10 @@ export class RoomScene extends Phaser.Scene {
       line = `Coffee’s flowing! ${museumVisitors(this.rooms).toLocaleString()} visitors a month means ${coffeeIncome(this.rooms)} gold an hour from cups.`;
     }
     if (n.kind === 'janitor' && Math.random() < 0.4) {
-      const j = janitors(this.rooms);
-      line = `There ${j === 1 ? 'is 1 of us' : `are ${j} of us`}. Each janitor keeps 3 rooms spotless.`;
+      const j = janitors();
+      line = `There ${j === 1 ? 'is 1 of us' : `are ${j} of us`}. One janitor per room keeps the whole place spotless.`;
     }
+    if (n.kind === 'guard' && !hasCameras()) return this.offerCameras(n, line);
     n.talking = true;
     n.target = null;
     this.faceSprite(n.s, n.prefix, this.player.x - n.s.x, this.player.y - n.s.y);
@@ -589,6 +626,22 @@ export class RoomScene extends Phaser.Scene {
     sfx('talk');
     const at = this.screenAt(n.s.x, n.s.y - 34);
     showTalk(n.name, PERSONALITIES[n.kind].label, line, at);
+  }
+
+  // The guard offers to put up cameras (no change to how the rooms look).
+  offerCameras(n, line) {
+    this.faceSprite(n.s, n.prefix, this.player.x - n.s.x, this.player.y - n.s.y);
+    sfx('talk');
+    this.pause(true);
+    const price = FREE ? `Free while testing (${CAMERA_COST} gold).` : `${CAMERA_COST} gold.`;
+    ask(`${n.name} · Security`, `“${line} Want me to put up security cameras? Thieves hate cameras.” ${price}`, 'Install cameras', (yes) => {
+      this.pause(false);
+      if (!yes) return;
+      if (!spend(CAMERA_COST)) return this.toast(`Need ${CAMERA_COST} gold`);
+      buyCameras();
+      sfx('build');
+      this.toast('Cameras installed: no more robberies');
+    });
   }
 
   talkToFamous(n) {
@@ -800,10 +853,22 @@ export class RoomScene extends Phaser.Scene {
           resetOffice();
           save(TUTORIAL_KEY, 0); // replay the walkthrough
           resetMet();
+          resetJanitors();
+          resetSecurity();
           save(DECOR_KEY, { 0: load(DECOR_KEY, {})[0] }); // built rooms are gone, so is their decor
           this.travel(0, 'start');
         },
         onAddCoins: (n) => addCoins(n),
+        janitor: { hired: covered(this.rooms, this.roomIndex), cost: janitorCost(), free: FREE },
+        onHireJanitor: () => {
+          if (!spend(janitorCost())) return this.toast(`Need ${janitorCost()} gold`);
+          this.settleAll();
+          hireJanitor(this.roomIndex);
+          sfx('build');
+          this.toast('Janitor hired: this room stays spotless');
+          this.refreshStaff();
+          this.updateHud();
+        },
         onClose: () => this.pause(false),
       });
     };

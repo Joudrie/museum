@@ -1,23 +1,27 @@
 // Janitors and floor dirt. Rooms slowly collect puddles and litter, and each
-// spot cuts that room's income. Every janitor (one per janitor closet) keeps
-// three rooms spotless; without one you mop up yourself.
+// spot cuts that room's income. Each room can have its own janitor (a one-time
+// hire, each one costing more than the last) who keeps it spotless; without
+// one you mop up yourself.
 import { load, save } from './decor.js';
-import { loadItems } from './items.js';
 
 const DIRT_KEY = 'curation.dirt'; // { [roomIndex]: { t: last spawn (ms), spots: [{ id, c, r, kind }] } }
+const JANITOR_KEY = 'curation.janitor'; // { [roomIndex]: true } rooms with a janitor
 const EVERY = 90 * 60 * 1000; // a new spot every 90 minutes
 export const MAX_DIRT = 3;
 export const DIRT_PENALTY = 0.1; // each spot: -10% room income
-export const ROOMS_PER_JANITOR = 3;
-export const MAX_JANITORS = 3;
 
-export function janitors(rooms) {
-  let n = 0;
-  rooms.forEach((_, i) => loadItems(i).forEach((it) => it.type === 'closet' && n++));
-  return Math.min(MAX_JANITORS, n);
+export const janitors = () => Object.values(load(JANITOR_KEY, {})).filter(Boolean).length;
+export const covered = (rooms, i) => !!load(JANITOR_KEY, {})[i];
+// The next janitor's price: 100, 160, 260, 410, ...
+export const janitorCost = () => Math.round((100 * 1.6 ** janitors()) / 10) * 10;
+
+export function hireJanitor(i) {
+  save(JANITOR_KEY, { ...load(JANITOR_KEY, {}), [i]: true });
 }
 
-export const covered = (rooms, i) => i < janitors(rooms) * ROOMS_PER_JANITOR;
+export function resetJanitors() {
+  save(JANITOR_KEY, {});
+}
 
 function state(i) {
   return load(DIRT_KEY, {})[i] || { t: Date.now(), spots: [] };
