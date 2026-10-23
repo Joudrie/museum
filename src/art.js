@@ -132,6 +132,11 @@ export const NEW_ROOM_DECOR = {
   music: 'none',
 };
 
+// The main hall starts out grand: marble floor, damask walls, dark wood.
+export const MAIN_DECOR = { ...DEFAULT_DECOR, pattern: 'marble', floor: '#e9e6df', paperStyle: 'damask', paper: '#7a3a3e', wainscotStyle: 'panels', wainscot: '#3e2a20', light: 'warm' };
+// A room's look before any customizing.
+export const baseDecor = (room, index) => (index === 0 ? DEFAULT_DECOR : room.orient === 'main' ? MAIN_DECOR : NEW_ROOM_DECOR);
+
 // Deterministic hash noise in [0, 1).
 export const hash = (x, y, s = 0) => {
   const n = Math.sin(x * 127.1 + y * 311.7 + s * 74.7) * 43758.5453;

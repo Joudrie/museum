@@ -39,6 +39,7 @@
 - Entrance with ticket desk, then a paid-unlock main hall: hallway (break room and office doors), open hall with two staircases up to a full-width balcony with four big paintings. Built rooms continue from the hall's middle arch. Office door opens the Curator's Office; break room is coming soon.
 
 ## Phase 6: Economy (in progress)
+- Done: **room ratings**. Each room scores out of 100 (1-5 stars): paintings 40 (wall spots filled), decor 25 (5 per item), clean 20 (−7 per mess), style 15 (pattern, wainscot, carpet, plants). Shown when entering a room and in Customize with tips; the museum rating (average of open rooms) is in the top bar and scales visitors from 0.6× to 1.4×.
 - Goal: get the most visitors. More paintings → more visitors; complete sets → big bonus; every decoration adds a little income.
 - Coffee shop room: visitors buy coffee; decorate it (bookshelves etc.).
 - Done: real gold. Start with 300. Each room earns gold/hr (5 per painting + each item's income); it piles up as a coin heap near the room's entrance (max 8 hours' worth). Walk up and Interact to collect. Items cost gold (sell for half back); each new room costs more (bigger rooms cost more). Testing button: +1,000 gold.
