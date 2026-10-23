@@ -28,7 +28,7 @@ import {
   baseDecor,
   LIGHT_TINTS,
 } from './art.js';
-import { setTrack } from './music.js';
+import { setTrack, sfx } from './music.js';
 import { MAIN_HALL_PRICE, seedEntry, loadRooms, addRoom, resetRooms, updateRoom, swapRooms, roomName, layout, paintingsFor, slotStates, setSlot, hungAnywhere, placeArt, wallItems, plantSpots, carpetRect } from './rooms.js';
 import { openSlotMenu } from './slotmenu.js';
 import { ITEMS, loadItems, saveItems, resetItems, footprint, countPlaced } from './items.js';
@@ -57,6 +57,7 @@ const REACH = 26; // how close you need to be to interact
 const HD = 4; // resolution multiplier for paintings on the wall
 
 const DECOR_KEY = 'curation.roomDecor'; // { [roomIndex]: decor }
+const TUTORIAL_KEY = 'curation.tutorial'; // how far the first-time walkthrough has got
 const CHARACTER_KEY = 'curation.character';
 const CLEANED_KEY = 'curation.cleaned';
 
@@ -190,6 +191,23 @@ export class RoomScene extends Phaser.Scene {
     if (this.deskSpot) this.placeDesk();
     this.pileTile = this.findPileTile();
     this.pileSprite = this.add.image(0, 0, 'coins_1').setOrigin(0.5, 1).setVisible(false);
+    // A twinkle on the coin pile so it catches the eye.
+    if (!this.textures.exists('twinkle')) {
+      const tw = this.make.graphics({ add: false });
+      tw.fillStyle(0xffffff, 1).fillRect(2, 0, 1, 5).fillRect(0, 2, 5, 1);
+      tw.generateTexture('twinkle', 5, 5);
+      tw.destroy();
+    }
+    this.twinkle = this.add.image(0, 0, 'twinkle').setAlpha(0).setVisible(false);
+    this.tweens.add({
+      targets: this.twinkle,
+      alpha: { from: 0, to: 1 },
+      yoyo: true,
+      repeat: -1,
+      duration: 380,
+      repeatDelay: 1300,
+      onRepeat: () => this.twinkle.setPosition(this.pileSprite.x - 8 + Math.random() * 16, this.pileSprite.y - 14 + Math.random() * 8),
+    });
     this.items = [];
     this.fitItems();
     this.itemSprites = [];
@@ -214,6 +232,7 @@ export class RoomScene extends Phaser.Scene {
     this.updateHud();
     this.updatePile();
     this.pileTimer = this.time.addEvent({ delay: 1000, loop: true, callback: () => this.updatePile() });
+    this.tutorial();
     this.dirtTimer = this.time.addEvent({ delay: 30000, loop: true, callback: () => this.refreshDirt() });
     const onCoins = () => this.updateHud();
     window.addEventListener('coins', onCoins);
@@ -391,6 +410,8 @@ export class RoomScene extends Phaser.Scene {
       removeDirt(this.roomIndex, m.id);
       this.updateHud();
     } else save(CLEANED_KEY, [...new Set([...load(CLEANED_KEY, []), m.id])]);
+    sfx('clean');
+    this.tutorialCleaned();
 
     const b = m.sprite.getBounds();
     const color = m.kind === 'cobweb' ? 0xf4f2ec : m.kind === 'crack' ? 0xf1dfb0 : 0xd8e4ea;
@@ -430,7 +451,7 @@ export class RoomScene extends Phaser.Scene {
     let x;
     let y;
     for (let tries = 0; tries < 20; tries++) {
-      x = g.xL + Math.floor(hash(seed, 1 + tries, 51) * g.fw) * T + T / 2;
+      x = g.xL + Math.floor(hash(seed * 13 + 3, 1 + tries, 51) * g.fw) * T + T / 2; // spread out, not all in one column
       y = g.y0 + (1 + Math.floor(hash(seed, 2 + tries, 52) * (g.fd - 2))) * T + T - 4;
       if (!this.blocked(x, y)) break;
     }
@@ -541,11 +562,44 @@ export class RoomScene extends Phaser.Scene {
     n.target = null;
     this.faceSprite(n.s, n.prefix, this.player.x - n.s.x, this.player.y - n.s.y);
     this.talkingTo = n;
+    sfx('talk');
+    const at = this.screenAt(n.s.x, n.s.y - 34);
+    showTalk(n.name, PERSONALITIES[n.kind].label, line, at);
+  }
+
+  // Where a point in the room is on the page (for speech bubbles).
+  screenAt(x, y) {
     const cam = this.cameras.main;
     const r = this.game.canvas.getBoundingClientRect();
     const k = r.width / this.scale.gameSize.width;
-    const at = { x: r.left + (n.s.x - cam.worldView.x) * cam.zoom * k, y: r.top + (n.s.y - 34 - cam.worldView.y) * cam.zoom * k };
-    showTalk(n.name, PERSONALITIES[n.kind].label, line, at);
+    return { x: r.left + (x - cam.worldView.x) * cam.zoom * k, y: r.top + (y - cam.worldView.y) * cam.zoom * k };
+  }
+
+  // ---------- First-time walkthrough: Edmund the caretaker shows you around ----------
+
+  tutorial() {
+    const step = load(TUTORIAL_KEY, 0);
+    if (step === 0 && this.roomIndex === 0) {
+      this.time.delayedCall(900, () => this.caretakerSays('Welcome, new curator! Congrats on your new museum. It’s seen better days: walk over to the cracks, stains and cobwebs and press Interact to clean them up.'));
+      save(TUTORIAL_KEY, 1);
+    } else if (step === 2 && this.roomIndex === 1) {
+      this.time.delayedCall(900, () => this.caretakerSays('The main hall! Decorate it with the hammer, change the floors and walls with the house button, and hang paintings in the empty frames. Each painting brings visitors.'));
+      save(TUTORIAL_KEY, 3);
+    }
+  }
+
+  // Called after cleaning: once the entrance is spotless, point the way on.
+  tutorialCleaned() {
+    if (load(TUTORIAL_KEY, 0) !== 1 || this.roomIndex !== 0 || this.mess.some((m) => !m.dirt)) return;
+    save(TUTORIAL_KEY, 2);
+    this.caretakerSays('Spotless! Visitors pay as they come: collect the coins that pile up by the door. When you’re ready, open the main hall through the double doors.');
+  }
+
+  caretakerSays(line) {
+    const n = this.npcs.find((v) => v.kind === 'caretaker');
+    const at = n ? this.screenAt(n.s.x, n.s.y - 34) : this.screenAt(this.player.x, this.player.y - 34);
+    sfx('talk');
+    showTalk('Edmund', PERSONALITIES.caretaker.label, line, at, 10000);
   }
 
   endTalk() {
@@ -701,6 +755,7 @@ export class RoomScene extends Phaser.Scene {
           resetWallet();
           resetDirt();
           resetOffice();
+          save(TUTORIAL_KEY, 0); // replay the walkthrough
           save(DECOR_KEY, { 0: load(DECOR_KEY, {})[0] }); // built rooms are gone, so is their decor
           this.travel(0, 'start');
         },
@@ -857,6 +912,7 @@ export class RoomScene extends Phaser.Scene {
       if (!yes) return;
       if (!spend(MAIN_HALL_PRICE)) return this.toast(`Need ${MAIN_HALL_PRICE.toLocaleString()} gold`);
       updateRoom(1, { locked: false });
+      sfx('build');
       this.rooms = loadRooms();
       this.toast('The main hall is open!');
       this.travel(1, 'entrance');
@@ -870,6 +926,7 @@ export class RoomScene extends Phaser.Scene {
     openBuild(this, this.rooms, NEW_ROOM_DECOR, {
       onBuild: (room) => {
         addRoom(room);
+        sfx('build');
         this.travel(this.roomIndex + 1, 'entrance');
       },
       onCancel: () => this.pause(false),
@@ -881,6 +938,7 @@ export class RoomScene extends Phaser.Scene {
     this.interactBtn.classList.add('hidden');
     hideTalk();
     if (instant) return this.scene.restart({ room, spawn, instant });
+    sfx('door');
     this.cameras.main.fadeOut(220, 29, 21, 18);
     this.cameras.main.once('camerafadeoutcomplete', () => this.scene.restart({ room, spawn }));
   }
@@ -893,6 +951,7 @@ export class RoomScene extends Phaser.Scene {
   }
 
   toast(text) {
+    if (/^(Need|Only|Unlocks|Upgrade|Not enough)/.test(text)) sfx('nope');
     const el = document.getElementById('toast');
     el.textContent = text;
     el.classList.remove('hidden');
@@ -1031,6 +1090,7 @@ export class RoomScene extends Phaser.Scene {
         const lvl = officeLevel();
         if (lvl >= MAX_LEVEL || !spend(LEVELS[lvl + 1].cost)) return lvl;
         setOfficeLevel(lvl + 1);
+        sfx('build');
         this.toast(`Curator’s Office level ${lvl + 1}!`);
         return lvl + 1;
       },
@@ -1056,18 +1116,21 @@ export class RoomScene extends Phaser.Scene {
     const n = pile(this.rooms, this.roomIndex);
     const sp = this.pileSprite;
     sp.amount = n;
+    this.twinkle.setVisible(n >= 1);
     if (n < 1) return sp.setVisible(false);
     const rate = Math.max(1, roomIncome(this.rooms, this.roomIndex));
     const stage = n >= rate * 4 ? 3 : n >= rate ? 2 : 1; // a heap after 4 hours
     const { c, r } = this.pileTile;
     const y = this.g.y0 + (r + 1) * T - 5;
     sp.setTexture(`coins_${stage}`).setPosition(this.g.xL + (c + 0.5) * T, y).setDepth(y).setVisible(true);
+    this.twinkle.setDepth(y + 1);
   }
 
   collectPile() {
     const sp = this.pileSprite;
     const n = collect(this.rooms, this.roomIndex);
     if (n > 0) {
+      sfx('coin');
       this.toast(`+${n.toLocaleString()} gold`);
       for (let i = 0; i < 8; i++) {
         const c = this.add.image(sp.x + (Math.random() - 0.5) * 16, sp.y - 8, 'coins_1').setScale(0.35).setDepth(5001);
@@ -1268,6 +1331,7 @@ export class RoomScene extends Phaser.Scene {
       this.settleAll();
     }
     this.items.push({ type, c, r, rot });
+    sfx('place');
     saveItems(this.roomIndex, this.items);
     this.placeItems();
     if (ITEMS[type].cat === 'services') this.refreshStaff();
@@ -1304,6 +1368,7 @@ export class RoomScene extends Phaser.Scene {
         onClick: () => {
           this.settleAll();
           addCoins(sellPrice(hit.type));
+          sfx('sell');
           this.toast(`Sold for ${sellPrice(hit.type)} gold`);
           this.updateItem(hit, null);
         },

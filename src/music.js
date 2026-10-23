@@ -103,6 +103,41 @@ function play(track) {
   }, 150);
 }
 
+// Little sound effects, built from short tones. Silent until audio is unlocked.
+function tone(freq, start, dur, { wave = 'triangle', gain = 0.35, to = null } = {}) {
+  const osc = ctx.createOscillator();
+  const g = ctx.createGain();
+  osc.type = wave;
+  osc.frequency.setValueAtTime(freq, start);
+  if (to) osc.frequency.exponentialRampToValueAtTime(to, start + dur);
+  g.gain.setValueAtTime(0, start);
+  g.gain.linearRampToValueAtTime(gain, start + 0.01);
+  g.gain.exponentialRampToValueAtTime(0.0001, start + dur);
+  osc.connect(g);
+  g.connect(master);
+  osc.start(start);
+  osc.stop(start + dur + 0.02);
+}
+
+const SFX = {
+  coin: (t) => [1319, 1976].forEach((f, i) => tone(f, t + i * 0.07, 0.18, { gain: 0.3 })),
+  clean: (t) => tone(1800, t, 0.22, { wave: 'sawtooth', gain: 0.08, to: 300 }),
+  door: (t) => {
+    tone(110, t, 0.18, { wave: 'square', gain: 0.12 });
+    tone(220, t + 0.05, 0.25, { wave: 'triangle', gain: 0.1, to: 180 });
+  },
+  place: (t) => tone(330, t, 0.09, { gain: 0.35, to: 260 }),
+  sell: (t) => [988, 784].forEach((f, i) => tone(f, t + i * 0.06, 0.14, { gain: 0.25 })),
+  build: (t) => [523, 659, 784, 1047].forEach((f, i) => tone(f, t + i * 0.09, 0.3, { gain: 0.28 })),
+  talk: (t) => tone(660 + Math.random() * 120, t, 0.06, { wave: 'square', gain: 0.05 }),
+  nope: (t) => tone(196, t, 0.16, { wave: 'square', gain: 0.08, to: 150 }),
+};
+
+export function sfx(name) {
+  if (!ctx || ctx.state !== 'running' || muted || !SFX[name]) return;
+  SFX[name](ctx.currentTime + 0.01);
+}
+
 // Set the room's track. Plays once audio is unlocked by a tap.
 export function setTrack(track) {
   wanted = track || 'none';

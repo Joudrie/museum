@@ -1141,3 +1141,13 @@ body {
   height: 100%;
   background: var(--gold);
 }
+
+/* The Interact button's icon pulses gently while something is in reach. */
+#interact:not(.hidden) .bang {
+  animation: bang-pulse 1.4s ease-in-out infinite;
+}
+@keyframes bang-pulse {
+  50% {
+    transform: scale(1.15);
+  }
+}
