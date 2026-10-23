@@ -29,10 +29,11 @@ import {
   LIGHT_TINTS,
 } from './art.js';
 import { setTrack, sfx } from './music.js';
-import { MAIN_HALL_PRICE, seedEntry, loadRooms, addRoom, resetRooms, updateRoom, swapRooms, roomName, layout, paintingsFor, slotStates, setSlot, hungAnywhere, placeArt, wallItems, plantSpots, carpetRect } from './rooms.js';
+import { BREAK, roomAt, MAIN_HALL_PRICE, seedEntry, loadRooms, addRoom, resetRooms, updateRoom, swapRooms, roomName, layout, paintingsFor, slotStates, setSlot, hungAnywhere, placeArt, wallItems, plantSpots, carpetRect } from './rooms.js';
 import { openSlotMenu } from './slotmenu.js';
 import { ITEMS, loadItems, saveItems, resetItems, footprint, countPlaced } from './items.js';
-import { roomDirt, removeDirt, resetDirt, covered, janitors, janitorCost, hireJanitor, resetJanitors } from './staff.js';
+import { roomDirt, removeDirt, resetDirt, covered, janitors, janitorCost, hireJanitor, resetJanitors, guides, maxGuides, guideCost, hireGuide, hasCarpenter, hireCarpenter, CARPENTER_COST, staffCount } from './staff.js';
+import { openStaffMenu } from './staffmenu.js';
 import { hasCameras, buyCameras, resetSecurity, CAMERA_COST, trackSeen, maybeRob } from './security.js';
 import { officeLevel, setOfficeLevel, resetOffice, perks, itemLevel, LEVELS, MAX_LEVEL } from './office.js';
 import { openOffice } from './officemenu.js';
@@ -63,6 +64,7 @@ const DECOR_KEY = 'curation.roomDecor'; // { [roomIndex]: decor }
 // The curator's chosen hat, facial hair and glasses.
 const lookOf = (ch) => ({ hat: ch.hat && ch.hat !== 'none' ? ch.hat : null, facial: ch.facial, glasses: ch.glasses && ch.glasses !== 'none' ? ch.glasses : null });
 const TUTORIAL_KEY = 'curation.tutorial'; // how far the first-time walkthrough has got
+const BREAK_SEEDED_KEY = 'curation.breakSeeded';
 const CHARACTER_KEY = 'curation.character';
 const CLEANED_KEY = 'curation.cleaned';
 
@@ -86,6 +88,8 @@ const OUTFITS = {
   barista: ['#2f5d46'],
   caretaker: ['#7a5a3a'],
   guard: ['#1e1e22'],
+  guide: ['#c0392b'],
+  carpenter: ['#e8762c'],
   janitor: ['#4a5f80'],
 };
 
@@ -126,6 +130,17 @@ function visitorLook(kind, r) {
     colors.p = '#2e3a4e';
   }
   if (kind === 'barista') colors.p = '#2a2420';
+  if (kind === 'guide') {
+    colors.c = '#c0392b'; // red blazer
+    colors.p = '#2f2b3d';
+  }
+  if (kind === 'carpenter') {
+    look.hat = 'hardhat';
+    colors.T = '#f2c53d';
+    colors.U = '#c99a1a';
+    colors.c = '#e8762c'; // safety orange
+    colors.p = '#3c4a63';
+  }
   if (kind === 'guard') {
     colors.c = '#1e1e22';
     colors.p = '#1e1e22';
@@ -155,7 +170,9 @@ export class RoomScene extends Phaser.Scene {
 
   preload() {
     this.rooms = loadRooms();
-    this.room = this.rooms[this.roomIndex];
+    this.room = roomAt(this.rooms, this.roomIndex);
+    this.isBreak = this.roomIndex === BREAK;
+    if (this.isBreak) this.seedBreakRoom();
     this.L = layout(this.room);
     this.states = slotStates(this.rooms, this.roomIndex);
     this.hung = paintingsFor(this.rooms, this.roomIndex).map(placeArt);
@@ -200,6 +217,7 @@ export class RoomScene extends Phaser.Scene {
     if (g.main) this.placeHall();
     this.decorObjects = [];
     this.placeDecor();
+    if (this.L.board) this.placeBoard();
     this.deskSpot = this.L.desk ? { ...this.L.desk } : this.roomIndex === 0 ? this.findDeskSpot() : null;
     if (this.deskSpot) this.placeDesk();
     this.pileTile = this.findPileTile();
@@ -243,7 +261,7 @@ export class RoomScene extends Phaser.Scene {
 
     const start = this.spawnPoint();
     this.player = this.add.sprite(start.x, start.y, start.face).setOrigin(0.5, 1).setScale(PLAYER_SCALE);
-    const count = Math.min(5, 3 + Math.floor(this.L.slots.length / 6));
+    const count = this.isBreak ? 0 : Math.min(5, 3 + Math.floor(this.L.slots.length / 6)); // the break room is staff only
     this.npcs = Array.from({ length: count }, (_, i) => this.spawnVisitor(i));
     this.spawnStaff();
     if (this.g.main) this.spawnFamous();
@@ -276,7 +294,7 @@ export class RoomScene extends Phaser.Scene {
     this.events.once('shutdown', () => window.removeEventListener('coins', onCoins));
     if (!this.instant) this.cameras.main.fadeIn(250, 29, 21, 18);
     this.archLock = true; // don't bounce straight back through the doorway we arrived by
-    if (typeof this.spawnAt !== 'object') this.toast(`${roomName(this.room, this.roomIndex)} · ${starText(roomRating(this.rooms, this.roomIndex).stars)}`);
+    if (typeof this.spawnAt !== 'object') this.toast(this.isBreak ? 'Break room · staff only' : `${roomName(this.room, this.roomIndex)} · ${starText(roomRating(this.rooms, this.roomIndex).stars)}`);
   }
 
   spawnPoint() {
@@ -286,6 +304,12 @@ export class RoomScene extends Phaser.Scene {
       return { ...this.spawnAt, x: Phaser.Math.Clamp(this.spawnAt.x, b.x0, b.x1), y: Phaser.Math.Clamp(this.spawnAt.y, b.y0, b.y1) };
     }
     if (this.spawnAt === 'exit' && exit) return { x: exit.ax, y: exit.ay + 14, face: 'player_down' };
+    if (this.spawnAt === 'breakdoor') {
+      // back out of the break room: in front of its door in the hallway
+      const d = this.L.decorDoors.find((dd) => dd.label === 'Break room');
+      const st = this.standFor({ wall: d.wall, u: (d.rect.u0 + d.rect.u1) / 2 });
+      return { x: st.x + 10, y: st.y, face: 'player_side' };
+    }
     if (this.spawnAt === 'entrance' && !entrance.mat) return { x: entrance.ax + 6, y: entrance.ay + 4, face: 'player_side' };
     if (this.spawnAt === 'entrance') return { x: entrance.ax, y: g.y1 - 16, face: 'player_up' };
     return { x: entrance.ax, y: g.y1 - 24, face: 'player_up' };
@@ -401,7 +425,8 @@ export class RoomScene extends Phaser.Scene {
 
   spawnMess() {
     const cleaned = new Set(load(CLEANED_KEY, []));
-    this.mess = this.messList().filter((m) => !cleaned.has(m.id));
+    // a hired carpenter has already patched the cracks
+    this.mess = this.messList().filter((m) => !cleaned.has(m.id) && !(m.kind === 'crack' && hasCarpenter()));
     this.mess.forEach((m) => {
       if (m.kind === 'cobweb') {
         m.sprite = this.add.image(m.x, m.y, m.key).setOrigin(m.fx ? 1 : 0, m.fy ? 1 : 0).setFlip(m.fx, m.fy).setDepth(4000);
@@ -497,6 +522,17 @@ export class RoomScene extends Phaser.Scene {
   }
 
   // The barista behind a coffee counter, and sometimes a janitor on their rounds.
+  makeStaff(kind, seed, x, y) {
+    const { colors, look, scale } = visitorLook(kind, (k) => hash(seed, k, 53));
+    const prefix = `staff${seed}`;
+    makeCharacter(this, prefix, colors, look);
+    const names = PERSONALITIES[kind].names;
+    const s = this.add.sprite(x, y, `${prefix}_down`).setOrigin(0.5, 1).setScale(scale);
+    const n = { s, prefix, kind, staff: true, name: names[Math.floor(hash(seed, 6, 50) * names.length)], wait: 1000, target: null };
+    this.npcs.push(n);
+    return n;
+  }
+
   spawnStaff() {
     const { g } = this;
     const make = (kind, seed, x, y) => {
@@ -527,6 +563,15 @@ export class RoomScene extends Phaser.Scene {
       n.mop = this.add.image(x + 12, y, 'mop').setOrigin(0.5, 1);
       n.puddle = this.add.image(x + 24, y - 4, 'dirt_puddle').setDepth(1);
     }
+    if (this.isBreak) this.spawnWorkers();
+    // The carpenter works on the newest room you've built.
+    const newest = this.rooms.length - 1;
+    if (hasCarpenter() && newest >= 2 && this.roomIndex === newest) {
+      const x = g.xR - 1.5 * T;
+      const y = g.y1 - 1.5 * T;
+      make('carpenter', 960, x, y).fixed = true;
+    }
+    if (g.main && guides() > 0) this.spawnTour();
     // One security guard: by the main hall's middle arch, or by the entrance's
     // double doors while the main hall is still locked.
     const hallOpen = this.rooms[1] && !this.rooms[1].locked;
@@ -537,6 +582,33 @@ export class RoomScene extends Phaser.Scene {
       const n = make('guard', 950, gx, gy);
       n.fixed = true;
     }
+  }
+
+  // Staff on their break: up to 6 of everyone you've hired.
+  spawnWorkers() {
+    const { g } = this;
+    const kinds = [...Array(Math.min(janitors(), 6)).fill('janitor'), ...(hasCarpenter() ? ['carpenter'] : []), ...Array(guides()).fill('guide')].slice(0, 6);
+    const spots = [[1.5, 2.5], [3.5, 3.6], [5.2, 3.2], [1.8, 4.6], [4.6, 4.8], [6.2, 2.2]];
+    kinds.forEach((kind, k) => {
+      const [c, r] = spots[k];
+      const n = this.makeStaff(kind, 1100 + k, g.xL + c * T, g.y0 + r * T);
+      n.wait = 2000 + k * 900; // they wander a little
+    });
+  }
+
+  // A tour guide leading a short line of visitors around the main hall.
+  spawnTour() {
+    const { g } = this;
+    const guide = this.makeStaff('guide', 1200, g.xL + 4.5 * T, g.yb + 4 * T);
+    guide.trail = [];
+    guide.leader = true;
+    [1, 2].forEach((k) => {
+      const v = this.spawnVisitor(20 + k);
+      v.s.setPosition(guide.s.x - k * 18, guide.s.y);
+      v.follow = guide;
+      v.gap = k * 14;
+      this.npcs.push(v);
+    });
   }
 
   // A famous artist visiting the main hall, with a gold star over their head.
@@ -569,13 +641,31 @@ export class RoomScene extends Phaser.Scene {
       n.mop?.destroy();
       n.puddle?.destroy();
     });
-    this.npcs = this.npcs.filter((n) => !n.staff);
+    this.npcs.filter((n) => n.follow).forEach((n) => n.s.destroy());
+    this.npcs = this.npcs.filter((n) => !n.staff && !n.follow);
     this.spawnStaff();
     this.refreshDirt();
   }
 
   updateVisitor(n, dt) {
     if (n.talking || n.fixed) return;
+    if (n.follow) {
+      // trail the tour guide along the path they walked
+      const t = n.follow.trail;
+      const p = t[Math.max(0, t.length - 1 - n.gap)];
+      if (p) {
+        const moved = Math.hypot(p.x - n.s.x, p.y - n.s.y) > 0.5;
+        if (moved) this.faceSprite(n.s, n.prefix, p.x - n.s.x, p.y - n.s.y);
+        n.s.setPosition(p.x, p.y);
+        n.walking = moved;
+      }
+      return;
+    }
+    if (n.leader) {
+      const last = n.trail[n.trail.length - 1];
+      if (!last || Math.hypot(last.x - n.s.x, last.y - n.s.y) > 1.5) n.trail.push({ x: n.s.x, y: n.s.y });
+      if (n.trail.length > 60) n.trail.shift();
+    }
     if (n.target) {
       const dx = n.target.x - n.s.x;
       const dy = n.target.y - n.s.y;
@@ -869,6 +959,7 @@ export class RoomScene extends Phaser.Scene {
           save(TUTORIAL_KEY, 0); // replay the walkthrough
           resetMet();
           resetJanitors();
+          save(BREAK_SEEDED_KEY, false);
           resetSecurity();
           save(DECOR_KEY, { 0: load(DECOR_KEY, {})[0] }); // built rooms are gone, so is their decor
           this.travel(0, 'start');
@@ -994,6 +1085,8 @@ export class RoomScene extends Phaser.Scene {
       const st = this.standFor({ wall: d.wall, u: (d.rect.u0 + d.rect.u1) / 2 });
       consider(Math.hypot(x - st.x, y - st.y), { door: d, icon: 'door' });
     });
+    if (this.boardFront) consider(Math.hypot(x - this.boardFront.x, y - this.boardFront.y) - 6, { board: true, icon: 'look' });
+    if (this.isBreak) consider(Math.hypot(x - this.L.entrance.ax, y - this.L.entrance.ay), { entrance: true, icon: 'back' });
     if (this.deskFront) consider(Math.hypot(x - this.deskFront.x, y - this.deskFront.y) - 6, { office: true, icon: 'office' });
     for (const n of this.npcs) consider(Math.hypot(x - n.s.x, y - n.s.y) - 2, { npc: n, icon: 'talk' });
     const { exit, entrance } = this.L;
@@ -1013,9 +1106,14 @@ export class RoomScene extends Phaser.Scene {
     else if (f.slot) this.editSlot(f.slot);
     else if (f.mess) this.clean(f.mess);
     else if (f.office) this.openOfficePanel();
-    else if (f.door) f.door.label === 'Office' ? this.openOfficePanel() : this.toast(`${f.door.label}: coming soon`);
+    else if (f.board) this.openStaff();
+    else if (f.door) {
+      if (f.door.label === 'Office') this.openOfficePanel();
+      else if (f.door.label === 'Break room') this.travel(BREAK, 'entrance');
+      else this.toast(`${f.door.label}: coming soon`);
+    }
     else if (f.npc) (this.talkingTo === f.npc ? this.endTalk() : this.talkTo(f.npc));
-    else if (f.entrance) this.travel(this.roomIndex - 1, 'exit');
+    else if (f.entrance) this.travel(this.isBreak ? 1 : this.roomIndex - 1, this.isBreak ? 'breakdoor' : 'exit');
     else if (f.exit) {
       const next = this.rooms[this.roomIndex + 1];
       if (next?.locked) this.offerMainHall();
@@ -1199,6 +1297,54 @@ export class RoomScene extends Phaser.Scene {
     this.deskFront = { x: x + T, y: y + 10 };
   }
 
+  placeBoard() {
+    const { c, r } = this.L.board;
+    if (!this.textures.exists('board_fixed')) bakeItem(this, 'board_fixed', 'board', { w: 1, h: 1, rise: 14 }, 0);
+    const x = this.g.xL + c * T + T / 2;
+    const y = this.g.y0 + (r + 1) * T;
+    this.add.image(x, y, 'board_fixed').setOrigin(0.5, 1).setDepth(y - 1);
+    this.blocks.push({ x0: x - 12, x1: x + 12, y0: y - T + 2, y1: y - 8 });
+    this.boardFront = { x, y: y + 12 };
+  }
+
+  // First visit to the break room: lockers, a donut table and a few seats.
+  seedBreakRoom() {
+    if (load(BREAK_SEEDED_KEY, false)) return;
+    saveItems(BREAK, [
+      { type: 'lockers', c: 0, r: 0, rot: 0 },
+      { type: 'lockers', c: 2, r: 0, rot: 0 },
+      { type: 'donuts', c: 2, r: 2, rot: 0 },
+      { type: 'stool', c: 1, r: 2, rot: 0 },
+      { type: 'stool', c: 4, r: 2, rot: 0 },
+      { type: 'sofa', c: 4, r: 4, rot: 0 },
+    ]);
+    save(BREAK_SEEDED_KEY, true);
+  }
+
+  openStaff() {
+    this.pause(true);
+    openStaffMenu({
+      info: () => ({ free: FREE, janitors: janitors(), guides: guides(), maxGuides: maxGuides(this.rooms.length), guideCost: guideCost(), carpenter: hasCarpenter(), carpenterCost: CARPENTER_COST }),
+      onHireGuide: () => {
+        if (!spend(guideCost())) return this.toast(`Need ${guideCost()} gold`);
+        this.settleAll();
+        hireGuide();
+        sfx('build');
+        this.toast('Tour guide hired: +10% income');
+        this.refreshStaff();
+        this.updateHud();
+      },
+      onHireCarpenter: () => {
+        if (!spend(CARPENTER_COST)) return this.toast(`Need ${CARPENTER_COST} gold`);
+        hireCarpenter();
+        sfx('build');
+        this.toast('Carpenter hired: cracks fixed, rooms built in a snap');
+        this.refreshStaff();
+      },
+      onClose: () => this.pause(false),
+    });
+  }
+
   openOfficePanel() {
     this.pause(true);
     const lines = PERSONALITIES.caretaker.generic;
@@ -1337,6 +1483,7 @@ export class RoomScene extends Phaser.Scene {
       g.stairs.forEach((st) => [0, 1].forEach((k) => [-2, -1].forEach((dr) => add(this.tileOf(st.x0 + k * T + T / 2, g.yb + dr * T + T / 2)))));
     }
     if (this.deskSpot) [0, 1].forEach((k) => add({ c: this.deskSpot.c + k, r: this.deskSpot.r }));
+    if (this.L.board) add(this.L.board);
     return set;
   }
 
@@ -1573,7 +1720,7 @@ export class RoomScene extends Phaser.Scene {
     const dt = Math.min(dtMs, 50) / 1000;
     this.npcs.forEach((n) => {
       this.updateVisitor(n, dt);
-      this.animate(n.s, !!n.target && !n.talking, dt);
+      this.animate(n.s, (!!n.target || !!n.walking) && !n.talking, dt);
       n.s.setDepth(n.s.y);
       n.mop?.setPosition(n.s.x + 12, n.s.y).setDepth(n.s.y - 1);
       n.star?.setPosition(n.s.x, n.s.y - 38).setDepth(n.s.y + 1);

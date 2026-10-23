@@ -4,14 +4,14 @@
 // scales how many visitors come.
 import { load } from './decor.js';
 import { baseDecor } from './art.js';
-import { layout, paintingsFor } from './rooms.js';
+import { layout, paintingsFor, roomAt } from './rooms.js';
 import { loadItems } from './items.js';
 import { dirtCount } from './staff.js';
 
 const DECOR_KEY = 'curation.roomDecor';
 
 export function roomRating(rooms, i) {
-  const room = rooms[i];
+  const room = roomAt(rooms, i);
   const decor = { ...baseDecor(room, i), ...(load(DECOR_KEY, {})[i] || {}) };
   const spots = layout(room).slots.length;
   const hung = paintingsFor(rooms, i).length;

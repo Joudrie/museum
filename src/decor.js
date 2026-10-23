@@ -187,10 +187,9 @@ function renderRoom() {
     set({ pattern, ...(fallback && !pal.includes(d.floor) ? { floor: fallback } : {}) });
   };
   const themes = Object.fromEntries(Object.entries(THEMES).map(([id, t]) => [id, t.name]));
+  const staffRoom = state.room.orient === 'break';
   const parts = [
-    renderRating(),
-    renderStaff(),
-    ...renderRoomSettings(),
+    ...(staffRoom ? [] : [renderRating(), renderStaff(), ...renderRoomSettings()]),
     section('Theme (one tap)', choices(themes, null, (id) => set(THEMES[id].decor))),
     section('Floor pattern', choices(FLOOR_PATTERNS, d.pattern, pickPattern)),
   ];

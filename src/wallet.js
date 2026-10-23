@@ -3,7 +3,7 @@
 import { load, save } from './decor.js';
 import { paintingsFor } from './rooms.js';
 import { ITEMS, loadItems } from './items.js';
-import { dirtCount, DIRT_PENALTY } from './staff.js';
+import { dirtCount, DIRT_PENALTY, guides, GUIDE_BOOST } from './staff.js';
 import { museumRating } from './rating.js';
 import { famousBoost } from './famous.js';
 
@@ -57,7 +57,8 @@ export function museumVisitors(rooms) {
 export const coffeeIncome = (rooms) => Math.round(museumVisitors(rooms) / 100);
 
 // What a room's income is multiplied by: dirt cuts it, famous visitors raise it.
-const roomMult = (rooms, i) => (1 - DIRT_PENALTY * dirtCount(rooms, i)) * famousBoost();
+// Tour guides raise it too.
+const roomMult = (rooms, i) => (1 - DIRT_PENALTY * dirtCount(rooms, i)) * famousBoost() * (1 + GUIDE_BOOST * guides());
 
 // Gold per hour from one painting, and from a room's decor (items + coffee).
 const artRate = (rooms, i) => PAINTING_INCOME * roomMult(rooms, i);
