@@ -115,3 +115,26 @@ PW=/opt/node-tools/node_modules/playwright node tests/gaps.cjs    # wall gaps, 5
   - confetti and a celebration card for opening the main hall, building a room and office level-ups (with fanfare sounds)
   - the HUD rating pops (with a chime when it goes up).
 - Visitor love: every heart a visitor shows in a room adds love that fades over time. A loved room earns up to +10%, shown in the HUD breakdown.
+
+## Phase 6: Final pass
+- Full smoke test passes:
+  - fresh save, tutorial, every room type, doors, panels, journal, Customize, toolkit, Collect all
+  - HUD at huge numbers, reload, cameras, robbery
+  - an old pre-entrance save and a corrupt save.
+- Gap check: no void pixels in 54 room shapes, by day and at night.
+- Performance in the busiest room (main hall: 19 famous visitors, a tour, visitors, lamps and candles; 27 people): 52–53 FPS on High lighting, 59 with lighting Off. That's in a headless browser with software rendering; phones with a GPU do better.
+
+## What shipped
+1. Bug sweep and tests (PR #32)
+2. Dynamic lighting and day/night (PR #33)
+3. Characters (PR #34)
+4. Menus and UI (PR #35)
+5. Goals, collection, more art and decor (PR #36)
+6. Final pass and docs (this PR)
+
+## Questions for Sean
+See "Needs Sean" in `docs/BACKLOG.md`. The main ones:
+- the West Wing outline
+- which (if any) of the new paintings don't load on your phone
+- whether goal rewards feel right
+- what the break-room upgrades should do
