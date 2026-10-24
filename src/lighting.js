@@ -60,7 +60,7 @@ export function timeOfDay(hour) {
   return 'evening';
 }
 
-function makeTextures(scene) {
+export function makeTextures(scene) {
   if (scene.textures.exists('lt_glow')) return;
   const S = 128;
   const glow = scene.textures.createCanvas('lt_glow', S, S);

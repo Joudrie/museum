@@ -3,6 +3,7 @@
 // swatches, ending in a + that opens a full color picker.
 import { HATS, FACIAL, GLASSES, HAIRSTYLES, OUTFITS, ACCESSORIES, PALETTES, FLOOR_PATTERNS, WOOD_FLOORS, TWO_COLOR_FLOORS, FLOOR_DEFAULTS, WALL_PATTERNS, WAINSCOT_STYLES, LIGHTS, PLANTS } from './art.js';
 import { TRACKS } from './music.js';
+import { PETS, PET_COLORS } from './pets.js';
 
 // One-tap room styles. Each sets floor, walls, lighting and music.
 export const THEMES = {
@@ -263,6 +264,8 @@ function turntable(frames) {
     }
     ctx.drawImage(frames[i], 0, -bob * S, 32 * S, 32 * S);
     ctx.restore();
+    // the pet sits at their feet
+    if (frames[3]) ctx.drawImage(frames[3], 13 * S, 6 * S, 22 * S, 22 * S);
   };
   draw();
   spin = setInterval(() => {
@@ -305,6 +308,8 @@ function renderCharacter() {
     parts.push(section('Hat color', strip(HAT_COLORS, ch.T || '#e8d8a0', (T, live) => setChar({ T }, live))));
   }
   parts.push(section('Glasses', choices(GLASSES, ch.glasses || 'none', pick('glasses'))));
+  parts.push(section('Pet', choices(PETS, ch.pet || 'none', (v) => setChar({ pet: v, petColor: PET_COLORS[v]?.[0] }))));
+  if (ch.pet && ch.pet !== 'none') parts.push(section('Pet color', strip(PET_COLORS[ch.pet], ch.petColor || PET_COLORS[ch.pet][0], (v, live) => setChar({ petColor: v }, live))));
   parts.push(section('Accessory', choices(ACCESSORIES, ch.acc || 'none', pick('acc'))));
   if (ch.acc && !['none', 'badge', 'necklace', 'camera'].includes(ch.acc)) {
     const key = ch.acc === 'bag' ? 'K' : 'X';

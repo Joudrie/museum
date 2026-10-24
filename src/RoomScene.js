@@ -53,6 +53,7 @@ import { openBuild } from './build.js';
 import { showTalk, hideTalk, talking } from './talk.js';
 import { Lighting, timeOfDay } from './lighting.js';
 import { animateWalker, footstep, dust } from './motion.js';
+import { Pet } from './pets.js';
 import { openSettings, closeSettings } from './settingsmenu.js';
 import { openIncome } from './incomemenu.js';
 import { openJournal } from './journal.js';
@@ -340,6 +341,7 @@ export class RoomScene extends Phaser.Scene {
 
     const start = this.spawnPoint();
     this.player = this.add.sprite(start.x, start.y, start.face).setOrigin(0.5, 1).setScale(PLAYER_SCALE);
+    this.makePet();
     const count = this.isBreak ? 0 : Math.min(5, 3 + Math.floor(this.L.slots.length / 6)); // the break room is staff only
     this.npcs = Array.from({ length: count }, (_, i) => this.spawnVisitor(i));
     this.pairCouples();
@@ -382,6 +384,15 @@ export class RoomScene extends Phaser.Scene {
     }
     this.archLock = true; // don't bounce straight back through the doorway we arrived by
     if (typeof this.spawnAt !== 'object') this.toast(this.isBreak ? 'Break room · staff only' : `${roomName(this.room, this.roomIndex)} · ${starText(roomRating(this.rooms, this.roomIndex).stars)}`);
+  }
+
+  // The curator's pet, if they have one.
+  makePet() {
+    this.pet?.s.destroy();
+    this.pet = null;
+    const kind = this.character.pet;
+    this.petColor = this.character.petColor;
+    if (kind && kind !== 'none') this.pet = new Pet(this, kind, this.character.petColor, this.player);
   }
 
   spawnPoint() {
@@ -1443,11 +1454,15 @@ export class RoomScene extends Phaser.Scene {
     const key = this.player.texture.key;
     makeCharacter(this, 'player', character, lookOf(character));
     this.player.setTexture(key);
+    if (character.pet !== this.pet?.kind || character.petColor !== this.petColor) this.makePet();
+    this.petColor = character.petColor;
   }
 
   // Big front/side/back views of the curator for the Character tab.
   characterPreview() {
-    return ['player_down', 'player_side', 'player_up'].map((k) => {
+    const keys = ['player_down', 'player_side', 'player_up'];
+    if (this.pet) keys.push(`pet_${this.pet.kind}_down`);
+    return keys.map((k) => {
       const src = this.textures.get(k).getSourceImage();
       const c = document.createElement('canvas');
       c.width = src.width;
@@ -1498,6 +1513,7 @@ export class RoomScene extends Phaser.Scene {
     if (this.isBreak) consider(Math.hypot(x - this.L.entrance.ax, y - this.L.entrance.ay), { entrance: true, icon: 'back' });
     if (this.deskFront) consider(Math.hypot(x - this.deskFront.x, y - this.deskFront.y) - 6, { office: true, icon: 'office' });
     for (const n of this.npcs) consider(Math.hypot(x - n.s.x, y - n.s.y) - 2, { npc: n, icon: 'talk' });
+    if (this.pet) consider(Math.hypot(x - this.pet.s.x, y - this.pet.s.y) + 4, { pet: true, icon: 'talk' });
     const { exit, entrance } = this.L;
     if (exit) {
       const built = this.roomIndex + 1 < this.rooms.length;
@@ -1522,6 +1538,7 @@ export class RoomScene extends Phaser.Scene {
       else this.toast(`${f.door.label}: coming soon`);
     }
     else if (f.npc) (this.talkingTo === f.npc ? this.endTalk() : this.talkTo(f.npc));
+    else if (f.pet) this.pet.pet();
     else if (f.entrance) this.travel(this.isBreak ? 1 : this.roomIndex - 1, this.isBreak ? 'breakdoor' : 'exit');
     else if (f.exit) {
       const next = this.rooms[this.roomIndex + 1];
@@ -2173,6 +2190,7 @@ export class RoomScene extends Phaser.Scene {
   update(_, dtMs) {
     const dt = Math.min(dtMs, 50) / 1000;
     this.lighting.update(dt);
+    this.pet?.update(dt);
     this.npcs.forEach((n) => {
       this.updateVisitor(n, dt);
       this.animate(n.s, (!!n.target || !!n.walking) && !n.talking, dt);
