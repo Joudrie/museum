@@ -2,7 +2,7 @@
 // spot cuts that room's income. Each room can have its own janitor (a one-time
 // hire, each one costing more than the last) who keeps it spotless; without
 // one you mop up yourself.
-import { load, save } from './decor.js';
+import { load, save } from './storage.js';
 
 const DIRT_KEY = 'curation.dirt'; // { [roomIndex]: { t: last spawn (ms), spots: [{ id, c, r, kind }] } }
 const JANITOR_KEY = 'curation.janitor'; // { [roomIndex]: true } rooms with a janitor

@@ -1,0 +1,130 @@
+// Dev page: every sprite in the game drawn on one page (characters and their
+// looks, famous visitors, pets, decor items, creatures and emotes), so the
+// whole art set can be reviewed at a glance. Island tiles are on tiles.html.
+import { makeCharacter, makeEmotes, bakeItem, bakePlant, HATS, FACIAL, GLASSES, HAIRSTYLES, OUTFITS, ACCESSORIES } from './art.js';
+import { ITEMS, CATEGORIES } from './items.js';
+import { FAMOUS } from './famous.js';
+import { makePet, PETS, PET_COLORS } from './pets.js';
+import { critterTextures } from './critters.js';
+
+// A stand-in for Phaser's texture manager: the art code only needs canvases.
+const store = {};
+const scene = {
+  textures: {
+    exists: (k) => k in store,
+    remove: (k) => delete store[k],
+    createCanvas: (k, w, h) => {
+      const c = document.createElement('canvas');
+      c.width = w;
+      c.height = h;
+      store[k] = c;
+      return { getContext: () => c.getContext('2d'), refresh() {}, getSourceImage: () => c, setFilter() {} };
+    },
+    addCanvas: (k, c) => (store[k] = c),
+    get: (k) => ({ getSourceImage: () => store[k] }),
+  },
+};
+
+const root = document.getElementById('lib');
+const S = 3;
+
+function card(label, keys, code) {
+  const c = document.createElement('div');
+  c.className = 'card';
+  const row = document.createElement('div');
+  row.className = 'row';
+  keys.forEach((k) => {
+    const src = store[k];
+    if (!src) return;
+    const cv = document.createElement('canvas');
+    cv.width = src.width;
+    cv.height = src.height;
+    cv.style.width = `${src.width * S}px`;
+    cv.style.height = `${src.height * S}px`;
+    cv.getContext('2d').drawImage(src, 0, 0);
+    row.appendChild(cv);
+  });
+  c.append(row);
+  c.insertAdjacentHTML('beforeend', `<b></b>${code ? `<code>${code}</code>` : ''}`);
+  c.querySelector('b').textContent = label;
+  return c;
+}
+
+function section(title, cards) {
+  const h = document.createElement('h2');
+  h.textContent = `${title} (${cards.length})`;
+  const g = document.createElement('div');
+  g.className = 'grid';
+  g.append(...cards);
+  root.append(h, g);
+}
+
+const base = { h: '#4a2e20', s: '#e0ac80', c: '#3d6fb6', p: '#2f2b3d', b: '#1a1418', w: '#efe6d4', g: '#c9a23f' };
+let n = 0;
+const char = (label, look, colors = {}, views = ['down', 'side', 'up', 'down_1']) => {
+  const key = `c${n++}`;
+  makeCharacter(scene, key, { ...base, ...colors }, look);
+  return card(label, views.map((v) => `${key}_${v}`));
+};
+
+const tabs = {
+  characters() {
+    section('Hairstyles', Object.entries(HAIRSTYLES).map(([id, l]) => char(l, id === 'bald' ? { bald: true } : { hair: id })));
+    section('Outfits', Object.entries(OUTFITS).map(([id, l]) => char(l, { outfit: id }, { c: '#7a2e3a' })));
+    section('Accessories', Object.entries(ACCESSORIES).filter(([id]) => id !== 'none').map(([id, l]) => char(l, { acc: id })));
+    section('Hats', Object.entries(HATS).filter(([id]) => id !== 'none').map(([id, l]) => char(l, { hat: id }, { T: '#2a2a2e' })));
+    section('Facial hair', Object.entries(FACIAL).filter(([id]) => id !== 'none').map(([id, l]) => char(l, { facial: id })));
+    section('Glasses', Object.entries(GLASSES).filter(([id]) => id !== 'none').map(([id, l]) => char(l, { glasses: id })));
+    section('Poses', [char('Walking (front)', {}, {}, ['down', 'down_1', 'down', 'down_2']), char('Walking (side)', {}, {}, ['side', 'side_1']), char('Phone & sitting', {}, {}, ['phone', 'sit'])]);
+  },
+  famous() {
+    section('Famous visitors', Object.entries(FAMOUS).map(([id, f]) => {
+      makeCharacter(scene, `f_${id}`, f.colors, f.look);
+      return card(f.name, ['down', 'side', 'up'].map((v) => `f_${id}_${v}`), id);
+    }));
+  },
+  pets() {
+    Object.keys(PETS).filter((k) => k !== 'none').forEach((kind) =>
+      section(PETS[kind], PET_COLORS[kind].map((col, i) => {
+        makePet(scene, `p_${kind}_${i}`, kind, col);
+        return card(col, ['down', 'side', 'up', 'side_1', 'down_sit'].map((v) => `p_${kind}_${i}_${v}`));
+      })),
+    );
+  },
+  decor() {
+    Object.entries(CATEGORIES).forEach(([cat, label]) => {
+      const list = Object.entries(ITEMS).filter(([, d]) => d.cat === cat);
+      section(label, list.map(([type, def]) => {
+        const key = `i_${type}`;
+        if (def.plant) bakePlant(scene, key, def.plant);
+        else bakeItem(scene, key, type, def, 0);
+        const keys = [key];
+        if (def.rotatable) {
+          bakeItem(scene, `${key}_r`, type, def, 1);
+          keys.push(`${key}_r`);
+        }
+        return card(def.name, keys, type);
+      }));
+    });
+  },
+  creatures() {
+    makeEmotes(scene);
+    section('Emotes', ['heart', 'bang', 'q', 'zzz', 'note', 'star'].map((e) => card(e, [`emote_${e}`])));
+    critterTextures(scene);
+    section('Island creatures', [
+      card('Gull', ['gull_0', 'gull_1']),
+      card('Crab', ['crab_0', 'crab_1']),
+      ...[0, 1, 2, 3].map((i) => card(`Butterfly ${i + 1}`, [`fly_${i}_0`, `fly_${i}_1`])),
+      card('Fish', ['fish']),
+      card('Firefly', ['firefly']),
+    ]);
+  },
+};
+
+function show(tab) {
+  root.replaceChildren();
+  document.querySelectorAll('[data-tab]').forEach((b) => b.classList.toggle('on', b.dataset.tab === tab));
+  tabs[tab]();
+}
+document.querySelectorAll('[data-tab]').forEach((b) => (b.onclick = () => show(b.dataset.tab)));
+show('characters');

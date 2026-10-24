@@ -1,6 +1,6 @@
 // Gold coins. Each room earns gold per hour from its paintings and decor;
 // the gold piles up in that room (up to 8 hours' worth) until you collect it.
-import { load, save } from './decor.js';
+import { load, save } from './storage.js';
 import { paintingsFor } from './rooms.js';
 import { ITEMS, loadItems } from './items.js';
 import { dirtCount, DIRT_PENALTY, guides, GUIDE_BOOST } from './staff.js';

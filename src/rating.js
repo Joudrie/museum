@@ -2,7 +2,7 @@
 // how full its walls are, how much decor it has, how clean it is and how much
 // style it has. The museum's rating is the average over its open rooms, and it
 // scales how many visitors come.
-import { load } from './decor.js';
+import { load } from './storage.js';
 import { baseDecor } from './art.js';
 import { layout, paintingsFor, roomAt } from './rooms.js';
 import { loadItems } from './items.js';

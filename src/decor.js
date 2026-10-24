@@ -48,25 +48,7 @@ const body = el.querySelector('.decor-body');
 const sheet = el.querySelector('.decor-sheet'); // (the part that scrolls)
 const tabs = el.querySelectorAll('[data-tab]');
 
-export function load(key, fallback) {
-  try {
-    const v = JSON.parse(localStorage.getItem(key));
-    if (v === null || v === undefined) return fallback;
-    // a value of the wrong shape (from a broken save) falls back too
-    if (fallback !== null && fallback !== undefined && (typeof v !== typeof fallback || Array.isArray(v) !== Array.isArray(fallback))) return fallback;
-    return v;
-  } catch {
-    return fallback;
-  }
-}
-
-export function save(key, value) {
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-  } catch {
-    // storage unavailable; changes last until reload
-  }
-}
+export { load, save } from './storage.js';
 
 let state = null;
 let tab = 'room';

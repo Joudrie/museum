@@ -2,7 +2,7 @@
 // footprint in tiles (w x h), a price and a daily income in gold coins.
 // `rise` is how many px the sprite sticks up above its footprint; `lvl` is the
 // Curator's Office level that unlocks it (default 1).
-import { load, save } from './decor.js';
+import { load, save } from './storage.js';
 
 export const CATEGORIES = {
   seating: 'Seating',

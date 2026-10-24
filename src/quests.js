@@ -1,6 +1,6 @@
 // Goals: a short list of things to do next, each with a gold reward. Three
 // are shown at a time; finish one to claim it and the next appears.
-import { load, save } from './decor.js';
+import { load, save } from './storage.js';
 
 const KEY = 'curation.quests'; // { claimed: { id: true }, stats: { placed, collected } }
 

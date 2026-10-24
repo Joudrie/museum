@@ -2,7 +2,7 @@
 // next room, and an unbuilt exit opens the build menu.
 import { T } from './art.js';
 import { PAINTINGS } from './paintings.js';
-import { load, save } from './decor.js';
+import { load, save } from './storage.js';
 
 export const D = 2 * T; // wall height on screen
 const SLOT_GAP = 4 * T;

@@ -1,7 +1,7 @@
 // Toolkit drawer (pick a decor item) and the bar shown while placing or
 // editing an item. The room scene drives the actual placement.
 import { CATEGORIES, ITEMS } from './items.js';
-import { load, save } from './decor.js';
+import { load, save } from './storage.js';
 
 // Items you haven't seen in the toolkit yet get a "New" tag. Items added in
 // an update count as new; everything else unlocked at first launch doesn't.

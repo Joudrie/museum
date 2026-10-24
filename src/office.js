@@ -1,6 +1,6 @@
 // The Curator's Office: level it up with gold to unlock more rooms, staff
 // and exhibits. Run by the old caretaker from a desk in the first room.
-import { load, save } from './decor.js';
+import { load, save } from './storage.js';
 import { ITEMS } from './items.js';
 
 const OFFICE_KEY = 'curation.office';

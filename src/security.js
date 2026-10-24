@@ -1,6 +1,6 @@
 // Security: a guard by the door, cameras you can buy, and the rare robbery
 // when you come back after a while away (cameras stop it).
-import { load, save } from './decor.js';
+import { load, save } from './storage.js';
 import { slotStates, setSlot } from './rooms.js';
 
 const CAMERAS_KEY = 'curation.cameras';

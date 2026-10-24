@@ -1,6 +1,6 @@
 // Gentle generated background music, one track per room (no audio files).
 // Audio starts after the first tap (browsers require a user gesture).
-import { load, save } from './decor.js';
+import { load, save } from './storage.js';
 import { settings } from './settings.js';
 
 export const TRACKS = { none: 'Silence', gallery: 'Gallery piano', egypt: 'Desert', japan: 'Koto garden', science: 'Science lab' };
