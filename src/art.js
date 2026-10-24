@@ -1796,7 +1796,8 @@ const LOOK_PAL = { T: '#e8d8a0', U: '#5a3b2c', R: '#e0506a', Y: '#f2d36b', G: '#
 
 const toHexEarly = (v) => '#' + v.map((n) => Math.round(Math.min(255, n)).toString(16).padStart(2, '0')).join('');
 
-// One character = three textures: `${prefix}_down`, `_up`, `_side` (faces right).
+// One character = three views: `${prefix}_down`, `_up`, `_side` (faces right),
+// each with two walking frames (`_down_1`, `_down_2`...), plus `_phone` and `_sit`.
 export function makeCharacter(scene, prefix, colors = {}, look = {}) {
   const pal = { ...PAL, k: '#1d1714', ...LOOK_PAL, ...colors };
   if (!pal.F) pal.F = colors.h ? toHexEarly(shade(hex(colors.h), 0.85)) : '#3a2418'; // facial hair follows the hair
@@ -1811,11 +1812,61 @@ export function makeCharacter(scene, prefix, colors = {}, look = {}) {
   sprite(scene, `${prefix}_down`, withLooks(FRONT, 'down', look), pal);
   sprite(scene, `${prefix}_up`, withLooks(BACK, 'up', look), pal);
   sprite(scene, `${prefix}_side`, withLooks(SIDE, 'side', look), pal);
+  // Walking: two step frames per view.
+  [['down', FRONT], ['up', BACK], ['side', SIDE]].forEach(([view, rows]) => {
+    const [a, b] = stepFrames(withLooks(rows, view, look), view);
+    sprite(scene, `${prefix}_${view}_1`, a, pal);
+    sprite(scene, `${prefix}_${view}_2`, b, pal);
+  });
   sprite(scene, `${prefix}_phone`, withLooks(FRONT, 'down', { ...look, phone: true }), pal);
   // Sitting: the legs fold forward under the body.
   const sit = withLooks(FRONT, 'down', look);
   const legs = sit.length - 6; // the pants and shoes rows
   sprite(scene, `${prefix}_sit`, [...sit.slice(0, legs), sit[legs], sit[legs + 1].replace(/oo(?=p)/, 'pp'), sit[sit.length - 2], sit[sit.length - 1]], pal);
+}
+
+// Step frames for walking. Facing front or back, one foot lifts off the
+// ground (left, then right); from the side, the legs open into a stride.
+// Rows are spread to the full tile width first so every row lines up.
+function stepFrames(rows, view) {
+  const abs = rows.map((r) => {
+    const off = Math.floor((T - r.length) / 2);
+    return Array.from({ length: T }, (_, x) => r[x - off] ?? '.');
+  });
+  const n = abs.length; // n-1: bottom outline, n-2: shoes, n-3..n-6: legs
+  const copy = () => abs.map((r) => [...r]);
+  const out = (a) => a.map((r) => r.join(''));
+  if (view === 'side') {
+    const a = copy();
+    [n - 4, n - 3, n - 2].forEach((i) => {
+      const xs = a[i].map((c, x) => (c !== '.' && c !== 'o' ? x : -1)).filter((x) => x >= 0);
+      if (xs.length < 4) return;
+      const mid = Math.floor((xs[0] + xs[xs.length - 1]) / 2);
+      a[i][mid] = 'o';
+      a[i][mid + 1] = 'o';
+    });
+    // the back foot lifts a little
+    const shoes = a[n - 2].map((c, x) => (c !== '.' && c !== 'o' ? x : -1)).filter((x) => x >= 0);
+    if (shoes.length) {
+      const back = shoes[0];
+      for (let x = back - 1; x < back + 2; x++) {
+        a[n - 1][x] = '.';
+        if (a[n - 2][x] !== '.') a[n - 1][x] = a[n - 2][x] === 'o' ? '.' : 'o';
+      }
+    }
+    return [out(a), out(a)];
+  }
+  const lift = (left) => {
+    const a = copy();
+    for (let x = 0; x < T; x++) {
+      if (left ? x >= T / 2 : x < T / 2) continue;
+      a[n - 3][x] = abs[n - 2][x] === '.' ? abs[n - 3][x] : abs[n - 2][x];
+      a[n - 2][x] = abs[n - 1][x];
+      a[n - 1][x] = '.';
+    }
+    return out(a);
+  };
+  return [lift(true), lift(false)];
 }
 
 // "!" bubble shown when something is in reach.

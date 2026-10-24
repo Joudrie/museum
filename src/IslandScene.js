@@ -12,6 +12,7 @@ import { iconSvg } from './icons.js';
 import { sfx, setTrack } from './music.js';
 import { ambientAt } from './lighting.js';
 import { settings, hourNow } from './settings.js';
+import { animateWalker, footstep, dust } from './motion.js';
 
 const W = 24; // map size in tiles
 const H = 40;
@@ -287,6 +288,7 @@ export class IslandScene extends Phaser.Scene {
   }
 
   tallGrass(x, y) {
+    (this.grassCells ||= new Set()).add(`${x},${y}`);
     this.place('tall_grass', x, y, { flat: true });
     this.place('tall_grass_front', x, y, { depth: (y + 1) * T + 2 }); // drawn over your legs
   }
@@ -341,6 +343,7 @@ export class IslandScene extends Phaser.Scene {
         const k = len > 36 ? 36 / len : 1;
         this.knob.style.transform = `translate(${dx * k}px, ${dy * k}px)`;
         this.dragVec = len ? { x: dx / len, y: dy / len } : null;
+        this.dragMag = Math.min(1, len / 36); // a short drag walks, a long one runs
       }
     });
     this.input.on('pointerup', () => {
@@ -405,6 +408,42 @@ export class IslandScene extends Phaser.Scene {
     this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start('room', { room: 0, spawn: 'outside' }));
   }
 
+  // What's underfoot: sand leaves footprints, tall grass rustles, the
+  // water's edge splashes.
+  surfaceAt(x, y) {
+    const cx = Math.floor(x / T);
+    const cy = Math.floor(y / T);
+    if (cx < 0 || cy < 0 || cx >= W || cy >= H) return 'sand';
+    if (this.grassCells?.has(`${cx},${cy}`)) return 'tall';
+    const wet = this.key(cx, cy, (m) => m === 0 || m === 3);
+    if (wet !== '0000') return 'shore';
+    if (this.key(cx, cy, (m) => m === 4) !== '0000') return 'path';
+    return this.key(cx, cy, (m) => m >= 2) === '1111' ? 'grass' : 'sand';
+  }
+
+  onStep(p, pace) {
+    const ground = this.surfaceAt(p.x, p.y - 2);
+    footstep(ground === 'sand' || ground === 'shore' ? 'sand' : ground === 'grass' || ground === 'tall' ? 'grass' : 'floor');
+    if (ground === 'sand') {
+      // a footprint that fades away
+      this.stepSide = !this.stepSide;
+      const side = p.texture.key.includes('side');
+      const fx = p.x + (side ? 0 : this.stepSide ? -3 : 3);
+      const fy = p.y - 2 + (side ? (this.stepSide ? -1 : 1) : 0);
+      const print = this.add.rectangle(fx, fy, side ? 4 : 3, side ? 2 : 3, 0x8a6a3c, 0.45).setDepth(0.6);
+      this.tweens.add({ targets: print, alpha: 0, delay: 2500, duration: 2500, onComplete: () => print.destroy() });
+    } else if (ground === 'tall') {
+      for (let i = 0; i < 3; i++) {
+        const leaf = this.add.rectangle(p.x + (Math.random() - 0.5) * 14, p.y - 6, 2, 2, Math.random() < 0.5 ? 0x94d672 : 0x58ad52).setDepth(p.y + 3);
+        this.tweens.add({ targets: leaf, x: leaf.x + (Math.random() - 0.5) * 16, y: leaf.y - 6 - Math.random() * 6, alpha: 0, duration: 500, onComplete: () => leaf.destroy() });
+      }
+    } else if (ground === 'shore') {
+      const ring = this.add.ellipse(p.x, p.y - 1, 10, 4).setStrokeStyle(1, 0xf2fbff, 0.8).setDepth(0.7);
+      this.tweens.add({ targets: ring, scaleX: 2, scaleY: 2, alpha: 0, duration: 600, onComplete: () => ring.destroy() });
+    }
+    if (pace === 1 && ground !== 'shore' && ground !== 'tall') dust(this, p.x, p.y, ground === 'sand' ? 0xe2c68a : ground === 'path' ? 0xc49464 : 0xb4d890);
+  }
+
   toast(text) {
     const el = document.getElementById('toast');
     el.textContent = text;
@@ -419,25 +458,22 @@ export class IslandScene extends Phaser.Scene {
     const k = this.keys;
     let vx = (k.D.isDown || k.RIGHT.isDown ? 1 : 0) - (k.A.isDown || k.LEFT.isDown ? 1 : 0);
     let vy = (k.S.isDown || k.DOWN.isDown ? 1 : 0) - (k.W.isDown || k.UP.isDown ? 1 : 0);
-    if (!vx && !vy && this.dragging && this.dragVec) ({ x: vx, y: vy } = this.dragVec);
+    let pace = 1;
+    if (!vx && !vy && this.dragging && this.dragVec) {
+      ({ x: vx, y: vy } = this.dragVec);
+      pace = this.dragMag > 0.7 ? 1 : 0.62;
+    }
     const len = Math.hypot(vx, vy);
     const p = this.player;
     if (len) {
-      const nx = p.x + (vx / len) * SPEED * dt;
-      const ny = p.y + (vy / len) * SPEED * dt;
+      const nx = p.x + (vx / len) * SPEED * pace * dt;
+      const ny = p.y + (vy / len) * SPEED * pace * dt;
       if (this.free(nx, p.y)) p.x = nx;
       if (this.free(p.x, ny)) p.y = ny;
       if (Math.abs(vx) > Math.abs(vy)) p.setTexture('player_side').setFlipX(vx < 0);
       else p.setTexture(vy < 0 ? 'player_up' : 'player_down').setFlipX(false);
-      p.walkT = (p.walkT || 0) + dt;
-      const phase = Math.floor(p.walkT * 8) % 2;
-      p.setOrigin(0.5, 1 + phase / 32);
-      if (!p.texture.key.endsWith('_side')) p.setFlipX(phase === 1);
-    } else {
-      p.walkT = 0;
-      p.setOrigin(0.5, 1);
-      if (!p.texture.key.endsWith('_side')) p.setFlipX(false);
     }
+    if (animateWalker(this, p, len > 0, dt, 0.8 + pace * 0.5)) this.onStep(p, pace);
     p.setDepth(p.y);
     this.shadow.setPosition(p.x, p.y - 1);
     // Walk up into the doors to go back inside.
