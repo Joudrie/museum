@@ -13,6 +13,7 @@ import { sfx, setTrack, setAmbience } from './music.js';
 import { Weather, weatherToday, season } from './weather.js';
 import { ambientAt, makeTextures as lightTextures } from './lighting.js';
 import { Critters } from './critters.js';
+import { Ambient } from './ambient.js';
 import { settings, hourNow } from './settings.js';
 import { animateWalker, footstep, dust } from './motion.js';
 import { Pet } from './pets.js';
@@ -71,6 +72,23 @@ export class IslandScene extends Phaser.Scene {
       { w: W * T, h: H * T, isSand: (x, y) => this.ground_(x, y) === 'sand', isWater: (x, y) => this.ground_(x, y) === 'water', flowers: this.flowerSpots, pond: { x: 5 * T, y: 16 * T, w: 5 * T, h: 5 * T } },
       this.dark > 0.45,
       this.weatherKind,
+    );
+
+    const hour = hourNow();
+    this.ambient = new Ambient(
+      this,
+      {
+        w: W * T,
+        h: H * T,
+        ground: (x, y) => this.ground_(x, y),
+        isPond: (x, y) => this.key(Math.floor(x / T), Math.floor(y / T), (m) => m === 3) !== '0000',
+        flowers: this.flowerSpots,
+        trees: this.trees.map((img) => ({ x: img.x + img.displayWidth / 2, y: img.y, h: img.displayHeight })),
+        lamps: this.lampSpots,
+        dock: { x: 12.5 * T, y: 38.7 * T },
+        pond: { x: 5 * T, y: 16 * T, w: 5 * T, h: 5 * T },
+      },
+      { night: this.dark > 0.45, dusk: this.dark <= 0.45 && (hour > 17.5 && hour < 21), weather: this.weatherKind, season: this.season },
     );
 
     this.seasonal();
@@ -283,6 +301,7 @@ export class IslandScene extends Phaser.Scene {
     // lamp posts along the path
     [13, 18, 23, 28].forEach((y) => {
       this.place('lamp_post', 11, y);
+      (this.lampSpots ||= []).push({ x: 11.5 * T, y: (y + 1) * T - 50 });
       this.light(11.5 * T, (y + 1) * T - 4, 40, 0xffe4a8, 0.9, { glow: 26, gy: (y + 1) * T - 52 });
     });
     this.place('park_bench', 13, 20);
@@ -625,6 +644,7 @@ export class IslandScene extends Phaser.Scene {
     o.y += ((len ? (-vy / len) * 18 : 0) - o.y) * k2;
     this.cameras.main.setFollowOffset(o.x, o.y);
     this.critters.update(dt, p);
+    this.ambient.update(dt, p);
     this.weather.update(dt);
     this.playerGlow?.setPosition(p.x, p.y - 12);
     p.setDepth(p.y);

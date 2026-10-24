@@ -155,7 +155,7 @@ export class Critters {
     this.flies = (night || !(wet || cold) ? map.flowers || [] : []).slice(0, 6).map((f, i) => {
       const key = night ? 'firefly' : `fly_${i % 4}_0`;
       const s = scene.add.image(f.x, f.y - 10, key).setDepth(f.y + 40);
-      if (night) s.setBlendMode('ADD');
+      if (night) s.setBlendMode('ADD').setDepth(5002); // they glow through the dark
       return { s, home: f, a: rnd(0, 6), r: rnd(10, 24), sp: rnd(0.6, 1.4), kind: i % 4, night };
     });
     this.fish = [];

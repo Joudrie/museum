@@ -6,6 +6,7 @@ import { ITEMS, CATEGORIES } from './items.js';
 import { FAMOUS } from './famous.js';
 import { makePet, PETS, PET_COLORS } from './pets.js';
 import { critterTextures } from './critters.js';
+import { ambientTextures } from './ambient.js';
 
 // A stand-in for Phaser's texture manager: the art code only needs canvases.
 const store = {};
@@ -117,6 +118,33 @@ const tabs = {
       ...[0, 1, 2, 3].map((i) => card(`Butterfly ${i + 1}`, [`fly_${i}_0`, `fly_${i}_1`])),
       card('Fish', ['fish']),
       card('Firefly', ['firefly']),
+      card('Duck', ['duck_0', 'duck_1']),
+      card('Duckling', ['duckling_0', 'duckling_1']),
+      card('Frog', ['frog_0', 'frog_1']),
+      card('Lily pad', ['lilypad']),
+    ]);
+    ambientTextures(scene);
+    section('Wildlife and ambience', [
+      card('Rabbit', ['rabbit_0', 'rabbit_1', 'rabbit_2']),
+      card('Snow rabbit', ['rabbit_w_0', 'rabbit_w_1', 'rabbit_w_2']),
+      card('Sparrow', ['sparrow_0', 'sparrow_1', 'sparrow_fly_0', 'sparrow_fly_1']),
+      card('Squirrel', ['squirrel_0', 'squirrel_1']),
+      card('Napping cat', ['napcat_0', 'napcat_1', 'napcat_up']),
+      card('Bee', ['bee']),
+      card('Snail', ['snail_0', 'snail_1']),
+      card('Dragonfly', ['dragonfly_0', 'dragonfly_1']),
+      card('Sandpiper', ['piper_0', 'piper_1', 'piper_2']),
+      card('Hermit crab', ['hermit_0', 'hermit_1', 'hermit_in']),
+      card('Sea turtle', ['turtle_0', 'turtle_1']),
+      card('Sailboat', ['sailboat_0', 'sailboat_1']),
+      card('Dolphin', ['dolphin']),
+      card('Bottle', ['bottle']),
+      card('Jellyfish', ['jelly_0', 'jelly_1']),
+      card('Bat', ['bat_0', 'bat_1']),
+      card('Moth', ['moth']),
+      card('Owl', ['owl_0', 'owl_1', 'owl_2']),
+      card('Float', ['bobber']),
+      card('Cloud shadow', ['cloud_shadow']),
     ]);
   },
 };
