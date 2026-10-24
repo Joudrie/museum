@@ -1661,6 +1661,20 @@ function withLooks(rows, view, look) {
     const eyes = out[6].map((c, i) => (c === 'e' ? i : -1)).filter((i) => i >= 0);
     if (eyes.length) for (let i = eyes[0] - 1; i <= eyes.at(-1) + 1; i++) if (skin(out[5][i] || '')) out[5][i] = 'e';
   }
+  // Face details: freckles, rosy cheeks, earrings.
+  if (look.freckles && view === 'down') {
+    [[9, 2], [9, 4], [9, -3], [9, -5], [8, 3], [8, -4]].forEach(([r, i]) => set(r, i < 0 ? out[r].length + i : i, 'Z'));
+  }
+  if (look.blush && view !== 'up') {
+    if (view === 'down') [[8, 1], [8, 2], [8, -2], [8, -3]].forEach(([r, i]) => set(r, i < 0 ? out[r].length + i : i, 'M'));
+    else set(8, out[8].length - 4, 'M');
+  }
+  if (look.earrings) {
+    if (view === 'down') {
+      set(9, 1, 'Y');
+      set(9, out[9].length - 2, 'Y');
+    } else if (view === 'side') set(9, 3, 'Y');
+  }
   if (look.earpiece) {
     if (view === 'side') set(7, 3, 'k');
     else if (view === 'down') {
@@ -1792,7 +1806,7 @@ function withLooks(rows, view, look) {
 }
 
 // Colors for the looks above.
-const LOOK_PAL = { T: '#e8d8a0', U: '#5a3b2c', R: '#e0506a', Y: '#f2d36b', G: '#4f8a4a', L: '#7fb06a', Q: '#ffffff', X: '#c0392b', K: '#6a4a2a' };
+const LOOK_PAL = { T: '#e8d8a0', U: '#5a3b2c', R: '#e0506a', Y: '#f2d36b', G: '#4f8a4a', L: '#7fb06a', Q: '#ffffff', X: '#c0392b', K: '#6a4a2a', M: '#e8908a' };
 
 const toHexEarly = (v) => '#' + v.map((n) => Math.round(Math.min(255, n)).toString(16).padStart(2, '0')).join('');
 
@@ -1809,6 +1823,7 @@ export function makeCharacter(scene, prefix, colors = {}, look = {}) {
   }
   if (colors.h && !colors.H) pal.H = toHex(mix(hex(colors.h), WHITE, 0.22));
   if (colors.s && !colors.S) pal.S = toHex(shade(hex(colors.s), 0.85));
+  pal.Z = toHex(shade(hex(pal.s), 0.72)); // freckles
   sprite(scene, `${prefix}_down`, withLooks(FRONT, 'down', look), pal);
   sprite(scene, `${prefix}_up`, withLooks(BACK, 'up', look), pal);
   sprite(scene, `${prefix}_side`, withLooks(SIDE, 'side', look), pal);

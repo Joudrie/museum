@@ -53,7 +53,7 @@ import { openBuild } from './build.js';
 import { showTalk, hideTalk, talking } from './talk.js';
 import { Lighting, timeOfDay } from './lighting.js';
 import { animateWalker, footstep, dust } from './motion.js';
-import { Pet } from './pets.js';
+import { Pet, PET_COLORS } from './pets.js';
 import { openSettings, closeSettings } from './settingsmenu.js';
 import { openIncome } from './incomemenu.js';
 import { openJournal } from './journal.js';
@@ -82,6 +82,9 @@ const lookOf = (ch) => ({
   bald: ch.hair === 'bald',
   outfit: ch.outfit,
   acc: ch.acc,
+  freckles: !!ch.freckles,
+  blush: !!ch.blush,
+  earrings: !!ch.earrings,
 });
 const TUTORIAL_KEY = 'curation.tutorial'; // how far the first-time walkthrough has got
 const BREAK_SEEDED_KEY = 'curation.breakSeeded';
@@ -619,7 +622,13 @@ export class RoomScene extends Phaser.Scene {
     }
     const s = this.add.sprite(x, y, `${prefix}_down`).setOrigin(0.5, 1).setScale(scale);
     const speed = kind === 'elder' || kind === 'grump' ? 0.65 : kind === 'kid' ? 1.25 : 1;
-    return { s, prefix, kind, speed, name: names[Math.floor(hash(seed, 6, 50) * names.length)], wait: 400 + Math.random() * 1500, target: null };
+    const n = { s, prefix, kind, speed, name: names[Math.floor(hash(seed, 6, 50) * names.length)], wait: 400 + Math.random() * 1500, target: null };
+    // some visitors bring their dog (on a leash)
+    if (!this.isBreak && ['casual', 'elder', 'tourist', 'couple', 'student'].includes(kind) && hash(seed, 30, 70) < 0.22) {
+      const col = PET_COLORS.dog[Math.floor(hash(seed, 31, 70) * PET_COLORS.dog.length)];
+      n.pet = new Pet(this, 'dog', col, s, { leash: true, gap: 6 });
+    }
+    return n;
   }
 
   // A couple walks around together: the second one follows the first.
@@ -1461,7 +1470,7 @@ export class RoomScene extends Phaser.Scene {
   // Big front/side/back views of the curator for the Character tab.
   characterPreview() {
     const keys = ['player_down', 'player_side', 'player_up'];
-    if (this.pet) keys.push(`pet_${this.pet.kind}_down`);
+    if (this.pet) keys.push(`${this.pet.prefix}_down`);
     return keys.map((k) => {
       const src = this.textures.get(k).getSourceImage();
       const c = document.createElement('canvas');
@@ -2191,6 +2200,19 @@ export class RoomScene extends Phaser.Scene {
     const dt = Math.min(dtMs, 50) / 1000;
     this.lighting.update(dt);
     this.pet?.update(dt);
+    this.leashes = this.leashes || this.add.graphics().setDepth(1);
+    this.leashes.clear();
+    this.npcs.forEach((n) => {
+      if (!n.pet) return;
+      n.pet.update(dt);
+      // the leash: from the owner's hand to the dog's collar
+      const hx = n.s.x + (n.s.flipX ? -5 : 5);
+      const hy = n.s.y - 12;
+      const px = n.pet.s.x;
+      const py = n.pet.s.y - 10;
+      this.leashes.lineStyle(1, 0x7a2232, 1).beginPath().moveTo(hx, hy).lineTo((hx + px) / 2, Math.max(hy, py) + 4).lineTo(px, py).strokePath();
+      this.leashes.setDepth(Math.min(n.s.y, n.pet.s.y) - 1);
+    });
     this.npcs.forEach((n) => {
       this.updateVisitor(n, dt);
       this.animate(n.s, (!!n.target || !!n.walking) && !n.talking, dt);
