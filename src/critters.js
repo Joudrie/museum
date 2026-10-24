@@ -171,8 +171,8 @@ export class Critters {
           const s = scene.add.image(p.x + rnd(28, p.w - 28), p.y + rnd(28, p.h - 28), 'lilypad').setDepth(0.6).setAngle(rnd(0, 360));
           this.pads.push({ s, ph: rnd(0, 6) });
         }
-      // a mother duck and her ducklings paddling in a line
-      if (!night) {
+      // a mother duck and her ducklings paddling in a line (not on the ice)
+      if (!night && !cold) {
         const kids = 2 + Math.floor(Math.random() * 3);
         for (let i = 0; i <= kids; i++) {
           const s = scene.add.image(0, 0, i ? 'duckling_0' : 'duck_0').setOrigin(0.5, 0.8);

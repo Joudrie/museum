@@ -1183,3 +1183,168 @@ function addGardenProps(add, anim) {
     R(19, 11 + Math.sin(f * 1.5) * 1.5, 6, 2, '#f8f4ec');
   })), { group: G, label: 'Flag pole (1×3)', w: T, h: 3 * T, walk: 'block' });
 }
+
+// ---------- Seasons ----------
+// Seasonal looks are made from the normal tiles: leaves recolored, blossom
+// sprinkled on, bare branches in winter, and snow settled on top of
+// everything else. seasonFrames() returns new frames, or null for no change.
+const DECIDUOUS = ['tree', 'apple_tree', 'oak_tree', 'birch_tree', 'willow_tree', 'cherry_tree', 'maple_tree', 'sapling'];
+const NO_SNOW = ['campfire', 'fountain', 'torch', 'bubbles', 'tide_pool', 'water_rock'];
+const SHRUBS = ['bush', 'hedge_round', 'roses', 'hydrangea'];
+const AUTUMN = ['#5a1e12', '#8a2a1a', '#c84a2a', '#e8702a', '#f2a03a', '#f8d06a'];
+const SUMMER = ['#163a22', '#22603a', '#2e7842', '#3c9048', '#58a854', '#7ac466'];
+const lum = (r, g, b) => (0.3 * r + 0.55 * g + 0.15 * b) / 255;
+const rgb = (h) => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
+
+function copy(src) {
+  const c = document.createElement('canvas');
+  c.width = src.width;
+  c.height = src.height;
+  c.getContext('2d').drawImage(src, 0, 0);
+  return c;
+}
+
+// Repaint the leaf pixels (picked by `isLeaf`) from a palette, keeping how
+// light or dark each pixel was. Small patches vary so the color isn't flat.
+function recolor(src, isLeaf, pal, seed, gain = 1.6) {
+  const c = copy(src);
+  const ctx = c.getContext('2d');
+  const img = ctx.getImageData(0, 0, c.width, c.height);
+  const d = img.data;
+  const P = pal.map(rgb);
+  for (let y = 0; y < c.height; y++)
+    for (let x = 0; x < c.width; x++) {
+      const i = (y * c.width + x) * 4;
+      if (d[i + 3] < 200 || !isLeaf(d[i], d[i + 1], d[i + 2])) continue;
+      const v = lum(d[i], d[i + 1], d[i + 2]) * gain + (hash(x >> 2, y >> 2, seed) - 0.5) * 0.35;
+      const col = P[Math.max(0, Math.min(P.length - 1, Math.floor(v * P.length)))];
+      d.set(col, i);
+    }
+  ctx.putImageData(img, 0, 0);
+  return c;
+}
+const green = (r, g, b) => g > r + 8 && g > b + 8;
+// orange, red and pink leaves, but not brown bark (bark is duller and darker)
+const warm = (r, g, b) => r > g + 20 && r > b + 20 && (b > g || (r - Math.min(g, b)) / r > 0.65 || lum(r, g, b) > 0.6);
+
+// Blossom: little pink and white flowers on the leaves.
+function blossom(src, seed) {
+  const c = copy(src);
+  const ctx = c.getContext('2d');
+  const d = ctx.getImageData(0, 0, c.width, c.height).data;
+  for (let y = 2; y < c.height - 2; y += 3)
+    for (let x = 2; x < c.width - 2; x += 3) {
+      const i = (y * c.width + x) * 4;
+      if (d[i + 3] < 200 || !green(d[i], d[i + 1], d[i + 2]) || hash(x, y, seed) < 0.82) continue;
+      ctx.fillStyle = hash(x, y, seed + 1) < 0.5 ? '#f8c8dc' : '#ffffff';
+      ctx.fillRect(x, y, 2, 2);
+      ctx.fillStyle = '#f4a8c8';
+      ctx.fillRect(x + 1, y + 1, 1, 1);
+    }
+  return c;
+}
+
+// Snow settled on every top edge: each solid pixel with open air above it
+// gets a white cap a few pixels deep (thinner on steep sides).
+export function snowify(src) {
+  const c = copy(src);
+  const ctx = c.getContext('2d');
+  const img = ctx.getImageData(0, 0, c.width, c.height);
+  const d = img.data;
+  const solid = (x, y) => x >= 0 && y >= 0 && x < c.width && y < c.height && d[(y * c.width + x) * 4 + 3] > 200;
+  const tops = [];
+  for (let x = 0; x < c.width; x++)
+    for (let y = 1; y < c.height; y++) if (solid(x, y) && !solid(x, y - 1) && solid(x, y + 1)) tops.push([x, y]);
+  const SN = [rgb('#ffffff'), rgb('#ffffff'), rgb('#f2f8fc'), rgb('#dce8f2'), rgb('#c4d4e4')];
+  tops.forEach(([x, y]) => {
+    // only on fairly flat tops: the pixels either side are also tops nearby
+    const flat = solid(x - 1, y) || solid(x + 1, y);
+    if (!flat || y > c.height - 6) return;
+    const depth = 3 + Math.round(hash(x >> 1, y, 77) * 2);
+    for (let k = 0; k < depth; k++) if (solid(x, y + k)) d.set(SN[Math.min(SN.length - 1, k + 5 - depth)], ((y + k) * c.width + x) * 4);
+  });
+  ctx.putImageData(img, 0, 0);
+  return c;
+}
+
+// A leafless tree the size of the tile, with snow along its branches.
+function bareTree(w, h, seed, birch) {
+  return draw(w, h, ({ R, E }) => {
+    E(w / 2, h - 3, w * 0.3, 3, SHADOW);
+    const bark = birch ? '#f2f0e8' : '#6a5242';
+    const bark2 = birch ? '#d8d4cc' : '#8a7262';
+    const tw = Math.max(5, Math.round(w / 9));
+    const top = Math.round(h * 0.42);
+    R(w / 2 - tw / 2 - 1, top, tw + 2, h - 3 - top, OUT);
+    R(w / 2 - tw / 2, top, tw, h - 3 - top, bark);
+    R(w / 2 - tw / 2, top, 2, h - 3 - top, bark2);
+    if (birch) for (let y = top + 4; y < h - 4; y += 7) R(w / 2 - tw / 2 + ((y / 7) % 2) * 2, y, 3, 1, '#3a3a3a');
+    const segs = [];
+    const grow = (x, y, a, len, width, depth) => {
+      const x2 = x + Math.cos(a) * len;
+      const y2 = y + Math.sin(a) * len;
+      segs.push([x, y, x2, y2, width]);
+      if (depth <= 0) return;
+      const n = depth > 1 ? 2 : 3;
+      for (let k = 0; k < n; k++) {
+        const da = (k / (n - 1) - 0.5) * 1.3 + (hash(depth, k + x, seed) - 0.5) * 0.4;
+        grow(x2, y2, a + da, len * (0.62 + hash(k, depth, seed) * 0.15), Math.max(1, width - 1), depth - 1);
+      }
+    };
+    const spread = Math.min(w, h * 0.9) * 0.26;
+    [-0.9, -0.3, 0.3, 0.9].forEach((o, i) => grow(w / 2, top + 6 + i * 3, -Math.PI / 2 + o * 0.9, spread, 3, w > 40 ? 3 : 2));
+    const line = (x1, y1, x2, y2, wd, col) => {
+      const n = Math.ceil(Math.hypot(x2 - x1, y2 - y1));
+      for (let i = 0; i <= n; i++) R(x1 + ((x2 - x1) * i) / n - wd / 2, y1 + ((y2 - y1) * i) / n - wd / 2, wd, wd, col);
+    };
+    segs.forEach(([x1, y1, x2, y2, wd]) => line(x1, y1, x2, y2, wd + 2, OUT));
+    segs.forEach(([x1, y1, x2, y2, wd]) => line(x1, y1, x2, y2, wd, bark));
+    // snow along the flatter branches
+    segs.forEach(([x1, y1, x2, y2, wd]) => {
+      if (Math.abs(y2 - y1) > Math.abs(x2 - x1) * 1.2) return;
+      line(x1, y1 - wd / 2 - 1, x2, y2 - wd / 2 - 1, 1.5, '#ffffff');
+    });
+  });
+}
+
+export function seasonFrames(name, tile, season) {
+  const f = tile.frames;
+  if (season === 'winter') {
+    if (name === 'pine') return null; // the snowy pine is its own tile; see seasonTile
+    if (DECIDUOUS.includes(name)) return [bareTree(tile.w, tile.h, name.length * 13, name === 'birch_tree')];
+    if (NO_SNOW.includes(name)) return null;
+    return f.map(snowify);
+  }
+  if (season === 'autumn') {
+    if (DECIDUOUS.includes(name) && name !== 'maple_tree') return f.map((c, i) => name === 'cherry_tree' ? recolor(c, warm, AUTUMN, 900 + i, 0.95) : recolor(c, green, AUTUMN, 900 + i));
+    if (SHRUBS.includes(name)) return f.map((c) => recolor(c, green, AUTUMN.slice(1), 901));
+    return null;
+  }
+  if (season === 'spring') {
+    if (name === 'maple_tree') return f.map((c) => recolor(c, warm, SUMMER, 902));
+    if (DECIDUOUS.includes(name) && name !== 'cherry_tree') return f.map((c) => blossom(c, 903));
+    if (name === 'bush' || name === 'hedge_round') return f.map((c) => blossom(c, 904));
+    return null;
+  }
+  if (season === 'summer') {
+    if (name === 'maple_tree' || name === 'cherry_tree') return f.map((c) => recolor(c, warm, SUMMER, 905));
+  }
+  return null;
+}
+
+// Some tiles have a whole other tile for a season.
+export const seasonTile = (name, season) => (season === 'winter' && name === 'pine' ? 'pine_snow' : null);
+
+// Where tiles give off light at night, from the tile's bottom-left corner:
+// [x, y, radius, color, strength, extra] (extra as for IslandScene.light).
+export const TILE_LIGHTS = {
+  cottage: [[25, -32, 34, 0xffd89a, 0.9, { glow: 22 }], [71, -32, 34, 0xffd89a, 0.9, { glow: 22 }]],
+  lighthouse: [[32, -109, 56, 0xfff4c0, 1, { glow: 44, beam: true }]],
+  tiki_hut: [[7, -29, 28, 0xffa850, 0.9, { glow: 20, flicker: true }], [89, -29, 28, 0xffa850, 0.9, { glow: 20, flicker: true }]],
+  greenhouse: [[48, -26, 52, 0xe0ffd0, 0.6, {}]],
+  garden_lantern: [[16, -36, 30, 0xffd080, 0.9, { glow: 18, flicker: true }]],
+  windmill: [[48, -51, 22, 0xffd89a, 0.7, { glow: 14 }]],
+  torch: [[16, -22, 30, 0xffa850, 0.9, { glow: 18, flicker: true }]],
+  ice_cream_cart: [[32, -20, 26, 0xffe8f0, 0.5, {}]],
+  market_stall: [[32, -30, 30, 0xffe0b0, 0.5, {}]],
+};
