@@ -198,17 +198,24 @@ export function makePet(scene, prefix, kind, color) {
 
 // A pet that follows a character, walking where they walked.
 export class Pet {
-  constructor(scene, kind, color, owner) {
+  constructor(scene, kind, color, owner, opts = {}) {
     this.scene = scene;
+    this.leash = !!opts.leash; // visitors walk their dogs on a leash
     this.kind = kind;
     this.owner = owner;
-    this.prefix = `pet_${kind}`;
-    makePet(scene, this.prefix, kind, color);
+    const col = color || PET_COLORS[kind]?.[0];
+    this.prefix = `pet_${kind}_${(col || '').replace('#', '')}`; // one set of textures per pet and color
+    if (!scene.textures.exists(`${this.prefix}_down`)) makePet(scene, this.prefix, kind, col);
     this.s = scene.add.sprite(owner.x - 16, owner.y, `${this.prefix}_down`).setOrigin(0.5, 1);
     this.trail = [];
     this.still = 0;
     this.walkT = 0;
     this.flier = kind === 'parrot';
+    this.gap = opts.gap || 9;
+  }
+
+  destroy() {
+    this.s.destroy();
   }
 
   update(dt) {
@@ -226,7 +233,7 @@ export class Pet {
       tx = o.x + 5;
       ty = o.y - 19;
     } else {
-      const target = this.trail[Math.max(0, this.trail.length - 9)] || o;
+      const target = this.trail[Math.max(0, this.trail.length - this.gap)] || o;
       tx = target.x;
       ty = target.y + (this.flier ? -14 : 0);
     }

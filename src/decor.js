@@ -19,6 +19,7 @@ import { roomRating, starText } from './rating.js';
 
 export const CHARACTER_PALETTES = {
   h: { label: 'Hair color', colors: ['#4a2e20', '#1e1410', '#d9b45a', '#a0522d', '#8a8a8a', '#e8e0d0', '#c0392b', '#2e5a8a', '#6a4c93', '#d06a9a', '#4a8ab0'] },
+  e: { label: 'Eyes', colors: ['#2a1a14', '#4a2e20', '#3a5a8a', '#3a7a4a', '#6a6a7a', '#7a4a8a'] },
   s: { label: 'Skin', colors: ['#ffe0c8', '#f2c6a0', '#e0ac80', '#c68a5e', '#b57850', '#9a6440', '#6e4428', '#4a2c18'] },
   c: { label: 'Jacket', colors: ['#7a2e3a', '#3d6fb6', '#4f7a3a', '#c27a2c', '#6a4c93', '#2a2a2e', '#e8e2d4', '#2e7d7a', '#b0413e', '#f08ab0', '#5a4632'] },
   w: { label: 'Shirt', colors: ['#efe6d4', '#ffffff', '#cfe0f0', '#f4e0a0', '#e8c8d0', '#2a2a2e', '#c8d8b0'] },
@@ -277,6 +278,18 @@ function renderCharacter() {
   parts.push(section('Hairstyle', choices(HAIRSTYLES, ch.hair || 'short', pick('hair'))));
   if (ch.hair !== 'bald') parts.push(colorRow('h'));
   parts.push(colorRow('s'));
+  parts.push(colorRow('e'));
+  // face details: each button toggles on and off
+  const face = document.createElement('div');
+  face.className = 'choices';
+  [['freckles', 'Freckles'], ['blush', 'Rosy cheeks'], ['earrings', 'Earrings']].forEach(([k, label]) => {
+    const b = document.createElement('button');
+    b.textContent = label;
+    b.className = ch[k] ? 'on' : '';
+    b.onclick = () => setChar({ [k]: !ch[k] });
+    face.appendChild(b);
+  });
+  parts.push(section('Face', face));
   parts.push(section('Facial hair', choices(FACIAL, ch.facial || 'none', pick('facial'))));
   parts.push(section('Outfit', choices(OUTFITS, style, pick('outfit'))));
   parts.push(colorRow('c', MAIN_LABEL[style]));
