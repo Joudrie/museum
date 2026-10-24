@@ -856,4 +856,155 @@ function addProps(add, anim) {
     R(3, 18, 26, 6, OUT);
     R(4, 19, 24, 4, css(STONE[1]));
   }), { group: 'Puzzles', label: 'Stone head (1×2)', w: T, h: 2 * T, walk: 'block' });
+
+  addOutdoor(add, anim, WOOD);
+}
+
+// ---------- Grounds & garden ----------
+function addOutdoor(add, anim, WOOD) {
+  const IRON = '#2a2a30';
+  add('lamp_post', draw(T, 2 * T, ({ R, E }) => {
+    E(16, 61, 7, 2, 'rgba(0,0,0,0.28)');
+    R(13, 56, 7, 5, OUT);
+    R(14, 57, 5, 3, IRON);
+    R(15, 20, 3, 37, IRON);
+    R(16, 20, 1, 37, '#55555e');
+    R(10, 8, 13, 14, OUT);
+    R(11, 9, 11, 12, '#fff0b8');
+    R(11, 9, 11, 2, '#ffffff');
+    R(16, 9, 1, 12, OUT);
+    R(9, 6, 15, 3, IRON);
+    R(14, 2, 5, 4, IRON);
+  }), { group: 'Grounds & garden', label: 'Lamp post (1×2)', w: T, h: 2 * T, walk: 'block' });
+  const fence = (dir) =>
+    draw(T, T, ({ R }) => {
+      if (dir === 'h') {
+        [6, 22].forEach((x) => {
+          R(x - 1, 10, 5, 19, OUT);
+          R(x, 11, 3, 17, '#f0ece2');
+        });
+        [14, 21].forEach((y) => {
+          R(0, y - 1, T, 4, OUT);
+          R(0, y, T, 2, '#f0ece2');
+        });
+      } else {
+        R(13, 0, 6, T, OUT);
+        R(14, 0, 4, T, '#f0ece2');
+        R(14, 0, 1, T, '#ffffff');
+      }
+    });
+  add('fence_h', fence('h'), { group: 'Grounds & garden', label: 'White fence (across)', walk: 'block' });
+  add('fence_v', fence('v'), { group: 'Grounds & garden', label: 'White fence (up)', walk: 'block' });
+  const hedge = (end) =>
+    pixels(T, T, (x, y) => {
+      const top = 4;
+      if (y < top) return null;
+      const e = end === 'l' ? x : end === 'r' ? T - 1 - x : 99;
+      if (e < 2) return e === 0 || y === top ? hex(OUT) : JUNGLE[1];
+      if (y === top || y === T - 1) return hex(OUT);
+      const n = fbm(x, y, 600);
+      if (y > T - 7) return JUNGLE[0];
+      return n < 0.35 ? JUNGLE[1] : n < 0.7 ? JUNGLE[2] : JUNGLE[3];
+    });
+  add('hedge_l', hedge('l'), { group: 'Grounds & garden', label: 'Hedge end (left)', walk: 'block' });
+  add('hedge', hedge(null), { group: 'Grounds & garden', label: 'Hedge', walk: 'block' });
+  add('hedge_r', hedge('r'), { group: 'Grounds & garden', label: 'Hedge end (right)', walk: 'block' });
+  add('topiary', draw(T, 2 * T, ({ R, E }) => {
+    E(16, 61, 9, 2, 'rgba(0,0,0,0.25)');
+    R(9, 50, 14, 11, OUT);
+    R(10, 51, 12, 9, '#a85a32');
+    R(10, 51, 12, 2, '#c0703f');
+    R(15, 36, 2, 14, '#5a3a20');
+    E(16, 28, 11, 11, OUT);
+    E(16, 28, 10, 10, '#2e7842');
+    E(13, 25, 5, 4, '#3c9048');
+    E(16, 12, 6, 6, OUT);
+    E(16, 12, 5, 5, '#2e7842');
+    E(14, 10, 2, 2, '#58a854');
+  }), { group: 'Grounds & garden', label: 'Topiary (1×2)', w: T, h: 2 * T, walk: 'block' });
+  add('flower_bed', draw(T, T, ({ R }) => {
+    R(1, 14, 30, 16, OUT);
+    R(2, 15, 28, 14, '#6a4428');
+    for (let i = 0; i < 6; i++) {
+      const x = 4 + i * 5;
+      R(x + 1, 13, 1, 9, '#2e7842');
+      R(x, 10 + (i % 2), 3, 4, i % 3 === 0 ? '#e0405a' : i % 3 === 1 ? '#f2d36b' : '#b06ae0');
+      R(x + 1, 9 + (i % 2), 1, 1, '#ffffff');
+    }
+  }), { group: 'Grounds & garden', label: 'Flower bed', walk: 'block' });
+  add('stepping_stone', draw(T, T, ({ E }) => {
+    [[10, 12], [22, 20]].forEach(([x, y]) => {
+      E(x, y + 1, 7, 4, 'rgba(0,0,0,0.2)');
+      E(x, y, 7, 4, OUT);
+      E(x, y, 6, 3, css(STONE[3]));
+      E(x - 2, y - 1, 3, 1, css(STONE[4]));
+    });
+  }), { group: 'Grounds & garden', label: 'Stepping stones', walk: 'walk' });
+  add('park_bench', draw(2 * T, T, ({ R, E }) => {
+    E(32, 29, 26, 2, 'rgba(0,0,0,0.25)');
+    [8, 54].forEach((x) => R(x, 16, 3, 13, IRON));
+    R(5, 6, 54, 9, OUT);
+    for (let y = 7; y < 14; y += 3) R(6, y, 52, 2, WOOD[2]);
+    R(4, 16, 56, 6, OUT);
+    R(5, 17, 54, 4, WOOD[3]);
+  }), { group: 'Grounds & garden', label: 'Park bench (2×1)', w: 2 * T, h: T, walk: 'block' });
+  add('umbrella', draw(2 * T, 2 * T, ({ ctx, R, E }) => {
+    R(10, 44, 44, 14, OUT);
+    R(11, 45, 42, 12, '#3a78c8');
+    for (let x = 11; x < 53; x += 8) R(x, 45, 4, 12, '#f0ece2');
+    R(31, 14, 2, 36, '#6a4a2a');
+    ctx.fillStyle = OUT;
+    ctx.beginPath();
+    ctx.moveTo(4, 24);
+    ctx.quadraticCurveTo(32, -6, 60, 24);
+    ctx.fill();
+    const stripes = ['#e0405a', '#f0ece2'];
+    for (let i = 0; i < 6; i++) {
+      ctx.fillStyle = stripes[i % 2];
+      ctx.beginPath();
+      ctx.moveTo(32, 6);
+      ctx.lineTo(6 + i * 9, 22);
+      ctx.lineTo(6 + (i + 1) * 9, 22);
+      ctx.fill();
+    }
+    E(32, 23, 26, 2, 'rgba(0,0,0,0.18)');
+  }), { group: 'Grounds & garden', label: 'Beach umbrella (2×2)', w: 2 * T, h: 2 * T, walk: 'block' });
+  add('driftwood', draw(T, T, ({ R }) => {
+    for (let i = 0; i < 24; i++) R(4 + i, 20 + Math.round(Math.sin(i / 4) * 2), 2, 3, i % 5 ? '#b8a088' : '#8a7460');
+    R(14, 16, 2, 5, '#b8a088');
+    R(22, 22, 4, 1, '#d8c4a8');
+  }), { group: 'Grounds & garden', label: 'Driftwood', walk: 'walk' });
+  add('rowboat', anim((f) => draw(2 * T, T, ({ R, E }) => {
+    const bob = f === 1 || f === 2 ? 1 : 0;
+    E(32, 26, 28, 4, 'rgba(242,251,255,0.45)');
+    E(32, 18 + bob, 27, 8, OUT);
+    E(32, 17 + bob, 26, 7, '#8a5a3a');
+    E(32, 15 + bob, 22, 4, '#5a3a20');
+    R(10, 14 + bob, 44, 2, '#b07a4a');
+    [22, 40].forEach((x) => R(x, 12 + bob, 3, 8, '#b07a4a'));
+    R(44, 6 + bob, 2, 14, '#c8b088'); // an oar
+    R(43, 18 + bob, 4, 5, '#c8b088');
+  })), { group: 'Grounds & garden', label: 'Rowboat (2×1)', w: 2 * T, h: T, walk: 'block' });
+  add('campfire', anim((f) => draw(T, T, ({ R, E }) => {
+    E(16, 26, 11, 3, 'rgba(0,0,0,0.3)');
+    [[8, 22], [20, 22], [14, 24]].forEach(([x, y], i) => {
+      R(x, y, 10, 3, OUT);
+      R(x + 1, y + 1 - (i % 2), 8, 1, WOOD[2]);
+    });
+    [[7, 25], [24, 25], [11, 27], [21, 27]].forEach(([x, y]) => E(x, y, 2, 1, css(STONE[2])));
+    const h = [11, 13, 10, 12][f];
+    E(16, 22 - h / 2, 5, h / 2, '#e8702a');
+    E(16, 22 - h / 3, 3, h / 3, '#f2d36b');
+    R(15 + (f % 2), 22 - h - 2, 2, 2, '#f2a03a');
+    R(12 - (f % 2), 22 - h, 1, 1, '#fff4a0');
+  })), { group: 'Grounds & garden', label: 'Campfire', walk: 'block' });
+  add('mailbox', draw(T, T, ({ R, E }) => {
+    E(16, 29, 6, 2, 'rgba(0,0,0,0.25)');
+    R(15, 14, 3, 15, WOOD[1]);
+    R(8, 6, 17, 10, OUT);
+    R(9, 7, 15, 8, '#3a78c8');
+    R(9, 7, 15, 2, '#5a98e0');
+    R(22, 2, 2, 7, '#e0405a');
+    R(22, 2, 5, 3, '#e0405a');
+  }), { group: 'Grounds & garden', label: 'Mailbox', walk: 'block' });
 }

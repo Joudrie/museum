@@ -152,6 +152,12 @@ const SFX = {
   step: (t) => tone(150 + Math.random() * 40, t, 0.035, { wave: 'triangle', gain: 0.07, to: 90 }),
   stepSoft: (t) => tone(90 + Math.random() * 20, t, 0.05, { wave: 'sine', gain: 0.08, to: 60 }),
   stepGrass: (t) => tone(2400 + Math.random() * 600, t, 0.03, { wave: 'sawtooth', gain: 0.012, to: 1200 }),
+  meow: (t) => tone(700, t, 0.28, { wave: 'triangle', gain: 0.16, to: 480 }),
+  woof: (t) => {
+    tone(180, t, 0.12, { wave: 'square', gain: 0.1, to: 120 });
+    tone(170, t + 0.16, 0.12, { wave: 'square', gain: 0.1, to: 110 });
+  },
+  squawk: (t) => tone(1400, t, 0.16, { wave: 'sawtooth', gain: 0.05, to: 900 }),
   tap: (t) => tone(1500, t, 0.03, { wave: 'square', gain: 0.04, to: 1100 }),
   open: (t) => tone(420, t, 0.12, { gain: 0.12, to: 640 }),
   close: (t) => tone(560, t, 0.1, { gain: 0.1, to: 360 }),

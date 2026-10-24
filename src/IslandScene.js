@@ -10,9 +10,11 @@ import { DEFAULT_CHARACTER } from './decor.js';
 import { showTalk, hideTalk, talking } from './talk.js';
 import { iconSvg } from './icons.js';
 import { sfx, setTrack } from './music.js';
-import { ambientAt } from './lighting.js';
+import { ambientAt, makeTextures as lightTextures } from './lighting.js';
+import { Critters } from './critters.js';
 import { settings, hourNow } from './settings.js';
 import { animateWalker, footstep, dust } from './motion.js';
+import { Pet } from './pets.js';
 
 const W = 24; // map size in tiles
 const H = 40;
@@ -43,6 +45,8 @@ export class IslandScene extends Phaser.Scene {
     this.solid = Array.from({ length: H }, () => Array(W).fill(false));
     this.animated = []; // images whose texture changes every frame
     this.things = []; // signs and chests you can interact with
+    this.flickers = []; // campfire glows
+    this.flowerSpots = [];
 
     this.makeMap();
     this.drawGround();
@@ -53,13 +57,15 @@ export class IslandScene extends Phaser.Scene {
     if (!this.textures.exists('player_down')) makeCharacter(this, 'player', ch, {});
     this.player = this.add.sprite(DOOR.x, DOOR.y + 22, 'player_down').setOrigin(0.5, 1).setScale(PLAYER_SCALE);
     this.shadow = this.add.ellipse(0, 0, 18, 6, 0x000000, 0.25).setDepth(0.5);
+    if (ch.pet && ch.pet !== 'none') this.pet = new Pet(this, ch.pet, ch.petColor, this.player);
     this.doorLock = true; // don't walk straight back in
 
-    // Time of day: the same ambient light as inside, without the lamps.
-    if (settings().dayNight && settings().lights !== 'off') {
-      const [r, g, b] = ambientAt(hourNow());
-      this.add.rectangle(0, 0, W * T, H * T, (r << 16) | (g << 8) | b).setOrigin(0).setDepth(5000).setBlendMode(Phaser.BlendModes.MULTIPLY);
-    }
+    this.lightUp();
+    this.critters = new Critters(
+      this,
+      { w: W * T, h: H * T, isSand: (x, y) => this.ground_(x, y) === 'sand', isWater: (x, y) => this.ground_(x, y) === 'water', flowers: this.flowerSpots },
+      this.dark > 0.45,
+    );
 
     this.setupCamera();
     this.setupInput();
@@ -238,6 +244,8 @@ export class IslandScene extends Phaser.Scene {
       tex.refresh();
     }
     this.add.image(DOOR.x, DOOR.y + 8, key).setOrigin(0.5, 1).setDepth(DOOR.y);
+    this.light(DOOR.x, DOOR.y + 6, 46, 0xffd89a, 1, { glow: 40, gy: DOOR.y - 20 });
+    [-1, 1].forEach((d) => this.light(DOOR.x + d * 32, DOOR.y - 88, 30, 0xffd080, 0.8, { glow: 34 })); // the windows
     // the building is solid, the steps and doorway are not
     for (let y = 2; y <= 7; y++) for (let x = 8; x <= 15; x++) if (!(y === 7 && x >= 11 && x <= 12)) this.block(x, y);
   }
@@ -250,7 +258,33 @@ export class IslandScene extends Phaser.Scene {
     [[9, 14], [16, 15], [6, 24], [18, 26]].forEach(([x, y]) => this.place('bush', x, y));
     for (let y = 22; y <= 25; y++) for (let x = 8; x <= 10; x++) if ((x + y) % 4) this.tallGrass(x, y);
     for (let y = 15; y <= 17; y++) for (let x = 14; x <= 17; x++) if ((x * y) % 3) this.tallGrass(x, y);
-    [[10, 11], [14, 12], [7, 13], [16, 18], [11, 28]].forEach(([x, y]) => this.place('flowers', x, y, { flat: true }));
+    [[10, 11], [14, 12], [7, 13], [16, 18], [11, 28]].forEach(([x, y]) => {
+      this.place('flowers', x, y, { flat: true });
+      this.flowerSpots.push({ x: (x + 0.5) * T, y: (y + 0.5) * T });
+    });
+    // the museum's garden: hedges, flower beds, topiaries, a white fence
+    [7, 16].forEach((x) => {
+      this.place('hedge_l', x, 8);
+      this.place('hedge_r', x + 1, 8);
+    });
+    [9, 14].forEach((x) => this.place('flower_bed', x, 9));
+    [[6, 11], [18, 11]].forEach(([x, y]) => this.place('topiary', x, y));
+    for (let x = 5; x <= 9; x++) this.place('fence_h', x, 12);
+    for (let x = 15; x <= 19; x++) this.place('fence_h', x, 12);
+    // lamp posts along the path
+    [13, 18, 23, 28].forEach((y) => {
+      this.place('lamp_post', 11, y);
+      this.light(11.5 * T, (y + 1) * T - 4, 40, 0xffe4a8, 0.9, { glow: 26, gy: (y + 1) * T - 52 });
+    });
+    this.place('park_bench', 13, 20);
+    this.place('mailbox', 14, 10);
+    this.flowerSpots.push({ x: 9.5 * T, y: 9.5 * T }, { x: 14.5 * T, y: 9.5 * T });
+    // the beach: an umbrella, driftwood and a campfire for the evening
+    this.place('umbrella', 17, 31);
+    this.place('driftwood', 6, 32, { flat: true });
+    this.place('driftwood', 16, 36, { flat: true });
+    this.place('campfire', 9, 32);
+    this.light(9.5 * T, 32.6 * T, 60, 0xffa850, 1, { glow: 46, gy: 32.4 * T, flicker: true });
     this.place('mushrooms', 5, 22, { flat: true });
     this.place('lily', 7, 18, { flat: true });
     this.place('lily', 8, 19, { flat: true });
@@ -283,6 +317,7 @@ export class IslandScene extends Phaser.Scene {
     for (let y = 36; y <= 39; y++) this.place('dock_v', 12, y, { flat: true });
     this.place('dock_post', 11, 38);
     this.place('dock_post', 13, 38);
+    this.place('rowboat', 13, 39, { solid: false });
     this.thing('sign', 13, 35, 'Expeditions leave from this dock. Pirate islands, shipwrecks, lost temples… coming soon!');
     this.thing('sign', 13, 9, 'Welcome to the island! The museum is right behind you. Walk up into the doors to go back in.');
   }
@@ -291,6 +326,43 @@ export class IslandScene extends Phaser.Scene {
     (this.grassCells ||= new Set()).add(`${x},${y}`);
     this.place('tall_grass', x, y, { flat: true });
     this.place('tall_grass_front', x, y, { depth: (y + 1) * T + 2 }); // drawn over your legs
+  }
+
+  // What a point is: open water, beach sand, or anything else.
+  ground_(x, y) {
+    const cx = Math.floor(x / T);
+    const cy = Math.floor(y / T);
+    if (cx < 0 || cy < 0 || cx >= W || cy >= H) return 'water';
+    const sea = [...this.key(cx, cy, (m) => m === 0 || m === 3)].filter((v) => v === '1').length;
+    if (sea >= 2) return 'water';
+    if (this.solid[cy][cx]) return 'solid';
+    return this.key(cx, cy, (m) => m >= 2) === '0000' ? 'sand' : 'grass';
+  }
+
+  // Night outside: the same ambient light as indoors, with pools of light from
+  // the museum's windows, the lamp posts and the campfire.
+  lightUp() {
+    const lit = settings().dayNight && settings().lights !== 'off';
+    const [r, g, b] = lit ? ambientAt(hourNow()) : [255, 255, 255];
+    this.dark = Math.max(0, Math.min(1, 1 - (0.3 * r + 0.55 * g + 0.15 * b) / 245));
+    if (!lit) return;
+    lightTextures(this);
+    const rt = this.add.renderTexture(0, 0, W * T, H * T).setOrigin(0).setDepth(5000).setBlendMode(Phaser.BlendModes.MULTIPLY);
+    rt.fill((r << 16) | (g << 8) | b, 1);
+    const k = 0.4 + 0.6 * this.dark;
+    const stamp = (x, y, w, h, tint, a) => rt.stamp('lt_glow', null, x, y, { scaleX: w / 128, scaleY: h / 128, tint, alpha: Math.min(1, a * k), blendMode: Phaser.BlendModes.ADD });
+    (this.lamps || []).forEach((l) => stamp(l.x, l.y, l.r * 2, l.r * 1.6, l.color, l.a));
+    // warm glows on top so the lamps themselves shine
+    (this.lamps || []).forEach((l) => {
+      if (!l.glow) return;
+      const gl = this.add.image(l.x, l.gy ?? l.y, 'lt_glow').setDisplaySize(l.glow, l.glow).setBlendMode(Phaser.BlendModes.ADD).setTint(l.color).setAlpha(0.1 + 0.5 * this.dark).setDepth(5001);
+      if (l.flicker) this.flickers.push(gl);
+    });
+    if (this.dark > 0.2) this.playerGlow = this.add.image(0, 0, 'lt_glow').setDisplaySize(90, 70).setBlendMode(Phaser.BlendModes.ADD).setTint(0xffd8a8).setAlpha(0.12 * this.dark).setDepth(5001);
+  }
+
+  light(x, y, r, color, a = 1, extra = {}) {
+    (this.lamps ||= []).push({ x, y, r, color, a, ...extra });
   }
 
   thing(name, x, y, text) {
@@ -365,6 +437,7 @@ export class IslandScene extends Phaser.Scene {
   }
 
   tick() {
+    this.flickers.forEach((g) => g.setAlpha((0.1 + 0.5 * this.dark) * (0.8 + Math.random() * 0.35)));
     this.frame = (this.frame + 1) % 4;
     this.ground.setTexture(this.groundKeys[this.frame]);
     this.animated.forEach(({ img, keys }) => img.setTexture(keys[this.frame % keys.length]));
@@ -381,6 +454,13 @@ export class IslandScene extends Phaser.Scene {
         bestD = d;
       }
     });
+    if (this.pet) {
+      const dp = Math.hypot(x - this.pet.s.x, y - this.pet.s.y) + 4;
+      if (dp < bestD) {
+        best = { pet: true, icon: 'talk' };
+        bestD = dp;
+      }
+    }
     const dd = Math.hypot(x - DOOR.x, y - (DOOR.y + 4));
     if (dd < 30 && dd < bestD) best = { door: true, icon: 'door' };
     return best;
@@ -390,6 +470,7 @@ export class IslandScene extends Phaser.Scene {
     const f = this.focus;
     if (!f || this.leaving) return;
     if (f.door) return this.goInside();
+    if (f.pet) return this.pet.pet();
     if (talking()) return hideTalk();
     sfx('talk');
     const r = this.game.canvas.getBoundingClientRect();
@@ -474,6 +555,9 @@ export class IslandScene extends Phaser.Scene {
       else p.setTexture(vy < 0 ? 'player_up' : 'player_down').setFlipX(false);
     }
     if (animateWalker(this, p, len > 0, dt, 0.8 + pace * 0.5)) this.onStep(p, pace);
+    this.pet?.update(dt);
+    this.critters.update(dt, p);
+    this.playerGlow?.setPosition(p.x, p.y - 12);
     p.setDepth(p.y);
     this.shadow.setPosition(p.x, p.y - 1);
     // Walk up into the doors to go back inside.
