@@ -52,6 +52,7 @@ import { openDecor, closeDecor, load, save, DEFAULT_CHARACTER } from './decor.js
 import { openBuild } from './build.js';
 import { showTalk, hideTalk, talking } from './talk.js';
 import { Lighting, timeOfDay } from './lighting.js';
+import { animateWalker, footstep, dust } from './motion.js';
 import { openSettings, closeSettings } from './settingsmenu.js';
 import { openIncome } from './incomemenu.js';
 import { openJournal } from './journal.js';
@@ -1202,6 +1203,7 @@ export class RoomScene extends Phaser.Scene {
     const k = len > max ? max / len : 1;
     this.knob.style.transform = `translate(${dx * k}px, ${dy * k}px)`;
     this.dragVec = len > 0 ? { x: dx / len, y: dy / len } : { x: 0, y: 0 };
+    this.dragMag = Math.min(1, len / max); // a short drag walks, a long one runs
   }
 
   setupButtons() {
@@ -1671,18 +1673,9 @@ export class RoomScene extends Phaser.Scene {
   }
 
   // Walking: a small bounce, and the legs swap when walking up or down.
-  animate(s, moving, dt) {
-    const front = !s.texture.key.endsWith('_side');
-    if (!moving) {
-      s.walkT = 0;
-      s.setOrigin(0.5, 1);
-      if (front) s.setFlipX(false);
-      return;
-    }
-    s.walkT = (s.walkT || 0) + dt;
-    const phase = Math.floor(s.walkT * 8) % 2;
-    s.setOrigin(0.5, 1 + phase / 32);
-    if (front) s.setFlipX(phase === 1);
+  // Walking: step frames and a little bounce. Returns true when a foot lands.
+  animate(s, moving, dt, rate = 1) {
+    return animateWalker(this, s, moving, dt, rate);
   }
 
   faceSprite(s, prefix, vx, vy) {
@@ -2195,13 +2188,17 @@ export class RoomScene extends Phaser.Scene {
     const k = this.keys;
     let vx = (k.D.isDown || k.RIGHT.isDown ? 1 : 0) - (k.A.isDown || k.LEFT.isDown ? 1 : 0);
     let vy = (k.S.isDown || k.DOWN.isDown ? 1 : 0) - (k.W.isDown || k.UP.isDown ? 1 : 0);
-    if (!vx && !vy && this.dragging && this.dragVec) ({ x: vx, y: vy } = this.dragVec);
+    let pace = 1; // keyboard: full speed
+    if (!vx && !vy && this.dragging && this.dragVec) {
+      ({ x: vx, y: vy } = this.dragVec);
+      pace = this.dragMag > 0.7 ? 1 : 0.62;
+    }
 
     const len = Math.hypot(vx, vy);
     if (len > 0) {
       const b = this.bounds();
-      const nx = Phaser.Math.Clamp(this.player.x + (vx / len) * SPEED * dt, b.x0, b.x1);
-      const ny = Phaser.Math.Clamp(this.player.y + (vy / len) * SPEED * dt, b.y0, b.y1);
+      const nx = Phaser.Math.Clamp(this.player.x + (vx / len) * SPEED * pace * dt, b.x0, b.x1);
+      const ny = Phaser.Math.Clamp(this.player.y + (vy / len) * SPEED * pace * dt, b.y0, b.y1);
       const free = (x, y, ox, oy) => !this.blocked(x, y) && (!this.hitsVisitor(x, y) || this.hitsVisitor(ox, oy));
       // (if already stuck inside something, e.g. a new item, let the player walk out)
       if (free(nx, this.player.y, this.player.x, this.player.y) || this.blocked(this.player.x, this.player.y)) this.player.x = nx;
@@ -2223,7 +2220,10 @@ export class RoomScene extends Phaser.Scene {
       }
       this.faceSprite(this.player, 'player', vx, vy);
     }
-    this.animate(this.player, len > 0, dt);
+    if (this.animate(this.player, len > 0, dt, 0.8 + pace * 0.5)) {
+      footstep();
+      if (pace === 1) dust(this, this.player.x, this.player.y);
+    }
     this.player.setDepth(this.player.y);
     this.checkArches();
     if (len > 0) this.checkCoins();
