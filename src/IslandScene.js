@@ -68,8 +68,9 @@ export class IslandScene extends Phaser.Scene {
     this.lightUp();
     this.critters = new Critters(
       this,
-      { w: W * T, h: H * T, isSand: (x, y) => this.ground_(x, y) === 'sand', isWater: (x, y) => this.ground_(x, y) === 'water', flowers: this.flowerSpots },
+      { w: W * T, h: H * T, isSand: (x, y) => this.ground_(x, y) === 'sand', isWater: (x, y) => this.ground_(x, y) === 'water', flowers: this.flowerSpots, pond: { x: 5 * T, y: 16 * T, w: 5 * T, h: 5 * T } },
       this.dark > 0.45,
+      this.weatherKind,
     );
 
     this.seasonal();

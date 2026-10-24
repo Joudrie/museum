@@ -1,6 +1,9 @@
 // Little lives on the island: gulls gliding overhead (their shadows slide
 // across the ground), crabs that scuttle off when you get close, butterflies
-// over the flowers, fish jumping out at sea, and fireflies after dark.
+// over the flowers, fish jumping out at sea, fireflies after dark, a duck
+// family paddling round the pond and frogs on its bank that plop in when you
+// come close. The weather changes who is out: rain brings the frogs out and
+// sends the butterflies and gulls home; snow keeps the crabs and frogs in.
 const OUT = '#1d1714';
 
 function tex(scene, key, w, h, draw) {
@@ -73,6 +76,55 @@ export function critterTextures(scene) {
     R(6, 0, 2, 4, '#a8b8c8');
     R(1, 1, 1, 1, OUT);
   });
+  // duck (white, orange bill) and duckling (yellow), feet paddling
+  [0, 1].forEach((f) => {
+    tex(scene, `duck_${f}`, 14, 11, (R) => {
+      R(1, 4, 10, 5, OUT);
+      R(2, 5, 8, 3, '#f4f4f0');
+      R(8, 0, 5, 5, OUT);
+      R(9, 1, 3, 3, '#f4f4f0');
+      R(13, 2, 1, 2, '#f2a03a');
+      R(11, 2, 2, 1, '#e8702a');
+      R(10, 1, 1, 1, OUT);
+      R(2, 5, 3, 1, '#d8d8d0');
+      R(3 + f * 2, 9, 2, 1, '#e8702a');
+      R(7 - f * 2, 9, 2, 1, '#e8702a');
+    });
+    tex(scene, `duckling_${f}`, 8, 7, (R) => {
+      R(0, 3, 6, 3, OUT);
+      R(1, 3, 4, 2, '#f8d84a');
+      R(4, 0, 3, 3, OUT);
+      R(5, 1, 1, 1, '#f8d84a');
+      R(7, 1, 1, 1, '#e8702a');
+      R(1 + f, 6, 1, 1, '#e8702a');
+      R(4 - f, 6, 1, 1, '#e8702a');
+    });
+    // frog: sitting (0) and mid-hop (1)
+    tex(scene, `frog_${f}`, 10, 8, (R) => {
+      if (!f) {
+        R(1, 3, 8, 5, OUT);
+        R(2, 3, 6, 4, '#5aa83a');
+        R(1, 1, 3, 3, OUT);
+        R(6, 1, 3, 3, OUT);
+        R(2, 2, 1, 1, '#f8f0c8');
+        R(7, 2, 1, 1, '#f8f0c8');
+        R(3, 5, 4, 1, '#a8d86a');
+      } else {
+        R(2, 1, 6, 4, OUT);
+        R(3, 1, 4, 3, '#5aa83a');
+        R(0, 4, 3, 3, OUT);
+        R(7, 4, 3, 3, OUT);
+        R(1, 5, 1, 1, '#5aa83a');
+        R(8, 5, 1, 1, '#5aa83a');
+      }
+    });
+  });
+  tex(scene, 'lilypad', 10, 6, (R) => {
+    R(1, 0, 8, 6, '#3a7a3a');
+    R(0, 1, 10, 4, '#3a7a3a');
+    R(2, 1, 6, 4, '#5aa84a');
+    R(4, 0, 2, 3, '#2a5a6a');
+  });
   tex(scene, 'firefly', 3, 3, (R) => {
     R(1, 0, 1, 3, '#f8ffb0');
     R(0, 1, 3, 1, '#f8ffb0');
@@ -80,24 +132,27 @@ export function critterTextures(scene) {
 }
 
 export class Critters {
-  // map: { w, h, isSand(x,y), isWater(x,y), flowers: [{x,y}] } in pixels
-  constructor(scene, map, night) {
+  // map: { w, h, isSand(x,y), isWater(x,y), flowers: [{x,y}], pond: {x,y,w,h} } in pixels
+  // weather: 'rain' | 'snow' | ... (see weather.js)
+  constructor(scene, map, night, weather = 'clear') {
     this.scene = scene;
     this.map = map;
     this.t = 0;
     critterTextures(scene);
     const rnd = (a, b) => a + Math.random() * (b - a);
+    const wet = weather === 'rain';
+    const cold = weather === 'snow';
     // gulls: in the sky (always on top), with a shadow on the ground
-    this.gulls = Array.from({ length: night ? 0 : 3 }, () => this.newGull(rnd(0, map.w)));
+    this.gulls = Array.from({ length: night || wet ? 0 : cold ? 1 : 3 }, () => this.newGull(rnd(0, map.w)));
     // crabs on the beach
     this.crabs = [];
-    for (let tries = 0; tries < 200 && this.crabs.length < 5; tries++) {
+    for (let tries = 0; tries < 200 && this.crabs.length < (cold ? 0 : 5); tries++) {
       const x = rnd(0, map.w);
       const y = rnd(0, map.h);
       if (map.isSand(x, y) && !map.isWater(x, y)) this.crabs.push({ s: scene.add.image(x, y, 'crab_0').setOrigin(0.5, 1), home: { x, y }, vx: 0, wait: rnd(0.5, 3), run: 0 });
     }
     // butterflies (daytime) or fireflies (night) around the flowers and grass
-    this.flies = (map.flowers || []).slice(0, 6).map((f, i) => {
+    this.flies = (night || !(wet || cold) ? map.flowers || [] : []).slice(0, 6).map((f, i) => {
       const key = night ? 'firefly' : `fly_${i % 4}_0`;
       const s = scene.add.image(f.x, f.y - 10, key).setDepth(f.y + 40);
       if (night) s.setBlendMode('ADD');
@@ -105,6 +160,120 @@ export class Critters {
     });
     this.fish = [];
     this.fishTimer = rnd(2, 5);
+    this.ducks = [];
+    this.frogs = [];
+    this.pads = [];
+    const p = map.pond;
+    if (p) {
+      // lily pads drifting slowly (in winter the pond is too cold for them)
+      if (!cold)
+        for (let i = 0; i < 4; i++) {
+          const s = scene.add.image(p.x + rnd(28, p.w - 28), p.y + rnd(28, p.h - 28), 'lilypad').setDepth(0.6).setAngle(rnd(0, 360));
+          this.pads.push({ s, ph: rnd(0, 6) });
+        }
+      // a mother duck and her ducklings paddling in a line
+      if (!night) {
+        const kids = 2 + Math.floor(Math.random() * 3);
+        for (let i = 0; i <= kids; i++) {
+          const s = scene.add.image(0, 0, i ? 'duckling_0' : 'duck_0').setOrigin(0.5, 0.8);
+          this.ducks.push({ s, trail: [] });
+        }
+        this.duckA = rnd(0, 6);
+        this.duckSp = 0.35;
+      }
+      // frogs on the bank (more of them in the rain)
+      if (!cold) {
+        const n = wet ? 4 : 2;
+        for (let i = 0; i < n; i++) {
+          const a = (i / n) * Math.PI * 2 + rnd(-0.4, 0.4);
+          // step out from the middle until we're on dry ground
+          let r = 0.5;
+          const at = (k) => ({ x: p.x + p.w / 2 + Math.cos(a) * (p.w / 2) * k, y: p.y + p.h / 2 + Math.sin(a) * (p.h / 2) * k });
+          while (r < 2 && map.isWater(at(r).x, at(r).y)) r += 0.05;
+          const home = at(r - 0.16);
+          const s = scene.add.image(home.x, home.y, 'frog_0').setOrigin(0.5, 1).setDepth(home.y);
+          this.frogs.push({ s, home, a, gone: 0, croak: rnd(2, 8) });
+        }
+      }
+    }
+  }
+
+  // The duck family paddles round an oval in the pond; the ducklings follow
+  // their mother's path. If you come close they hurry along.
+  updateDucks(dt, player) {
+    if (!this.ducks.length) return;
+    const p = this.map.pond;
+    const cx = p.x + p.w / 2;
+    const cy = p.y + p.h / 2;
+    const mom = this.ducks[0];
+    const near = Math.hypot(player.x - mom.s.x, player.y - mom.s.y) < 50;
+    this.duckSp += ((near ? 1.1 : 0.35) - this.duckSp) * Math.min(1, dt * 2);
+    const rx = p.w / 2 - 26;
+    const ry = p.h / 2 - 26;
+    this.duckA += (this.duckSp * dt * 40) / Math.max(20, (rx + ry) / 2);
+    const x = cx + Math.cos(this.duckA) * rx;
+    const y = cy + Math.sin(this.duckA) * ry;
+    const dx = -Math.sin(this.duckA);
+    mom.trail.unshift({ x, y, dx });
+    if (mom.trail.length > 400) mom.trail.length = 400;
+    const paddle = Math.floor(this.t * (near ? 10 : 4)) % 2;
+    this.ducks.forEach((d, i) => {
+      // each duckling a few steps behind the one in front
+      const pt = mom.trail[Math.min(mom.trail.length - 1, Math.round((i * 11) / Math.max(0.3, this.duckSp)))];
+      const bob = Math.sin(this.t * 3 + i) * 0.6;
+      d.s.setPosition(pt.x, pt.y + bob).setFlipX(pt.dx < 0).setDepth(pt.y);
+      d.s.setTexture(`${i ? 'duckling' : 'duck'}_${paddle}`);
+      if (Math.floor(this.t * 6 + i * 3) % 18 === 0 && !d.rippled) {
+        d.rippled = true;
+        const ring = this.scene.add.ellipse(pt.x, pt.y + 2, i ? 6 : 10, 3).setStrokeStyle(1, 0xf2fbff, 0.6).setDepth(0.7);
+        this.scene.tweens.add({ targets: ring, scaleX: 2, scaleY: 2, alpha: 0, duration: 900, onComplete: () => ring.destroy() });
+      } else if (Math.floor(this.t * 6 + i * 3) % 18 !== 0) d.rippled = false;
+    });
+  }
+
+  // Frogs sit on the bank, puff a croak now and then, and hop into the pond
+  // when you come close (then climb back out a while later).
+  updateFrogs(dt, player) {
+    const p = this.map.pond;
+    this.frogs.forEach((f) => {
+      if (f.gone > 0) {
+        f.gone -= dt;
+        if (f.gone <= 0) {
+          f.s.setPosition(f.home.x, f.home.y).setTexture('frog_0').setVisible(true).setAlpha(0);
+          this.scene.tweens.add({ targets: f.s, alpha: 1, duration: 400 });
+        }
+        return;
+      }
+      if (f.hopping) return;
+      if (Math.hypot(player.x - f.s.x, player.y - f.s.y) < 40) {
+        f.hopping = true;
+        const tx = p.x + p.w / 2 + Math.cos(f.a) * (p.w / 2 - 30);
+        const ty = p.y + p.h / 2 + Math.sin(f.a) * (p.h / 2 - 30);
+        f.s.setTexture('frog_1');
+        this.scene.tweens.add({ targets: f.s, x: tx, duration: 380 });
+        this.scene.tweens.add({
+          targets: f.s,
+          y: { from: f.s.y, to: f.s.y - 10 },
+          duration: 190,
+          yoyo: true,
+          ease: 'Sine.easeOut',
+          onComplete: () => {
+            f.s.setVisible(false);
+            f.hopping = false;
+            f.gone = 6 + Math.random() * 6;
+            const ring = this.scene.add.ellipse(tx, ty - 2, 8, 3).setStrokeStyle(1, 0xf2fbff, 0.9).setDepth(0.7);
+            this.scene.tweens.add({ targets: ring, scaleX: 2.4, scaleY: 2.4, alpha: 0, duration: 700, onComplete: () => ring.destroy() });
+          },
+        });
+        this.scene.tweens.add({ targets: f.s, y: ty, delay: 190, duration: 190 });
+        return;
+      }
+      f.croak -= dt;
+      if (f.croak < 0) {
+        f.croak = 3 + Math.random() * 7;
+        this.scene.tweens.add({ targets: f.s, scaleX: 1.15, scaleY: 0.9, duration: 120, yoyo: true, repeat: 1 });
+      }
+    });
   }
 
   newGull(x) {
@@ -172,6 +341,9 @@ export class Critters {
       if (f.night) f.s.setAlpha(0.4 + 0.6 * Math.max(0, Math.sin(this.t * 2 + f.a * 3)));
       else f.s.setTexture(`fly_${f.kind}_${Math.floor(this.t * 10 + f.a) % 2}`);
     });
+    this.pads.forEach((l) => l.s.setAngle(l.s.angle + Math.sin(this.t * 0.3 + l.ph) * dt * 4));
+    this.updateDucks(dt, player);
+    this.updateFrogs(dt, player);
     // now and then a fish jumps out at sea
     this.fishTimer -= dt;
     if (this.fishTimer < 0) {
