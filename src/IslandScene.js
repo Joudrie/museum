@@ -9,7 +9,8 @@ import { load } from './decor.js';
 import { DEFAULT_CHARACTER } from './decor.js';
 import { showTalk, hideTalk, talking } from './talk.js';
 import { iconSvg } from './icons.js';
-import { sfx, setTrack } from './music.js';
+import { sfx, setTrack, setAmbience } from './music.js';
+import { Weather, weatherToday, season } from './weather.js';
 import { ambientAt, makeTextures as lightTextures } from './lighting.js';
 import { Critters } from './critters.js';
 import { settings, hourNow } from './settings.js';
@@ -41,6 +42,10 @@ export class IslandScene extends Phaser.Scene {
     document.body.classList.add('outside');
     this.events.once('shutdown', () => document.body.classList.remove('outside'));
     setTrack('none');
+    this.weatherKind = weatherToday();
+    this.season = season();
+    setAmbience(this.weatherKind === 'rain' ? ['waves', 'rain'] : ['waves']);
+    this.events.once('shutdown', () => setAmbience([]));
     this.frame = 0;
     this.solid = Array.from({ length: H }, () => Array(W).fill(false));
     this.animated = []; // images whose texture changes every frame
@@ -67,7 +72,9 @@ export class IslandScene extends Phaser.Scene {
       this.dark > 0.45,
     );
 
+    this.seasonal();
     this.setupCamera();
+    this.weather = new Weather(this, this.weatherKind);
     this.setupInput();
     this.time.addEvent({ delay: STEP_MS, loop: true, callback: () => this.tick() });
     this.cameras.main.fadeIn(300, 29, 21, 18);
@@ -252,10 +259,11 @@ export class IslandScene extends Phaser.Scene {
 
   placeThings() {
     // beach and lawn
+    this.trees = [];
     [[3, 13], [20, 14], [2, 26], [21, 27], [7, 35], [17, 34]].forEach(([x, y]) => this.place('palm', x, y));
-    [[4, 8], [19, 9]].forEach(([x, y]) => this.place('tree', x, y));
+    [[4, 8], [19, 9]].forEach(([x, y]) => this.trees.push(this.place('tree', x, y)));
     [[18, 21], [20, 23]].forEach(([x, y]) => this.place('pine', x, y));
-    [[9, 14], [16, 15], [6, 24], [18, 26]].forEach(([x, y]) => this.place('bush', x, y));
+    [[9, 14], [16, 15], [6, 24], [18, 26]].forEach(([x, y]) => this.trees.push(this.place('bush', x, y)));
     for (let y = 22; y <= 25; y++) for (let x = 8; x <= 10; x++) if ((x + y) % 4) this.tallGrass(x, y);
     for (let y = 15; y <= 17; y++) for (let x = 14; x <= 17; x++) if ((x * y) % 3) this.tallGrass(x, y);
     [[10, 11], [14, 12], [7, 13], [16, 18], [11, 28]].forEach(([x, y]) => {
@@ -359,6 +367,59 @@ export class IslandScene extends Phaser.Scene {
       if (l.flicker) this.flickers.push(gl);
     });
     if (this.dark > 0.2) this.playerGlow = this.add.image(0, 0, 'lt_glow').setDisplaySize(90, 70).setBlendMode(Phaser.BlendModes.ADD).setTint(0xffd8a8).setAlpha(0.12 * this.dark).setDepth(5001);
+  }
+
+  // The season shows on the land: snow on the grass in winter, orange trees
+  // in autumn, blossom pink in spring.
+  seasonal() {
+    if (this.season === 'autumn') this.trees.forEach((t) => t.setTint(0xffb070));
+    if (this.season === 'spring') this.trees.forEach((t) => t.setTint(0xffe0ec));
+    if (this.season !== 'winter') return;
+    this.trees.forEach((t) => t.setTint(0xe8f0ff));
+    const key = 'island_snow';
+    if (this.textures.exists(key)) this.textures.remove(key);
+    const tex = this.textures.createCanvas(key, W * T, H * T);
+    const ctx = tex.getContext();
+    const img = ctx.createImageData(W * T, H * T);
+    // smooth value noise: big drifts plus small clumps, and a little grain
+    const vnoise = (x, y, size, seed) => {
+      const gx = x / size;
+      const gy = y / size;
+      const x0 = Math.floor(gx);
+      const y0 = Math.floor(gy);
+      const fx = gx - x0;
+      const fy = gy - y0;
+      const sx = fx * fx * (3 - 2 * fx);
+      const sy = fy * fy * (3 - 2 * fy);
+      const a = hash(x0, y0, seed);
+      const b = hash(x0 + 1, y0, seed);
+      const c = hash(x0, y0 + 1, seed);
+      const d = hash(x0 + 1, y0 + 1, seed);
+      return a + (b - a) * sx + (c - a) * sy + (a - b - c + d) * sx * sy;
+    };
+    const n = (x, y) => 0.6 * vnoise(x, y, 40, 7) + 0.3 * vnoise(x, y, 12, 8) + 0.1 * hash(x, y, 9);
+    // snow settles on grass (and the path), right up to the grass's ragged edge
+    const g0 = this.textures.get(this.groundKeys[0]).getSourceImage();
+    const ground = g0.getContext('2d').getImageData(0, 0, W * T, H * T).data;
+    for (let y = 0; y < H * T; y++)
+      for (let x = 0; x < W * T; x++) {
+        const cx = Math.floor(x / T);
+        const cy = Math.floor(y / T);
+        const k = this.key(cx, cy, (m) => m === 2 || m === 4);
+        if (k === '0000') continue;
+        const j = (y * W * T + x) * 4;
+        const grassy = ground[j + 1] > ground[j] && ground[j + 1] > ground[j + 2];
+        const path = !grassy && this.key(cx, cy, (m) => m === 4) !== '0000';
+        if (!grassy && !path) continue;
+        const v = n(x, y);
+        if (v < (path ? 0.5 : 0.36)) continue; // grass peeks through; the path is trodden
+        const i = (y * W * T + x) * 4;
+        const c = v > 0.62 ? 250 : v > 0.42 ? 236 : 214;
+        img.data.set([c, c + 2 > 255 ? 255 : c + 2, 255, v < 0.4 ? 170 : 255], i);
+      }
+    ctx.putImageData(img, 0, 0);
+    tex.refresh();
+    this.add.image(0, 0, key).setOrigin(0).setDepth(0.4);
   }
 
   light(x, y, r, color, a = 1, extra = {}) {
@@ -557,6 +618,7 @@ export class IslandScene extends Phaser.Scene {
     if (animateWalker(this, p, len > 0, dt, 0.8 + pace * 0.5)) this.onStep(p, pace);
     this.pet?.update(dt);
     this.critters.update(dt, p);
+    this.weather.update(dt);
     this.playerGlow?.setPosition(p.x, p.y - 12);
     p.setDepth(p.y);
     this.shadow.setPosition(p.x, p.y - 1);

@@ -175,6 +175,64 @@ export function sfx(name) {
   SFX[name](ctx.currentTime + 0.01);
 }
 
+// Background ambience outside: waves on the shore, rain. Made from filtered
+// noise, no audio files. kinds: ['waves', 'rain'] (any mix), or [] for quiet.
+let ambience = { want: [], nodes: [] };
+function noiseBuffer() {
+  const len = ctx.sampleRate * 2;
+  const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+  const d = buf.getChannelData(0);
+  let last = 0;
+  for (let i = 0; i < len; i++) {
+    last = last * 0.97 + (Math.random() * 2 - 1) * 0.03; // brown-ish noise
+    d[i] = last * 6;
+  }
+  return buf;
+}
+function startAmbience() {
+  ambience.nodes.forEach((n) => {
+    try {
+      n.stop?.();
+    } catch {
+      // already stopped
+    }
+    n.disconnect?.();
+  });
+  ambience.nodes = [];
+  if (!ctx || ctx.state !== 'running') return;
+  const buf = noiseBuffer();
+  ambience.want.forEach((kind) => {
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    src.loop = true;
+    const f = ctx.createBiquadFilter();
+    f.type = 'lowpass';
+    f.frequency.value = kind === 'rain' ? 3200 : 520;
+    const g = ctx.createGain();
+    g.gain.value = kind === 'rain' ? 0.5 : 0.35;
+    src.connect(f);
+    f.connect(g);
+    g.connect(sfxBus);
+    if (kind === 'waves') {
+      // the surf swells and falls back every few seconds
+      const lfo = ctx.createOscillator();
+      const depth = ctx.createGain();
+      lfo.frequency.value = 0.13;
+      depth.gain.value = 0.3;
+      lfo.connect(depth);
+      depth.connect(g.gain);
+      lfo.start();
+      ambience.nodes.push(lfo, depth);
+    }
+    src.start();
+    ambience.nodes.push(src, f, g);
+  });
+}
+export function setAmbience(kinds) {
+  ambience.want = kinds || [];
+  startAmbience();
+}
+
 // Set the room's track. Plays once audio is unlocked by a tap.
 export function setTrack(track) {
   wanted = track || 'none';
@@ -194,7 +252,10 @@ export function setMuted(on) {
 // Unlock audio on the first tap anywhere.
 const unlock = () => {
   if (!ensure()) return;
-  ctx.resume().then(() => play(wanted));
+  ctx.resume().then(() => {
+    play(wanted);
+    if (ambience.want.length && !ambience.nodes.length) startAmbience();
+  });
 };
 window.addEventListener('pointerdown', unlock);
 window.addEventListener('keydown', unlock);
