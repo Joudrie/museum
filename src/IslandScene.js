@@ -14,6 +14,7 @@ import { Weather, weatherToday, season } from './weather.js';
 import { ambientAt, makeTextures as lightTextures } from './lighting.js';
 import { Critters } from './critters.js';
 import { Ambient } from './ambient.js';
+import { seasonFrames, seasonTile, TILE_LIGHTS } from './scenery.js';
 import { settings, hourNow } from './settings.js';
 import { animateWalker, footstep, dust } from './motion.js';
 import { Pet } from './pets.js';
@@ -94,6 +95,7 @@ export class IslandScene extends Phaser.Scene {
     this.seasonal();
     this.setupCamera();
     this.weather = new Weather(this, this.weatherKind);
+    if (this.weatherKind === 'rain') this.makePuddles();
     this.setupInput();
     this.time.addEvent({ delay: STEP_MS, loop: true, callback: () => this.tick() });
     this.cameras.main.fadeIn(300, 29, 21, 18);
@@ -185,6 +187,8 @@ export class IslandScene extends Phaser.Scene {
     const img = this.add.image(x * T, (y + 1) * T, keys[0]).setOrigin(0, 1);
     img.setDepth(opts.depth ?? (opts.flat ? 1 : (y + 1) * T - 2));
     if (keys.length > 1) this.animated.push({ img, keys });
+    (this.placed ||= []).push({ img, name, flat: opts.flat });
+    (TILE_LIGHTS[name] || []).forEach(([lx, ly, r, color, a, extra]) => this.light(x * T + lx, (y + 1) * T + ly, r, color, a, { ...extra, gy: (y + 1) * T + ly }));
     if (opts.solid !== false && ['block', 'push'].includes(t.walk)) {
       const wide = Math.max(1, Math.round(t.w / T));
       for (let r = 0; r < (t.base || 1); r++) for (let i = 0; i < wide; i++) this.block(x + i, y - r);
@@ -391,6 +395,34 @@ export class IslandScene extends Phaser.Scene {
     this.trees.push(this.place('apple_tree', 18, 19));
   }
 
+  // Rain leaves puddles on the path and the grass, rippling as drops land.
+  makePuddles() {
+    this.puddles = [];
+    for (let tries = 0; tries < 400 && this.puddles.length < 14; tries++) {
+      const x = (1 + Math.random() * (W - 2)) * T;
+      const y = (1 + Math.random() * (H - 2)) * T;
+      const ground = this.surfaceAt(x, y);
+      if ((ground !== 'path' && ground !== 'grass') || !this.free(x, y) || !this.free(x + 14, y) || !this.free(x - 14, y)) continue;
+      if (this.puddles.some((p) => Math.hypot(p.x - x, p.y - y) < 60)) continue;
+      const w = 14 + Math.random() * 14;
+      const h = w * (0.4 + Math.random() * 0.15);
+      this.add.ellipse(x, y + 1, w + 2, h + 2, 0x000000, 0.12).setDepth(0.58);
+      this.add.ellipse(x, y, w, h, ground === 'path' ? 0x6a7a8a : 0x5a7a8a, 0.75).setDepth(0.6);
+      this.add.ellipse(x - w * 0.15, y - h * 0.15, w * 0.45, h * 0.3, 0xc8d8e8, 0.35).setDepth(0.61); // the sky in it
+      this.puddles.push({ x, y, w, h });
+    }
+    this.time.addEvent({
+      delay: 140,
+      loop: true,
+      callback: () => {
+        const p = this.puddles[Math.floor(Math.random() * this.puddles.length)];
+        if (!p) return;
+        const ring = this.add.ellipse(p.x + (Math.random() - 0.5) * p.w * 0.6, p.y + (Math.random() - 0.5) * p.h * 0.5, 3, 1.5).setStrokeStyle(1, 0xe8f2ff, 0.8).setDepth(0.62);
+        this.tweens.add({ targets: ring, scaleX: 3, scaleY: 3, alpha: 0, duration: 600, onComplete: () => ring.destroy() });
+      },
+    });
+  }
+
   tallGrass(x, y) {
     (this.grassCells ||= new Set()).add(`${x},${y}`);
     this.place('tall_grass', x, y, { flat: true });
@@ -427,16 +459,53 @@ export class IslandScene extends Phaser.Scene {
       const gl = this.add.image(l.x, l.gy ?? l.y, 'lt_glow').setDisplaySize(l.glow, l.glow).setBlendMode(Phaser.BlendModes.ADD).setTint(l.color).setAlpha(0.1 + 0.5 * this.dark).setDepth(5001);
       if (l.flicker) this.flickers.push(gl);
     });
+    // lighthouses sweep a beam out over the sea
+    this.beams = (this.lamps || []).filter((l) => l.beam && this.dark > 0.3).map((l) => {
+      if (!this.textures.exists('lt_beam')) {
+        const t = this.textures.createCanvas('lt_beam', 256, 64);
+        const ctx = t.getContext();
+        const g = ctx.createLinearGradient(0, 0, 256, 0);
+        g.addColorStop(0, 'rgba(255,248,210,0.9)');
+        g.addColorStop(1, 'rgba(255,248,210,0)');
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.moveTo(0, 30);
+        ctx.lineTo(256, 0);
+        ctx.lineTo(256, 64);
+        ctx.lineTo(0, 34);
+        ctx.fill();
+        t.refresh();
+      }
+      return this.add.image(l.x, l.y, 'lt_beam').setOrigin(0, 0.5).setScale(2.6, 1.6).setBlendMode(Phaser.BlendModes.ADD).setAlpha(0.45 * this.dark).setDepth(5002);
+    });
     if (this.dark > 0.2) this.playerGlow = this.add.image(0, 0, 'lt_glow').setDisplaySize(90, 70).setBlendMode(Phaser.BlendModes.ADD).setTint(0xffd8a8).setAlpha(0.12 * this.dark).setDepth(5001);
   }
 
   // The season shows on the land: snow on the grass in winter, orange trees
   // in autumn, blossom pink in spring.
   seasonal() {
-    if (this.season === 'autumn') this.trees.forEach((t) => t.setTint(0xffb070));
-    if (this.season === 'spring') this.trees.forEach((t) => t.setTint(0xffe0ec));
+    // swap each placed piece for its look this season (see scenery.js)
+    (this.placed || []).forEach(({ img, name, flat }) => {
+      if (flat && this.season === 'winter') {
+        // the pond is frozen and the flowers are asleep under the snow
+        if (['lily', 'flowers', 'tulips', 'daisies', 'poppies', 'wildflowers', 'dandelions', 'clover', 'fern', 'mushrooms'].includes(name)) img.setVisible(false);
+        return; // flat things lie under the snow layer
+      }
+      const other = seasonTile(name, this.season);
+      const frames = other ? TILES[other].frames : seasonFrames(name, TILES[name], this.season);
+      if (!frames) return;
+      const keys = frames.map((fr, i) => {
+        const k = `isl_${name}@${this.season}_${i}`;
+        if (!this.textures.exists(k)) this.textures.addCanvas(k, fr);
+        return k;
+      });
+      img.setTexture(keys[0]);
+      const a = this.animated.find((e) => e.img === img);
+      if (a && keys.length > 1) a.keys = keys;
+      else if (a) this.animated.splice(this.animated.indexOf(a), 1);
+      else if (keys.length > 1) this.animated.push({ img, keys });
+    });
     if (this.season !== 'winter') return;
-    this.trees.forEach((t) => t.setTint(0xe8f0ff));
     const key = 'island_snow';
     if (this.textures.exists(key)) this.textures.remove(key);
     const tex = this.textures.createCanvas(key, W * T, H * T);
@@ -466,9 +535,16 @@ export class IslandScene extends Phaser.Scene {
       for (let x = 0; x < W * T; x++) {
         const cx = Math.floor(x / T);
         const cy = Math.floor(y / T);
+        const j = (y * W * T + x) * 4;
+        if (this.key(cx, cy, (m) => m === 3) !== '0000' && ground[j + 2] > ground[j] + 40 && ground[j + 2] > ground[j + 1]) {
+          // the pond freezes: pale ice with a few streaks
+          const v = n(x, y);
+          const streak = Math.abs(((x + y * 0.4) % 23) - 11) < 0.6 && v > 0.45;
+          img.data.set(streak ? [255, 255, 255, 255] : v > 0.55 ? [206, 230, 244, 255] : [178, 214, 236, 255], j);
+          continue;
+        }
         const k = this.key(cx, cy, (m) => m === 2 || m === 4);
         if (k === '0000') continue;
-        const j = (y * W * T + x) * 4;
         const grassy = ground[j + 1] > ground[j] && ground[j + 1] > ground[j + 2];
         const path = !grassy && this.key(cx, cy, (m) => m === 4) !== '0000';
         if (!grassy && !path) continue;
@@ -680,6 +756,7 @@ export class IslandScene extends Phaser.Scene {
     this.pet?.update(dt);
     this.critters.update(dt, p);
     this.ambient.update(dt, p);
+    this.beams?.forEach((b) => (b.rotation += dt * 0.7));
     this.weather.update(dt);
     this.playerGlow?.setPosition(p.x, p.y - 12);
     p.setDepth(p.y);
