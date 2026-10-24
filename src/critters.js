@@ -15,7 +15,7 @@ function tex(scene, key, w, h, draw) {
   t.refresh();
 }
 
-function makeTextures(scene) {
+export function critterTextures(scene) {
   // gull, wings up and down
   tex(scene, 'gull_0', 16, 8, (R) => {
     R(6, 3, 5, 3, OUT);
@@ -85,7 +85,7 @@ export class Critters {
     this.scene = scene;
     this.map = map;
     this.t = 0;
-    makeTextures(scene);
+    critterTextures(scene);
     const rnd = (a, b) => a + Math.random() * (b - a);
     // gulls: in the sky (always on top), with a shadow on the ground
     this.gulls = Array.from({ length: night ? 0 : 3 }, () => this.newGull(rnd(0, map.w)));

@@ -1,6 +1,6 @@
 // Visitor love: every heart a visitor shows in a room adds a little love,
 // which fades over time. A loved room earns up to +10%.
-import { load, save } from './decor.js';
+import { load, save } from './storage.js';
 
 const LOVE_KEY = 'curation.love'; // { [roomIndex]: { n, t } }
 const FADE = 10 * 60 * 1000; // one heart fades every 10 minutes

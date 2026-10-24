@@ -1,5 +1,5 @@
 // Player settings: lighting, day/night and sound. Stored in one object.
-import { load, save } from './decor.js';
+import { load, save } from './storage.js';
 
 const SETTINGS_KEY = 'curation.settings';
 export const DEFAULT_SETTINGS = { dayNight: true, lights: 'high', music: 0.7, sfx: 0.8, haptics: true };

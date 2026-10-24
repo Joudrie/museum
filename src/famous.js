@@ -1,6 +1,6 @@
 // Famous visitors: the great artists drop by the main hall. Talk to one to meet
 // them; each one you meet gives a permanent income boost.
-import { load, save } from './decor.js';
+import { load, save } from './storage.js';
 
 const MET_KEY = 'curation.met'; // ids of famous visitors you've met
 export const MEET_BOOST = 0.05; // +5% income per famous visitor met

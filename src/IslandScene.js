@@ -5,7 +5,7 @@
 import Phaser from 'phaser';
 import { buildTiles, T } from './tiles.js';
 import { makeCharacter } from './art.js';
-import { load } from './decor.js';
+import { load } from './storage.js';
 import { DEFAULT_CHARACTER } from './decor.js';
 import { showTalk, hideTalk, talking } from './talk.js';
 import { iconSvg } from './icons.js';
