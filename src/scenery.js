@@ -4,6 +4,7 @@
 // Added to the same tile set as tiles.js (see buildTiles there).
 // Tall pieces set `base`: how many rows at the bottom are solid.
 import { T, OUT, draw, pixels, hash, fbm, hex, css, GRASS, STONE, DIRT, SAND } from './tiles.js';
+import { leafy as naturalLeafy, conifer, palm as naturalPalm, willow as naturalWillow } from './foliage.js';
 
 const SHADOW = 'rgba(0,0,0,0.25)';
 const LEAF = ['#22603a', '#2e7842', '#3c9048', '#58a854', '#7ac466'];
@@ -46,6 +47,49 @@ export function addScenery(add, anim) {
   addPaths(add);
   addBuildings(add, anim);
   addGardenProps(add, anim);
+  addNaturalTrees(add, anim);
+}
+
+// The trees and shrubs, drawn the natural way (see foliage.js). These replace
+// the simpler round-canopy versions of the same names.
+function addNaturalTrees(add, anim) {
+  const G = 'Trees';
+  const GREEN = ['#1f4a2c', '#2e6a38', '#3f8a42', '#5aa64c', '#86c664'];
+  const big = (pal, seed, extra = {}) =>
+    anim((f) => naturalLeafy(2 * T, 3 * T, f, { pal, seed, crown: { cx: 32, cy: 38, rx: 26, ry: 25 }, clumps: 16, trunk: { x: 32, top: 52, bottom: 93, w: 8 }, ...extra }));
+  const opt = (label, w = 2, h = 3) => ({ group: G, label, w: w * T, h: h * T, walk: 'block' });
+  add('tree', big(GREEN, 11), { ...opt('Leafy tree (2×3)'), group: 'Plants' });
+  add('apple_tree', big(GREEN, 12, { dots: [{ color: '#d8303a', chance: 0.07 }] }), opt('Apple tree (2×3)'));
+  add('orange_tree', big(['#163e26', '#22583a', '#2e7444', '#44904c', '#68ac5a'], 13, { dots: [{ color: '#f2902a', chance: 0.08 }] }), opt('Orange tree (2×3)'));
+  add('cherry_tree', big(['#9a4466', '#cc6c8e', '#e696b2', '#f4bcd0', '#ffe2ee'], 14, { dots: [{ color: '#ffffff', chance: 0.05, size: 1 }] }), opt('Cherry blossom (2×3)'));
+  add('maple_tree', big(['#6a1e14', '#a8381e', '#d85a26', '#ee8a32', '#f8c058'], 15), opt('Autumn maple (2×3)'));
+  add('oak_tree', anim((f) => naturalLeafy(3 * T, 3 * T, f, { pal: GREEN, seed: 16, crown: { cx: 48, cy: 40, rx: 40, ry: 28 }, clumps: 24, trunk: { x: 48, top: 54, bottom: 93, w: 13 } })), opt('Big oak (3×3)', 3, 3));
+  add('birch_tree', anim((f) => naturalLeafy(T, 3 * T, f, { pal: ['#3e6a24', '#5a8a30', '#78a840', '#9cc458', '#c4e080'], seed: 17, crown: { cx: 16, cy: 30, rx: 14, ry: 24 }, clumps: 12, birch: true, trunk: { x: 16, top: 40, bottom: 93, w: 5 } })), opt('Birch (1×3)', 1, 3));
+  add('tropical_tree', anim((f) => naturalLeafy(2 * T, 3 * T, f, { pal: GREEN, seed: 18, crown: { cx: 32, cy: 30, rx: 29, ry: 15 }, clumps: 13, flat: true, trunk: { x: 32, top: 36, bottom: 93, w: 6 }, dots: [{ color: '#e8402a', chance: 0.1 }, { color: '#f2902a', chance: 0.04 }] })), opt('Flame tree (2×3)'));
+  add('sapling', anim((f) => naturalLeafy(T, T, f, { pal: GREEN, seed: 19, crown: { cx: 16, cy: 11, rx: 9, ry: 8 }, clumps: 6, sway: 0.6, trunk: { x: 16, top: 14, bottom: 29, w: 3 } })), { group: G, label: 'Sapling', walk: 'block' });
+  add('bush', naturalLeafy(T, T, 0, { pal: GREEN, seed: 20, crown: { cx: 16, cy: 18, rx: 12, ry: 10 }, clumps: 10, flat: true, sway: 0, dots: [{ color: '#e0405a', chance: 0.05 }] }), { group: 'Plants', label: 'Bush', walk: 'block' });
+  add('hedge_round', naturalLeafy(T, T, 0, { pal: GREEN, seed: 21, crown: { cx: 16, cy: 17, rx: 12, ry: 11 }, clumps: 10, flat: true, sway: 0 }), { group: G, label: 'Round shrub', walk: 'block' });
+  add('palm', anim((f) => naturalPalm(2 * T, 3 * T, f, { seed: 23 })), { group: 'Plants', label: 'Palm tree (2×3)', w: 2 * T, h: 3 * T, walk: 'block' });
+  add('willow_tree', anim((f) => naturalWillow(3 * T, 3 * T, f, { seed: 24, pal: ['#2e5424', '#46742e', '#62923c', '#84b050', '#acd070'] })), opt('Weeping willow (3×3)', 3, 3));
+  // a clipped topiary: two leafy balls on a stem, in a terracotta pot
+  add('topiary', (() => {
+    const c = draw(T, 2 * T, ({ R, E }) => {
+      E(16, 61, 9, 2, SHADOW);
+      R(9, 50, 14, 11, OUT);
+      R(10, 51, 12, 9, '#a85a32');
+      R(10, 51, 12, 2, '#c0703f');
+      R(10, 51, 3, 9, '#c0703f');
+      R(15, 30, 3, 21, WOOD[1]);
+      R(15, 30, 1, 21, WOOD[3]);
+    });
+    const ctx = c.getContext('2d');
+    ctx.drawImage(naturalLeafy(T, 2 * T, 0, { pal: GREEN, seed: 25, crown: { cx: 16, cy: 30, rx: 11, ry: 10 }, clumps: 9, sway: 0, shadow: false }), 0, 0);
+    ctx.drawImage(naturalLeafy(T, 2 * T, 0, { pal: GREEN, seed: 26, crown: { cx: 16, cy: 13, rx: 7, ry: 7 }, clumps: 7, sway: 0, shadow: false }), 0, 0);
+    return c;
+  })(), { group: 'Grounds & garden', label: 'Topiary (1×2)', w: T, h: 2 * T, walk: 'block' });
+  const PINE = ['#123a26', '#1c5232', '#26683c', '#348048', '#4a9a58'];
+  add('pine', anim((f) => conifer(T, 2 * T, f, { pal: PINE, seed: 22 })), { group: 'Plants', label: 'Pine tree (1×2)', w: T, h: 2 * T, walk: 'block' });
+  add('pine_snow', anim((f) => conifer(T, 2 * T, f, { pal: PINE, seed: 22, snow: true })), { group: G, label: 'Snowy pine (1×2)', w: T, h: 2 * T, walk: 'block' });
 }
 
 // ---------- Flowers and garden plants ----------
@@ -1224,8 +1268,6 @@ function recolor(src, isLeaf, pal, seed, gain = 1.6) {
   return c;
 }
 const green = (r, g, b) => g > r + 8 && g > b + 8;
-// orange, red and pink leaves, but not brown bark (bark is duller and darker)
-const warm = (r, g, b) => r > g + 20 && r > b + 20 && (b > g || (r - Math.min(g, b)) / r > 0.65 || lum(r, g, b) > 0.6);
 
 // Blossom: little pink and white flowers on the leaves.
 function blossom(src, seed) {
@@ -1316,24 +1358,26 @@ export function seasonFrames(name, tile, season) {
     return f.map(snowify);
   }
   if (season === 'autumn') {
-    if (DECIDUOUS.includes(name) && name !== 'maple_tree') return f.map((c, i) => name === 'cherry_tree' ? recolor(c, warm, AUTUMN, 900 + i, 0.95) : recolor(c, green, AUTUMN, 900 + i));
+    if (DECIDUOUS.includes(name) && name !== 'maple_tree') return f.map((c, i) => recolor(c, green, AUTUMN, 900 + i));
     if (SHRUBS.includes(name)) return f.map((c) => recolor(c, green, AUTUMN.slice(1), 901));
     return null;
   }
   if (season === 'spring') {
-    if (name === 'maple_tree') return f.map((c) => recolor(c, warm, SUMMER, 902));
     if (DECIDUOUS.includes(name) && name !== 'cherry_tree') return f.map((c) => blossom(c, 903));
     if (name === 'bush' || name === 'hedge_round') return f.map((c) => blossom(c, 904));
     return null;
-  }
-  if (season === 'summer') {
-    if (name === 'maple_tree' || name === 'cherry_tree') return f.map((c) => recolor(c, warm, SUMMER, 905));
   }
   return null;
 }
 
 // Some tiles have a whole other tile for a season.
-export const seasonTile = (name, season) => (season === 'winter' && name === 'pine' ? 'pine_snow' : null);
+const SEASON_TILES = {
+  winter: { pine: 'pine_snow' },
+  spring: { maple_tree: 'tree' },
+  summer: { maple_tree: 'tree', cherry_tree: 'tree' },
+  autumn: { cherry_tree: 'maple_tree' },
+};
+export const seasonTile = (name, season) => SEASON_TILES[season]?.[name] || null;
 
 // Where tiles give off light at night, from the tile's bottom-left corner:
 // [x, y, radius, color, strength, extra] (extra as for IslandScene.light).
