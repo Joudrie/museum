@@ -30,7 +30,7 @@ import {
   LIGHT_TINTS,
 } from './art.js';
 import { setTrack, sfx, setAmbience } from './music.js';
-import { weatherToday } from './weather.js';
+import { weatherToday, season } from './weather.js';
 import { ORIENT_LABELS, SIZE_LABELS, BREAK, roomAt, MAIN_HALL_PRICE, seedEntry, loadRooms, addRoom, resetRooms, updateRoom, swapRooms, roomName, layout, paintingsFor, slotStates, setSlot, hungAnywhere, placeArt, wallItems, plantSpots, carpetRect } from './rooms.js';
 import { openSlotMenu } from './slotmenu.js';
 import { ITEMS, loadItems, saveItems, resetItems, footprint, countPlaced } from './items.js';
@@ -2057,6 +2057,7 @@ export class RoomScene extends Phaser.Scene {
       canAfford,
       level: () => officeLevel(),
       onPick: (type) => {
+        if (ITEMS[type].season && ITEMS[type].season !== season()) return this.toast(`Only for sale in ${ITEMS[type].season}`);
         if (itemLevel(type) > officeLevel()) return this.toast(`Unlocks at Curator’s Office level ${itemLevel(type)}`);
         const max = ITEMS[type].max;
         if (max && countPlaced(type, this.rooms.length) >= max) return this.toast(`Only ${max} allowed in the museum`);
@@ -2243,6 +2244,19 @@ export class RoomScene extends Phaser.Scene {
     const dt = Math.min(dtMs, 50) / 1000;
     this.lighting.update(dt);
     this.pet?.update(dt);
+    // visitors love meeting your pet
+    if (this.pet && (this.petCheck = (this.petCheck || 0) - dt) < 0) {
+      this.petCheck = 1;
+      const now = this.time.now;
+      this.npcs.forEach((n) => {
+        if (n.staff || n.talking || (n.metPet && now - n.metPet < 30000)) return;
+        if (Math.hypot(n.s.x - this.pet.s.x, n.s.y - this.pet.s.y) < 36) {
+          n.metPet = now;
+          this.emote(n, 'heart');
+          if (Math.random() < 0.4) this.time.delayedCall(700, () => this.quip(n));
+        }
+      });
+    }
     this.leashes = this.leashes || this.add.graphics().setDepth(1);
     this.leashes.clear();
     this.npcs.forEach((n) => {

@@ -2,11 +2,12 @@
 // editing an item. The room scene drives the actual placement.
 import { CATEGORIES, ITEMS } from './items.js';
 import { load, save } from './storage.js';
+import { season } from './weather.js';
 
 // Items you haven't seen in the toolkit yet get a "New" tag. Items added in
 // an update count as new; everything else unlocked at first launch doesn't.
 const SEEN_KEY = 'curation.seenItems';
-const ADDED = ['piano', 'harp', 'easel', 'clock', 'aquarium', 'birdcage', 'urn', 'mask', 'display_case', 'ship_model', 'idol', 'butterflies', 'fossil_slab', 'gramophone', 'banner', 'orchid', 'rug_round', 'rug_long'];
+const ADDED = ['piano', 'harp', 'easel', 'clock', 'aquarium', 'birdcage', 'urn', 'mask', 'display_case', 'ship_model', 'idol', 'butterflies', 'fossil_slab', 'gramophone', 'banner', 'orchid', 'rug_round', 'rug_long', 'pumpkin', 'xmas_tree', 'gifts', 'flower_basket'];
 function seen(level) {
   const list = load(SEEN_KEY, null);
   if (list) return new Set(list);
@@ -50,14 +51,15 @@ function render() {
       .map(([type, def]) => {
         const b = document.createElement('button');
         const lvl = def.lvl || 1;
-        const locked = lvl > state.level();
+        const offSeason = def.season && def.season !== season();
+        const locked = lvl > state.level() || offSeason;
         b.className = locked ? 'tool-item locked' : !state.canAfford(def.price) ? 'tool-item poor' : 'tool-item';
         // Scale the icon up, but keep tall or wide items inside the tile.
         const iw = def.plant ? 24 : def.w * 32;
         const ih = def.plant ? 34 : def.h * 32 + def.rise;
         const k = Math.min(1.4, 56 / ih, 76 / iw);
         b.innerHTML = `<span class="ti-icon"><img alt="" src="${state.icon(type)}" style="width:${iw * k}px;height:${ih * k}px" /></span>
-          <b>${def.name}</b><span class="ti-meta">${locked ? `<i class="lock"></i> Office Lv ${lvl}` : `<i class="coin"></i> ${def.price.toLocaleString()}`}</span><span class="ti-meta">${def.note || `+${def.income}/hr`}</span>
+          <b>${def.name}</b><span class="ti-meta">${offSeason ? `<i class="lock"></i> In ${def.season}` : locked ? `<i class="lock"></i> Office Lv ${lvl}` : `<i class="coin"></i> ${def.price.toLocaleString()}`}</span><span class="ti-meta">${def.note || `+${def.income}/hr`}</span>
           <span class="ti-size">${def.w}×${def.h} tiles</span>`;
         if (!locked && !known.has(type)) {
           b.insertAdjacentHTML('beforeend', '<span class="new-tag">NEW</span>');
@@ -72,7 +74,7 @@ function render() {
   // categories with something new get a dot
   [...cats.children].forEach((b, i) => {
     const id = Object.keys(CATEGORIES)[i];
-    const has = Object.keys(ITEMS).some((t) => ITEMS[t].cat === id && (ITEMS[t].lvl || 1) <= state.level() && !known.has(t) && id !== cat);
+    const has = Object.keys(ITEMS).some((t) => ITEMS[t].cat === id && (ITEMS[t].lvl || 1) <= state.level() && !(ITEMS[t].season && ITEMS[t].season !== season()) && !known.has(t) && id !== cat);
     if (has) b.insertAdjacentHTML('beforeend', '<i class="cat-new"></i>');
   });
 }
