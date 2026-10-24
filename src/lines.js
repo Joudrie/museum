@@ -85,6 +85,13 @@ export const PERSONALITIES = {
     generic: ['I come every Tuesday. It’s good for the heart.', 'My late husband loved museums. I still bring him, in a way.', 'Take your time, dear. Paintings don’t rush.', 'I remember when this building was a bank.', 'The benches here are lovely. Thank you for the benches.'],
     about: ['I saw {title} once, long ago. It hasn’t aged a day. I have.', 'Isn’t it wonderful? {by} gave us something to keep.'],
   },
+  teacher: {
+    label: 'Teacher (school trip)',
+    staff: true, // only comes with a class
+    names: ['Ms. Alvarez', 'Mr. Okafor', 'Mrs. Lindqvist', 'Mr. Bell'],
+    generic: ['Stay together, everyone! Buddy system!', 'Worksheets out. Question one: what colors do you see?', 'No touching! Eyes only!', 'Who can tell me what “museum” means? Anyone?', 'We have twenty minutes before the bus. Make them count.'],
+    about: [],
+  },
   // Staff (not random visitors).
   barista: {
     label: 'Barista',
@@ -207,7 +214,7 @@ export const QUIPS = {
   casual: ['Nice.', 'Vibes.', 'Huh, cool.', 'Love this.'],
   fanboy: ['AMAZING!!', 'I’m crying.', 'Iconic.', 'Best day ever!'],
   snob: ['Hmm.', 'Passable.', 'Quaint.', 'Darling.'],
-  kid: ['Whoa!', 'Mom, look!', 'Dragons?', 'Cool!!'],
+  kid: ['Whoa!', 'Mom, look!', 'Dragons?', 'Cool!!', 'Field trip!!', 'I’m hungry.'],
   grump: ['Hmph.', 'Too bright.', 'Back in my day…', 'Fine.'],
   tourist: ['*click*', 'Selfie!', 'Wow!', 'Postcard!'],
   artist: ['That light…', 'Sketching!', 'Those hands!', 'Goals.'],

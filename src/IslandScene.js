@@ -617,6 +617,12 @@ export class IslandScene extends Phaser.Scene {
     }
     if (animateWalker(this, p, len > 0, dt, 0.8 + pace * 0.5)) this.onStep(p, pace);
     this.pet?.update(dt);
+    // the camera leans a little ahead of where you're walking
+    const o = (this.look ||= { x: 0, y: 0 });
+    const k2 = Math.min(1, dt * 2.2);
+    o.x += ((len ? (-vx / len) * 22 : 0) - o.x) * k2;
+    o.y += ((len ? (-vy / len) * 18 : 0) - o.y) * k2;
+    this.cameras.main.setFollowOffset(o.x, o.y);
     this.critters.update(dt, p);
     this.weather.update(dt);
     this.playerGlow?.setPosition(p.x, p.y - 12);

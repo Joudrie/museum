@@ -6,7 +6,7 @@ import { load, save } from './storage.js';
 // Items you haven't seen in the toolkit yet get a "New" tag. Items added in
 // an update count as new; everything else unlocked at first launch doesn't.
 const SEEN_KEY = 'curation.seenItems';
-const ADDED = ['piano', 'harp', 'easel', 'clock', 'aquarium', 'birdcage', 'urn', 'mask'];
+const ADDED = ['piano', 'harp', 'easel', 'clock', 'aquarium', 'birdcage', 'urn', 'mask', 'display_case', 'ship_model', 'idol', 'butterflies', 'fossil_slab', 'gramophone', 'banner', 'orchid', 'rug_round', 'rug_long'];
 function seen(level) {
   const list = load(SEEN_KEY, null);
   if (list) return new Set(list);

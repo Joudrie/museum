@@ -29,7 +29,8 @@ import {
   baseDecor,
   LIGHT_TINTS,
 } from './art.js';
-import { setTrack, sfx } from './music.js';
+import { setTrack, sfx, setAmbience } from './music.js';
+import { weatherToday } from './weather.js';
 import { ORIENT_LABELS, SIZE_LABELS, BREAK, roomAt, MAIN_HALL_PRICE, seedEntry, loadRooms, addRoom, resetRooms, updateRoom, swapRooms, roomName, layout, paintingsFor, slotStates, setSlot, hungAnywhere, placeArt, wallItems, plantSpots, carpetRect } from './rooms.js';
 import { openSlotMenu } from './slotmenu.js';
 import { ITEMS, loadItems, saveItems, resetItems, footprint, countPlaced } from './items.js';
@@ -194,6 +195,7 @@ function visitorLook(kind, r) {
     historian: { hair: ['part', 'short', 'bun'], outfit: ['vest', 'coat'], acc: ['bowtie', 'scarf', 'none'] },
     student: { hair: ['short', 'curly', 'ponytail', 'afro', 'bun', 'buzz'], outfit: ['hoodie', 'tee', 'sweater'], acc: ['bag', 'bag', 'none'] },
     elder: { hair: ['bun', 'short', 'part', 'curly'], outfit: ['sweater', 'coat', 'dress', 'vest'], acc: ['scarf', 'none', 'necklace'] },
+    teacher: { hair: ['bun', 'part', 'short', 'curly'], outfit: ['sweater', 'vest', 'coat'], acc: ['bag', 'badge'] },
   }[kind];
   if (STYLE) {
     if (!look.bald) look.hair = any(STYLE.hair, 1);
@@ -214,6 +216,7 @@ function visitorLook(kind, r) {
     colors.g = '#2f5d46';
   }
   if (kind === 'caretaker') look.outfit = 'vest';
+  if (kind === 'teacher') look.glasses = r(10) < 0.6;
   if (kind === 'janitor' || kind === 'carpenter') look.outfit = 'tee';
   return { colors, look, scale };
 }
@@ -348,11 +351,13 @@ export class RoomScene extends Phaser.Scene {
     const count = this.isBreak ? 0 : Math.min(5, 3 + Math.floor(this.L.slots.length / 6)); // the break room is staff only
     this.npcs = Array.from({ length: count }, (_, i) => this.spawnVisitor(i));
     this.pairCouples();
+    if (!this.isBreak && this.roomIndex >= 1 && Math.random() < 0.3) this.spawnSchoolTrip();
     this.spawnStaff();
     if (this.g.main) this.spawnFamous();
     this.refreshDirt();
     this.bubble = this.add.image(0, 0, 'bubble').setOrigin(0.5, 1).setDepth(5000).setVisible(false);
     this.lighting = new Lighting(this);
+    setAmbience(weatherToday() === 'rain' && !this.isBreak ? ['rainSoft'] : []); // rain on the roof
     this.time.addEvent({ delay: 60000, loop: true, callback: () => this.lighting.build() }); // the sun moves
 
     this.setupCamera();
@@ -721,6 +726,30 @@ export class RoomScene extends Phaser.Scene {
     });
   }
 
+  // Now and then a school trip: a teacher with a line of kids behind.
+  spawnSchoolTrip() {
+    const { g } = this;
+    let x = g.xL + 2.5 * T;
+    let y = g.y1 - 2.5 * T;
+    for (let tries = 0; tries < 20 && this.blocked(x, y); tries++) {
+      x = g.xL + (1 + Math.floor(Math.random() * (g.fw - 2)) + 0.5) * T;
+      y = g.y0 + (2 + Math.floor(Math.random() * (g.fd - 3))) * T;
+    }
+    const teacher = this.makeStaff('teacher', 1300 + this.roomIndex, x, y);
+    teacher.staff = false; // she looks at paintings like everyone else
+    teacher.trail = [];
+    teacher.leader = true;
+    for (let k = 1; k <= 4; k++) {
+      const kid = this.spawnVisitor(60 + k, 'kid');
+      kid.s.setPosition(x, y + k * 6);
+      kid.follow = teacher;
+      kid.gap = k * 9;
+      kid.pet?.destroy();
+      kid.pet = null;
+      this.npcs.push(kid);
+    }
+  }
+
   // A tour guide leading a short line of visitors around the main hall.
   spawnTour() {
     const { g } = this;
@@ -768,8 +797,10 @@ export class RoomScene extends Phaser.Scene {
       n.mop?.destroy();
       n.puddle?.destroy();
     });
-    this.npcs.filter((n) => n.follow).forEach((n) => n.s.destroy());
-    this.npcs = this.npcs.filter((n) => !n.staff && !n.follow);
+    // (the tour's followers go with their guide; a school class stays with its teacher)
+    const goes = (n) => n.staff || (n.follow && n.follow.staff);
+    this.npcs.filter((n) => n.follow && n.follow.staff).forEach((n) => n.s.destroy());
+    this.npcs = this.npcs.filter((n) => !goes(n));
     this.spawnStaff();
     this.refreshDirt();
   }
@@ -1699,6 +1730,15 @@ export class RoomScene extends Phaser.Scene {
   }
 
   // Walking: a small bounce, and the legs swap when walking up or down.
+  // The camera leans a little ahead of where you're walking.
+  lookAhead(vx, vy, dt) {
+    const o = (this.look ||= { x: 0, y: 0 });
+    const k = Math.min(1, dt * 2.2);
+    o.x += (-vx * 20 - o.x) * k;
+    o.y += (-vy * 16 - o.y) * k;
+    this.cameras.main.setFollowOffset(o.x, o.y);
+  }
+
   // Walking: step frames and a little bounce. Returns true when a foot lands.
   animate(s, moving, dt, rate = 1) {
     return animateWalker(this, s, moving, dt, rate);
@@ -1986,9 +2026,10 @@ export class RoomScene extends Phaser.Scene {
       const { w, h } = footprint(it);
       const x = g.xL + it.c * T;
       const y = g.y0 + (it.r + h) * T;
-      this.blocks.push({ item: true, x0: x + 4, x1: x + w * T - 4, y0: y - h * T + 2, y1: y - 8 });
+      const flat = ITEMS[it.type].flat; // rugs: walk right over them
+      if (!flat) this.blocks.push({ item: true, x0: x + 4, x1: x + w * T - 4, y0: y - h * T + 2, y1: y - 8 });
       const key = this.itemKey(it.type, it.rot);
-      const sp = this.add.image(x + (w * T) / 2, y, key).setOrigin(0.5, 1).setDepth(y - 1);
+      const sp = this.add.image(x + (w * T) / 2, y, key).setOrigin(0.5, 1).setDepth(flat ? 0.55 : y - 1);
       return sp;
     });
     this.lighting?.build();
@@ -2005,6 +2046,8 @@ export class RoomScene extends Phaser.Scene {
 
   browse() {
     this.mode = 'browse';
+    this.look = { x: 0, y: 0 };
+    this.cameras.main.setFollowOffset(0, 0);
     this.selected = null;
     this.clearGhost();
     hideBar();
@@ -2260,6 +2303,7 @@ export class RoomScene extends Phaser.Scene {
       }
       this.faceSprite(this.player, 'player', vx, vy);
     }
+    this.lookAhead(len > 0 ? vx / len : 0, len > 0 ? vy / len : 0, dt);
     if (this.animate(this.player, len > 0, dt, 0.8 + pace * 0.5)) {
       footstep();
       if (pace === 1) dust(this, this.player.x, this.player.y);

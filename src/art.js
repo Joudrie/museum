@@ -2309,6 +2309,152 @@ export function bakeItem(scene, key, type, def, rot) {
         R(x + 1, y + 4, 2, 3, 'rgba(60,40,30,0.5)');
       });
       break;
+    case 'display_case':
+      // a glass case of jewels on a dark wood stand
+      shadow(16, gy, 12, 3);
+      box(6, gy - 14, 20, 13, WOOD_D, OUT);
+      R(7, gy - 12, 18, 2, WOOD);
+      box(5, gy - 30, 22, 16, 'rgba(200,230,245,0.45)', OUT);
+      R(6, gy - 29, 20, 2, 'rgba(255,255,255,0.6)');
+      R(8, gy - 18, 16, 3, '#7a2232');
+      [[10, '#e0405a'], [15, '#5aa8e0'], [20, '#6fd07a']].forEach(([x, c]) => {
+        E(x + 1, gy - 20, 2, 2, c);
+        R(x, gy - 21, 1, 1, '#ffffff');
+      });
+      E(16, gy - 25, 3, 2, BRASS_L);
+      break;
+    case 'ship_model':
+      shadow(32, gy, 28, 4);
+      box(6, gy - 10, 52, 9, WOOD_D, OUT);
+      box(4, gy - 40, 56, 30, 'rgba(200,230,245,0.35)', OUT);
+      R(5, gy - 39, 54, 2, 'rgba(255,255,255,0.5)');
+      // the ship
+      ctx.fillStyle = '#6a4428';
+      ctx.beginPath();
+      ctx.moveTo(12, gy - 20);
+      ctx.lineTo(52, gy - 20);
+      ctx.lineTo(46, gy - 13);
+      ctx.lineTo(17, gy - 13);
+      ctx.fill();
+      [22, 32, 42].forEach((x, i) => {
+        R(x, gy - 37 + i, 1, 17 - i, '#3a2418');
+        R(x - 5 + i, gy - 35 + i, 10 - i * 2, 6, '#f4f0e6');
+        R(x - 4 + i, gy - 28 + i, 8 - i * 2, 5, '#e8e2d4');
+      });
+      R(12, gy - 21, 40, 1, BRASS);
+      break;
+    case 'butterflies':
+      shadow(16, gy, 11, 3);
+      R(15, gy - 12, 2, 11, WOOD_D);
+      box(5, gy - 36, 22, 24, '#f4ead6', OUT);
+      R(5, gy - 36, 22, 2, WOOD);
+      [[10, 28, '#3a78c8'], [20, 28, '#f2a03a'], [10, 19, '#e0405a'], [20, 19, '#6fd07a'], [15, 23, '#b06ae0']].forEach(([x, y, c]) => {
+        R(x - 3, gy - y, 3, 3, c);
+        R(x + 1, gy - y, 3, 3, c);
+        R(x, gy - y - 1, 1, 5, OUT);
+      });
+      break;
+    case 'fossil_slab':
+      shadow(32, gy, 28, 4);
+      box(4, gy - 26, 56, 25, '#c8b498', OUT);
+      R(5, gy - 25, 54, 3, '#dccab0');
+      for (let k = 0; k < 18; k++) R(8 + hash(k, 1, 77) * 48, gy - 22 + hash(k, 2, 77) * 18, 2, 1, '#b0987a');
+      // an ammonite and a little fish skeleton
+      E(18, gy - 14, 8, 7, '#8a7458');
+      E(18, gy - 14, 6, 5, '#c8b498');
+      E(18, gy - 14, 4, 3, '#8a7458');
+      E(18, gy - 14, 2, 1, '#c8b498');
+      R(32, gy - 15, 20, 1, '#6a5640');
+      for (let x = 34; x < 50; x += 3) R(x, gy - 19, 1, 9, '#6a5640');
+      R(51, gy - 18, 4, 7, '#6a5640');
+      break;
+    case 'gramophone':
+      shadow(16, gy, 10, 3);
+      box(8, gy - 12, 16, 11, WOOD, OUT);
+      R(9, gy - 11, 14, 2, WOOD_L);
+      E(16, gy - 13, 7, 2, '#1e1a20');
+      R(14, gy - 26, 2, 13, BRASS);
+      ctx.fillStyle = OUT;
+      ctx.beginPath();
+      ctx.moveTo(15, gy - 26);
+      ctx.lineTo(4, gy - 44);
+      ctx.lineTo(28, gy - 44);
+      ctx.fill();
+      ctx.fillStyle = BRASS;
+      ctx.beginPath();
+      ctx.moveTo(15, gy - 27);
+      ctx.lineTo(6, gy - 43);
+      ctx.lineTo(26, gy - 43);
+      ctx.fill();
+      E(16, gy - 43, 10, 2, BRASS_L);
+      break;
+    case 'idol':
+      shadow(16, gy, 9, 3);
+      box(9, gy - 16, 14, 15, MARBLE, OUT);
+      R(10, gy - 15, 3, 13, MARBLE_D);
+      R(7, gy - 18, 18, 3, MARBLE);
+      // a little golden idol
+      E(16, gy - 26, 5, 6, OUT);
+      E(16, gy - 26, 4, 5, '#e0b040');
+      E(16, gy - 33, 3, 3, OUT);
+      E(16, gy - 33, 2, 2, '#f2d36b');
+      R(14, gy - 27, 1, 1, OUT);
+      R(17, gy - 27, 1, 1, OUT);
+      R(14, gy - 28, 1, 3, '#fff4a0');
+      break;
+    case 'orchid':
+      shadow(16, gy, 7, 2);
+      box(11, gy - 9, 10, 8, '#f4f0e6', OUT);
+      R(15, gy - 30, 1, 21, '#3c7a3a');
+      R(11, gy - 12, 5, 2, '#4f8a3a');
+      R(16, gy - 14, 6, 2, '#4f8a3a');
+      [[17, 30], [19, 25], [18, 20]].forEach(([x, y]) => {
+        R(x - 2, gy - y, 5, 3, '#e8a0d8');
+        R(x - 1, gy - y - 1, 3, 5, '#f4c8ec');
+        R(x, gy - y + 1, 1, 1, '#e0c040');
+      });
+      break;
+    case 'banner':
+      shadow(16, gy, 8, 3);
+      R(9, gy - 4, 14, 3, BRASS);
+      R(15, gy - 52, 2, 49, BRASS);
+      E(16, gy - 53, 2, 2, BRASS_L);
+      R(7, gy - 50, 18, 2, BRASS);
+      box(8, gy - 48, 16, 26, '#7a2232', OUT);
+      ctx.fillStyle = '#7a2232';
+      ctx.beginPath();
+      ctx.moveTo(8, gy - 22);
+      ctx.lineTo(16, gy - 17);
+      ctx.lineTo(24, gy - 22);
+      ctx.fill();
+      R(9, gy - 46, 14, 1, BRASS);
+      E(16, gy - 36, 4, 4, BRASS);
+      E(16, gy - 36, 2, 2, '#7a2232');
+      break;
+    case 'rug_round':
+      E(32, gy - 14, 30, 14, OUT);
+      E(32, gy - 14, 29, 13, '#7a2232');
+      E(32, gy - 14, 25, 10, '#c9a23f');
+      E(32, gy - 14, 23, 9, '#2e4a7a');
+      E(32, gy - 14, 12, 5, '#c9a23f');
+      E(32, gy - 14, 10, 4, '#7a2232');
+      for (let a = 0; a < 12; a++) R(32 + Math.cos(a / 1.91) * 18, gy - 14 + Math.sin(a / 1.91) * 7, 2, 2, '#e8e2d4');
+      break;
+    case 'rug_long': {
+      const w = rot ? 32 : 96;
+      const h = rot ? 96 : 32;
+      R(2, H - h + 2, w - 4, h - 4, OUT);
+      R(3, H - h + 3, w - 6, h - 6, '#2e5a4a');
+      R(6, H - h + 6, w - 12, h - 12, '#c9a23f');
+      R(8, H - h + 8, w - 16, h - 16, '#2e5a4a');
+      for (let k = 0; k < (rot ? 5 : 5); k++) {
+        const cx = rot ? 16 : 16 + k * 16;
+        const cy = rot ? H - h + 16 + k * 16 : H - 16;
+        E(cx, cy, 4, 3, '#e8e2d4');
+        E(cx, cy, 2, 1, '#7a2232');
+      }
+      break;
+    }
     case 'piano':
       // a grand piano, lid up
       shadow(32, gy, 30, 4);

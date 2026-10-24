@@ -59,6 +59,16 @@ export const ITEMS = {
   birdcage: { name: 'Canary cage', cat: 'features', w: 1, h: 1, rise: 30, price: 90, income: 7 },
   urn: { name: 'Greek urn', cat: 'relics', w: 1, h: 1, rise: 30, price: 180, income: 14, lvl: 2 },
   mask: { name: 'Carved mask', cat: 'relics', w: 1, h: 1, rise: 30, price: 160, income: 13, lvl: 2 },
+  display_case: { name: 'Jewel case', cat: 'relics', w: 1, h: 1, rise: 30, price: 280, income: 22, lvl: 2 },
+  ship_model: { name: 'Ship in a case', cat: 'relics', w: 2, h: 1, rise: 30, price: 340, income: 26, lvl: 2 },
+  idol: { name: 'Golden idol', cat: 'relics', w: 1, h: 1, rise: 30, price: 420, income: 32, lvl: 3 },
+  butterflies: { name: 'Butterfly case', cat: 'science', w: 1, h: 1, rise: 30, price: 130, income: 10 },
+  fossil_slab: { name: 'Fossil slab', cat: 'science', w: 2, h: 1, rise: 22, price: 380, income: 28, lvl: 2 },
+  gramophone: { name: 'Gramophone', cat: 'features', w: 1, h: 1, rise: 30, price: 110, income: 9 },
+  banner: { name: 'Museum banner', cat: 'features', w: 1, h: 1, rise: 34, price: 45, income: 4 },
+  orchid: { name: 'Orchid', cat: 'plants', w: 1, h: 1, rise: 14, price: 40, income: 3 },
+  rug_round: { name: 'Round rug', cat: 'features', w: 2, h: 1, rise: 0, price: 70, income: 5, flat: true },
+  rug_long: { name: 'Long runner', cat: 'features', w: 3, h: 1, rise: 0, price: 90, income: 6, flat: true, rotatable: true },
 };
 
 const ITEMS_KEY = 'curation.items'; // { [roomIndex]: [{ type, c, r, rot }] }
