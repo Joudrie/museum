@@ -38,6 +38,8 @@ const LAMPS = {
   meteorite: { up: 14, r: 26, color: 0xa0c8ff, flicker: 0.3 },
   geode: { up: 14, r: 26, color: 0xd8a0ff, flicker: 0.3 },
   aquarium: { up: 22, r: 44, color: 0x8ad8ff, flicker: 0.25 },
+  pumpkin: { up: 8, r: 34, color: 0xffb040, flicker: 1 },
+  xmas_tree: { up: 30, r: 44, color: 0xfff0c0, flicker: 0.5 },
 };
 
 export function ambientAt(hour) {

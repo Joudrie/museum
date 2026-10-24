@@ -2309,6 +2309,55 @@ export function bakeItem(scene, key, type, def, rot) {
         R(x + 1, y + 4, 2, 3, 'rgba(60,40,30,0.5)');
       });
       break;
+    case 'pumpkin':
+      shadow(16, gy, 11, 3);
+      E(16, gy - 9, 12, 9, OUT);
+      E(16, gy - 9, 11, 8, '#e8702a');
+      [10, 16, 22].forEach((x) => R(x, gy - 16, 1, 14, '#c0501a'));
+      R(15, gy - 21, 3, 5, '#4f7a3a');
+      // a carved face, lit from inside
+      [[11, 12], [19, 12]].forEach(([x, y]) => R(x, gy - y, 3, 3, '#ffd860'));
+      R(11, gy - 6, 11, 2, '#ffd860');
+      R(13, gy - 7, 2, 1, '#ffd860');
+      R(18, gy - 7, 2, 1, '#ffd860');
+      break;
+    case 'xmas_tree':
+      shadow(16, gy, 12, 3);
+      box(12, gy - 7, 8, 6, '#b0413e', OUT);
+      [[gy - 12, 13], [gy - 22, 11], [gy - 32, 9], [gy - 41, 6]].forEach(([y, w]) => {
+        for (let k = 0; k < 10; k++) {
+          const half = Math.round((w * (k + 3)) / 12);
+          R(16 - half - 1, y - 10 + k, half * 2 + 2, 1, OUT);
+          R(16 - half, y - 10 + k, half * 2, 1, k < 3 ? '#3c9048' : '#2e7842');
+        }
+      });
+      [[10, 14, '#e0405a'], [21, 16, '#f2d36b'], [14, 24, '#5aa8e0'], [19, 30, '#e0405a'], [12, 34, '#f2d36b'], [17, 20, '#ffffff']].forEach(([x, y, c]) => R(x, gy - y, 2, 2, c));
+      E(16, gy - 52, 3, 3, '#f2d36b');
+      R(16, gy - 56, 1, 2, '#fff4a0');
+      break;
+    case 'gifts':
+      shadow(16, gy, 12, 3);
+      [[5, 12, 12, '#3a78c8', '#f2d36b'], [16, 10, 11, '#e0405a', '#ffffff'], [10, 20, 9, '#6fd07a', '#e0405a']].forEach(([x, h, w, c, rib]) => {
+        box(x, gy - h - (x === 10 ? 10 : 0), w, h, c, OUT);
+        const y0 = gy - h - (x === 10 ? 10 : 0);
+        R(x + Math.floor(w / 2) - 1, y0, 2, h, rib);
+        R(x, y0 + Math.floor(h / 2) - 1, w, 2, rib);
+        R(x + Math.floor(w / 2) - 3, y0 - 2, 3, 2, rib);
+        R(x + Math.floor(w / 2), y0 - 2, 3, 2, rib);
+      });
+      break;
+    case 'flower_basket':
+      shadow(16, gy, 11, 3);
+      box(7, gy - 11, 18, 10, '#c8a070', OUT);
+      for (let x = 8; x < 25; x += 3) R(x, gy - 11, 1, 10, '#a07a4a');
+      R(7, gy - 22, 2, 12, '#a07a4a');
+      R(23, gy - 22, 2, 12, '#a07a4a');
+      R(7, gy - 23, 18, 2, '#a07a4a');
+      [[10, 14, '#f4b8d0'], [14, 16, '#f2d36b'], [18, 14, '#ffffff'], [22, 15, '#b06ae0'], [12, 18, '#e0405a'], [19, 18, '#f4b8d0']].forEach(([x, y, c]) => {
+        R(x - 1, gy - y, 3, 3, c);
+        R(x, gy - y + 1, 1, 1, '#f2d36b');
+      });
+      break;
     case 'display_case':
       // a glass case of jewels on a dark wood stand
       shadow(16, gy, 12, 3);

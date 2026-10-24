@@ -13,6 +13,7 @@ export const CATEGORIES = {
   science: 'Science',
   features: 'Features',
   services: 'Services',
+  seasonal: 'Seasonal',
 };
 
 export const ITEMS = {
@@ -69,6 +70,11 @@ export const ITEMS = {
   orchid: { name: 'Orchid', cat: 'plants', w: 1, h: 1, rise: 14, price: 40, income: 3 },
   rug_round: { name: 'Round rug', cat: 'features', w: 2, h: 1, rise: 0, price: 70, income: 5, flat: true },
   rug_long: { name: 'Long runner', cat: 'features', w: 3, h: 1, rise: 0, price: 90, income: 6, flat: true, rotatable: true },
+  // Seasonal: only for sale in their season (placed ones stay all year)
+  pumpkin: { name: 'Jack-o’-lantern', cat: 'seasonal', w: 1, h: 1, rise: 10, price: 30, income: 4, season: 'autumn' },
+  xmas_tree: { name: 'Holiday tree', cat: 'seasonal', w: 1, h: 1, rise: 40, price: 120, income: 10, season: 'winter' },
+  gifts: { name: 'Pile of gifts', cat: 'seasonal', w: 1, h: 1, rise: 18, price: 40, income: 4, season: 'winter' },
+  flower_basket: { name: 'Flower basket', cat: 'seasonal', w: 1, h: 1, rise: 14, price: 35, income: 4, season: 'spring' },
 };
 
 const ITEMS_KEY = 'curation.items'; // { [roomIndex]: [{ type, c, r, rot }] }
