@@ -207,9 +207,9 @@ function startAmbience() {
     src.loop = true;
     const f = ctx.createBiquadFilter();
     f.type = 'lowpass';
-    f.frequency.value = kind === 'rain' ? 3200 : 520;
+    f.frequency.value = kind === 'rain' ? 3200 : kind === 'rainSoft' ? 900 : 520;
     const g = ctx.createGain();
-    g.gain.value = kind === 'rain' ? 0.5 : 0.35;
+    g.gain.value = kind === 'rain' ? 0.5 : kind === 'rainSoft' ? 0.28 : 0.35; // (rainSoft: rain on the roof, heard from inside)
     src.connect(f);
     f.connect(g);
     g.connect(sfxBus);
