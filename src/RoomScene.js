@@ -1729,16 +1729,6 @@ export class RoomScene extends Phaser.Scene {
     });
   }
 
-  // Walking: a small bounce, and the legs swap when walking up or down.
-  // The camera leans a little ahead of where you're walking.
-  lookAhead(vx, vy, dt) {
-    const o = (this.look ||= { x: 0, y: 0 });
-    const k = Math.min(1, dt * 2.2);
-    o.x += (-vx * 20 - o.x) * k;
-    o.y += (-vy * 16 - o.y) * k;
-    this.cameras.main.setFollowOffset(o.x, o.y);
-  }
-
   // Walking: step frames and a little bounce. Returns true when a foot lands.
   animate(s, moving, dt, rate = 1) {
     return animateWalker(this, s, moving, dt, rate);
@@ -2046,8 +2036,6 @@ export class RoomScene extends Phaser.Scene {
 
   browse() {
     this.mode = 'browse';
-    this.look = { x: 0, y: 0 };
-    this.cameras.main.setFollowOffset(0, 0);
     this.selected = null;
     this.clearGhost();
     hideBar();
@@ -2317,7 +2305,6 @@ export class RoomScene extends Phaser.Scene {
       }
       this.faceSprite(this.player, 'player', vx, vy);
     }
-    this.lookAhead(len > 0 ? vx / len : 0, len > 0 ? vy / len : 0, dt);
     if (this.animate(this.player, len > 0, dt, 0.8 + pace * 0.5)) {
       footstep();
       if (pace === 1) dust(this, this.player.x, this.player.y);

@@ -31,8 +31,8 @@ const PARTS = {
   petals: { n: 24, colors: [0xf4b8d0, 0xffd8e8, 0xf090b8], w: 2, h: 2, vx: -14, vy: 22, alpha: 0.95, sway: 20, spin: true },
 };
 
-// Falling particles over the view (they live in screen space so they cover
-// wherever the camera goes).
+// Falling particles around the view. They live in the world (so they stay
+// put against the ground as you walk) and wrap round the edges of the view.
 export class Weather {
   constructor(scene, kind) {
     this.scene = scene;
@@ -44,11 +44,11 @@ export class Weather {
     const cam = scene.cameras.main;
     for (let i = 0; i < this.cfg.n; i++) {
       const color = this.cfg.colors ? this.cfg.colors[i % this.cfg.colors.length] : this.cfg.color;
-      const r = scene.add.rectangle(0, 0, this.cfg.w, this.cfg.h, color, this.cfg.alpha).setDepth(6001).setScrollFactor(0);
+      const r = scene.add.rectangle(0, 0, this.cfg.w, this.cfg.h, color, this.cfg.alpha).setDepth(6001);
       if (kind === 'rain') r.setAngle(6);
-      this.parts.push({ r, x: Math.random(), y: Math.random(), ph: Math.random() * 6, sp: 0.7 + Math.random() * 0.6 });
+      const v = cam.worldView;
+      this.parts.push({ r, x: v.x + Math.random() * v.width, y: v.y + Math.random() * v.height, ph: Math.random() * 6, sp: 0.7 + Math.random() * 0.6 });
     }
-    this.view = () => ({ w: cam.width / cam.zoom, h: cam.height / cam.zoom });
     if (kind === 'rain') {
       // a grey sky
       this.sky = scene.add.rectangle(0, 0, 10, 10, 0x9aa4b4, 1).setOrigin(0).setScrollFactor(0).setDepth(4999).setBlendMode('MULTIPLY');
@@ -66,17 +66,20 @@ export class Weather {
     const ox = (vw - vw / z) / 2;
     const oy = (vh - vh / z) / 2;
     if (this.sky) this.sky.setPosition(ox - 4, oy - 4).setSize(vw / z + 8, vh / z + 8);
+    const v = cam.worldView;
+    const m = 12; // wrap a little outside the view so nothing pops in
     this.parts.forEach((p) => {
-      p.y += (this.cfg.vy * p.sp * dt) / (vh / z);
-      p.x += (this.cfg.vx * p.sp * dt) / (vw / z);
-      if (p.y > 1.02) {
-        p.y = -0.02;
-        p.x = Math.random() * 1.2;
+      p.y += this.cfg.vy * p.sp * dt;
+      p.x += this.cfg.vx * p.sp * dt;
+      if (p.y > v.bottom + m) {
+        p.y -= v.height + m * 2;
+        p.x = v.x + Math.random() * v.width;
         if (this.kind === 'rain' && Math.random() < 0.5) this.splash();
-      }
-      if (p.x < -0.05) p.x += 1.1;
+      } else if (p.y < v.y - m) p.y += v.height + m * 2;
+      if (p.x < v.x - m) p.x += v.width + m * 2;
+      else if (p.x > v.right + m) p.x -= v.width + m * 2;
       const sway = this.cfg.sway ? Math.sin(this.t * 1.6 + p.ph) * this.cfg.sway : 0;
-      p.r.setPosition(ox + p.x * (vw / z) + sway, oy + p.y * (vh / z));
+      p.r.setPosition(p.x + sway, p.y);
       if (this.cfg.spin) p.r.setAngle(Math.sin(this.t * 3 + p.ph) * 60);
     });
   }
