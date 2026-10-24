@@ -8,15 +8,17 @@
 // walk: 'walk' | 'block' | 'water' | 'grass' (walk-through, hides the legs) |
 //       'ledge' (jump down only) | 'push' (a boulder you can shove) | 'over' (draw above people)
 
+import { addScenery } from './scenery.js';
+
 export const T = 32;
 const FRAMES = 4;
 
 // ---------- Helpers ----------
-const hash = (x, y, s = 0) => {
+export const hash = (x, y, s = 0) => {
   const n = Math.sin(x * 127.1 + y * 311.7 + s * 74.7) * 43758.5453;
   return n - Math.floor(n);
 };
-const hex = (h) => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16), 255];
+export const hex = (h) => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16), 255];
 const smooth = (t) => t * t * (3 - 2 * t);
 
 // Value noise that repeats every tile, so neighbors always line up.
@@ -35,7 +37,7 @@ function tnoise(x, y, cells, seed) {
   const d = h(x0 + 1, y0 + 1);
   return a + (b - a) * fx + (c - a) * fy + (a - b - c + d) * fx * fy;
 }
-const fbm = (x, y, seed) => 0.55 * tnoise(x, y, 4, seed) + 0.3 * tnoise(x, y, 8, seed + 1) + 0.15 * tnoise(x, y, 16, seed + 2);
+export const fbm = (x, y, seed) => 0.55 * tnoise(x, y, 4, seed) + 0.3 * tnoise(x, y, 8, seed + 1) + 0.15 * tnoise(x, y, 16, seed + 2);
 
 function canvas(w, h) {
   const c = document.createElement('canvas');
@@ -45,7 +47,7 @@ function canvas(w, h) {
 }
 
 // A tile from a per-pixel function returning a color array (or null).
-function pixels(w, h, fn) {
+export function pixels(w, h, fn) {
   const c = canvas(w, h);
   const ctx = c.getContext('2d');
   const img = ctx.createImageData(w, h);
@@ -61,7 +63,7 @@ function pixels(w, h, fn) {
 }
 
 // A tile drawn with simple pixel shapes on top of an optional base tile.
-function draw(w, h, fn, base) {
+export function draw(w, h, fn, base) {
   const c = canvas(w, h);
   const ctx = c.getContext('2d');
   ctx.imageSmoothingEnabled = false;
@@ -82,13 +84,13 @@ function draw(w, h, fn, base) {
 }
 
 // ---------- Palettes ----------
-const OUT = '#20201a';
-const GRASS = ['#3c8a46', '#52a64e', '#6cbc5a', '#8ed26c', '#b4e488'].map(hex);
-const JUNGLE = ['#22603a', '#2e7842', '#3c9048', '#58a854', '#7ac466'].map(hex);
-const SAND = ['#b8945c', '#d0ae72', '#e2c68a', '#efd9a4', '#f8ecc4'].map(hex);
+export const OUT = '#20201a';
+export const GRASS = ['#3c8a46', '#52a64e', '#6cbc5a', '#8ed26c', '#b4e488'].map(hex);
+export const JUNGLE = ['#22603a', '#2e7842', '#3c9048', '#58a854', '#7ac466'].map(hex);
+export const SAND = ['#b8945c', '#d0ae72', '#e2c68a', '#efd9a4', '#f8ecc4'].map(hex);
 const WET = ['#a0804c', '#b4945e'].map(hex);
-const DIRT = ['#7a5232', '#946640', '#ad7c50', '#c49464', '#d8ae7e'].map(hex);
-const STONE = ['#56545a', '#6e6c72', '#88868a', '#a4a2a4', '#c4c2c0'].map(hex);
+export const DIRT = ['#7a5232', '#946640', '#ad7c50', '#c49464', '#d8ae7e'].map(hex);
+export const STONE = ['#56545a', '#6e6c72', '#88868a', '#a4a2a4', '#c4c2c0'].map(hex);
 const CLIFF = ['#4a3424', '#644830', '#80603e', '#9c7a52', '#ba9a6c'].map(hex);
 const WATER = ['#2a5ea8', '#3474bc', '#4890d0', '#6cb0e4', '#a6d8f6'].map(hex);
 const SHALLOW = ['#4aa0c8', '#62b4d4', '#84cce2'].map(hex);
@@ -355,11 +357,14 @@ export function buildTiles() {
   // Props
   addProps(add, anim);
 
+  // Flowers, garden plants, more trees and rocks, paths and buildings
+  addScenery(add, anim);
+
   return tiles;
 }
 
 const WATER_CSS = ['#2a5ea8', '#3474bc', '#4890d0', '#6cb0e4', '#a6d8f6'];
-const css = (c) => `rgb(${c[0]},${c[1]},${c[2]})`;
+export const css = (c) => `rgb(${c[0]},${c[1]},${c[2]})`;
 
 // ---------- Cliffs ----------
 function cliffFace(x, y, seed) {

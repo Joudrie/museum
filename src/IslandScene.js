@@ -187,7 +187,7 @@ export class IslandScene extends Phaser.Scene {
     if (keys.length > 1) this.animated.push({ img, keys });
     if (opts.solid !== false && ['block', 'push'].includes(t.walk)) {
       const wide = Math.max(1, Math.round(t.w / T));
-      for (let i = 0; i < wide; i++) this.block(x + i, y);
+      for (let r = 0; r < (t.base || 1); r++) for (let i = 0; i < wide; i++) this.block(x + i, y - r);
     }
     return img;
   }
@@ -340,6 +340,7 @@ export class IslandScene extends Phaser.Scene {
         this.block(x, 28);
       }
     }
+    this.placeScenery();
     this.thing('chest', 18, 25, 'A heavy chest, locked tight. Expeditions will turn up the keys.');
     // the dock at the south end
     for (let y = 36; y <= 39; y++) this.place('dock_v', 12, y, { flat: true });
@@ -348,6 +349,46 @@ export class IslandScene extends Phaser.Scene {
     this.place('rowboat', 13, 39, { solid: false });
     this.thing('sign', 13, 35, 'Expeditions leave from this dock. Pirate islands, shipwrecks, lost temples… coming soon!');
     this.thing('sign', 13, 9, 'Welcome to the island! The museum is right behind you. Walk up into the doors to go back in.');
+  }
+
+  // A sample of the newer scenery tiles (flowers, trees, rocks, buildings)
+  // dotted round the free spots, until the island gets its real layout.
+  placeScenery() {
+    // a flower garden on the west lawn, roses and a fountain on the east
+    [['tulips', 5, 14], ['daisies', 6, 13], ['poppies', 7, 14], ['wildflowers', 8, 13], ['dandelions', 8, 15], ['clover', 5, 13]].forEach(([n, x, y]) => this.place(n, x, y, { flat: true }));
+    this.trees.push(this.place('cherry_tree', 2, 16));
+    this.place('lavender', 6, 15);
+    this.place('lavender', 7, 15);
+    this.place('fountain', 17, 14);
+    this.place('roses', 15, 14);
+    this.place('hydrangea', 19, 15);
+    this.place('signpost', 14, 14);
+    // cattails and a fern by the pond
+    this.place('reeds', 10, 18);
+    this.place('reeds', 10, 19);
+    this.place('fern', 4, 19, { flat: true });
+    // a cottage with a vegetable garden in the south-west meadow
+    this.place('cottage', 4, 28);
+    this.place('veg_patch', 7, 27, { flat: true });
+    this.place('veg_patch', 8, 27, { flat: true });
+    this.place('veg_patch', 7, 28, { flat: true });
+    this.place('veg_patch', 8, 28, { flat: true });
+    this.place('scarecrow', 9, 28);
+    this.place('well', 9, 30);
+    this.place('path_flagstone', 5, 29, { flat: true });
+    this.place('pumpkins', 3, 29);
+    // the beach: a striped hut, a tiki hut, a tide pool
+    this.place('beach_hut', 20, 30);
+    this.place('tiki_hut', 3, 32);
+    this.place('tide_pool', 2, 20);
+    this.place('pebbles', 8, 35, { flat: true });
+    this.place('agave', 18, 33);
+    // a lighthouse on the northern point, standing stones by the cliff
+    this.place('lighthouse', 16, 4);
+    this.place('cairn', 15, 25);
+    this.place('rock_mossy', 20, 25);
+    this.place('fossil_rock', 3, 23);
+    this.trees.push(this.place('apple_tree', 18, 19));
   }
 
   tallGrass(x, y) {
@@ -637,12 +678,6 @@ export class IslandScene extends Phaser.Scene {
     }
     if (animateWalker(this, p, len > 0, dt, 0.8 + pace * 0.5)) this.onStep(p, pace);
     this.pet?.update(dt);
-    // the camera leans a little ahead of where you're walking
-    const o = (this.look ||= { x: 0, y: 0 });
-    const k2 = Math.min(1, dt * 2.2);
-    o.x += ((len ? (-vx / len) * 22 : 0) - o.x) * k2;
-    o.y += ((len ? (-vy / len) * 18 : 0) - o.y) * k2;
-    this.cameras.main.setFollowOffset(o.x, o.y);
     this.critters.update(dt, p);
     this.ambient.update(dt, p);
     this.weather.update(dt);
