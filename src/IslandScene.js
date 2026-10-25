@@ -15,12 +15,19 @@ import { ambientAt, makeTextures as lightTextures } from './lighting.js';
 import { Critters } from './critters.js';
 import { Ambient } from './ambient.js';
 import { seasonFrames, seasonTile, TILE_LIGHTS } from './scenery.js';
+import { layoutShowcase } from './showcase.js';
 import { settings, hourNow } from './settings.js';
 import { animateWalker, footstep, dust } from './motion.js';
 import { Pet } from './pets.js';
 
-const W = 24; // map size in tiles
-const H = 40;
+// The main island is 24×40 tiles; the tile garden (see showcase.js) lies
+// east of it, joined by a path, and sets the full map size.
+const MW = 24;
+const MH = 40;
+const SX = 28; // where the tile garden starts
+const SW = 32; // and how wide it is
+let W = MW; // map size in tiles
+let H = MH;
 const VIEW_TILES = 9;
 const SPEED = 176;
 const PLAYER_SCALE = 1.15;
@@ -41,6 +48,9 @@ export class IslandScene extends Phaser.Scene {
 
   create() {
     TILES = TILES || buildTiles();
+    this.plan = layoutShowcase(TILES, SX, 2, SW);
+    W = SX + SW + 1;
+    H = Math.max(MH, this.plan.y0 + this.plan.height + 2);
     document.body.classList.add('outside');
     this.events.once('shutdown', () => document.body.classList.remove('outside'));
     setTrack('none');
@@ -56,6 +66,7 @@ export class IslandScene extends Phaser.Scene {
     this.flowerSpots = [];
 
     this.makeMap();
+    this.paintShowcase();
     this.drawGround();
     this.placeMuseum();
     this.placeThings();
@@ -109,8 +120,10 @@ export class IslandScene extends Phaser.Scene {
     for (let y = 0; y <= H; y++) {
       c.push([]);
       for (let x = 0; x <= W; x++) {
-        const d = Math.hypot((x - W / 2) / (W * 0.46), (y - H * 0.5) / (H * 0.47)) + (hash(x, y, 1) - 0.5) * 0.12 + (hash(x >> 2, y >> 2, 2) - 0.5) * 0.1;
+        const d = Math.hypot((x - MW / 2) / (MW * 0.46), (y - MH * 0.5) / (MH * 0.47)) + (hash(x, y, 1) - 0.5) * 0.12 + (hash(x >> 2, y >> 2, 2) - 0.5) * 0.1;
         let m = d < 0.74 ? 2 : d < 0.97 ? 1 : 0;
+        if (x >= SX - 1 && x <= W - 1 && y >= 1 && y <= H - 1) m = 2; // the tile garden
+        if (x >= 18 && x < SX && y >= 20 && y <= 27) m = Math.max(m, 2); // the land between
         if (x >= 6 && x <= 18 && y >= 2 && y <= 12) m = 2; // the museum's lawn
         if (x >= 6 && x <= 9 && y >= 17 && y <= 20) m = 3; // a pond
         if (x >= 11 && x <= 13 && y >= 33 && y <= 40) m = Math.min(m, 1); // sandy path to the dock
@@ -126,6 +139,8 @@ export class IslandScene extends Phaser.Scene {
       }
     // the dirt path from the doors down to the beach (4 = path, on grass)
     for (let y = 9; y <= 31; y++) for (const x of [12, 13]) if (c[y][x] === 2) c[y][x] = 4;
+    // and a branch east to the tile garden
+    for (let x = 14; x <= SX; x++) for (const y of [23, 24]) if (c[y][x] === 2) c[y][x] = 4;
     this.corners = c;
   }
 
@@ -136,44 +151,77 @@ export class IslandScene extends Phaser.Scene {
 
   // The ground is drawn into one big picture per animation frame.
   drawGround() {
-    this.groundKeys = [];
-    for (let f = 0; f < 4; f++) {
-      const key = `island_ground_${f}`;
-      if (this.textures.exists(key)) this.textures.remove(key);
-      const tex = this.textures.createCanvas(key, W * T, H * T);
-      const ctx = tex.getContext();
-      ctx.imageSmoothingEnabled = false;
-      const put = (name, x, y) => {
-        const t = TILES[name];
-        if (t) ctx.drawImage(t.frames[f % t.frames.length], x * T, y * T);
-      };
-      for (let y = 0; y < H; y++)
-        for (let x = 0; x < W; x++) {
-          put((x * 7 + y * 3) % 5 ? 'sand_1' : 'sand_2', x, y);
-          const shore = this.key(x, y, (m) => m === 0);
-          if (shore === '1111') put('water', x, y);
-          else if (shore !== '0000') put(`shore_${shore}`, x, y);
-          const grass = this.key(x, y, (m) => m >= 2);
-          const path = this.key(x, y, (m) => m === 4);
-          if (path !== '0000') {
-            // the path: dirt with the grass growing over its edges
-            put('dirt_1', x, y);
-            const g = this.key(x, y, (m) => m === 2 || m === 3);
-            if (g !== '0000') put(`grass_dirt_${g}`, x, y);
-          } else if (grass === '1111') put(['grass_1', 'grass_2', 'grass_1', 'grass_3'][(x * 3 + y * 5) % 4], x, y);
-          else if (grass !== '0000') put(`grass_sand_${grass}`, x, y);
-          const pond = this.key(x, y, (m) => m === 3);
-          if (pond === '1111') put('water', x, y);
-          else if (pond !== '0000') put(`bank_${pond}`, x, y);
-          // water you can't walk into (3+ corners wet)
-          const wet = [...shore].filter((v) => v === '1').length;
-          const pondWet = [...pond].filter((v) => v === '1').length;
-          if (wet >= 3 || pondWet >= 3) this.solid[y][x] = true;
+    // what's painted on each cell, bottom to top
+    const cells = (x, y) => {
+      const out = [(x * 7 + y * 3) % 5 ? 'sand_1' : 'sand_2'];
+      const shore = this.key(x, y, (m) => m === 0);
+      if (shore === '1111') out.push('water');
+      else if (shore !== '0000') out.push(`shore_${shore}`);
+      const grass = this.key(x, y, (m) => m >= 2);
+      const path = this.key(x, y, (m) => m === 4);
+      if (path !== '0000') {
+        // the path: dirt with the grass growing over its edges
+        out.push('dirt_1');
+        const g = this.key(x, y, (m) => m === 2 || m === 3);
+        if (g !== '0000') out.push(`grass_dirt_${g}`);
+      } else if (grass === '1111') out.push(['grass_1', 'grass_2', 'grass_1', 'grass_3'][(x * 3 + y * 5) % 4]);
+      else if (grass !== '0000') out.push(`grass_sand_${grass}`);
+      const pond = this.key(x, y, (m) => m === 3);
+      if (pond === '1111') out.push('water');
+      else if (pond !== '0000') out.push(`bank_${pond}`);
+      out.push(...(this.paint[y]?.[x] || []));
+      // water you can't walk into (3+ corners wet)
+      const wet = [...shore].filter((v) => v === '1').length;
+      const pondWet = [...pond].filter((v) => v === '1').length;
+      if (wet >= 3 || pondWet >= 3) this.solid[y][x] = true;
+      return out;
+    };
+    // The ground is drawn in chunks of C×C cells. Chunks with nothing moving
+    // get one picture, chunks with water get four (the water ebbs), and open
+    // sea chunks all share one set, which keeps a big map light on memory.
+    const C = 8;
+    const canvasFor = (key, w, h, draw) => {
+      if (!this.textures.exists(key)) {
+        const tex = this.textures.createCanvas(key, w, h);
+        const ctx = tex.getContext();
+        ctx.imageSmoothingEnabled = false;
+        draw(ctx);
+        tex.refresh();
+      }
+      return key;
+    };
+    const sea = [0, 1, 2, 3].map((f) =>
+      canvasFor(`island_sea_${f}`, C * T, C * T, (ctx) => {
+        for (let y = 0; y < C; y++) for (let x = 0; x < C; x++) ctx.drawImage(TILES.water.frames[f], x * T, y * T);
+      }),
+    );
+    this.groundAnim = [];
+    this.groundChunks = [];
+    for (let cy = 0; cy * C < H; cy++)
+      for (let cx = 0; cx * C < W; cx++) {
+        const list = [];
+        for (let y = cy * C; y < Math.min(H, cy * C + C); y++) for (let x = cx * C; x < Math.min(W, cx * C + C); x++) list.push({ x, y, names: cells(x, y) });
+        let keys;
+        if (list.every((c) => c.names[c.names.length - 1] === 'water')) keys = sea;
+        else {
+          const frames = list.some((c) => c.names.some((n) => TILES[n]?.frames.length > 1)) ? 4 : 1;
+          keys = Array.from({ length: frames }, (_, f) =>
+            canvasFor(`island_g${W}x${H}_${cx}_${cy}_${f}`, C * T, C * T, (ctx) =>
+              list.forEach(({ x, y, names }) =>
+                names.forEach((n) => {
+                  const t = TILES[n];
+                  if (t) ctx.drawImage(t.frames[f % t.frames.length], (x - cx * C) * T, (y - cy * C) * T);
+                }),
+              ),
+            ),
+          );
         }
-      tex.refresh();
-      this.groundKeys.push(key);
-    }
-    this.ground = this.add.image(0, 0, this.groundKeys[0]).setOrigin(0).setDepth(0);
+        const img = this.add.image(cx * C * T, cy * C * T, keys[0]).setOrigin(0).setDepth(0);
+        img.setCrop(0, 0, Math.min(C, W - cx * C) * T, Math.min(C, H - cy * C) * T); // edge chunks stop at the map's edge
+        this.groundChunks.push({ img, keys, cx, cy });
+        if (keys.length > 1) this.groundAnim.push({ img, keys });
+      }
+    this.chunk = C;
   }
 
   // A tile or object, standing on cell (x, y) (its bottom row), sorted by depth.
@@ -285,7 +333,7 @@ export class IslandScene extends Phaser.Scene {
     this.trees = [];
     [[3, 13], [20, 14], [2, 26], [21, 27], [7, 35], [17, 34]].forEach(([x, y]) => this.place('palm', x, y));
     [[4, 8], [19, 9]].forEach(([x, y]) => this.trees.push(this.place('tree', x, y)));
-    [[18, 21], [20, 23]].forEach(([x, y]) => this.place('pine', x, y));
+    [[18, 21], [20, 20]].forEach(([x, y]) => this.place('pine', x, y));
     [[9, 14], [16, 15], [6, 24], [18, 26]].forEach(([x, y]) => this.trees.push(this.place('bush', x, y)));
     for (let y = 22; y <= 25; y++) for (let x = 8; x <= 10; x++) if ((x + y) % 4) this.tallGrass(x, y);
     for (let y = 15; y <= 17; y++) for (let x = 14; x <= 17; x++) if ((x * y) % 3) this.tallGrass(x, y);
@@ -345,6 +393,7 @@ export class IslandScene extends Phaser.Scene {
       }
     }
     this.placeScenery();
+    this.buildShowcase();
     this.thing('chest', 18, 25, 'A heavy chest, locked tight. Expeditions will turn up the keys.');
     // the dock at the south end
     for (let y = 36; y <= 39; y++) this.place('dock_v', 12, y, { flat: true });
@@ -423,6 +472,48 @@ export class IslandScene extends Phaser.Scene {
     });
   }
 
+  // The tile garden's floors, streets and walkways are painted into the
+  // ground itself (see drawGround); its standing pieces come in buildShowcase.
+  paintShowcase() {
+    const P = this.plan;
+    this.paint = [];
+    const paint = (name, x, y) => ((this.paint[y] ||= [])[x] ||= []).push(name);
+    for (let y = P.y0; y < P.y0 + P.height; y++) [P.x0, P.x0 + 1, P.x0 + P.width - 2, P.x0 + P.width - 1].forEach((x) => paint('path_flagstone', x, y));
+    P.streets.forEach(({ y, x0, x1, tile }) => {
+      for (let x = x0; x <= x1; x++) paint(tile, x, y);
+    });
+    P.floors.forEach(({ name, x, y, w, h, base, solid }) => {
+      for (let dy = 0; dy < h; dy++)
+        for (let dx = 0; dx < w; dx++) {
+          if (base) paint(base, x + dx, y + dy);
+          paint(name, x + dx, y + dy);
+          if (solid) this.block(x + dx, y + dy);
+        }
+    });
+  }
+
+  // The tile garden: every tile on show, with its name (plan from showcase.js).
+  buildShowcase() {
+    const P = this.plan;
+    const label = (x, y, text, w, size = 8, color = '#fff8e8') => {
+      const t = this.add
+        .text(x * T, y * T + 3, text, { fontFamily: 'Georgia, serif', fontSize: `${size}px`, color, stroke: '#2a2018', strokeThickness: 3, align: 'center', wordWrap: { width: w * T - 2 } })
+        .setOrigin(0.5, 0)
+        .setResolution(4)
+        .setDepth(2);
+      t.texture.setFilter(Phaser.Textures.FilterMode.LINEAR); // smooth text, not pixel-scaled
+      return t;
+    };
+    P.items.forEach(({ name, x, y }) => {
+      const t = TILES[name];
+      const img = this.place(name, x, y, { flat: t.walk === 'walk' || t.walk === 'grass' });
+      if (/tree|palm|pine|bush|shrub|sapling/.test(name)) this.trees.push(img);
+    });
+    P.labels.forEach(({ x, y, text, w }) => label(x, y, text, w));
+    P.headers.forEach(({ x, y, text }) => label(x, y, text, 12, 11, '#f2d36b').setOrigin(0, 0).setX(x * T));
+    label(SX - 4.5, 22, 'Tile garden →', 4, 9, '#f2d36b'); // on the path out of the island
+  }
+
   tallGrass(x, y) {
     (this.grassCells ||= new Set()).add(`${x},${y}`);
     this.place('tall_grass', x, y, { flat: true });
@@ -448,10 +539,12 @@ export class IslandScene extends Phaser.Scene {
     this.dark = Math.max(0, Math.min(1, 1 - (0.3 * r + 0.55 * g + 0.15 * b) / 245));
     if (!lit) return;
     lightTextures(this);
-    const rt = this.add.renderTexture(0, 0, W * T, H * T).setOrigin(0).setDepth(5000).setBlendMode(Phaser.BlendModes.MULTIPLY);
+    // the shade is soft, so a quarter-size texture stretched over the map does
+    const Q = 4;
+    const rt = this.add.renderTexture(0, 0, (W * T) / Q, (H * T) / Q).setOrigin(0).setScale(Q).setDepth(5000).setBlendMode(Phaser.BlendModes.MULTIPLY);
     rt.fill((r << 16) | (g << 8) | b, 1);
     const k = 0.4 + 0.6 * this.dark;
-    const stamp = (x, y, w, h, tint, a) => rt.stamp('lt_glow', null, x, y, { scaleX: w / 128, scaleY: h / 128, tint, alpha: Math.min(1, a * k), blendMode: Phaser.BlendModes.ADD });
+    const stamp = (x, y, w, h, tint, a) => rt.stamp('lt_glow', null, x / Q, y / Q, { scaleX: w / 128 / Q, scaleY: h / 128 / Q, tint, alpha: Math.min(1, a * k), blendMode: Phaser.BlendModes.ADD });
     (this.lamps || []).forEach((l) => stamp(l.x, l.y, l.r * 2, l.r * 1.6, l.color, l.a));
     // warm glows on top so the lamps themselves shine
     (this.lamps || []).forEach((l) => {
@@ -506,11 +599,6 @@ export class IslandScene extends Phaser.Scene {
       else if (keys.length > 1) this.animated.push({ img, keys });
     });
     if (this.season !== 'winter') return;
-    const key = 'island_snow';
-    if (this.textures.exists(key)) this.textures.remove(key);
-    const tex = this.textures.createCanvas(key, W * T, H * T);
-    const ctx = tex.getContext();
-    const img = ctx.createImageData(W * T, H * T);
     // smooth value noise: big drifts plus small clumps, and a little grain
     const vnoise = (x, y, size, seed) => {
       const gx = x / size;
@@ -529,34 +617,52 @@ export class IslandScene extends Phaser.Scene {
     };
     const n = (x, y) => 0.6 * vnoise(x, y, 40, 7) + 0.3 * vnoise(x, y, 12, 8) + 0.1 * hash(x, y, 9);
     // snow settles on grass (and the path), right up to the grass's ragged edge
-    const g0 = this.textures.get(this.groundKeys[0]).getSourceImage();
-    const ground = g0.getContext('2d').getImageData(0, 0, W * T, H * T).data;
-    for (let y = 0; y < H * T; y++)
-      for (let x = 0; x < W * T; x++) {
-        const cx = Math.floor(x / T);
-        const cy = Math.floor(y / T);
-        const j = (y * W * T + x) * 4;
-        if (this.key(cx, cy, (m) => m === 3) !== '0000' && ground[j + 2] > ground[j] + 40 && ground[j + 2] > ground[j + 1]) {
+    // done chunk by chunk, reading the ground's first frame
+    const C = this.chunk;
+    const S = C * T;
+    const flag = (test) => Array.from({ length: H }, (_, y) => Array.from({ length: W }, (_, x) => this.key(x, y, test) !== '0000'));
+    const isPond = flag((m) => m === 3);
+    const isLand = flag((m) => m === 2 || m === 4);
+    const isPath = flag((m) => m === 4);
+    this.groundChunks.forEach(({ keys, cx: gx, cy: gy }) => {
+      if (keys[0].startsWith('island_sea')) return; // nothing settles on the sea
+      const ground = this.textures.get(keys[0]).getSourceImage().getContext('2d').getImageData(0, 0, S, S).data;
+      const img = new ImageData(S, S);
+      let any = false;
+      for (let py = 0; py < S; py++)
+        for (let px = 0; px < S; px++) {
+          const x = gx * S + px;
+          const y = gy * S + py;
+          const cx = Math.floor(x / T);
+          const cy = Math.floor(y / T);
+          if (cx >= W || cy >= H) continue;
+          const j = (py * S + px) * 4;
+        if (isPond[cy][cx] && ground[j + 2] > ground[j] + 40 && ground[j + 2] > ground[j + 1]) {
           // the pond freezes: pale ice with a few streaks
           const v = n(x, y);
           const streak = Math.abs(((x + y * 0.4) % 23) - 11) < 0.6 && v > 0.45;
           img.data.set(streak ? [255, 255, 255, 255] : v > 0.55 ? [206, 230, 244, 255] : [178, 214, 236, 255], j);
+          any = true;
           continue;
         }
-        const k = this.key(cx, cy, (m) => m === 2 || m === 4);
-        if (k === '0000') continue;
+        if (!isLand[cy][cx]) continue;
         const grassy = ground[j + 1] > ground[j] && ground[j + 1] > ground[j + 2];
-        const path = !grassy && this.key(cx, cy, (m) => m === 4) !== '0000';
+        const path = !grassy && isPath[cy][cx];
         if (!grassy && !path) continue;
         const v = n(x, y);
         if (v < (path ? 0.5 : 0.36)) continue; // grass peeks through; the path is trodden
-        const i = (y * W * T + x) * 4;
         const c = v > 0.62 ? 250 : v > 0.42 ? 236 : 214;
-        img.data.set([c, c + 2 > 255 ? 255 : c + 2, 255, v < 0.4 ? 170 : 255], i);
+        img.data.set([c, c + 2 > 255 ? 255 : c + 2, 255, v < 0.4 ? 170 : 255], j);
+        any = true;
       }
-    ctx.putImageData(img, 0, 0);
-    tex.refresh();
-    this.add.image(0, 0, key).setOrigin(0).setDepth(0.4);
+      if (!any) return;
+      const key = `island_snow_${gx}_${gy}`;
+      if (this.textures.exists(key)) this.textures.remove(key);
+      const tex = this.textures.createCanvas(key, S, S);
+      tex.getContext().putImageData(img, 0, 0);
+      tex.refresh();
+      this.add.image(gx * S, gy * S, key).setOrigin(0).setDepth(0.4);
+    });
   }
 
   light(x, y, r, color, a = 1, extra = {}) {
@@ -637,7 +743,7 @@ export class IslandScene extends Phaser.Scene {
   tick() {
     this.flickers.forEach((g) => g.setAlpha((0.1 + 0.5 * this.dark) * (0.8 + Math.random() * 0.35)));
     this.frame = (this.frame + 1) % 4;
-    this.ground.setTexture(this.groundKeys[this.frame]);
+    this.groundAnim.forEach(({ img, keys }) => img.setTexture(keys[this.frame]));
     this.animated.forEach(({ img, keys }) => img.setTexture(keys[this.frame % keys.length]));
   }
 
