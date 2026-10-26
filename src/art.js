@@ -811,6 +811,31 @@ function doorMaterial(u, v, r) {
   return iu % 7 === 0 ? FIX.oakDark : FIX.oak;
 }
 
+// A tall window: a white frame and mullions round panes of sky, brighter at
+// the top, with a sill below.
+function windowMaterial(u, v, r) {
+  const du = Math.min(u - r.u0, r.u1 - 1 - u);
+  const dv = Math.min(v - r.v0, r.v1 - 1 - v);
+  if (du === 0 || dv === 0) return FIX.doorFrame;
+  if (du < 3 || dv < 3) return v - r.v0 < 3 ? hex('#d8d0c0') : hex('#f2ece0'); // frame and sill
+  const iu = u - r.u0 - 3;
+  const iw = r.u1 - r.u0 - 6;
+  const iv = r.v1 - 4 - v; // from the top of the glass
+  if (iu === Math.floor(iw / 2) || iv % 12 === 11) return hex('#e8e2d4'); // mullions
+  const k = iv / Math.max(1, r.v1 - r.v0 - 6);
+  const sky = mix(hex('#bfe0f6'), hex('#8cc0e8'), k);
+  return (iu + iv) % 9 === 0 && iv < 10 ? mix(sky, WHITE, 0.5) : sky; // a glint of light
+}
+
+// Steps down toward the front, seen from above: lit treads, dark risers.
+function stepsMaterial(u, y, h) {
+  const stone = hex('#d8cfbe');
+  const ly = y % 8;
+  let c = ly < 5 ? mix(stone, WHITE, 0.12) : ly === 7 ? shade(stone, 0.55) : shade(stone, 0.78);
+  c = shade(c, 0.86 + (y / h) * 0.16);
+  return hash(u, y, 90) > 0.95 ? shade(c, 0.92) : c;
+}
+
 // Wall material at (u along the wall, v height in px from the floor).
 function wallMaterial(u, v, D, items, seed, P) {
   for (const it of items) {
@@ -822,6 +847,7 @@ function wallMaterial(u, v, D, items, seed, P) {
         continue; // outside the arch's rounded corners: plain wall
       }
       if (it.door) return doorMaterial(u, v, it.rect);
+      if (it.window) return windowMaterial(u, v, it.rect);
       if (it.empty) {
         const border = u === u0 || u === u1 - 1 || v === v0 || v === v1 - 1;
         return border ? mix(P.faded, P.stripe, 0.4) : P.faded;
@@ -1201,6 +1227,79 @@ export function bakeMainWalls(scene, key, g, items, decor) {
         return inMat ? (y === 5 || y === 19 ? hex('#5a3b2c') : hex('#7a4f39')) : hex('#2a201b');
       }
       if (sx >= hx0 - D && sx < hx1 + D) return y === 0 ? hex('#6b4530') : y === 1 ? hex('#4a2f22') : FIX.void;
+    }
+    return FIX.void;
+  });
+}
+
+// Shaped rooms (see shaped.js): the floor is a column of bands, each with its
+// own width. A band can end in a wall down to the next (lower) level, or in a
+// run of steps. Wider bands get back walls on the parts that stick out past
+// the band behind them; narrower ones leave a front edge and void outside.
+// Wall keys: band 0's walls are back/left/right, band i's sides are li/ri,
+// the stick-out back walls oli/ori, and the face of band i's drop is fi.
+export function bakeShapedWalls(scene, key, g, items, decor) {
+  const { w, h, D, bands } = g;
+  const P = wallPalette(decor);
+  const mat = (u, v, list, seed) => wallMaterial(u, v, D, list || [], seed, P) ?? shade(wallMaterial(u, v, D, [], seed, P), 0.75);
+  const n = bands.length;
+  const last = bands[n - 1];
+  return bake(scene, key, w, h, (sx, sy) => {
+    // floors, and the drops and steps at the front of each band
+    for (let i = 0; i < n; i++) {
+      const b = bands[i];
+      if (sx < b.x0 || sx >= b.x1 || sy < b.top || sy >= b.bottom) continue;
+      const s = b.strip;
+      if (s && sy >= b.bottom - s.h && !s.cuts.some(([a, c]) => sx >= a && sx < c)) {
+        if (s.kind === 'wall') return mat(sx - b.x0, b.bottom - 1 - sy, items[`f${i}`], 41 + i);
+        return stepsMaterial(sx - b.x0, sy - (b.bottom - s.h), s.h);
+      }
+      return null;
+    }
+    // back walls: all of band 0's, and the parts of wider bands that stick out
+    const b0 = bands[0];
+    let d = b0.top - sy;
+    if (d > 0 && d <= D && sx >= b0.x0 - d && sx < b0.x1 + d) return mat(sx - b0.x0, Math.floor(d - 0.001), items.back, 11);
+    for (let i = 1; i < n; i++) {
+      const b = bands[i];
+      const p = bands[i - 1];
+      d = b.top - sy;
+      if (d <= 0 || d > D) continue;
+      const v = Math.floor(d - 0.001);
+      if (b.x0 < p.x0 && sx >= b.x0 - d && sx < p.x0) return sx === p.x0 - 1 ? FIX.edge : mat(sx - b.x0, v, items[`ol${i}`], 71 + i);
+      if (b.x1 > p.x1 && sx >= p.x1 && sx < b.x1 + d) return sx === p.x1 ? FIX.edge : mat(sx - p.x1, v, items[`or${i}`], 81 + i);
+    }
+    // side walls (running right down to the band's front edge), front bands
+    // first since they stand in front
+    for (let i = n - 1; i >= 0; i--) {
+      const b = bands[i];
+      const lv = b.x0 - 1 - sx;
+      const lb = sy + lv;
+      if (lv >= 0 && lv < D && lb >= b.top && sy < b.bottom) {
+        if (lb < b.top + 1 && i === 0) return FIX.edge; // corner seam with the back wall
+        return shade(mat(lb - b.top, lv, items[i ? `l${i}` : 'left'], 21 + i), 0.92);
+      }
+      const rv = sx - b.x1;
+      const rb = sy + rv;
+      if (rv >= 0 && rv < D && rb >= b.top && sy < b.bottom) {
+        if (rb < b.top + 1 && i === 0) return FIX.edge;
+        return shade(mat(rb - b.top, rv, items[i ? `r${i}` : 'right'], 31 + i), 0.84);
+      }
+    }
+    // the front edge where a band ends with nothing in front of it
+    for (let i = 0; i < n; i++) {
+      const b = bands[i];
+      const nb = bands[i + 1];
+      if (sy >= b.bottom && sy < b.bottom + 2 && sx >= b.x0 && sx < b.x1 && (!nb || sx < nb.x0 || sx >= nb.x1)) return hex(sy === b.bottom ? '#6b4530' : '#4a2f22');
+    }
+    // below the last band: the door mat where you come in
+    if (sy >= last.bottom && sx >= g.matX0 && sx < g.matX1) {
+      const y = sy - last.bottom;
+      if (y < 2) return FIX.edge;
+      if (y < T) {
+        const inMat = sx >= g.matX0 + 3 && sx < g.matX1 - 3 && y >= 5 && y < 20;
+        return inMat ? (y === 5 || y === 19 ? hex('#5a3b2c') : hex('#7a4f39')) : hex('#2a201b');
+      }
     }
     return FIX.void;
   });

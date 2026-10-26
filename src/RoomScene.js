@@ -8,6 +8,7 @@ import {
   bakeHallStairs,
   bakeRailing,
   bakeColumn,
+  bakeShapedWalls,
   bakeFront,
   bakeCrack,
   bakeStain,
@@ -53,7 +54,7 @@ import { openViewer } from './viewer.js';
 import { openDecor, closeDecor, load, save, DEFAULT_CHARACTER } from './decor.js';
 import { openBuild } from './build.js';
 import { showTalk, hideTalk, talking } from './talk.js';
-import { Lighting, timeOfDay } from './lighting.js';
+import { Lighting, timeOfDay, makeTextures as lightTextures } from './lighting.js';
 import { animateWalker, footstep, dust } from './motion.js';
 import { Pet, PET_COLORS } from './pets.js';
 import { openSettings, closeSettings } from './settingsmenu.js';
@@ -297,12 +298,13 @@ export class RoomScene extends Phaser.Scene {
     this.wallItems = wallItems(this.L, this.hung, this.states, this.arches);
     this.floorImg = this.add.image(g.xL, g.y0, bakeFloor(this, 'floor', g.xR - g.xL, g.y1 - g.y0, this.decor).key).setOrigin(0);
     this.wallImg = this.add.image(0, 0, this.bakeRoomWalls(this.decor)).setOrigin(0);
-    if (!g.main) this.add.image(0, g.y1, bakeFront(this, 'front', g.w, entrance.mat ? entrance.x0 : -1, entrance.mat ? entrance.x1 : -1).key).setOrigin(0);
+    if (!g.main && !g.shaped) this.add.image(0, g.y1, bakeFront(this, 'front', g.w, entrance.mat ? entrance.x0 : -1, entrance.mat ? entrance.x1 : -1).key).setOrigin(0);
     if (exit?.sprite) this.add.image(exit.sprite.x, exit.sprite.y, exit.sprite.key).setOrigin(0).setFlipX(exit.sprite.flip).setDepth(2);
     this.hung.forEach((p) => this.drawPainting(p));
     this.blocks = exit?.block ? [exit.block] : [];
     if (g.main) this.placeHall();
     if (g.atrium) this.placeAtrium();
+    if (g.shaped) this.placeShaped();
     this.decorObjects = [];
     this.placeDecor();
     if (this.L.board) this.placeBoard();
@@ -428,7 +430,7 @@ export class RoomScene extends Phaser.Scene {
 
   // Draw the real painting onto the angled wall at higher resolution.
   bakeRoomWalls(decor) {
-    return (this.g.main ? bakeMainWalls : bakeWalls)(this, 'walls', this.g, this.wallItems, decor).key;
+    return (this.g.main ? bakeMainWalls : this.g.shaped ? bakeShapedWalls : bakeWalls)(this, 'walls', this.g, this.wallItems, decor).key;
   }
 
   // Main hall: stairs standing out from the balcony, columns one tile in front of
@@ -528,6 +530,107 @@ export class RoomScene extends Phaser.Scene {
     this.L.decorDoors.forEach((d) => {
       const st = this.standFor({ wall: d.wall, u: (d.rect.u0 + d.rect.u1) / 2 });
       plaque(st.x + (d.wall === 'left' ? -8 : 8), st.y - d.rect.v1 - 4, d.label);
+    });
+  }
+
+  // Shaped rooms (see shaped.js): what you can't walk through, stairs up each
+  // drop with a railing along its edge, columns, the sunken pit, the
+  // stairwell down, and daylight falling in from the windows.
+  placeShaped() {
+    const { g } = this;
+    (this.shapedParts || []).forEach((o) => o.destroy());
+    this.shapedParts = [];
+    this.blocks = this.blocks.filter((b) => !b.shaped);
+    const parts = this.shapedParts;
+    const block = (x0, x1, y0, y1) => this.blocks.push({ shaped: true, x0, x1, y0, y1 });
+    const { bands } = g;
+    bakeColumn(this, 'hall_newel', 20);
+    bakeHallStairs(this, 'hall_stairs', this.decor, 2 * T); // (baked once: re-baking a texture in use breaks it)
+    bands.forEach((b, i) => {
+      // outside the band on either side
+      block(0, b.x0, b.top - 2, b.bottom - 8);
+      block(b.x1, g.w, b.top - 2, b.bottom - 8);
+      if (b.strip?.kind !== 'wall') return;
+      const top = b.bottom - g.D;
+      // a railing along the drop's edge, one run between each pair of stairs
+      const edges = [b.x0, ...b.stairs.flatMap((st) => [st.x0, st.x1]), b.x1];
+      for (let k = 0; k < edges.length; k += 2) {
+        const [x0, x1] = [edges[k], edges[k + 1]];
+        if (x1 - x0 < 4) continue;
+        const key = `shaped_rail_${i}_${k}`;
+        bakeRailing(this, key, x1 - x0);
+        parts.push(this.add.image(x0, top + 8, key).setOrigin(0, 1).setDepth(top));
+        block(x0, x1, top - 10, b.bottom - 8);
+      }
+      b.stairs.forEach((st) => {
+        parts.push(this.add.image(st.x0, st.foot, 'hall_stairs').setOrigin(0, 1).setDepth(1));
+        [st.x0 + 3, st.x1 - 3].forEach((x) => parts.push(this.add.image(x, st.foot + 2, 'hall_newel').setOrigin(0.5, 1).setDepth(st.foot + 2)));
+        block(st.x0 - 3, st.x0 + 1, b.bottom - 8, st.foot - 14);
+        block(st.x1 - 1, st.x1 + 3, b.bottom - 8, st.foot - 14);
+      });
+    });
+    // columns
+    bakeColumn(this, 'shaped_column', 72);
+    g.columns.forEach((c) => {
+      parts.push(this.add.image(c.x, c.y + 8, 'shaped_column').setOrigin(0.5, 1).setDepth(c.y + 8));
+      block(c.x - 7, c.x + 7, c.y - 2, c.y);
+    });
+    // the sunken pit: its far wall, a stone floor below, railings round it
+    if (g.pit) {
+      const q = g.pit;
+      const gfx = this.add.graphics().setDepth(0.6);
+      parts.push(gfx);
+      const depth = 22;
+      gfx.fillStyle(0x6e675e, 1).fillRect(q.x0, q.y0, q.x1 - q.x0, depth); // the far wall, facing you
+      gfx.fillStyle(0x857d72, 1).fillRect(q.x0, q.y0 + depth - 3, q.x1 - q.x0, 3);
+      for (let y = q.y0 + depth; y < q.y1; y += 16)
+        for (let x = q.x0; x < q.x1; x += 16) gfx.fillStyle(((x + y) / 16) % 2 ? 0x9a9184 : 0x8f877b, 1).fillRect(x, y, Math.min(16, q.x1 - x), Math.min(16, q.y1 - y));
+      gfx.fillStyle(0x000000, 0.22).fillRect(q.x0, q.y0 + depth, 10, q.y1 - q.y0 - depth); // shade under the left rim
+      gfx.fillStyle(0x000000, 0.3).fillRect(q.x0, q.y0 + depth, q.x1 - q.x0, 4);
+      gfx.lineStyle(3, 0xd8d0c0, 1).strokeRect(q.x0, q.y0, q.x1 - q.x0, q.y1 - q.y0); // the rim
+      const railKey = 'shaped_pitrail';
+      bakeRailing(this, railKey, q.x1 - q.x0);
+      ['back', 'front'].forEach((side) => {
+        const key = railKey;
+        const y = side === 'back' ? q.y0 + 2 : q.y1 + 2;
+        parts.push(this.add.image(q.x0, y, key).setOrigin(0, 1).setDepth(y));
+      });
+      [q.x0, q.x1].forEach((x) => {
+        for (let y = q.y0 + 10; y < q.y1; y += 12) parts.push(this.add.image(x, y + 4, 'hall_newel').setOrigin(0.5, 1).setDepth(y + 4).setScale(0.6, 0.7));
+      });
+      block(q.x0 - 4, q.x1 + 4, q.y0 - 6, q.y1 - 4);
+    }
+    // a stairwell going down: steps descending away from you into the dark
+    if (g.stairwell) {
+      const q = g.stairwell;
+      const gfx = this.add.graphics().setDepth(0.6);
+      parts.push(gfx);
+      const steps = Math.floor((q.y1 - q.y0) / 8);
+      for (let k = 0; k < steps; k++) {
+        const y = q.y1 - (k + 1) * 8;
+        const dark = 1 - k / steps;
+        const col = Phaser.Display.Color.GetColor(Math.round(170 * dark + 20), Math.round(130 * dark + 16), Math.round(90 * dark + 12));
+        gfx.fillStyle(col, 1).fillRect(q.x0, y, q.x1 - q.x0, 6);
+        gfx.fillStyle(0x000000, 0.35).fillRect(q.x0, y + 6, q.x1 - q.x0, 2);
+      }
+      gfx.fillStyle(0x120c0a, 1).fillRect(q.x0, q.y0, q.x1 - q.x0, 6);
+      gfx.lineStyle(3, 0xd8d0c0, 1).strokeRect(q.x0, q.y0, q.x1 - q.x0, q.y1 - q.y0);
+      const key = `shaped_wellrail_${q.x1 - q.x0}`;
+      bakeRailing(this, key, q.x1 - q.x0);
+      parts.push(this.add.image(q.x0, q.y0 + 2, key).setOrigin(0, 1).setDepth(q.y0 + 2));
+      [q.x0, q.x1].forEach((x) => {
+        for (let y = q.y0 + 10; y < q.y1 - 4; y += 12) parts.push(this.add.image(x, y + 4, 'hall_newel').setOrigin(0.5, 1).setDepth(y + 4).setScale(0.6, 0.7));
+      });
+      block(q.x0 - 4, q.x1 + 4, q.y0 - 6, q.y1 - 6);
+    }
+    // daylight from the windows: a soft shaft falling onto the floor
+    lightTextures(this);
+    const light = timeOfDay(hourNow()) === 'night' ? 0.04 : 0.16;
+    (this.L.windows || []).forEach((w) => {
+      const r = g.refs[w.wall];
+      if (r.face !== 'back') return;
+      const cx = r.x + (w.rect.u0 + w.rect.u1) / 2;
+      parts.push(this.add.image(cx, r.y - 4, 'lt_beam').setOrigin(0.5, 0).setDisplaySize(w.rect.u1 - w.rect.u0 + 18, 70).setBlendMode(Phaser.BlendModes.ADD).setTint(0xfff2d0).setAlpha(light).setDepth(0.7));
     });
   }
 
@@ -1542,6 +1645,7 @@ export class RoomScene extends Phaser.Scene {
     this.wallImg.setTexture('walls');
     if (this.g.main) this.placeHall();
     if (this.g.atrium) this.placeAtrium();
+    if (this.g.shaped) this.placeShaped();
     this.placeDecor();
     this.lighting.build();
   }
@@ -1607,6 +1711,7 @@ export class RoomScene extends Phaser.Scene {
       const st = this.standFor({ wall: d.wall, u: (d.rect.u0 + d.rect.u1) / 2 });
       consider(Math.hypot(x - st.x, y - st.y), { door: d, icon: 'door' });
     });
+    if (this.g.stairwell) consider(Math.hypot(x - (this.g.stairwell.x0 + this.g.stairwell.x1) / 2, y - this.g.stairwell.y1 - 8), { downstairs: true, icon: 'stairs' });
     (this.L.upstairs || []).forEach((st) => consider(Math.hypot(x - (st.up === 'left' ? st.x1 + 8 : st.x0 - 8), y - (st.top + st.foot) / 2), { upstairs: true, icon: 'stairs' })); // at the bottom step
     if (this.boardFront) consider(Math.hypot(x - this.boardFront.x, y - this.boardFront.y) - 6, { board: true, icon: 'look' });
     if (this.isBreak) consider(Math.hypot(x - this.L.entrance.ax, y - this.L.entrance.ay), { entrance: true, icon: 'back' });
@@ -1632,6 +1737,7 @@ export class RoomScene extends Phaser.Scene {
     else if (f.office) this.openOfficePanel();
     else if (f.board) this.openStaff();
     else if (f.upstairs) this.toast('Upper floor: coming soon');
+    else if (f.downstairs) this.toast('Lower floor: coming soon');
     else if (f.door) {
       if (f.door.label === 'Office') this.openOfficePanel();
       else if (f.door.label === 'Break room') this.travel(BREAK, 'entrance');
@@ -2270,7 +2376,7 @@ export class RoomScene extends Phaser.Scene {
     const { g } = this;
     o.clear();
     o.fillStyle(0xffffff, 0.12);
-    if (g.main || g.atrium) {
+    if (g.main || g.atrium || g.shaped) {
       const off = new Set((this.L.blockedTiles || []).map((t) => `${t.c},${t.r}`));
       for (let c = 0; c < g.fw; c++) {
         for (let r = 0; r < g.fd; r++) {
