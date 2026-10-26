@@ -48,7 +48,7 @@ import { openToolkit, hideToolkit, showBar, hideBar } from './toolkit.js';
 import { artBounds, paintArt, wallRef } from './walldraw.js';
 import { PERSONALITIES, lineFor, QUIPS, CONTEXT } from './lines.js';
 import { iconSvg } from './icons.js';
-import { bakeFountain, bakeUpstairs, bakeRope, FOUNTAIN } from './atrium.js';
+import { bakeFountain, bakeSideStairs, FOUNTAIN } from './atrium.js';
 import { openViewer } from './viewer.js';
 import { openDecor, closeDecor, load, save, DEFAULT_CHARACTER } from './decor.js';
 import { openBuild } from './build.js';
@@ -510,15 +510,12 @@ export class RoomScene extends Phaser.Scene {
       const half = FOUNTAIN.rx * Math.sqrt(Math.max(0, 1 - (k / 3.4) ** 2));
       block(f.x - half + 4, f.x + half - 4, yy - FOUNTAIN.ry / 7, yy);
     }
-    // the staircases: climb toward the back, closed at the foot by a rope
-    const rise = g.D;
+    // the staircases along the front wall, climbing sideways toward the walls
     g.stairs.forEach((st, i) => {
-      const w = st.x1 - st.x0;
-      bakeUpstairs(this, `atrium_stairs_${i}`, w, st.foot - st.top, rise, this.decor);
-      parts.push(this.add.image(st.x0, st.foot, `atrium_stairs_${i}`).setOrigin(0, 1).setDepth(st.top + 2));
-      bakeRope(this, `atrium_rope_${i}`, w - 8);
-      parts.push(this.add.image(st.x0 + 4, st.foot - 2, `atrium_rope_${i}`).setOrigin(0, 1).setDepth(st.foot));
-      block(st.x0 - 4, st.x1 + 4, st.top - rise * 0.2, st.foot - 10);
+      const run = st.x1 - st.x0;
+      bakeSideStairs(this, `atrium_stairs_${i}`, run, st.foot - st.top, g.D, st.up, this.decor);
+      parts.push(this.add.image(st.x0, st.foot, `atrium_stairs_${i}`).setOrigin(0, 1).setDepth(st.top + 4));
+      block(st.x0 - 2, st.x1 + 2, st.top - 6, st.foot - 10);
     });
     // name plaques over the archways
     const plaque = (x, y, text) => {
@@ -1610,7 +1607,7 @@ export class RoomScene extends Phaser.Scene {
       const st = this.standFor({ wall: d.wall, u: (d.rect.u0 + d.rect.u1) / 2 });
       consider(Math.hypot(x - st.x, y - st.y), { door: d, icon: 'door' });
     });
-    (this.L.upstairs || []).forEach((st) => consider(Math.hypot(x - (st.x0 + st.x1) / 2, y - st.foot + 6), { upstairs: true, icon: 'stairs' }));
+    (this.L.upstairs || []).forEach((st) => consider(Math.hypot(x - (st.up === 'left' ? st.x1 + 8 : st.x0 - 8), y - (st.top + st.foot) / 2), { upstairs: true, icon: 'stairs' })); // at the bottom step
     if (this.boardFront) consider(Math.hypot(x - this.boardFront.x, y - this.boardFront.y) - 6, { board: true, icon: 'look' });
     if (this.isBreak) consider(Math.hypot(x - this.L.entrance.ax, y - this.L.entrance.ay), { entrance: true, icon: 'back' });
     if (this.deskFront) consider(Math.hypot(x - this.deskFront.x, y - this.deskFront.y) - 6, { office: true, icon: 'office' });

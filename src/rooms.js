@@ -317,13 +317,16 @@ function mainLayout() {
   return { g, slots, exit, entrance, split: { y: y0 + 3 * T }, decorDoors, blockedTiles };
 }
 
-// The atrium, from the sketch: you come in from the main hall's middle arch at
-// the bottom, between two staircases up to the (closed) upper floor. A
-// waterfall fountain stands in the middle. The back wall has columns, two
-// paintings each with a statue in front, and the big Science arch in the
-// middle, which leads on to the rooms you build. Side archways lead to
-// Archaeology (left) and the Statue hall (right), closed for now.
-export const ATRIUM = { fw: 17, fd: 11 };
+// The atrium, from the sketch: a big room you enter from the main hall's
+// middle arch at the bottom. Two long staircases run along the front wall on
+// either side of the way in, each climbing sideways from its bottom step (at
+// the inner end, facing the middle of the room) up toward its side wall and
+// the closed upper floor. The waterfall fountain stands in the upper third.
+// The back wall: column, painting with a statue in front, column, the wide
+// Science arch (on to the rooms you build), column, painting and statue,
+// column. Archways halfway along the side walls lead to Archaeology (left)
+// and the Statue hall (right), closed for now.
+export const ATRIUM = { fw: 19, fd: 14 };
 function atriumLayout() {
   const { fw, fd } = ATRIUM;
   const xL = 2 * T;
@@ -331,23 +334,24 @@ function atriumLayout() {
   const y0 = T + D;
   const y1 = y0 + fd * T;
   const W = fw * T;
-  // columns along the back wall: column, painting, column, column, ARCH,
-  // column, column, painting, column
-  const columns = [0.5, 4.5, 6.5, 10.5, 12.5, 16.5].map((t) => ({ x: xL + t * T, foot: y0 + 10 }));
-  const statues = [2.5, 14.5].map((t) => ({ x: xL + t * T, y: y0 + 22 }));
-  const fountain = { x: xL + W / 2, y: y0 + 5.6 * T };
-  const flight = { w: 3, run: 3 }; // tiles
+  const columns = [1, 5, 14, 18].map((t) => ({ x: xL + t * T, foot: y0 + 10 }));
+  const statues = [3, 16].map((t) => ({ x: xL + t * T, y: y0 + 22 }));
+  const fountain = { x: xL + W / 2, y: y0 + 4.7 * T };
+  // each flight: 7 tiles long, 3 deep; `up` is the way it climbs
+  const run = 7 * T;
+  const depth = 3 * T;
   const stairs = [
-    { x0: xL, x1: xL + flight.w * T, top: y1 - flight.run * T, foot: y1 },
-    { x0: xR - flight.w * T, x1: xR, top: y1 - flight.run * T, foot: y1 },
+    { x0: xL, x1: xL + run, top: y1 - depth, foot: y1, up: 'left' },
+    { x0: xR - run, x1: xR, top: y1 - depth, foot: y1, up: 'right' },
   ];
   const g = { w: (fw + 4) * T, h: y1 + T, xL, xR, y0, y1, D, fw, fd, vertical: true, atrium: true, columns, statues, fountain, stairs, refs: boxRefs(xL, xR, y0) };
-  const slots = [2.5, 14.5].map((t) => ({ wall: 'back', u: t * T, big: true })); // big paintings behind the statues
+  const slots = [3, 16].map((t) => ({ wall: 'back', u: t * T, big: true })); // big paintings behind the statues
   const arch = (u, half, v1) => ({ u0: u - half, u1: u + half, v0: 0, v1 });
-  const exit = { kind: 'door-back', wall: 'back', rect: arch(W / 2, 30, 58), ax: xL + W / 2, ay: y0 + 12, label: 'Science' };
+  const exit = { kind: 'door-back', wall: 'back', rect: arch(W / 2, 44, 60), ax: xL + W / 2, ay: y0 + 12, label: 'Science' };
+  const side = arch((fd * T) / 2 - T, 22, 52); // halfway along the wall, clear of the stairs
   const decorDoors = [
-    { wall: 'left', arch: true, closed: true, rect: arch(1.6 * T, 22, 52), label: 'Archaeology' },
-    { wall: 'right', arch: true, closed: true, rect: arch(1.6 * T, 22, 52), label: 'Statue hall' },
+    { wall: 'left', arch: true, closed: true, rect: side, label: 'Archaeology' },
+    { wall: 'right', arch: true, closed: true, rect: side, label: 'Statue hall' },
   ];
   const col = Math.floor(fw / 2);
   const entrance = { mat: true, x0: xL + col * T, x1: xL + (col + 1) * T, ax: xL + col * T + T / 2, ay: y1 - 10 };

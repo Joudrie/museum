@@ -185,7 +185,25 @@ const ok = (msg) => console.log('  ✓ ' + msg);
     await p.click('.office-close');
   } else fail('office did not open');
 
-  // Build rooms of every kind through the middle arch
+  // Buy the atrium through the main hall's middle arch
+  await scene(() => {
+    const s = __game.scene.getScene('room');
+    s.player.setPosition(s.L.exit.ax, s.L.exit.ay + 2);
+    s.focus = s.findFocus();
+    s.interact();
+  });
+  await settle(300);
+  if (!(await shown('#ask'))) fail('no offer to open the atrium');
+  else {
+    await p.click('.ask-yes');
+    await settle(2000);
+    if ((await scene(() => __game.scene.getScene('room').roomIndex)) === 2) ok('opened the atrium');
+    else fail('did not travel to the atrium');
+  }
+  await roomCheck('Atrium');
+  await talkAll('Atrium');
+
+  // Build rooms of every kind through the atrium's Science arch
   const kinds = [['vertical', 'short'], ['horizontal', 'medium'], ['square', 'short'], ['vertical', 'long']];
   await scene(() => localStorage.setItem('curation.office', '5'));
   for (const [orient, size] of kinds) {

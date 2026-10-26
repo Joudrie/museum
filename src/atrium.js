@@ -85,42 +85,64 @@ export function bakeFountain(scene, key) {
   }
 }
 
-// A staircase up to the upper floor: a flight climbing toward the back, a
-// marble stringer and handrail each side, the dark stairwell at the top, and a
-// velvet rope across the bottom while the upper floor is closed.
-export function bakeUpstairs(scene, key, width, run, rise, decor = {}) {
+// A staircase up to the upper floor, running sideways along the front wall:
+// the bottom step is at the inner end (facing the middle of the room) and it
+// climbs toward the side wall (`up`: 'left' or 'right'), ending in a landing.
+// We see the treads from above and the marble side of the flight from the
+// front, with a balustrade along both edges. A velvet rope closes the bottom
+// step while the upper floor is shut. The sprite is `run` wide and
+// depth + rise tall; its bottom edge is the flight's front edge on the floor.
+export function bakeSideStairs(scene, key, run, depth, rise, up, decor = {}) {
   const wood = hex(decor.wainscot || '#6e4430');
   const tread = mix(hex('#a0703f'), wood, 0.35);
-  const H = run + rise;
-  bake(scene, key, width, H, (x, y) => {
-    const side = x < 6 || x >= width - 6;
-    if (side) {
-      const e = x < 6 ? x : width - 1 - x;
-      if (e === 0) return EDGE;
-      if (e === 1 || e === 2) return y % 10 === 0 ? shade(MARBLE, 0.8) : mix(MARBLE, WHITE, 0.3); // handrail
-      return shade(MARBLE, e === 5 ? 0.7 : 0.86);
+  const H = depth + rise;
+  const STEP = 14;
+  const landing = 32;
+  const n = Math.floor((run - landing) / STEP);
+  // how high the flight is at column x (0 at the floor, rise at the landing)
+  const from = (x) => (up === 'left' ? run - 1 - x : x); // distance from the bottom end
+  const elev = (x) => Math.min(n, Math.floor(from(x) / STEP) + 1) * (rise / n);
+  const brass = hex('#f2d36b');
+  bake(scene, key, run, H, (x, y) => {
+    const e = Math.round(elev(x));
+    const topY = H - depth - e; // back edge of the treads
+    const frontY = H - e; // front edge of the treads
+    const d = from(x);
+    // the velvet rope across the bottom step, on two brass posts
+    if (d >= 3 && d <= 5) {
+      if ((y >= H - 16 && y < H - 2) || (y >= topY - 4 && y < topY + 10)) return d === 4 ? brass : shade(brass, 0.7);
     }
-    // the stairwell going up through the ceiling
-    if (y < rise * 0.45) {
-      const k = y / (rise * 0.45);
-      return y < 2 ? EDGE : mix(hex('#120c0a'), hex('#3a2a20'), k * k);
+    if (d >= 4 && d <= 7 && y > topY + 8 && y < H - 14) {
+      const sag = 4 + Math.round(Math.sin(((y - topY) / depth) * Math.PI) * 3);
+      if (d === sag || d === sag + 1) return d === sag ? hex('#c8304a') : hex('#8a1a2a');
     }
-    const step = Math.floor((y - rise * 0.45) / 8);
-    const ly = (y - rise * 0.45) % 8;
-    let c = ly < 4 ? mix(tread, WHITE, 0.14) : ly === 7 ? shade(tread, 0.55) : shade(tread, 0.8);
-    c = shade(c, 0.62 + (y / H) * 0.4); // darker toward the top, into the stairwell
-    if (x < 9 || x >= width - 9) c = shade(c, 0.85);
-    return hash(x, y, 70) > 0.94 ? shade(c, 0.9) : c;
-  });
-}
-
-// The velvet rope and brass posts across the foot of a closed staircase.
-export function bakeRope(scene, key, width) {
-  bake(scene, key, width, 18, (x, y) => {
-    const post = x < 4 || x >= width - 4;
-    if (post) return y < 3 ? hex('#f2d36b') : y > 15 ? hex('#8a6a2a') : x % 4 === 1 ? hex('#f2d36b') : hex('#c8a040');
-    const sag = 5 + Math.sin((x / width) * Math.PI) * 5;
-    if (Math.abs(y - sag) < 1.5) return y - sag < 0 ? hex('#c8304a') : hex('#8a1a2a');
+    // balustrades along the back and front edges
+    const rail = (edge) => y >= edge - 10 && y < edge;
+    if (rail(topY) || rail(frontY)) {
+      const edge = rail(topY) ? topY : frontY;
+      if (y === edge - 10) return EDGE;
+      if (y === edge - 9) return mix(MARBLE, WHITE, 0.4); // handrail
+      if (x % 5 === 0) return shade(MARBLE, 0.95); // balusters
+      if (rail(topY)) return null; // you see through to the wall behind
+    }
+    if (y >= topY && y < frontY) {
+      // the treads, seen from above; the landing at the top end
+      if (d >= run - landing) {
+        const k = (d - (run - landing)) / landing; // into the stairwell
+        return mix(shade(tread, 0.75), hex('#1a120e'), k * k);
+      }
+      const ly = d % STEP;
+      let c = ly < 3 ? shade(tread, 0.6) : ly < 6 ? mix(tread, WHITE, 0.15) : shade(tread, 0.85);
+      c = shade(c, 1 - (d / run) * 0.25);
+      if (y < topY + 3 || y >= frontY - 3) c = shade(c, 0.8);
+      return hash(x, y, 70) > 0.94 ? shade(c, 0.9) : c;
+    }
+    if (y >= frontY) {
+      // the marble side of the flight, its steps outlined
+      if (y === frontY) return EDGE;
+      const lit = 0.82 + ((y - frontY) / Math.max(1, e)) * 0.08;
+      return d % STEP === 0 && d < run - landing ? shade(MARBLE, 0.7) : shade(MARBLE, lit);
+    }
     return null;
   });
 }
