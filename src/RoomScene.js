@@ -263,6 +263,10 @@ export class RoomScene extends Phaser.Scene {
     this.L = layout(this.room);
     this.states = slotStates(this.rooms, this.roomIndex);
     this.hung = paintingsFor(this.rooms, this.roomIndex).map(placeArt);
+    // furniture sprites from the free art packs (see docs/ASSETS.md)
+    const sprites = new Set((this.L.props || []).map((q) => q.s));
+    if ((this.L.props || []).some((q) => q.flames)) [0, 1, 2, 3].forEach((f) => sprites.add(`flame_${f}`));
+    sprites.forEach((s) => this.textures.exists(`lpc_${s}`) || this.load.image(`lpc_${s}`, `sprites/lpc/${s}.png`));
     this.load.setCORS('anonymous');
     this.hung.forEach((p) => {
       if (!this.textures.exists(`art_${p.id}`)) this.load.image(`art_${p.id}`, p.src);
@@ -623,6 +627,31 @@ export class RoomScene extends Phaser.Scene {
       });
       block(q.x0 - 4, q.x1 + 4, q.y0 - 6, q.y1 - 6);
     }
+    // furniture: each piece stands on its row, sorted by where it stands
+    const night = timeOfDay(hourNow()) === 'night';
+    (this.L.props || []).forEach((q) => {
+      const img = this.add.image(q.px, q.py, `lpc_${q.s}`).setOrigin(0.5, 1).setFlipX(!!q.flip);
+      img.setDepth(q.flat ? 0.56 : q.wall ? 2 : q.py + (q.lift ? 1 : 0));
+      parts.push(img);
+      if (q.block) {
+        const [bw, bh] = q.block;
+        block(q.px - (bw * T) / 2 + 4, q.px + (bw * T) / 2 - 4, q.py - bh * T + 4, q.py - 8);
+      }
+      if (q.flames) {
+        const fx = q.px - img.width / 2 + q.flames.x + 16;
+        const fire = this.add.image(fx, q.py - img.height + q.flames.y, 'lpc_flame_0').setOrigin(0.5, 1).setDepth(night ? 5002 : img.depth + 0.5); // at night the fire shines through the dark
+        parts.push(fire);
+        let f = 0;
+        parts.push(this.time.addEvent({ delay: 140, loop: true, callback: () => fire.setTexture(`lpc_flame_${(f = (f + 1) % 4)}`) }));
+      }
+      if (q.glow) {
+        lightTextures(this);
+        const gy = q.flames ? q.py - 20 : q.py - img.height + 6;
+        const glow = this.add.image(q.px, gy, 'lt_glow').setDisplaySize(q.flames ? (night ? 240 : 150) : 70, q.flames ? (night ? 170 : 110) : 60).setBlendMode(Phaser.BlendModes.ADD).setTint(q.glow).setAlpha(night ? 0.8 : 0.25).setDepth(5001);
+        parts.push(glow);
+        if (q.flames) this.tweens.add({ targets: glow, alpha: { from: glow.alpha * 0.8, to: glow.alpha * 1.1 }, duration: 260, yoyo: true, repeat: -1, ease: 'Sine.inOut' });
+      }
+    });
     // daylight from the windows: a soft shaft falling onto the floor
     lightTextures(this);
     const light = timeOfDay(hourNow()) === 'night' ? 0.04 : 0.16;

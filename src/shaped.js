@@ -61,8 +61,46 @@ export const PLANS = {
     windows: [{ wall: 'back', u: 2.2 }, { wall: 'back', u: 6.8 }, { wall: 'ol1', u: 2 }, { wall: 'or1', u: 2 }],
     columns: [[2.5, 7], [14.5, 7], [2.5, 10.5], [14.5, 10.5]],
   },
+  // A small, detailed library, furnished with free pixel art (see
+  // docs/ASSETS.md): bookshelves and a grand fireplace along the back wall, a
+  // grandfather clock, candelabras, a red rug with armchairs round a table,
+  // a settee nook, potted trees. The way on is an arch at the right of the
+  // back wall. Props: s = sprite (public/sprites/lpc), x = centre in tiles,
+  // r = the tile row it stands on (its bottom edge), block = [w, h] tiles it
+  // takes up from that row back, lift = px raised (on a table or a wall),
+  // flat = lies on the floor, flip = mirrored, glow / flames = lit.
+  library: {
+    name: 'Library',
+    bands: [
+      { c0: 0, c1: 11, rows: 8 },
+      { c0: 4, c1: 7, rows: 2 },
+    ],
+    exitU: 9.9,
+    props: [
+      { s: 'bookshelf_a', x: 1, r: 0, block: [2, 1] },
+      { s: 'bookshelf_b', x: 2.75, r: 0, block: [2, 1] },
+      { s: 'fireplace_grand', x: 5.5, r: 0, block: [3, 1], flames: { x: 31, y: 57 }, glow: 0xffa040 },
+      { s: 'clock', x: 7.55, r: 0, block: [1, 1] },
+      { s: 'table_small', x: 8.6, r: 0, block: [1, 1] },
+      { s: 'vase_flowers', x: 8.6, r: 0, lift: 18 },
+      { s: 'portrait_small', x: 8.6, r: 0, lift: 52, wall: true },
+      { s: 'candelabra', x: 3.75, r: 1, block: [1, 1], glow: 0xffd890 },
+      { s: 'candelabra', x: 7.25, r: 1, block: [1, 1], glow: 0xffd890 },
+      { s: 'rug_red', x: 5.5, r: 4, flat: true },
+      { s: 'table_round', x: 5.5, r: 3, block: [1, 1] },
+      { s: 'armchair_side', x: 4.3, r: 3, block: [1, 1] },
+      { s: 'armchair_side', x: 6.7, r: 3, block: [1, 1], flip: true },
+      { s: 'footstool', x: 5.5, r: 4, block: [1, 1] },
+      { s: 'settee_gold', x: 1.5, r: 4, block: [2, 1] },
+      { s: 'table_small', x: 1.5, r: 5, block: [1, 1] },
+      { s: 'armchair_front', x: 9.2, r: 4, block: [1, 1] },
+      { s: 'chair_tall', x: 10.3, r: 4, block: [1, 1] },
+      { s: 'tree_pot', x: 0.6, r: 7, block: [1, 1] },
+      { s: 'tree_pot', x: 10.4, r: 7, block: [1, 1] },
+    ],
+  },
 };
-export const PLAN_ORDER = ['terraces', 'cross', 'court', 'mezzanine'];
+export const PLAN_ORDER = ['terraces', 'cross', 'court', 'mezzanine', 'library'];
 
 export function shapedLayout(planId) {
   const plan = PLANS[planId];
@@ -116,7 +154,14 @@ export function shapedLayout(planId) {
   const g = { w: (fw + 4) * T, h: y1 + T, xL, xR: X(cmax), y0, y1, D, fw, fd, vertical: true, shaped: true, plan: planId, bands, columns, pit, stairwell, matX0, matX1: matX0 + T, scanRects, refs };
 
   const W0 = b0.x1 - b0.x0;
-  const exit = { kind: 'door-back', wall: 'back', rect: { u0: W0 / 2 - 22, u1: W0 / 2 + 22, v0: 0, v1: 52 }, ax: b0.x0 + W0 / 2, ay: b0.top + 12 };
+  const eu = plan.exitU !== undefined ? plan.exitU * T : W0 / 2; // where the arch sits along the back wall
+  const exit = { kind: 'door-back', wall: 'back', rect: { u0: eu - 22, u1: eu + 22, v0: 0, v1: 52 }, ax: b0.x0 + eu, ay: b0.top + 12 };
+  // furniture and decor (sprites from public/sprites/lpc), placed in pixels
+  const props = (plan.props || []).map((q) => {
+    const [bw, bh] = q.block || [0, 0];
+    const c0 = Math.round(q.x - bw / 2);
+    return { ...q, px: X(q.x), py: y0 + (q.r + 1) * T - (q.lift || 0), tiles: Array.from({ length: bw * bh }, (_, k) => ({ c: c0 - cmin + (k % bw), r: q.r - Math.floor(k / bw) })) };
+  });
   const windows = (plan.windows || []).map(({ wall, u }) => ({ wall, rect: { u0: u * T - 16, u1: u * T + 16, v0: 12, v1: 58 } }));
   const entrance = { mat: true, x0: matX0, x1: matX0 + T, ax: matX0 + T / 2, ay: y1 - 10 };
 
@@ -135,5 +180,6 @@ export function shapedLayout(planId) {
       const column = columns.some((k) => Math.abs(x - k.x) < T / 2 && Math.abs(y - k.y) < T / 2);
       if (outside || drop || onStairs || inRect(pit) || inRect(stairwell) || column) blockedTiles.push({ c, r });
     }
-  return { g, slots: [], exit, entrance, split: { y: y0 + 3 * T }, blockedTiles, windows };
+  props.forEach((q) => q.tiles.forEach((t) => blockedTiles.push(t)));
+  return { g, slots: [], exit, entrance, split: { y: y0 + 3 * T }, blockedTiles, windows, props };
 }
