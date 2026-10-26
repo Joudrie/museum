@@ -167,6 +167,10 @@ const SFX = {
     tone(262, t, 0.6, { wave: 'sine', gain: 0.2 });
   },
   star: (t) => [1568, 2093].forEach((f, i) => tone(f, t + i * 0.05, 0.2, { wave: 'sine', gain: 0.18 })),
+  cast: (t) => tone(900, t, 0.22, { wave: 'triangle', gain: 0.1, to: 260 }),
+  plop: (t) => tone(520, t, 0.08, { wave: 'sine', gain: 0.3, to: 180 }),
+  bite: (t) => [1047, 1397].forEach((f, i) => tone(f, t + i * 0.06, 0.14, { wave: 'square', gain: 0.1 })),
+  reel: (t) => [0, 1, 2, 3, 4].forEach((i) => tone(1200 + i * 90, t + i * 0.035, 0.03, { wave: 'square', gain: 0.05 })),
   quest: (t) => [659, 880, 1319].forEach((f, i) => tone(f, t + i * 0.09, 0.28, { gain: 0.24 })),
 };
 

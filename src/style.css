@@ -2055,10 +2055,168 @@ body {
 body.outside #build-btn,
 body.outside #home-btn,
 body.outside #collect-all,
-body.outside #journal-btn,
 body.outside #settings-btn {
   display: none;
 }
 body.outside #hud {
   pointer-events: none;
+}
+
+/* Fishing: the catch card, and the fish tab in the journal */
+#catch {
+  position: fixed;
+  inset: 0;
+  z-index: 31;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(10, 8, 6, 0.45);
+}
+#catch.hidden {
+  display: none;
+}
+.catch-card {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  max-width: 320px;
+  padding: 18px 22px 14px;
+  text-align: center;
+  background: var(--panel);
+  border: 3px solid var(--shadow);
+  border-radius: 12px;
+  box-shadow: inset 0 0 0 2px var(--gold), 0 8px 30px rgba(0, 0, 0, 0.6);
+  animation: catch-in 0.35s cubic-bezier(0.2, 0.9, 0.25, 1.3);
+}
+.catch-pic canvas {
+  display: block;
+  image-rendering: pixelated;
+  max-width: 100%;
+}
+.catch-title {
+  font-size: 20px;
+  color: #ffe9a8;
+}
+.catch-meta {
+  font-size: 13px;
+  color: var(--muted);
+}
+.catch-new {
+  color: #7ae0a0;
+}
+.catch-note {
+  margin: 4px 0 0;
+  font-size: 13px;
+  line-height: 1.4;
+}
+.catch-note:empty {
+  display: none;
+}
+.catch-hint {
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--muted);
+}
+.r1 { color: #c8c0b0; }
+.r2 { color: #7ac8e0; }
+.r3 { color: #c88af0; }
+.r4 { color: #f2d36b; }
+@keyframes catch-in {
+  from {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+}
+#journal.fish-only .journal-tabs {
+  display: none;
+}
+.fish-h {
+  margin: 14px 0 8px;
+  font-size: 15px;
+  color: #ffe9a8;
+}
+.bobber-list {
+  display: grid;
+  gap: 8px;
+}
+.bobber {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.04);
+  border: 2px solid var(--line);
+  border-radius: 8px;
+  cursor: pointer;
+}
+.bobber.on {
+  border-color: var(--gold);
+  background: rgba(201, 162, 63, 0.12);
+}
+.bobber.locked {
+  opacity: 0.6;
+  cursor: default;
+}
+.bobber span {
+  flex: 1;
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.bobber small {
+  font-size: 12px;
+  color: var(--muted);
+}
+.bobber em {
+  font-style: normal;
+  font-size: 12px;
+  color: var(--muted);
+}
+.bobber.on em {
+  color: var(--gold);
+}
+.bob-dot {
+  width: 16px;
+  height: 20px;
+  flex: none;
+  border: 2px solid #1d1714;
+  border-radius: 50% 50% 45% 45%;
+  background: linear-gradient(var(--top) 50%, var(--base) 50%);
+}
+.fish-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 8px;
+}
+.fish-cell {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 2px;
+  padding: 8px 4px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.04);
+  border: 2px solid var(--line);
+  border-radius: 8px;
+}
+.fish-cell b {
+  font-size: 12px;
+}
+.fish-cell small {
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.3;
+}
+.fish-pic {
+  height: 48px;
+  display: grid;
+  place-items: center;
+}
+.fish-pic canvas {
+  image-rendering: pixelated;
+  max-width: 100%;
 }

@@ -411,6 +411,32 @@ const ok = (msg) => console.log('  ✓ ' + msg);
   if (!outside) fail('walking out the front door did not reach the island');
   else {
     ok('walked out onto the island');
+    // Fishing: face the pond, cast, wait for the bite, tap to hook
+    const spot = await scene(() => {
+      const s = __game.scene.getScene('island');
+      for (let y = 8 * 32; y < 40 * 32; y += 8) for (let x = 32; x < 24 * 32; x += 8) {
+        if (!s.free(x, y)) continue;
+        for (const f of ['up', 'down', 'left', 'right']) {
+          s.player.setPosition(x, y); s.facing = f;
+          if (s.waterAhead()?.water === 'pond') return true;
+        }
+      }
+      return false;
+    });
+    await settle(300);
+    if (!spot || !(await shown('#interact'))) fail('no Fish button at the pond');
+    else {
+      await p.click('#interact');
+      await settle(800);
+      await scene(() => { const f = __game.scene.getScene('island').fishing; f.biteAt = f.t + 0.2; });
+      await settle(400);
+      await p.mouse.click(200, 300);
+      await settle(900);
+      if (await shown('#catch')) ok('caught something fishing');
+      else fail('fishing: no catch card after hooking');
+      await p.click('#catch');
+      await settle(400);
+    }
     await scene(() => __game.scene.getScene('island').player.setPosition(12 * 32, 9 * 32 + 10));
     await p.keyboard.down('w');
     await settle(800);

@@ -4,6 +4,7 @@ import { PAINTINGS } from './paintings.js';
 import { FAMOUS } from './famous.js';
 import { QUESTS, activeQuests, claimedCount } from './quests.js';
 import { eraOf, ERAS } from './slotmenu.js';
+import { fishTab } from './fishing.js';
 
 const el = document.getElementById('journal');
 const body = el.querySelector('.journal-body');
@@ -98,7 +99,7 @@ function visitors() {
 
 function render() {
   tabs.forEach((t) => t.classList.toggle('on', t.dataset.jtab === tab));
-  body.replaceChildren(...{ goals, paintings, visitors }[tab]());
+  body.replaceChildren(...{ goals, paintings, visitors, fish: fishTab }[tab]());
 }
 
 tabs.forEach((t) =>
@@ -114,9 +115,12 @@ el.querySelector('.journal-close').addEventListener('click', () => {
 });
 
 // opts: { ctx() -> quest context, onClaim(id), hungIn() -> Map, roomLabel(i), met() -> [ids], portrait(id) -> url, onClose() }
+// Outside on the island only the fish tab is on hand (opts.fishOnly).
 export function openJournal(opts, startTab) {
   state = opts;
-  if (startTab) tab = startTab;
+  el.classList.toggle('fish-only', !!opts.fishOnly);
+  if (opts.fishOnly) tab = 'fish';
+  else if (startTab) tab = startTab;
   render();
   el.classList.remove('hidden');
 }
