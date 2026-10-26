@@ -16,12 +16,12 @@ export const PLANS = {
   terraces: {
     name: 'Terraces',
     bands: [
-      { c0: 3, c1: 14, rows: 4, end: { kind: 'wall', stairs: [[7.5, 9.5]] } },
-      { c0: 1, c1: 16, rows: 5, end: { kind: 'wall', stairs: [[2, 4], [13, 15]] } },
-      { c0: 0, c1: 17, rows: 6 },
+      { c0: 3, c1: 14, rows: 5, end: { kind: 'wall', stairs: [[7.5, 9.5]] } },
+      { c0: 1, c1: 16, rows: 7, end: { kind: 'wall', stairs: [[4, 6], [11, 13]] } },
+      { c0: 0, c1: 17, rows: 7 },
     ],
     windows: [{ wall: 'back', u: 1.6 }, { wall: 'back', u: 9.4 }, { wall: 'ol1', u: 1 }, { wall: 'or1', u: 1 }],
-    columns: [[4.5, 1.6], [12.5, 1.6]],
+    columns: [[5, 1.8], [12, 1.8]],
   },
   // A cross: a raised alcove at the back up a few steps, wide arms with
   // windows, and a long nave; columns mark the crossing.
@@ -41,25 +41,25 @@ export const PLANS = {
   court: {
     name: 'Sunken court',
     bands: [
-      { c0: 0, c1: 15, rows: 12 },
-      { c0: 5, c1: 10, rows: 3 },
+      { c0: 0, c1: 17, rows: 13 },
+      { c0: 6, c1: 11, rows: 3 },
     ],
-    windows: [{ wall: 'back', u: 2 }, { wall: 'back', u: 13 }],
-    columns: [[3.5, 3], [11.5, 3], [3.5, 9], [11.5, 9]],
-    pit: { c0: 4.5, c1: 10.5, r0: 4, r1: 8.5 },
-    stairwell: { c0: 11.5, c1: 14, r0: 0.6, r1: 3 },
+    windows: [{ wall: 'back', u: 2.5 }, { wall: 'back', u: 14.5 }],
+    columns: [[4.5, 4], [12.5, 4], [4.5, 10], [12.5, 10]],
+    pit: { c0: 5.5, c1: 11.5, r0: 5, r1: 9.5 },
+    stairwell: { c0: 13.5, c1: 15.5, r0: 1.5, r1: 3.8 },
   },
   // A narrow corridor steps up into a tall hall with a colonnade down each
   // side and a raised mezzanine across the back, stairs at both ends.
   mezzanine: {
     name: 'Mezzanine',
     bands: [
-      { c0: 4, c1: 13, rows: 4, end: { kind: 'wall', stairs: [[4.2, 6.2], [10.8, 12.8]] } },
+      { c0: 4, c1: 13, rows: 5, end: { kind: 'wall', stairs: [[5, 7], [10, 12]] } },
       { c0: 0, c1: 17, rows: 8, end: { kind: 'steps', rows: 1, span: [6, 11] } },
       { c0: 6, c1: 11, rows: 3 },
     ],
     windows: [{ wall: 'back', u: 2.2 }, { wall: 'back', u: 6.8 }, { wall: 'ol1', u: 2 }, { wall: 'or1', u: 2 }],
-    columns: [[2.5, 6], [14.5, 6], [2.5, 9.5], [14.5, 9.5]],
+    columns: [[2.5, 7], [14.5, 7], [2.5, 10.5], [14.5, 10.5]],
   },
 };
 export const PLAN_ORDER = ['terraces', 'cross', 'court', 'mezzanine'];
