@@ -403,7 +403,7 @@ const ok = (msg) => console.log('  ✓ ' + msg);
     await p.click('.ask-yes');
   } else fail('no robbery pop-up with ?rob');
 
-  // Old save from before the entrance existed: rooms move back two places
+  // Old save from before the entrance existed: rooms move back behind the fixed ones
   await p.evaluate(() => {
     localStorage.clear();
     localStorage.setItem('curation.rooms', JSON.stringify([{ orient: 'horizontal', size: 'short', exit: 'door-back' }]));
@@ -414,7 +414,7 @@ const ok = (msg) => console.log('  ✓ ' + msg);
   if (await p.$('#crash')) fail('crash screen on an old save');
   else {
     const list = await scene(() => JSON.parse(localStorage.getItem('curation.roomList')).map((r) => r.orient).join(','));
-    if (list.startsWith('entry,main,vertical,horizontal')) ok('old save migrates: ' + list);
+    if (list.startsWith('entry,main,atrium,vertical,horizontal')) ok('old save migrates: ' + list);
     else fail('old save migration gave ' + list);
   }
 

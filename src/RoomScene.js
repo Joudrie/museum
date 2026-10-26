@@ -31,7 +31,7 @@ import {
 } from './art.js';
 import { setTrack, sfx, setAmbience } from './music.js';
 import { weatherToday, season } from './weather.js';
-import { ORIENT_LABELS, SIZE_LABELS, BREAK, roomAt, MAIN_HALL_PRICE, seedEntry, loadRooms, addRoom, resetRooms, updateRoom, swapRooms, roomName, layout, paintingsFor, slotStates, setSlot, hungAnywhere, placeArt, wallItems, plantSpots, carpetRect } from './rooms.js';
+import { ORIENT_LABELS, SIZE_LABELS, BREAK, roomAt, MAIN_HALL_PRICE, ATRIUM_PRICE, isFixed, seedEntry, loadRooms, addRoom, resetRooms, updateRoom, swapRooms, roomName, layout, paintingsFor, slotStates, setSlot, hungAnywhere, placeArt, wallItems, plantSpots, carpetRect } from './rooms.js';
 import { openSlotMenu } from './slotmenu.js';
 import { ITEMS, loadItems, saveItems, resetItems, footprint, countPlaced } from './items.js';
 import { roomDirt, removeDirt, resetDirt, dirtCount, covered, janitors, janitorCost, hireJanitor, resetJanitors, guides, maxGuides, guideCost, hireGuide, hasCarpenter, hireCarpenter, CARPENTER_COST, staffCount } from './staff.js';
@@ -48,6 +48,7 @@ import { openToolkit, hideToolkit, showBar, hideBar } from './toolkit.js';
 import { artBounds, paintArt, wallRef } from './walldraw.js';
 import { PERSONALITIES, lineFor, QUIPS, CONTEXT } from './lines.js';
 import { iconSvg } from './icons.js';
+import { bakeFountain, bakeUpstairs, bakeRope, FOUNTAIN } from './atrium.js';
 import { openViewer } from './viewer.js';
 import { openDecor, closeDecor, load, save, DEFAULT_CHARACTER } from './decor.js';
 import { openBuild } from './build.js';
@@ -301,6 +302,7 @@ export class RoomScene extends Phaser.Scene {
     this.hung.forEach((p) => this.drawPainting(p));
     this.blocks = exit?.block ? [exit.block] : [];
     if (g.main) this.placeHall();
+    if (g.atrium) this.placeAtrium();
     this.decorObjects = [];
     this.placeDecor();
     if (this.L.board) this.placeBoard();
@@ -472,6 +474,64 @@ export class RoomScene extends Phaser.Scene {
     // Outside the hallway, below the hall's front edge.
     this.blocks.push({ hall: true, x0: 0, x1: g.hx0, y0: g.yf - 2, y1: g.h });
     this.blocks.push({ hall: true, x0: g.hx1, x1: g.w, y0: g.yf - 2, y1: g.h });
+  }
+
+  // Atrium: columns against the back wall, a statue in front of each painting,
+  // the waterfall fountain in the middle, the staircases up to the closed upper
+  // floor, and name plaques over the archways.
+  placeAtrium() {
+    const { g } = this;
+    (this.atriumParts || []).forEach((o) => o.destroy());
+    this.atriumParts = [];
+    this.blocks = this.blocks.filter((b) => !b.atrium);
+    const parts = this.atriumParts;
+    const block = (x0, x1, y0, y1) => this.blocks.push({ atrium: true, x0, x1, y0, y1 });
+    bakeColumn(this, 'atrium_column', g.D + 6);
+    g.columns.forEach((col) => {
+      parts.push(this.add.image(col.x, col.foot, 'atrium_column').setOrigin(0.5, 1).setDepth(col.foot));
+      block(col.x - 8, col.x + 8, col.foot - 12, col.foot - 8);
+    });
+    if (!this.textures.exists('atrium_statue')) bakeItem(this, 'atrium_statue', 'statue', ITEMS.statue, 0);
+    g.statues.forEach((st) => {
+      parts.push(this.add.image(st.x, st.y + 6, 'atrium_statue').setOrigin(0.5, 1).setDepth(st.y + 6));
+      block(st.x - 12, st.x + 12, st.y - 12, st.y - 2);
+    });
+    // the fountain: four frames of falling water
+    bakeFountain(this, 'atrium_fountain');
+    const f = g.fountain;
+    const fy = f.y - FOUNTAIN.cy + FOUNTAIN.h; // the sprite's bottom edge
+    const fountain = this.add.image(f.x, fy, 'atrium_fountain_0').setOrigin(0.5, 1).setDepth(f.y + FOUNTAIN.ry);
+    parts.push(fountain);
+    let frame = 0;
+    parts.push(this.time.addEvent({ delay: 160, loop: true, callback: () => fountain.setTexture(`atrium_fountain_${(frame = (frame + 1) % 4)}`) }));
+    // the basin is round: block it as a stack of strips
+    for (let k = -3; k <= 3; k++) {
+      const yy = f.y + (k * FOUNTAIN.ry) / 3.2;
+      const half = FOUNTAIN.rx * Math.sqrt(Math.max(0, 1 - (k / 3.4) ** 2));
+      block(f.x - half + 4, f.x + half - 4, yy - FOUNTAIN.ry / 7, yy);
+    }
+    // the staircases: climb toward the back, closed at the foot by a rope
+    const rise = g.D;
+    g.stairs.forEach((st, i) => {
+      const w = st.x1 - st.x0;
+      bakeUpstairs(this, `atrium_stairs_${i}`, w, st.foot - st.top, rise, this.decor);
+      parts.push(this.add.image(st.x0, st.foot, `atrium_stairs_${i}`).setOrigin(0, 1).setDepth(st.top + 2));
+      bakeRope(this, `atrium_rope_${i}`, w - 8);
+      parts.push(this.add.image(st.x0 + 4, st.foot - 2, `atrium_rope_${i}`).setOrigin(0, 1).setDepth(st.foot));
+      block(st.x0 - 4, st.x1 + 4, st.top - rise * 0.2, st.foot - 10);
+    });
+    // name plaques over the archways
+    const plaque = (x, y, text) => {
+      const t = this.add.text(x, y, text.toUpperCase(), { fontFamily: 'Georgia, serif', fontSize: '7px', color: '#3a2a10', backgroundColor: '#e8d49a', padding: { x: 3, y: 1 } }).setOrigin(0.5, 1).setResolution(4).setDepth(3);
+      t.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
+      parts.push(t);
+    };
+    const { exit } = this.L;
+    plaque(exit.ax, g.y0 - exit.rect.v1 - 1, exit.label);
+    this.L.decorDoors.forEach((d) => {
+      const st = this.standFor({ wall: d.wall, u: (d.rect.u0 + d.rect.u1) / 2 });
+      plaque(st.x + (d.wall === 'left' ? -8 : 8), st.y - d.rect.v1 - 4, d.label);
+    });
   }
 
   drawPainting(p) {
@@ -696,7 +756,7 @@ export class RoomScene extends Phaser.Scene {
     if (this.isBreak) this.spawnWorkers();
     // The carpenter works on the newest room you've built.
     const newest = this.rooms.length - 1;
-    if (hasCarpenter() && newest >= 2 && this.roomIndex === newest) {
+    if (hasCarpenter() && !isFixed(this.rooms[newest]) && this.roomIndex === newest) {
       const x = g.xR - 1.5 * T;
       const y = g.y1 - 1.5 * T;
       make('carpenter', 960, x, y).fixed = true;
@@ -1484,6 +1544,7 @@ export class RoomScene extends Phaser.Scene {
     this.bakeRoomWalls(decor);
     this.wallImg.setTexture('walls');
     if (this.g.main) this.placeHall();
+    if (this.g.atrium) this.placeAtrium();
     this.placeDecor();
     this.lighting.build();
   }
@@ -1549,6 +1610,7 @@ export class RoomScene extends Phaser.Scene {
       const st = this.standFor({ wall: d.wall, u: (d.rect.u0 + d.rect.u1) / 2 });
       consider(Math.hypot(x - st.x, y - st.y), { door: d, icon: 'door' });
     });
+    (this.L.upstairs || []).forEach((st) => consider(Math.hypot(x - (st.x0 + st.x1) / 2, y - st.foot + 6), { upstairs: true, icon: 'stairs' }));
     if (this.boardFront) consider(Math.hypot(x - this.boardFront.x, y - this.boardFront.y) - 6, { board: true, icon: 'look' });
     if (this.isBreak) consider(Math.hypot(x - this.L.entrance.ax, y - this.L.entrance.ay), { entrance: true, icon: 'back' });
     if (this.deskFront) consider(Math.hypot(x - this.deskFront.x, y - this.deskFront.y) - 6, { office: true, icon: 'office' });
@@ -1572,6 +1634,7 @@ export class RoomScene extends Phaser.Scene {
     else if (f.mess) this.clean(f.mess);
     else if (f.office) this.openOfficePanel();
     else if (f.board) this.openStaff();
+    else if (f.upstairs) this.toast('Upper floor: coming soon');
     else if (f.door) {
       if (f.door.label === 'Office') this.openOfficePanel();
       else if (f.door.label === 'Break room') this.travel(BREAK, 'entrance');
@@ -1582,26 +1645,32 @@ export class RoomScene extends Phaser.Scene {
     else if (f.entrance) this.travel(this.isBreak ? 1 : this.roomIndex - 1, this.isBreak ? 'breakdoor' : 'exit');
     else if (f.exit) {
       const next = this.rooms[this.roomIndex + 1];
-      if (next?.locked) this.offerMainHall();
+      if (next?.locked) this.offerUnlock(this.roomIndex + 1);
       else if (next) this.travel(this.roomIndex + 1, 'entrance');
       else this.openBuildMenu();
     }
     this.focus = null;
   }
 
-  // The main hall starts locked behind the entrance's double doors.
-  offerMainHall() {
+  // The main hall starts locked behind the entrance's double doors, and the
+  // atrium behind the main hall's middle arch.
+  offerUnlock(i) {
+    const room = this.rooms[i];
+    const atrium = room.orient === 'atrium';
+    const cost = atrium ? ATRIUM_PRICE : MAIN_HALL_PRICE;
+    const name = atrium ? 'atrium' : 'main hall';
+    const blurb = atrium ? 'A grand atrium with a waterfall, statues and archways to new wings.' : 'A grand open hall with a balcony and room for big exhibits.';
     this.pause(true);
-    const price = FREE ? `free while testing (${MAIN_HALL_PRICE} gold)` : `${MAIN_HALL_PRICE} gold`;
-    ask(`Open the main hall?`, `A grand open hall with a balcony and room for big exhibits. ${price}.`, 'Open it', (yes) => {
+    const price = FREE ? `free while testing (${cost} gold)` : `${cost} gold`;
+    ask(`Open the ${name}?`, `${blurb} ${price}.`, 'Open it', (yes) => {
       this.pause(false);
       if (!yes) return;
-      if (!spend(MAIN_HALL_PRICE)) return this.toast(`Need ${MAIN_HALL_PRICE.toLocaleString()} gold`);
-      updateRoom(1, { locked: false });
+      if (!spend(cost)) return this.toast(`Need ${cost.toLocaleString()} gold`);
+      updateRoom(i, { locked: false });
       sfx('unlock');
       this.rooms = loadRooms();
-      celebrate('The main hall is open!', 'A grand hall with a balcony, and famous faces');
-      this.travel(1, 'entrance');
+      celebrate(`The ${name} is open!`, atrium ? 'A waterfall, statues, and the way to new wings' : 'A grand hall with a balcony, and famous faces');
+      this.travel(i, 'entrance');
     });
   }
 
@@ -2204,7 +2273,7 @@ export class RoomScene extends Phaser.Scene {
     const { g } = this;
     o.clear();
     o.fillStyle(0xffffff, 0.12);
-    if (g.main) {
+    if (g.main || g.atrium) {
       const off = new Set((this.L.blockedTiles || []).map((t) => `${t.c},${t.r}`));
       for (let c = 0; c < g.fw; c++) {
         for (let r = 0; r < g.fd; r++) {

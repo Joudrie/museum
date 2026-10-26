@@ -20,19 +20,22 @@ export const SIZES = {
   square: { short: 7, medium: 9, long: 12 },
   entry: { fixed: 8 },
   main: { fixed: 15 },
+  atrium: { fixed: 17 },
   break: { fixed: 6 },
 };
-// The first two rooms are fixed: the entrance (ticket desk) and the main hall.
-export const FIXED = ['entry', 'main', 'break'];
+// The first three rooms are fixed: the entrance (ticket desk), the main hall
+// and the atrium behind it. The rooms you build follow on after them.
+export const FIXED = ['entry', 'main', 'atrium', 'break'];
 export const isFixed = (room) => FIXED.includes(room.orient);
 
-export const ORIENT_LABELS = { vertical: 'Vertical', horizontal: 'Horizontal', square: 'Big hall', entry: 'Entrance', main: 'Main hall', break: 'Break room' };
+export const ORIENT_LABELS = { vertical: 'Vertical', horizontal: 'Horizontal', square: 'Big hall', entry: 'Entrance', main: 'Main hall', atrium: 'Atrium', break: 'Break room' };
 export const SIZE_LABELS = {
   vertical: { short: 'Short', medium: 'Medium', long: 'Long' },
   horizontal: { short: 'Short', medium: 'Medium', long: 'Long' },
   square: { short: 'Small', medium: 'Medium', long: 'Large' },
   entry: { fixed: 'Fixed' },
   main: { fixed: 'Fixed' },
+  atrium: { fixed: 'Fixed' },
   break: { fixed: 'Fixed' },
 };
 
@@ -43,7 +46,7 @@ export const EXITS = {
 };
 
 export function roomName(room, i) {
-  return room.name || { entry: 'Entrance', main: 'Main hall', break: 'Break room' }[room.orient] || `Room ${i + 1}`;
+  return room.name || { entry: 'Entrance', main: 'Main hall', atrium: 'Atrium', break: 'Break room' }[room.orient] || `Room ${i + 1}`;
 }
 
 export function exitLabel(orient, kind) {
@@ -62,6 +65,10 @@ export function exitLabel(orient, kind) {
 const ENTRY_ROOM = { orient: 'entry', size: 'fixed', exit: 'door-back' };
 const MAIN_ROOM = { orient: 'main', size: 'fixed', exit: 'door-back', arch: true, locked: true };
 export const MAIN_HALL_PRICE = 500;
+// The atrium opens off the main hall's middle arch (a paid unlock too).
+const ATRIUM_ROOM = { orient: 'atrium', size: 'fixed', exit: 'door-back', arch: true, locked: true };
+export const ATRIUM_PRICE = 2000;
+const START = [ENTRY_ROOM, MAIN_ROOM, ATRIUM_ROOM];
 // The staff break room sits off the main hall's hallway (left door), outside
 // the chain of rooms. It's stored under the room key 'break'.
 export const BREAK = 'break';
@@ -73,27 +80,42 @@ export function loadRooms() {
   let saved = load(ROOM_LIST_KEY, null);
   if (!Array.isArray(saved) || !saved.length) saved = null;
   else saved = saved.filter((r) => r && SIZES[r.orient]); // drop anything a broken save left behind
-  if (saved?.[0]?.orient === 'entry') return saved;
+  if (saved?.[0]?.orient === 'entry') return withAtrium(saved);
   const old = load(ROOMS_KEY, []);
   if (!saved && !old.length) {
-    // A brand-new museum: just the entrance and the (locked) main hall.
-    saveRooms([ENTRY_ROOM, MAIN_ROOM]);
+    // A brand-new museum: the entrance, and the (locked) main hall and atrium.
+    saveRooms(START);
     seedEntry();
-    return [ENTRY_ROOM, MAIN_ROOM];
+    return START;
   }
   const list = saved || [{ orient: 'vertical', size: 'medium', exit: 'door-back' }, ...old];
-  // Older saves: the fixed entrance and main hall go in front; existing rooms
-  // (and their decor, items, wall spots) move back two places.
-  PER_ROOM_KEYS.forEach((key) => {
-    const all = load(key, {});
-    const moved = {};
-    Object.entries(all).forEach(([i, v]) => (moved[Number(i) + 2] = v));
-    save(key, moved);
-  });
-  const next = [ENTRY_ROOM, MAIN_ROOM, ...list];
+  // Older saves: the fixed entrance, main hall and atrium go in front;
+  // existing rooms (and their decor, items, wall spots) move back.
+  shiftRoomData(0, START.length);
+  const next = [...START, ...list];
   saveRooms(next);
   seedEntry();
   return next;
+}
+
+// Saves from before the atrium: it goes in after the main hall, and the rooms
+// you built (with their decor, items and wall spots) move back one place.
+function withAtrium(list) {
+  if (list[2]?.orient === 'atrium') return list;
+  shiftRoomData(2, 1);
+  const next = [...list.slice(0, 2), ATRIUM_ROOM, ...list.slice(2)];
+  saveRooms(next);
+  return next;
+}
+
+// Move per-room data for rooms from index `from` on back by `by` places.
+function shiftRoomData(from, by) {
+  PER_ROOM_KEYS.forEach((key) => {
+    const all = load(key, {});
+    const moved = {};
+    Object.entries(all).forEach(([i, v]) => (moved[/^\d+$/.test(i) && Number(i) >= from ? Number(i) + by : i] = v));
+    save(key, moved);
+  });
 }
 
 // The entrance starts with a potted tree in each front corner.
@@ -137,7 +159,7 @@ export function swapRooms(i, j) {
 }
 
 export function resetRooms() {
-  saveRooms([ENTRY_ROOM, MAIN_ROOM]);
+  saveRooms(START);
   const slots = load(SLOTS_KEY, {});
   save(SLOTS_KEY, { 0: slots[0] || {}, 1: slots[1] || {} });
 }
@@ -151,6 +173,7 @@ export function layout(room) {
   if (room.orient === 'main') return mainLayout();
   if (room.orient === 'entry') return entryLayout();
   if (room.orient === 'break') return breakLayout();
+  if (room.orient === 'atrium') return atriumLayout();
   const square = room.orient === 'square';
   // Big halls behave like vertical rooms (enter at the bottom, exit at the top).
   const vertical = room.orient !== 'horizontal';
@@ -294,6 +317,54 @@ function mainLayout() {
   return { g, slots, exit, entrance, split: { y: y0 + 3 * T }, decorDoors, blockedTiles };
 }
 
+// The atrium, from the sketch: you come in from the main hall's middle arch at
+// the bottom, between two staircases up to the (closed) upper floor. A
+// waterfall fountain stands in the middle. The back wall has columns, two
+// paintings each with a statue in front, and the big Science arch in the
+// middle, which leads on to the rooms you build. Side archways lead to
+// Archaeology (left) and the Statue hall (right), closed for now.
+export const ATRIUM = { fw: 17, fd: 11 };
+function atriumLayout() {
+  const { fw, fd } = ATRIUM;
+  const xL = 2 * T;
+  const xR = xL + fw * T;
+  const y0 = T + D;
+  const y1 = y0 + fd * T;
+  const W = fw * T;
+  // columns along the back wall: column, painting, column, column, ARCH,
+  // column, column, painting, column
+  const columns = [0.5, 4.5, 6.5, 10.5, 12.5, 16.5].map((t) => ({ x: xL + t * T, foot: y0 + 10 }));
+  const statues = [2.5, 14.5].map((t) => ({ x: xL + t * T, y: y0 + 22 }));
+  const fountain = { x: xL + W / 2, y: y0 + 5.6 * T };
+  const flight = { w: 3, run: 3 }; // tiles
+  const stairs = [
+    { x0: xL, x1: xL + flight.w * T, top: y1 - flight.run * T, foot: y1 },
+    { x0: xR - flight.w * T, x1: xR, top: y1 - flight.run * T, foot: y1 },
+  ];
+  const g = { w: (fw + 4) * T, h: y1 + T, xL, xR, y0, y1, D, fw, fd, vertical: true, atrium: true, columns, statues, fountain, stairs, refs: boxRefs(xL, xR, y0) };
+  const slots = [2.5, 14.5].map((t) => ({ wall: 'back', u: t * T, big: true })); // big paintings behind the statues
+  const arch = (u, half, v1) => ({ u0: u - half, u1: u + half, v0: 0, v1 });
+  const exit = { kind: 'door-back', wall: 'back', rect: arch(W / 2, 30, 58), ax: xL + W / 2, ay: y0 + 12, label: 'Science' };
+  const decorDoors = [
+    { wall: 'left', arch: true, closed: true, rect: arch(1.6 * T, 22, 52), label: 'Archaeology' },
+    { wall: 'right', arch: true, closed: true, rect: arch(1.6 * T, 22, 52), label: 'Statue hall' },
+  ];
+  const col = Math.floor(fw / 2);
+  const entrance = { mat: true, x0: xL + col * T, x1: xL + (col + 1) * T, ax: xL + col * T + T / 2, ay: y1 - 10 };
+  // Tiles nothing can stand on: the fountain, the stairs, the statues and columns.
+  const blockedTiles = [];
+  for (let c = 0; c < fw; c++)
+    for (let r = 0; r < fd; r++) {
+      const x = xL + c * T + T / 2;
+      const y = y0 + r * T + T / 2;
+      const inFountain = Math.hypot((x - fountain.x) / 80, (y - fountain.y) / 44) < 1;
+      const onStairs = stairs.some((st) => x > st.x0 && x < st.x1 && y > st.top);
+      const byWall = r === 0 && (columns.some((k) => Math.abs(x - k.x) < T / 2) || statues.some((k) => Math.abs(x - k.x) < T / 2));
+      if (inFountain || onStairs || byWall) blockedTiles.push({ c, r });
+    }
+  return { g, slots, exit, entrance, split: { y: y0 + 3 * T }, decorDoors, blockedTiles, upstairs: stairs };
+}
+
 function exitLayout(kind, g) {
   const { xL, xR, y0, fw, fd, vertical } = g;
   const W = fw * T;
@@ -405,7 +476,7 @@ export function wallItems(L, hung, states, arches = {}) {
 export function plantSpots(L) {
   const { g } = L;
   const spots = [];
-  if (g.main) return spots; // the main hall is open plan: place plants with the toolkit
+  if (g.main || g.atrium) return spots; // open plan: place plants with the toolkit
   ['left', 'right', 'back'].forEach((wall) => {
     const us = L.slots.filter((s) => s.wall === wall).map((s) => s.u).sort((a, b) => a - b);
     for (let i = 1; i < us.length; i++) {

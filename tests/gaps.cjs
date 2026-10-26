@@ -1,6 +1,6 @@
 // Wall-gap check: counts void pixels between wall planes in every room shape
-// (all orientations, sizes and endings) plus the entrance, main hall and break
-// room. Any count above 0 is a black gap. Exit code 1 on gaps or page errors.
+// (all orientations, sizes and endings) plus the entrance, main hall, atrium
+// and break room. Any count above 0 is a black gap. Exit code 1 on gaps or page errors.
 // Usage: PW=/path/to/playwright node tests/gaps.cjs (preview running on :4173)
 const { chromium } = require(process.env.PW || 'playwright');
 const URL = process.env.URL || 'http://localhost:4173/';
@@ -13,12 +13,12 @@ const URL = process.env.URL || 'http://localhost:4173/';
   await p.route('https://upload.wikimedia.org/**', (r) => r.fulfill({ contentType: 'image/svg+xml', headers: { 'access-control-allow-origin': '*' }, body: '<svg xmlns="http://www.w3.org/2000/svg" width="8" height="6"/>' }));
   await p.goto(URL);
   await p.waitForTimeout(2000);
-  const fixed = [{ orient: 'entry', size: 'fixed', exit: 'door-back' }, { orient: 'main', size: 'fixed', exit: 'door-back', arch: true }];
+  const fixed = [{ orient: 'entry', size: 'fixed', exit: 'door-back' }, { orient: 'main', size: 'fixed', exit: 'door-back', arch: true }, { orient: 'atrium', size: 'fixed', exit: 'door-back', arch: true }];
   const combos = [];
   for (const orient of ['vertical', 'horizontal', 'square'])
     for (const size of ['short', 'medium', 'long'])
       for (const exit of orient !== 'horizontal' ? ['door-back', 'door-left', 'door-right', 'stairs-up', 'stairs-down', 'none'] : ['door-back', 'door-end', 'stairs-up', 'stairs-down', 'none']) combos.push({ orient, size, exit });
-  const runs = [['entrance', 0, null], ['main hall', 1, null], ['break room', 'break', null], ...combos.map((c) => [`${c.orient}/${c.size}/${c.exit}`, 2, c])];
+  const runs = [['entrance', 0, null], ['main hall', 1, null], ['atrium', 2, null], ['break room', 'break', null], ...combos.map((c) => [`${c.orient}/${c.size}/${c.exit}`, 3, c])];
   let bad = 0;
   for (const [label, room, c] of runs) {
     await p.evaluate(([room, c, fixed]) => {
