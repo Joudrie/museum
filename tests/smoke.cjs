@@ -185,7 +185,25 @@ const ok = (msg) => console.log('  ✓ ' + msg);
     await p.click('.office-close');
   } else fail('office did not open');
 
-  // Build rooms of every kind through the middle arch
+  // Buy the atrium through the main hall's middle arch
+  await scene(() => {
+    const s = __game.scene.getScene('room');
+    s.player.setPosition(s.L.exit.ax, s.L.exit.ay + 2);
+    s.focus = s.findFocus();
+    s.interact();
+  });
+  await settle(300);
+  if (!(await shown('#ask'))) fail('no offer to open the atrium');
+  else {
+    await p.click('.ask-yes');
+    await settle(2000);
+    if ((await scene(() => __game.scene.getScene('room').roomIndex)) === 2) ok('opened the atrium');
+    else fail('did not travel to the atrium');
+  }
+  await roomCheck('Atrium');
+  await talkAll('Atrium');
+
+  // Build rooms of every kind through the atrium's Science arch
   const kinds = [['vertical', 'short'], ['horizontal', 'medium'], ['square', 'short'], ['vertical', 'long']];
   await scene(() => localStorage.setItem('curation.office', '5'));
   for (const [orient, size] of kinds) {
@@ -403,7 +421,7 @@ const ok = (msg) => console.log('  ✓ ' + msg);
     await p.click('.ask-yes');
   } else fail('no robbery pop-up with ?rob');
 
-  // Old save from before the entrance existed: rooms move back two places
+  // Old save from before the entrance existed: rooms move back behind the fixed ones
   await p.evaluate(() => {
     localStorage.clear();
     localStorage.setItem('curation.rooms', JSON.stringify([{ orient: 'horizontal', size: 'short', exit: 'door-back' }]));
@@ -414,7 +432,7 @@ const ok = (msg) => console.log('  ✓ ' + msg);
   if (await p.$('#crash')) fail('crash screen on an old save');
   else {
     const list = await scene(() => JSON.parse(localStorage.getItem('curation.roomList')).map((r) => r.orient).join(','));
-    if (list.startsWith('entry,main,vertical,horizontal')) ok('old save migrates: ' + list);
+    if (list.startsWith('entry,main,atrium,vertical,horizontal')) ok('old save migrates: ' + list);
     else fail('old save migration gave ' + list);
   }
 
