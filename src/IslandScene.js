@@ -19,6 +19,8 @@ import { layoutShowcase } from './showcase.js';
 import { settings, hourNow } from './settings.js';
 import { animateWalker, footstep, dust } from './motion.js';
 import { Pet } from './pets.js';
+import { Fishing, catchOpen } from './fishing.js';
+import { openJournal } from './journal.js';
 
 // The main island is 24×40 tiles; the tile garden (see showcase.js) lies
 // east of it, joined by a path, and sets the full map size.
@@ -77,6 +79,8 @@ export class IslandScene extends Phaser.Scene {
     this.shadow = this.add.ellipse(0, 0, 18, 6, 0x000000, 0.25).setDepth(0.5);
     if (ch.pet && ch.pet !== 'none') this.pet = new Pet(this, ch.pet, ch.petColor, this.player);
     this.doorLock = true; // don't walk straight back in
+    this.facing = 'down';
+    this.fishing = new Fishing(this, this.player);
 
     this.lightUp();
     this.critters = new Critters(
@@ -695,6 +699,15 @@ export class IslandScene extends Phaser.Scene {
     this.knob = this.stick.querySelector('.knob');
     this.interactBtn = document.getElementById('interact');
     this.interactBtn.onclick = () => this.interact();
+    // the journal, opened to the fish log
+    this.journalBtn = document.getElementById('journal-btn');
+    this.journalBtn.onclick = () => {
+      if (this.fishing.busy) return;
+      sfx('open');
+      this.paused = true;
+      openJournal({ fishOnly: true, onClose: () => (this.paused = false) });
+    };
+    this.events.once('shutdown', () => (this.journalBtn.onclick = null));
     const css = (p) => {
       const r = this.game.canvas.getBoundingClientRect();
       return { x: r.left + (p.x * r.width) / this.scale.gameSize.width, y: r.top + (p.y * r.height) / this.scale.gameSize.height };
@@ -702,6 +715,7 @@ export class IslandScene extends Phaser.Scene {
     this.input.on('pointerdown', (p) => {
       this.press = css(p);
       this.dragging = false;
+      if (this.fishing.busy && !catchOpen()) this.fishing.tap(); // the hook: tap anywhere
     });
     this.input.on('pointermove', (p) => {
       if (!this.press || !p.isDown) return;
@@ -709,6 +723,7 @@ export class IslandScene extends Phaser.Scene {
       const dx = at.x - this.press.x;
       const dy = at.y - this.press.y;
       if (!this.dragging && Math.hypot(dx, dy) > 10) {
+        if (this.fishing.busy) return; // a tap that wobbles isn't a walk
         this.dragging = true;
         this.stick.style.left = `${this.press.x}px`;
         this.stick.style.top = `${this.press.y}px`;
@@ -767,13 +782,43 @@ export class IslandScene extends Phaser.Scene {
     }
     const dd = Math.hypot(x - DOOR.x, y - (DOOR.y + 4));
     if (dd < 30 && dd < bestD) best = { door: true, icon: 'door' };
+    if (!best) {
+      const spot = this.waterAhead();
+      if (spot) best = { fish: spot, icon: 'fish' };
+    }
     return best;
+  }
+
+  // Open water a short cast ahead of where you're facing: { x, y, water }.
+  waterAhead() {
+    const p = this.player;
+    const [dx, dy] = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] }[this.facing];
+    for (const d of [30, 44, 58]) {
+      const x = p.x + dx * d;
+      const y = p.y - 4 + dy * d;
+      if (this.ground_(x, y) !== 'water') continue;
+      // the bobber needs a little open water round it too
+      if (this.ground_(x + 8, y) !== 'water' || this.ground_(x - 8, y) !== 'water') continue;
+      const cx = Math.floor(x / T);
+      const cy = Math.floor(y / T);
+      const pond = cx >= 0 && cy >= 0 && cx < W && cy < H && this.key(cx, cy, (m) => m === 3) !== '0000';
+      return { x, y, water: pond ? 'pond' : 'sea' };
+    }
+    return null;
   }
 
   interact() {
     const f = this.focus;
     if (!f || this.leaving) return;
+    if (this.fishing.busy) return this.fishing.tap();
     if (f.door) return this.goInside();
+    if (f.fish) {
+      if (this.season === 'winter' && f.fish.water === 'pond') return this.toast('The pond is frozen solid. Try the sea.');
+      this.fishing.facing = this.facing;
+      this.fishing.cast(f.fish, f.fish.water, this.weatherKind);
+      this.interactBtn.querySelector('.label').textContent = 'Hook';
+      return;
+    }
     if (f.pet) return this.pet.pet();
     if (talking()) return hideTalk();
     sfx('talk');
@@ -840,10 +885,17 @@ export class IslandScene extends Phaser.Scene {
   update(_, dtMs) {
     if (this.leaving) return;
     const dt = Math.min(dtMs, 50) / 1000;
+    this.fishing.update(dt);
+    if (this.paused) return;
     const k = this.keys;
     let vx = (k.D.isDown || k.RIGHT.isDown ? 1 : 0) - (k.A.isDown || k.LEFT.isDown ? 1 : 0);
     let vy = (k.S.isDown || k.DOWN.isDown ? 1 : 0) - (k.W.isDown || k.UP.isDown ? 1 : 0);
     let pace = 1;
+    if (this.fishing.busy) {
+      // walking off reels the line in
+      if ((vx || vy) && this.fishing.state !== 'reel') this.fishing.end();
+      else vx = vy = 0;
+    }
     if (!vx && !vy && this.dragging && this.dragVec) {
       ({ x: vx, y: vy } = this.dragVec);
       pace = this.dragMag > 0.7 ? 1 : 0.62;
@@ -855,8 +907,13 @@ export class IslandScene extends Phaser.Scene {
       const ny = p.y + (vy / len) * SPEED * pace * dt;
       if (this.free(nx, p.y)) p.x = nx;
       if (this.free(p.x, ny)) p.y = ny;
-      if (Math.abs(vx) > Math.abs(vy)) p.setTexture('player_side').setFlipX(vx < 0);
-      else p.setTexture(vy < 0 ? 'player_up' : 'player_down').setFlipX(false);
+      if (Math.abs(vx) > Math.abs(vy)) {
+        p.setTexture('player_side').setFlipX(vx < 0);
+        this.facing = vx < 0 ? 'left' : 'right';
+      } else {
+        p.setTexture(vy < 0 ? 'player_up' : 'player_down').setFlipX(false);
+        this.facing = vy < 0 ? 'up' : 'down';
+      }
     }
     if (animateWalker(this, p, len > 0, dt, 0.8 + pace * 0.5)) this.onStep(p, pace);
     this.pet?.update(dt);
@@ -874,9 +931,10 @@ export class IslandScene extends Phaser.Scene {
 
     if (talking() && this.focus?.thing && Math.hypot(p.x - this.focus.thing.x, p.y - this.focus.thing.y) > 60) hideTalk();
     const prev = this.focus?.icon;
-    this.focus = this.findFocus();
-    this.interactBtn.classList.toggle('hidden', !this.focus);
+    if (!this.fishing.busy) this.focus = this.findFocus();
+    this.interactBtn.classList.toggle('hidden', !this.focus || (this.fishing.busy && this.fishing.state === 'reel'));
     if (this.focus && this.focus.icon !== prev) this.interactBtn.querySelector('.bang').innerHTML = iconSvg(this.focus.icon);
+    if (!this.fishing.busy) this.interactBtn.querySelector('.label').textContent = this.focus?.fish ? 'Fish' : 'Interact';
     if (this.focus && (Phaser.Input.Keyboard.JustDown(k.SPACE) || Phaser.Input.Keyboard.JustDown(k.ENTER))) this.interact();
   }
 }
