@@ -113,12 +113,16 @@ function withAtrium(list) {
   return next;
 }
 
-// Saves from before the shaped rooms: they go in after the atrium, and the
-// rooms you built move back behind them.
+// Saves from before (some of) the shaped rooms: they go in after the atrium,
+// and the rooms you built move back behind them.
 function withShaped(list) {
-  if (list[3]?.orient === 'shaped') return list;
-  shiftRoomData(3, SHAPED_ROOMS.length);
-  const next = [...list.slice(0, 3), ...SHAPED_ROOMS, ...list.slice(3)];
+  let k = 3;
+  while (list[k]?.orient === 'shaped') k++;
+  const have = list.slice(3, k).map((r) => r.plan);
+  const missing = SHAPED_ROOMS.filter((r) => !have.includes(r.plan)); // new plans join the end of the row
+  if (!missing.length) return list;
+  shiftRoomData(k, missing.length);
+  const next = [...list.slice(0, k), ...missing, ...list.slice(k)];
   saveRooms(next);
   return next;
 }

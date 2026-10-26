@@ -137,7 +137,10 @@ export const MAIN_DECOR = { ...DEFAULT_DECOR, pattern: 'marble', floor: '#e9e6df
 // A room's look before any customizing.
 // The break room: a staff room with a checker floor and subway-tile walls.
 export const BREAK_DECOR = { ...NEW_ROOM_DECOR, pattern: 'checker', checkA: '#3c4a63', checkB: '#e9e6df', paper: '#cfd8dc', paperStyle: 'subway', wainscotStyle: 'none', light: 'day' };
-export const baseDecor = (room, index) => (index === 0 ? DEFAULT_DECOR : room.orient === 'main' ? MAIN_DECOR : room.orient === 'break' ? BREAK_DECOR : NEW_ROOM_DECOR);
+// The library (a shaped room) starts cozy: dark panelling, green damask, a herringbone wood floor.
+export const LIBRARY_DECOR = { ...DEFAULT_DECOR, pattern: 'herringbone', floor: '#6e4a30', paperStyle: 'damask', paper: '#2f4a3a', wainscotStyle: 'panels', wainscot: '#3e2a20', light: 'warm' };
+export const baseDecor = (room, index) =>
+  index === 0 ? DEFAULT_DECOR : room.orient === 'main' ? MAIN_DECOR : room.orient === 'break' ? BREAK_DECOR : room.plan === 'library' ? LIBRARY_DECOR : NEW_ROOM_DECOR;
 
 // Deterministic hash noise in [0, 1).
 export const hash = (x, y, s = 0) => {
