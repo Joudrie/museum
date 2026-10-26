@@ -35,6 +35,7 @@ const SPEED = 176;
 const PLAYER_SCALE = 1.15;
 const STEP_MS = 260; // animation frame time
 const DOOR = { x: 12 * T, y: 8 * T }; // the museum's front doors (bottom middle of the building)
+const COTTAGE = { x: 4 * T + 48, y: 29 * T }; // the cottage door, which leads to the angled room
 
 const hash = (x, y, s = 0) => {
   const n = Math.sin(x * 127.1 + y * 311.7 + s * 74.7) * 43758.5453;
@@ -46,6 +47,10 @@ let TILES = null; // built once, shared
 export class IslandScene extends Phaser.Scene {
   constructor() {
     super('island');
+  }
+
+  init(data) {
+    this.spawnAt = data?.spawn;
   }
 
   create() {
@@ -66,6 +71,13 @@ export class IslandScene extends Phaser.Scene {
     this.things = []; // signs and chests you can interact with
     this.flickers = []; // campfire glows
     this.flowerSpots = [];
+    // the scene object is reused on every visit, so start these afresh
+    this.placed = [];
+    this.lamps = [];
+    this.lampSpots = [];
+    this.grassCells = new Set();
+    this.paused = false;
+    this.leaving = false;
 
     this.makeMap();
     this.paintShowcase();
@@ -75,10 +87,12 @@ export class IslandScene extends Phaser.Scene {
 
     const ch = { ...DEFAULT_CHARACTER, ...load('curation.character', {}) };
     if (!this.textures.exists('player_down')) makeCharacter(this, 'player', ch, {});
-    this.player = this.add.sprite(DOOR.x, DOOR.y + 22, 'player_down').setOrigin(0.5, 1).setScale(PLAYER_SCALE);
+    const start = this.spawnAt === 'cottage' ? { x: COTTAGE.x, y: COTTAGE.y + 16 } : { x: DOOR.x, y: DOOR.y + 22 };
+    this.player = this.add.sprite(start.x, start.y, 'player_down').setOrigin(0.5, 1).setScale(PLAYER_SCALE);
     this.shadow = this.add.ellipse(0, 0, 18, 6, 0x000000, 0.25).setDepth(0.5);
     if (ch.pet && ch.pet !== 'none') this.pet = new Pet(this, ch.pet, ch.petColor, this.player);
-    this.doorLock = true; // don't walk straight back in
+    this.doorLock = this.spawnAt !== 'cottage'; // don't walk straight back in
+    this.cottageLock = this.spawnAt === 'cottage';
     this.facing = 'down';
     this.fishing = new Fishing(this, this.player);
 
@@ -114,7 +128,7 @@ export class IslandScene extends Phaser.Scene {
     this.setupInput();
     this.time.addEvent({ delay: STEP_MS, loop: true, callback: () => this.tick() });
     this.cameras.main.fadeIn(300, 29, 21, 18);
-    this.toast('The island · walk back into the doors to go inside');
+    if (this.spawnAt !== 'cottage') this.toast('The island · walk back into the doors to go inside');
   }
 
   // ---------- The map ----------
@@ -782,6 +796,7 @@ export class IslandScene extends Phaser.Scene {
     }
     const dd = Math.hypot(x - DOOR.x, y - (DOOR.y + 4));
     if (dd < 30 && dd < bestD) best = { door: true, icon: 'door' };
+    if (Math.hypot(x - COTTAGE.x, y - (COTTAGE.y + 8)) < 22) best = { cottage: true, icon: 'door' };
     if (!best) {
       const spot = this.waterAhead();
       if (spot) best = { fish: spot, icon: 'fish' };
@@ -812,6 +827,7 @@ export class IslandScene extends Phaser.Scene {
     if (!f || this.leaving) return;
     if (this.fishing.busy) return this.fishing.tap();
     if (f.door) return this.goInside();
+    if (f.cottage) return this.enterCottage();
     if (f.fish) {
       if (this.season === 'winter' && f.fish.water === 'pond') return this.toast('The pond is frozen solid. Try the sea.');
       this.fishing.facing = this.facing;
@@ -826,6 +842,16 @@ export class IslandScene extends Phaser.Scene {
     const cam = this.cameras.main;
     const k = r.width / this.scale.gameSize.width;
     showTalk(f.thing.name === 'chest' ? 'Treasure chest' : 'Sign', 'The island', f.thing.text, { x: r.left + (f.thing.x - cam.worldView.x) * cam.zoom * k, y: r.top + (f.thing.y - 30 - cam.worldView.y) * cam.zoom * k });
+  }
+
+  enterCottage() {
+    if (this.leaving) return;
+    this.leaving = true;
+    hideTalk();
+    this.interactBtn.classList.add('hidden');
+    sfx('door');
+    this.cameras.main.fadeOut(220, 29, 21, 18);
+    this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start('iso'));
   }
 
   goInside() {
@@ -928,6 +954,10 @@ export class IslandScene extends Phaser.Scene {
     const atDoor = Math.abs(p.x - DOOR.x) < 20 && p.y < DOOR.y + 10;
     if (this.doorLock && !atDoor) this.doorLock = false;
     if (!this.doorLock && atDoor && vy < 0) return this.goInside();
+    // and up into the cottage door for the angled room
+    const atCottage = Math.abs(p.x - COTTAGE.x) < 10 && p.y < COTTAGE.y + 10;
+    if (this.cottageLock && !atCottage) this.cottageLock = false;
+    if (!this.cottageLock && atCottage && vy < 0) return this.enterCottage();
 
     if (talking() && this.focus?.thing && Math.hypot(p.x - this.focus.thing.x, p.y - this.focus.thing.y) > 60) hideTalk();
     const prev = this.focus?.icon;

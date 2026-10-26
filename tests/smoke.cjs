@@ -437,6 +437,25 @@ const ok = (msg) => console.log('  ✓ ' + msg);
       await p.click('#catch');
       await settle(400);
     }
+    // The angled room, through the cottage door, and back out (twice, so a
+    // second visit to the island is covered too)
+    await scene(() => __game.scene.getScene('island').player.setPosition(4 * 32 + 48, 29 * 32 + 14));
+    await p.keyboard.down('w');
+    await settle(700);
+    await p.keyboard.up('w');
+    await settle(1200);
+    if (!(await scene(() => __game.scene.isActive('iso')))) fail('cottage door did not open the angled room');
+    else {
+      await scene(() => (__game.scene.getScene('iso').pos = { gx: 0.8, gy: 5.5 }));
+      await p.keyboard.down('a');
+      await p.keyboard.down('w');
+      await settle(800);
+      await p.keyboard.up('a');
+      await p.keyboard.up('w');
+      await settle(1500);
+      if (await scene(() => __game.scene.isActive('island'))) ok('visited the angled room and came back out');
+      else fail('could not leave the angled room');
+    }
     await scene(() => __game.scene.getScene('island').player.setPosition(12 * 32, 9 * 32 + 10));
     await p.keyboard.down('w');
     await settle(800);
