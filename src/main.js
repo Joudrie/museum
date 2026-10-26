@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { RoomScene } from './RoomScene.js';
 import { IslandScene } from './IslandScene.js';
+import { IsoScene } from './IsoScene.js';
 import { makeCharacter } from './art.js';
 import './ui.js';
 
@@ -18,7 +19,7 @@ const game = new Phaser.Game({
   backgroundColor: '#1d1512',
   pixelArt: true,
   scale: { mode: Phaser.Scale.NONE },
-  scene: [RoomScene, IslandScene],
+  scene: [RoomScene, IslandScene, IsoScene],
 });
 
 window.__game = game; // handy for debugging in the console
