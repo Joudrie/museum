@@ -3,6 +3,7 @@
 import { T } from './art.js';
 import { PAINTINGS } from './paintings.js';
 import { load, save } from './storage.js';
+import { PLANS, PLAN_ORDER, shapedLayout } from './shaped.js';
 
 export const D = 2 * T; // wall height on screen
 const SLOT_GAP = 4 * T;
@@ -21,14 +22,15 @@ export const SIZES = {
   entry: { fixed: 8 },
   main: { fixed: 15 },
   atrium: { fixed: 17 },
+  shaped: { fixed: 0 },
   break: { fixed: 6 },
 };
 // The first three rooms are fixed: the entrance (ticket desk), the main hall
 // and the atrium behind it. The rooms you build follow on after them.
-export const FIXED = ['entry', 'main', 'atrium', 'break'];
+export const FIXED = ['entry', 'main', 'atrium', 'shaped', 'break'];
 export const isFixed = (room) => FIXED.includes(room.orient);
 
-export const ORIENT_LABELS = { vertical: 'Vertical', horizontal: 'Horizontal', square: 'Big hall', entry: 'Entrance', main: 'Main hall', atrium: 'Atrium', break: 'Break room' };
+export const ORIENT_LABELS = { vertical: 'Vertical', horizontal: 'Horizontal', square: 'Big hall', entry: 'Entrance', main: 'Main hall', atrium: 'Atrium', shaped: 'Shaped room', break: 'Break room' };
 export const SIZE_LABELS = {
   vertical: { short: 'Short', medium: 'Medium', long: 'Long' },
   horizontal: { short: 'Short', medium: 'Medium', long: 'Long' },
@@ -36,6 +38,7 @@ export const SIZE_LABELS = {
   entry: { fixed: 'Fixed' },
   main: { fixed: 'Fixed' },
   atrium: { fixed: 'Fixed' },
+  shaped: { fixed: 'Fixed' },
   break: { fixed: 'Fixed' },
 };
 
@@ -46,7 +49,7 @@ export const EXITS = {
 };
 
 export function roomName(room, i) {
-  return room.name || { entry: 'Entrance', main: 'Main hall', atrium: 'Atrium', break: 'Break room' }[room.orient] || `Room ${i + 1}`;
+  return room.name || (room.orient === 'shaped' && PLANS[room.plan]?.name) || { entry: 'Entrance', main: 'Main hall', atrium: 'Atrium', break: 'Break room' }[room.orient] || `Room ${i + 1}`;
 }
 
 export function exitLabel(orient, kind) {
@@ -68,7 +71,9 @@ export const MAIN_HALL_PRICE = 500;
 // The atrium opens off the main hall's middle arch (a paid unlock too).
 const ATRIUM_ROOM = { orient: 'atrium', size: 'fixed', exit: 'door-back', arch: true, locked: true };
 export const ATRIUM_PRICE = 2000;
-const START = [ENTRY_ROOM, MAIN_ROOM, ATRIUM_ROOM];
+// Empty shaped rooms in a row behind the atrium (see shaped.js), open from the start.
+const SHAPED_ROOMS = PLAN_ORDER.map((plan) => ({ orient: 'shaped', size: 'fixed', plan, exit: 'door-back', arch: true }));
+const START = [ENTRY_ROOM, MAIN_ROOM, ATRIUM_ROOM, ...SHAPED_ROOMS];
 // The staff break room sits off the main hall's hallway (left door), outside
 // the chain of rooms. It's stored under the room key 'break'.
 export const BREAK = 'break';
@@ -80,7 +85,7 @@ export function loadRooms() {
   let saved = load(ROOM_LIST_KEY, null);
   if (!Array.isArray(saved) || !saved.length) saved = null;
   else saved = saved.filter((r) => r && SIZES[r.orient]); // drop anything a broken save left behind
-  if (saved?.[0]?.orient === 'entry') return withAtrium(saved);
+  if (saved?.[0]?.orient === 'entry') return withShaped(withAtrium(saved));
   const old = load(ROOMS_KEY, []);
   if (!saved && !old.length) {
     // A brand-new museum: the entrance, and the (locked) main hall and atrium.
@@ -104,6 +109,16 @@ function withAtrium(list) {
   if (list[2]?.orient === 'atrium') return list;
   shiftRoomData(2, 1);
   const next = [...list.slice(0, 2), ATRIUM_ROOM, ...list.slice(2)];
+  saveRooms(next);
+  return next;
+}
+
+// Saves from before the shaped rooms: they go in after the atrium, and the
+// rooms you built move back behind them.
+function withShaped(list) {
+  if (list[3]?.orient === 'shaped') return list;
+  shiftRoomData(3, SHAPED_ROOMS.length);
+  const next = [...list.slice(0, 3), ...SHAPED_ROOMS, ...list.slice(3)];
   saveRooms(next);
   return next;
 }
@@ -174,6 +189,7 @@ export function layout(room) {
   if (room.orient === 'entry') return entryLayout();
   if (room.orient === 'break') return breakLayout();
   if (room.orient === 'atrium') return atriumLayout();
+  if (room.orient === 'shaped') return shapedLayout(room.plan);
   const square = room.orient === 'square';
   // Big halls behave like vertical rooms (enter at the bottom, exit at the top).
   const vertical = room.orient !== 'horizontal';
@@ -464,6 +480,8 @@ export function placeArt(p) {
 // arches: { exit, entrance } — draw those doorways as open archways.
 export function wallItems(L, hung, states, arches = {}) {
   const items = { left: [], right: [], back: [], band: [], hl: [], hr: [] };
+  Object.keys(L.g.refs || {}).forEach((k) => (items[k] ||= []));
+  (L.windows || []).forEach((w) => items[w.wall].push({ window: true, rect: w.rect }));
   (L.decorDoors || []).forEach((d) => items[d.wall].push({ door: true, arch: !!d.arch, closed: !!d.closed, rect: d.rect }));
   // An archway stays shut until the room behind it exists and is unlocked.
   if (L.exit?.rect) items[L.exit.wall].push({ door: true, arch: !!arches.exit, closed: !!arches.exitClosed, rect: L.exit.rect });
@@ -480,7 +498,7 @@ export function wallItems(L, hung, states, arches = {}) {
 export function plantSpots(L) {
   const { g } = L;
   const spots = [];
-  if (g.main || g.atrium) return spots; // open plan: place plants with the toolkit
+  if (g.main || g.atrium || g.shaped) return spots; // open plan: place plants with the toolkit
   ['left', 'right', 'back'].forEach((wall) => {
     const us = L.slots.filter((s) => s.wall === wall).map((s) => s.u).sort((a, b) => a - b);
     for (let i = 1; i < us.length; i++) {
@@ -496,6 +514,10 @@ export function plantSpots(L) {
 export function carpetRect(L) {
   const { g } = L;
   if (g.main) return { x: g.hx0 + T, y: g.yb + T, w: g.hx1 - g.hx0 - 2 * T, h: g.yh - g.yb - 2 * T, alongY: true };
+  if (g.shaped) {
+    const b = g.bands[g.bands.length - 1]; // a runner up the front band
+    return { x: b.x0 + T, y: b.top + T, w: b.x1 - b.x0 - 2 * T, h: b.bottom - b.top - 2 * T, alongY: true };
+  }
   if (g.vertical) return { x: g.xL + T, y: g.y0 + T, w: g.xR - g.xL - 2 * T, h: g.y1 - g.y0 - 2 * T, alongY: true };
   return { x: g.xL + T, y: g.y0 + T, w: g.xR - g.xL - 2 * T, h: g.y1 - g.y0 - 2 * T, alongY: false };
 }

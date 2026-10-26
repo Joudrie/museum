@@ -203,7 +203,14 @@ const ok = (msg) => console.log('  ✓ ' + msg);
   await roomCheck('Atrium');
   await talkAll('Atrium');
 
-  // Build rooms of every kind through the atrium's Science arch
+  // The shaped rooms in a row behind the atrium
+  for (const i of [3, 4, 5, 6]) {
+    await travel(i, 'entrance');
+    const name = await scene(() => __game.scene.getScene('room').room.plan);
+    await roomCheck(`Shaped room (${name})`);
+  }
+
+  // Build rooms of every kind through the last shaped room's arch
   const kinds = [['vertical', 'short'], ['horizontal', 'medium'], ['square', 'short'], ['vertical', 'long']];
   await scene(() => localStorage.setItem('curation.office', '5'));
   for (const [orient, size] of kinds) {
@@ -432,7 +439,7 @@ const ok = (msg) => console.log('  ✓ ' + msg);
   if (await p.$('#crash')) fail('crash screen on an old save');
   else {
     const list = await scene(() => JSON.parse(localStorage.getItem('curation.roomList')).map((r) => r.orient).join(','));
-    if (list.startsWith('entry,main,atrium,vertical,horizontal')) ok('old save migrates: ' + list);
+    if (list.startsWith('entry,main,atrium,shaped,shaped,shaped,shaped,vertical,horizontal')) ok('old save migrates: ' + list);
     else fail('old save migration gave ' + list);
   }
 
