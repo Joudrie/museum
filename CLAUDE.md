@@ -1,5 +1,7 @@
 # Curation: rules for working on this repo
 
+Read docs/VISION.md first: every feature should serve it.
+
 ## Workflow
 - After pushing, open a PR and **merge it yourself, every time**. Then reset the
   working branch to the new `main`.
