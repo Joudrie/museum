@@ -352,8 +352,9 @@ export class IslandScene extends Phaser.Scene {
     this.add.image(DOOR.x, DOOR.y + 8, key).setOrigin(0.5, 1).setDepth(DOOR.y);
     this.light(DOOR.x, DOOR.y + 6, 46, 0xffd89a, 1, { glow: 40, gy: DOOR.y - 20 });
     [-1, 1].forEach((d) => this.light(DOOR.x + d * 32, DOOR.y - 88, 30, 0xffd080, 0.8, { glow: 34 })); // the windows
-    // the building is solid, the steps and doorway are not
-    for (let y = 2; y <= 7; y++) for (let x = 8; x <= 15; x++) if (!(y === 7 && x >= 11 && x <= 12)) this.block(x, y);
+    // only the front of the building is solid (its last two rows, but not the
+    // doorway); behind it you can walk round the back, hidden by the roof
+    for (let y = 6; y <= 7; y++) for (let x = 8; x <= 15; x++) if (!(y === 7 && x >= 11 && x <= 12)) this.block(x, y);
   }
 
   placeThings() {
@@ -962,11 +963,11 @@ export class IslandScene extends Phaser.Scene {
     p.setDepth(p.y);
     this.shadow.setPosition(p.x, p.y - 1);
     // Walk up into the doors to go back inside.
-    const atDoor = Math.abs(p.x - DOOR.x) < 20 && p.y < DOOR.y + 10;
+    const atDoor = Math.abs(p.x - DOOR.x) < 20 && p.y < DOOR.y + 10 && p.y > DOOR.y - 12;
     if (this.doorLock && !atDoor) this.doorLock = false;
     if (!this.doorLock && atDoor && vy < 0) return this.goInside();
     // and up into the cottage door for the angled room
-    const atCottage = Math.abs(p.x - COTTAGE.x) < 10 && p.y < COTTAGE.y + 10;
+    const atCottage = Math.abs(p.x - COTTAGE.x) < 10 && p.y < COTTAGE.y + 10 && p.y > COTTAGE.y - 6; // right at the door, not anywhere above it
     if (this.cottageLock && !atCottage) this.cottageLock = false;
     if (!this.cottageLock && atCottage && vy < 0) return this.enterCottage();
 
