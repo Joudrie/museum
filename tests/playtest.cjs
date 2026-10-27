@@ -199,6 +199,19 @@ const fail = (s, n) => log(s, '❌', n);
   (await room()).i === 2 ? pass('8.1 atrium unlock', 'atrium opens') : fail('8.1 atrium unlock', 'atrium did not open');
   await shot('atrium');
 
+  // ---------- 12.2 Nobody stands in a doorway ----------
+  await travel(1);
+  const doors = await S(() => {
+    const s = __game.scene.getScene('room');
+    let bad = 0;
+    for (let i = 0; i < 2400; i++) {
+      s.npcs.forEach((n) => s.updateVisitor(n, 0.05));
+      if (i > 200 && i % 20 === 0) s.npcs.forEach((n) => { if (!n.fixed && !n.follow && !n.target && s.inDoorway(n.s.x, n.s.y)) bad++; });
+    }
+    return bad;
+  });
+  doors === 0 ? pass('12.2 doorways', 'over a minute in the main hall, nobody stood in a doorway') : fail('12.2 doorways', `${doors} times someone stood in a doorway`);
+
   // ---------- 8.3 Archways (shaped rooms) ----------
   console.log('8.3 Archways');
   await travel(3);

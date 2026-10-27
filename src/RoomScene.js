@@ -306,6 +306,8 @@ export class RoomScene extends Phaser.Scene {
     if (exit?.sprite) this.add.image(exit.sprite.x, exit.sprite.y, exit.sprite.key).setOrigin(0).setFlipX(exit.sprite.flip).setDepth(2);
     this.hung.forEach((p) => this.drawPainting(p));
     this.blocks = exit?.block ? [exit.block] : [];
+    this.keepClear = this.doorZones();
+    this.archTop();
     if (g.main) this.placeHall();
     if (g.atrium) this.placeAtrium();
     if (g.shaped) this.placeShaped();
@@ -1051,6 +1053,8 @@ export class RoomScene extends Phaser.Scene {
       return;
     }
     n.wait -= dt * 1000;
+    // never loiter in a doorway: step out of it first
+    if (!n.seat && this.inDoorway(n.s.x, n.s.y) && this.leaveDoorway(n)) return;
     this.idle(n, dt);
     if (n.wait > 0) return;
     if (n.seat) return this.standUp(n);
@@ -1066,7 +1070,7 @@ export class RoomScene extends Phaser.Scene {
     const tx = n.s.x + dx * tiles * T;
     const ty = n.s.y + dy * tiles * T;
     const b = this.bounds();
-    if (tx < b.x0 || tx > b.x1 || ty < b.y0 + 12 || ty > b.y1 - 20 || this.pathBlocked(n.s.x, n.s.y, tx, ty)) {
+    if (tx < b.x0 || tx > b.x1 || ty < b.y0 + 12 || ty > b.y1 - 20 || this.pathBlocked(n.s.x, n.s.y, tx, ty) || this.inDoorway(tx, ty)) {
       n.wait = 200;
       return;
     }
@@ -1074,10 +1078,28 @@ export class RoomScene extends Phaser.Scene {
     this.faceSprite(n.s, n.prefix, dx, dy);
   }
 
+  // Step out of a doorway to the nearest clear spot (true if heading out).
+  leaveDoorway(n) {
+    const b = this.bounds();
+    for (const d of [1, 2, 3])
+      for (const [dx, dy] of [[0, 1], [1, 0], [-1, 0], [0, -1]]) {
+        const tx = n.s.x + dx * d * T;
+        const ty = n.s.y + dy * d * T;
+        if (tx < b.x0 || tx > b.x1 || ty < b.y0 + 12 || ty > b.y1 - 20 || this.inDoorway(tx, ty) || this.pathBlocked(n.s.x, n.s.y, tx, ty)) continue;
+        n.goal = null;
+        n.admiring = null;
+        n.target = { x: tx, y: ty };
+        this.faceSprite(n.s, n.prefix, dx, dy);
+        return true;
+      }
+    return false;
+  }
+
   // Plan an L-shaped walk (people walk in straight lines, one axis at a time).
   planWalk(n, x, y) {
     const b = this.bounds();
     if (x < b.x0 || x > b.x1 || y < b.y0 + 12 || y > b.y1 - 4) return false;
+    if (this.inDoorway(x, y)) return false; // not to stand in a doorway
     if (this.npcs.some((o) => o !== n && Math.abs(o.s.x - x) < 12 && Math.abs(o.s.y - y) < 10)) return false; // someone's there
     const { x: x0, y: y0 } = n.s;
     for (const corner of [{ x, y: y0 }, { x: x0, y }]) {
@@ -1393,9 +1415,13 @@ export class RoomScene extends Phaser.Scene {
     const zoom = width / (VIEW_TILES * T);
     cam.setZoom(zoom);
     // Rooms smaller than the screen sit centered instead of stuck to the top.
+    // At the top the camera can go a little past the back wall, so the HUD
+    // and buttons never sit over a doorway or arch up there.
+    const PAD = 110;
     const vw = Math.max(this.g.w, width / zoom);
-    const vh = Math.max(this.g.h, height / zoom);
-    cam.setBounds((this.g.w - vw) / 2, (this.g.h - vh) / 2, vw, vh);
+    const vh = Math.max(this.g.h + PAD, height / zoom);
+    const top = Math.min((this.g.h - vh) / 2, -PAD);
+    cam.setBounds((this.g.w - vw) / 2, top, vw, Math.max(vh, this.g.h - top));
   }
 
   // Press and drag anywhere to walk (a floating joystick appears).
@@ -1678,6 +1704,7 @@ export class RoomScene extends Phaser.Scene {
     this.floorImg.setTexture('floor');
     this.bakeRoomWalls(decor);
     this.wallImg.setTexture('walls');
+    this.archTopImg?.setTexture('walls').setCrop(...this.archTopCrop); // (the walls were redrawn)
     if (this.g.main) this.placeHall();
     if (this.g.atrium) this.placeAtrium();
     if (this.g.shaped) this.placeShaped();
@@ -1887,6 +1914,41 @@ export class RoomScene extends Phaser.Scene {
     const half = (exit.rect.u1 - exit.rect.u0) / 2 - 8;
     const base = exit.ay - 12;
     return { x0: exit.ax - half, x1: exit.ax + half, base, y: base - 36 };
+  }
+
+  // Doorways people shouldn't stand in: in front of the exit, the entrance
+  // and every door or arch on the walls. Visitors walk through them but never
+  // stop there.
+  doorZones() {
+    const { exit, entrance } = this.L;
+    const zones = [];
+    const around = (x, y, w = 28, up = 26, down = 24) => zones.push({ x0: x - w, x1: x + w, y0: y - up, y1: y + down });
+    if (exit) around(exit.ax, exit.ay);
+    if (entrance.mat) zones.push({ x0: entrance.x0 - 10, x1: entrance.x1 + 10, y0: this.g.y1 - 40, y1: this.g.y1 + 4 });
+    else if (entrance.ax !== undefined) around(entrance.ax, entrance.ay);
+    (this.L.decorDoors || []).forEach((d) => {
+      const st = this.standFor({ wall: d.wall, u: (d.rect.u0 + d.rect.u1) / 2 });
+      around(st.x, st.y, 24, 22, 22);
+    });
+    return zones;
+  }
+
+  inDoorway(x, y) {
+    return (this.keepClear || []).some((z) => x > z.x0 && x < z.x1 && y > z.y0 && y < z.y1);
+  }
+
+  // The top of the back-wall arch drawn again over the player, so when you
+  // stand inside the archway its top covers your head.
+  archTop() {
+    this.archTopImg = null; // (the scene is reused room to room)
+    const { exit } = this.L;
+    if (!exit?.rect || !this.room.arch || exit.sprite) return;
+    const base = exit.ay - 12;
+    const half = (exit.rect.u1 - exit.rect.u0) / 2 + 6;
+    const top = base - exit.rect.v1 + 2; // the opening's top edge
+    const h = 40;
+    this.archTopCrop = [exit.ax - half, top - h, half * 2, h];
+    this.archTopImg = this.add.image(0, 0, this.wallImg.texture.key).setOrigin(0).setCrop(...this.archTopCrop).setDepth(base + 1);
   }
 
   // Archways: walk straight through, no button and no fade.
