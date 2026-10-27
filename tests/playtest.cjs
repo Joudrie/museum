@@ -295,6 +295,12 @@ const fail = (s, n) => log(s, '❌', n);
   // ---------- 13. Island ----------
   console.log('13. Island');
   await S(() => __game.scene.getScene('room').travel('island'));
+  await wait(2500);
+  const home = await S(() => { const s = __game.scene.getScene('island'); return s.mapId === 'main' && !!s.door && Math.abs(s.player.y - s.door.y - 22) < 4; });
+  home ? pass('13.0 main island', 'out the front doors onto Main Island, by the museum') : fail('13.0 main island', 'did not come out at the museum on Main Island');
+  await shot('main-island');
+  // the rest of these checks are on Island One (the first island, drawn in code)
+  await S(() => { __game.scene.getScene('island').scene.start('island', { map: 'one' }); });
   await wait(1800);
   const isl = await S(() => {
     const s = __game.scene.getScene('island');
@@ -358,9 +364,9 @@ const fail = (s, n) => log(s, '❌', n);
     await wait(400);
     await p.click('#interact');
     await wait(300);
-    await p.locator('.sail-dest', { hasText: 'Home island' }).click();
+    await p.locator('.sail-dest', { hasText: 'Main Island' }).click();
     await wait(2500);
-    (await S(() => !__game.scene.getScene('island').mapId)) ? pass('13.7 sail home', 'sailed home to the main island') : fail('13.7 sail home', 'could not sail home');
+    (await S(() => __game.scene.getScene('island').mapId === 'main')) ? pass('13.7 sail home', 'sailed home to Main Island') : fail('13.7 sail home', 'could not sail home');
   } else fail('13.7 sail', 'no Sail button at the end of the dock');
 
   // ---------- 13.6 Second visit ----------
@@ -370,6 +376,8 @@ const fail = (s, n) => log(s, '❌', n);
   await wait(1800);
   const second = await S(() => __game.scene.isActive('island') && !__game.scene.getScene('island').leaving);
   await hold('d', 300);
+  await S(() => { __game.scene.getScene('island').scene.start('island', { map: 'one' }); }); // back to Island One for fishing and the cottage
+  await wait(1800);
   second ? pass('13.6 second visit', 'going outside again works and you can move') : fail('13.6 second visit', 'stuck on the second visit');
 
   // ---------- 14. Fishing ----------
@@ -403,7 +411,7 @@ const fail = (s, n) => log(s, '❌', n);
 
   // ---------- 15. Angled room ----------
   console.log('15. Angled room');
-  await S(() => __game.scene.getScene('island').player.setPosition(4 * 32 + 48, 29 * 32 + 14));
+  await S(() => { __game.scene.getScene('island').player.setPosition(4 * 32 + 48, 29 * 32 + 14); });
   await hold('w', 700);
   await wait(1200);
   if (await S(() => __game.scene.isActive('iso'))) {

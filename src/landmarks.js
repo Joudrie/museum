@@ -2,6 +2,8 @@
 // doors to go in) and people who live there (each wanders a little round the
 // spot they were placed).
 import { T, OUT, draw } from './tiles.js';
+import { makePet, PET_COLORS } from './pets.js';
+import { critterTextures } from './critters.js';
 
 // how far each kind of person strays from their spot, in tiles
 export const PEOPLE = { person: 0, person_wander: 3, person_roam: 7 };
@@ -83,7 +85,67 @@ function personCanvas(shirt, ring) {
   });
 }
 
+// Animals: pets from the curator's pets (cat, dog, bunny, parrot) and the
+// island's critters. Each wanders round its spot; ducks stay on the water.
+export const ANIMALS = {
+  cat_ginger: { label: 'Ginger cat', pet: 'cat', color: PET_COLORS.cat[0], range: 4 },
+  cat_black: { label: 'Black cat', pet: 'cat', color: PET_COLORS.cat[1], range: 4 },
+  cat_grey: { label: 'Grey cat', pet: 'cat', color: PET_COLORS.cat[3], range: 4 },
+  dog_brown: { label: 'Brown dog', pet: 'dog', color: PET_COLORS.dog[0], range: 5 },
+  dog_golden: { label: 'Golden dog', pet: 'dog', color: PET_COLORS.dog[1], range: 5 },
+  dog_black: { label: 'Black dog', pet: 'dog', color: PET_COLORS.dog[2], range: 5 },
+  bunny_white: { label: 'White bunny', pet: 'bunny', color: PET_COLORS.bunny[0], range: 3 },
+  bunny_brown: { label: 'Brown bunny', pet: 'bunny', color: PET_COLORS.bunny[1], range: 3 },
+  parrot_red: { label: 'Red parrot', pet: 'parrot', color: PET_COLORS.parrot[0], range: 3 },
+  parrot_green: { label: 'Green parrot', pet: 'parrot', color: PET_COLORS.parrot[1], range: 3 },
+  crab: { label: 'Crab', critter: 'crab', range: 2 },
+  frog: { label: 'Frog', critter: 'frog', range: 2 },
+  duck: { label: 'Duck (on water)', critter: 'duck', range: 3, water: true },
+};
+
+// a stand-in for a Phaser scene, so the pet and critter drawings also make
+// plain canvases for the builder's pictures
+function canvasScene() {
+  const store = {};
+  const textures = {
+    exists: (k) => !!store[k],
+    remove: (k) => delete store[k],
+    get: (k) => ({ getSourceImage: () => store[k] }),
+    addCanvas: (k, c) => (store[k] = c),
+    createCanvas: (k, w, h) => {
+      const c = document.createElement('canvas');
+      c.width = w;
+      c.height = h;
+      store[k] = c;
+      return { getContext: () => c.getContext('2d'), refresh() {}, getSourceImage: () => c };
+    },
+  };
+  return { textures, store };
+}
+
+function animalCanvases() {
+  const sc = canvasScene();
+  critterTextures(sc);
+  const out = {};
+  Object.entries(ANIMALS).forEach(([name, a]) => {
+    let src;
+    if (a.pet) {
+      makePet(sc, name, a.pet, a.color);
+      src = sc.store[a.pet === 'parrot' ? `${name}_side` : `${name}_down`];
+    } else src = sc.store[`${a.critter}_0`];
+    const c = document.createElement('canvas');
+    c.width = c.height = T;
+    const g = c.getContext('2d');
+    g.imageSmoothingEnabled = false;
+    if (src) g.drawImage(src, Math.round((T - src.width) / 2), T - src.height - (a.pet ? 0 : 3));
+    out[name] = c;
+  });
+  return out;
+}
+
 export function addLandmarks(add) {
+  const pics = animalCanvases();
+  Object.entries(ANIMALS).forEach(([name, a]) => add(`animal_${name}`, pics[name], { group: 'Animals', label: a.label, walk: 'person' }));
   add('museum', museumCanvas(), { group: 'Buildings', label: 'Museum (walk into the doors)', w: 8 * T, h: 6 * T, walk: 'block', base: 2 });
   add('person', personCanvas('#c0392b'), { group: 'People', label: 'Stays put', h: 48, walk: 'person' });
   add('person_wander', personCanvas('#2e7d7a', 'rgba(232,200,103,0.35)'), { group: 'People', label: 'Wanders a little', h: 48, walk: 'person' });

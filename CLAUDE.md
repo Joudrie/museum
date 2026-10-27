@@ -8,6 +8,7 @@ Read docs/VISION.md first: every feature should serve it.
 - When the user sends a hand-drawn sketch or blueprint, study it closely. If any
   part is unclear, **ask before building**. Never guess on a sketch.
 - Test in a phone-sized portrait browser (390×844) before shipping.
+- **Always send the links when done:** game https://seanjoudrie.github.io/museum/ and builder https://seanjoudrie.github.io/museum/builder.html
 
 ## Hard rules for the game
 - **Portrait only.** The phone is never held sideways.
@@ -17,6 +18,11 @@ Read docs/VISION.md first: every feature should serve it.
   the entrance and the main hall) for void pixels between wall planes before shipping.
 - Pixel art stays on the 32px tile grid; paintings render in HD on the wall.
 - Movement is press-and-drag only (no tap-to-walk).
+
+## Islands
+- **Main Island** (src/maps/main-island.json, drawn by the user in the builder) is home: the museum
+  is there and you come out of its doors. **Island One** is the old code-drawn island; its museum
+  doors are locked. The boat lists every island, including ones built in the builder on the phone.
 
 ## Starting rooms (from the user's sketch)
 - Room 0 is the **entrance**: you come in at the bottom, ticket desk on the right with
