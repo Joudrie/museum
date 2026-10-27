@@ -343,6 +343,22 @@ const fail = (s, n) => log(s, '❌', n);
   await wait(800);
   (await S(() => __game.scene.isActive('island'))) ? pass('13.2 cottage door', 'only the cottage door itself opens it') : fail('13.2 cottage door', 'walking up far above the cottage opened it');
 
+  // sail to the builder island and back
+  await S(() => { const s = __game.scene.getScene('island'); s.player.setPosition(12.5 * 32, 38.6 * 32); });
+  await wait(400);
+  if ((await S(() => document.querySelector('#interact .label').textContent)) === 'Sail') {
+    await p.click('#interact');
+    await wait(2500);
+    const isle = await S(() => { const s = __game.scene.getScene('island'); return s.mapId && s.free(s.player.x, s.player.y); });
+    await shot('builder-island');
+    isle ? pass('13.7 sail', 'sailed to the builder island and landed on solid ground') : fail('13.7 sail', 'no landing on the builder island');
+    await S(() => { const s = __game.scene.getScene('island'); s.player.setPosition(s.landingSpot.x, s.landingSpot.y); });
+    await wait(400);
+    await p.click('#interact');
+    await wait(2500);
+    (await S(() => !__game.scene.getScene('island').mapId)) ? pass('13.7 sail home', 'sailed home to the main island') : fail('13.7 sail home', 'could not sail home');
+  } else fail('13.7 sail', 'no Sail button at the end of the dock');
+
   // ---------- 13.6 Second visit ----------
   await S(() => { const s = __game.scene.getScene('island'); s.goInside(); });
   await wait(1800);

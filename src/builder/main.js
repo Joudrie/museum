@@ -170,7 +170,7 @@ function buildPalette() {
   lists.push({ name: 'Terrain', refs: MATS.map((m) => `m:${m.m}`) });
   const byGroup = {};
   Object.entries(PIECES).forEach(([ref, p]) => {
-    if (!ref.startsWith('t:') || p.skip) return;
+    if (!ref.startsWith('t:') || p.skip || ref === 't:tall_grass_front') return; // (tall grass draws its own front)
     const name = p.layer === 'tile' ? `Ground: ${p.group}` : p.group || 'Other';
     (byGroup[name] ||= []).push(ref);
   });
@@ -804,7 +804,9 @@ function moveStroke(p) {
 function endStroke(cancelled) {
   const g = gesture;
   if (tool === 'paint' && ghost) {
-    if (!cancelled) {
+    const same = map.objects.some((o) => o.ref === ghost.ref && o.x === ghost.x && o.y === ghost.y);
+    if (!cancelled && !same) {
+      // (tapping the same spot twice doesn't stack two copies)
       record();
       map.objects.push({ ...ghost });
       g.did = true;
