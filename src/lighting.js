@@ -12,16 +12,18 @@ import { settings, hourNow } from './settings.js';
 
 const DEPTH = 4998; // under speech/interact bubbles (5000), over people
 // Ambient light through the day: [hour, r, g, b].
+// (night is a moonlit blue, dark enough for lamps to matter but still easy
+// to read on a phone)
 const AMBIENT = [
-  [0, 44, 42, 74],
-  [5.5, 44, 42, 74],
+  [0, 74, 70, 112],
+  [5.5, 74, 70, 112],
   [7, 214, 188, 168],
   [9, 246, 242, 236],
   [16.5, 246, 240, 230],
   [18.5, 232, 168, 120],
   [20.5, 96, 80, 108],
-  [22, 44, 42, 74],
-  [24, 44, 42, 74],
+  [22, 74, 70, 112],
+  [24, 74, 70, 112],
 ];
 const DAY = [244, 240, 232]; // with day/night off: a bright museum afternoon
 const WARM = 0xffc888;

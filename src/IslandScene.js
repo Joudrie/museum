@@ -37,6 +37,10 @@ const STEP_MS = 260; // animation frame time
 const DOOR = { x: 12 * T, y: 8 * T }; // the museum's front doors (bottom middle of the building)
 const COTTAGE = { x: 4 * T + 48, y: 29 * T }; // the cottage door, which leads to the angled room
 
+// Tall things you can walk behind: only the trunk (or post) at the bottom is
+// solid, w × h px, centred; the leaves and lamp tops are above you.
+const TRUNKS = { palm: [12, 8], tree: [14, 8], pine: [10, 8], pine_snow: [10, 8], cherry_tree: [14, 8], maple_tree: [14, 8], apple_tree: [14, 8], orange_tree: [14, 8], willow: [16, 8], bare_tree: [12, 8], flame_tree: [14, 8], lamp_post: [8, 6], signpost: [8, 6] };
+
 const hash = (x, y, s = 0) => {
   const n = Math.sin(x * 127.1 + y * 311.7 + s * 74.7) * 43758.5453;
   return n - Math.floor(n);
@@ -76,6 +80,7 @@ export class IslandScene extends Phaser.Scene {
     this.lamps = [];
     this.lampSpots = [];
     this.grassCells = new Set();
+    this.posts = []; // trunk-sized hitboxes (see TRUNKS)
     this.paused = false;
     this.leaving = false;
 
@@ -255,7 +260,12 @@ export class IslandScene extends Phaser.Scene {
     if (keys.length > 1) this.animated.push({ img, keys });
     (this.placed ||= []).push({ img, name, flat: opts.flat });
     (TILE_LIGHTS[name] || []).forEach(([lx, ly, r, color, a, extra]) => this.light(x * T + lx, (y + 1) * T + ly, r, color, a, { ...extra, gy: (y + 1) * T + ly }));
-    if (opts.solid !== false && ['block', 'push'].includes(t.walk)) {
+    const trunk = TRUNKS[name] || (/tree|palm|pine|willow/.test(name) && t.h >= 2 * T ? [14, 8] : null);
+    if (opts.solid !== false && trunk) {
+      const cx = x * T + t.w / 2;
+      const by = (y + 1) * T;
+      this.posts.push({ x0: cx - trunk[0] / 2, x1: cx + trunk[0] / 2, y0: by - trunk[1] - 4, y1: by - 2 });
+    } else if (opts.solid !== false && ['block', 'push'].includes(t.walk)) {
       const wide = Math.max(1, Math.round(t.w / T));
       for (let r = 0; r < (t.base || 1); r++) for (let i = 0; i < wide; i++) this.block(x + i, y - r);
     }
@@ -762,6 +772,7 @@ export class IslandScene extends Phaser.Scene {
   // Can the player's feet stand here?
   free(x, y) {
     const pts = [[x - 6, y - 2], [x + 6, y - 2], [x - 6, y - 7], [x + 6, y - 7]];
+    if (this.posts.some((b) => x + 6 > b.x0 && x - 6 < b.x1 && y - 2 > b.y0 && y - 7 < b.y1)) return false;
     return pts.every(([px, py]) => {
       const cx = Math.floor(px / T);
       const cy = Math.floor(py / T);
