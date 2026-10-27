@@ -21,6 +21,11 @@ import { animateWalker, footstep, dust } from './motion.js';
 import { Pet } from './pets.js';
 import { Fishing, catchOpen } from './fishing.js';
 import { openJournal } from './journal.js';
+import isle1 from './maps/isle-1.json';
+
+// Islands drawn in the map builder (builder.html), reached by boat from the
+// main island's dock. Each is a 'curation-map' file (see src/builder/main.js).
+const MAPS = { 'isle-1': isle1 };
 
 // The main island is 24×40 tiles; the tile garden (see showcase.js) lies
 // east of it, joined by a path, and sets the full map size.
@@ -55,13 +60,21 @@ export class IslandScene extends Phaser.Scene {
 
   init(data) {
     this.spawnAt = data?.spawn;
+    this.mapId = MAPS[data?.map] ? data.map : null;
+    this.map = this.mapId ? MAPS[this.mapId] : null; // a builder island instead of the main one
   }
 
   create() {
     TILES = TILES || buildTiles();
-    this.plan = layoutShowcase(TILES, SX, 2, SW);
-    W = SX + SW + 1;
-    H = Math.max(MH, this.plan.y0 + this.plan.height + 2);
+    if (this.map) {
+      this.plan = { floors: [], items: [], streets: [], labels: [], headers: [], x0: 0, y0: 0, width: 0, height: 0 };
+      W = this.map.w;
+      H = this.map.h;
+    } else {
+      this.plan = layoutShowcase(TILES, SX, 2, SW);
+      W = SX + SW + 1;
+      H = Math.max(MH, this.plan.y0 + this.plan.height + 2);
+    }
     document.body.classList.add('outside');
     this.events.once('shutdown', () => document.body.classList.remove('outside'));
     setTrack('none');
@@ -84,19 +97,21 @@ export class IslandScene extends Phaser.Scene {
     this.paused = false;
     this.leaving = false;
 
+    this.boats = [];
     this.makeMap();
     this.paintShowcase();
     this.drawGround();
+    if (this.map) this.walkableTiles();
     this.placeMuseum();
     this.placeThings();
 
     const ch = { ...DEFAULT_CHARACTER, ...load('curation.character', {}) };
     if (!this.textures.exists('player_down')) makeCharacter(this, 'player', ch, {});
-    const start = this.spawnAt === 'cottage' ? { x: COTTAGE.x, y: COTTAGE.y + 16 } : { x: DOOR.x, y: DOOR.y + 22 };
+    const start = this.map ? this.landing() : this.spawnAt === 'cottage' ? { x: COTTAGE.x, y: COTTAGE.y + 16 } : this.spawnAt === 'dock' ? { x: 12.5 * T, y: 38.6 * T } : { x: DOOR.x, y: DOOR.y + 22 };
     this.player = this.add.sprite(start.x, start.y, 'player_down').setOrigin(0.5, 1).setScale(PLAYER_SCALE);
     this.shadow = this.add.ellipse(0, 0, 18, 6, 0x000000, 0.25).setDepth(0.5);
     if (ch.pet && ch.pet !== 'none') this.pet = new Pet(this, ch.pet, ch.petColor, this.player);
-    this.doorLock = this.spawnAt !== 'cottage'; // don't walk straight back in
+    this.doorLock = this.spawnAt !== 'cottage' && this.spawnAt !== 'dock'; // don't walk straight back in
     this.cottageLock = this.spawnAt === 'cottage';
     this.facing = 'down';
     this.fishing = new Fishing(this, this.player);
@@ -104,7 +119,7 @@ export class IslandScene extends Phaser.Scene {
     this.lightUp();
     this.critters = new Critters(
       this,
-      { w: W * T, h: H * T, isSand: (x, y) => this.ground_(x, y) === 'sand', isWater: (x, y) => this.ground_(x, y) === 'water', flowers: this.flowerSpots, pond: { x: 5 * T, y: 16 * T, w: 5 * T, h: 5 * T } },
+      { w: W * T, h: H * T, isSand: (x, y) => this.ground_(x, y) === 'sand', isWater: (x, y) => this.ground_(x, y) === 'water', flowers: this.flowerSpots, pond: this.pondRect() },
       this.dark > 0.45,
       this.weatherKind,
     );
@@ -120,8 +135,8 @@ export class IslandScene extends Phaser.Scene {
         flowers: this.flowerSpots,
         trees: this.trees.map((img) => ({ x: img.x + img.displayWidth / 2, y: img.y, h: img.displayHeight })),
         lamps: this.lampSpots,
-        dock: { x: 12.5 * T, y: 38.7 * T },
-        pond: { x: 5 * T, y: 16 * T, w: 5 * T, h: 5 * T },
+        dock: this.map ? null : { x: 12.5 * T, y: 38.7 * T },
+        pond: this.pondRect(),
       },
       { night: this.dark > 0.45, dusk: this.dark <= 0.45 && (hour > 17.5 && hour < 21), weather: this.weatherKind, season: this.season },
     );
@@ -133,13 +148,26 @@ export class IslandScene extends Phaser.Scene {
     this.setupInput();
     this.time.addEvent({ delay: STEP_MS, loop: true, callback: () => this.tick() });
     this.cameras.main.fadeIn(300, 29, 21, 18);
-    if (this.spawnAt !== 'cottage') this.toast('The island · walk back into the doors to go inside');
+    if (this.map) this.toast(`${this.mapName()} · sail home from the rowboat`);
+    else if (this.spawnAt === 'dock') this.toast('Home again');
+    else if (this.spawnAt !== 'cottage') this.toast('The island · walk back into the doors to go inside');
   }
 
   // ---------- The map ----------
   // Corner materials: 0 water, 1 sand, 2 grass, 3 pond water.
   makeMap() {
     const c = [];
+    if (this.map) {
+      for (let y = 0; y <= H; y++) c.push(Array.from({ length: W + 1 }, (_, x) => Number(this.map.corners[y]?.[x]) || 0));
+      // grass never touches the sea directly: there's always a bit of beach
+      for (let y = 0; y <= H; y++)
+        for (let x = 0; x <= W; x++) {
+          if (c[y][x] !== 2) continue;
+          if ([[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [-1, -1], [1, -1], [-1, 1]].some(([dx, dy]) => c[y + dy]?.[x + dx] === 0)) c[y][x] = 1;
+        }
+      this.corners = c;
+      return;
+    }
     for (let y = 0; y <= H; y++) {
       c.push([]);
       for (let x = 0; x <= W; x++) {
@@ -278,6 +306,7 @@ export class IslandScene extends Phaser.Scene {
 
   // The museum's front: stone, columns, a pediment and double doors.
   placeMuseum() {
+    if (this.map) return; // (builder islands have no museum)
     const key = 'island_museum';
     if (!this.textures.exists(key)) {
       const w = 8 * T;
@@ -358,6 +387,7 @@ export class IslandScene extends Phaser.Scene {
   }
 
   placeThings() {
+    if (this.map) return this.placeMapPieces();
     // beach and lawn
     this.trees = [];
     [[3, 13], [20, 14], [2, 26], [21, 27], [7, 35], [17, 34]].forEach(([x, y]) => this.place('palm', x, y));
@@ -504,6 +534,16 @@ export class IslandScene extends Phaser.Scene {
   // The tile garden's floors, streets and walkways are painted into the
   // ground itself (see drawGround); its standing pieces come in buildShowcase.
   paintShowcase() {
+    if (this.map) {
+      // the builder's tile layer: ground tiles painted over the terrain
+      this.paint = [];
+      Object.entries(this.map.tiles || {}).forEach(([k, ref]) => {
+        const [x, y] = k.split(',').map(Number);
+        const name = ref.slice(2);
+        if (ref.startsWith('t:') && TILES[name] && y < H && x < W) ((this.paint[y] ||= [])[x] ||= []).push(name);
+      });
+      return;
+    }
     const P = this.plan;
     this.paint = [];
     const paint = (name, x, y) => ((this.paint[y] ||= [])[x] ||= []).push(name);
@@ -788,6 +828,84 @@ export class IslandScene extends Phaser.Scene {
     this.animated.forEach(({ img, keys }) => img.setTexture(keys[this.frame % keys.length]));
   }
 
+  // ---------- Builder islands ----------
+  mapName() {
+    return !this.map.name || this.map.name === 'Untitled island' ? 'Your island' : this.map.name;
+  }
+
+  // painted tiles decide walking where they cover the terrain: boardwalks
+  // and docks over the water can be walked on, water tiles can't, cliffs block
+  walkableTiles() {
+    this.paint.forEach((row, y) =>
+      row?.forEach((names, x) => {
+        const t = TILES[names[names.length - 1]];
+        if (!t) return;
+        if (t.walk === 'water' || t.walk === 'block') this.solid[y][x] = true;
+        else if (t.walk === 'walk') this.solid[y][x] = false;
+      }),
+    );
+  }
+
+  // the pieces from the builder, standing on their tiles
+  placeMapPieces() {
+    this.trees = [];
+    const seen = new Set();
+    (this.map.objects || []).forEach((o) => {
+      const name = o.ref.startsWith('t:') ? o.ref.slice(2) : null;
+      const t = name && TILES[name];
+      if (!t) return;
+      const k = `${name}|${o.x}|${o.y}`;
+      if (seen.has(k)) return; // the same piece twice in one spot
+      seen.add(k);
+      const x = Math.round(o.x / T);
+      const y = Math.round((o.y + t.h) / T) - 1;
+      if (x < 0 || y < 0 || x >= W || y >= H) return;
+      if (name === 'tall_grass' || name === 'tall_grass_front') {
+        if (!this.grassCells.has(`${x},${y}`)) this.tallGrass(x, y);
+        return;
+      }
+      const dock = /^dock|bridge/.test(name);
+      const flat = dock || ['walk', 'grass', 'over'].includes(t.walk);
+      const img = this.place(name, x, y, { flat, solid: name === 'rowboat' ? false : undefined });
+      if (o.flip) img.setFlipX(true);
+      if (dock) for (let i = 0; i < Math.round(t.w / T); i++) if (this.solid[y]?.[x + i] !== undefined) this.solid[y][x + i] = false;
+      if (/tree|palm|pine|bush|willow|sapling/.test(name)) this.trees.push(img);
+      if (name === 'rowboat') this.boats.push({ x: img.x + img.displayWidth / 2, y: img.y - 10 });
+    });
+  }
+
+  // where you step off the boat: the nearest walkable spot to the first boat
+  // (or the middle of the island if there's no boat)
+  landing() {
+    const from = this.boats[0] || { x: (W * T) / 2, y: (H * T) / 2 };
+    if (!this.boats.length) this.boats.push({ ...from, virtual: true });
+    for (let r = 0; r < 20 * T; r += 8)
+      for (let a = 0; a < Math.PI * 2; a += Math.PI / 12) {
+        const x = from.x + Math.cos(a) * r;
+        const y = from.y + Math.sin(a) * r;
+        if (this.free(x, y) && this.ground_(x, y) !== 'water') return (this.landingSpot = { x, y });
+      }
+    return from;
+  }
+
+  // the pond's extent (for ducks and dragonflies), or null
+  pondRect() {
+    if (!this.map) return { x: 5 * T, y: 16 * T, w: 5 * T, h: 5 * T };
+    let x0 = 1e9, y0 = 1e9, x1 = -1, y1 = -1;
+    this.corners.forEach((row, y) => row.forEach((m, x) => m === 3 && ((x0 = Math.min(x0, x)), (x1 = Math.max(x1, x)), (y0 = Math.min(y0, y)), (y1 = Math.max(y1, y)))));
+    return x1 - x0 >= 3 && y1 - y0 >= 3 ? { x: x0 * T, y: y0 * T, w: (x1 - x0) * T, h: (y1 - y0) * T } : null;
+  }
+
+  sail() {
+    if (this.leaving) return;
+    this.leaving = true;
+    hideTalk();
+    this.interactBtn.classList.add('hidden');
+    sfx('door');
+    this.cameras.main.fadeOut(400, 20, 40, 70);
+    this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start('island', this.map ? { spawn: 'dock' } : { map: 'isle-1' }));
+  }
+
   findFocus() {
     const { x, y } = this.player;
     let best = null;
@@ -806,9 +924,15 @@ export class IslandScene extends Phaser.Scene {
         bestD = dp;
       }
     }
-    const dd = Math.hypot(x - DOOR.x, y - (DOOR.y + 4));
-    if (dd < 30 && dd < bestD) best = { door: true, icon: 'door' };
-    if (Math.hypot(x - COTTAGE.x, y - (COTTAGE.y + 8)) < 22) best = { cottage: true, icon: 'door' };
+    if (this.map) {
+      // by a boat, or back where you stepped off
+      if (this.boats.some((b) => Math.hypot(x - b.x, y - b.y) < 64) || (this.landingSpot && Math.hypot(x - this.landingSpot.x, y - this.landingSpot.y) < 36)) best = { boat: true, icon: 'door' };
+    } else {
+      const dd = Math.hypot(x - DOOR.x, y - (DOOR.y + 4));
+      if (dd < 30 && dd < bestD) best = { door: true, icon: 'door' };
+      if (Math.hypot(x - COTTAGE.x, y - (COTTAGE.y + 8)) < 22) best = { cottage: true, icon: 'door' };
+      if (Math.hypot(x - 14 * T, y - 39.4 * T) < 56) best = { boat: true, icon: 'door' }; // the rowboat at the dock
+    }
     if (!best) {
       const spot = this.waterAhead();
       if (spot) best = { fish: spot, icon: 'fish' };
@@ -838,6 +962,7 @@ export class IslandScene extends Phaser.Scene {
     const f = this.focus;
     if (!f || this.leaving) return;
     if (this.fishing.busy) return this.fishing.tap();
+    if (f.boat) return this.sail();
     if (f.door) return this.goInside();
     if (f.cottage) return this.enterCottage();
     if (f.fish) {
@@ -962,12 +1087,12 @@ export class IslandScene extends Phaser.Scene {
     this.playerGlow?.setPosition(p.x, p.y - 12);
     p.setDepth(p.y);
     this.shadow.setPosition(p.x, p.y - 1);
-    // Walk up into the doors to go back inside.
-    const atDoor = Math.abs(p.x - DOOR.x) < 20 && p.y < DOOR.y + 10 && p.y > DOOR.y - 12;
+    // Walk up into the doors to go back inside (main island only).
+    const atDoor = !this.map && Math.abs(p.x - DOOR.x) < 20 && p.y < DOOR.y + 10 && p.y > DOOR.y - 12;
     if (this.doorLock && !atDoor) this.doorLock = false;
     if (!this.doorLock && atDoor && vy < 0) return this.goInside();
     // and up into the cottage door for the angled room
-    const atCottage = Math.abs(p.x - COTTAGE.x) < 10 && p.y < COTTAGE.y + 10 && p.y > COTTAGE.y - 6; // right at the door, not anywhere above it
+    const atCottage = !this.map && Math.abs(p.x - COTTAGE.x) < 10 && p.y < COTTAGE.y + 10 && p.y > COTTAGE.y - 6; // right at the door, not anywhere above it
     if (this.cottageLock && !atCottage) this.cottageLock = false;
     if (!this.cottageLock && atCottage && vy < 0) return this.enterCottage();
 
@@ -976,7 +1101,7 @@ export class IslandScene extends Phaser.Scene {
     if (!this.fishing.busy) this.focus = this.findFocus();
     this.interactBtn.classList.toggle('hidden', !this.focus || (this.fishing.busy && this.fishing.state === 'reel'));
     if (this.focus && this.focus.icon !== prev) this.interactBtn.querySelector('.bang').innerHTML = iconSvg(this.focus.icon);
-    if (!this.fishing.busy) this.interactBtn.querySelector('.label').textContent = this.focus?.fish ? 'Fish' : 'Interact';
+    if (!this.fishing.busy) this.interactBtn.querySelector('.label').textContent = this.focus?.fish ? 'Fish' : this.focus?.boat ? 'Sail' : 'Interact';
     if (this.focus && (Phaser.Input.Keyboard.JustDown(k.SPACE) || Phaser.Input.Keyboard.JustDown(k.ENTER))) this.interact();
   }
 }
