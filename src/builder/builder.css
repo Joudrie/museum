@@ -350,6 +350,16 @@ button.link {
   color: var(--muted);
   text-decoration: underline;
 }
+#versions {
+  display: grid;
+  gap: 5px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+#versions button {
+  text-align: left;
+  font-size: 13px;
+}
 #saved-list {
   display: grid;
   gap: 5px;

@@ -6,12 +6,15 @@
 // Pieces come from the game's island tiles (src/tiles.js) and the room pieces
 // cut from the free packs (public/builder, tools/build_palette.py).
 import { buildTiles, T } from '../tiles.js';
+import { backup, backupsFor, latestBackup, keepStorage } from './vault.js';
+import recovered from './recovered.json';
 
 const $ = (id) => document.getElementById(id);
 const canvas = $('canvas');
 const ctx = canvas.getContext('2d');
 const STORE = 'curation.mapbuilder.maps';
 const CURRENT = 'curation.mapbuilder.current';
+const VIEW = 'curation.mapbuilder.view';
 const MAX = 300;
 const C = 8; // cells per cached ground chunk
 const MATS = [
@@ -405,7 +408,8 @@ function render() {
     ctx.strokeStyle = tool === 'erase' ? '#e0405a' : '#e8c867';
     ctx.strokeRect(brushAt.x * T, brushAt.y * T, n * T, n * T);
   }
-  $('zoom-chip').textContent = `${Math.round(view.z * 100)}% · ${map.w}×${map.h}`;
+  const t = savedAt && new Date(savedAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+  $('zoom-chip').textContent = `${Math.round(view.z * 100)}% · ${map.w}×${map.h}${t ? ` · saved ${t}` : ''}`;
 }
 
 // ---------- editing ----------
@@ -561,7 +565,9 @@ function serialize() {
   for (let y = 0; y <= map.h; y++) rows.push(Array.from(map.corners.subarray(y * (map.w + 1), (y + 1) * (map.w + 1))).join(''));
   const tiles = {};
   map.tiles.forEach((r, i) => r && (tiles[`${i % map.w},${Math.floor(i / map.w)}`] = r));
-  return { format: 'curation-map', version: 2, tile: T, name: map.name, kind: map.kind, w: map.w, h: map.h, corners: map.kind === 'island' ? rows : [], tiles, objects: sorted().map((o) => ({ ref: o.ref, x: o.x, y: o.y, ...(o.flip ? { flip: true } : {}) })) };
+  Object.assign(tiles, map.keep?.tiles);
+  const objects = sorted().map((o) => ({ ref: o.ref, x: o.x, y: o.y, ...(o.flip ? { flip: true } : {}) }));
+  return { format: 'curation-map', version: 2, tile: T, name: map.name, kind: map.kind, w: map.w, h: map.h, corners: map.kind === 'island' ? rows : [], tiles, objects: objects.concat(map.keep?.objects || []) };
 }
 function deserialize(d) {
   // older room files from the first builder
@@ -578,11 +584,14 @@ function deserialize(d) {
   m.tiles.fill(null);
   m.name = String(d.name || m.name).slice(0, 60);
   (d.corners || []).forEach((row, y) => [...String(row)].forEach((ch, x) => x <= m.w && y <= m.h && (m.corners[y * (m.w + 1) + x] = Number(ch) || 0)));
+  // pieces that didn't load (a bad connection) are kept as they are, not dropped
+  m.keep = { tiles: {}, objects: [] };
   Object.entries(d.tiles || {}).forEach(([k, r]) => {
     const [x, y] = k.split(',').map(Number);
-    if (x < m.w && y < m.h && PIECES[r]) m.tiles[y * m.w + x] = r;
+    if (x < m.w && y < m.h) PIECES[r] ? (m.tiles[y * m.w + x] = r) : (m.keep.tiles[k] = r);
   });
-  m.objects = (d.objects || []).filter((o) => PIECES[o.ref]).map((o) => ({ ref: o.ref, x: Math.round(o.x), y: Math.round(o.y), flip: !!o.flip }));
+  (d.objects || []).forEach((o) => (PIECES[o.ref] ? m.objects : m.keep.objects).push({ ref: o.ref, x: Math.round(o.x), y: Math.round(o.y), ...(o.flip ? { flip: true } : {}) }));
+  m.objects.forEach((o) => (o.flip = !!o.flip));
   return m;
 }
 function record() {
@@ -590,22 +599,48 @@ function record() {
   if (undoStack.length > 40) undoStack.shift();
   redoStack.length = 0;
 }
-let saveTimer = 0;
+// Work is saved the moment it changes: to this phone's storage, plus a
+// history of earlier versions in a second store (vault.js) so nothing is lost
+// if the page reloads or the phone clears one of them.
+let savedAt = 0;
 function changed() {
-  clearTimeout(saveTimer);
-  saveTimer = setTimeout(saveLocal, 600);
+  saveLocal();
   draw();
 }
-function saveLocal() {
+function readAll() {
   try {
-    const all = JSON.parse(localStorage.getItem(STORE) || '{}');
-    all[map.name] = serialize();
-    localStorage.setItem(STORE, JSON.stringify(all));
-    localStorage.setItem(CURRENT, map.name);
+    return JSON.parse(localStorage.getItem(STORE) || '{}');
   } catch {
-    toast('Couldn’t autosave (storage full?). Use Save map file.');
+    return {};
   }
 }
+function saveLocal() {
+  if (!map) return;
+  const data = { ...serialize(), saved: Date.now() };
+  try {
+    const all = readAll();
+    all[map.name] = data;
+    localStorage.setItem(STORE, JSON.stringify(all));
+    localStorage.setItem(CURRENT, map.name);
+    savedAt = data.saved;
+  } catch {
+    toast('Phone storage is full. Use Save map file now.');
+  }
+  backup(data);
+  saveView();
+}
+function saveView() {
+  try {
+    localStorage.setItem(VIEW, JSON.stringify({ name: map.name, ...view }));
+  } catch {
+    // fine
+  }
+}
+// the phone may close the page any time it's in the background
+const flush = () => map && saveLocal();
+document.addEventListener('visibilitychange', () => document.visibilityState === 'hidden' && flush());
+window.addEventListener('pagehide', flush);
+window.addEventListener('blur', flush);
 function loadMap(m, keepView) {
   map = m;
   select(null);
@@ -722,7 +757,10 @@ const lift = (e) => {
     endStroke();
   } else if (gesture?.kind === 'stroke') endStroke();
   if (gesture?.kind === 'pinch' && fingers.size) gesture = { kind: 'none' }; // the other finger doesn't start painting
-  if (!fingers.size) gesture = null;
+  if (!fingers.size) {
+    gesture = null;
+    saveView();
+  }
 };
 canvas.addEventListener('pointerup', lift);
 canvas.addEventListener('pointercancel', lift);
@@ -871,13 +909,8 @@ function openMenu() {
 function renderSaved() {
   const list = $('saved-list');
   list.replaceChildren();
-  let all = {};
-  try {
-    all = JSON.parse(localStorage.getItem(STORE) || '{}');
-  } catch {
-    // nothing saved
-  }
-  const names = Object.keys(all);
+  const all = readAll();
+  const names = Object.keys(all).sort((a, b) => (all[b].saved || 0) - (all[a].saved || 0));
   if (!names.length) list.innerHTML = '<p class="hint">Maps save on this phone as you work. They’ll show here.</p>';
   names.forEach((n) => {
     const row = document.createElement('div');
@@ -888,7 +921,7 @@ function renderSaved() {
       saveLocal();
       loadMap(deserialize(all[n]));
       undoStack.length = redoStack.length = 0;
-      localStorage.setItem(CURRENT, n);
+      saveLocal();
       $('menu').hidden = true;
     };
     const del = document.createElement('button');
@@ -906,20 +939,44 @@ function renderSaved() {
     row.append(open, del);
     list.appendChild(row);
   });
+  renderVersions();
+}
+// earlier versions of the open map, newest first
+async function renderVersions() {
+  const box = $('versions');
+  box.replaceChildren();
+  const list = await backupsFor(map.name);
+  if (!list.length) box.innerHTML = '<p class="hint">Earlier versions of this map show here as you work.</p>';
+  list.slice(0, 30).forEach((v) => {
+    const b = document.createElement('button');
+    const d = new Date(v.saved);
+    b.textContent = `${d.toLocaleDateString([], { month: 'short', day: 'numeric' })} ${d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })} · ${v.objects.length} pieces`;
+    b.onclick = () => {
+      record();
+      loadMap(deserialize(v), true);
+      changed();
+      $('menu').hidden = true;
+      toast('Earlier version opened. Undo goes back.');
+    };
+    box.appendChild(b);
+  });
 }
 $('menu-btn').onclick = openMenu;
 $('map-name').onclick = openMenu;
 $('menu-close').onclick = () => {
   const name = $('name-input').value.trim() || map.name;
   if (name !== map.name) {
+    // the copy under the old name stays until the new one is saved
+    const old = map.name;
+    map.name = name;
+    saveLocal();
     try {
-      const all = JSON.parse(localStorage.getItem(STORE) || '{}');
-      delete all[map.name];
+      const all = readAll();
+      if (all[name]) delete all[old];
       localStorage.setItem(STORE, JSON.stringify(all));
     } catch {
       // fine
     }
-    map.name = name;
     $('map-name').textContent = name;
     changed();
   }
@@ -954,18 +1011,26 @@ $('file-input').onchange = async (e) => {
   }
 };
 const newMap = (kind) => {
+  const btn = $(kind === 'island' ? 'new-island' : 'new-room');
+  if (btn.dataset.sure !== '1') {
+    btn.dataset.sure = '1';
+    btn.textContent = 'Tap again to start it';
+    setTimeout(() => {
+      btn.dataset.sure = '';
+      btn.textContent = kind === 'island' ? 'New island' : 'New room';
+    }, 3000);
+    return;
+  }
+  btn.dataset.sure = '';
+  btn.textContent = kind === 'island' ? 'New island' : 'New room';
   saveLocal();
   const m = blankMap(kind, Number($('new-w').value), Number($('new-h').value));
-  let all = {};
-  try {
-    all = JSON.parse(localStorage.getItem(STORE) || '{}');
-  } catch {
-    // fine
-  }
+  const all = readAll();
   let n = 1;
   const base = m.name;
   while (all[m.name]) m.name = `${base} ${++n}`;
   loadMap(m);
+  toast('Your other maps are in ☰ My maps.');
   undoStack.length = redoStack.length = 0;
   changed();
   $('menu').hidden = true;
@@ -1028,18 +1093,49 @@ async function boot() {
   await loadPieces();
   buildPalette();
   credits();
-  let m = null;
-  try {
-    const all = JSON.parse(localStorage.getItem(STORE) || '{}');
-    const cur = localStorage.getItem(CURRENT);
-    if (cur && all[cur]) m = deserialize(all[cur]);
-  } catch {
-    // start fresh
+  keepStorage();
+  const all = readAll();
+  const newest = Object.keys(all).sort((a, b) => (all[b].saved || 0) - (all[a].saved || 0))[0];
+  let cur = localStorage.getItem(CURRENT);
+  if (!all[cur]) cur = newest;
+  // the island recovered from the map file sent in October 2026 (added once)
+  if (!localStorage.getItem('curation.mapbuilder.recovered1')) {
+    localStorage.setItem('curation.mapbuilder.recovered1', '1');
+    if (!all[recovered.name]) {
+      all[recovered.name] = { ...recovered, saved: 1 };
+      try {
+        localStorage.setItem(STORE, JSON.stringify(all));
+      } catch {
+        // fine
+      }
+      if (!all[cur] || isBlank(all[cur])) cur = recovered.name;
+    }
   }
+  let data = all[cur];
+  // this phone's storage was cleared: bring back the newest copy from the vault
+  const vault = await latestBackup();
+  if (vault && vault.saved > (data?.saved || 0)) data = vault;
   resize();
-  loadMap(m || blankMap('island', 80, 80));
+  try {
+    loadMap(data ? deserialize(data) : blankMap('island', 80, 80));
+  } catch {
+    loadMap(blankMap('island', 80, 80));
+  }
+  savedAt = data?.saved > 1 ? data.saved : 0;
+  try {
+    const v = JSON.parse(localStorage.getItem(VIEW) || 'null');
+    if (v && v.name === map.name) Object.assign(view, { x: v.x, y: v.y, z: v.z });
+  } catch {
+    // fine
+  }
+  localStorage.setItem(CURRENT, map.name);
   choose('m:2');
   setTool('paint');
+  draw();
+}
+
+function isBlank(d) {
+  return !(d.objects || []).length && !Object.keys(d.tiles || {}).length && (d.w || 0) <= 80;
 }
 
 window.__builder = { get map() { return map; }, serialize, deserialize, get view() { return view; } }; // for tests
