@@ -639,7 +639,7 @@ export class RoomScene extends Phaser.Scene {
       }
       if (q.flames) {
         const fx = q.px - img.width / 2 + q.flames.x + 16;
-        const fire = this.add.image(fx, q.py - img.height + q.flames.y, 'lpc_flame_0').setOrigin(0.5, 1).setDepth(night ? 5002 : img.depth + 0.5); // at night the fire shines through the dark
+        const fire = this.add.image(fx, q.py - img.height + q.flames.y, 'lpc_flame_0').setOrigin(0.5, 1).setDepth(img.depth + 0.5); // sorted with its fireplace, so you can stand in front of it
         parts.push(fire);
         let f = 0;
         parts.push(this.time.addEvent({ delay: 140, loop: true, callback: () => fire.setTexture(`lpc_flame_${(f = (f + 1) % 4)}`) }));
@@ -647,8 +647,13 @@ export class RoomScene extends Phaser.Scene {
       if (q.glow) {
         lightTextures(this);
         const gy = q.flames ? q.py - 20 : q.py - img.height + 6;
-        const glow = this.add.image(q.px, gy, 'lt_glow').setDisplaySize(q.flames ? (night ? 240 : 150) : 70, q.flames ? (night ? 170 : 110) : 60).setBlendMode(Phaser.BlendModes.ADD).setTint(q.glow).setAlpha(night ? 0.8 : 0.25).setDepth(5001);
+        const glow = this.add.image(q.px, gy, 'lt_glow').setDisplaySize(q.flames ? (night ? 240 : 150) : 70, q.flames ? (night ? 170 : 110) : 60).setBlendMode(Phaser.BlendModes.ADD).setTint(q.glow).setAlpha(night ? 0.55 : 0.25).setDepth(5001);
         parts.push(glow);
+        if (q.flames && night) {
+          // the fire itself stays bright through the dark (a small warm glow right on it)
+          const core = this.add.image(q.px - img.width / 2 + q.flames.x + 16, q.py - img.height + q.flames.y - 8, 'lt_glow').setDisplaySize(44, 30).setBlendMode(Phaser.BlendModes.ADD).setTint(0xffc060).setAlpha(0.9).setDepth(5001);
+          parts.push(core);
+        }
         if (q.flames) this.tweens.add({ targets: glow, alpha: { from: glow.alpha * 0.8, to: glow.alpha * 1.1 }, duration: 260, yoyo: true, repeat: -1, ease: 'Sine.inOut' });
       }
     });
@@ -1636,6 +1641,7 @@ export class RoomScene extends Phaser.Scene {
       this.bubble.setVisible(false);
       this.interactBtn.classList.add('hidden');
       this.endTalk();
+      hideTalk(); // the caretaker's tips too: never leave a speech bubble over a panel
     }
   }
 
@@ -1872,23 +1878,38 @@ export class RoomScene extends Phaser.Scene {
     if (changed) saveItems(this.roomIndex, this.items);
   }
 
+  // An open archway in the back wall you can step into (about a tile deep)
+  // before you're through: { x0, x1 } across it, base = the wall's foot,
+  // y = how far in you can go.
+  archOpening() {
+    const { exit } = this.L;
+    if (!exit?.rect || !this.arches.exit || this.arches.exitClosed || this.roomIndex + 1 >= this.rooms.length) return null;
+    const half = (exit.rect.u1 - exit.rect.u0) / 2 - 8;
+    const base = exit.ay - 12;
+    return { x0: exit.ax - half, x1: exit.ax + half, base, y: base - 36 };
+  }
+
   // Archways: walk straight through, no button and no fade.
   checkArches() {
     const { x, y } = this.player;
     const { exit, entrance } = this.L;
     const near = (a) => a && Math.hypot(x - a.ax, y - a.ay) < 12;
     const builtNext = this.roomIndex + 1 < this.rooms.length;
-    const exitArch = this.arches.exit && builtNext && exit?.rect;
+    const arch = this.archOpening();
+    // walk on into an open archway and you're through
+    const throughArch = arch && x > arch.x0 && x < arch.x1 && y < arch.base - 30;
+    // (a locked room behind the arch has to be paid for first: Interact offers it)
+    const exitArch = this.arches.exit && builtNext && !this.arches.exitClosed && exit?.rect;
     const entranceArch = this.arches.entrance;
     // Out the entrance's front doors: onto the island.
     const onMat = this.roomIndex === 0 && entrance.mat && x > entrance.x0 && x < entrance.x1 && y > this.g.y1 - 8;
-    const touching = (exitArch && near(exit)) || (entranceArch && near(entrance)) || onMat;
+    const touching = (exitArch && (arch ? throughArch : near(exit))) || (entranceArch && near(entrance)) || onMat;
     if (this.archLock) {
       if (!touching) this.archLock = false;
       return;
     }
     if (onMat) this.travel('island');
-    else if (exitArch && near(exit)) this.travel(this.roomIndex + 1, 'entrance', true);
+    else if (exitArch && (arch ? throughArch : near(exit))) this.travel(this.roomIndex + 1, 'entrance', true);
     else if (entranceArch && near(entrance)) this.travel(this.roomIndex - 1, 'exit', true);
   }
 
@@ -2483,9 +2504,13 @@ export class RoomScene extends Phaser.Scene {
     const len = Math.hypot(vx, vy);
     if (len > 0) {
       const b = this.bounds();
-      const nx = Phaser.Math.Clamp(this.player.x + (vx / len) * SPEED * pace * dt, b.x0, b.x1);
-      const ny = Phaser.Math.Clamp(this.player.y + (vy / len) * SPEED * pace * dt, b.y0, b.y1);
-      const free = (x, y, ox, oy) => !this.blocked(x, y) && (!this.hitsVisitor(x, y) || this.hitsVisitor(ox, oy));
+      const arch = this.archOpening();
+      const inArch = (x, y) => arch && x > arch.x0 && x < arch.x1 && y >= arch.y && y <= arch.base + 12;
+      const deep = arch && this.player.y < arch.base; // already inside the archway: stay between its sides
+      let nx = Phaser.Math.Clamp(this.player.x + (vx / len) * SPEED * pace * dt, deep ? arch.x0 + 1 : b.x0, deep ? arch.x1 - 1 : b.x1);
+      const top = arch && this.player.x > arch.x0 && this.player.x < arch.x1 ? Math.min(b.y0, arch.y) : b.y0;
+      const ny = Phaser.Math.Clamp(this.player.y + (vy / len) * SPEED * pace * dt, top, b.y1);
+      const free = (x, y, ox, oy) => (inArch(x, y) || !this.blocked(x, y)) && (!this.hitsVisitor(x, y) || this.hitsVisitor(ox, oy));
       // (if already stuck inside something, e.g. a new item, let the player walk out)
       if (free(nx, this.player.y, this.player.x, this.player.y) || this.blocked(this.player.x, this.player.y)) this.player.x = nx;
       if (free(this.player.x, ny, this.player.x, this.player.y)) this.player.y = ny;
