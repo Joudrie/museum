@@ -411,6 +411,11 @@ const ok = (msg) => console.log('  ✓ ' + msg);
   if (!outside) fail('walking out the front door did not reach the island');
   else {
     ok('walked out onto the island');
+    if (await scene(() => __game.scene.getScene('island').mapId === 'main')) ok('Main Island is home');
+    else fail('the front door did not lead to Main Island');
+    // fishing and the cottage are on Island One
+    await scene(() => { __game.scene.getScene('island').scene.start('island', { map: 'one' }); });
+    await settle(1800);
     // Fishing: face the pond, cast, wait for the bite, tap to hook
     const spot = await scene(() => {
       const s = __game.scene.getScene('island');
@@ -439,7 +444,7 @@ const ok = (msg) => console.log('  ✓ ' + msg);
     }
     // The angled room, through the cottage door, and back out (twice, so a
     // second visit to the island is covered too)
-    await scene(() => __game.scene.getScene('island').player.setPosition(4 * 32 + 48, 29 * 32 + 14));
+    await scene(() => { __game.scene.getScene('island').player.setPosition(4 * 32 + 48, 29 * 32 + 14); });
     await p.keyboard.down('w');
     await settle(700);
     await p.keyboard.up('w');
@@ -456,13 +461,23 @@ const ok = (msg) => console.log('  ✓ ' + msg);
       if (await scene(() => __game.scene.isActive('island'))) ok('visited the angled room and came back out');
       else fail('could not leave the angled room');
     }
-    await scene(() => __game.scene.getScene('island').player.setPosition(12 * 32, 9 * 32 + 10));
+    // Island One's museum doors are shut; Main Island's open
+    await scene(() => { const s = __game.scene.getScene('island'); s.player.setPosition(s.door.x, s.door.y + 10); s.doorLock = false; });
+    await p.keyboard.down('w');
+    await settle(800);
+    await p.keyboard.up('w');
+    await settle(600);
+    if (await scene(() => __game.scene.isActive('island'))) ok('Island One museum doors stay locked');
+    else fail('walked into the locked museum on Island One');
+    await scene(() => { __game.scene.getScene('island').scene.start('island', { map: 'main' }); });
+    await settle(3000);
+    await scene(() => { const s = __game.scene.getScene('island'); s.player.setPosition(s.door.x, s.door.y + 10); s.doorLock = false; });
     await p.keyboard.down('w');
     await settle(800);
     await p.keyboard.up('w');
     await settle(1500);
     if (await scene(() => __game.scene.isActive('room') && __game.scene.getScene('room').roomIndex === 0)) ok('walked back into the museum');
-    else fail('could not get back in from the island');
+    else fail(`could not get back in from the island ${JSON.stringify(await scene(() => { const s = __game.scene.getScene('island'); return { map: s.mapId, door: s.door, p: [s.player.x, s.player.y], island: __game.scene.isActive('island'), room: __game.scene.isActive('room') && __game.scene.getScene('room').roomIndex }; }))}`);
   }
 
   // Robbery pop-up

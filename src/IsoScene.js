@@ -519,7 +519,7 @@ export class IsoScene extends Phaser.Scene {
     this.interactBtn.classList.add('hidden');
     sfx('door');
     this.cameras.main.fadeOut(220, 29, 21, 18);
-    this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start('island', { spawn: 'cottage' }));
+    this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start('island', { map: 'one', spawn: 'cottage' }));
   }
 
   toast(text) {

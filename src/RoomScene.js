@@ -1862,7 +1862,7 @@ export class RoomScene extends Phaser.Scene {
     sfx('door');
     if (room === 'island') {
       this.cameras.main.fadeOut(220, 29, 21, 18);
-      this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start('island'));
+      this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start('island', { map: 'main' }));
       return;
     }
     const cam = this.cameras.main;
