@@ -350,6 +350,23 @@ button.link {
   color: var(--muted);
   text-decoration: underline;
 }
+#resume-list {
+  display: grid;
+  gap: 5px;
+}
+#resume-list button {
+  text-align: left;
+}
+.resume-name {
+  display: block;
+  font-size: 18px;
+}
+#resume-go {
+  margin-bottom: 6px;
+}
+#resume-others[hidden] {
+  display: none;
+}
 #versions {
   display: grid;
   gap: 5px;
