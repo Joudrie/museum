@@ -22,6 +22,10 @@ import { Pet } from './pets.js';
 import { Fishing, catchOpen } from './fishing.js';
 import { openJournal } from './journal.js';
 import isle1 from './maps/isle-1.json';
+import { PEOPLE } from './landmarks.js';
+import { openSail, builderIslands } from './sailmenu.js';
+import { visitorLook, KINDS } from './RoomScene.js';
+import { PERSONALITIES, QUIPS } from './lines.js';
 
 // Islands drawn in the map builder (builder.html), reached by boat from the
 // main island's dock. Each is a 'curation-map' file (see src/builder/main.js).
@@ -60,8 +64,8 @@ export class IslandScene extends Phaser.Scene {
 
   init(data) {
     this.spawnAt = data?.spawn;
-    this.mapId = MAPS[data?.map] ? data.map : null;
-    this.map = this.mapId ? MAPS[this.mapId] : null; // a builder island instead of the main one
+    this.mapId = MAPS[data?.map] ? data.map : data?.mapData ? 'test' : null;
+    this.map = data?.mapData || (this.mapId ? MAPS[this.mapId] : null); // a builder island instead of the main one
   }
 
   create() {
@@ -98,6 +102,8 @@ export class IslandScene extends Phaser.Scene {
     this.leaving = false;
 
     this.boats = [];
+    this.islanders = [];
+    this.door = this.map ? null : DOOR; // a museum's front doors
     this.makeMap();
     this.paintShowcase();
     this.drawGround();
@@ -107,7 +113,7 @@ export class IslandScene extends Phaser.Scene {
 
     const ch = { ...DEFAULT_CHARACTER, ...load('curation.character', {}) };
     if (!this.textures.exists('player_down')) makeCharacter(this, 'player', ch, {});
-    const start = this.map ? this.landing() : this.spawnAt === 'cottage' ? { x: COTTAGE.x, y: COTTAGE.y + 16 } : this.spawnAt === 'dock' ? { x: 12.5 * T, y: 38.6 * T } : { x: DOOR.x, y: DOOR.y + 22 };
+    const start = this.map ? (this.door && this.mapId === 'test' ? { x: this.door.x, y: this.door.y + 22 } : this.landing()) : this.spawnAt === 'cottage' ? { x: COTTAGE.x, y: COTTAGE.y + 16 } : this.spawnAt === 'dock' ? { x: 12.5 * T, y: 38.6 * T } : { x: DOOR.x, y: DOOR.y + 22 };
     this.player = this.add.sprite(start.x, start.y, 'player_down').setOrigin(0.5, 1).setScale(PLAYER_SCALE);
     this.shadow = this.add.ellipse(0, 0, 18, 6, 0x000000, 0.25).setDepth(0.5);
     if (ch.pet && ch.pet !== 'none') this.pet = new Pet(this, ch.pet, ch.petColor, this.player);
@@ -308,76 +314,7 @@ export class IslandScene extends Phaser.Scene {
   placeMuseum() {
     if (this.map) return; // (builder islands have no museum)
     const key = 'island_museum';
-    if (!this.textures.exists(key)) {
-      const w = 8 * T;
-      const h = 6 * T;
-      const tex = this.textures.createCanvas(key, w, h);
-      const g = tex.getContext();
-      const R = (x, y, rw, rh, c) => {
-        g.fillStyle = c;
-        g.fillRect(x, y, rw, rh);
-      };
-      // pediment (the triangle roof)
-      g.fillStyle = '#20201a';
-      g.beginPath();
-      g.moveTo(4, 52);
-      g.lineTo(w / 2, 6);
-      g.lineTo(w - 4, 52);
-      g.fill();
-      g.fillStyle = '#e8e2d4';
-      g.beginPath();
-      g.moveTo(12, 48);
-      g.lineTo(w / 2, 12);
-      g.lineTo(w - 12, 48);
-      g.fill();
-      g.fillStyle = '#cfc6b4';
-      g.beginPath();
-      g.moveTo(30, 44);
-      g.lineTo(w / 2, 22);
-      g.lineTo(w - 30, 44);
-      g.fill();
-      R(0, 50, w, 10, '#20201a');
-      R(2, 51, w - 4, 8, '#f0ece2');
-      // walls
-      R(6, 60, w - 12, h - 84, '#20201a');
-      R(8, 60, w - 16, h - 86, '#d8d0be');
-      for (let y = 66; y < h - 26; y += 8) R(8, y, w - 16, 1, '#bfb5a2');
-      // sign
-      R(w / 2 - 44, 30, 88, 14, '#20201a');
-      R(w / 2 - 42, 31, 84, 12, '#3e2a20');
-      g.fillStyle = '#f2d36b';
-      g.font = 'bold 9px monospace';
-      g.textAlign = 'center';
-      g.fillText('CURATION', w / 2, 41);
-      // columns
-      [20, 58, 198, 236].forEach((x) => {
-        R(x - 8, 60, 16, h - 86, '#20201a');
-        R(x - 7, 60, 14, h - 86, '#f4f0e6');
-        R(x - 7, 60, 4, h - 86, '#ffffff');
-        R(x + 3, 60, 3, h - 86, '#cfc6b4');
-        R(x - 10, 60, 20, 4, '#e8e2d4');
-        R(x - 10, h - 30, 20, 4, '#e8e2d4');
-      });
-      // windows with a warm glow
-      [96, 160].forEach((x) => {
-        R(x - 12, 76, 24, 34, '#20201a');
-        R(x - 10, 78, 20, 30, '#f2c86a');
-        R(x - 1, 78, 2, 30, '#20201a');
-        R(x - 10, 92, 20, 2, '#20201a');
-      });
-      // double doors (open: the warm hall shows through)
-      R(w / 2 - 22, h - 72, 44, 46, '#20201a');
-      R(w / 2 - 20, h - 70, 40, 44, '#f2d9a0');
-      R(w / 2 - 20, h - 70, 9, 44, '#7a4f39');
-      R(w / 2 + 11, h - 70, 9, 44, '#7a4f39');
-      R(w / 2 - 12, h - 58, 24, 30, '#e8c070');
-      // steps
-      for (let i = 0; i < 3; i++) {
-        R(w / 2 - 40 - i * 8, h - 26 + i * 8, 80 + i * 16, 8, '#20201a');
-        R(w / 2 - 39 - i * 8, h - 25 + i * 8, 78 + i * 16, 6, i % 2 ? '#e8e2d4' : '#d8d0be');
-      }
-      tex.refresh();
-    }
+    if (!this.textures.exists(key)) this.textures.addCanvas(key, TILES.museum.frames[0]);
     this.add.image(DOOR.x, DOOR.y + 8, key).setOrigin(0.5, 1).setDepth(DOOR.y);
     this.light(DOOR.x, DOOR.y + 6, 46, 0xffd89a, 1, { glow: 40, gy: DOOR.y - 20 });
     [-1, 1].forEach((d) => this.light(DOOR.x + d * 32, DOOR.y - 88, 30, 0xffd080, 0.8, { glow: 34 })); // the windows
@@ -860,6 +797,8 @@ export class IslandScene extends Phaser.Scene {
       const x = Math.round(o.x / T);
       const y = Math.round((o.y + t.h) / T) - 1;
       if (x < 0 || y < 0 || x >= W || y >= H) return;
+      if (PEOPLE[name] !== undefined) return this.islanders.push(this.islander(o.x + T / 2, o.y + t.h - 4, PEOPLE[name], this.islanders.length));
+      if (name === 'museum') return this.mapMuseum(x, y, t);
       if (name === 'tall_grass' || name === 'tall_grass_front') {
         if (!this.grassCells.has(`${x},${y}`)) this.tallGrass(x, y);
         return;
@@ -872,6 +811,78 @@ export class IslandScene extends Phaser.Scene {
       if (/tree|palm|pine|bush|willow|sapling/.test(name)) this.trees.push(img);
       if (name === 'rowboat') this.boats.push({ x: img.x + img.displayWidth / 2, y: img.y - 10 });
     });
+  }
+
+  // A museum placed on a builder island: same building, same doors.
+  mapMuseum(x, y, t) {
+    if (this.door) return; // one museum per island
+    const img = this.place('museum', x, y, { solid: false });
+    const wide = t.w / T;
+    // the front two rows are solid, except the doorway
+    for (let r = 0; r <= 1; r++) for (let i = 0; i < wide; i++) if (!(r === 0 && (i === wide / 2 - 1 || i === wide / 2))) this.block(x + i, y - r);
+    this.door = { x: img.x + t.w / 2, y: img.y - 8 };
+    this.light(this.door.x, this.door.y + 6, 46, 0xffd89a, 1, { glow: 40, gy: this.door.y - 20 });
+  }
+
+  // Someone who lives on the island: walks Pokémon-style, a tile or two at a
+  // time, never further than `range` tiles from home. Tap to chat.
+  islander(x, y, range, i) {
+    const seed = 700 + i * 7 + Math.round(x + y);
+    const r = (k) => {
+      const v = Math.sin(seed * 12.9898 + k * 78.233) * 43758.5453;
+      return v - Math.floor(v);
+    };
+    const kind = KINDS[Math.floor(r(1) * KINDS.length)];
+    const { colors, look, scale } = visitorLook(kind, r);
+    const prefix = `islander${seed}`;
+    if (!this.textures.exists(`${prefix}_down`)) makeCharacter(this, prefix, colors, look);
+    const s = this.add.sprite(x, y, `${prefix}_down`).setOrigin(0.5, 1).setScale(scale).setDepth(y);
+    const names = PERSONALITIES[kind].names;
+    return { s, prefix, kind, home: { x, y }, range: range * T, name: names[Math.floor(r(2) * names.length)], wait: 500 + r(3) * 2500, target: null };
+  }
+
+  moveIslanders(dt) {
+    this.islanders.forEach((n) => {
+      const { s } = n;
+      if (this.focus?.npc === n && talking()) n.target = null; // stops to chat
+      if (!n.target) {
+        animateWalker(this, s, false, dt);
+        n.wait -= dt * 1000;
+        if (n.wait > 0 || !n.range) return;
+        n.wait = 1500 + Math.random() * 3500;
+        const [dx, dy] = [[1, 0], [-1, 0], [0, 1], [0, -1]][Math.floor(Math.random() * 4)];
+        const steps = 1 + Math.floor(Math.random() * 2);
+        const tx = s.x + dx * steps * T;
+        const ty = s.y + dy * steps * T;
+        if (Math.hypot(tx - n.home.x, ty - n.home.y) > n.range) return;
+        for (let k = 1; k <= steps; k++) if (!this.free(s.x + dx * k * T, s.y + dy * k * T) || this.ground_(s.x + dx * k * T, s.y + dy * k * T) === 'water') return;
+        n.target = { x: tx, y: ty, dx, dy };
+        return;
+      }
+      const sp = 38 * dt;
+      const { target: g } = n;
+      const ddx = g.x - s.x;
+      const ddy = g.y - s.y;
+      const d = Math.hypot(ddx, ddy);
+      if (d <= sp) {
+        s.setPosition(g.x, g.y);
+        n.target = null;
+      } else s.setPosition(s.x + (ddx / d) * sp, s.y + (ddy / d) * sp);
+      if (g.dy) s.setTexture(g.dy < 0 ? `${n.prefix}_up` : `${n.prefix}_down`).setFlipX(false);
+      else s.setTexture(`${n.prefix}_side`).setFlipX(g.dx < 0);
+      animateWalker(this, s, true, dt);
+      s.setDepth(s.y);
+    });
+  }
+
+  talkTo(n) {
+    sfx('talk');
+    const lines = QUIPS?.island || ['Lovely day for it.', 'Have you been to the museum yet?', 'I come out here to think.', 'The fish are biting by the dock, they say.', 'Every rock on this island has a story.'];
+    const line = lines[Math.floor(Math.random() * lines.length)];
+    const r = this.game.canvas.getBoundingClientRect();
+    const cam = this.cameras.main;
+    const k = r.width / this.scale.gameSize.width;
+    showTalk(n.name, 'Islander', line, { x: r.left + (n.s.x - cam.worldView.x) * cam.zoom * k, y: r.top + (n.s.y - 40 - cam.worldView.y) * cam.zoom * k });
   }
 
   // where you step off the boat: the nearest walkable spot to the first boat
@@ -896,14 +907,29 @@ export class IslandScene extends Phaser.Scene {
     return x1 - x0 >= 3 && y1 - y0 >= 3 ? { x: x0 * T, y: y0 * T, w: (x1 - x0) * T, h: (y1 - y0) * T } : null;
   }
 
+  // the boat: pick an island, then sail
   sail() {
+    if (this.leaving) return;
+    const here = this.map?.name;
+    const options = [];
+    if (this.map) options.push({ label: 'Home island', sub: 'The museum’s island', go: { spawn: 'dock' } });
+    Object.entries(MAPS).forEach(([id, m]) => id !== this.mapId && options.push({ label: m.name === 'Untitled island' ? 'The far isle' : m.name, sub: 'An island to explore', go: { map: id } }));
+    builderIslands().forEach((m) => m.name !== here && options.push({ label: m.name, sub: `Your island · ${m.w}×${m.h}`, go: { mapData: m } }));
+    this.paused = true;
+    openSail(options, (pick) => {
+      this.paused = false;
+      if (pick) this.sailTo(pick.go);
+    });
+  }
+
+  sailTo(go) {
     if (this.leaving) return;
     this.leaving = true;
     hideTalk();
     this.interactBtn.classList.add('hidden');
     sfx('door');
     this.cameras.main.fadeOut(400, 20, 40, 70);
-    this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start('island', this.map ? { spawn: 'dock' } : { map: 'isle-1' }));
+    this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start('island', go));
   }
 
   findFocus() {
@@ -927,6 +953,14 @@ export class IslandScene extends Phaser.Scene {
     if (this.map) {
       // by a boat, or back where you stepped off
       if (this.boats.some((b) => Math.hypot(x - b.x, y - b.y) < 64) || (this.landingSpot && Math.hypot(x - this.landingSpot.x, y - this.landingSpot.y) < 36)) best = { boat: true, icon: 'door' };
+      if (this.door && Math.hypot(x - this.door.x, y - (this.door.y + 4)) < 30) best = { door: true, icon: 'door' };
+      this.islanders.forEach((n) => {
+        const d = Math.hypot(x - n.s.x, y - n.s.y);
+        if (d < 26 && d < bestD) {
+          best = { npc: n, icon: 'talk' };
+          bestD = d;
+        }
+      });
     } else {
       const dd = Math.hypot(x - DOOR.x, y - (DOOR.y + 4));
       if (dd < 30 && dd < bestD) best = { door: true, icon: 'door' };
@@ -974,6 +1008,7 @@ export class IslandScene extends Phaser.Scene {
     }
     if (f.pet) return this.pet.pet();
     if (talking()) return hideTalk();
+    if (f.npc) return this.talkTo(f.npc);
     sfx('talk');
     const r = this.game.canvas.getBoundingClientRect();
     const cam = this.cameras.main;
@@ -1049,6 +1084,7 @@ export class IslandScene extends Phaser.Scene {
     if (this.leaving) return;
     const dt = Math.min(dtMs, 50) / 1000;
     this.fishing.update(dt);
+    this.moveIslanders(dt);
     if (this.paused) return;
     const k = this.keys;
     let vx = (k.D.isDown || k.RIGHT.isDown ? 1 : 0) - (k.A.isDown || k.LEFT.isDown ? 1 : 0);
@@ -1088,7 +1124,8 @@ export class IslandScene extends Phaser.Scene {
     p.setDepth(p.y);
     this.shadow.setPosition(p.x, p.y - 1);
     // Walk up into the doors to go back inside (main island only).
-    const atDoor = !this.map && Math.abs(p.x - DOOR.x) < 20 && p.y < DOOR.y + 10 && p.y > DOOR.y - 12;
+    const D = this.door;
+    const atDoor = !!D && Math.abs(p.x - D.x) < 20 && p.y < D.y + 10 && p.y > D.y - 12;
     if (this.doorLock && !atDoor) this.doorLock = false;
     if (!this.doorLock && atDoor && vy < 0) return this.goInside();
     // and up into the cottage door for the angled room

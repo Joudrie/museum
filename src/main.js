@@ -22,6 +22,27 @@ const game = new Phaser.Game({
   scene: [RoomScene, IslandScene, IsoScene],
 });
 
+// "Walk around this island" from the map builder
+if (new URLSearchParams(location.search).has('play')) {
+  let mapData = null;
+  try {
+    mapData = JSON.parse(localStorage.getItem('curation.playtest') || 'null');
+  } catch {
+    // no map
+  }
+  if (mapData) {
+    game.events.once('ready', () => setTimeout(() => {
+      game.scene.stop('room');
+      game.scene.start('island', { mapData });
+    }, 50));
+    const back = document.createElement('a');
+    back.href = './builder.html';
+    back.id = 'back-builder';
+    back.textContent = '← Builder';
+    document.body.appendChild(back);
+  }
+}
+
 window.__game = game; // handy for debugging in the console
 window.__makeCharacter = makeCharacter; // (and for sprite contact sheets in tests)
 

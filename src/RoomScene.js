@@ -121,7 +121,7 @@ const OUTFITS = {
   janitor: ['#4a5f80'],
 };
 
-function visitorLook(kind, r) {
+export function visitorLook(kind, r) {
   const pick = (arr, k) => arr[Math.floor(r(k) * arr.length) % arr.length];
   const colors = { s: pick(SKINS, 1), h: pick(HAIRS, 2), c: pick(OUTFITS[kind] || OUTFITS.casual, 3), p: pick(PANTS, 4) };
   const look = {};
@@ -242,7 +242,7 @@ const EMOTES = {
 };
 const PHONE_KINDS = ['influencer', 'kid', 'casual', 'student', 'fanboy', 'tourist'];
 const SEATS = ['stool', 'bench', 'sofa'];
-const KINDS = Object.keys(PERSONALITIES).filter((k) => !PERSONALITIES[k].staff);
+export const KINDS = Object.keys(PERSONALITIES).filter((k) => !PERSONALITIES[k].staff);
 
 export class RoomScene extends Phaser.Scene {
   constructor() {
