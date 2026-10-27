@@ -2,76 +2,81 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Room Builder · Curation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#1d1714" />
+    <meta name="robots" content="noindex" />
+    <title>Map Builder · Curation</title>
     <link rel="stylesheet" href="./src/builder/builder.css" />
   </head>
   <body>
-    <main id="stage">
-      <header id="bar">
-        <div class="group" role="toolbar" aria-label="Tools">
-          <button data-tool="paint" class="on" title="Paint (B)">Paint</button>
-          <button data-tool="erase" title="Erase (E) · right-click erases with any tool">Erase</button>
-          <button data-tool="select" title="Select & move (V)">Move</button>
-          <button data-tool="fill" title="Fill floor or wall (G)">Fill</button>
-          <button data-tool="pick" title="Pick a piece from the room (I)">Pick</button>
-        </div>
-        <div class="group">
-          <button id="undo" title="Undo (Ctrl+Z)">↶</button>
-          <button id="redo" title="Redo (Ctrl+Shift+Z)">↷</button>
-        </div>
-        <div class="group">
-          <button id="zoom-out" title="Zoom out (−)">−</button>
-          <span id="zoom-level">200%</span>
-          <button id="zoom-in" title="Zoom in (+)">+</button>
-          <button id="zoom-fit" title="Fit the room (0)">Fit</button>
-        </div>
-        <div class="group">
-          <label title="Where pieces snap to">Snap
-            <select id="snap"><option value="32">32 px (tile)</option><option value="16" selected>16 px (half)</option><option value="1">1 px (free)</option></select>
-          </label>
-          <label><input type="checkbox" id="show-grid" checked /> Grid</label>
-        </div>
-      </header>
-      <div id="view"><canvas id="canvas"></canvas></div>
-      <footer id="status"><span id="cursor"></span><span id="hint">Drag with the middle button or hold Space to pan · scroll to zoom · F flips · Delete removes · Ctrl+D duplicates</span></footer>
-    </main>
+    <header id="top">
+      <button id="menu-btn" aria-label="Menu">☰</button>
+      <b id="map-name">Untitled island</b>
+      <button id="undo" aria-label="Undo">↶</button>
+      <button id="redo" aria-label="Redo">↷</button>
+    </header>
 
-    <aside id="side">
-      <section class="room">
+    <main id="view"><canvas id="canvas"></canvas><div id="zoom-chip"></div></main>
+
+    <nav id="tools" aria-label="Tools">
+      <button data-tool="paint" class="on">Paint</button>
+      <button data-tool="erase">Erase</button>
+      <button data-tool="fill">Fill</button>
+      <button data-tool="move">Move</button>
+      <button data-tool="pick">Pick</button>
+      <button data-tool="hand">Pan</button>
+    </nav>
+    <div id="selbar" hidden>
+      <span id="sel-text">Selected</span>
+      <button id="sel-flip">Flip</button>
+      <button id="sel-dup">Copy</button>
+      <button id="sel-del">Delete</button>
+    </div>
+
+    <section id="sheet">
+      <button id="sheet-handle" aria-label="Show or hide the pieces"><i></i></button>
+      <div id="chosen">
+        <canvas id="chosen-pic" width="48" height="48"></canvas>
+        <div><b id="chosen-name">Pick something to paint</b><small id="chosen-meta">Open a list below</small></div>
+        <label class="brush">Brush <select id="brush"><option>1</option><option>2</option><option>3</option><option>5</option></select></label>
+      </div>
+      <div id="palette"></div>
+    </section>
+
+    <div id="menu" class="overlay" hidden>
+      <div class="menu-card">
+        <h2>Map</h2>
+        <label class="field">Name <input id="name-input" maxlength="60" /></label>
+        <div class="row"><button id="save-png" class="main">Save picture</button><button id="share-file">Save map file</button></div>
+        <div class="row"><button id="copy-code">Copy map code</button><button id="open-file">Open file…</button></div>
+        <input id="file-input" type="file" accept=".json,application/json" hidden />
+        <h2>New map</h2>
         <div class="row">
-          <input id="room-name" value="Untitled room" aria-label="Room name" />
+          <label class="field small">Width <input id="new-w" type="number" min="8" max="300" value="80" /></label>
+          <label class="field small">Height <input id="new-h" type="number" min="8" max="300" value="80" /></label>
         </div>
+        <div class="row"><button id="new-island">New island</button><button id="new-room">New room</button></div>
+        <h2>My maps</h2>
+        <div id="saved-list"></div>
+        <h2>Options</h2>
         <div class="row">
-          <label>Width <input id="room-w" type="number" min="4" max="60" value="14" /></label>
-          <label>Height <input id="room-h" type="number" min="4" max="60" value="10" /></label>
-          <button id="new-room" title="Start an empty room">New</button>
+          <label class="field small">Snap pieces <select id="snap"><option value="32">Tile</option><option value="16">Half tile</option><option value="1">Free</option></select></label>
+          <label class="check"><input type="checkbox" id="grid-toggle" checked /> Grid</label>
         </div>
-        <div class="row files">
-          <button id="save-png" class="main">Save PNG</button>
-          <button id="export">Export file</button>
-          <button id="copy">Copy code</button>
-          <button id="import">Open file…</button>
-          <input id="import-file" type="file" accept=".json,application/json" hidden />
-        </div>
-      </section>
+        <p class="hint">Two fingers pinch to zoom and drag to move around. Paint with one finger. Long maps are fine: up to 300 × 300 tiles.</p>
+        <div class="row"><button id="credits-btn" class="link">Art credits</button><button id="back-game" class="link">Back to the game</button></div>
+        <button id="menu-close" class="main wide">Done</button>
+      </div>
+    </div>
 
-      <div id="palette" aria-label="Pieces"></div>
-
-      <section id="selected">
-        <div class="sel-pic"><canvas id="sel-canvas" width="64" height="64"></canvas></div>
-        <div class="sel-info"><b id="sel-name">Pick a piece</b><span id="sel-meta">Open a list and click a piece, then click in the room.</span></div>
-        <button id="flip" title="Flip (F)">Flip</button>
-      </section>
-      <button id="credits-btn" class="link">Art credits</button>
-    </aside>
-
-    <dialog id="credits">
-      <h2>Art credits</h2>
-      <p>All pieces are free pixel art from OpenGameArt and others, used under their licenses (CC0, CC-BY, CC-BY-SA, OGA-BY, GPL).</p>
-      <ul id="credits-list"></ul>
-      <form method="dialog"><button>Close</button></form>
-    </dialog>
+    <div id="credits" class="overlay" hidden>
+      <div class="menu-card">
+        <h2>Art credits</h2>
+        <p class="hint">Island tiles are drawn for Curation. Room pieces are free pixel art used under their licenses.</p>
+        <ul id="credits-list"></ul>
+        <button id="credits-close" class="main wide">Close</button>
+      </div>
+    </div>
     <div id="toast" hidden></div>
 
     <script type="module" src="./src/builder/main.js"></script>

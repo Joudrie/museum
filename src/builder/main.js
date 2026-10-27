@@ -1,723 +1,1003 @@
-// Room builder: paint floors and walls, place furniture, then save a picture
-// or a file of the room. Pieces come from public/builder (cut from the free
-// art packs by tools/build_palette.py). The room file lists every piece by
-// id and position, so a room can be rebuilt exactly.
-const T = 32;
+// Map builder for phones: paint whole islands (terrain with automatic
+// shorelines, paths and pond banks, exactly as the game draws them) or rooms,
+// on a grid up to 300 × 300 tiles, then save a picture or a map file.
+// Layers, bottom to top: terrain corners (islands), a tile layer (ground and
+// floor tiles), and pieces standing on the map (trees, buildings, furniture).
+// Pieces come from the game's island tiles (src/tiles.js) and the room pieces
+// cut from the free packs (public/builder, tools/build_palette.py).
+import { buildTiles, T } from '../tiles.js';
+
 const $ = (id) => document.getElementById(id);
 const canvas = $('canvas');
 const ctx = canvas.getContext('2d');
-const KEY = 'curation.builder';
+const STORE = 'curation.mapbuilder.maps';
+const CURRENT = 'curation.mapbuilder.current';
+const MAX = 300;
+const C = 8; // cells per cached ground chunk
+const MATS = [
+  { m: 2, name: 'Grass', color: '#5aa84e' },
+  { m: 1, name: 'Sand', color: '#e2c68a' },
+  { m: 0, name: 'Sea', color: '#3c80c0' },
+  { m: 3, name: 'Pond', color: '#4a9ad8' },
+  { m: 4, name: 'Dirt path', color: '#b08458' },
+];
+const FLAT_GROUPS = ['Ground', 'Paths', 'Water', 'Cliffs & ledges'];
+const SKIP_GROUP = /on |bank|Shoreline/; // the corner pieces terrain picks for you
 
-let DATA = null; // pieces.json
-const PIECES = {}; // id -> { ...piece, group, kind, img }
-const GROUP_IMG = {};
-let room = blank(14, 10);
+let TILES = null;
+let ROOM = null; // pieces.json
+const PIECES = {}; // ref -> { img, sx, sy, w, h, layer: 'tile' | 'object', label, src }
+let map = null;
+let chosen = null; // a ref: 'm:2' terrain, 't:palm' island tile, 'p:seating/3' room piece
 let tool = 'paint';
-let current = null; // the chosen piece id
 let flip = false;
-let selected = null; // an item in the room
-let view = { x: 0, y: 0, z: 2 }; // pan (screen px) and zoom
-let hover = null; // { wx, wy } in room px
+let selected = null;
+const view = { x: 0, y: 0, z: 1 }; // screen = world * z + (x, y), in css px
 const undoStack = [];
 const redoStack = [];
 
-function blank(w, h) {
-  return { name: 'Untitled room', w, h, floor: Array(w * h).fill(null), wall: Array(w * h).fill(null), items: [] };
+// ---------- the map ----------
+function blankMap(kind, w, h) {
+  w = clamp(w | 0, 8, MAX);
+  h = clamp(h | 0, 8, MAX);
+  const m = { name: kind === 'island' ? 'Untitled island' : 'Untitled room', kind, w, h, corners: new Uint8Array((w + 1) * (h + 1)), tiles: new Array(w * h).fill(null), objects: [] };
+  if (kind === 'island') {
+    // a starter island in the middle of the sea
+    const cx = w / 2;
+    const cy = h / 2;
+    for (let y = 0; y <= h; y++)
+      for (let x = 0; x <= w; x++) {
+        const d = Math.hypot((x - cx) / (w * 0.32), (y - cy) / (h * 0.32));
+        m.corners[y * (w + 1) + x] = d < 0.75 ? 2 : d < 1 ? 1 : 0;
+      }
+  } else m.tiles.fill(ROOM ? 'p:floors/4' : null);
+  return m;
+}
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const corner = (x, y) => (x < 0 || y < 0 || x > map.w || y > map.h ? 0 : map.corners[y * (map.w + 1) + x]);
+// grass never meets the sea directly: there's always a little beach
+function eff(x, y) {
+  const m = corner(x, y);
+  if (m !== 2 || map.kind !== 'island') return m;
+  for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) if ((dx || dy) && corner(x + dx, y + dy) === 0) return 1;
+  return m;
+}
+const key = (x, y, test) => [eff(x, y), eff(x + 1, y), eff(x, y + 1), eff(x + 1, y + 1)].map((m) => (test(m) ? 1 : 0)).join('');
+
+// what the game paints on a cell, bottom to top (as IslandScene.drawGround)
+function groundNames(x, y) {
+  const out = [(x * 7 + y * 3) % 5 ? 'sand_1' : 'sand_2'];
+  const shore = key(x, y, (m) => m === 0);
+  if (shore === '1111') out.push('water');
+  else if (shore !== '0000') out.push(`shore_${shore}`);
+  const grass = key(x, y, (m) => m >= 2);
+  const path = key(x, y, (m) => m === 4);
+  if (path !== '0000') {
+    out.push('dirt_1');
+    const g = key(x, y, (m) => m === 2 || m === 3);
+    if (g !== '0000') out.push(`grass_dirt_${g}`);
+  } else if (grass === '1111') out.push(['grass_1', 'grass_2', 'grass_1', 'grass_3'][(x * 3 + y * 5) % 4]);
+  else if (grass !== '0000') out.push(`grass_sand_${grass}`);
+  const pond = key(x, y, (m) => m === 3);
+  if (pond === '1111') out.push('water');
+  else if (pond !== '0000') out.push(`bank_${pond}`);
+  return out;
 }
 
-// ---------- Loading ----------
-async function boot() {
-  DATA = await (await fetch('./builder/pieces.json')).json();
-  await Promise.all(
-    DATA.groups.map(
-      (g) =>
-        new Promise((res) => {
-          const img = new Image();
-          img.onload = res;
-          img.src = `./${g.sheet}`;
-          GROUP_IMG[g.id] = img;
-          g.pieces.forEach((p) => (PIECES[p.id] = { ...p, group: g.id, kind: g.kind, img }));
-        }),
-    ),
-  );
-  // see-through test for clicking on pieces: each sheet's alpha
-  DATA.groups.forEach((g) => {
-    const img = GROUP_IMG[g.id];
-    const c = document.createElement('canvas');
-    c.width = img.width;
-    c.height = img.height;
-    const cx = c.getContext('2d');
-    cx.drawImage(img, 0, 0);
-    g.alpha = cx.getImageData(0, 0, c.width, c.height);
+// ---------- pieces ----------
+async function loadPieces() {
+  TILES = buildTiles();
+  Object.entries(TILES).forEach(([name, t]) => {
+    if (name.includes('@')) return;
+    const flat = t.w === T && t.h === T && FLAT_GROUPS.includes(t.group);
+    PIECES[`t:${name}`] = { img: t.frames[0], sx: 0, sy: 0, w: t.w, h: t.h, layer: flat ? 'tile' : 'object', label: t.label || name, group: t.group, skip: SKIP_GROUP.test(t.group || '') };
   });
-  buildPalette();
-  credits();
   try {
-    const saved = JSON.parse(localStorage.getItem(KEY));
-    if (saved && saved.w) room = normalize(saved);
+    ROOM = await (await fetch('./builder/pieces.json')).json();
+    await Promise.all(
+      ROOM.groups.map(
+        (g) =>
+          new Promise((res) => {
+            const img = new Image();
+            img.onload = res;
+            img.onerror = res;
+            img.src = `./${g.sheet}`;
+            g.pieces.forEach((p) => {
+              PIECES[`p:${p.id}`] = { img, sx: p.x, sy: p.y, w: p.w, h: p.h, layer: g.kind === 'tile' || g.kind === 'wall' ? 'tile' : 'object', label: `${g.name} ${p.id.split('/')[1]}`, src: p.pack, flat: g.kind === 'flat' };
+            });
+          }),
+      ),
+    );
   } catch {
-    // no saved room yet
+    ROOM = null; // the island tiles still work
   }
-  syncRoomInputs();
-  resize();
-  fit();
-  draw();
 }
 
-// ---------- The palette (dropdowns) ----------
+const drawRef = (c, ref, x, y, w, h) => {
+  const p = PIECES[ref];
+  if (p) c.drawImage(p.img, p.sx, p.sy, p.w, p.h, x, y, w ?? p.w, h ?? p.h);
+};
+
+function thumb(ref, size) {
+  const c = document.createElement('canvas');
+  if (ref.startsWith('m:')) {
+    c.width = c.height = 2;
+    const g = c.getContext('2d');
+    g.fillStyle = MATS.find((m) => `m:${m.m}` === ref).color;
+    g.fillRect(0, 0, 2, 2);
+    c.className = 'swatch';
+    return c;
+  }
+  const p = PIECES[ref];
+  const k = Math.min(size / p.w, size / p.h, 3);
+  c.width = Math.max(1, Math.round(p.w * k));
+  c.height = Math.max(1, Math.round(p.h * k));
+  const g = c.getContext('2d');
+  g.imageSmoothingEnabled = false;
+  g.drawImage(p.img, p.sx, p.sy, p.w, p.h, 0, 0, c.width, c.height);
+  return c;
+}
+
+// one average colour per piece, for the zoomed-out view
+const avgCache = {};
+function avg(ref) {
+  if (avgCache[ref]) return avgCache[ref];
+  const p = PIECES[ref];
+  if (!p) return (avgCache[ref] = '#000');
+  const c = document.createElement('canvas');
+  c.width = c.height = 4;
+  const g = c.getContext('2d');
+  g.drawImage(p.img, p.sx, p.sy, p.w, p.h, 0, 0, 4, 4);
+  const d = g.getImageData(0, 0, 4, 4).data;
+  let r = 0;
+  let gg = 0;
+  let b = 0;
+  let n = 0;
+  for (let i = 0; i < d.length; i += 4)
+    if (d[i + 3] > 40) {
+      r += d[i];
+      gg += d[i + 1];
+      b += d[i + 2];
+      n++;
+    }
+  return (avgCache[ref] = n ? `rgb(${(r / n) | 0},${(gg / n) | 0},${(b / n) | 0})` : 'rgba(0,0,0,0)');
+}
+
+// ---------- the palette (dropdowns) ----------
 function buildPalette() {
   const pal = $('palette');
-  DATA.groups.forEach((g, gi) => {
+  const lists = [];
+  lists.push({ name: 'Terrain', refs: MATS.map((m) => `m:${m.m}`) });
+  const byGroup = {};
+  Object.entries(PIECES).forEach(([ref, p]) => {
+    if (!ref.startsWith('t:') || p.skip) return;
+    const name = p.layer === 'tile' ? `Ground: ${p.group}` : p.group || 'Other';
+    (byGroup[name] ||= []).push(ref);
+  });
+  const order = ['Ground: Ground', 'Ground: Paths', 'Ground: Water', 'Trees', 'Plants', 'Flowers & plants', 'Rocks', 'Buildings', 'Garden & park', 'Grounds & garden', 'Props', 'Puzzles', 'Ground: Cliffs & ledges', 'Cliffs & ledges'];
+  Object.keys(byGroup)
+    .sort((a, b) => (order.indexOf(a) + 1 || 99) - (order.indexOf(b) + 1 || 99))
+    .forEach((name) => lists.push({ name: name.replace('Ground: Ground', 'Ground tiles').replace('Ground: ', ''), refs: byGroup[name] }));
+  (ROOM?.groups || []).forEach((g) => lists.push({ name: `Room: ${g.name}`, refs: g.pieces.map((p) => `p:${p.id}`) }));
+  lists.forEach((list, li) => {
     const det = document.createElement('details');
-    det.innerHTML = `<summary>${g.name}<small>${g.pieces.length}</small></summary><div class="pieces"></div>`;
+    det.innerHTML = `<summary>${list.name}<small>${list.refs.length}</small></summary><div class="pieces"></div>`;
     const grid = det.querySelector('.pieces');
     let built = false;
     det.addEventListener('toggle', () => {
       if (!det.open) return;
-      pal.querySelectorAll('details[open]').forEach((d) => d !== det && (d.open = false)); // one open at a time
-      if (built) return;
-      built = true;
-      g.pieces.forEach((p) => {
-        const b = document.createElement('button');
-        b.className = 'piece';
-        b.title = `${p.id} · ${p.w}×${p.h} · ${p.pack}`;
-        b.dataset.id = p.id;
-        b.appendChild(thumb(p.id, 48));
-        b.onclick = () => choose(p.id);
-        grid.appendChild(b);
-      });
-      markChosen();
+      pal.querySelectorAll('details[open]').forEach((d) => d !== det && (d.open = false)); // one list open at a time
+      if (!built) {
+        built = true;
+        list.refs.forEach((ref) => {
+          const b = document.createElement('button');
+          b.className = 'piece';
+          b.dataset.ref = ref;
+          b.appendChild(thumb(ref, 50));
+          if (ref.startsWith('m:')) b.insertAdjacentHTML('beforeend', `<span>${MATS.find((m) => `m:${m.m}` === ref).name}</span>`);
+          b.onclick = () => choose(ref);
+          grid.appendChild(b);
+        });
+        markChosen();
+      }
+      setTimeout(() => det.scrollIntoView({ block: 'start', behavior: 'smooth' }), 30);
     });
-    if (gi === 0) det.open = true;
+    if (li === 0) det.open = true;
     pal.appendChild(det);
   });
 }
 
-function thumb(id, size) {
-  const p = PIECES[id];
-  const c = document.createElement('canvas');
-  const k = Math.min(size / p.w, size / p.h, 3);
-  c.width = Math.max(1, Math.round(p.w * k));
-  c.height = Math.max(1, Math.round(p.h * k));
-  const cx = c.getContext('2d');
-  cx.imageSmoothingEnabled = false;
-  cx.drawImage(p.img, p.x, p.y, p.w, p.h, 0, 0, c.width, c.height);
-  return c;
-}
-
-function choose(id) {
-  current = id;
-  if (tool === 'erase' || tool === 'select' || tool === 'pick') setTool('paint');
+function choose(ref) {
+  chosen = ref;
+  if (tool !== 'paint' && tool !== 'fill') setTool('paint');
   markChosen();
   showChosen();
 }
-
 function markChosen() {
-  document.querySelectorAll('.piece').forEach((b) => b.classList.toggle('on', b.dataset.id === current));
+  document.querySelectorAll('.piece').forEach((b) => b.classList.toggle('on', b.dataset.ref === chosen));
 }
-
-const KIND_TEXT = { tile: 'floor tile · drag to paint, Fill to flood', wall: 'wall tile · drag to paint', flat: 'lies on the floor', hang: 'hangs on a wall', object: 'stands on the floor' };
+function refLabel(ref) {
+  if (ref.startsWith('m:')) return MATS.find((m) => `m:${m.m}` === ref).name;
+  return PIECES[ref]?.label || ref;
+}
 function showChosen() {
-  const p = PIECES[current];
-  const c = $('sel-canvas');
-  const cx = c.getContext('2d');
-  cx.clearRect(0, 0, 64, 64);
-  if (!p) return;
-  cx.imageSmoothingEnabled = false;
-  const k = Math.min(64 / p.w, 64 / p.h, 2);
-  const w = p.w * k;
-  const h = p.h * k;
-  cx.save();
+  const c = $('chosen-pic');
+  const g = c.getContext('2d');
+  g.clearRect(0, 0, 48, 48);
+  if (!chosen) return;
+  const t = thumb(chosen, 44);
+  g.imageSmoothingEnabled = false;
+  g.save();
   if (flip) {
-    cx.translate(64, 0);
-    cx.scale(-1, 1);
+    g.translate(48, 0);
+    g.scale(-1, 1);
   }
-  cx.drawImage(p.img, p.x, p.y, p.w, p.h, (64 - w) / 2, (64 - h) / 2, w, h);
-  cx.restore();
-  $('sel-name').textContent = p.id;
-  $('sel-meta').textContent = `${p.w}×${p.h} px · ${KIND_TEXT[p.kind]} · ${p.pack}${flip ? ' · flipped' : ''}`;
+  if (chosen.startsWith('m:')) g.drawImage(t, 0, 0, 48, 48);
+  else g.drawImage(t, (48 - t.width) / 2, (48 - t.height) / 2);
+  g.restore();
+  $('chosen-name').textContent = refLabel(chosen);
+  const p = PIECES[chosen];
+  $('chosen-meta').textContent = chosen.startsWith('m:') ? 'Terrain · shores and edges draw themselves' : p.layer === 'tile' ? 'Ground tile · drag to paint' : `Piece · ${Math.ceil(p.w / T)}×${Math.ceil(p.h / T)} tiles · tap to place${flip ? ' · flipped' : ''}`;
 }
 
-// ---------- Drawing ----------
+// ---------- drawing ----------
+const chunks = new Map(); // "cx,cy" -> canvas, oldest first
+let overview = null;
+function chunk(cx, cy) {
+  const k = `${cx},${cy}`;
+  let c = chunks.get(k);
+  if (c) {
+    chunks.delete(k);
+    chunks.set(k, c); // most recently used
+    return c;
+  }
+  c = document.createElement('canvas');
+  c.width = c.height = C * T;
+  const g = c.getContext('2d');
+  g.imageSmoothingEnabled = false;
+  for (let y = cy * C; y < Math.min(map.h, cy * C + C); y++)
+    for (let x = cx * C; x < Math.min(map.w, cx * C + C); x++) {
+      const px = (x - cx * C) * T;
+      const py = (y - cy * C) * T;
+      if (map.kind === 'island') groundNames(x, y).forEach((n) => TILES[n] && g.drawImage(TILES[n].frames[0], px, py));
+      else {
+        g.fillStyle = '#2a211b';
+        g.fillRect(px, py, T, T);
+      }
+      const ref = map.tiles[y * map.w + x];
+      if (ref) drawRef(g, ref, px, py, T, T);
+    }
+  chunks.set(k, c);
+  while (chunks.size > 160) chunks.delete(chunks.keys().next().value);
+  return c;
+}
+// a cell changed: forget the chunks that show it (and its neighbours' edges)
+function dirty(x0, y0, x1, y1) {
+  for (let cy = Math.floor((y0 - 1) / C); cy <= Math.floor((y1 + 1) / C); cy++) for (let cx = Math.floor((x0 - 1) / C); cx <= Math.floor((x1 + 1) / C); cx++) chunks.delete(`${cx},${cy}`);
+  if (overview) for (let y = Math.max(0, y0 - 1); y <= Math.min(map.h - 1, y1 + 1); y++) for (let x = Math.max(0, x0 - 1); x <= Math.min(map.w - 1, x1 + 1); x++) paintOverview(x, y);
+}
+function paintOverview(x, y) {
+  const g = overview.getContext('2d');
+  const ref = map.tiles[y * map.w + x];
+  let color;
+  if (ref) color = avg(ref);
+  else if (map.kind === 'island') {
+    const names = groundNames(x, y);
+    const top = names[names.length - 1];
+    color = avg(`t:${top.startsWith('shore_') ? (top.slice(6).split('1').length > 2 ? 'water' : 'sand_1') : top.startsWith('grass_sand_') ? 'grass_1' : top.startsWith('bank_') ? 'water' : top}`);
+  } else color = '#2a211b';
+  g.fillStyle = color;
+  g.fillRect(x * 4, y * 4, 4, 4);
+}
+function rebuildAll() {
+  chunks.clear();
+  overview = document.createElement('canvas');
+  overview.width = map.w * 4;
+  overview.height = map.h * 4;
+  for (let y = 0; y < map.h; y++) for (let x = 0; x < map.w; x++) paintOverview(x, y);
+}
+
 function resize() {
   const r = $('view').getBoundingClientRect();
-  const dpr = window.devicePixelRatio || 1;
+  const dpr = Math.min(3, window.devicePixelRatio || 1);
   canvas.width = Math.round(r.width * dpr);
   canvas.height = Math.round(r.height * dpr);
   draw();
 }
 
 function fit() {
-  const dpr = window.devicePixelRatio || 1;
-  const z = Math.min((canvas.width / dpr - 40) / (room.w * T), (canvas.height / dpr - 40) / (room.h * T));
-  view.z = Math.max(0.25, Math.min(8, Math.floor(z * 4) / 4 || z));
-  view.x = (canvas.width / dpr - room.w * T * view.z) / 2;
-  view.y = (canvas.height / dpr - room.h * T * view.z) / 2;
-  $('zoom-level').textContent = `${Math.round(view.z * 100)}%`;
+  const r = $('view').getBoundingClientRect();
+  // start close enough to see the tiles: about 12 tiles across
+  view.z = clamp(r.width / (12 * T), 0.05, 6);
+  view.x = r.width / 2 - (map.w * T * view.z) / 2;
+  view.y = r.height / 2 - (map.h * T * view.z) / 2;
   draw();
 }
 
-function drawPiece(c, p, x, y, flipped, alpha = 1) {
-  c.globalAlpha = alpha;
-  if (flipped) {
-    c.save();
-    c.translate(x + p.w, y);
-    c.scale(-1, 1);
-    c.drawImage(p.img, p.x, p.y, p.w, p.h, 0, 0, p.w, p.h);
-    c.restore();
-  } else c.drawImage(p.img, p.x, p.y, p.w, p.h, x, y, p.w, p.h);
-  c.globalAlpha = 1;
+const objectBox = (o) => {
+  const p = PIECES[o.ref];
+  return p ? { x0: o.x, y0: o.y, x1: o.x + p.w, y1: o.y + p.h } : null;
+};
+const sorted = () =>
+  map.objects
+    .map((o, i) => ({ o, i, p: PIECES[o.ref] }))
+    .filter((e) => e.p)
+    .sort((a, b) => (a.p.flat ? 0 : 1) - (b.p.flat ? 0 : 1) || a.o.y + a.p.h - (b.o.y + b.p.h) || a.i - b.i)
+    .map((e) => e.o);
+
+function drawObj(g, o, alpha = 1) {
+  const p = PIECES[o.ref];
+  if (!p) return;
+  g.globalAlpha = alpha;
+  if (o.flip) {
+    g.save();
+    g.translate(o.x + p.w, o.y);
+    g.scale(-1, 1);
+    g.drawImage(p.img, p.sx, p.sy, p.w, p.h, 0, 0, p.w, p.h);
+    g.restore();
+  } else g.drawImage(p.img, p.sx, p.sy, p.w, p.h, o.x, o.y, p.w, p.h);
+  g.globalAlpha = 1;
 }
 
-const ORDER = { flat: 0, hang: 1, object: 2 };
-// the room itself, at 1:1 (used for the view and for Save PNG)
-function paintRoom(c, { grid = false } = {}) {
-  c.fillStyle = '#2a211b';
-  c.fillRect(0, 0, room.w * T, room.h * T);
-  for (const layer of ['floor', 'wall'])
-    room[layer].forEach((id, i) => {
-      const p = PIECES[id];
-      if (p) c.drawImage(p.img, p.x, p.y, p.w, p.h, (i % room.w) * T, Math.floor(i / room.w) * T, T, T);
-    });
-  sortedItems().forEach((it) => {
-    const p = PIECES[it.id];
-    if (p) drawPiece(c, p, it.x, it.y, it.flip);
-  });
-  if (grid) {
-    c.strokeStyle = 'rgba(255,255,255,0.08)';
-    c.lineWidth = 1 / view.z;
-    c.beginPath();
-    for (let x = 0; x <= room.w; x++) {
-      c.moveTo(x * T, 0);
-      c.lineTo(x * T, room.h * T);
-    }
-    for (let y = 0; y <= room.h; y++) {
-      c.moveTo(0, y * T);
-      c.lineTo(room.w * T, y * T);
-    }
-    c.stroke();
-  }
-}
-
-// back to front: flats, then wall pieces, then furniture by where it stands
-function sortedItems() {
-  return room.items
-    .map((it, i) => ({ it, i }))
-    .sort((a, b) => {
-      const ka = ORDER[PIECES[a.it.id]?.kind] ?? 2;
-      const kb = ORDER[PIECES[b.it.id]?.kind] ?? 2;
-      if (ka !== kb) return ka - kb;
-      const pa = PIECES[a.it.id];
-      const pb = PIECES[b.it.id];
-      return a.it.y + (pa?.h || 0) - (b.it.y + (pb?.h || 0)) || a.i - b.i;
-    })
-    .map((e) => e.it);
-}
-
+let ghost = null; // a piece being placed: { ref, x, y, flip }
+let raf = 0;
 function draw() {
-  if (!DATA) return;
-  const dpr = window.devicePixelRatio || 1;
+  if (raf) return;
+  raf = requestAnimationFrame(() => {
+    raf = 0;
+    render();
+  });
+}
+function render() {
+  if (!map) return;
+  const dpr = canvas.width / $('view').getBoundingClientRect().width || 1;
   ctx.setTransform(1, 0, 0, 1, 0, 0);
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = map.kind === 'island' ? '#1e4a7a' : '#0d0a08';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.setTransform(dpr * view.z, 0, 0, dpr * view.z, dpr * view.x, dpr * view.y);
   ctx.imageSmoothingEnabled = false;
-  paintRoom(ctx, { grid: $('show-grid').checked });
-  // the room's edge
-  ctx.strokeStyle = 'rgba(232,200,103,0.6)';
+  // the visible part of the map, in world px
+  const wx0 = -view.x / view.z;
+  const wy0 = -view.y / view.z;
+  const wx1 = wx0 + canvas.width / dpr / view.z;
+  const wy1 = wy0 + canvas.height / dpr / view.z;
+  if (view.z * T < 7) {
+    // far out: the overview, one colour per tile
+    ctx.drawImage(overview, 0, 0, map.w * T, map.h * T);
+  } else {
+    for (let cy = Math.max(0, Math.floor(wy0 / (C * T))); cy <= Math.min(Math.ceil(map.h / C) - 1, Math.floor(wy1 / (C * T))); cy++)
+      for (let cx = Math.max(0, Math.floor(wx0 / (C * T))); cx <= Math.min(Math.ceil(map.w / C) - 1, Math.floor(wx1 / (C * T))); cx++) ctx.drawImage(chunk(cx, cy), cx * C * T, cy * C * T);
+  }
+  // pieces standing on the map, back to front
+  sorted().forEach((o) => {
+    const b = objectBox(o);
+    if (b.x1 < wx0 || b.x0 > wx1 || b.y1 < wy0 || b.y0 > wy1) return;
+    drawObj(ctx, o);
+  });
+  if (ghost) drawObj(ctx, ghost, 0.7);
+  // grid
+  if ($('grid-toggle').checked && view.z * T >= 14) {
+    ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+    ctx.lineWidth = 1 / view.z;
+    ctx.beginPath();
+    for (let x = Math.max(0, Math.floor(wx0 / T)); x <= Math.min(map.w, Math.ceil(wx1 / T)); x++) {
+      ctx.moveTo(x * T, Math.max(0, wy0));
+      ctx.lineTo(x * T, Math.min(map.h * T, wy1));
+    }
+    for (let y = Math.max(0, Math.floor(wy0 / T)); y <= Math.min(map.h, Math.ceil(wy1 / T)); y++) {
+      ctx.moveTo(Math.max(0, wx0), y * T);
+      ctx.lineTo(Math.min(map.w * T, wx1), y * T);
+    }
+    ctx.stroke();
+  }
+  ctx.strokeStyle = 'rgba(232,200,103,0.7)';
   ctx.lineWidth = 2 / view.z;
-  ctx.strokeRect(0, 0, room.w * T, room.h * T);
-  // what you're about to place
-  if (hover && tool === 'paint' && current && !panning) {
-    const p = PIECES[current];
-    if (p.kind === 'tile' || p.kind === 'wall') {
-      const cx = Math.floor(hover.wx / T);
-      const cy = Math.floor(hover.wy / T);
-      if (inRoom(cx, cy)) {
-        ctx.globalAlpha = 0.7;
-        ctx.drawImage(p.img, p.x, p.y, p.w, p.h, cx * T, cy * T, T, T);
-        ctx.globalAlpha = 1;
-      }
-    } else {
-      const at = placeAt(p, hover.wx, hover.wy);
-      drawPiece(ctx, p, at.x, at.y, flip, 0.65);
-    }
-  }
-  if (hover && (tool === 'erase' || tool === 'fill' || tool === 'pick')) {
-    const cx = Math.floor(hover.wx / T);
-    const cy = Math.floor(hover.wy / T);
-    if (inRoom(cx, cy)) {
-      ctx.strokeStyle = tool === 'erase' ? '#e0405a' : '#e8c867';
-      ctx.strokeRect(cx * T, cy * T, T, T);
-    }
-  }
-  if (selected && room.items.includes(selected)) {
-    const p = PIECES[selected.id];
+  ctx.strokeRect(0, 0, map.w * T, map.h * T);
+  if (selected && map.objects.includes(selected)) {
+    const b = objectBox(selected);
     ctx.strokeStyle = '#e8c867';
     ctx.setLineDash([4 / view.z, 3 / view.z]);
-    ctx.strokeRect(selected.x - 0.5, selected.y - 0.5, p.w + 1, p.h + 1);
+    ctx.strokeRect(b.x0 - 1, b.y0 - 1, b.x1 - b.x0 + 2, b.y1 - b.y0 + 2);
     ctx.setLineDash([]);
   }
+  if (brushAt) {
+    const n = brushSize();
+    ctx.strokeStyle = tool === 'erase' ? '#e0405a' : '#e8c867';
+    ctx.strokeRect(brushAt.x * T, brushAt.y * T, n * T, n * T);
+  }
+  $('zoom-chip').textContent = `${Math.round(view.z * 100)}% · ${map.w}×${map.h}`;
 }
 
-// ---------- Placing ----------
-const snapTo = () => Number($('snap').value);
-const snap = (v) => Math.round(v / snapTo()) * snapTo();
-const inRoom = (cx, cy) => cx >= 0 && cy >= 0 && cx < room.w && cy < room.h;
+// ---------- editing ----------
+const brushSize = () => (tool === 'paint' && chosen && PIECES[chosen]?.layer === 'object' ? 1 : Number($('brush').value));
+let brushAt = null;
+const cellAt = (wx, wy) => ({ x: Math.floor(wx / T), y: Math.floor(wy / T) });
 
-// a piece under the cursor: centred across, its bottom on the cursor's row
-function placeAt(p, wx, wy) {
-  const s = snapTo();
-  const bottom = s === 1 ? Math.round(wy + p.h / 2) : Math.ceil(wy / s) * s;
-  return { x: snap(wx - p.w / 2), y: bottom - p.h };
+function paintCells(wx, wy) {
+  const n = brushSize();
+  const c = cellAt(wx, wy);
+  const x0 = c.x - Math.floor((n - 1) / 2);
+  const y0 = c.y - Math.floor((n - 1) / 2);
+  brushAt = { x: x0, y: y0 };
+  let changed = false;
+  if (chosen.startsWith('m:')) {
+    if (map.kind !== 'island') return toast('Terrain is for islands. Start a new island from the menu.');
+    const m = Number(chosen.slice(2));
+    for (let y = y0; y <= y0 + n; y++)
+      for (let x = x0; x <= x0 + n; x++) {
+        if (x < 0 || y < 0 || x > map.w || y > map.h) continue;
+        const i = y * (map.w + 1) + x;
+        if (map.corners[i] !== m) {
+          map.corners[i] = m;
+          changed = true;
+        }
+      }
+  } else {
+    for (let y = y0; y < y0 + n; y++)
+      for (let x = x0; x < x0 + n; x++) {
+        if (x < 0 || y < 0 || x >= map.w || y >= map.h) continue;
+        const i = y * map.w + x;
+        if (map.tiles[i] !== chosen) {
+          map.tiles[i] = chosen;
+          changed = true;
+        }
+      }
+  }
+  if (changed) dirty(x0, y0, x0 + n, y0 + n);
+  return changed;
 }
 
-function hitItem(wx, wy) {
-  const list = sortedItems().reverse();
-  return list.find((it) => {
-    const p = PIECES[it.id];
-    if (!p || wx < it.x || wy < it.y || wx >= it.x + p.w || wy >= it.y + p.h) return false;
-    const lx = Math.floor(it.flip ? p.w - 1 - (wx - it.x) : wx - it.x);
-    const ly = Math.floor(wy - it.y);
-    const a = DATA.groups.find((g) => g.id === p.group).alpha;
-    return a.data[((p.y + ly) * a.width + p.x + lx) * 4 + 3] > 20;
-  });
-}
-
-function paintCell(wx, wy) {
-  const p = PIECES[current];
-  const cx = Math.floor(wx / T);
-  const cy = Math.floor(wy / T);
-  if (!inRoom(cx, cy)) return false;
-  const layer = p.kind === 'wall' ? 'wall' : 'floor';
-  const i = cy * room.w + cx;
-  if (room[layer][i] === current) return false;
-  room[layer][i] = current;
-  if (layer === 'floor') room.wall[i] = null; // painting floor over a wall clears it
-  return true;
+function hitObject(wx, wy) {
+  return sorted()
+    .reverse()
+    .find((o) => {
+      const b = objectBox(o);
+      return wx >= b.x0 && wx < b.x1 && wy >= b.y0 && wy < b.y1;
+    });
 }
 
 function eraseAt(wx, wy) {
-  const it = hitItem(wx, wy);
-  if (it) {
-    room.items.splice(room.items.indexOf(it), 1);
-    if (selected === it) selected = null;
+  const o = hitObject(wx, wy);
+  if (o) {
+    map.objects.splice(map.objects.indexOf(o), 1);
+    if (selected === o) select(null);
     return true;
   }
-  const cx = Math.floor(wx / T);
-  const cy = Math.floor(wy / T);
-  if (!inRoom(cx, cy)) return false;
-  const i = cy * room.w + cx;
-  if (room.wall[i]) return !!(room.wall[i] = null) || true;
-  if (room.floor[i]) return !!(room.floor[i] = null) || true;
-  return false;
+  const n = Number($('brush').value);
+  const c = cellAt(wx, wy);
+  const x0 = c.x - Math.floor((n - 1) / 2);
+  const y0 = c.y - Math.floor((n - 1) / 2);
+  brushAt = { x: x0, y: y0 };
+  let changed = false;
+  for (let y = y0; y < y0 + n; y++)
+    for (let x = x0; x < x0 + n; x++) {
+      if (x < 0 || y < 0 || x >= map.w || y >= map.h) continue;
+      if (map.tiles[y * map.w + x]) {
+        map.tiles[y * map.w + x] = null;
+        changed = true;
+      }
+    }
+  if (changed) dirty(x0, y0, x0 + n, y0 + n);
+  return changed;
 }
 
 function fillAt(wx, wy) {
-  const p = PIECES[current];
-  if (!p || (p.kind !== 'tile' && p.kind !== 'wall')) return toast('Fill works with floor and wall tiles. Pick one first.');
-  const cx = Math.floor(wx / T);
-  const cy = Math.floor(wy / T);
-  if (!inRoom(cx, cy)) return;
-  const layer = p.kind === 'wall' ? 'wall' : 'floor';
-  const grid = room[layer];
-  const from = grid[cy * room.w + cx];
-  if (from === current) return;
+  if (!chosen) return toast('Pick a terrain or a ground tile first.');
+  const c = cellAt(wx, wy);
+  if (chosen.startsWith('m:')) {
+    if (map.kind !== 'island') return toast('Terrain is for islands.');
+    const m = Number(chosen.slice(2));
+    const W = map.w + 1;
+    const sx = clamp(Math.round(wx / T), 0, map.w);
+    const sy = clamp(Math.round(wy / T), 0, map.h);
+    const from = map.corners[sy * W + sx];
+    if (from === m) return;
+    record();
+    const q = [[sx, sy]];
+    while (q.length) {
+      const [x, y] = q.pop();
+      if (x < 0 || y < 0 || x > map.w || y > map.h || map.corners[y * W + x] !== from) continue;
+      map.corners[y * W + x] = m;
+      q.push([x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]);
+    }
+    rebuildAll();
+    return changed();
+  }
+  const p = PIECES[chosen];
+  if (p.layer !== 'tile') return toast('Fill works with terrain and ground tiles.');
+  if (c.x < 0 || c.y < 0 || c.x >= map.w || c.y >= map.h) return;
+  const from = map.tiles[c.y * map.w + c.x];
+  if (from === chosen) return;
   record();
-  const q = [[cx, cy]];
-  while (q.length) {
+  const q = [[c.x, c.y]];
+  let n = 0;
+  while (q.length && n < MAX * MAX) {
     const [x, y] = q.pop();
-    if (!inRoom(x, y) || grid[y * room.w + x] !== from) continue;
-    grid[y * room.w + x] = current;
+    if (x < 0 || y < 0 || x >= map.w || y >= map.h || map.tiles[y * map.w + x] !== from) continue;
+    map.tiles[y * map.w + x] = chosen;
+    n++;
     q.push([x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]);
   }
+  rebuildAll();
   changed();
 }
 
 function pickAt(wx, wy) {
-  const it = hitItem(wx, wy);
-  const cx = Math.floor(wx / T);
-  const cy = Math.floor(wy / T);
-  const id = it?.id || (inRoom(cx, cy) && (room.wall[cy * room.w + cx] || room.floor[cy * room.w + cx]));
-  if (!id) return;
-  flip = !!it?.flip;
-  choose(id);
-  // open its dropdown so you can see it
-  const g = PIECES[id].group;
-  const det = [...document.querySelectorAll('#palette details')][DATA.groups.findIndex((x) => x.id === g)];
-  if (det && !det.open) det.open = true;
-  setTimeout(() => document.querySelector(`.piece[data-id="${CSS.escape(id)}"]`)?.scrollIntoView({ block: 'nearest' }), 50);
+  const o = hitObject(wx, wy);
+  if (o) {
+    flip = !!o.flip;
+    return choose(o.ref);
+  }
+  const c = cellAt(wx, wy);
+  if (c.x < 0 || c.y < 0 || c.x >= map.w || c.y >= map.h) return;
+  const ref = map.tiles[c.y * map.w + c.x];
+  if (ref) return choose(ref);
+  if (map.kind === 'island') choose(`m:${corner(Math.round(wx / T), Math.round(wy / T))}`);
 }
 
-// ---------- History and saving ----------
+// where a piece goes for a finger at (wx, wy): island pieces stand on the
+// tile under the finger; room pieces follow the snap setting
+function placeFor(ref, wx, wy) {
+  const p = PIECES[ref];
+  if (ref.startsWith('t:')) {
+    const c = cellAt(wx, wy);
+    return { x: c.x * T, y: (c.y + 1) * T - p.h };
+  }
+  const s = Number($('snap').value);
+  const bottom = s === 1 ? Math.round(wy + p.h / 2) : Math.ceil(wy / s) * s;
+  return { x: s === 1 ? Math.round(wx - p.w / 2) : Math.round((wx - p.w / 2) / s) * s, y: bottom - p.h };
+}
+
+function select(o) {
+  selected = o;
+  $('selbar').hidden = !o;
+  if (o) $('sel-text').textContent = refLabel(o.ref);
+  draw();
+}
+
+// ---------- history and saving ----------
+function serialize() {
+  const rows = [];
+  for (let y = 0; y <= map.h; y++) rows.push(Array.from(map.corners.subarray(y * (map.w + 1), (y + 1) * (map.w + 1))).join(''));
+  const tiles = {};
+  map.tiles.forEach((r, i) => r && (tiles[`${i % map.w},${Math.floor(i / map.w)}`] = r));
+  return { format: 'curation-map', version: 2, tile: T, name: map.name, kind: map.kind, w: map.w, h: map.h, corners: map.kind === 'island' ? rows : [], tiles, objects: sorted().map((o) => ({ ref: o.ref, x: o.x, y: o.y, ...(o.flip ? { flip: true } : {}) })) };
+}
+function deserialize(d) {
+  // older room files from the first builder
+  if (d.format === 'curation-room') {
+    const w = d.w;
+    const flat = (g) => (Array.isArray(g?.[0]) ? g.flat() : g || []);
+    const floor = flat(d.floor);
+    const wall = flat(d.wall);
+    const tiles = {};
+    floor.forEach((r, i) => (wall[i] || r) && (tiles[`${i % w},${Math.floor(i / w)}`] = `p:${wall[i] || r}`));
+    d = { name: d.name, kind: 'room', w, h: d.h, corners: [], tiles, objects: (d.items || []).map((it) => ({ ref: `p:${it.id}`, x: it.x, y: it.y, flip: it.flip })) };
+  }
+  const m = blankMap(d.kind === 'room' ? 'room' : 'island', d.w, d.h);
+  m.tiles.fill(null);
+  m.name = String(d.name || m.name).slice(0, 60);
+  (d.corners || []).forEach((row, y) => [...String(row)].forEach((ch, x) => x <= m.w && y <= m.h && (m.corners[y * (m.w + 1) + x] = Number(ch) || 0)));
+  Object.entries(d.tiles || {}).forEach(([k, r]) => {
+    const [x, y] = k.split(',').map(Number);
+    if (x < m.w && y < m.h && PIECES[r]) m.tiles[y * m.w + x] = r;
+  });
+  m.objects = (d.objects || []).filter((o) => PIECES[o.ref]).map((o) => ({ ref: o.ref, x: Math.round(o.x), y: Math.round(o.y), flip: !!o.flip }));
+  return m;
+}
 function record() {
-  undoStack.push(JSON.stringify(room));
-  if (undoStack.length > 150) undoStack.shift();
+  undoStack.push(JSON.stringify(serialize()));
+  if (undoStack.length > 40) undoStack.shift();
   redoStack.length = 0;
 }
+let saveTimer = 0;
 function changed() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveLocal, 600);
+  draw();
+}
+function saveLocal() {
   try {
-    localStorage.setItem(KEY, JSON.stringify(room));
+    const all = JSON.parse(localStorage.getItem(STORE) || '{}');
+    all[map.name] = serialize();
+    localStorage.setItem(STORE, JSON.stringify(all));
+    localStorage.setItem(CURRENT, map.name);
   } catch {
-    // storage full or off; the room still works
+    toast('Couldn’t autosave (storage full?). Use Save map file.');
   }
+}
+function loadMap(m, keepView) {
+  map = m;
+  select(null);
+  $('map-name').textContent = map.name;
+  rebuildAll();
+  if (!keepView) fit();
   draw();
 }
 function undo() {
   if (!undoStack.length) return;
-  redoStack.push(JSON.stringify(room));
-  room = JSON.parse(undoStack.pop());
-  selected = null;
-  syncRoomInputs();
+  redoStack.push(JSON.stringify(serialize()));
+  loadMap(deserialize(JSON.parse(undoStack.pop())), true);
   changed();
 }
 function redo() {
   if (!redoStack.length) return;
-  undoStack.push(JSON.stringify(room));
-  room = JSON.parse(redoStack.pop());
-  selected = null;
-  syncRoomInputs();
+  undoStack.push(JSON.stringify(serialize()));
+  loadMap(deserialize(JSON.parse(redoStack.pop())), true);
   changed();
 }
 
-function normalize(r) {
-  const w = Math.max(4, Math.min(60, r.w | 0));
-  const h = Math.max(4, Math.min(60, r.h | 0));
-  const grid = (g) => Array.from({ length: w * h }, (_, i) => (g && PIECES[g[i]] ? g[i] : null));
-  return {
-    name: String(r.name || 'Untitled room').slice(0, 80),
-    w,
-    h,
-    floor: grid(r.floor),
-    wall: grid(r.wall),
-    items: (r.items || []).filter((it) => PIECES[it.id]).map((it) => ({ id: it.id, x: Math.round(it.x), y: Math.round(it.y), flip: !!it.flip })),
-  };
-}
-
-// a room file: readable, with the grid written row by row
-function roomFile() {
-  const rows = (g) => Array.from({ length: room.h }, (_, y) => g.slice(y * room.w, (y + 1) * room.w));
-  return JSON.stringify(
-    { format: 'curation-room', version: 1, tile: T, name: room.name, w: room.w, h: room.h, floor: rows(room.floor), wall: rows(room.wall), items: sortedItems() },
-    (k, v) => (Array.isArray(v) && v.every((x) => x === null || typeof x === 'string') && k !== 'items' ? JSON.stringify(v) : v),
-    1,
-  ).replace(/"(\[.*?\])"/g, (_, a) => a.replace(/\\"/g, '"'));
-}
-function readFile(text) {
-  const r = JSON.parse(text);
-  const flat = (g) => (Array.isArray(g?.[0]) ? g.flat() : g);
-  record();
-  room = normalize({ ...r, floor: flat(r.floor), wall: flat(r.wall) });
-  selected = null;
-  syncRoomInputs();
-  fit();
-  changed();
-  toast(`Opened “${room.name}”`);
-}
-const fileName = (ext) => `${room.name.replace(/[^\w-]+/g, '-').replace(/^-|-$/g, '') || 'room'}${ext}`;
-function download(blob, name) {
+const fileName = (ext) => `${map.name.replace(/[^\w-]+/g, '-').replace(/^-|-$/g, '') || 'map'}${ext}`;
+async function saveBlob(blob, name) {
+  // phones: the share sheet (Save to Files, AirDrop, Messages…); else a download
+  const file = new File([blob], name, { type: blob.type });
+  if (navigator.canShare?.({ files: [file] })) {
+    try {
+      await navigator.share({ files: [file], title: name });
+      return;
+    } catch (e) {
+      if (e.name === 'AbortError') return;
+    }
+  }
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = name;
   document.body.appendChild(a);
   a.click();
   a.remove();
-  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  setTimeout(() => URL.revokeObjectURL(a.href), 3000);
 }
-
-function savePng() {
-  const scale = 2; // twice size so details read well when shared
+function savePicture() {
+  const scale = Math.min(1, 4096 / (Math.max(map.w, map.h) * T)); // phones can't make huge pictures
   const c = document.createElement('canvas');
-  c.width = room.w * T * scale;
-  c.height = room.h * T * scale;
-  const cx = c.getContext('2d');
-  cx.imageSmoothingEnabled = false;
-  cx.scale(scale, scale);
-  paintRoom(cx);
-  c.toBlob((b) => {
-    download(b, fileName('.png'));
-    toast('Saved the picture to your downloads');
-  });
+  c.width = Math.round(map.w * T * scale);
+  c.height = Math.round(map.h * T * scale);
+  const g = c.getContext('2d');
+  g.imageSmoothingEnabled = false;
+  g.scale(scale, scale);
+  for (let cy = 0; cy < Math.ceil(map.h / C); cy++) for (let cx = 0; cx < Math.ceil(map.w / C); cx++) g.drawImage(chunk(cx, cy), cx * C * T, cy * C * T);
+  sorted().forEach((o) => drawObj(g, o));
+  c.toBlob((b) => b && saveBlob(b, fileName('.png')), 'image/png');
 }
 
-function syncRoomInputs() {
-  $('room-name').value = room.name;
-  $('room-w').value = room.w;
-  $('room-h').value = room.h;
-}
-
-// change the room's size, keeping what's there (anchored top-left)
-function setSize(w, h) {
-  w = Math.max(4, Math.min(60, w | 0));
-  h = Math.max(4, Math.min(60, h | 0));
-  if (w === room.w && h === room.h) return;
-  record();
-  const grid = (g) => Array.from({ length: w * h }, (_, i) => {
-    const x = i % w;
-    const y = Math.floor(i / w);
-    return x < room.w && y < room.h ? g[y * room.w + x] : null;
-  });
-  room = { ...room, w, h, floor: grid(room.floor), wall: grid(room.wall), items: room.items.filter((it) => it.x < w * T && it.y < h * T) };
-  syncRoomInputs();
-  fit();
-  changed();
-}
-
-// ---------- Input ----------
-let panning = null;
-let painting = false;
-let dragItem = null;
-let space = false;
-
-const toWorld = (e) => {
+// ---------- touch: one finger paints, two fingers pinch and pan ----------
+const fingers = new Map();
+let gesture = null; // { kind: 'pending' | 'stroke' | 'pan' | 'pinch', ... }
+const toWorld = (sx, sy) => ({ wx: (sx - view.x) / view.z, wy: (sy - view.y) / view.z });
+const local = (e) => {
   const r = canvas.getBoundingClientRect();
-  return { wx: (e.clientX - r.left - view.x) / view.z, wy: (e.clientY - r.top - view.y) / view.z };
+  return { x: e.clientX - r.left, y: e.clientY - r.top };
 };
 
-canvas.addEventListener('contextmenu', (e) => e.preventDefault());
 canvas.addEventListener('pointerdown', (e) => {
   canvas.setPointerCapture(e.pointerId);
-  const { wx, wy } = toWorld(e);
-  if (e.button === 1 || space || (e.button === 0 && e.altKey)) {
-    panning = { x: e.clientX, y: e.clientY, vx: view.x, vy: view.y };
+  fingers.set(e.pointerId, local(e));
+  if (fingers.size === 2) {
+    if (gesture?.kind === 'stroke') endStroke(true);
+    const [a, b] = [...fingers.values()];
+    gesture = { kind: 'pinch', d: Math.hypot(a.x - b.x, a.y - b.y), mx: (a.x + b.x) / 2, my: (a.y + b.y) / 2 };
+    ghost = null;
+    brushAt = null;
     return;
   }
-  if (e.button === 2) {
-    record();
-    if (eraseAt(wx, wy)) changed();
-    else undoStack.pop();
-    painting = 'erase';
-    return;
-  }
-  if (e.button !== 0) return;
-  if (tool === 'select') {
-    const it = hitItem(wx, wy);
-    selected = it || null;
-    if (it) {
-      record();
-      dragItem = { it, dx: wx - it.x, dy: wy - it.y, moved: false };
-    }
-    draw();
-  } else if (tool === 'erase') {
-    record();
-    if (!eraseAt(wx, wy)) undoStack.pop();
-    painting = 'erase';
-    changed();
-  } else if (tool === 'fill') fillAt(wx, wy);
-  else if (tool === 'pick') pickAt(wx, wy);
-  else if (tool === 'paint') {
-    const p = PIECES[current];
-    if (!p) return toast('Open a list on the right and pick a piece first.');
-    record();
-    if (p.kind === 'tile' || p.kind === 'wall') {
-      paintCell(wx, wy);
-      painting = 'tile';
-    } else {
-      const at = placeAt(p, wx, wy);
-      const it = { id: current, x: at.x, y: at.y, flip };
-      room.items.push(it);
-      selected = it;
-    }
-    changed();
-  }
+  if (fingers.size > 2) return;
+  const p = local(e);
+  if (tool === 'hand' || e.button === 1) gesture = { kind: 'pan', x: p.x, y: p.y };
+  else gesture = { kind: 'pending', x: p.x, y: p.y, t: performance.now() };
 });
 canvas.addEventListener('pointermove', (e) => {
-  const { wx, wy } = toWorld(e);
-  hover = { wx, wy };
-  const cx = Math.floor(wx / T);
-  const cy = Math.floor(wy / T);
-  $('cursor').textContent = inRoom(cx, cy) ? `tile ${cx}, ${cy} · ${Math.round(wx)}, ${Math.round(wy)} px` : '';
-  if (panning) {
-    view.x = panning.vx + e.clientX - panning.x;
-    view.y = panning.vy + e.clientY - panning.y;
-  } else if (painting === 'tile') paintCell(wx, wy) && changed();
-  else if (painting === 'erase') eraseAt(wx, wy) && changed();
-  else if (dragItem) {
-    const p = PIECES[dragItem.it.id];
-    const nx = snap(wx - dragItem.dx);
-    const ny = snap(wy - dragItem.dy + p.h) - p.h;
-    if (nx !== dragItem.it.x || ny !== dragItem.it.y) {
-      dragItem.it.x = nx;
-      dragItem.it.y = ny;
-      dragItem.moved = true;
-    }
-  }
-  draw();
+  if (!fingers.has(e.pointerId)) return;
+  const p = local(e);
+  fingers.set(e.pointerId, p);
+  if (!gesture) return;
+  if (gesture.kind === 'pinch' && fingers.size >= 2) {
+    const [a, b] = [...fingers.values()];
+    const d = Math.hypot(a.x - b.x, a.y - b.y);
+    const mx = (a.x + b.x) / 2;
+    const my = (a.y + b.y) / 2;
+    const k = d / (gesture.d || d);
+    const z = clamp(view.z * k, 0.03, 8);
+    view.x = mx - ((gesture.mx - view.x) * z) / view.z;
+    view.y = my - ((gesture.my - view.y) * z) / view.z;
+    view.z = z;
+    Object.assign(gesture, { d, mx, my });
+    draw();
+  } else if (gesture.kind === 'pan') {
+    view.x += p.x - gesture.x;
+    view.y += p.y - gesture.y;
+    gesture.x = p.x;
+    gesture.y = p.y;
+    draw();
+  } else if (gesture.kind === 'pending') {
+    if (Math.hypot(p.x - gesture.x, p.y - gesture.y) > 6 || performance.now() - gesture.t > 120) startStroke(gesture.x, gesture.y, p);
+  } else if (gesture.kind === 'stroke') moveStroke(p);
 });
-const endDrag = () => {
-  if (dragItem) {
-    if (!dragItem.moved) undoStack.pop();
-    else changed();
-  }
-  panning = null;
-  painting = false;
-  dragItem = null;
+const lift = (e) => {
+  if (!fingers.has(e.pointerId)) return;
+  const p = fingers.get(e.pointerId);
+  fingers.delete(e.pointerId);
+  if (gesture?.kind === 'pending') {
+    // a tap
+    startStroke(gesture.x, gesture.y, p);
+    endStroke();
+  } else if (gesture?.kind === 'stroke') endStroke();
+  if (gesture?.kind === 'pinch' && fingers.size) gesture = { kind: 'none' }; // the other finger doesn't start painting
+  if (!fingers.size) gesture = null;
 };
-canvas.addEventListener('pointerup', endDrag);
-canvas.addEventListener('pointercancel', endDrag);
-canvas.addEventListener('pointerleave', () => {
-  hover = null;
-  draw();
-});
+canvas.addEventListener('pointerup', lift);
+canvas.addEventListener('pointercancel', lift);
 canvas.addEventListener(
   'wheel',
   (e) => {
     e.preventDefault();
-    const r = canvas.getBoundingClientRect();
-    zoomAt(e.deltaY < 0 ? 1.15 : 1 / 1.15, e.clientX - r.left, e.clientY - r.top);
+    const p = local(e);
+    const z = clamp(view.z * (e.deltaY < 0 ? 1.15 : 1 / 1.15), 0.03, 8);
+    view.x = p.x - ((p.x - view.x) * z) / view.z;
+    view.y = p.y - ((p.y - view.y) * z) / view.z;
+    view.z = z;
+    draw();
   },
   { passive: false },
 );
-function zoomAt(k, sx, sy) {
-  const z = Math.max(0.25, Math.min(10, view.z * k));
-  view.x = sx - ((sx - view.x) * z) / view.z;
-  view.y = sy - ((sy - view.y) * z) / view.z;
-  view.z = z;
-  $('zoom-level').textContent = `${Math.round(z * 100)}%`;
+document.addEventListener('gesturestart', (e) => e.preventDefault()); // iOS page zoom
+
+function startStroke(sx, sy, now) {
+  const { wx, wy } = toWorld(sx, sy);
+  gesture = { kind: 'stroke', last: { wx, wy }, did: false };
+  if (tool === 'paint') {
+    if (!chosen) {
+      gesture = { kind: 'none' };
+      return toast('Open a list below and pick something first.');
+    }
+    if (PIECES[chosen]?.layer === 'object') {
+      ghost = { ref: chosen, ...placeFor(chosen, wx, wy), flip };
+    } else {
+      record();
+      gesture.did = paintCells(wx, wy);
+    }
+  } else if (tool === 'erase') {
+    record();
+    gesture.did = eraseAt(wx, wy);
+  } else if (tool === 'fill') {
+    fillAt(wx, wy);
+    gesture = { kind: 'none' };
+  } else if (tool === 'pick') {
+    pickAt(wx, wy);
+    gesture = { kind: 'none' };
+  } else if (tool === 'move') {
+    const o = hitObject(wx, wy);
+    select(o || null);
+    if (o) {
+      record();
+      gesture.drag = { o, dx: wx - o.x, dy: wy - o.y };
+    }
+  }
+  if (now) moveStroke(now);
   draw();
 }
-const zoomCenter = (k) => {
-  const r = canvas.getBoundingClientRect();
-  zoomAt(k, r.width / 2, r.height / 2);
-};
+function moveStroke(p) {
+  const { wx, wy } = toWorld(p.x, p.y);
+  const g = gesture;
+  if (tool === 'paint' && ghost) Object.assign(ghost, placeFor(ghost.ref, wx, wy));
+  else if (tool === 'paint' || tool === 'erase') {
+    // fill in between fast finger moves
+    const steps = Math.max(1, Math.ceil(Math.hypot(wx - g.last.wx, wy - g.last.wy) / (T / 2)));
+    for (let i = 1; i <= steps; i++) {
+      const x = g.last.wx + ((wx - g.last.wx) * i) / steps;
+      const y = g.last.wy + ((wy - g.last.wy) * i) / steps;
+      g.did = (tool === 'paint' ? paintCells(x, y) : eraseAt(x, y)) || g.did;
+    }
+  } else if (tool === 'move' && g.drag) {
+    const p2 = PIECES[g.drag.o.ref];
+    const s = g.drag.o.ref.startsWith('t:') ? T : Number($('snap').value);
+    const nx = Math.round((wx - g.drag.dx) / s) * s;
+    const ny = Math.round((wy - g.drag.dy + p2.h) / s) * s - p2.h;
+    if (nx !== g.drag.o.x || ny !== g.drag.o.y) {
+      g.drag.o.x = nx;
+      g.drag.o.y = ny;
+      g.did = true;
+    }
+  }
+  g.last = { wx, wy };
+  draw();
+}
+function endStroke(cancelled) {
+  const g = gesture;
+  if (tool === 'paint' && ghost) {
+    if (!cancelled) {
+      record();
+      map.objects.push({ ...ghost });
+      g.did = true;
+    }
+    ghost = null;
+  }
+  if (g && !g.did && (tool === 'paint' || tool === 'erase' || (tool === 'move' && g.drag))) undoStack.pop(); // nothing changed
+  brushAt = null;
+  gesture = { kind: 'none' };
+  if (g?.did) changed();
+  else draw();
+}
 
 function setTool(t) {
   tool = t;
   document.querySelectorAll('[data-tool]').forEach((b) => b.classList.toggle('on', b.dataset.tool === t));
-  canvas.style.cursor = t === 'select' ? 'move' : t === 'pick' ? 'copy' : 'crosshair';
+  if (t !== 'move') select(null);
   draw();
 }
+
+// ---------- buttons and menus ----------
 document.querySelectorAll('[data-tool]').forEach((b) => (b.onclick = () => setTool(b.dataset.tool)));
-
-function doFlip() {
-  if (selected && room.items.includes(selected) && tool === 'select') {
-    record();
-    selected.flip = !selected.flip;
-    changed();
-  } else {
-    flip = !flip;
-    showChosen();
-    draw();
-  }
-}
-
-window.addEventListener('keydown', (e) => {
-  if (e.target.matches('input, select, textarea')) return;
-  const k = e.key.toLowerCase();
-  const mod = e.ctrlKey || e.metaKey;
-  if (k === ' ') {
-    space = true;
-    canvas.style.cursor = 'grab';
-    e.preventDefault();
-  } else if (mod && k === 'z') {
-    e.preventDefault();
-    e.shiftKey ? redo() : undo();
-  } else if (mod && k === 'y') {
-    e.preventDefault();
-    redo();
-  } else if (mod && k === 'd' && selected) {
-    e.preventDefault();
-    record();
-    const copy = { ...selected, x: selected.x + snapTo() * (snapTo() === 1 ? 8 : 1), y: selected.y };
-    room.items.push(copy);
-    selected = copy;
-    changed();
-  } else if ((k === 'delete' || k === 'backspace') && selected) {
-    record();
-    room.items.splice(room.items.indexOf(selected), 1);
-    selected = null;
-    changed();
-  } else if (selected && tool === 'select' && k.startsWith('arrow')) {
-    e.preventDefault();
-    record();
-    const s = e.shiftKey ? T : snapTo();
-    if (k === 'arrowleft') selected.x -= s;
-    if (k === 'arrowright') selected.x += s;
-    if (k === 'arrowup') selected.y -= s;
-    if (k === 'arrowdown') selected.y += s;
-    changed();
-  } else if (!mod) {
-    const tools = { b: 'paint', e: 'erase', v: 'select', g: 'fill', i: 'pick' };
-    if (tools[k]) setTool(tools[k]);
-    else if (k === 'f') doFlip();
-    else if (k === '+' || k === '=') zoomCenter(1.25);
-    else if (k === '-') zoomCenter(0.8);
-    else if (k === '0') fit();
-    else if (k === 'escape') {
-      selected = null;
-      draw();
-    }
-  }
-});
-window.addEventListener('keyup', (e) => {
-  if (e.key === ' ') {
-    space = false;
-    setTool(tool);
-  }
-});
-
 $('undo').onclick = undo;
 $('redo').onclick = redo;
-$('zoom-in').onclick = () => zoomCenter(1.25);
-$('zoom-out').onclick = () => zoomCenter(0.8);
-$('zoom-fit').onclick = fit;
-$('show-grid').onchange = draw;
-$('flip').onclick = doFlip;
-$('room-name').onchange = (e) => {
+$('sheet-handle').onclick = () => {
+  $('sheet').classList.toggle('small');
+  setTimeout(resize, 220);
+};
+$('sel-flip').onclick = () => {
+  if (!selected) return;
   record();
-  room.name = e.target.value.trim() || 'Untitled room';
+  selected.flip = !selected.flip;
   changed();
 };
-$('room-w').onchange = () => setSize(Number($('room-w').value), room.h);
-$('room-h').onchange = () => setSize(room.w, Number($('room-h').value));
-$('new-room').onclick = () => {
+$('sel-dup').onclick = () => {
+  if (!selected) return;
   record();
-  room = blank(room.w, room.h);
-  selected = null;
-  syncRoomInputs();
+  const s = selected.ref.startsWith('t:') ? T : Math.max(Number($('snap').value), 8);
+  const copy = { ...selected, x: selected.x + s };
+  map.objects.push(copy);
+  select(copy);
   changed();
-  toast('New empty room (Undo brings the old one back)');
 };
-$('save-png').onclick = savePng;
-$('export').onclick = () => {
-  download(new Blob([roomFile()], { type: 'application/json' }), fileName('.room.json'));
-  toast('Saved the room file to your downloads');
+$('sel-del').onclick = () => {
+  if (!selected) return;
+  record();
+  map.objects.splice(map.objects.indexOf(selected), 1);
+  select(null);
+  changed();
 };
-$('copy').onclick = async () => {
+// flipping the chosen piece: tap its picture
+$('chosen-pic').onclick = () => {
+  flip = !flip;
+  showChosen();
+};
+
+function openMenu() {
+  $('name-input').value = map.name;
+  renderSaved();
+  $('menu').hidden = false;
+}
+function renderSaved() {
+  const list = $('saved-list');
+  list.replaceChildren();
+  let all = {};
   try {
-    await navigator.clipboard.writeText(roomFile());
-    toast('Room code copied. Paste it to Claude.');
+    all = JSON.parse(localStorage.getItem(STORE) || '{}');
   } catch {
-    toast('Copy was blocked; use Export file instead.');
+    // nothing saved
+  }
+  const names = Object.keys(all);
+  if (!names.length) list.innerHTML = '<p class="hint">Maps save on this phone as you work. They’ll show here.</p>';
+  names.forEach((n) => {
+    const row = document.createElement('div');
+    row.className = 'saved';
+    const open = document.createElement('button');
+    open.textContent = `${n} · ${all[n].w}×${all[n].h}${n === map.name ? ' (open)' : ''}`;
+    open.onclick = () => {
+      saveLocal();
+      loadMap(deserialize(all[n]));
+      undoStack.length = redoStack.length = 0;
+      localStorage.setItem(CURRENT, n);
+      $('menu').hidden = true;
+    };
+    const del = document.createElement('button');
+    del.textContent = 'Delete';
+    del.onclick = () => {
+      if (del.dataset.sure !== '1') {
+        del.dataset.sure = '1';
+        del.textContent = 'Sure?';
+        return;
+      }
+      delete all[n];
+      localStorage.setItem(STORE, JSON.stringify(all));
+      renderSaved();
+    };
+    row.append(open, del);
+    list.appendChild(row);
+  });
+}
+$('menu-btn').onclick = openMenu;
+$('map-name').onclick = openMenu;
+$('menu-close').onclick = () => {
+  const name = $('name-input').value.trim() || map.name;
+  if (name !== map.name) {
+    try {
+      const all = JSON.parse(localStorage.getItem(STORE) || '{}');
+      delete all[map.name];
+      localStorage.setItem(STORE, JSON.stringify(all));
+    } catch {
+      // fine
+    }
+    map.name = name;
+    $('map-name').textContent = name;
+    changed();
+  }
+  $('menu').hidden = true;
+  draw();
+};
+$('menu').onclick = (e) => e.target === $('menu') && $('menu-close').onclick();
+$('save-png').onclick = savePicture;
+$('share-file').onclick = () => saveBlob(new Blob([JSON.stringify(serialize())], { type: 'application/json' }), fileName('.map.json'));
+$('copy-code').onclick = async () => {
+  try {
+    await navigator.clipboard.writeText(JSON.stringify(serialize()));
+    toast('Map code copied. Paste it to Claude.');
+  } catch {
+    toast('Copy was blocked. Use Save map file instead.');
   }
 };
-$('import').onclick = () => $('import-file').click();
-$('import-file').onchange = async (e) => {
+$('open-file').onclick = () => $('file-input').click();
+$('file-input').onchange = async (e) => {
   const f = e.target.files[0];
   e.target.value = '';
   if (!f) return;
   try {
-    readFile(await f.text());
+    saveLocal();
+    loadMap(deserialize(JSON.parse(await f.text())));
+    undoStack.length = redoStack.length = 0;
+    $('menu').hidden = true;
+    changed();
+    toast(`Opened “${map.name}”`);
   } catch {
-    toast('That file isn’t a room file.');
+    toast('That file isn’t a map.');
   }
 };
-// paste a room's code anywhere on the page to open it
-window.addEventListener('paste', (e) => {
-  if (e.target.matches('input, textarea')) return;
-  const text = e.clipboardData?.getData('text') || '';
-  if (!text.includes('curation-room')) return;
+const newMap = (kind) => {
+  saveLocal();
+  const m = blankMap(kind, Number($('new-w').value), Number($('new-h').value));
+  let all = {};
   try {
-    readFile(text);
+    all = JSON.parse(localStorage.getItem(STORE) || '{}');
   } catch {
-    toast('That pasted text isn’t a room.');
+    // fine
+  }
+  let n = 1;
+  const base = m.name;
+  while (all[m.name]) m.name = `${base} ${++n}`;
+  loadMap(m);
+  undoStack.length = redoStack.length = 0;
+  changed();
+  $('menu').hidden = true;
+  if (kind === 'island') choose('m:2');
+};
+$('new-island').onclick = () => newMap('island');
+$('new-room').onclick = () => newMap('room');
+$('grid-toggle').onchange = draw;
+$('credits-btn').onclick = () => {
+  $('menu').hidden = true;
+  $('credits').hidden = false;
+};
+$('back-game').onclick = () => {
+  saveLocal();
+  location.href = './index.html';
+};
+$('credits-close').onclick = () => ($('credits').hidden = true);
+window.addEventListener('resize', resize);
+// paste a map's code anywhere to open it
+window.addEventListener('paste', (e) => {
+  const text = e.clipboardData?.getData('text') || '';
+  if (!/curation-(map|room)/.test(text) || e.target.matches('input')) return;
+  try {
+    record();
+    loadMap(deserialize(JSON.parse(text)));
+    changed();
+  } catch {
+    toast('That pasted text isn’t a map.');
   }
 });
-$('credits-btn').onclick = () => $('credits').showModal();
-window.addEventListener('resize', resize);
 
 function credits() {
   const ul = $('credits-list');
-  Object.entries(DATA.credits).forEach(([, lines]) => {
+  Object.values(ROOM?.credits || {}).forEach((lines) => {
     const li = document.createElement('li');
     const [title, link, author, lic] = lines;
     if (link?.startsWith('http')) {
@@ -739,7 +1019,26 @@ function toast(text) {
   el.hidden = false;
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => (el.hidden = true), 2600);
+  return false;
 }
 
-window.__builder = { get room() { return room; }, PIECES, readFile, roomFile }; // for tests
+async function boot() {
+  await loadPieces();
+  buildPalette();
+  credits();
+  let m = null;
+  try {
+    const all = JSON.parse(localStorage.getItem(STORE) || '{}');
+    const cur = localStorage.getItem(CURRENT);
+    if (cur && all[cur]) m = deserialize(all[cur]);
+  } catch {
+    // start fresh
+  }
+  resize();
+  loadMap(m || blankMap('island', 80, 80));
+  choose('m:2');
+  setTool('paint');
+}
+
+window.__builder = { get map() { return map; }, serialize, deserialize, get view() { return view; } }; // for tests
 boot();
