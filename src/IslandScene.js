@@ -39,7 +39,7 @@ const COTTAGE = { x: 4 * T + 48, y: 29 * T }; // the cottage door, which leads t
 
 // Tall things you can walk behind: only the trunk (or post) at the bottom is
 // solid, w × h px, centred; the leaves and lamp tops are above you.
-const TRUNKS = { palm: [12, 8], tree: [14, 8], pine: [10, 8], pine_snow: [10, 8], cherry_tree: [14, 8], maple_tree: [14, 8], apple_tree: [14, 8], orange_tree: [14, 8], willow: [16, 8], bare_tree: [12, 8], flame_tree: [14, 8], lamp_post: [8, 6], signpost: [8, 6] };
+const TRUNKS = { palm: [12, 8], tree: [14, 8], pine: [10, 8], pine_snow: [10, 8], cherry_tree: [14, 8], maple_tree: [14, 8], apple_tree: [14, 8], orange_tree: [14, 8], willow: [16, 8], bare_tree: [12, 8], flame_tree: [14, 8], lamp_post: [8, 6], signpost: [8, 6], umbrella: [6, 6], scarecrow: [8, 6] };
 
 const hash = (x, y, s = 0) => {
   const n = Math.sin(x * 127.1 + y * 311.7 + s * 74.7) * 43758.5453;

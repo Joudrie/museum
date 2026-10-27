@@ -249,3 +249,30 @@ Fixed in this run:
   enough for the lamps to matter.
 - **Going outside twice:** the second visit could crash or freeze (fixed
   earlier).
+
+## Full run (Oct 27, 2026)
+
+The whole prompt, including the hands-on steps.
+
+| Step | Result |
+|---|---|
+| 1 First launch, greeting, HUD | ✅ |
+| 2 Walking: tap, drag, walk vs run, facing, camera | ✅ |
+| 3 Hitboxes in every room | ✅ A red overlay of each room (entrance, hall, atrium, 5 shaped rooms, library, break room) shows solid areas only at walls, drops, stairs, pits and furniture footprints. |
+| 3.2 Depth | ✅ Palm, statue, cherry tree, bookshelf and lamp hide you from behind, and you draw over them in front. The fireplace no longer draws over you. |
+| 4–7 Interact, cleaning, coins, paintings, viewer | ✅ |
+| 8 Doors, locked arches, archway step-in | ✅ |
+| 9 Rooms, build menu | ✅ The end carousel scrolls vertically, and the page never scrolls sideways. |
+| 10 Toolkit | ✅ Pick, ghost, Place, back to the list. Items are free while testing. |
+| 11 Customize, journal (claim +50), settings | ✅ |
+| 12 People | ✅ (smoke test: nobody inside walls, no overlaps) |
+| 13 Island hitboxes | ✅ Only trunks and posts block: trees, palms, lamp posts, signposts, the beach umbrella and the scarecrow. |
+| 13 Island, other | ✅ Tall grass covers your legs, and rain and snow look right. |
+| 14 Fishing | ✅ |
+| 15 Angled room | ✅ |
+| 16 Night, and the day/night toggle | ✅ Night is readable. With the toggle off, a night hour shows full brightness. |
+| 17 Saving, corrupt save | ✅ |
+
+Fixed in this run: the beach umbrella and the scarecrow now block only at
+their pole.
+
