@@ -43,6 +43,7 @@ function render() {
     section('Lighting', choices(LIGHT_QUALITY, s.lights, (v) => (setSetting('lights', v), render()))),
     section('Day & night', choices(onOff, s.dayNight ? 'on' : 'off', (v) => (setSetting('dayNight', v === 'on'), render()))),
     section('Vibration', choices(onOff, s.haptics ? 'on' : 'off', (v) => (setSetting('haptics', v === 'on'), render()))),
+    section('Design', button('Map builder: islands & rooms', () => (location.href = './builder.html'), 'wide-btn')),
     section('Testing', button('+1,000 gold', () => state.onAddCoins(1000)), button('Reset museum (rooms, gold, mess)', () => state.onReset(), 'wide-btn danger')),
   );
   const note = document.createElement('p');
