@@ -379,7 +379,9 @@ export class IsoScene extends Phaser.Scene {
     piece.img?.destroy();
     piece.img = this.add.image(p.x - art.ox, p.y - art.oy, key).setOrigin(0);
     // depth: the piece's front corner on screen
-    piece.img.setDepth(S(piece.gx + art.w, piece.gy + art.d).y - 2);
+    // pieces sort by their middle on the floor; the player is slotted in
+    // between them each frame (see place)
+    piece.img.setDepth((piece.gx + art.w / 2 + piece.gy + art.d / 2) * 10);
     piece.box = { x0: piece.gx, x1: piece.gx + art.w, y0: piece.gy, y1: piece.gy + art.d };
   }
 
@@ -406,8 +408,27 @@ export class IsoScene extends Phaser.Scene {
 
   place() {
     const p = S(this.pos.gx, this.pos.gy);
-    this.player.setPosition(p.x, p.y + 2).setDepth(p.y);
-    this.shadow.setPosition(p.x, p.y + 1).setDepth(p.y - 1);
+    // In front of a piece: past its far side along either floor axis.
+    // Behind it: short of its near side along either axis. Draw the player
+    // over everything it's in front of and under everything it's behind.
+    const { gx, gy } = this.pos;
+    let lo = -Infinity;
+    let hi = Infinity;
+    const px0 = p.x - 10;
+    const px1 = p.x + 10;
+    const py0 = p.y - 40;
+    const py1 = p.y + 2;
+    this.pieces.forEach((q) => {
+      const i = q.img;
+      if (i.x > px1 || i.x + i.width < px0 || i.y > py1 || i.y + i.height < py0) return; // not overlapping you on screen
+      const b = q.box;
+      const d = q.img.depth;
+      if (gx >= b.x1 || gy >= b.y1) lo = Math.max(lo, d);
+      else if (gx <= b.x0 || gy <= b.y0) hi = Math.min(hi, d);
+    });
+    const depth = lo > -Infinity ? (hi < Infinity ? (lo + Math.min(hi, lo + 10)) / 2 : lo + 1) : hi < Infinity ? hi - 1 : (gx + gy) * 10;
+    this.player.setPosition(p.x, p.y + 2).setDepth(depth);
+    this.shadow.setPosition(p.x, p.y + 1).setDepth(depth - 0.1);
   }
 
   setupCamera() {

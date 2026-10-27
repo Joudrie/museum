@@ -485,15 +485,17 @@ function addCliffs(add) {
 // ---------- Plants ----------
 function addPlants(add, anim) {
   // Tall grass you walk through (the front layer is drawn over the player's legs)
+  // (14px taller than a tile, so it stands up past the tile above)
+  const GH = T + 14;
   const blades = (f, front) =>
-    draw(T, T, ({ R }) => {
+    draw(T, GH, ({ R }) => {
       // rows of pointed blades, back to front; the front layer is only the
-      // bottom row, drawn over the player's legs
+      // bottom row, drawn over the player up to the knees
       const sway = [0, 1, 0, -1][f];
-      const rows = front ? [[31, 1]] : [[13, 0], [22, 2], [31, 1]];
+      const rows = front ? [[GH - 1, 1]] : [[GH - 19, 0], [GH - 10, 2], [GH - 1, 1]];
       rows.forEach(([base, off], r) => {
         for (let bx = -2 + off * 2; bx < T; bx += 5) {
-          const h = 11 + ((bx + r * 3) % 3);
+          const h = (front || r === 2 ? 19 : 16) + ((bx + r * 3) % 3);
           for (let i = 0; i < h; i++) {
             const t = i / h;
             const w = Math.max(1, Math.round(4 * (1 - t)));
@@ -506,8 +508,8 @@ function addPlants(add, anim) {
         }
       });
     });
-  add('tall_grass', anim((f) => blades(f, false)), { group: 'Plants', label: 'Tall grass', walk: 'grass' });
-  add('tall_grass_front', anim((f) => blades(f, true)), { group: 'Plants', label: 'Tall grass (over legs)', walk: 'over' });
+  add('tall_grass', anim((f) => blades(f, false)), { group: 'Plants', label: 'Tall grass', walk: 'grass', h: GH });
+  add('tall_grass_front', anim((f) => blades(f, true)), { group: 'Plants', label: 'Tall grass (over legs)', walk: 'over', h: GH });
   add('flowers', anim((f) => draw(T, T, ({ R }) => {
     const bob = f % 2;
     [[6, 8, '#e0405a'], [20, 6, '#f2d36b'], [13, 18, '#ffffff'], [25, 22, '#e0405a'], [5, 25, '#f2d36b'], [17, 28, '#b06ae0']].forEach(([x, y, c], i) => {

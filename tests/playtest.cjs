@@ -321,6 +321,15 @@ const fail = (s, n) => log(s, '❌', n);
   await wait(250);
   await shot('island-behind-lamp');
 
+  // behind the museum: only its front is solid
+  const museum = await S(() => { const s = __game.scene.getScene('island'); return s.free(14 * 32, 4 * 32) && !s.free(9 * 32, 7 * 32 + 20); });
+  museum ? pass('13.2 museum', 'you can walk behind the museum; its front is solid') : fail('13.2 museum', 'the museum blocks behind its roof (or its front is open)');
+  // walking up anywhere above the cottage must not open it
+  await S(() => { const s = __game.scene.getScene('island'); s.player.setPosition(4 * 32 + 48, 22 * 32); s.cottageLock = false; });
+  await hold('w', 500);
+  await wait(800);
+  (await S(() => __game.scene.isActive('island'))) ? pass('13.2 cottage door', 'only the cottage door itself opens it') : fail('13.2 cottage door', 'walking up far above the cottage opened it');
+
   // ---------- 13.6 Second visit ----------
   await S(() => { const s = __game.scene.getScene('island'); s.goInside(); });
   await wait(1800);
@@ -366,6 +375,15 @@ const fail = (s, n) => log(s, '❌', n);
   await wait(1200);
   if (await S(() => __game.scene.isActive('iso'))) {
     pass('15.1 cottage', 'the cottage door opens the angled room');
+    // in front of the bookshelf's left end and of the sofa you draw over them; behind an armchair you don't
+    const iso = await S(() => {
+      const s = __game.scene.getScene('iso');
+      const at = (gx, gy) => { s.pos = { gx, gy }; s.place(); return s.player.depth; };
+      const kind = (k) => s.pieces.find((q) => q.kind === k);
+      const shelf = kind('bookshelf').img.depth, sofa = kind('sofa').img.depth, chair = kind('armchair');
+      return { shelf: at(3.75, 0.95) > shelf, sofa: at(1.45, 3.2) > sofa, chair: at(chair.box.x0 + 0.5, chair.box.y0 - 0.1) < chair.img.depth };
+    });
+    iso.shelf && iso.sofa && iso.chair ? pass('15.2 angled depth', 'in front of the shelf and sofa, behind the armchair') : fail('15.2 angled depth', JSON.stringify(iso));
     await shot('angled-room');
   } else fail('15.1 cottage', 'cottage door did not open');
 
