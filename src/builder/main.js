@@ -409,7 +409,7 @@ function render() {
     ctx.strokeRect(brushAt.x * T, brushAt.y * T, n * T, n * T);
   }
   const t = savedAt && new Date(savedAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
-  $('zoom-chip').textContent = `${Math.round(view.z * 100)}% · ${map.w}×${map.h}${t ? ` · saved ${t}` : ''}`;
+  $('zoom-chip').textContent = `${Math.round(view.z * 100)}% · ${map.w}×${map.h}${t ? ` · autosaved ${t}` : ''}`;
 }
 
 // ---------- editing ----------
@@ -1132,7 +1132,39 @@ async function boot() {
   choose('m:2');
   setTool('paint');
   draw();
+  if (data) showResume(all);
 }
+
+// opening the builder (also after a crash or a dead battery): pick up where you left off
+const when = (ts) => {
+  const d = new Date(ts);
+  const today = d.toDateString() === new Date().toDateString();
+  return `${today ? 'today' : d.toLocaleDateString([], { month: 'short', day: 'numeric' })} ${d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`;
+};
+function showResume(all) {
+  $('resume-name').textContent = map.name;
+  $('resume-meta').textContent = savedAt ? `Autosaved ${when(savedAt)} · ${map.w}×${map.h}` : `${map.w}×${map.h}`;
+  const list = $('resume-list');
+  list.replaceChildren();
+  Object.keys(all)
+    .filter((n) => n !== map.name)
+    .sort((a, b) => (all[b].saved || 0) - (all[a].saved || 0))
+    .slice(0, 8)
+    .forEach((n) => {
+      const b = document.createElement('button');
+      b.textContent = `${n}${all[n].saved > 1 ? ` · ${when(all[n].saved)}` : ''}`;
+      b.onclick = () => {
+        loadMap(deserialize(all[n]));
+        undoStack.length = redoStack.length = 0;
+        saveLocal();
+        $('resume').hidden = true;
+      };
+      list.appendChild(b);
+    });
+  $('resume-others').hidden = !list.children.length;
+  $('resume').hidden = false;
+}
+$('resume-go').onclick = () => ($('resume').hidden = true);
 
 function isBlank(d) {
   return !(d.objects || []).length && !Object.keys(d.tiles || {}).length && (d.w || 0) <= 80;
