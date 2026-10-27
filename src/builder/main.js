@@ -778,6 +778,9 @@ canvas.addEventListener(
   { passive: false },
 );
 document.addEventListener('gesturestart', (e) => e.preventDefault()); // iOS page zoom
+// the page itself never zooms: two fingers only zoom the map, and double taps do nothing
+document.addEventListener('touchmove', (e) => e.touches.length > 1 && e.target !== canvas && e.preventDefault(), { passive: false });
+document.addEventListener('dblclick', (e) => e.preventDefault());
 
 function startStroke(sx, sy, now) {
   const { wx, wy } = toWorld(sx, sy);
@@ -1165,6 +1168,7 @@ function showResume(all) {
   $('resume').hidden = false;
 }
 $('resume-go').onclick = () => ($('resume').hidden = true);
+$('resume').onclick = (e) => e.target === $('resume') && ($('resume').hidden = true);
 
 function isBlank(d) {
   return !(d.objects || []).length && !Object.keys(d.tiles || {}).length && (d.w || 0) <= 80;
