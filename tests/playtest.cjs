@@ -348,6 +348,8 @@ const fail = (s, n) => log(s, '❌', n);
   await wait(400);
   if ((await S(() => document.querySelector('#interact .label').textContent)) === 'Sail') {
     await p.click('#interact');
+    await wait(300);
+    await p.locator('.sail-dest', { hasText: 'The far isle' }).click(); // the boat asks where to
     await wait(2500);
     const isle = await S(() => { const s = __game.scene.getScene('island'); return s.mapId && s.free(s.player.x, s.player.y); });
     await shot('builder-island');
@@ -355,6 +357,8 @@ const fail = (s, n) => log(s, '❌', n);
     await S(() => { const s = __game.scene.getScene('island'); s.player.setPosition(s.landingSpot.x, s.landingSpot.y); });
     await wait(400);
     await p.click('#interact');
+    await wait(300);
+    await p.locator('.sail-dest', { hasText: 'Home island' }).click();
     await wait(2500);
     (await S(() => !__game.scene.getScene('island').mapId)) ? pass('13.7 sail home', 'sailed home to the main island') : fail('13.7 sail home', 'could not sail home');
   } else fail('13.7 sail', 'no Sail button at the end of the dock');

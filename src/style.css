@@ -2220,3 +2220,52 @@ body.outside #hud {
   image-rendering: pixelated;
   max-width: 100%;
 }
+
+/* back to the map builder while walking a test island */
+#back-builder {
+  position: fixed;
+  right: 10px;
+  top: calc(64px + env(safe-area-inset-top, 0px));
+  z-index: 20;
+  padding: 9px 16px;
+  border-radius: 20px;
+  background: rgba(29, 23, 20, 0.85);
+  border: 1px solid #e8c867;
+  color: #f2e8d8;
+  font: 600 14px system-ui, sans-serif;
+  text-decoration: none;
+}
+
+/* the boat: where to sail */
+#sail {
+  position: fixed;
+  inset: 0;
+  z-index: 22;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(10, 6, 4, 0.45);
+}
+#sail.hidden {
+  display: none;
+}
+.sail-list {
+  display: grid;
+  gap: 8px;
+  max-height: 50dvh;
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
+.sail-dest {
+  display: grid;
+  gap: 2px;
+  text-align: left;
+}
+.sail-dest small {
+  color: #5a4630;
+  font-family: system-ui, sans-serif;
+  font-size: 12px;
+}
+.sail-stay {
+  width: 100%;
+}

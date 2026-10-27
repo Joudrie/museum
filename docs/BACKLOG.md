@@ -1,5 +1,10 @@
 # Curation: Backlog (base-building first, mini-games later)
 
+## Noted from the user (islands)
+- Grass should blend into other surfaces (paths, dirt, stone), not hard square edges.
+- The island being built in the builder ("Recovered island", backup in docs/maps/) will become the default spawn island.
+- The museum exterior on the island needs re-texturing (look to be specified).
+
 ## Phase 1: Polish the base ✅
 - Walking animation (a small bounce/shuffle) for player and visitors.
 - Remove dirt stains from walls.

@@ -177,7 +177,7 @@ function buildPalette() {
     const name = p.layer === 'tile' ? `Ground: ${p.group}` : p.group || 'Other';
     (byGroup[name] ||= []).push(ref);
   });
-  const order = ['Ground: Ground', 'Ground: Paths', 'Ground: Water', 'Trees', 'Plants', 'Flowers & plants', 'Rocks', 'Buildings', 'Garden & park', 'Grounds & garden', 'Props', 'Puzzles', 'Ground: Cliffs & ledges', 'Cliffs & ledges'];
+  const order = ['Ground: Ground', 'Ground: Paths', 'Ground: Water', 'Buildings', 'People', 'Trees', 'Plants', 'Flowers & plants', 'Rocks', 'Buildings', 'Garden & park', 'Grounds & garden', 'Props', 'Puzzles', 'Ground: Cliffs & ledges', 'Cliffs & ledges'];
   Object.keys(byGroup)
     .sort((a, b) => (order.indexOf(a) + 1 || 99) - (order.indexOf(b) + 1 || 99))
     .forEach((name) => lists.push({ name: name.replace('Ground: Ground', 'Ground tiles').replace('Ground: ', ''), refs: byGroup[name] }));
@@ -196,8 +196,17 @@ function buildPalette() {
           const b = document.createElement('button');
           b.className = 'piece';
           b.dataset.ref = ref;
-          b.appendChild(thumb(ref, 50));
-          if (ref.startsWith('m:')) b.insertAdjacentHTML('beforeend', `<span>${MATS.find((m) => `m:${m.m}` === ref).name}</span>`);
+          const pic = document.createElement('div');
+          pic.className = 'pic';
+          pic.appendChild(thumb(ref, 72));
+          b.appendChild(pic);
+          const name = ref.startsWith('m:') ? MATS.find((m) => `m:${m.m}` === ref).name : ref.startsWith('t:') ? PIECES[ref].label : '';
+          if (name) {
+            const sp = document.createElement('span');
+            sp.textContent = name;
+            b.appendChild(sp);
+          }
+          b.title = name || PIECES[ref]?.label || '';
           b.onclick = () => choose(ref);
           grid.appendChild(b);
         });
@@ -988,6 +997,17 @@ $('menu-close').onclick = () => {
 };
 $('menu').onclick = (e) => e.target === $('menu') && $('menu-close').onclick();
 $('save-png').onclick = savePicture;
+// try the island in the game (people wander, the museum's doors work)
+$('play-map').onclick = () => {
+  saveLocal();
+  if (map.kind !== 'island') return toast('Only islands can be walked for now.');
+  try {
+    localStorage.setItem('curation.playtest', JSON.stringify(serialize()));
+  } catch {
+    return toast('Phone storage is full.');
+  }
+  location.href = './index.html?play=1';
+};
 $('share-file').onclick = () => saveBlob(new Blob([JSON.stringify(serialize())], { type: 'application/json' }), fileName('.map.json'));
 $('copy-code').onclick = async () => {
   try {

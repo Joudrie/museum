@@ -8,6 +8,7 @@
 // walk: 'walk' | 'block' | 'water' | 'grass' (walk-through, hides the legs) |
 //       'ledge' (jump down only) | 'push' (a boulder you can shove) | 'over' (draw above people)
 
+import { addLandmarks } from './landmarks.js';
 import { addScenery } from './scenery.js';
 
 export const T = 32;
@@ -359,6 +360,9 @@ export function buildTiles() {
 
   // Flowers, garden plants, more trees and rocks, paths and buildings
   addScenery(add, anim);
+
+  // the museum and people, for builder islands
+  addLandmarks(add);
 
   return tiles;
 }
