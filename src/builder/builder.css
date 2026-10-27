@@ -12,6 +12,7 @@
 * {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
+  touch-action: pan-y; /* no double-tap or pinch zoom on the page, lists still scroll */
 }
 html,
 body {
@@ -53,6 +54,7 @@ button.main {
 }
 input,
 select {
+  font-size: 16px; /* smaller makes iPhone zoom in when you type */
   background: var(--bg);
   border: 1px solid var(--line);
   border-radius: 6px;
