@@ -1,0 +1,4 @@
+{ "info": { "total": 2 }, "data": [
+  { "id": 900020, "title": "Fixture Mountain Retreat", "share_license_status": "CC0", "creators": [{ "description": "Test Master (Chinese, active 1600s)" }], "images": { "web": { "url": "https://openaccess-cdn.clevelandart.org/1900.1/1900.1_web.jpg", "width": "1280", "height": "2477" } }, "creditline": "Fund", "measurements": "Unframed: 120.5 x 62.3 cm", "url": "https://clevelandart.org/art/1900.1", "creation_date": "ca. 1600" },
+  { "id": 900021, "title": "Fixture Restricted", "share_license_status": "Copyrighted", "creators": [], "images": { "web": { "url": "https://x/y.jpg", "width": "100", "height": "100" } }, "creditline": "Fund" }
+] }

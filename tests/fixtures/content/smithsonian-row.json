@@ -1,0 +1,8 @@
+{ "response": { "id": "edanmdm:fixture_900030", "title": "Fixture Prairie Camp", "content": {
+  "descriptiveNonRepeating": { "title": { "content": "Fixture Prairie Camp" }, "record_link": "https://www.si.edu/object/fixture:900030", "data_source": "Fixture American Art Museum",
+    "online_media": { "mediaCount": 1, "media": [{ "type": "Images", "content": "https://ids.si.edu/ids/deliveryService?id=FIXTURE-900030", "idsId": "FIXTURE-900030", "usage": { "access": "CC0" } }] } },
+  "freetext": { "name": [{ "label": "Artist", "content": "A. Traveller, 1800-1870" }], "date": [{ "label": "Date", "content": "1835" }],
+    "physicalDescription": [{ "label": "Medium", "content": "oil on canvas" }, { "label": "Dimensions", "content": "H x W: 50.8 x 66 cm (20 x 26 in.)" }],
+    "creditLine": [{ "label": "Credit Line", "content": "Gift of the Fixture Estate" }],
+    "notes": [{ "label": "Summary", "content": "The painter travelled for eight months and made this study from memory afterwards." }] },
+  "indexedStructured": { "object_type": ["Paintings"], "topic": ["Landscapes"] } } } }

@@ -1,0 +1,6 @@
+{ "artObject": { "objectNumber": "FX-900040", "title": "Fixture Winter Canal", "principalOrFirstMaker": "B. Dutchman", "subTitle": "oil on panel, h 30cm × w 45cm",
+  "dating": { "presentingDate": "1642", "sortingDate": 1642 }, "physicalMedium": "oil on panel", "objectTypes": ["painting"],
+  "dimensions": [{ "unit": "cm", "type": "height", "part": null, "value": "30" }, { "unit": "cm", "type": "width", "part": null, "value": "45" }],
+  "webImage": { "url": "https://lh3.googleusercontent.com/fixture=s0", "width": 3000, "height": 2000 }, "copyrightHolder": null,
+  "plaqueDescriptionEnglish": "Skaters cross a frozen canal while a baker sells waffles from a sled. The painter added the church tower later, over a finished sky.",
+  "acquisition": { "method": "gift", "creditLine": "Gift of the Fixture Friends" }, "links": { "web": "https://www.rijksmuseum.nl/en/collection/FX-900040" } } }

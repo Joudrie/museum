@@ -1,0 +1,19 @@
+{
+  "collection": "painting",
+  "name": "first-batch",
+  "about": "Twelve paintings to widen the museum beyond Europe: Japan, China, India, Ethiopia, the Americas, plus women and American painters the game lacks. Each item is a search, not a pinned object: the first public-domain match with an image wins, and the reviewer decides. Sources are tried in order. Nothing here reaches the game until a review file is approved and published.",
+  "items": [
+    { "region": "Japan", "title": "Sudden Shower over Shin-Ōhashi Bridge", "maker": "Hiroshige", "query": "Hiroshige Sudden Shower Shin-Ohashi Bridge Atake", "sources": ["aic", "met", "cleveland"] },
+    { "region": "Japan", "maker": "Utamaro", "query": "Utamaro woodblock print beauty", "sources": ["met", "aic", "cleveland"] },
+    { "region": "China", "title": "Night-Shining White", "maker": "Han Gan", "query": "Han Gan Night-Shining White horse", "sources": ["met"] },
+    { "region": "China", "query": "Chinese hanging scroll mountain landscape ink", "sources": ["cleveland", "met", "aic"] },
+    { "region": "India", "query": "Mughal painting Jahangir emperor", "sources": ["met", "cleveland", "aic"] },
+    { "region": "India", "query": "Rajput painting Krishna Radha", "sources": ["cleveland", "met", "aic"] },
+    { "region": "Ethiopia", "query": "Ethiopian icon painting Virgin Mary", "sources": ["met", "cleveland", "aic"] },
+    { "region": "Indigenous Americas", "maker": "Bodmer", "query": "Karl Bodmer Mandan Missouri", "sources": ["smithsonian", "met", "aic"], "note": "Catlin and Bodmer painted Plains nations in the 1830s; check how the piece names its subjects and use the people's own names where the record gives them" },
+    { "region": "Colonial Mexico", "query": "casta painting Mexico", "sources": ["met", "cleveland"], "note": "sensitive subject: describe plainly, say what the paintings were made for, see docs/CONTENT-STYLE.md" },
+    { "region": "Italy (a woman painter)", "maker": "Gentileschi", "query": "Artemisia Gentileschi Esther before Ahasuerus", "sources": ["met"] },
+    { "region": "France (a woman painter)", "maker": "Morisot", "query": "Berthe Morisot", "sources": ["met", "aic", "commons"] },
+    { "region": "United States", "maker": "Homer", "title": "The Gulf Stream", "query": "Winslow Homer The Gulf Stream", "sources": ["met", "aic"] }
+  ]
+}

@@ -1,6 +1,9 @@
 // Paintings: public-domain masterpieces, shown in HD on the wall.
 // Migrated from the old hard-coded list in src/paintings.js; ids keep their
 // old slugs ("painting:harvesters" was "harvesters") so saves still match.
+// New paintings come in through the content pipeline (docs/CONTENT.md): reviewed drafts in
+// content/review/painting/ are written here by tools/publish_content.mjs.
+// @generated-by tools/publish_content.mjs
 export default {
   collection: {
     id: 'painting',

@@ -1,0 +1,13 @@
+{
+  "data": {
+    "id": 900010, "title": "Fixture Harbour at Dawn", "artist_display": "A. Painter\nFrench, 1840–1900", "artist_title": "A. Painter",
+    "date_display": "1884", "medium_display": "Oil on canvas", "dimensions": "60 × 90 cm (23 5/8 × 35 7/16 in.)",
+    "dimensions_detail": [{ "depth": null, "width": 90, "height": 60, "diameter": null, "clarification": null }],
+    "image_id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "thumbnail": { "lqip": "data:image/gif;base64,R0lGOD", "width": 3000, "height": 2000, "alt_text": "A harbour at first light with three small boats." },
+    "is_public_domain": true, "credit_line": "Gift of the Fixture Society, 1920.1",
+    "description": "<p>The artist painted the harbour from a rented room above a fish market. He finished the canvas in nine mornings, always before the tide turned.</p>",
+    "short_description": null, "place_of_origin": "France", "classification_title": "painting", "style_title": "Impressionism",
+    "subject_titles": ["harbors"], "term_titles": ["oil paint"], "api_link": "https://api.artic.edu/api/v1/artworks/900010"
+  },
+  "config": { "iiif_url": "https://www.artic.edu/iiif/2", "website_url": "http://www.artic.edu" }
+}

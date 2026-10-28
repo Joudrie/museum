@@ -2,7 +2,7 @@
 // Turns a spreadsheet of rows into a collection data file.
 //
 //   node tools/import_collection.mjs rows.csv --collection fossil --name Fossils \
-//        --noun fossils --icon 🦴 --display case [--ownership earned] [--out path]
+//        --noun fossils --icon 🦴 --display case [--ownership earned] [--out path] [--publishable]
 //
 // rows.csv (or rows.json: a list of objects) has one row per entry. Columns:
 //   slug*, title*, license*, credit*      (* required: the tool stops without them)
@@ -24,10 +24,13 @@ import { validateCollection, validateEntry } from '../src/collections/schema.js'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 
+const argvHas = (f) => process.argv.includes(f);
+
 function parseArgs(argv) {
   const out = { _: [] };
   for (let i = 0; i < argv.length; i++) {
-    if (argv[i].startsWith('--')) out[argv[i].slice(2)] = argv[++i];
+    if (argv[i] === '--publishable') out.publishable = true;
+    else if (argv[i].startsWith('--')) out[argv[i].slice(2)] = argv[++i];
     else out._.push(argv[i]);
   }
   return out;
@@ -112,6 +115,8 @@ export function buildPack(rows, def) {
     seen.add(r.slug);
     const e = rowToEntry(r, def.collection);
     validateEntry(e, collection).forEach((p) => problems.push(`${label}: ${p.replace(/^[^:]*: /, '')}`));
+    // pictures that hang on a wall need their shape, or they would be squashed
+    if (e.image.kind === 'url' && (e.display || [collection.display]).includes('wall') && !e.ratio) problems.push(`${label}: a wall picture needs a ratio (width / height)`);
     return e;
   });
   return { pack: { collection, sets: [], entries }, problems };
@@ -121,7 +126,7 @@ function main() {
   const args = parseArgs(process.argv.slice(2));
   const file = args._[0];
   if (!file || !args.collection || !args.name) {
-    console.error('Usage: node tools/import_collection.mjs rows.csv --collection <id> --name <Name> [--noun x] [--icon x] [--display case] [--ownership earned] [--out path]');
+    console.error('Usage: node tools/import_collection.mjs rows.csv --collection <id> --name <Name> [--noun x] [--icon x] [--display case] [--ownership earned] [--out path] [--publishable]');
     process.exit(2);
   }
   const text = readFileSync(file, 'utf8');
@@ -133,7 +138,9 @@ function main() {
     process.exit(1);
   }
   const out = args.out || join(root, 'src', 'collections', 'data', `${args.collection}.js`);
-  writeFileSync(out, `// ${args.name}: imported from ${file.split('/').pop()} by tools/import_collection.mjs.\n// Edit freely; add sets and richer images by hand.\nexport default ${js(pack, 0)};\n`);
+  // --publishable marks the file so tools/publish_content.mjs may add reviewed entries to it later
+  const marker = argvHas('--publishable') ? '// @generated-by tools/publish_content.mjs\n' : '';
+  writeFileSync(out, `// ${args.name}: imported from ${file.split('/').pop()} by tools/import_collection.mjs.\n// Edit freely; add sets and richer images by hand.\n${marker}export default ${js(pack, 0)};\n`);
   console.log(`Wrote ${pack.entries.length} entries to ${out}`);
   console.log(`Now add it to src/collections/index.js:\n  import ${args.collection} from './data/${args.collection}.js';  // and put it in PACKS`);
   console.log('Credits: every entry carries its license and credit; add the pack to CREDITS.md.');

@@ -1,0 +1,10 @@
+{ "data": {
+  "id": 900020, "accession_number": "1900.1", "share_license_status": "CC0", "tombstone": "Fixture Mountain Retreat, ca. 1600, Test Master (Chinese, active 1600s), ink on silk",
+  "title": "Fixture Mountain Retreat", "creation_date": "ca. 1600", "technique": "ink and colors on silk", "department": "Chinese Art", "type": "Painting", "culture": ["China, Ming dynasty (1368–1644)"],
+  "measurements": "Framed: 150 x 80 cm; Unframed: 120.5 x 62.3 cm", "creditline": "John L. Severance Fund 1900.1",
+  "description": "The scroll shows a scholar's hut under a cliff. It was owned by four collectors, each of whom added a red seal in the corner. The paper was remounted in 1935.",
+  "fun_fact": "Conservators found a fingerprint under the silk in 1990.", "did_you_know": null,
+  "creators": [{ "description": "Test Master (Chinese, active 1600s)", "role": "artist" }],
+  "images": { "web": { "url": "https://openaccess-cdn.clevelandart.org/1900.1/1900.1_web.jpg", "width": "1280", "height": "2477", "filesize": "400000" } },
+  "url": "https://clevelandart.org/art/1900.1"
+} }
