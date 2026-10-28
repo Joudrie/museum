@@ -79,6 +79,12 @@
 - Next on top of it: dig sites that hand out minerals and fossils, display cases / plinths / tanks that place
   entries in rooms, restoration, famous visitors as a collection, shop buy / sell through the codex.
 
+## Content pipeline ✅ (built, not yet run live)
+- Adapters, image checker, claim-checked drafts, review report, publish step and a 12-work first batch (`docs/CONTENT.md`).
+- To do once the museum hosts are allowed: run `tools/check_images.mjs --resource` on the 49 paintings (33 links never verified),
+  run `tools/build_batch.mjs content/batches/first-batch.json`, fix adapter shape surprises, replace fixtures with recordings,
+  then review and approve the drafts.
+
 ## Needs Sean
 - **West Wing**: waiting for your outline.
 - **Semi-mythological famous visitors** (you said maybe later).
@@ -86,6 +92,7 @@
 - **Pixel packs**: allow kenney.nl, opengameart.org and itch.io under the environment's Network access, then I can pull in free assets.
 - **Break-room upgrade menu**: what should upgrades do (faster janitors, guide bonus, carpenter speed)?
 - **Collection screens / menu redo**: the journal is a first version you can redesign.
+- **Museum network access**: allow the hosts in `docs/CONTENT.md` so the content pipeline can run (images, first batch).
 - **Wikimedia images**: 33 new paintings' links are built from Commons file names but couldn't be tested here (Wikimedia is blocked in this environment). Any that don't load show a colored placeholder; tell me which ones and I'll fix the file names.
 - **Goals**: are the 19 goals and rewards the right pace? Want daily goals?
 

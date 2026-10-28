@@ -1,0 +1,5 @@
+{ "data": [
+  { "id": 900010, "title": "Fixture Harbour at Dawn", "artist_title": "A. Painter", "date_display": "1884", "medium_display": "Oil on canvas", "dimensions": "60 × 90 cm", "dimensions_detail": [{ "width": 90, "height": 60 }], "image_id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "is_public_domain": true, "credit_line": "Gift", "description": "A harbour." },
+  { "id": 900011, "title": "Fixture Copyright Piece", "artist_title": "Living Artist", "date_display": "1990", "image_id": "ffffffff-bbbb-cccc-dddd-eeeeeeeeeeee", "is_public_domain": false, "credit_line": "Purchase" },
+  { "id": 900012, "title": "Fixture With No Image", "artist_title": "Nobody", "date_display": "1700", "image_id": null, "is_public_domain": true }
+], "config": { "iiif_url": "https://www.artic.edu/iiif/2" } }

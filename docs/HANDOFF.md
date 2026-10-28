@@ -107,6 +107,19 @@ Scenes (`src/main.js`):
 - `tools/import_collection.mjs` turns a CSV into a data file and refuses rows with no license/credit.
 - Test: `PW=/opt/node-tools/node_modules/playwright OUT=<dir> node tests/collections.cjs`.
 
+### Content pipeline (`docs/CONTENT.md`, `docs/CONTENT-STYLE.md`): real art in, with a person approving
+- `tools/sources/` has one adapter per museum (Met, AIC, Cleveland, Smithsonian, Rijksmuseum, Commons):
+  public-domain / CC0 only, cached, rate-limited. **They have never run against a live API**: the build
+  sandbox blocks every museum host, so they follow the documented shapes and tests use hand-written fixtures.
+  Allow the hosts listed in `docs/CONTENT.md`, then expect small fixes (Smithsonian and Rijksmuseum most).
+- Flow: `build_batch.mjs` → drafts in `content/review/<collection>/` → `review_report.mjs` → a person sets
+  `"status": "approved"` → `publish_content.mjs` writes the data file and `CREDITS.md`.
+  Every blurb and fact is a claim with the museum's exact sentence quoted; unsourced claims, invented numbers,
+  filler, duplicates and missing licenses are flagged. The Met has no description text, so its drafts need a hook written.
+- `check_images.mjs` flags broken, tiny, heavy and wrong-shaped images for every painting. **Not run yet on the
+  49 paintings** (no network here); `content/batches/first-batch.json` (12 works, 9+ regions) is waiting to be built.
+- Test: `node tests/content.cjs` (no browser, no network).
+
 ### Gotchas we hit
 - **Phaser reuses the previous scene data** if you call `scene.start('island')` with no data.
   Always pass data explicitly, e.g. `{ map: 'main' }`. Leaving the museum once dropped you on
@@ -128,6 +141,7 @@ The preview server must run first (it dies between turns):
 | Smoke | `node tests/smoke.cjs` | "All good" |
 | Gaps | `node tests/gaps.cjs` | "No gaps in 60 room shapes" |
 | Playtest | `PW=/opt/node-tools/node_modules/playwright OUT=<dir> node tests/playtest.cjs` | 38/38, with screenshots (see `docs/PLAYTEST.md`) |
+| Content | `node tests/content.cjs` | All good (fixtures only; adapters untested live) |
 | Collections | `PW=/opt/node-tools/node_modules/playwright OUT=<dir> node tests/collections.cjs` | All good (schema, migration, corrupt codex, journal tabs, Minerals, viewer, set claim, a real catch) |
 
 Smoke and playtest go out onto Main Island first, then switch to Island One for fishing and
