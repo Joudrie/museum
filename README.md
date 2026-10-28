@@ -4,6 +4,8 @@ A cozy pixel-art museum tycoon game with real masterpieces. Phone first, portrai
 
 - Design: [docs/DESIGN.md](docs/DESIGN.md)
 - First session: [docs/FIRST_SESSION.md](docs/FIRST_SESSION.md)
+- Where things stand: [docs/HANDOFF.md](docs/HANDOFF.md)
+- Collections (paintings, fish, minerals, …): [docs/COLLECTIONS.md](docs/COLLECTIONS.md)
 
 ## Prototype
 

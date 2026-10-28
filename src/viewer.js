@@ -1,5 +1,10 @@
 // Painting viewer: the camera "turns to face the wall". Paintings sit on a
 // blurred wall strip; swiping slides along the wall to the next one.
+// It shows any collection entry (or the older painting shape, which carries
+// its entry): pictures from files hang on the wall, pixel art sits in a case.
+import { keyOf, metaLine } from './collections/index.js';
+import { drawEntry } from './collections/render.js';
+
 const STORE_KEY = 'curation.journal';
 
 const el = document.getElementById('viewer');
@@ -10,6 +15,8 @@ const meta = el.querySelector('.info-meta');
 const blurb = el.querySelector('.info-blurb');
 const rating = el.querySelector('.info-rating');
 const note = el.querySelector('.info-note');
+const change = el.querySelector('.viewer-change');
+const entryOf = (it) => it.entry || it;
 
 let list = [];
 let current = -1;
@@ -34,39 +41,52 @@ function saveEntry(id, patch) {
   }
 }
 
-function slide(p) {
+function slide(item) {
+  const e = entryOf(item);
+  const im = e.image;
+  const drawn = im.kind === 'pixels' || im.kind === 'procedural';
   const s = document.createElement('div');
   s.className = 'slide';
   s.innerHTML = `
     <div class="slide-wall"></div>
     <div class="spotlight"></div>
-    <figure class="frame" style="aspect-ratio:${p.ratio}">
-      <img alt="${p.title}, ${p.by}" draggable="false" />
-    </figure>`;
-  const img = s.querySelector('img');
+    <figure class="frame${drawn ? ' case' : ''}"${drawn ? '' : ` style="aspect-ratio:${e.ratio || 1}"`}></figure>`;
+  const frame = s.querySelector('.frame');
+  if (drawn) {
+    const cv = drawEntry(e, 12);
+    cv.className = 'pix';
+    cv.setAttribute('role', 'img');
+    cv.setAttribute('aria-label', e.title);
+    frame.appendChild(cv);
+    return s;
+  }
+  const img = document.createElement('img');
+  img.alt = [e.title, e.by].filter(Boolean).join(', ');
+  img.draggable = false;
   img.onerror = () => {
     img.replaceWith(
       Object.assign(document.createElement('div'), {
         className: 'img-fallback',
-        textContent: p.title,
-        style: `background:${p.placeholder}`,
+        textContent: e.title,
+        style: `background:${im.placeholder || '#6a6458'}`,
       }),
     );
   };
-  img.src = p.src;
+  img.src = im.src;
+  frame.appendChild(img);
   return s;
 }
 
 function show(i) {
   if (i === current || !list[i]) return;
   current = i;
-  const p = list[i];
-  title.textContent = p.title;
-  meta.textContent = `${p.by} · ${p.year}`;
-  blurb.textContent = p.blurb;
-  const entry = loadJournal()[p.id] || {};
-  note.value = entry.note || '';
-  renderStars(entry.rating || 0);
+  const e = entryOf(list[i]);
+  title.textContent = e.title;
+  meta.textContent = metaLine(e);
+  blurb.textContent = [e.blurb, ...(e.facts || [])].filter(Boolean).join(' ');
+  const saved = loadJournal()[keyOf(e)] || {};
+  note.value = saved.note || '';
+  renderStars(saved.rating || 0);
   [...dots.children].forEach((d, j) => d.classList.toggle('on', j === i));
 }
 
@@ -79,7 +99,7 @@ function renderStars(value) {
     b.setAttribute('aria-checked', String(n === value));
     b.setAttribute('aria-label', `${n} star${n > 1 ? 's' : ''}`);
     b.onclick = () => {
-      saveEntry(list[current].id, { rating: n });
+      saveEntry(keyOf(entryOf(list[current])), { rating: n });
       renderStars(n);
     };
     rating.appendChild(b);
@@ -91,11 +111,12 @@ track.addEventListener('scroll', () => {
 });
 
 note.addEventListener('input', () => {
-  if (list[current]) saveEntry(list[current].id, { note: note.value });
+  if (list[current]) saveEntry(keyOf(entryOf(list[current])), { note: note.value });
 });
 
 function close() {
   el.classList.add('hidden');
+  el.classList.remove('over');
   el.setAttribute('aria-hidden', 'true');
   note.blur();
   if (onClose) onClose();
@@ -114,9 +135,12 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && !el.classList.contains('hidden')) close();
 });
 
-// changeCb(painting): the player wants to change the wall spot this painting hangs in.
-export function openViewer(paintings, index, closeCb, changeCb) {
+// changeCb(painting): the player wants to change the wall spot this painting hangs in
+// (the button only shows when there is one). opts.over: open above the journal.
+export function openViewer(paintings, index, closeCb, changeCb, opts = {}) {
   list = paintings;
+  el.classList.toggle('over', !!opts.over);
+  change.style.display = changeCb ? '' : 'none';
   current = -1;
   onClose = closeCb;
   onChange = changeCb;

@@ -92,6 +92,21 @@ Scenes (`src/main.js`):
     pieces ≤20px tall, like mats, are walkable; nothing may block the museum doorway)
   - rowboats, docks, tall grass and cliffs
 
+### Collections: one format for everything the museum holds (`docs/COLLECTIONS.md`)
+- Paintings, fish, finds and minerals are **entries** in **collections** (`src/collections/`).
+  A new collection = a data file in `src/collections/data/` + one line in `index.js`.
+- `curation.codex` (versioned) is the one ledger: everything ever collected, what you hold, claimed
+  set rewards. Older saves migrate silently; old keys (`curation.fishing`, `curation.met`,
+  `curation.slots`) are left alone. Fish `caught` now lives in the codex.
+- `src/paintings.js` and `FISH` / `FINDS` in `fishing.js` are thin views over the registry. Painting
+  ids stay bare slugs (`harvesters`), so saves, goals and notes still match.
+- The Journal builds its Paintings / Fish / Minerals tabs from the registry, and the viewer
+  shows any entry (pictures on the wall, pixel art in a glass case). Sets show progress and pay out once.
+- **Minerals** is the proof: 8 entries, pure data. Settings → Testing → "Collect one of everything"
+  fills it, since nothing hands out minerals yet (that is the dig-site work).
+- `tools/import_collection.mjs` turns a CSV into a data file and refuses rows with no license/credit.
+- Test: `PW=/opt/node-tools/node_modules/playwright OUT=<dir> node tests/collections.cjs`.
+
 ### Gotchas we hit
 - **Phaser reuses the previous scene data** if you call `scene.start('island')` with no data.
   Always pass data explicitly, e.g. `{ map: 'main' }`. Leaving the museum once dropped you on
@@ -113,6 +128,7 @@ The preview server must run first (it dies between turns):
 | Smoke | `node tests/smoke.cjs` | "All good" |
 | Gaps | `node tests/gaps.cjs` | "No gaps in 60 room shapes" |
 | Playtest | `PW=/opt/node-tools/node_modules/playwright OUT=<dir> node tests/playtest.cjs` | 38/38, with screenshots (see `docs/PLAYTEST.md`) |
+| Collections | `PW=/opt/node-tools/node_modules/playwright OUT=<dir> node tests/collections.cjs` | All good (schema, migration, corrupt codex, journal tabs, Minerals, viewer, set claim, a real catch) |
 
 Smoke and playtest go out onto Main Island first, then switch to Island One for fishing and
 the cottage.
@@ -133,7 +149,7 @@ See `docs/ASSET-HUNT.md` (the "super dig" prompt plus the to-do list) and `docs/
    - open plan, plus small quiet rooms
    - this needs a design pass with the user
 5. **Museum exterior re-texture** (look to be given), then a **menu redesign** later.
-6. **Bigger systems that fit VISION.md:**
+6. **Bigger systems that fit VISION.md** (they now sit on the collection format):
    - an aquarium for caught fish
    - dig sites to excavate bones
    - restoring paintings

@@ -1,16 +1,22 @@
-// The Journal: goals to work on, and the collection so far (paintings and
-// the famous visitors you've met).
-import { PAINTINGS } from './paintings.js';
+// The Journal: goals to work on, and the collection so far. Collection tabs
+// (paintings, fish, minerals, …) are built from the collection registry; the
+// famous visitors you've met keep their own tab.
 import { FAMOUS } from './famous.js';
 import { QUESTS, activeQuests, claimedCount } from './quests.js';
-import { eraOf, ERAS } from './slotmenu.js';
-import { fishTab } from './fishing.js';
+import { collectionTab, collectionTabs } from './collections/tab.js';
+import './fishing.js'; // (adds the bobber list to the Fish tab)
 
 const el = document.getElementById('journal');
 const body = el.querySelector('.journal-body');
-const tabs = el.querySelectorAll('[data-jtab]');
+const tabBar = el.querySelector('.journal-tabs');
 let state = null;
 let tab = 'goals';
+
+// Goals first, then each collection by its order, with the visitors in third place.
+function tabList() {
+  const all = [{ id: 'goals', label: 'Goals', order: 0 }, { id: 'visitors', label: 'Visitors', order: 2 }, ...collectionTabs()];
+  return all.sort((a, b) => a.order - b.order);
+}
 
 function goals() {
   const ctx = state.ctx();
@@ -53,29 +59,6 @@ function goals() {
   return [head, wrap];
 }
 
-function paintings() {
-  const hung = state.hungIn();
-  const head = document.createElement('p');
-  head.className = 'toolkit-note';
-  head.textContent = `${hung.size} of ${PAINTINGS.length} paintings on display. Hang the rest from any empty wall spot.`;
-  const grid = document.createElement('div');
-  grid.className = 'gallery-grid book';
-  PAINTINGS.forEach((p) => {
-    const where = hung.get(p.id);
-    const b = document.createElement('button');
-    b.className = 'slot-painting' + (where === undefined ? ' elsewhere' : '');
-    b.innerHTML = `<span class="thumb" style="background:${p.placeholder}"><img alt="" loading="lazy" src="${p.src}" /></span>
-      <span class="meta"><b></b><i></i><em>${where === undefined ? 'In storage' : `On display: ${state.roomLabel(where)}`}</em><small class="blurb"></small></span>`;
-    b.querySelector('b').textContent = p.title;
-    b.querySelector('i').textContent = `${p.by} · ${p.year} · ${ERAS[eraOf(p)]}`;
-    b.querySelector('.blurb').textContent = p.blurb;
-    b.querySelector('img').onerror = (e) => e.target.remove();
-    b.onclick = () => b.classList.toggle('open');
-    grid.appendChild(b);
-  });
-  return [head, grid];
-}
-
 function visitors() {
   const met = new Set(state.met());
   const ids = Object.keys(FAMOUS);
@@ -98,23 +81,29 @@ function visitors() {
 }
 
 function render() {
-  tabs.forEach((t) => t.classList.toggle('on', t.dataset.jtab === tab));
-  body.replaceChildren(...{ goals, paintings, visitors, fish: fishTab }[tab]());
+  tabBar.replaceChildren(
+    ...tabList().map((t) => {
+      const b = document.createElement('button');
+      b.dataset.jtab = t.id;
+      b.textContent = t.label;
+      b.classList.toggle('on', t.id === tab);
+      b.onclick = () => {
+        tab = t.id;
+        el.querySelector('.sheet').scrollTop = 0;
+        render();
+      };
+      return b;
+    }),
+  );
+  body.replaceChildren(...(tab === 'goals' ? goals() : tab === 'visitors' ? visitors() : collectionTab(tab, state, render)));
 }
 
-tabs.forEach((t) =>
-  t.addEventListener('click', () => {
-    tab = t.dataset.jtab;
-    el.querySelector('.sheet').scrollTop = 0;
-    render();
-  }),
-);
 el.querySelector('.journal-close').addEventListener('click', () => {
   el.classList.add('hidden');
   state?.onClose();
 });
 
-// opts: { ctx() -> quest context, onClaim(id), hungIn() -> Map, roomLabel(i), met() -> [ids], portrait(id) -> url, onClose() }
+// opts: { ctx() -> quest context, onClaim(id), onClaimSet(set, gold), hungIn() -> Map of painting slug -> room, roomLabel(i), met() -> [ids], portrait(id) -> url, onClose() }
 // Outside on the island only the fish tab is on hand (opts.fishOnly).
 export function openJournal(opts, startTab) {
   state = opts;

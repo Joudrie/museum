@@ -72,6 +72,13 @@
   5. Gift shop and food court.
   6. First pirate-island expedition.
 
+## Collections foundation ✅
+- One entry / collection / set format with a registry, a versioned codex, a journal tab and viewer for any
+  collection, and a CSV importer (`docs/COLLECTIONS.md`). Paintings, fish, finds and a data-only Minerals
+  collection run on it.
+- Next on top of it: dig sites that hand out minerals and fossils, display cases / plinths / tanks that place
+  entries in rooms, restoration, famous visitors as a collection, shop buy / sell through the codex.
+
 ## Needs Sean
 - **West Wing**: waiting for your outline.
 - **Semi-mythological famous visitors** (you said maybe later).

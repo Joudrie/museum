@@ -1,6 +1,7 @@
 // Famous visitors: the great artists drop by the main hall. Talk to one to meet
 // them; each one you meet gives a permanent income boost.
 import { load, save } from './storage.js';
+import { markSeen } from './collections/codex.js';
 
 const MET_KEY = 'curation.met'; // ids of famous visitors you've met
 export const MEET_BOOST = 0.05; // +5% income per famous visitor met
@@ -273,6 +274,7 @@ export function meet(id) {
   const met = metList();
   if (met.includes(id)) return false;
   save(MET_KEY, [...met, id]);
+  markSeen([`visitor:${id}`]); // the codex keeps the visitors you've met too
   return true;
 }
 
