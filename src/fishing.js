@@ -9,41 +9,29 @@ import { load, save } from './storage.js';
 import { sfx } from './music.js';
 import { haptic } from './ui.js';
 import { hourNow } from './settings.js';
+import { list, slugOf, RARITY as RARITY_NAMES } from './collections/index.js';
+import { snapshot, collect } from './collections/codex.js';
+import { drawEntry, drawShadow as shadowOf } from './collections/render.js';
+import { registerTabExtra } from './collections/tab.js';
 
-const KEY = 'curation.fishing'; // { caught: { id: { n, best } }, total, night, bobber }
+const KEY = 'curation.fishing'; // { total, night, bobber } (what you've caught lives in the codex; older saves kept it here as caught)
 
-// water: pond / sea. rarity 1 common … 4 legendary. time: day / night / any.
-// shape picks the drawing; c = [back, belly, fins].
-export const FISH = [
-  { id: 'minnow', name: 'Minnow', water: 'pond', rarity: 1, size: [4, 9], shape: 'slim', c: ['#8a9a7a', '#d8dcc0', '#6a7a5a'] },
-  { id: 'bluegill', name: 'Bluegill', water: 'pond', rarity: 1, size: [10, 22], shape: 'deep', c: ['#3e6a8a', '#e8b860', '#2a4a6a'] },
-  { id: 'perch', name: 'Yellow perch', water: 'pond', rarity: 1, size: [12, 28], shape: 'fish', c: ['#9aa040', '#f0e090', '#d06a30'], stripes: '#4a5020' },
-  { id: 'carp', name: 'Carp', water: 'pond', rarity: 2, size: [30, 70], shape: 'deep', c: ['#9a7a3a', '#e8d08a', '#7a5a2a'] },
-  { id: 'catfish', name: 'Catfish', water: 'pond', rarity: 2, time: 'night', size: [30, 90], shape: 'cat', c: ['#5a5650', '#c8c0b0', '#3e3a36'] },
-  { id: 'trout', name: 'Rainbow trout', water: 'pond', rarity: 2, time: 'day', size: [25, 60], shape: 'fish', c: ['#6a8a7a', '#f0d8d0', '#5a6a5a'], band: '#e07a8a' },
-  { id: 'koi', name: 'Koi', water: 'pond', rarity: 3, size: [30, 70], shape: 'fish', c: ['#f4f0e8', '#ffffff', '#e8e0d0'], spots: '#e8582a' },
-  { id: 'goldkoi', name: 'Golden koi', water: 'pond', rarity: 4, weather: 'rain', size: [40, 80], shape: 'fish', c: ['#f2c040', '#ffe890', '#e0a020'], shine: true },
-  { id: 'sardine', name: 'Sardine', water: 'sea', rarity: 1, size: [10, 20], shape: 'slim', c: ['#4a6a9a', '#e0e8f0', '#3a5a8a'] },
-  { id: 'mackerel', name: 'Mackerel', water: 'sea', rarity: 1, size: [25, 45], shape: 'fish', c: ['#2a6a7a', '#e8eef0', '#1a4a5a'], stripes: '#14303a' },
-  { id: 'seabass', name: 'Sea bass', water: 'sea', rarity: 1, size: [30, 70], shape: 'fish', c: ['#7a8a96', '#e0e4e8', '#5a6a76'] },
-  { id: 'clownfish', name: 'Clownfish', water: 'sea', rarity: 2, time: 'day', size: [7, 11], shape: 'deep', c: ['#f07a20', '#f8a050', '#1d1714'], bars: '#ffffff' },
-  { id: 'puffer', name: 'Pufferfish', water: 'sea', rarity: 2, size: [10, 30], shape: 'round', c: ['#c8b070', '#f4ecd0', '#a08a50'], spots: '#5a4a2a' },
-  { id: 'squid', name: 'Squid', water: 'sea', rarity: 2, time: 'night', size: [20, 50], shape: 'squid', c: ['#e8a0a8', '#f8d8dc', '#c87080'] },
-  { id: 'tuna', name: 'Bluefin tuna', water: 'sea', rarity: 3, size: [100, 250], shape: 'fish', c: ['#1e3a6a', '#d8dee8', '#e8c040'] },
-  { id: 'octopus', name: 'Octopus', water: 'sea', rarity: 3, size: [30, 90], shape: 'octo', c: ['#c0503a', '#e88a6a', '#9a3a2a'] },
-  { id: 'swordfish', name: 'Swordfish', water: 'sea', rarity: 3, time: 'day', size: [150, 300], shape: 'sword', c: ['#3a4a6a', '#c8d0dc', '#2a3a5a'] },
-  { id: 'moonfish', name: 'Moonfish', water: 'sea', rarity: 4, time: 'night', size: [80, 180], shape: 'round', c: ['#c8d0e8', '#ffffff', '#e86a5a'], shine: true },
-];
+// What bites comes from the collection registry (src/collections/data/fish.js).
+// These are the shapes the fishing code reads: water pond / sea, rarity 1
+// common … 4 legendary, time day / night / any. `entry` is the registry entry.
+const view = (e) => ({
+  id: slugOf(e),
+  name: e.title,
+  rarity: e.rarity ?? 1,
+  ...e.acquire,
+  ...(e.collectable === false && { junk: true }),
+  ...(e.provenance?.story && { note: e.provenance.story }),
+  entry: e,
+});
+export const FISH = list({ collection: 'fish' }).map(view);
 // Things that aren't fish. Some belong in the museum.
-export const FINDS = [
-  { id: 'boot', name: 'Old boot', junk: true, rarity: 1, art: 'boot' },
-  { id: 'can', name: 'Rusty tin can', junk: true, rarity: 1, art: 'can' },
-  { id: 'kelp', name: 'Tangle of seaweed', junk: true, rarity: 1, water: 'sea', art: 'kelp' },
-  { id: 'bottle', name: 'Message in a bottle', rarity: 2, water: 'sea', art: 'bottle', note: 'The note inside is too faded to read. Maybe one day.' },
-  { id: 'coin', name: 'Ancient coin', rarity: 3, art: 'coin', note: 'Worn smooth by the water. A museum piece!' },
-  { id: 'ammonite', name: 'Ammonite fossil', rarity: 3, art: 'ammonite', note: 'A spiral shell from millions of years ago.' },
-];
-export const RARITY = ['', 'Common', 'Uncommon', 'Rare', 'Legendary'];
+export const FINDS = list({ collection: 'find', all: true }).map(view);
+export const RARITY = RARITY_NAMES;
 const ALL = [...FISH, ...FINDS];
 const byId = Object.fromEntries(ALL.map((f) => [f.id, f]));
 
@@ -58,8 +46,24 @@ export const BOBBERS = [
 ];
 const kinds = (s) => Object.keys(s.caught).filter((id) => byId[id] && !byId[id].junk && FISH.includes(byId[id])).length;
 
-export const fishState = () => ({ caught: {}, total: 0, night: 0, bobber: 'basic', ...load(KEY, {}) });
-const put = (s) => save(KEY, s);
+// `caught` is read from the codex: { slug: { n, best } }, the shape older saves used.
+const caughtNow = () => {
+  const c = snapshot();
+  const out = {};
+  [...FISH, ...FINDS].forEach((f) => {
+    const r = c.seen[f.entry.id];
+    if (r) out[f.id] = { n: r.n, best: r.best || 0 };
+  });
+  return out;
+};
+export const fishState = () => {
+  const caught = caughtNow(); // (first, so an older save is moved into the codex before anything else)
+  return { total: 0, night: 0, bobber: 'basic', ...load(KEY, {}), caught };
+};
+const put = (s) => {
+  const { caught, ...rest } = s;
+  save(KEY, { ...load(KEY, {}), ...rest });
+};
 export const bobberUnlocked = (b, s = fishState()) => !b.goal || b.goal.n(s) >= b.goal.of;
 export const currentBobber = (s = fishState()) => {
   const b = BOBBERS.find((x) => x.id === s.bobber);
@@ -103,160 +107,29 @@ export function roll(water, weather, bobber) {
 export function record(item) {
   const s = fishState();
   const before = BOBBERS.filter((b) => bobberUnlocked(b, s)).map((b) => b.id);
-  const prev = s.caught[item.id];
   let size = null;
   if (item.size) {
     const [a, b] = item.size;
     const t = Math.pow(Math.random(), 1.6); // big ones are rarer
     size = Math.round(a + (b - a) * t);
   }
-  s.caught = { ...s.caught, [item.id]: { n: (prev?.n || 0) + 1, best: Math.max(prev?.best || 0, size || 0) } };
+  const got = collect(item.entry.id, { size }); // null for junk, which is never kept
   if (FISH.includes(item)) {
     s.total += 1;
     if (isNight()) s.night = (s.night || 0) + 1;
   }
   put(s);
-  const unlocked = BOBBERS.filter((b) => bobberUnlocked(b, s) && !before.includes(b.id));
-  return { fresh: !prev, size, best: size && (!prev || size > (prev.best || 0)) && !!prev, unlocked };
+  const after = fishState();
+  const unlocked = BOBBERS.filter((b) => bobberUnlocked(b, after) && !before.includes(b.id));
+  return { fresh: !got || got.fresh, size, best: !!got?.improved, unlocked };
 }
 
 // ---------- Drawing ----------
-// Fish are drawn side-on, facing right, on a 24×14 grid (scaled up later).
-const hex = (h) => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
-const OUT = '#1d1714';
-const ITEM_ART = {
-  boot: ['.....####...', '.....#oo#...', '.....#oo#...', '.....#oo#...', '.....#oo#...', '.....#oo##..', '.....#ooo##.', '..####oooo#.', '.#oooooooo#.', '.##########.'],
-  can: ['..######..', '.#dddddd#.', '.#oooooo#.', '.#rrrrrr#.', '.#rrrrrr#.', '.#rrrrrr#.', '.#oooooo#.', '.#dddddd#.', '..######..'],
-  kelp: ['...g....g...', '..gg...gg...', '..g...gg..g.', '..gg..g..gg.', '...g..gg.g..', '...gg..g.g..', '....g..ggg..', '....gg..g...', '.....gggg...', '......gg....'],
-  bottle: ['....##....', '....#c#...', '...#cc#...', '..#gggg#..', '..#gwwg#..', '..#gwwg#..', '..#gwwg#..', '..#gggg#..', '..#gggg#..', '...####...'],
-  coin: ['...####...', '..#yyyy#..', '.#yoooy##.', '.#yoyyoy#.', '.#yoyyoy#.', '.#yoooy##.', '..#yyyy#..', '...####...'],
-  ammonite: ['...#####...', '..#sssss#..', '.#ss###ss#.', '.#s#sss#s#.', '.#s#s#s#s#.', '.#s#ss#ss#.', '.#ss###s#..', '..#sssss#..', '...#####...'],
-};
-const ITEM_COLORS = { o: '#8a5a3a', d: '#a8a8b0', r: '#c05040', g: '#4a8a5a', w: '#f4ecd0', c: '#b08a5a', y: '#f2d36b', s: '#c8a878', '#': OUT };
-
-export function drawCatch(item, scale = 4) {
-  const cv = document.createElement('canvas');
-  if (item.art) {
-    const rows = ITEM_ART[item.art];
-    cv.width = rows[0].length * scale;
-    cv.height = rows.length * scale;
-    const g = cv.getContext('2d');
-    rows.forEach((r, y) =>
-      [...r].forEach((ch, x) => {
-        if (ch === '.') return;
-        g.fillStyle = ITEM_COLORS[ch];
-        g.fillRect(x * scale, y * scale, scale, scale);
-      }),
-    );
-    return cv;
-  }
-  const W = 26;
-  const H = 16;
-  cv.width = W * scale;
-  cv.height = H * scale;
-  const g = cv.getContext('2d');
-  const px = fishPixels(item, W, H);
-  px.forEach((row, y) =>
-    row.forEach((c, x) => {
-      if (!c) return;
-      g.fillStyle = c;
-      g.fillRect(x * scale, y * scale, scale, scale);
-    }),
-  );
-  return cv;
-}
-
+// Fish and finds are drawn from their registry entries (src/collections/render.js).
+export const drawCatch = (item, scale = 4) => drawEntry(item.entry, scale);
 // A silhouette for fish you haven't caught yet.
-export function drawShadow(item, scale = 3) {
-  const cv = drawCatch(item, scale);
-  const g = cv.getContext('2d');
-  g.globalCompositeOperation = 'source-in';
-  g.fillStyle = 'rgba(20, 16, 14, 0.55)';
-  g.fillRect(0, 0, cv.width, cv.height);
-  return cv;
-}
-
-function fishPixels(f, W, H) {
-  const [back, belly, fin] = f.c;
-  const grid = Array.from({ length: H }, () => Array(W).fill(null));
-  const cy = H / 2;
-  // body: an ellipse-ish shape per kind
-  const shapes = {
-    slim: { x0: 5, x1: 21, h: 2.6 },
-    fish: { x0: 4, x1: 21, h: 3.6 },
-    deep: { x0: 5, x1: 20, h: 5 },
-    cat: { x0: 3, x1: 22, h: 3.2 },
-    round: { x0: 5, x1: 19, h: 6 },
-    sword: { x0: 6, x1: 19, h: 3.2 },
-    squid: { x0: 3, x1: 16, h: 3 },
-    octo: { x0: 9, x1: 19, h: 4.5 },
-  };
-  const S = shapes[f.shape] || shapes.fish;
-  const inBody = (x, y) => {
-    const t = (x - S.x0) / (S.x1 - S.x0);
-    if (t < 0 || t > 1) return false;
-    const half = S.h * Math.sqrt(Math.max(0, 1 - Math.pow(2 * t - 1, 2))) * (f.shape === 'squid' ? 0.5 + t * 0.6 : 1);
-    return Math.abs(y + 0.5 - cy) <= half;
-  };
-  const set = (x, y, c) => x >= 0 && y >= 0 && x < W && y < H && (grid[y][x] = c);
-  if (f.shape === 'octo') {
-    // head and eight curling arms
-    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (Math.hypot((x - 14) / 5, (y - 5) / 4.5) < 1) set(x, y, y > 6 ? belly : back);
-    for (let a = 0; a < 6; a++) for (let i = 0; i < 6; i++) set(8 + a * 2 + Math.round(Math.sin(i * 0.9 + a) * 1), 9 + i, i % 2 ? fin : back);
-  } else {
-    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (inBody(x, y)) set(x, y, y + 0.5 > cy + 0.5 ? belly : back);
-    // tail
-    if (f.shape === 'squid') {
-      for (let i = 0; i < 5; i++) for (let k = 0; k < 4; k++) set(S.x1 + i, Math.round(cy - 2 + k * 1.3 + Math.sin(i + k) * 0.5), fin);
-      for (let y = -3; y <= 3; y++) set(S.x0 - 1, Math.round(cy + y), fin); // the fins at the point
-    } else {
-      const tx = S.x0 - 1;
-      const spread = f.shape === 'round' ? 3 : f.shape === 'slim' ? 2.5 : 3.5;
-      for (let i = 0; i < 4; i++) for (let y = -Math.round(1 + i * spread * 0.35); y <= Math.round(1 + i * spread * 0.35); y++) set(tx - i, Math.round(cy - 0.5 + y), fin);
-      // a fin on the back
-      const fx = Math.round((S.x0 + S.x1) / 2);
-      for (let i = -2; i <= 2; i++) set(fx + i, Math.round(cy - S.h - (i < 1 ? 1 : 0)), fin);
-    }
-    if (f.shape === 'sword') for (let x = S.x1; x < W; x++) set(x, Math.round(cy - 1), fin); // the bill
-    if (f.shape === 'cat') [[S.x1, cy + 1], [S.x1 + 1, cy + 2], [S.x1, cy + 2], [S.x1 + 2, cy + 3]].forEach(([x, y]) => set(x, Math.round(y), OUT)); // whiskers
-  }
-  // markings
-  for (let y = 0; y < H; y++)
-    for (let x = 0; x < W; x++) {
-      if (grid[y][x] !== back && grid[y][x] !== belly) continue;
-      if (f.stripes && x % 3 === 0 && grid[y][x] === back) grid[y][x] = f.stripes;
-      if (f.bars && (Math.abs(x - 9) < 1 || Math.abs(x - 15) < 1)) grid[y][x] = f.bars;
-      if (f.band && Math.abs(y + 0.5 - cy) < 1) grid[y][x] = f.band;
-      if (f.spots && (x * 7 + y * 13) % 11 < 2) grid[y][x] = f.spots;
-    }
-  // outline
-  const filled = (x, y) => grid[y]?.[x] && grid[y][x] !== OUT;
-  const out = grid.map((row) => row.slice());
-  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (!grid[y][x] && [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => filled(x + dx, y + dy))) out[y][x] = OUT;
-  // shading: light along the top edge, a highlight for shiny ones
-  for (let y = 0; y < H; y++)
-    for (let x = 0; x < W; x++) {
-      const c = out[y][x];
-      if (!c || c === OUT) continue;
-      if (out[y - 1]?.[x] === OUT) out[y][x] = mix(c, '#ffffff', f.shine ? 0.5 : 0.25);
-      if (out[y + 1]?.[x] === OUT) out[y][x] = mix(c, '#000000', 0.25);
-    }
-  // the eye
-  const ex = f.shape === 'octo' ? 12 : f.shape === 'squid' ? S.x1 - 3 : S.x1 - 3;
-  const ey = f.shape === 'octo' ? 5 : Math.round(cy - (f.shape === 'round' || f.shape === 'deep' ? 2 : 1));
-  out[ey][ex] = '#ffffff';
-  out[ey][ex + 1] = OUT;
-  if (f.shape === 'octo') {
-    out[ey][ex + 3] = '#ffffff';
-    out[ey][ex + 4] = OUT;
-  }
-  return out;
-}
-function mix(a, b, t) {
-  const A = hex(a);
-  const B = hex(b);
-  return `rgb(${A.map((v, i) => Math.round(v + (B[i] - v) * t)).join(',')})`;
-}
+export const drawShadow = (item, scale = 3) => shadowOf(item.entry, scale);
+const OUT = '#1d1714';
 
 // The bobber as seen on the water, 7×9.
 export function bobberTexture(scene, b) {
@@ -308,14 +181,11 @@ export function showCatch(item, info, onClose) {
 export const catchOpen = () => !card.classList.contains('hidden');
 
 // ---------- The journal tab ----------
-export function fishTab() {
+// The Fish tab itself is generic (src/collections/tab.js). Fishing adds the
+// bobber list above the log.
+registerTabExtra('fish', ({ refresh }) => {
   const s = fishState();
   const nodes = [];
-  const head = document.createElement('p');
-  head.className = 'toolkit-note';
-  head.textContent = `${kinds(s)} of ${FISH.length} fish caught. Stand at the water's edge facing the water and tap Fish. The pond and the sea have different fish, and some only bite at night or in the rain.`;
-  nodes.push(head);
-
   const bh = document.createElement('h3');
   bh.className = 'fish-h';
   bh.textContent = 'Bobbers';
@@ -337,35 +207,13 @@ export function fishTab() {
       row.onclick = () => {
         equipBobber(b.id);
         sfx('tap');
-        row.parentElement.parentElement.replaceChildren(...fishTab());
+        refresh();
       };
     blist.appendChild(row);
   });
   nodes.push(blist);
-
-  const fh = document.createElement('h3');
-  fh.className = 'fish-h';
-  fh.textContent = 'Fish log';
-  nodes.push(fh);
-  const grid = document.createElement('div');
-  grid.className = 'fish-grid';
-  [...FISH, ...FINDS.filter((f) => !f.junk)].forEach((f) => {
-    const got = s.caught[f.id];
-    const cell = document.createElement('div');
-    cell.className = 'fish-cell' + (got ? '' : ' unknown');
-    const k = f.art ? 4 : 3;
-    const pic = got ? drawCatch(f, k) : drawShadow(f, k);
-    const where = f.water ? (f.water === 'pond' ? 'Pond' : 'Sea') : 'Pond or sea';
-    const when = [f.time === 'night' ? 'night' : f.time === 'day' ? 'day' : '', f.weather === 'rain' ? 'rain' : ''].filter(Boolean).join(', ');
-    cell.innerHTML = `<div class="fish-pic"></div><b></b><small></small>`;
-    cell.querySelector('.fish-pic').appendChild(pic);
-    cell.querySelector('b').textContent = got ? f.name : '???';
-    cell.querySelector('small').textContent = got ? `×${got.n}${got.best ? ` · best ${got.best >= 100 ? `${(got.best / 100).toFixed(2)} m` : `${got.best} cm`}` : ''}` : `${where}${when ? ` · ${when}` : ''} · ${RARITY[f.rarity]}`;
-    grid.appendChild(cell);
-  });
-  nodes.push(grid);
   return nodes;
-}
+});
 
 // ---------- The fishing itself ----------
 // Runs inside a scene; the scene supplies the player sprite and calls

@@ -60,6 +60,7 @@ import { Pet, PET_COLORS } from './pets.js';
 import { openSettings, closeSettings } from './settingsmenu.js';
 import { openIncome } from './incomemenu.js';
 import { openJournal } from './journal.js';
+import { markSeen, collectEverything as collectOneOfEach } from './collections/codex.js';
 import { activeQuests, claim, bump, stat, resetQuests } from './quests.js';
 import { celebrate } from './ui.js';
 import { addLove, loveOf, resetLove } from './love.js';
@@ -263,6 +264,7 @@ export class RoomScene extends Phaser.Scene {
     this.L = layout(this.room);
     this.states = slotStates(this.rooms, this.roomIndex);
     this.hung = paintingsFor(this.rooms, this.roomIndex).map(placeArt);
+    markSeen(this.hung.map((p) => p.entry.id)); // the codex stamps each painting the first time it hangs
     // furniture sprites from the free art packs (see docs/ASSETS.md)
     const sprites = new Set((this.L.props || []).map((q) => q.s));
     if ((this.L.props || []).some((q) => q.flames)) [0, 1, 2, 3].forEach((f) => sprites.add(`flame_${f}`));
@@ -1489,7 +1491,12 @@ export class RoomScene extends Phaser.Scene {
     document.getElementById('settings-btn').onclick = () => {
       if (!this.input.enabled || this.mode) return;
       this.pause(true);
-      openSettings({ onAddCoins: (n) => addCoins(n), onReset: () => this.resetMuseum(), onClose: () => this.pause(false) });
+      openSettings({
+        onAddCoins: (n) => addCoins(n),
+        onCollectAll: () => collectOneOfEach(),
+        onReset: () => this.resetMuseum(),
+        onClose: () => this.pause(false),
+      });
     };
     document.getElementById('journal-btn').onclick = () => {
       if (!this.input.enabled || this.mode) return;
@@ -1648,6 +1655,11 @@ export class RoomScene extends Phaser.Scene {
         },
         hungIn: () => hungAnywhere(this.rooms),
         roomLabel: (i) => roomName(this.rooms[i], i),
+        onClaimSet: (set, gold) => {
+          addCoins(gold);
+          sfx('coin');
+          celebrate(`+${gold.toLocaleString()} gold`, set.name);
+        },
         met: () => metList(),
         portrait: (id) => {
           if (!this.textures.exists(`famous_${id}_down`)) makeCharacter(this, `famous_${id}`, FAMOUS[id].colors, FAMOUS[id].look);
