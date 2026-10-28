@@ -1,0 +1,114 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "buddhist-retreat-by-stream-and-mountains-juran",
+  "notes": "region: China",
+  "entry": {
+    "id": "painting:buddhist-retreat-by-stream-and-mountains-juran",
+    "collection": "painting",
+    "title": "Buddhist Retreat by Stream and Mountains",
+    "by": "Juran",
+    "year": "960–85",
+    "era": "renaissance",
+    "ratio": 0.3041,
+    "blurb": "Juran moved north to Kaifeng when the Southern Tang surrendered to the Northern Song, the impact of which may be seen in this painting, presumably painted after 976.",
+    "rarity": 1,
+    "tags": [
+      "china",
+      "scroll",
+      "ink"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1959.348/1959.348_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Gift of Katharine Holden Thayer",
+      "url": "https://clevelandart.org/art/1959.348"
+    },
+    "value": 5,
+    "facts": [
+      "Monk Juran served the Southern Tang (937–75) imperial house in Nanjing, where he studied with Dong Yuan (active 930s–60s).",
+      "Both founded the southern landscape tradition, or Jiangnan school, known for gentle misty riverscapes in wet ink.",
+      "This hanging scroll with the towering mountain is a prime example of the monumental landscape style of Northern Song."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "135836",
+    "title": "Buddhist Retreat by Stream and Mountains",
+    "maker": "Juran",
+    "year": "960–85",
+    "medium": "Hanging scroll; ink on silk",
+    "dimensions": "Painting only: 184.5 x 56.1 cm (72 5/8 x 22 1/16 in.); Overall with knobs: 260.5 x 77.4 cm (102 9/16 x 30 1/2 in.)",
+    "widthCm": 56.1,
+    "heightCm": 184.5,
+    "ratio": 0.3041,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1959.348/1959.348_web.jpg",
+    "imageWidth": 259,
+    "imageHeight": 900,
+    "pageUrl": "https://clevelandart.org/art/1959.348",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Gift of Katharine Holden Thayer",
+    "description": "Monk Juran served the Southern Tang (937–75) imperial house in Nanjing, where he studied with Dong Yuan (active 930s–60s). Both founded the southern landscape tradition, or Jiangnan school, known for gentle misty riverscapes in wet ink. Juran moved north to Kaifeng when the Southern Tang surrendered to the Northern Song, the impact of which may be seen in this painting, presumably painted after 976. A towering mountain dominates the composition, typically representing the style of the Northern Song academy; while the use of long hemp fiber strokes to texture the mountains, wet dots, and round boulders on mountain tops are elements of the southern landscape tradition. This hanging scroll with the towering mountain is a prime example of the monumental landscape style of Northern Song.",
+    "culture": "China, Northern Song dynasty (960–1127)",
+    "classification": "Painting",
+    "tags": [
+      "Chinese Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Buddhist Retreat by Stream and Mountains",
+      "maker": "Juran",
+      "year": "960–85",
+      "medium": "Hanging scroll; ink on silk",
+      "dimensions": "Painting only: 184.5 x 56.1 cm (72 5/8 x 22 1/16 in.); Overall with knobs: 260.5 x 77.4 cm (102 9/16 x 30 1/2 in.)",
+      "culture": "China, Northern Song dynasty (960–1127)",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Gift of Katharine Holden Thayer",
+      "description": "Monk Juran served the Southern Tang (937–75) imperial house in Nanjing, where he studied with Dong Yuan (active 930s–60s). Both founded the southern landscape tradition, or Jiangnan school, known for gentle misty riverscapes in wet ink. Juran moved north to Kaifeng when the Southern Tang surrendered to the Northern Song, the impact of which may be seen in this painting, presumably painted after 976. A towering mountain dominates the composition, typically representing the style of the Northern Song academy; while the use of long hemp fiber strokes to texture the mountains, wet dots, and round boulders on mountain tops are elements of the southern landscape tradition. This hanging scroll with the towering mountain is a prime example of the monumental landscape style of Northern Song.",
+      "tombstone": "Buddhist Retreat by Stream and Mountains (溪山蘭若圖), 960–85. Juran (Chinese, active 960–985). Hanging scroll; ink on silk; painting only: 184.5 x 56.1 cm (72 5/8 x 22 1/16 in.); overall with knobs: 260.5 x 77.4 cm (102 9/16 x 30 1/2 in.). The Cleveland Museum of Art, Gift of Katharine Holden Thayer, 1959.348",
+      "funFact": "",
+      "didYouKnow": "This hanging scroll with the towering mountain is a prime example of the monumental landscape style of Northern Song.",
+      "creators": "Juran (Chinese, active 960–985)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "Juran moved north to Kaifeng when the Southern Tang surrendered to the Northern Song, the impact of which may be seen in this painting, presumably painted after 976.",
+      "quote": "Juran moved north to Kaifeng when the Southern Tang surrendered to the Northern Song, the impact of which may be seen in this painting, presumably painted after 976.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Monk Juran served the Southern Tang (937–75) imperial house in Nanjing, where he studied with Dong Yuan (active 930s–60s).",
+      "quote": "Monk Juran served the Southern Tang (937–75) imperial house in Nanjing, where he studied with Dong Yuan (active 930s–60s).",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Both founded the southern landscape tradition, or Jiangnan school, known for gentle misty riverscapes in wet ink.",
+      "quote": "Both founded the southern landscape tradition, or Jiangnan school, known for gentle misty riverscapes in wet ink.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "This hanging scroll with the towering mountain is a prime example of the monumental landscape style of Northern Song.",
+      "quote": "This hanging scroll with the towering mountain is a prime example of the monumental landscape style of Northern Song.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

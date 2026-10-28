@@ -1,0 +1,96 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "the-gulf-stream-winslow",
+  "notes": "region: United States",
+  "entry": {
+    "id": "painting:the-gulf-stream-winslow",
+    "collection": "painting",
+    "title": "The Gulf Stream",
+    "by": "Winslow Homer",
+    "year": "1899; reworked by 1906",
+    "era": "impressionist",
+    "ratio": 1.7479,
+    "blurb": "By Winslow Homer, 1899; reworked by 1906, Oil on canvas.",
+    "rarity": 1,
+    "tags": [
+      "american",
+      "oil"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://images.metmuseum.org/CRDImages/ad/original/DP-20821-001.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Metropolitan Museum of Art, New York. Catharine Lorillard Wolfe Collection, Wolfe Fund, 1906",
+      "url": "https://www.metmuseum.org/art/collection/search/11122"
+    },
+    "value": 5
+  },
+  "candidate": {
+    "source": "met",
+    "sourceId": "11122",
+    "title": "The Gulf Stream",
+    "maker": "Winslow Homer",
+    "year": "1899; reworked by 1906",
+    "medium": "Oil on canvas",
+    "dimensions": "28 1/8 x 49 1/8 in. (71.4 x 124.8 cm) Framed: 42 5/16 x 62 11/16 x 5 7/8 in. (107.5 x 159.3 x 15 cm)",
+    "widthCm": 124.8,
+    "heightCm": 71.4,
+    "ratio": 1.7479,
+    "imageUrl": "https://images.metmuseum.org/CRDImages/ad/original/DP-20821-001.jpg",
+    "pageUrl": "https://www.metmuseum.org/art/collection/search/11122",
+    "license": "CC0",
+    "credit": "The Metropolitan Museum of Art, New York. Catharine Lorillard Wolfe Collection, Wolfe Fund, 1906",
+    "description": "",
+    "culture": "American",
+    "classification": "Painting",
+    "tags": [
+      "Men",
+      "Fish",
+      "Seas",
+      "Waves",
+      "Boats"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "The Gulf Stream",
+      "maker": "Winslow Homer",
+      "year": "1899; reworked by 1906",
+      "medium": "Oil on canvas",
+      "dimensions": "28 1/8 x 49 1/8 in. (71.4 x 124.8 cm) Framed: 42 5/16 x 62 11/16 x 5 7/8 in. (107.5 x 159.3 x 15 cm)",
+      "culture": "American",
+      "classification": "Painting",
+      "credit": "The Metropolitan Museum of Art, New York. Catharine Lorillard Wolfe Collection, Wolfe Fund, 1906",
+      "description": "",
+      "objectName": "Painting",
+      "department": "The American Wing",
+      "period": "",
+      "dynasty": "",
+      "artistBio": "American, Boston, Massachusetts 1836–1910 Prouts Neck, Maine",
+      "region": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "By Winslow Homer, 1899; reworked by 1906, Oil on canvas.",
+      "quote": "By Winslow Homer, 1899; reworked by 1906, Oil on canvas",
+      "source": "record",
+      "placeholderFor": "needs a real hook"
+    }
+  ],
+  "problems": [
+    "claim 1: needs a real hook; it only restates the record's own details (maker, date, medium)",
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

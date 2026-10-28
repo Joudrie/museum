@@ -1,0 +1,94 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "hanazuma-of-hyogoya-kenbishi-of-sakagami-from-th",
+  "notes": "region: Japan",
+  "entry": {
+    "id": "painting:hanazuma-of-hyogoya-kenbishi-of-sakagami-from-th",
+    "collection": "painting",
+    "title": "\"Hanazuma of Hyōgoya, Kenbishi of Sakagami” from the series The Peers of Saké Likened to Select Denizens of Six Houses (Natori zake rokkasen: Hyōgoya Hanazuma, Sakagami no Kenbishi)",
+    "by": "Kitagawa Utamaro",
+    "year": "ca. 1794",
+    "era": "romantic",
+    "ratio": 0.6427,
+    "blurb": "By Kitagawa Utamaro, ca. 1794, Woodblock print; ink and color on paper.",
+    "rarity": 1,
+    "tags": [
+      "japan",
+      "woodblock print",
+      "ink"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://images.metmuseum.org/CRDImages/as/original/DP135616.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Metropolitan Museum of Art, New York. Rogers Fund, 1925",
+      "url": "https://www.metmuseum.org/art/collection/search/54862"
+    },
+    "value": 5
+  },
+  "candidate": {
+    "source": "met",
+    "sourceId": "54862",
+    "title": "\"Hanazuma of Hyōgoya, Kenbishi of Sakagami” from the series The Peers of Saké Likened to Select Denizens of Six Houses (Natori zake rokkasen: Hyōgoya Hanazuma, Sakagami no Kenbishi)",
+    "maker": "Kitagawa Utamaro",
+    "year": "ca. 1794",
+    "medium": "Woodblock print; ink and color on paper",
+    "dimensions": "H. 14 3/4 in. (37.5 cm); W. 9 1/2 in. (24.1 cm)",
+    "widthCm": 24.1,
+    "heightCm": 37.5,
+    "ratio": 0.6427,
+    "imageUrl": "https://images.metmuseum.org/CRDImages/as/original/DP135616.jpg",
+    "pageUrl": "https://www.metmuseum.org/art/collection/search/54862",
+    "license": "CC0",
+    "credit": "The Metropolitan Museum of Art, New York. Rogers Fund, 1925",
+    "description": "",
+    "culture": "Japan",
+    "classification": "Prints",
+    "tags": [
+      "Women",
+      "Mirrors"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "\"Hanazuma of Hyōgoya, Kenbishi of Sakagami” from the series The Peers of Saké Likened to Select Denizens of Six Houses (Natori zake rokkasen: Hyōgoya Hanazuma, Sakagami no Kenbishi)",
+      "maker": "Kitagawa Utamaro",
+      "year": "ca. 1794",
+      "medium": "Woodblock print; ink and color on paper",
+      "dimensions": "H. 14 3/4 in. (37.5 cm); W. 9 1/2 in. (24.1 cm)",
+      "culture": "Japan",
+      "classification": "Prints",
+      "credit": "The Metropolitan Museum of Art, New York. Rogers Fund, 1925",
+      "description": "",
+      "objectName": "Print",
+      "department": "Asian Art",
+      "period": "Edo period (1615–1868)",
+      "dynasty": "",
+      "artistBio": "Japanese, ca. 1754–1806",
+      "region": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "By Kitagawa Utamaro, ca. 1794, Woodblock print; ink and color on paper.",
+      "quote": "By Kitagawa Utamaro, ca. 1794, Woodblock print; ink and color on paper",
+      "source": "record",
+      "placeholderFor": "needs a real hook"
+    }
+  ],
+  "problems": [
+    "claim 1: needs a real hook; it only restates the record's own details (maker, date, medium)",
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

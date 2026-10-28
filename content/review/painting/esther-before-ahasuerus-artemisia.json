@@ -1,0 +1,94 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "esther-before-ahasuerus-artemisia",
+  "notes": "region: Italy (a woman painter)",
+  "entry": {
+    "id": "painting:esther-before-ahasuerus-artemisia",
+    "collection": "painting",
+    "title": "Esther before Ahasuerus",
+    "by": "Artemisia Gentileschi",
+    "year": "1620s",
+    "era": "baroque",
+    "ratio": 1.314,
+    "blurb": "By Artemisia Gentileschi, 1620s, Oil on canvas.",
+    "rarity": 1,
+    "tags": [
+      "oil"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://images.metmuseum.org/CRDImages/ep/original/DP-20748-001.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Metropolitan Museum of Art, New York. Gift of Elinor Dorrance Ingersoll, 1969",
+      "url": "https://www.metmuseum.org/art/collection/search/436453"
+    },
+    "value": 5
+  },
+  "candidate": {
+    "source": "met",
+    "sourceId": "436453",
+    "title": "Esther before Ahasuerus",
+    "maker": "Artemisia Gentileschi",
+    "year": "1620s",
+    "medium": "Oil on canvas",
+    "dimensions": "82 in. × 8 ft. 11 3/4 in. (208.3 × 273.7 cm)",
+    "widthCm": 273.7,
+    "heightCm": 208.3,
+    "ratio": 1.314,
+    "imageUrl": "https://images.metmuseum.org/CRDImages/ep/original/DP-20748-001.jpg",
+    "pageUrl": "https://www.metmuseum.org/art/collection/search/436453",
+    "license": "CC0",
+    "credit": "The Metropolitan Museum of Art, New York. Gift of Elinor Dorrance Ingersoll, 1969",
+    "description": "",
+    "culture": "",
+    "classification": "Paintings",
+    "tags": [
+      "Men",
+      "Women",
+      "Esther",
+      "Ahasuerus"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Esther before Ahasuerus",
+      "maker": "Artemisia Gentileschi",
+      "year": "1620s",
+      "medium": "Oil on canvas",
+      "dimensions": "82 in. × 8 ft. 11 3/4 in. (208.3 × 273.7 cm)",
+      "culture": "",
+      "classification": "Paintings",
+      "credit": "The Metropolitan Museum of Art, New York. Gift of Elinor Dorrance Ingersoll, 1969",
+      "description": "",
+      "objectName": "Painting",
+      "department": "European Paintings",
+      "period": "",
+      "dynasty": "",
+      "artistBio": "Italian, born Rome 1593–died Naples 1654 or later",
+      "region": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "By Artemisia Gentileschi, 1620s, Oil on canvas.",
+      "quote": "By Artemisia Gentileschi, 1620s, Oil on canvas",
+      "source": "record",
+      "placeholderFor": "needs a real hook"
+    }
+  ],
+  "problems": [
+    "claim 1: needs a real hook; it only restates the record's own details (maker, date, medium)",
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

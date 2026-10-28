@@ -1,0 +1,113 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "radhas-confidante-brings-her-to-krishna-based-on",
+  "notes": "region: India",
+  "entry": {
+    "id": "painting:radhas-confidante-brings-her-to-krishna-based-on",
+    "collection": "painting",
+    "title": "Radha’s Confidante Brings Her to Krishna, based on poetry of Bihari (Indian, 1595–1663)",
+    "year": "c. 1790–1800",
+    "era": "romantic",
+    "ratio": 1.3922,
+    "blurb": "The blue god Krishna has spread a carpet and set up a canopy in a secret grove to create the space for a romantic tryst with his lover Radha.",
+    "rarity": 1,
+    "tags": [
+      "northwestern india",
+      "tempera",
+      "ink"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/2018.172/2018.172_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Purchase and partial gift from the Catherine and Ralph Benkaim Collection; Severance and Greta Millikin Purchase Fund",
+      "url": "https://clevelandart.org/art/2018.172"
+    },
+    "value": 5,
+    "facts": [
+      "The ruler of the Hindu kingdom of Jaipur, who may have commissioned this painting, had an important collection of Persian carpets and textiles.",
+      "Wine-and-gold curtains have been unrolled to cover the windows of the house behind Radha and her companion, indicating that she has left the house in secret after it has been closed up for the night.",
+      "The wine-colored carpet with allover floral patterns match the canopy, and they are Persian in design."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "314477",
+    "title": "Radha’s Confidante Brings Her to Krishna, based on poetry of Bihari (Indian, 1595–1663)",
+    "maker": "",
+    "year": "c. 1790–1800",
+    "medium": "Gum tempera, ink, and gold on paper",
+    "dimensions": "Page: 28.3 x 39.4 cm (11 1/8 x 15 1/2 in.); Miniature: 21.6 x 31.4 cm (8 1/2 x 12 3/8 in.)",
+    "widthCm": 39.4,
+    "heightCm": 28.3,
+    "ratio": 1.3922,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/2018.172/2018.172_web.jpg",
+    "imageWidth": 900,
+    "imageHeight": 656,
+    "pageUrl": "https://clevelandart.org/art/2018.172",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Purchase and partial gift from the Catherine and Ralph Benkaim Collection; Severance and Greta Millikin Purchase Fund",
+    "description": "The blue god Krishna has spread a carpet and set up a canopy in a secret grove to create the space for a romantic tryst with his lover Radha. The wine-colored carpet with allover floral patterns match the canopy, and they are Persian in design. The ruler of the Hindu kingdom of Jaipur, who may have commissioned this painting, had an important collection of Persian carpets and textiles. Wine-and-gold curtains have been unrolled to cover the windows of the house behind Radha and her companion, indicating that she has left the house in secret after it has been closed up for the night. Halos behind the heads of Radha and Krishna suggest their eminence as divine lovers.",
+    "culture": "Northwestern India, Rajasthan, Rajput Kingdom of Jaipur",
+    "classification": "Painting",
+    "tags": [
+      "Indian and Southeast Asian Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Radha’s Confidante Brings Her to Krishna, based on poetry of Bihari (Indian, 1595–1663)",
+      "maker": "",
+      "year": "c. 1790–1800",
+      "medium": "Gum tempera, ink, and gold on paper",
+      "dimensions": "Page: 28.3 x 39.4 cm (11 1/8 x 15 1/2 in.); Miniature: 21.6 x 31.4 cm (8 1/2 x 12 3/8 in.)",
+      "culture": "Northwestern India, Rajasthan, Rajput Kingdom of Jaipur",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Purchase and partial gift from the Catherine and Ralph Benkaim Collection; Severance and Greta Millikin Purchase Fund",
+      "description": "The blue god Krishna has spread a carpet and set up a canopy in a secret grove to create the space for a romantic tryst with his lover Radha. The wine-colored carpet with allover floral patterns match the canopy, and they are Persian in design. The ruler of the Hindu kingdom of Jaipur, who may have commissioned this painting, had an important collection of Persian carpets and textiles. Wine-and-gold curtains have been unrolled to cover the windows of the house behind Radha and her companion, indicating that she has left the house in secret after it has been closed up for the night. Halos behind the heads of Radha and Krishna suggest their eminence as divine lovers.",
+      "tombstone": "Radha’s Confidante Brings Her to Krishna, based on poetry of Bihari (Indian, 1595–1663), c. 1790–1800. Northwestern India, Rajasthan, Rajput Kingdom of Jaipur. Gum tempera, ink, and gold on paper; page: 28.3 x 39.4 cm (11 1/8 x 15 1/2 in.); miniature: 21.6 x 31.4 cm (8 1/2 x 12 3/8 in.). The Cleveland Museum of Art, Purchase and partial gift from the Catherine and Ralph Benkaim Collection; Severance and Greta Millikin Purchase Fund, 2018.172",
+      "funFact": "",
+      "didYouKnow": "Halos behind the heads of Radha and Krishna suggest their eminence as divine lovers.",
+      "creators": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "The blue god Krishna has spread a carpet and set up a canopy in a secret grove to create the space for a romantic tryst with his lover Radha.",
+      "quote": "The blue god Krishna has spread a carpet and set up a canopy in a secret grove to create the space for a romantic tryst with his lover Radha.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The ruler of the Hindu kingdom of Jaipur, who may have commissioned this painting, had an important collection of Persian carpets and textiles.",
+      "quote": "The ruler of the Hindu kingdom of Jaipur, who may have commissioned this painting, had an important collection of Persian carpets and textiles.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Wine-and-gold curtains have been unrolled to cover the windows of the house behind Radha and her companion, indicating that she has left the house in secret after it has been closed up for the night.",
+      "quote": "Wine-and-gold curtains have been unrolled to cover the windows of the house behind Radha and her companion, indicating that she has left the house in secret after it has been closed up for the night.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The wine-colored carpet with allover floral patterns match the canopy, and they are Persian in design.",
+      "quote": "The wine-colored carpet with allover floral patterns match the canopy, and they are Persian in design.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

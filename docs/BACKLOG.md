@@ -79,11 +79,11 @@
 - Next on top of it: dig sites that hand out minerals and fossils, display cases / plinths / tanks that place
   entries in rooms, restoration, famous visitors as a collection, shop buy / sell through the codex.
 
-## Content pipeline ✅ (built, not yet run live)
-- Adapters, image checker, claim-checked drafts, review report, publish step and a 12-work first batch (`docs/CONTENT.md`).
-- To do once the museum hosts are allowed: run `tools/check_images.mjs --resource` on the 49 paintings (33 links never verified),
-  run `tools/build_batch.mjs content/batches/first-batch.json`, fix adapter shape surprises, replace fixtures with recordings,
-  then review and approve the drafts.
+## Content pipeline ✅ (run live 2026-10-28)
+- Adapters, image checker, claim-checked drafts, review report, publish step (`docs/CONTENT.md` has the live results).
+- Image check of the 49 paintings: 3 broken links (horse-fair, temeraire, crossing-delaware), 15 over 600 KB, 11 with the wrong shape. Nothing swapped; list in `content/image-fixes.json`.
+- 14 drafts waiting in `content/review/painting/` (rarity, hooks, a few wrong matches). None approved.
+- Still to do: Smithsonian and Rijksmuseum keys; AIC is behind a Cloudflare challenge.
 
 ## Needs Sean
 - **West Wing**: waiting for your outline.

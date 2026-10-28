@@ -16,12 +16,12 @@ museum APIs ──► candidates ──► drafts (claims + quotes) ──► YO
 
 | Source | Key? | License of what we take | Limits we honor | Confidence in the adapter |
 |---|---|---|---|---|
-| Met (`met`) | no | CC0 (`isPublicDomain`) | ~5 requests/s | shape from the Met docs; **no description text** (blurbs need another source) |
-| Art Institute of Chicago (`aic`) | no | CC0 (`is_public_domain`) | ~1 request/s | shape from the AIC docs; IIIF images at 1280px |
-| Cleveland (`cleveland`) | no | CC0 (`share_license_status`) | ~2 requests/s | shape from the CMA docs; has `fun_fact` text |
+| Met (`met`) | no | CC0 (`isPublicDomain`) | ~5 requests/s | **verified live**; search moved to `/v1.1/search`; **no description text** (blurbs need another source) |
+| Art Institute of Chicago (`aic`) | no | CC0 (`is_public_domain`) | ~1 request/s | shape from the AIC docs; **blocked by a Cloudflare challenge, unverified** |
+| Cleveland (`cleveland`) | no | CC0 (`share_license_status`) | ~2 requests/s | **verified live**; has `fun_fact` text |
 | Smithsonian (`smithsonian`) | **yes**, free: https://api.data.gov/signup/ → `SI_API_KEY` | CC0 media only | 1 request/s | follows the docs; check on first live run |
 | Rijksmuseum (`rijks`) | **yes**, free: `RIJKS_API_KEY` | public domain (no copyright holder) | ~2 requests/s | follows the documented collection API; the museum is moving to data.rijksmuseum.nl, so **expect to adjust** |
-| Wikimedia Commons (`commons`) | no, but set `CONTENT_CONTACT` (an email or URL for the User-Agent) | what the file says; `Copyrighted: True` is refused | ~3 requests/s | extmetadata shape from the MediaWiki docs |
+| Wikimedia Commons (`commons`) | no, but set `CONTENT_CONTACT` (an email or URL for the User-Agent) | what the file says; `Copyrighted: True` is refused | ~3 requests/s | **verified live**; html and `QS:` junk stripped; 429 if too fast |
 
 Adapters live in `tools/sources/`, one file each, all with `search(query, {limit}) → { candidates, rejected }`
 and `fetch(id) → candidate`. **Only works the source itself marks public domain / CC0 are accepted.**
@@ -32,26 +32,46 @@ A candidate is: title, maker, year, medium, dimensions (so we can compute `ratio
 or a 1280px size where the source offers it), the object page, the exact license string, the credit
 line, the museum's own description, and `texts`: every text field a claim may quote.
 
-## Network: this was not tested live
+## First live run (2026-10-28)
 
-The build sandbox's network policy refuses **every** host above, so **the adapters have never talked to a
-real API.** They follow each API's documented response shape, and the tests use hand-written fixtures
-(`tests/fixtures/content/README.md`). Expect small fixes on the first live run, especially Smithsonian and Rijksmuseum.
-Fix them, then replace the fixtures with recordings: `node tools/record_fixtures.mjs <url> <file>`.
+Hosts, tested with curl from the build session:
 
-To run it where hosts are blocked, allow these in the environment's network settings (Allowed domains):
+| Host | Result |
+|---|---|
+| collectionapi.metmuseum.org | works (see the search change below) |
+| images.metmuseum.org | reachable (images are originals, often large) |
+| openaccess-api.clevelandart.org | works |
+| openaccess-cdn.clevelandart.org | works for real image paths (the site root answers 403) |
+| commons.wikimedia.org, upload.wikimedia.org | work; the API answers **429** if hit too fast. Adapter spacing (300 ms) was enough |
+| thumb.wikimedia.org | works. **New host**: Commons returns thumbnails from here, so it is now in the adapter's host list |
+| ids.si.edu | reachable |
+| api.si.edu | reachable but **403 without a key** (api.data.gov): not run, no key yet |
+| www.rijksmuseum.nl | reachable (302): adapter not run, no key yet |
+| lh3.googleusercontent.com | reachable (400 on the bare host, as expected) |
+| api.artic.edu, www.artic.edu | **refused by the museum, not the proxy**: Cloudflare bot challenge (`cf-mitigated: challenge`, HTTP 403). Nothing was done to get around it. AIC cannot be used from here; the adapter is unverified |
 
-```
-collectionapi.metmuseum.org  images.metmuseum.org
-api.artic.edu  www.artic.edu
-openaccess-api.clevelandart.org  openaccess-cdn.clevelandart.org
-api.si.edu  ids.si.edu
-www.rijksmuseum.nl  lh3.googleusercontent.com
-commons.wikimedia.org  upload.wikimedia.org
-```
+What the live run changed:
+- **Met: `/v1/search` was retired on 2026-10-01** (HTTP 410). The adapter now uses `/v1.1/search` (same `{ total, objectIDs }` shape, `limit`/`offset`). `/v1/objects/<id>` is unchanged.
+- **Commons: fields carry Wikidata junk and html.** `ObjectName` and dates came back with `title QS:P1476,en:...` appended, and `ObjectName`/`Artist` as html. The adapter now strips tags and the `QS:` tail, and falls back to the file name when a name is several languages run together.
+- **Duplicate claims.** Cleveland repeats a sentence in `description` and `did_you_know`. The blurb writer made two claims from it, the second citing the wrong field. Sentences are now de-duplicated.
+- **Era** missed "1620s", "early 1600s" and three-digit years ("ca. 750"). Fixed.
+- Cleveland needed no change. Smithsonian, Rijksmuseum and AIC are still unverified live.
+
+Live recordings are in `tests/fixtures/content/*-live.json` (Met, Cleveland, Commons) and `tests/content.cjs` has a "Live recordings" section. The hand-written fixtures stay for the fake-network tests and for AIC, Smithsonian and Rijksmuseum.
 
 A blocked host fails with a plain sentence ("could not reach … the host may need allowing"), and other sources still run.
 Nothing tries to get around the proxy.
+
+Hosts to allow in the environment's network settings:
+
+```
+collectionapi.metmuseum.org  images.metmuseum.org
+api.artic.edu  www.artic.edu   (allowed, but Cloudflare challenges bots)
+openaccess-api.clevelandart.org  openaccess-cdn.clevelandart.org
+api.si.edu  ids.si.edu
+www.rijksmuseum.nl  lh3.googleusercontent.com
+commons.wikimedia.org  upload.wikimedia.org  thumb.wikimedia.org
+```
 
 ## Add a batch in 6 steps
 
@@ -104,7 +124,8 @@ for in the museum sources and the matching candidates are listed in the fixes fi
 
 ## Known limits
 
-- **Never run live.** See above.
+- **AIC, Smithsonian and Rijksmuseum have never run live** (Cloudflare challenge, no key, no key).
+- **First batch, live:** 11 of 12 found (the casta paintings had only non-public-domain matches). All 14 drafts in `content/review/painting/` are still `draft`: each needs a rarity decision, nine Met ones need a real hook (the Met has no description text), and a few matched the wrong work ("Deer in a Landscape" for the Bodmer Mandan search; a pendant for the Ethiopian icon search). Three batch items have both a Met and a Cleveland draft; the Cleveland ones are the better texts.
 - **The Met serves originals** (often several MB). The checker will flag them `huge`; pick another source or
   use `primaryImageSmall` (smaller than HD) until we have somewhere to host resized copies.
 - **The blurb writer picks sentences; it doesn't write.** It scores the museum's own sentences (a date, a "first"

@@ -1,0 +1,946 @@
+{
+  "checked": "2026-10-28T21:54:38.117Z",
+  "note": "Candidates only. Nothing is swapped automatically; review each one.",
+  "fixes": [
+    {
+      "id": "painting:horse-fair",
+      "title": "The Horse Fair",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Rosa_Bonheur_-_The_Horse_Fair_-_Google_Art_Project.jpg/1280px-Rosa_Bonheur_-_The_Horse_Fair_-_Google_Art_Project.jpg",
+      "flags": [
+        "broken"
+      ],
+      "status": 404,
+      "contentType": "text/html; charset=utf-8",
+      "bytes": 1928,
+      "note": "HTTP 404",
+      "suggestions": [
+        {
+          "source": "cleveland",
+          "sourceId": "166702",
+          "title": "Return from the Horse Fair",
+          "maker": "Rosa Bonheur",
+          "imageUrl": "https://openaccess-cdn.clevelandart.org/2008.410/2008.410_web.jpg",
+          "pageUrl": "https://clevelandart.org/art/2008.410",
+          "license": "CC0"
+        },
+        {
+          "source": "commons",
+          "sourceId": "File:Rosa Bonheur, The Horse Fair, 1852–55.jpg",
+          "title": "The Horse Fair title QS:P1476,en:\"The Horse Fair \" label QS:Len,\"The Horse Fair \" label QS:Les,\"La feria de caballos\" label QS:Lfr,\"Le Marché aux chevaux\" label QS:Leu,\"Zaldi feria (Bonheur)\" label QS:Lca,\"Fira de cavalls\" label QS:Lcy,\"Le Marché aux chevaux\" label QS:Lpt,\"A feira de cavalos\" label QS:Lzh,\"马市\" label QS:Lhy,\"Ձիերի տոնավաճառ\" label QS:Laf,\"Die Perdeskou\" label QS:Lcs,\"Koňský trh\" label QS:Lsl,\"Konjski sejem\" label QS:Lja,\"馬の市\" label QS:Leo,\"La Ĉevala Foiro\" label QS:Lru,\"Ярмарка лошадей (картина Бонёр)\" label QS:Larz,\"معرض الخيول\" label QS:Lde,\"Der Pferdemarkt\" label QS:Luk,\"Ярмарок коней\" label QS:Lnl,\"De paardenmarkt (op de Boulevard de l'Hôpital, Parijs)\" label QS:Lit,\"La fiera dei cavalli\" label QS:Lhi,\"द हॉर्स फेयर\" label QS:Lko,\"말 시장\" label QS:Lfa,\"نمایشگاه اسب\" label QS:Lar,\"سوق الخيل بباريس\"",
+          "maker": "Rosa Bonheur",
+          "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c6/Rosa_Bonheur%2C_The_Horse_Fair%2C_1852%E2%80%9355.jpg/1280px-Rosa_Bonheur%2C_The_Horse_Fair%2C_1852%E2%80%9355.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+          "pageUrl": "https://commons.wikimedia.org/wiki/File:Rosa_Bonheur,_The_Horse_Fair,_1852%E2%80%9355.jpg",
+          "license": "Public domain"
+        },
+        {
+          "source": "commons",
+          "sourceId": "File:WLA metmuseum Rosa Bonheur The Horse Fair detail.jpg",
+          "title": "The Horse Fair title QS:P1476,en:\"The Horse Fair \" label QS:Len,\"The Horse Fair \" label QS:Les,\"La feria de caballos\" label QS:Lfr,\"Le Marché aux chevaux\" label QS:Leu,\"Zaldi feria (Bonheur)\" label QS:Lca,\"Fira de cavalls\" label QS:Lcy,\"Le Marché aux chevaux\" label QS:Lpt,\"A feira de cavalos\" label QS:Lzh,\"马市\" label QS:Lhy,\"Ձիերի տոնավաճառ\" label QS:Laf,\"Die Perdeskou\" label QS:Lcs,\"Koňský trh\" label QS:Lsl,\"Konjski sejem\" label QS:Lja,\"馬の市\" label QS:Leo,\"La Ĉevala Foiro\" label QS:Lru,\"Ярмарка лошадей (картина Бонёр)\" label QS:Larz,\"معرض الخيول\" label QS:Lde,\"Der Pferdemarkt\" label QS:Luk,\"Ярмарок коней\" label QS:Lnl,\"De paardenmarkt (op de Boulevard de l'Hôpital, Parijs)\" label QS:Lit,\"La fiera dei cavalli\" label QS:Lhi,\"द हॉर्स फेयर\" label QS:Lko,\"말 시장\" label QS:Lfa,\"نمایشگاه اسب\" label QS:Lar,\"سوق الخيل بباريس\"",
+          "maker": "Rosa Bonheur",
+          "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/38/WLA_metmuseum_Rosa_Bonheur_The_Horse_Fair_detail.jpg/1280px-WLA_metmuseum_Rosa_Bonheur_The_Horse_Fair_detail.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+          "pageUrl": "https://commons.wikimedia.org/wiki/File:WLA_metmuseum_Rosa_Bonheur_The_Horse_Fair_detail.jpg",
+          "license": "Public domain"
+        }
+      ],
+      "searchErrors": [
+        {
+          "source": "met",
+          "error": "collectionapi.metmuseum.org answered 410 for https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&isPublicDomain=true&q=The%20Horse%20Fair%20Rosa%20Bonheur"
+        },
+        {
+          "source": "aic",
+          "error": "api.artic.edu answered 403 for https://api.artic.edu/api/v1/artworks/search?q=The%20Horse%20Fair%20Rosa%20Bonheur&limit=5&fields=id,title,artist_display,artist_title,date_display,medium_display,dimensions,dimensions_detail,image_id,thumbnail,is_public_domain,credit_line,description,short_description,place_of_origin,classification_title,style_title,subject_titles,term_titles,api_link"
+        },
+        {
+          "source": "smithsonian",
+          "error": "Smithsonian needs a free key: get one at https://api.data.gov/signup/ and set SI_API_KEY"
+        },
+        {
+          "source": "rijks",
+          "error": "Rijksmuseum needs a free key: set RIJKS_API_KEY (see docs/CONTENT.md)"
+        }
+      ]
+    },
+    {
+      "id": "painting:starry-night",
+      "title": "The Starry Night",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/1280px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg",
+      "flags": [
+        "huge"
+      ],
+      "status": 200,
+      "contentType": "image/jpeg",
+      "bytes": 618432,
+      "width": 1280,
+      "height": 1014,
+      "ratioOff": 1,
+      "suggestions": [
+        {
+          "source": "commons",
+          "sourceId": "File:VanGogh-starry night.jpg",
+          "title": "Dutch: Sterrennacht The Starry Night title QS:P1476,nl:\"Sterrennacht \" label QS:Lnl,\"Sterrennacht \" label QS:Les,\"La noche estrellada\" label QS:Lco,\"Notte stillata\" label QS:Lms,\"The Starry Night\" label QS:Len-gb,\"The Starry Night\" label QS:Lbg,\"Звездна нощ\" label QS:Ltr,\"Yıldızlı Gece\" label QS:Lzh-hk,\"星夜\" label QS:Lsv,\"De sterrennacht\" label QS:Luk,\"Зоряна ніч\" label QS:Lzh-cn,\"星夜\" label QS:Luz,\"Yulduzli tun\" label QS:Lkk,\"Жұлдызды түн\" label QS:Leo,\"Stela nokto\" label QS:Lcs,\"Hvězdná noc\" label QS:Lbs,\"Zvjezdana noć\" label QS:Lbn,\"তারাময় রাত\" label QS:Lfr,\"La Nuit étoilée\" label QS:Lhr,\"Zvjezdana noć\" label QS:Lvi,\"Đêm đầy sao\" label QS:Llv,\"Zvaigžņotā nakts\" label QS:Laf,\"Die Sterrenag\" label QS:Lsr,\"Звездана ноћ\" label QS:Lnb,\"Stjernenatt\" label QS:Laz,\"Ulduzlu gecə\" label QS:Lckb,\"شەوی ئەستێرەکان\" label QS:Len,\"The Starry Night\" label QS:Lar,\"ليلة النجوم\" label QS:Lbr,\"An Noz stergannek\" label QS:Lyue,\"星夜\" label QS:Lhu,\"Csillagos éj\" label QS:Leu,\"Gau izartsua\" label QS:Last,\"La nueche estrellada\" label QS:Lru,\"Звёздная ночь\" label QS:Lba,\"Йондоҙло төн\" label QS:Lcy,\"Y Noson Serennog\" label QS:Lbe,\"Зорная ноч\" label QS:Lsr-ec,\"Звездана ноћ\" label QS:Lzh,\"星夜\" label QS:Lda,\"Stjernenatten\" label QS:Lka,\"ვარსკვლავებიანი ღამე\" label QS:Lja,\"星月夜\" label QS:Larz,\"ليله النجوم\" label QS:Lhe,\"ליל כוכבים\" label QS:Lla,\"Nox stellans\" label QS:Lhi,\"तारामय रात\" label QS:Lte,\"ది స్టార్రీ నైట్\" label QS:Lfi,\"Tähtikirkas yö\" label QS:Lta,\"விண்மீன்கள் நிறைந்த இரவு\" label QS:Lit,\"Notte stellata\" label QS:Lne,\"तारामय रात\" label QS:Lht,\"Nuit zetwal (1889)\" label QS:Let,\"Tähistaevas\" label QS:Lkm,\"រាត្រីពោរពេញដោយផ្កាយ\" label QS:Lsh,\"Zvjezdana noć\" label QS:Lwuu,\"星夜\" label QS:Las,\"দ্য ষ্টাৰী নাইট\" label QS:Ltt,\"Йолдызлы төн\" label QS:Lhy,\"Աստղալից գիշեր\" label QS:Lpt,\"A Noite Estrelada\" label QS:Lbe-tarask,\"Зорная ноч\" label QS:Lde,\"Sternennacht\" label QS:Ltw,\"The Starry Night\" label QS:Llt,\"Žvaigždėta naktis\" label QS:Lsl,\"Zvezdna noč\" label QS:Lfa,\"شب پر ستاره\" label QS:Lro,\"Noapte înstelată\" label QS:Lth,\"ราตรีประดับดาว\" label QS:Lwar,\"An Mabitun-on nga Gab-i\" label QS:Lpl,\"Gwiaździsta noc\" label QS:Lml,\"ദ സ്റ്റാറി നൈറ്റ്\" label QS:Lzh-tw,\"星夜\" label QS:Lga,\"An Oíche Réaltach\" label QS:Lid,\"Malam Berbintang\" label QS:Lmk,\"Ѕвездена ноќ\" label QS:Lpa,\"ਤਾਰਿਆਂ ਭਰੀ ਰਾਤ\" label QS:Lgl,\"A noite estrelada\" label QS:Lko,\"별이 빛나는 밤\" label QS:Lel,\"Η έναστρη νύχτα\" label QS:Lca,\"La nit estelada\"",
+          "maker": "Vincent van Gogh",
+          "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cd/VanGogh-starry_night.jpg/1280px-VanGogh-starry_night.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+          "pageUrl": "https://commons.wikimedia.org/wiki/File:VanGogh-starry_night.jpg",
+          "license": "Public domain"
+        },
+        {
+          "source": "commons",
+          "sourceId": "File:VanGogh-starry night ballance1.jpg",
+          "title": "The Starry Night",
+          "maker": "Vincent van Gogh",
+          "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/66/VanGogh-starry_night_ballance1.jpg/1280px-VanGogh-starry_night_ballance1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+          "pageUrl": "https://commons.wikimedia.org/wiki/File:VanGogh-starry_night_ballance1.jpg",
+          "license": "Public domain"
+        },
+        {
+          "source": "commons",
+          "sourceId": "File:Van Gogh - Starry Night - Google Art Project.jpg",
+          "title": "The Starry Night title QS:P1476,en:\" The Starry Night \" label QS:Len,\" The Starry Night \" label QS:Les,\" La noche estrellada \" label QS:Lmk,\" Ѕвездена ноќ \" label QS:Lfr,\" La Nuit étoilée \" label QS:Lar,\" ليلة النُجُوم \" label QS:Lbr,\" An Noz stergannek \" label QS:Lca,\" La nit estelada \" label QS:Lzh,\" 星夜 \" label QS:Lja,\" 星月夜 \" label QS:Lfi,\" Tähtikirkas yö \" label QS:Lbe-tarask,\" Зорная ноч \" label QS:Lth,\" คืนดาวเกลื่อนฟ้า (ฟาน ก็อกฮ์) \" label QS:Lbg,\" Звездна нощ \" label QS:Lro,\" Noapte înstelată \" label QS:Lko,\" 별이 빛나는 밤 \" label QS:Leo,\" Stela nokto \" label QS:Laf,\" Die Sterrenag \" label QS:Lru,\" Звёздная ночь \" label QS:Lde,\" Sternennacht \" label QS:Lhe,\" ליל כוכבים \" label QS:Lit,\" Notte stellata \" label QS:Lsv,\" De sterrennacht \" label QS:Let,\" Tähistaevas \" label QS:Lhr,\" Zvjezdana noć \" label QS:Lpt,\" A Noite Estrelada \" label QS:Lpl,\" Gwiaździsta noc \" label QS:Lnl,\" De sterrennacht \" label QS:Leu,\" Gau izartsua \" label QS:Lfa,\" شب پر ستاره \"",
+          "maker": "Vincent van Gogh",
+          "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/1280px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+          "pageUrl": "https://commons.wikimedia.org/wiki/File:Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg",
+          "license": "Public domain"
+        }
+      ],
+      "searchErrors": [
+        {
+          "source": "met",
+          "error": "collectionapi.metmuseum.org answered 410 for https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&isPublicDomain=true&q=The%20Starry%20Night%20Vincent%20van%20Gogh"
+        },
+        {
+          "source": "aic",
+          "error": "api.artic.edu answered 403 for https://api.artic.edu/api/v1/artworks/search?q=The%20Starry%20Night%20Vincent%20van%20Gogh&limit=5&fields=id,title,artist_display,artist_title,date_display,medium_display,dimensions,dimensions_detail,image_id,thumbnail,is_public_domain,credit_line,description,short_description,place_of_origin,classification_title,style_title,subject_titles,term_titles,api_link"
+        },
+        {
+          "source": "smithsonian",
+          "error": "Smithsonian needs a free key: get one at https://api.data.gov/signup/ and set SI_API_KEY"
+        },
+        {
+          "source": "rijks",
+          "error": "Rijksmuseum needs a free key: set RIJKS_API_KEY (see docs/CONTENT.md)"
+        }
+      ]
+    },
+    {
+      "id": "painting:mona-lisa",
+      "title": "Mona Lisa",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/1280px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg",
+      "flags": [
+        "huge"
+      ],
+      "status": 200,
+      "contentType": "image/jpeg",
+      "bytes": 980329,
+      "width": 1280,
+      "height": 1908,
+      "ratioOff": 2.5,
+      "suggestions": [
+        {
+          "source": "commons",
+          "sourceId": "File:Mona Lisa.jpg",
+          "title": "The Mona Lisa (or La Joconde , La Gioconda ).",
+          "maker": "Leonardo da Vinci",
+          "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6a/Mona_Lisa.jpg/1280px-Mona_Lisa.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+          "pageUrl": "https://commons.wikimedia.org/wiki/File:Mona_Lisa.jpg",
+          "license": "Public domain"
+        },
+        {
+          "source": "commons",
+          "sourceId": "File:Mona Lisa headcrop.jpg",
+          "title": "The Mona Lisa (or La Joconde , La Gioconda ).",
+          "maker": "Leonardo da Vinci",
+          "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/55/Mona_Lisa_headcrop.jpg/1280px-Mona_Lisa_headcrop.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+          "pageUrl": "https://commons.wikimedia.org/wiki/File:Mona_Lisa_headcrop.jpg",
+          "license": "Public domain"
+        },
+        {
+          "source": "commons",
+          "sourceId": "File:Mona Lisa, by Leonardo da Vinci, from C2RMF retouched.jpg",
+          "title": "Polish: Mona Lisa Mona Lisa title QS:P1476,pl:\"Mona Lisa \" label QS:Lpl,\"Mona Lisa \" label QS:Lrsk,\"Мона Лиза\" label QS:Lszl,\"Mona Lisa\" label QS:Lis,\"Móna Lísa\" label QS:Lks,\"مونا لیزا\" label QS:Lms,\"Mona Lisa\" label QS:Lps,\"مونالیزا\" label QS:Ltr,\"Mona Lisa\" label QS:Lur,\"مونا لیزہ\" label QS:Lsk,\"Mona Líza\" label QS:Luk,\"Мона Ліза\" label QS:Lzh-cn,\"蒙娜丽莎\" label QS:Luz,\"Mona Lisa\" label QS:Las,\"মনালিছা\" label QS:Lmk,\"Мона Лиза\" label QS:Lbs,\"Mona Lisa\" label QS:Lfr,\"La Joconde\" label QS:Lhr,\"Mona Lisa\" label QS:Lcbk-zam,\"Monalisa\" label QS:Lmr,\"मोनालिसा\" label QS:Lglk,\"ژؤکؤند\" label QS:Lor,\"ମୋନା ଲିସା\" label QS:Lsr,\"Мона Лиза\" label QS:Lzu,\"Mona Lisa\" label QS:Llb,\"Mona Lisa\" label QS:Lnb,\"Mona Lisa\" label QS:Laz,\"Mona Liza\" label QS:Lhif,\"Mona Lisa\" label QS:Lgor,\"Mona Lisa\" label QS:Lar,\"موناليزا\" label QS:Lbr,\"Mona Lisa\" label QS:Lmy,\"မိုနာလီဆာ\" label QS:Lyue,\"蒙娜麗莎\" label QS:Last,\"La Gioconda\" label QS:Lca,\"La Gioconda\" label QS:Lba,\"Мона Лиза\" label QS:Lcy,\"Mona Lisa\" label QS:Lga,\"An Mona Lisa\" label QS:Lsr-ec,\"Мона Лиза\" label QS:Lzh,\"蒙娜丽莎\" label QS:Lda,\"Mona Lisa\" label QS:Lka,\"მონა ლიზა\" label QS:Lja,\"モナ・リザ\" label QS:Lha,\"Mona Lisa\" label QS:Larz,\"موناليزا\" label QS:Lsi,\"මොනාලිසා\" label QS:Lla,\"Iucunda\" label QS:Lhi,\"मॉना लिसा\" label QS:Lwuu,\"蒙娜丽莎\" label QS:Lpa,\"ਮੋਨਾ ਲੀਜ਼ਾ\" label QS:Lhyw,\"Լիզա տէլ Ճոքոնտօ\" label QS:Lli,\"Mona Lisa\" label QS:Lta,\"மோனா லிசா\" label QS:Lbe-tarask,\"Мона Ліза\" label QS:Lscn,\"Gioconda\" label QS:Lth,\"โมนาลิซา\" label QS:Lsh,\"Mona Lisa\" label QS:Lrue,\"Мона Ліза\" label QS:Lvec,\"Ła Joconda\" label QS:Lrki,\"မိုနာလီဆာ\" label QS:Lco,\"Giuconda\" label QS:Lbcl,\"Mona Lisa\" label QS:Lpcm,\"Mona Lisa\" label QS:Lro,\"Gioconda\" label QS:Lzh-hk,\"蒙娜麗莎\" label QS:Lso,\"Mona Lisa\" label QS:Lsv,\"Mona Lisa\" label QS:Lig,\"Mona Lisa\" label QS:Lzh-hant,\"蒙娜麗莎\" label QS:Llo,\"ລາໂຊກົງ\" label QS:Lko,\"모나리자\" label QS:Lfo,\"Mona Lisa\" label QS:Leo,\"La Gioconda\" label QS:Lan,\"A Gioconda\" label QS:Lbn,\"মোনা লিসা\" label QS:Ljv,\"Monalisa\" label QS:Lcv,\"Мона Лиза\" label QS:Lgcr,\"Mona Lisa\" label QS:Lyi,\"מאנא ליסע\" label QS:Lvi,\"Mona Lisa\" label QS:Llv,\"Mona Liza\" label QS:Lilo,\"Mona Lisa\" label QS:Lsco,\"Mona Lisa\" label QS:Lmn,\"Мона Лиза\" label QS:Lnan,\"Mona Lisa\" label QS:Lkn,\"ಮೋನ ಲೀಸ\" label QS:Lckb,\"مۆنالیزا\" label QS:Len,\"Mona Lisa\" label QS:Lhu,\"Mona Lisa\" label QS:Lam,\"ሞና ሊዛ\" label QS:Lbo,\"མོ་ན་ལི་ས།\" label QS:Leu,\"Gioconda\" label QS:Lel,\"Μόνα Λίζα\" label QS:Lfrr,\"Mona Lisa\" label QS:Lru,\"Мона Лиза\" label QS:Lszy,\"Mong-na-li-sa\" label QS:Lmai,\"मोना लिजा\" label QS:Lzh-sg,\"蒙娜丽莎\" label QS:Lbe,\"Мона Ліза\" label QS:Lhy,\"Մոնա Լիզա\" label QS:Laf,\"Mona Lisa\" label QS:Lku,\"Mona Lîza\" label QS:Lne,\"मोना लिजा\" label QS:Lzh-my,\"蒙娜丽莎\" label QS:Lnl,\"Mona Lisa\" label QS:Lwar,\"Mona Lisa\" label QS:Lie,\"Mona Lisa\" label QS:Lhe,\"מונה ליזה\" label QS:Ltt,\"Мона Лиза\" label QS:Lkab,\"Monna Liza\" label QS:Lkm,\"ម៉ូណាលីសា\" label QS:Lte,\"మోనాలిసా\" label QS:Lpnb,\"مونا لیزا\" label QS:Lkaa,\"Mona Lisa\" label QS:Lfa,\"مونالیزا\" label QS:Lbg,\"Мона Лиза\" label QS:Lit,\"La Gioconda\" label QS:Lksh,\"Mona Lisa (Beld)\" label QS:Loc,\"La Joconda\" label QS:Lht,\"La Joconde\" label QS:Lzh-mo,\"蒙娜麗莎\" label QS:Lid,\"Mona Lisa\" label QS:Lpt,\"Mona Lisa\" label QS:Lnn,\"Mona Lisa\" label QS:Lsu,\"Mona Lisa\" label QS:Les,\"La Gioconda\" label QS:Lkk,\"Мона Лиза\" label QS:Lsr-el,\"Mona Liza\" label QS:Lmt,\"Mona Lisa\" label QS:Let,\"Mona Lisa\" label QS:Lbjn,\"Mona Lisa\" label QS:Llt,\"Mona Liza\" label QS:Lsl,\"Mona Liza\" label QS:Ltl,\"Mona Lisa\" label QS:Lcs,\"Mona Lisa\" label QS:Ltw,\"Mona Lisa\" label QS:Lsw,\"Mona Lisa\" label QS:Lml,\"മോണാലിസ\" label QS:Lzh-tw,\"蒙娜麗莎\" label QS:Lsq,\"Mona Liza\" label QS:Lsat,\"ᱢᱚᱱᱟᱞᱤᱥᱟ\" label QS:Lsd,\"مونا ليزا\" label QS:Lfy,\"Mona Lisa\" label QS:Lgl,\"Mona Lisa\" label QS:Lfi,\"Mona Lisa\" label QS:Lzh-hans,\"蒙娜丽莎\" label QS:Lde,\"Mona Lisa\"",
+          "maker": "Leonardo da Vinci",
+          "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/1280px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+          "pageUrl": "https://commons.wikimedia.org/wiki/File:Mona_Lisa,_by_Leonardo_da_Vinci,_from_C2RMF_retouched.jpg",
+          "license": "Public domain"
+        }
+      ],
+      "searchErrors": [
+        {
+          "source": "met",
+          "error": "collectionapi.metmuseum.org answered 410 for https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&isPublicDomain=true&q=Mona%20Lisa%20Leonardo%20da%20Vinci"
+        },
+        {
+          "source": "aic",
+          "error": "api.artic.edu answered 403 for https://api.artic.edu/api/v1/artworks/search?q=Mona%20Lisa%20Leonardo%20da%20Vinci&limit=5&fields=id,title,artist_display,artist_title,date_display,medium_display,dimensions,dimensions_detail,image_id,thumbnail,is_public_domain,credit_line,description,short_description,place_of_origin,classification_title,style_title,subject_titles,term_titles,api_link"
+        },
+        {
+          "source": "smithsonian",
+          "error": "Smithsonian needs a free key: get one at https://api.data.gov/signup/ and set SI_API_KEY"
+        },
+        {
+          "source": "rijks",
+          "error": "Rijksmuseum needs a free key: set RIJKS_API_KEY (see docs/CONTENT.md)"
+        }
+      ]
+    },
+    {
+      "id": "painting:pearl-earring",
+      "title": "Girl with a Pearl Earring",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/1665_Girl_with_a_Pearl_Earring.jpg/1280px-1665_Girl_with_a_Pearl_Earring.jpg",
+      "flags": [
+        "ratio"
+      ],
+      "status": 200,
+      "contentType": "image/jpeg",
+      "bytes": 594446,
+      "width": 1280,
+      "height": 1516,
+      "ratioOff": 3.7,
+      "suggestions": [
+        {
+          "source": "commons",
+          "sourceId": "File:Johannes Vermeer (1632-1675) - The Girl With The Pearl Earring (1665).jpg",
+          "title": "Het meisje met de parel ( Girl with a Pearl Earring )",
+          "maker": "Johannes Vermeer",
+          "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/66/Johannes_Vermeer_%281632-1675%29_-_The_Girl_With_The_Pearl_Earring_%281665%29.jpg/1280px-Johannes_Vermeer_%281632-1675%29_-_The_Girl_With_The_Pearl_Earring_%281665%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+          "pageUrl": "https://commons.wikimedia.org/wiki/File:Johannes_Vermeer_(1632-1675)_-_The_Girl_With_The_Pearl_Earring_(1665).jpg",
+          "license": "Public domain"
+        },
+        {
+          "source": "commons",
+          "sourceId": "File:Girl with a Pearl Earring.jpg",
+          "title": "Dutch: Meisje met de parel Girl with a Pearl Earring title QS:P1476,nl:\"Meisje met de parel \" label QS:Lnl,\"Meisje met de parel \" label QS:Les,\"La joven de la perla\" label QS:Lis,\"Stúlka með perlueyrnalokk\" label QS:Lps,\"د مرغلرې غوږوالۍ لرونکې نجلۍ\" label QS:Lbg,\"Момичето с перлената обица\" label QS:Lro,\"Fata cu turban\" label QS:Lur,\"موتی کی بالی والی لڑکی (مصوری)\" label QS:Lsv,\"Flicka med pärlörhänge\" label QS:Luk,\"Дівчина з перловою сережкою\" label QS:Lzh-hant,\"戴珍珠耳環的少女\" label QS:Lzh-cn,\"戴珍珠耳环的少女\" label QS:Lko,\"진주 귀고리를 한 소녀\" label QS:Lkk,\"Інжу сырғалы қыз\" label QS:Leo,\"Junulino kun perla orelringo\" label QS:Lcs,\"Dívka s perlou\" label QS:Lbs,\"Djevojka sa bisernom naušnicom\" label QS:Lbn,\"হেট মেইশে মেট ড্য পারেল\" label QS:Lfr,\"La Jeune Fille à la perle\" label QS:Lhr,\"Djevojka s bisernom naušnicom\" label QS:Lvi,\"Cô gái đeo hoa tai ngọc trai\" label QS:Llv,\"Meitene ar pērļu auskaru\" label QS:Laf,\"Die meisie met die pêrel\" label QS:Lsr,\"Девојка са бисерном минђушом\" label QS:Lpt-br,\"Moça com o Brinco de Pérola\" label QS:Lzh-sg,\"戴珍珠耳环的少女\" label QS:Llb,\"Meedche mat der Pärel\" label QS:Lnan,\"Koà Chin-chu Hīⁿ-kau ê Siàu-lú\" label QS:Lnb,\"«Pike med perleøredobb»\" label QS:Laz,\"Mirvari tanalı qız\" label QS:Len,\"Girl with a Pearl Earring\" label QS:Lar,\"فتاة ترتدي قرطًا من اللؤلؤ\" label QS:Lbr,\"Plac'h he ferlezenn\" label QS:Lmy,\"ပုလဲနားဆွဲနဲ့ မိန်းကလေး\" label QS:Lhu,\"Leány gyöngy fülbevalóval\" label QS:Leu,\"Neska perlarekin\" label QS:Last,\"La moza de la perlla\" label QS:Lru,\"Девушка с жемчужной серёжкой\" label QS:Lde,\"Das Mädchen mit dem Perlenohrgehänge\" label QS:Lga,\"Meisje met de parel\" label QS:Lfa,\"دختری با گوشواره مروارید\" label QS:Lzh,\"戴珍珠耳環的少女\" label QS:Lda,\"Pige med perleørering\" label QS:Lka,\"გოგონა მარგალიტის საყურით\" label QS:Lja,\"真珠の耳飾りの少女\" label QS:Lrki,\"ပုလဲနားဆွဲနန့် မိမ\" label QS:Larz,\"فتاه ترتدى قرطا من اللؤلؤ\" label QS:Lel,\"Το κορίτσι με το μαργαριταρένιο σκουλαρίκι\" label QS:Lhe,\"נערה עם עגיל פנינה\" label QS:Ltt,\"Энҗе алкалы кыз\" label QS:Lte,\"గర్ల్ విత్ ఎ పెర్ల్ ఇయర్రింగ్\" label QS:Lhi,\"गर्ल विथ अ पर्ल इअर रिंग\" label QS:Lwuu,\"戴珍珠耳环个少女\" label QS:Lfi,\"Turbaanipäinen tyttö\" label QS:Luz,\"Marvarid sirg'ali qiz\" label QS:Lcv,\"Ĕнчĕ хăлха çаккиллĕ хĕр (ӳкерчĕк)\" label QS:Lzh-hk,\"戴珍珠耳環的少女\" label QS:Lta,\"முத்துத் தோட்டுடனான சிறுமி\" label QS:Lit,\"Ragazza con l'orecchino di perla\" label QS:Lbe,\"Дзяўчына з жамчужнай завушніцай\" label QS:Lary,\"بنت لابسة زواڭة د اللويز\" label QS:Lavk,\"Sardikya dem mard (trutca ke Vermeer)\" label QS:Lbe-tarask,\"Дзяўчына з пэрлінавай завушніцай\" label QS:Lth,\"สาวใส่ต่างหูมุก\" label QS:Ltw,\"Abaayewa / Ɔbaa a ɔhyɛ Pearl asomadeɛ\" label QS:Lpnb,\"موتی چمکے نال کڑی\" label QS:Let,\"Tütarlaps pärlkõrvarõngaga\" label QS:Lca,\"La noia de la perla\" label QS:Lpt,\"Rapariga com o Brinco de Pérola\" label QS:Lsr-el,\"Devojka sa bisernom minđušom\" label QS:Lmt,\"Tfajla bl-imsielet tal-ġawhar\" label QS:Lsi,\"මුතු අරුංගලය පැළඳි යුවතිය\" label QS:Lbjn,\"Gadis lawan Bonel-bonel Mutiara\" label QS:Llt,\"Mergina su perlo auskaru\" label QS:Lsl,\"Dekle z bisernim uhanom\" label QS:Ltl,\"Dalagitang may Hikaw na Perlas\" label QS:Lpa,\"ਗਰਲ ਵਿਦ ਅ ਪਰਲ ਈਅਰ ਰਿੰਗ\" label QS:Lhy,\"Մարգարտե ականջօղով աղջիկը\" label QS:Lid,\"Gadis dengan Anting-Anting Mutiara\" label QS:Lpl,\"Dziewczyna z perłą\" label QS:Lml,\"ഗേൾ വിത് എ പേൾ ഈയർറിങ്\" label QS:Lzh-tw,\"戴珍珠耳環的少女\" label QS:Lio,\"Meisje met de parel\" label QS:Ltr,\"İnci Küpeli Kız\" label QS:Lsh,\"Djevojka s bisernom naušnicom\" label QS:Lmk,\"Девојка со бисерна обетка\" label QS:Lgl,\"A rapaza da perla\" label QS:Lzh-hans,\"戴珍珠耳环的少女\" label QS:Lsr-ec,\"Девојка са бисерном минђушом\"",
+          "maker": "Johannes Vermeer",
+          "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/ce/Girl_with_a_Pearl_Earring.jpg/1280px-Girl_with_a_Pearl_Earring.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+          "pageUrl": "https://commons.wikimedia.org/wiki/File:Girl_with_a_Pearl_Earring.jpg",
+          "license": "Public domain"
+        },
+        {
+          "source": "commons",
+          "sourceId": "File:Meisje met de parel.jpg",
+          "title": "Dutch: Meisje met de parel Girl with a Pearl Earring title QS:P1476,nl:\"Meisje met de parel \" label QS:Lnl,\"Meisje met de parel \" label QS:Les,\"La joven de la perla\" label QS:Lis,\"Stúlka með perlueyrnalokk\" label QS:Lps,\"د مرغلرې غوږوالۍ لرونکې نجلۍ\" label QS:Lbg,\"Момичето с перлената обица\" label QS:Lro,\"Fata cu turban\" label QS:Lur,\"موتی کی بالی والی لڑکی (مصوری)\" label QS:Lsv,\"Flicka med pärlörhänge\" label QS:Luk,\"Дівчина з перловою сережкою\" label QS:Lzh-hant,\"戴珍珠耳環的少女\" label QS:Lzh-cn,\"戴珍珠耳环的少女\" label QS:Lko,\"진주 귀고리를 한 소녀\" label QS:Lkk,\"Інжу сырғалы қыз\" label QS:Leo,\"Junulino kun perla orelringo\" label QS:Lcs,\"Dívka s perlou\" label QS:Lbs,\"Djevojka sa bisernom naušnicom\" label QS:Lbn,\"হেট মেইশে মেট ড্য পারেল\" label QS:Lfr,\"La Jeune Fille à la perle\" label QS:Lhr,\"Djevojka s bisernom naušnicom\" label QS:Lvi,\"Cô gái đeo hoa tai ngọc trai\" label QS:Llv,\"Meitene ar pērļu auskaru\" label QS:Laf,\"Die meisie met die pêrel\" label QS:Lsr,\"Девојка са бисерном минђушом\" label QS:Lpt-br,\"Moça com o Brinco de Pérola\" label QS:Lzh-sg,\"戴珍珠耳环的少女\" label QS:Llb,\"Meedche mat der Pärel\" label QS:Lnan,\"Koà Chin-chu Hīⁿ-kau ê Siàu-lú\" label QS:Lnb,\"«Pike med perleøredobb»\" label QS:Laz,\"Mirvari tanalı qız\" label QS:Len,\"Girl with a Pearl Earring\" label QS:Lar,\"فتاة ترتدي قرطًا من اللؤلؤ\" label QS:Lbr,\"Plac'h he ferlezenn\" label QS:Lmy,\"ပုလဲနားဆွဲနဲ့ မိန်းကလေး\" label QS:Lhu,\"Leány gyöngy fülbevalóval\" label QS:Leu,\"Neska perlarekin\" label QS:Last,\"La moza de la perlla\" label QS:Lru,\"Девушка с жемчужной серёжкой\" label QS:Lde,\"Das Mädchen mit dem Perlenohrgehänge\" label QS:Lga,\"Meisje met de parel\" label QS:Lfa,\"دختری با گوشواره مروارید\" label QS:Lzh,\"戴珍珠耳環的少女\" label QS:Lda,\"Pige med perleørering\" label QS:Lka,\"გოგონა მარგალიტის საყურით\" label QS:Lja,\"真珠の耳飾りの少女\" label QS:Lrki,\"ပုလဲနားဆွဲနန့် မိမ\" label QS:Larz,\"فتاه ترتدى قرطا من اللؤلؤ\" label QS:Lel,\"Το κορίτσι με το μαργαριταρένιο σκουλαρίκι\" label QS:Lhe,\"נערה עם עגיל פנינה\" label QS:Ltt,\"Энҗе алкалы кыз\" label QS:Lte,\"గర్ల్ విత్ ఎ పెర్ల్ ఇయర్రింగ్\" label QS:Lhi,\"गर्ल विथ अ पर्ल इअर रिंग\" label QS:Lwuu,\"戴珍珠耳环个少女\" label QS:Lfi,\"Turbaanipäinen tyttö\" label QS:Luz,\"Marvarid sirg'ali qiz\" label QS:Lcv,\"Ĕнчĕ хăлха çаккиллĕ хĕр (ӳкерчĕк)\" label QS:Lzh-hk,\"戴珍珠耳環的少女\" label QS:Lta,\"முத்துத் தோட்டுடனான சிறுமி\" label QS:Lit,\"Ragazza con l'orecchino di perla\" label QS:Lbe,\"Дзяўчына з жамчужнай завушніцай\" label QS:Lary,\"بنت لابسة زواڭة د اللويز\" label QS:Lavk,\"Sardikya dem mard (trutca ke Vermeer)\" label QS:Lbe-tarask,\"Дзяўчына з пэрлінавай завушніцай\" label QS:Lth,\"สาวใส่ต่างหูมุก\" label QS:Ltw,\"Abaayewa / Ɔbaa a ɔhyɛ Pearl asomadeɛ\" label QS:Lpnb,\"موتی چمکے نال کڑی\" label QS:Let,\"Tütarlaps pärlkõrvarõngaga\" label QS:Lca,\"La noia de la perla\" label QS:Lpt,\"Rapariga com o Brinco de Pérola\" label QS:Lsr-el,\"Devojka sa bisernom minđušom\" label QS:Lmt,\"Tfajla bl-imsielet tal-ġawhar\" label QS:Lsi,\"මුතු අරුංගලය පැළඳි යුවතිය\" label QS:Lbjn,\"Gadis lawan Bonel-bonel Mutiara\" label QS:Llt,\"Mergina su perlo auskaru\" label QS:Lsl,\"Dekle z bisernim uhanom\" label QS:Ltl,\"Dalagitang may Hikaw na Perlas\" label QS:Lpa,\"ਗਰਲ ਵਿਦ ਅ ਪਰਲ ਈਅਰ ਰਿੰਗ\" label QS:Lhy,\"Մարգարտե ականջօղով աղջիկը\" label QS:Lid,\"Gadis dengan Anting-Anting Mutiara\" label QS:Lpl,\"Dziewczyna z perłą\" label QS:Lml,\"ഗേൾ വിത് എ പേൾ ഈയർറിങ്\" label QS:Lzh-tw,\"戴珍珠耳環的少女\" label QS:Lio,\"Meisje met de parel\" label QS:Ltr,\"İnci Küpeli Kız\" label QS:Lsh,\"Djevojka s bisernom naušnicom\" label QS:Lmk,\"Девојка со бисерна обетка\" label QS:Lgl,\"A rapaza da perla\" label QS:Lzh-hans,\"戴珍珠耳环的少女\" label QS:Lsr-ec,\"Девојка са бисерном минђушом\"",
+          "maker": "Johannes Vermeer",
+          "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d7/Meisje_met_de_parel.jpg/1280px-Meisje_met_de_parel.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+          "pageUrl": "https://commons.wikimedia.org/wiki/File:Meisje_met_de_parel.jpg",
+          "license": "Public domain"
+        }
+      ],
+      "searchErrors": [
+        {
+          "source": "met",
+          "error": "collectionapi.metmuseum.org answered 410 for https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&isPublicDomain=true&q=Girl%20with%20a%20Pearl%20Earring%20Johannes%20Vermeer"
+        },
+        {
+          "source": "aic",
+          "error": "api.artic.edu answered 403 for https://api.artic.edu/api/v1/artworks/search?q=Girl%20with%20a%20Pearl%20Earring%20Johannes%20Vermeer&limit=5&fields=id,title,artist_display,artist_title,date_display,medium_display,dimensions,dimensions_detail,image_id,thumbnail,is_public_domain,credit_line,description,short_description,place_of_origin,classification_title,style_title,subject_titles,term_titles,api_link"
+        },
+        {
+          "source": "smithsonian",
+          "error": "Smithsonian needs a free key: get one at https://api.data.gov/signup/ and set SI_API_KEY"
+        },
+        {
+          "source": "rijks",
+          "error": "Rijksmuseum needs a free key: set RIJKS_API_KEY (see docs/CONTENT.md)"
+        }
+      ]
+    },
+    {
+      "id": "painting:scream",
+      "title": "The Scream",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Edvard_Munch%2C_1893%2C_The_Scream%2C_oil%2C_tempera_and_pastel_on_cardboard%2C_91_x_73_cm%2C_National_Gallery_of_Norway.jpg/1280px-Edvard_Munch%2C_1893%2C_The_Scream%2C_oil%2C_tempera_and_pastel_on_cardboard%2C_91_x_73_cm%2C_National_Gallery_of_Norway.jpg",
+      "flags": [
+        "huge"
+      ],
+      "status": 200,
+      "contentType": "image/jpeg",
+      "bytes": 622974,
+      "width": 1280,
+      "height": 1589,
+      "ratioOff": 0.3,
+      "suggestions": [
+        {
+          "source": "commons",
+          "sourceId": "File:Edvard Munch - The Scream - Google Art Project.jpg",
+          "title": "Norwegian: Skrik The Scream title QS:P1476,no:\"Skrik\" label QS:Lno,\"Skrik\" label QS:Lfr,\"Le cri\" label QS:Lde,\"Der Schrei\" label QS:Len,\"The Scream\"",
+          "maker": "Edvard Munch",
+          "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/86/Edvard_Munch_-_The_Scream_-_Google_Art_Project.jpg/1280px-Edvard_Munch_-_The_Scream_-_Google_Art_Project.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+          "pageUrl": "https://commons.wikimedia.org/wiki/File:Edvard_Munch_-_The_Scream_-_Google_Art_Project.jpg",
+          "license": "Public domain"
+        },
+        {
+          "source": "commons",
+          "sourceId": "File:The Scream Pastel.jpg",
+          "title": "The Scream of Nature",
+          "maker": "Edvard Munch",
+          "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f7/The_Scream_Pastel.jpg/1280px-The_Scream_Pastel.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+          "pageUrl": "https://commons.wikimedia.org/wiki/File:The_Scream_Pastel.jpg",
+          "license": "Public domain"
+        },
+        {
+          "source": "commons",
+          "sourceId": "File:Edvard Munch, 1893, The Scream, oil, tempera and pastel on cardboard, 91 x 73 cm, National Gallery of Norway.jpg",
+          "title": "German: Der Schrei der Natur The scream of nature title QS:P1476,de:\"Der Schrei der Natur\" label QS:Lde,\"Der Schrei der Natur\" label QS:Les,\"El grito\" label QS:Lno,\"Skrik\" label QS:Lfr,\"Le cri\" label QS:Len,\"The scream of nature\" label QS:Lar,\"صرخة الطبيعة\"",
+          "maker": "Edvard Munch",
+          "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c5/Edvard_Munch%2C_1893%2C_The_Scream%2C_oil%2C_tempera_and_pastel_on_cardboard%2C_91_x_73_cm%2C_National_Gallery_of_Norway.jpg/1280px-Edvard_Munch%2C_1893%2C_The_Scream%2C_oil%2C_tempera_and_pastel_on_cardboard%2C_91_x_73_cm%2C_National_Gallery_of_Norway.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+          "pageUrl": "https://commons.wikimedia.org/wiki/File:Edvard_Munch,_1893,_The_Scream,_oil,_tempera_and_pastel_on_cardboard,_91_x_73_cm,_National_Gallery_of_Norway.jpg",
+          "license": "Public domain"
+        }
+      ],
+      "searchErrors": [
+        {
+          "source": "met",
+          "error": "collectionapi.metmuseum.org answered 410 for https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&isPublicDomain=true&q=The%20Scream%20Edvard%20Munch"
+        },
+        {
+          "source": "aic",
+          "error": "api.artic.edu answered 403 for https://api.artic.edu/api/v1/artworks/search?q=The%20Scream%20Edvard%20Munch&limit=5&fields=id,title,artist_display,artist_title,date_display,medium_display,dimensions,dimensions_detail,image_id,thumbnail,is_public_domain,credit_line,description,short_description,place_of_origin,classification_title,style_title,subject_titles,term_titles,api_link"
+        },
+        {
+          "source": "smithsonian",
+          "error": "Smithsonian needs a free key: get one at https://api.data.gov/signup/ and set SI_API_KEY"
+        },
+        {
+          "source": "rijks",
+          "error": "Rijksmuseum needs a free key: set RIJKS_API_KEY (see docs/CONTENT.md)"
+        }
+      ]
+    },
+    {
+      "id": "painting:kiss",
+      "title": "The Kiss",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/The_Kiss_-_Gustav_Klimt_-_Google_Cultural_Institute.jpg/1280px-The_Kiss_-_Gustav_Klimt_-_Google_Cultural_Institute.jpg",
+      "flags": [
+        "huge"
+      ],
+      "status": 200,
+      "contentType": "image/jpeg",
+      "bytes": 715229,
+      "width": 1280,
+      "height": 1284,
+      "ratioOff": 0.3,
+      "suggestions": [],
+      "searchErrors": [
+        {
+          "source": "met",
+          "error": "collectionapi.metmuseum.org answered 410 for https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&isPublicDomain=true&q=The%20Kiss%20Gustav%20Klimt"
+        },
+        {
+          "source": "aic",
+          "error": "api.artic.edu answered 403 for https://api.artic.edu/api/v1/artworks/search?q=The%20Kiss%20Gustav%20Klimt&limit=5&fields=id,title,artist_display,artist_title,date_display,medium_display,dimensions,dimensions_detail,image_id,thumbnail,is_public_domain,credit_line,description,short_description,place_of_origin,classification_title,style_title,subject_titles,term_titles,api_link"
+        },
+        {
+          "source": "smithsonian",
+          "error": "Smithsonian needs a free key: get one at https://api.data.gov/signup/ and set SI_API_KEY"
+        },
+        {
+          "source": "rijks",
+          "error": "Rijksmuseum needs a free key: set RIJKS_API_KEY (see docs/CONTENT.md)"
+        },
+        {
+          "source": "commons",
+          "error": "commons.wikimedia.org answered 429 for https://commons.wikimedia.org/w/api.php?action=query&format=json&list=search&srnamespace=6&srlimit=5&srsearch=The%20Kiss%20Gustav%20Klimt%20filetype%3Abitmap"
+        }
+      ]
+    },
+    {
+      "id": "painting:milkmaid",
+      "title": "The Milkmaid",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Johannes_Vermeer_-_Het_melkmeisje_-_Google_Art_Project.jpg/1280px-Johannes_Vermeer_-_Het_melkmeisje_-_Google_Art_Project.jpg",
+      "flags": [
+        "huge"
+      ],
+      "status": 200,
+      "contentType": "image/jpeg",
+      "bytes": 615510,
+      "width": 1280,
+      "height": 1435,
+      "ratioOff": 1,
+      "suggestions": [],
+      "searchErrors": [
+        {
+          "source": "met",
+          "error": "collectionapi.metmuseum.org answered 410 for https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&isPublicDomain=true&q=The%20Milkmaid%20Johannes%20Vermeer"
+        },
+        {
+          "source": "aic",
+          "error": "api.artic.edu answered 403 for https://api.artic.edu/api/v1/artworks/search?q=The%20Milkmaid%20Johannes%20Vermeer&limit=5&fields=id,title,artist_display,artist_title,date_display,medium_display,dimensions,dimensions_detail,image_id,thumbnail,is_public_domain,credit_line,description,short_description,place_of_origin,classification_title,style_title,subject_titles,term_titles,api_link"
+        },
+        {
+          "source": "smithsonian",
+          "error": "Smithsonian needs a free key: get one at https://api.data.gov/signup/ and set SI_API_KEY"
+        },
+        {
+          "source": "rijks",
+          "error": "Rijksmuseum needs a free key: set RIJKS_API_KEY (see docs/CONTENT.md)"
+        },
+        {
+          "source": "commons",
+          "error": "commons.wikimedia.org answered 429 for https://commons.wikimedia.org/w/api.php?action=query&format=json&list=search&srnamespace=6&srlimit=5&srsearch=The%20Milkmaid%20Johannes%20Vermeer%20filetype%3Abitmap"
+        }
+      ]
+    },
+    {
+      "id": "painting:cafe-terrace",
+      "title": "Café Terrace at Night",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Van_Gogh_-_Terrasse_des_Caf%C3%A9s_an_der_Place_du_Forum_in_Arles_am_Abend1.jpeg/1280px-Van_Gogh_-_Terrasse_des_Caf%C3%A9s_an_der_Place_du_Forum_in_Arles_am_Abend1.jpeg",
+      "flags": [
+        "huge",
+        "ratio"
+      ],
+      "status": 200,
+      "contentType": "image/jpeg",
+      "bytes": 965310,
+      "width": 1280,
+      "height": 1681,
+      "ratioOff": 5.8,
+      "suggestions": [],
+      "searchErrors": [
+        {
+          "source": "met",
+          "error": "collectionapi.metmuseum.org answered 410 for https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&isPublicDomain=true&q=Caf%C3%A9%20Terrace%20at%20Night%20Vincent%20van%20Gogh"
+        },
+        {
+          "source": "aic",
+          "error": "api.artic.edu answered 403 for https://api.artic.edu/api/v1/artworks/search?q=Caf%C3%A9%20Terrace%20at%20Night%20Vincent%20van%20Gogh&limit=5&fields=id,title,artist_display,artist_title,date_display,medium_display,dimensions,dimensions_detail,image_id,thumbnail,is_public_domain,credit_line,description,short_description,place_of_origin,classification_title,style_title,subject_titles,term_titles,api_link"
+        },
+        {
+          "source": "smithsonian",
+          "error": "Smithsonian needs a free key: get one at https://api.data.gov/signup/ and set SI_API_KEY"
+        },
+        {
+          "source": "rijks",
+          "error": "Rijksmuseum needs a free key: set RIJKS_API_KEY (see docs/CONTENT.md)"
+        },
+        {
+          "source": "commons",
+          "error": "commons.wikimedia.org answered 429 for https://commons.wikimedia.org/w/api.php?action=query&format=json&list=search&srnamespace=6&srlimit=5&srsearch=Caf%C3%A9%20Terrace%20at%20Night%20Vincent%20van%20Gogh%20filetype%3Abitmap"
+        }
+      ]
+    },
+    {
+      "id": "painting:water-lilies",
+      "title": "Water Lilies",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Claude_Monet_-_Water_Lilies_-_1906,_Ryerson.jpg/1280px-Claude_Monet_-_Water_Lilies_-_1906,_Ryerson.jpg",
+      "flags": [
+        "huge",
+        "ratio"
+      ],
+      "status": 200,
+      "contentType": "image/jpeg",
+      "bytes": 723038,
+      "width": 1280,
+      "height": 1230,
+      "ratioOff": 10.1,
+      "suggestions": [
+        {
+          "source": "cleveland",
+          "sourceId": "136510",
+          "title": "Water Lilies (Agapanthus)",
+          "maker": "Claude Monet",
+          "imageUrl": "https://openaccess-cdn.clevelandart.org/1960.81/1960.81_web.jpg",
+          "pageUrl": "https://clevelandart.org/art/1960.81",
+          "license": "CC0"
+        }
+      ],
+      "searchErrors": [
+        {
+          "source": "met",
+          "error": "collectionapi.metmuseum.org answered 410 for https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&isPublicDomain=true&q=Water%20Lilies%20Claude%20Monet"
+        },
+        {
+          "source": "aic",
+          "error": "api.artic.edu answered 403 for https://api.artic.edu/api/v1/artworks/search?q=Water%20Lilies%20Claude%20Monet&limit=5&fields=id,title,artist_display,artist_title,date_display,medium_display,dimensions,dimensions_detail,image_id,thumbnail,is_public_domain,credit_line,description,short_description,place_of_origin,classification_title,style_title,subject_titles,term_titles,api_link"
+        },
+        {
+          "source": "smithsonian",
+          "error": "Smithsonian needs a free key: get one at https://api.data.gov/signup/ and set SI_API_KEY"
+        },
+        {
+          "source": "rijks",
+          "error": "Rijksmuseum needs a free key: set RIJKS_API_KEY (see docs/CONTENT.md)"
+        },
+        {
+          "source": "commons",
+          "error": "commons.wikimedia.org answered 429 for https://commons.wikimedia.org/w/api.php?action=query&format=json&list=search&srnamespace=6&srlimit=5&srsearch=Water%20Lilies%20Claude%20Monet%20filetype%3Abitmap"
+        }
+      ]
+    },
+    {
+      "id": "painting:woman-parasol",
+      "title": "Woman with a Parasol",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Claude_Monet_-_Woman_with_a_Parasol_-_Madame_Monet_and_Her_Son_-_Google_Art_Project.jpg/1280px-Claude_Monet_-_Woman_with_a_Parasol_-_Madame_Monet_and_Her_Son_-_Google_Art_Project.jpg",
+      "flags": [
+        "huge"
+      ],
+      "status": 200,
+      "contentType": "image/jpeg",
+      "bytes": 726096,
+      "width": 1280,
+      "height": 1590,
+      "ratioOff": 0.6,
+      "suggestions": [],
+      "searchErrors": [
+        {
+          "source": "met",
+          "error": "collectionapi.metmuseum.org answered 410 for https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&isPublicDomain=true&q=Woman%20with%20a%20Parasol%20Claude%20Monet"
+        },
+        {
+          "source": "aic",
+          "error": "api.artic.edu answered 403 for https://api.artic.edu/api/v1/artworks/search?q=Woman%20with%20a%20Parasol%20Claude%20Monet&limit=5&fields=id,title,artist_display,artist_title,date_display,medium_display,dimensions,dimensions_detail,image_id,thumbnail,is_public_domain,credit_line,description,short_description,place_of_origin,classification_title,style_title,subject_titles,term_titles,api_link"
+        },
+        {
+          "source": "smithsonian",
+          "error": "Smithsonian needs a free key: get one at https://api.data.gov/signup/ and set SI_API_KEY"
+        },
+        {
+          "source": "rijks",
+          "error": "Rijksmuseum needs a free key: set RIJKS_API_KEY (see docs/CONTENT.md)"
+        },
+        {
+          "source": "commons",
+          "error": "commons.wikimedia.org answered 429 for https://commons.wikimedia.org/w/api.php?action=query&format=json&list=search&srnamespace=6&srlimit=5&srsearch=Woman%20with%20a%20Parasol%20Claude%20Monet%20filetype%3Abitmap"
+        }
+      ]
+    },
+    {
+      "id": "painting:sunflowers",
+      "title": "Sunflowers",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Vincent_Willem_van_Gogh_127.jpg/1280px-Vincent_Willem_van_Gogh_127.jpg",
+      "flags": [
+        "huge"
+      ],
+      "status": 200,
+      "contentType": "image/jpeg",
+      "bytes": 738875,
+      "width": 1280,
+      "height": 1615,
+      "ratioOff": 0.1,
+      "suggestions": [],
+      "searchErrors": [
+        {
+          "source": "met",
+          "error": "collectionapi.metmuseum.org answered 410 for https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&isPublicDomain=true&q=Sunflowers%20Vincent%20van%20Gogh"
+        },
+        {
+          "source": "aic",
+          "error": "api.artic.edu answered 403 for https://api.artic.edu/api/v1/artworks/search?q=Sunflowers%20Vincent%20van%20Gogh&limit=5&fields=id,title,artist_display,artist_title,date_display,medium_display,dimensions,dimensions_detail,image_id,thumbnail,is_public_domain,credit_line,description,short_description,place_of_origin,classification_title,style_title,subject_titles,term_titles,api_link"
+        },
+        {
+          "source": "smithsonian",
+          "error": "Smithsonian needs a free key: get one at https://api.data.gov/signup/ and set SI_API_KEY"
+        },
+        {
+          "source": "rijks",
+          "error": "Rijksmuseum needs a free key: set RIJKS_API_KEY (see docs/CONTENT.md)"
+        },
+        {
+          "source": "commons",
+          "error": "commons.wikimedia.org answered 429 for https://commons.wikimedia.org/w/api.php?action=query&format=json&list=search&srnamespace=6&srlimit=5&srsearch=Sunflowers%20Vincent%20van%20Gogh%20filetype%3Abitmap"
+        }
+      ]
+    },
+    {
+      "id": "painting:wheatfield-crows",
+      "title": "Wheatfield with Crows",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Vincent_van_Gogh_-_Wheatfield_with_crows_-_Google_Art_Project.jpg/1280px-Vincent_van_Gogh_-_Wheatfield_with_crows_-_Google_Art_Project.jpg",
+      "flags": [
+        "ratio"
+      ],
+      "status": 200,
+      "contentType": "image/jpeg",
+      "bytes": 343266,
+      "width": 1280,
+      "height": 609,
+      "ratioOff": 3,
+      "suggestions": [],
+      "searchErrors": [
+        {
+          "source": "met",
+          "error": "collectionapi.metmuseum.org answered 410 for https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&isPublicDomain=true&q=Wheatfield%20with%20Crows%20Vincent%20van%20Gogh"
+        },
+        {
+          "source": "aic",
+          "error": "api.artic.edu answered 403 for https://api.artic.edu/api/v1/artworks/search?q=Wheatfield%20with%20Crows%20Vincent%20van%20Gogh&limit=5&fields=id,title,artist_display,artist_title,date_display,medium_display,dimensions,dimensions_detail,image_id,thumbnail,is_public_domain,credit_line,description,short_description,place_of_origin,classification_title,style_title,subject_titles,term_titles,api_link"
+        },
+        {
+          "source": "smithsonian",
+          "error": "Smithsonian needs a free key: get one at https://api.data.gov/signup/ and set SI_API_KEY"
+        },
+        {
+          "source": "rijks",
+          "error": "Rijksmuseum needs a free key: set RIJKS_API_KEY (see docs/CONTENT.md)"
+        },
+        {
+          "source": "commons",
+          "error": "commons.wikimedia.org answered 429 for https://commons.wikimedia.org/w/api.php?action=query&format=json&list=search&srnamespace=6&srlimit=5&srsearch=Wheatfield%20with%20Crows%20Vincent%20van%20Gogh%20filetype%3Abitmap"
+        }
+      ]
+    },
+    {
+      "id": "painting:vangogh-self",
+      "title": "Self-Portrait",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Vincent_van_Gogh_-_Self-Portrait_-_Google_Art_Project_(454045).jpg/1280px-Vincent_van_Gogh_-_Self-Portrait_-_Google_Art_Project_(454045).jpg",
+      "flags": [
+        "huge"
+      ],
+      "status": 200,
+      "contentType": "image/jpeg",
+      "bytes": 817315,
+      "width": 1280,
+      "height": 1618,
+      "ratioOff": 0.2,
+      "suggestions": [],
+      "searchErrors": [
+        {
+          "source": "met",
+          "error": "collectionapi.metmuseum.org answered 410 for https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&isPublicDomain=true&q=Self-Portrait%20Vincent%20van%20Gogh"
+        },
+        {
+          "source": "aic",
+          "error": "api.artic.edu answered 403 for https://api.artic.edu/api/v1/artworks/search?q=Self-Portrait%20Vincent%20van%20Gogh&limit=5&fields=id,title,artist_display,artist_title,date_display,medium_display,dimensions,dimensions_detail,image_id,thumbnail,is_public_domain,credit_line,description,short_description,place_of_origin,classification_title,style_title,subject_titles,term_titles,api_link"
+        },
+        {
+          "source": "smithsonian",
+          "error": "Smithsonian needs a free key: get one at https://api.data.gov/signup/ and set SI_API_KEY"
+        },
+        {
+          "source": "rijks",
+          "error": "Rijksmuseum needs a free key: set RIJKS_API_KEY (see docs/CONTENT.md)"
+        },
+        {
+          "source": "commons",
+          "error": "commons.wikimedia.org answered 429 for https://commons.wikimedia.org/w/api.php?action=query&format=json&list=search&srnamespace=6&srlimit=5&srsearch=Self-Portrait%20Vincent%20van%20Gogh%20filetype%3Abitmap"
+        }
+      ]
+    },
+    {
+      "id": "painting:anatomy-lesson",
+      "title": "The Anatomy Lesson of Dr Nicolaes Tulp",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Rembrandt_-_The_Anatomy_Lesson_of_Dr_Nicolaes_Tulp.jpg/1280px-Rembrandt_-_The_Anatomy_Lesson_of_Dr_Nicolaes_Tulp.jpg",
+      "flags": [
+        "ratio"
+      ],
+      "status": 200,
+      "contentType": "image/jpeg",
+      "bytes": 231529,
+      "width": 1280,
+      "height": 964,
+      "ratioOff": 4,
+      "suggestions": [],
+      "searchErrors": [
+        {
+          "source": "met",
+          "error": "collectionapi.metmuseum.org answered 410 for https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&isPublicDomain=true&q=The%20Anatomy%20Lesson%20of%20Dr%20Nicolaes%20Tulp%20Rembrandt"
+        },
+        {
+          "source": "aic",
+          "error": "api.artic.edu answered 403 for https://api.artic.edu/api/v1/artworks/search?q=The%20Anatomy%20Lesson%20of%20Dr%20Nicolaes%20Tulp%20Rembrandt&limit=5&fields=id,title,artist_display,artist_title,date_display,medium_display,dimensions,dimensions_detail,image_id,thumbnail,is_public_domain,credit_line,description,short_description,place_of_origin,classification_title,style_title,subject_titles,term_titles,api_link"
+        },
+        {
+          "source": "smithsonian",
+          "error": "Smithsonian needs a free key: get one at https://api.data.gov/signup/ and set SI_API_KEY"
+        },
+        {
+          "source": "rijks",
+          "error": "Rijksmuseum needs a free key: set RIJKS_API_KEY (see docs/CONTENT.md)"
+        },
+        {
+          "source": "commons",
+          "error": "commons.wikimedia.org answered 429 for https://commons.wikimedia.org/w/api.php?action=query&format=json&list=search&srnamespace=6&srlimit=5&srsearch=The%20Anatomy%20Lesson%20of%20Dr%20Nicolaes%20Tulp%20Rembrandt%20filetype%3Abitmap"
+        }
+      ]
+    },
+    {
+      "id": "painting:emmaus",
+      "title": "Supper at Emmaus",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Caravaggio_-_Cena_in_Emmaus.jpg/1280px-Caravaggio_-_Cena_in_Emmaus.jpg",
+      "flags": [
+        "ratio"
+      ],
+      "status": 200,
+      "contentType": "image/jpeg",
+      "bytes": 321049,
+      "width": 1280,
+      "height": 1067,
+      "ratioOff": 13.7,
+      "suggestions": [],
+      "searchErrors": [
+        {
+          "source": "met",
+          "error": "collectionapi.metmuseum.org answered 410 for https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&isPublicDomain=true&q=Supper%20at%20Emmaus%20Caravaggio"
+        },
+        {
+          "source": "aic",
+          "error": "api.artic.edu answered 403 for https://api.artic.edu/api/v1/artworks/search?q=Supper%20at%20Emmaus%20Caravaggio&limit=5&fields=id,title,artist_display,artist_title,date_display,medium_display,dimensions,dimensions_detail,image_id,thumbnail,is_public_domain,credit_line,description,short_description,place_of_origin,classification_title,style_title,subject_titles,term_titles,api_link"
+        },
+        {
+          "source": "smithsonian",
+          "error": "Smithsonian needs a free key: get one at https://api.data.gov/signup/ and set SI_API_KEY"
+        },
+        {
+          "source": "rijks",
+          "error": "Rijksmuseum needs a free key: set RIJKS_API_KEY (see docs/CONTENT.md)"
+        },
+        {
+          "source": "commons",
+          "error": "commons.wikimedia.org answered 429 for https://commons.wikimedia.org/w/api.php?action=query&format=json&list=search&srnamespace=6&srlimit=5&srsearch=Supper%20at%20Emmaus%20Caravaggio%20filetype%3Abitmap"
+        }
+      ]
+    },
+    {
+      "id": "painting:creation-adam",
+      "title": "The Creation of Adam",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Michelangelo_-_Creation_of_Adam_(cropped).jpg/1280px-Michelangelo_-_Creation_of_Adam_(cropped).jpg",
+      "flags": [
+        "ratio"
+      ],
+      "status": 200,
+      "contentType": "image/jpeg",
+      "bytes": 226807,
+      "width": 1280,
+      "height": 581,
+      "ratioOff": 4.9,
+      "suggestions": [],
+      "searchErrors": [
+        {
+          "source": "met",
+          "error": "collectionapi.metmuseum.org answered 410 for https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&isPublicDomain=true&q=The%20Creation%20of%20Adam%20Michelangelo"
+        },
+        {
+          "source": "aic",
+          "error": "api.artic.edu answered 403 for https://api.artic.edu/api/v1/artworks/search?q=The%20Creation%20of%20Adam%20Michelangelo&limit=5&fields=id,title,artist_display,artist_title,date_display,medium_display,dimensions,dimensions_detail,image_id,thumbnail,is_public_domain,credit_line,description,short_description,place_of_origin,classification_title,style_title,subject_titles,term_titles,api_link"
+        },
+        {
+          "source": "smithsonian",
+          "error": "Smithsonian needs a free key: get one at https://api.data.gov/signup/ and set SI_API_KEY"
+        },
+        {
+          "source": "rijks",
+          "error": "Rijksmuseum needs a free key: set RIJKS_API_KEY (see docs/CONTENT.md)"
+        },
+        {
+          "source": "commons",
+          "error": "commons.wikimedia.org answered 429 for https://commons.wikimedia.org/w/api.php?action=query&format=json&list=search&srnamespace=6&srlimit=5&srsearch=The%20Creation%20of%20Adam%20Michelangelo%20filetype%3Abitmap"
+        }
+      ]
+    },
+    {
+      "id": "painting:school-athens",
+      "title": "The School of Athens",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/%22The_School_of_Athens%22_by_Raffaello_Sanzio_da_Urbino.jpg/1280px-%22The_School_of_Athens%22_by_Raffaello_Sanzio_da_Urbino.jpg",
+      "flags": [
+        "ratio"
+      ],
+      "status": 200,
+      "contentType": "image/jpeg",
+      "bytes": 500058,
+      "width": 1280,
+      "height": 993,
+      "ratioOff": 16.3,
+      "suggestions": [],
+      "searchErrors": [
+        {
+          "source": "met",
+          "error": "collectionapi.metmuseum.org answered 410 for https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&isPublicDomain=true&q=The%20School%20of%20Athens%20Raphael"
+        },
+        {
+          "source": "aic",
+          "error": "api.artic.edu answered 403 for https://api.artic.edu/api/v1/artworks/search?q=The%20School%20of%20Athens%20Raphael&limit=5&fields=id,title,artist_display,artist_title,date_display,medium_display,dimensions,dimensions_detail,image_id,thumbnail,is_public_domain,credit_line,description,short_description,place_of_origin,classification_title,style_title,subject_titles,term_titles,api_link"
+        },
+        {
+          "source": "smithsonian",
+          "error": "Smithsonian needs a free key: get one at https://api.data.gov/signup/ and set SI_API_KEY"
+        },
+        {
+          "source": "rijks",
+          "error": "Rijksmuseum needs a free key: set RIJKS_API_KEY (see docs/CONTENT.md)"
+        },
+        {
+          "source": "commons",
+          "error": "commons.wikimedia.org answered 429 for https://commons.wikimedia.org/w/api.php?action=query&format=json&list=search&srnamespace=6&srlimit=5&srsearch=The%20School%20of%20Athens%20Raphael%20filetype%3Abitmap"
+        }
+      ]
+    },
+    {
+      "id": "painting:ballet-class",
+      "title": "The Ballet Class",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Edgar_Degas_-_The_Ballet_Class_-_Google_Art_Project.jpg/1280px-Edgar_Degas_-_The_Ballet_Class_-_Google_Art_Project.jpg",
+      "flags": [
+        "huge"
+      ],
+      "status": 200,
+      "contentType": "image/jpeg",
+      "bytes": 620380,
+      "width": 1280,
+      "height": 1470,
+      "ratioOff": 1.3,
+      "suggestions": [],
+      "searchErrors": [
+        {
+          "source": "met",
+          "error": "collectionapi.metmuseum.org answered 410 for https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&isPublicDomain=true&q=The%20Ballet%20Class%20Edgar%20Degas"
+        },
+        {
+          "source": "aic",
+          "error": "api.artic.edu answered 403 for https://api.artic.edu/api/v1/artworks/search?q=The%20Ballet%20Class%20Edgar%20Degas&limit=5&fields=id,title,artist_display,artist_title,date_display,medium_display,dimensions,dimensions_detail,image_id,thumbnail,is_public_domain,credit_line,description,short_description,place_of_origin,classification_title,style_title,subject_titles,term_titles,api_link"
+        },
+        {
+          "source": "smithsonian",
+          "error": "Smithsonian needs a free key: get one at https://api.data.gov/signup/ and set SI_API_KEY"
+        },
+        {
+          "source": "rijks",
+          "error": "Rijksmuseum needs a free key: set RIJKS_API_KEY (see docs/CONTENT.md)"
+        },
+        {
+          "source": "commons",
+          "error": "commons.wikimedia.org answered 429 for https://commons.wikimedia.org/w/api.php?action=query&format=json&list=search&srnamespace=6&srlimit=5&srsearch=The%20Ballet%20Class%20Edgar%20Degas%20filetype%3Abitmap"
+        }
+      ]
+    },
+    {
+      "id": "painting:childs-bath",
+      "title": "The Child’s Bath",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Mary_Cassatt_-_The_Child%27s_Bath_-_Google_Art_Project.jpg/1280px-Mary_Cassatt_-_The_Child%27s_Bath_-_Google_Art_Project.jpg",
+      "flags": [
+        "huge"
+      ],
+      "status": 200,
+      "contentType": "image/jpeg",
+      "bytes": 645659,
+      "width": 1280,
+      "height": 1953,
+      "ratioOff": 0.7,
+      "suggestions": [],
+      "searchErrors": [
+        {
+          "source": "met",
+          "error": "collectionapi.metmuseum.org answered 410 for https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&isPublicDomain=true&q=The%20Child%E2%80%99s%20Bath%20Mary%20Cassatt"
+        },
+        {
+          "source": "aic",
+          "error": "api.artic.edu answered 403 for https://api.artic.edu/api/v1/artworks/search?q=The%20Child%E2%80%99s%20Bath%20Mary%20Cassatt&limit=5&fields=id,title,artist_display,artist_title,date_display,medium_display,dimensions,dimensions_detail,image_id,thumbnail,is_public_domain,credit_line,description,short_description,place_of_origin,classification_title,style_title,subject_titles,term_titles,api_link"
+        },
+        {
+          "source": "smithsonian",
+          "error": "Smithsonian needs a free key: get one at https://api.data.gov/signup/ and set SI_API_KEY"
+        },
+        {
+          "source": "rijks",
+          "error": "Rijksmuseum needs a free key: set RIJKS_API_KEY (see docs/CONTENT.md)"
+        },
+        {
+          "source": "commons",
+          "error": "commons.wikimedia.org answered 429 for https://commons.wikimedia.org/w/api.php?action=query&format=json&list=search&srnamespace=6&srlimit=5&srsearch=The%20Child%E2%80%99s%20Bath%20Mary%20Cassatt%20filetype%3Abitmap"
+        }
+      ]
+    },
+    {
+      "id": "painting:temeraire",
+      "title": "The Fighting Temeraire",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/J._M._W._Turner_-_The_Fighting_T%C3%A9m%C3%A9raire_tugged_to_her_last_Berth_to_be_broken.jpg/1280px-J._M._W._Turner_-_The_Fighting_T%C3%A9m%C3%A9raire_tugged_to_her_last_Berth_to_be_broken.jpg",
+      "flags": [
+        "broken"
+      ],
+      "status": 404,
+      "contentType": "text/html; charset=utf-8",
+      "bytes": 1928,
+      "note": "HTTP 404",
+      "suggestions": [],
+      "searchErrors": [
+        {
+          "source": "met",
+          "error": "collectionapi.metmuseum.org answered 410 for https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&isPublicDomain=true&q=The%20Fighting%20Temeraire%20J.%20M.%20W.%20Turner"
+        },
+        {
+          "source": "aic",
+          "error": "api.artic.edu answered 403 for https://api.artic.edu/api/v1/artworks/search?q=The%20Fighting%20Temeraire%20J.%20M.%20W.%20Turner&limit=5&fields=id,title,artist_display,artist_title,date_display,medium_display,dimensions,dimensions_detail,image_id,thumbnail,is_public_domain,credit_line,description,short_description,place_of_origin,classification_title,style_title,subject_titles,term_titles,api_link"
+        },
+        {
+          "source": "smithsonian",
+          "error": "Smithsonian needs a free key: get one at https://api.data.gov/signup/ and set SI_API_KEY"
+        },
+        {
+          "source": "rijks",
+          "error": "Rijksmuseum needs a free key: set RIJKS_API_KEY (see docs/CONTENT.md)"
+        },
+        {
+          "source": "commons",
+          "error": "commons.wikimedia.org answered 429 for https://commons.wikimedia.org/w/api.php?action=query&format=json&list=search&srnamespace=6&srlimit=5&srsearch=The%20Fighting%20Temeraire%20J.%20M.%20W.%20Turner%20filetype%3Abitmap"
+        }
+      ]
+    },
+    {
+      "id": "painting:crossing-delaware",
+      "title": "Washington Crossing the Delaware",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Emanuel_Leutze_(American,_Schw%C3%A4bisch_Gm%C3%BCnd_1816%E2%80%931882_D%C3%BCsseldorf)_-_Washington_Crossing_the_Delaware_-_Google_Art_Project.jpg/1280px-Emanuel_Leutze_(American,_Schw%C3%A4bisch_Gm%C3%BCnd_1816%E2%80%931882_D%C3%BCsseldorf)_-_Washington_Crossing_the_Delaware_-_Google_Art_Project.jpg",
+      "flags": [
+        "broken"
+      ],
+      "status": 404,
+      "contentType": "text/html; charset=utf-8",
+      "bytes": 1929,
+      "note": "HTTP 404",
+      "suggestions": [],
+      "searchErrors": [
+        {
+          "source": "met",
+          "error": "collectionapi.metmuseum.org answered 410 for https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&isPublicDomain=true&q=Washington%20Crossing%20the%20Delaware%20Emanuel%20Leutze"
+        },
+        {
+          "source": "aic",
+          "error": "api.artic.edu answered 403 for https://api.artic.edu/api/v1/artworks/search?q=Washington%20Crossing%20the%20Delaware%20Emanuel%20Leutze&limit=5&fields=id,title,artist_display,artist_title,date_display,medium_display,dimensions,dimensions_detail,image_id,thumbnail,is_public_domain,credit_line,description,short_description,place_of_origin,classification_title,style_title,subject_titles,term_titles,api_link"
+        },
+        {
+          "source": "smithsonian",
+          "error": "Smithsonian needs a free key: get one at https://api.data.gov/signup/ and set SI_API_KEY"
+        },
+        {
+          "source": "rijks",
+          "error": "Rijksmuseum needs a free key: set RIJKS_API_KEY (see docs/CONTENT.md)"
+        },
+        {
+          "source": "commons",
+          "error": "commons.wikimedia.org answered 429 for https://commons.wikimedia.org/w/api.php?action=query&format=json&list=search&srnamespace=6&srlimit=5&srsearch=Washington%20Crossing%20the%20Delaware%20Emanuel%20Leutze%20filetype%3Abitmap"
+        }
+      ]
+    },
+    {
+      "id": "painting:swing",
+      "title": "The Swing",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Fragonard,_The_Swing.jpg/1280px-Fragonard,_The_Swing.jpg",
+      "flags": [
+        "huge"
+      ],
+      "status": 200,
+      "contentType": "image/jpeg",
+      "bytes": 683079,
+      "width": 1280,
+      "height": 1607,
+      "ratioOff": 0.5,
+      "suggestions": [],
+      "searchErrors": [
+        {
+          "source": "met",
+          "error": "collectionapi.metmuseum.org answered 410 for https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&isPublicDomain=true&q=The%20Swing%20Jean-Honor%C3%A9%20Fragonard"
+        },
+        {
+          "source": "aic",
+          "error": "api.artic.edu answered 403 for https://api.artic.edu/api/v1/artworks/search?q=The%20Swing%20Jean-Honor%C3%A9%20Fragonard&limit=5&fields=id,title,artist_display,artist_title,date_display,medium_display,dimensions,dimensions_detail,image_id,thumbnail,is_public_domain,credit_line,description,short_description,place_of_origin,classification_title,style_title,subject_titles,term_titles,api_link"
+        },
+        {
+          "source": "smithsonian",
+          "error": "Smithsonian needs a free key: get one at https://api.data.gov/signup/ and set SI_API_KEY"
+        },
+        {
+          "source": "rijks",
+          "error": "Rijksmuseum needs a free key: set RIJKS_API_KEY (see docs/CONTENT.md)"
+        },
+        {
+          "source": "commons",
+          "error": "commons.wikimedia.org answered 429 for https://commons.wikimedia.org/w/api.php?action=query&format=json&list=search&srnamespace=6&srlimit=5&srsearch=The%20Swing%20Jean-Honor%C3%A9%20Fragonard%20filetype%3Abitmap"
+        }
+      ]
+    }
+  ]
+}
