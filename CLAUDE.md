@@ -1,6 +1,6 @@
 # Curation: rules for working on this repo
 
-Read docs/VISION.md first: every feature should serve it.
+Read docs/VISION.md first: every feature should serve it. Then docs/HANDOFF.md for where things stand and how the user likes to work.
 
 ## Workflow
 - After pushing, open a PR and **merge it yourself, every time**. Then reset the
