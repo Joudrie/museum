@@ -1,3 +1,5 @@
+import { hasTiles } from './mapformat.js';
+
 // Where to sail: the home island, the islands that ship with the game, and
 // every island drawn in the map builder on this phone.
 const el = document.createElement('div');
@@ -37,7 +39,7 @@ export function builderIslands() {
   try {
     const all = JSON.parse(localStorage.getItem('curation.mapbuilder.maps') || '{}');
     return Object.values(all)
-      .filter((m) => m.kind === 'island' && (m.objects?.length || Object.keys(m.tiles || {}).length))
+      .filter((m) => m.kind === 'island' && (m.objects?.length || hasTiles(m)))
       .sort((a, b) => (b.saved || 0) - (a.saved || 0));
   } catch {
     return [];

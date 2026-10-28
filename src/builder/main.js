@@ -1,6 +1,6 @@
 // Map builder for phones: paint whole islands (terrain with automatic
 // shorelines, paths and pond banks, exactly as the game draws them) or rooms,
-// on a grid up to 300 × 300 tiles, then save a picture or a map file.
+// on a grid up to 700 × 700 tiles, then save a picture or a map file.
 // Layers, bottom to top: terrain corners (islands), a tile layer (ground and
 // floor tiles), and pieces standing on the map (trees, buildings, furniture).
 // Pieces come from the game's island tiles (src/tiles.js) and the room pieces
@@ -8,6 +8,7 @@
 import { buildTiles, T } from '../tiles.js';
 import { backup, backupsFor, latestBackup, keepStorage } from './vault.js';
 import recovered from './recovered.json';
+import { BIG_MAP, packCells, withTiles, hasTiles } from '../mapformat.js';
 
 const $ = (id) => document.getElementById(id);
 const canvas = $('canvas');
@@ -16,7 +17,7 @@ const STORE = 'curation.mapbuilder.maps';
 const CURRENT = 'curation.mapbuilder.current';
 const VIEW = 'curation.mapbuilder.view';
 const OVERLAY = 'curation.mapbuilder.overlay';
-const MAX = 300;
+const MAX = 700; // Wakefield is 451 x 552; the New map boxes stay at 300
 const C = 8; // cells per cached ground chunk
 const MATS = [
   { m: 2, name: 'Grass', color: '#5aa84e' },
@@ -595,13 +596,19 @@ function select(o) {
 function serialize() {
   const rows = [];
   for (let y = 0; y <= map.h; y++) rows.push(Array.from(map.corners.subarray(y * (map.w + 1), (y + 1) * (map.w + 1))).join(''));
-  const tiles = {};
-  map.tiles.forEach((r, i) => r && (tiles[`${i % map.w},${Math.floor(i / map.w)}`] = r));
-  Object.assign(tiles, map.keep?.tiles);
+  let tiles = {};
+  let tileRows;
+  // big maps store the tile layer packed (see mapformat.js), small ones as a plain list
+  if (map.w * map.h >= BIG_MAP) tileRows = packCells(map.tiles, map.w, map.h, map.keep?.tiles);
+  if (!tileRows) {
+    map.tiles.forEach((r, i) => r && (tiles[`${i % map.w},${Math.floor(i / map.w)}`] = r));
+    Object.assign(tiles, map.keep?.tiles);
+  }
   const objects = sorted().map((o) => ({ ref: o.ref, x: o.x, y: o.y, ...(o.flip ? { flip: true } : {}) }));
-  return { format: 'curation-map', version: 2, tile: T, name: map.name, kind: map.kind, w: map.w, h: map.h, corners: map.kind === 'island' ? rows : [], tiles, objects: objects.concat(map.keep?.objects || []), ...(map.overlay ? { overlay: map.overlay } : {}) };
+  return { format: 'curation-map', version: 2, tile: T, name: map.name, kind: map.kind, w: map.w, h: map.h, corners: map.kind === 'island' ? rows : [], tiles, ...(tileRows ? { tileRows } : {}), objects: objects.concat(map.keep?.objects || []), ...(map.overlay ? { overlay: map.overlay } : {}) };
 }
 function deserialize(d) {
+  d = withTiles(d);
   // older room files from the first builder
   if (d.format === 'curation-room') {
     const w = d.w;
@@ -1216,17 +1223,18 @@ async function boot() {
       if (!all[cur] || isBlank(all[cur])) cur = recovered.name;
     }
   }
-  // Wakefield, Massachusetts, built from OpenStreetMap, with its real map to lay over it (added once)
-  if (!localStorage.getItem('curation.mapbuilder.wakefield1')) {
+  // Wakefield, Massachusetts, built from OpenStreetMap, with its real map to lay over it (added once;
+  // the first, coarse version is swapped out unless it was edited)
+  if (!localStorage.getItem('curation.mapbuilder.wakefield2')) {
     try {
-      const w = await (await fetch('./maps/wakefield.json')).json();
-      if (!all[w.name]) {
-        all[w.name] = { ...w, saved: 1 };
-        localStorage.setItem(STORE, JSON.stringify(all));
-      }
-      localStorage.setItem('curation.mapbuilder.wakefield1', '1');
+      const w = await (await fetch('./maps/wakefield-detail.json')).json();
+      const old = all[w.name];
+      if (old && old.saved > 1 && !old.overlay?.src.includes('detail')) all[`${w.name} (detailed)`] = { ...w, name: `${w.name} (detailed)`, saved: 1 };
+      else all[w.name] = { ...w, saved: 1 };
+      localStorage.setItem(STORE, JSON.stringify(all));
+      localStorage.setItem('curation.mapbuilder.wakefield2', '1');
     } catch {
-      // offline: try again next time
+      // offline or storage full: try again next time
     }
   }
   let data = all[cur];
@@ -1286,7 +1294,7 @@ $('resume-go').onclick = () => ($('resume').hidden = true);
 $('resume').onclick = (e) => e.target === $('resume') && ($('resume').hidden = true);
 
 function isBlank(d) {
-  return !(d.objects || []).length && !Object.keys(d.tiles || {}).length && (d.w || 0) <= 80;
+  return !(d.objects || []).length && !hasTiles(d) && (d.w || 0) <= 80;
 }
 
 window.__builder = { get map() { return map; }, serialize, deserialize, get view() { return view; } }; // for tests

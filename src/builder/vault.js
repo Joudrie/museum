@@ -43,6 +43,7 @@ export async function backup(data) {
     req.onsuccess = () => {
       if (rec.id === undefined) last = { name: data.name, id: req.result, at: data.saved };
     };
+    if (rec.id !== undefined) return; // just refreshed the latest version: nothing new to trim (big maps are heavy to list)
     const mine = await all(s, 'name', data.name);
     mine.sort((a, b) => b.saved - a.saved).slice(KEEP).forEach((v) => s.delete(v.id));
   } catch {

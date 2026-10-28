@@ -48,3 +48,8 @@ Read docs/VISION.md first: every feature should serve it. Then docs/HANDOFF.md f
 - **Never use horizontal scrolling on this page.**
 - Horizontal rooms: enter through a door on the left end wall; the end piece is
   the right end. Vertical rooms: enter at the bottom; the end piece is the top.
+
+## Wakefield, MA (the user's hometown map)
+- Built from real map data (tools/wakefield_map.py). **Every road goes in, even the smallest streets,
+  and no road is narrower than two tiles** so the character can always walk it. A huge map is fine.
+- The overlay button (builder and game) lays the real street map over the tiles so the user can fix blocks by hand.
