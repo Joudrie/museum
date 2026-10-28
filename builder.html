@@ -28,6 +28,7 @@
     </nav>
     <div id="selbar" hidden>
       <span id="sel-text">Selected</span>
+      <button id="sel-turn" hidden>⟳ Turn</button>
       <button id="sel-flip">Flip</button>
       <button id="sel-dup">Copy</button>
       <button id="sel-del">Delete</button>
@@ -38,6 +39,7 @@
       <div id="chosen">
         <canvas id="chosen-pic" width="48" height="48"></canvas>
         <div><b id="chosen-name">Pick something to paint</b><small id="chosen-meta">Open a list below</small></div>
+        <button id="chosen-turn" hidden aria-label="Turn this piece">⟳</button>
         <label class="brush">Brush <select id="brush"><option>1</option><option>2</option><option>3</option><option>5</option></select></label>
       </div>
       <div id="palette"></div>
