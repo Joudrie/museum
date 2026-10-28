@@ -81,7 +81,7 @@
 
 ## Content pipeline ✅ (run live 2026-10-28)
 - Adapters, image checker, claim-checked drafts, review report, publish step (`docs/CONTENT.md` has the live results).
-- Image check of the 49 paintings: 3 broken links (horse-fair, temeraire, crossing-delaware), 15 over 600 KB, 11 with the wrong shape. Nothing swapped; list in `content/image-fixes.json`.
+- Image check of the 49 paintings: 3 broken links (horse-fair, temeraire, crossing-delaware), 13 over 600 KB, 8 with the wrong shape (none tiny). Nothing swapped; list in `content/image-fixes.json`.
 - 14 drafts waiting in `content/review/painting/` (rarity, hooks, a few wrong matches). None approved.
 - Still to do: Smithsonian and Rijksmuseum keys; AIC is behind a Cloudflare challenge.
 
