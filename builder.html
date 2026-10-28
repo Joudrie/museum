@@ -16,7 +16,14 @@
       <button id="redo" aria-label="Redo">↷</button>
     </header>
 
-    <main id="view"><canvas id="canvas"></canvas><div id="zoom-chip"></div></main>
+    <main id="view">
+      <canvas id="canvas"></canvas>
+      <div id="overlay-ctl" hidden>
+        <button id="overlay-btn" aria-label="Show the real map over this one" aria-pressed="false">🗺 Map</button>
+        <input id="overlay-alpha" type="range" min="10" max="100" value="55" aria-label="Overlay strength" hidden />
+      </div>
+      <div id="zoom-chip"></div>
+    </main>
 
     <nav id="tools" aria-label="Tools">
       <button data-tool="paint" class="on">Paint</button>

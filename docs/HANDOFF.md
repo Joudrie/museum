@@ -120,6 +120,17 @@ Scenes (`src/main.js`):
   49 paintings** (no network here); `content/batches/first-batch.json` (12 works, 9+ regions) is waiting to be built.
 - Test: `node tests/content.cjs` (no browser, no network).
 
+### Wakefield, MA (the user's hometown, from real map data)
+- `tools/wakefield_map.py` turns OpenStreetMap data into `public/maps/wakefield.json` (245×300, ~22 m a tile, because the builder
+  caps at 300) and `public/maps/wakefield-overlay.png` (a labelled street map that lines up with the grid).
+  `--fetch DIR` downloads (the `overpass.openstreetmap.fr` mirror works from the sandbox; the main Overpass host does not), then `python3 tools/wakefield_map.py DIR`.
+- Outside the town line is sea, inside is grass, lakes are pond, streets are `t:cobble` (dirt for tracks), rail is `t:rock_1`,
+  and buildings are `t:brick` (new tile) where they cover 35% of a tile. Interstates are two tiles wide.
+- A map may carry `overlay: {src}`. The builder shows a 🗺 Map button (toggle plus strength slider) and the game a 🗺 button
+  (off, faint, strong). Builder seeds Wakefield once into My maps; the boat also lists it before the builder was ever opened.
+- Next: finer scale (raise `MAX` in the builder, check game speed on a phone), tuning which houses show, landmarks and
+  named buildings, a spawn on the Town Common.
+
 ### Gotchas we hit
 - **Phaser reuses the previous scene data** if you call `scene.start('island')` with no data.
   Always pass data explicitly, e.g. `{ map: 'main' }`. Leaving the museum once dropped you on

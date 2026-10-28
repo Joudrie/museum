@@ -171,6 +171,18 @@ function cobblePixel() {
   };
 }
 
+function brickPixel() {
+  // red bricks, 8 x 4 px, every other course shifted half a brick
+  const REDS = ['#9c4a3a', '#a85644', '#8f4034', '#b0604c'].map(hex);
+  const MORTAR = hex('#d9cfc0');
+  return (x, y) => {
+    const row = Math.floor(y / 4);
+    const ox = row % 2 ? 4 : 0;
+    if (y % 4 === 3 || (x + ox) % 8 === 7) return MORTAR;
+    return REDS[Math.floor(hash(Math.floor((x + ox) / 8), row, 97) * REDS.length)];
+  };
+}
+
 // ---------- Water ----------
 // Deep water: soft bands that drift, and little sparkles that come and go.
 function waterPixel(frame, pal = WATER) {
@@ -267,6 +279,7 @@ export function buildTiles() {
   add('rock_1', pixels(T, T, stonePixel(0)), { group: 'Ground', label: 'Rock ground', walk: 'walk' });
   add('rock_2', pixels(T, T, stonePixel(1)), { group: 'Ground', label: 'Cave floor', walk: 'walk' });
   add('cobble', pixels(T, T, cobblePixel()), { group: 'Ground', label: 'Cobblestone', walk: 'walk' });
+  add('brick', pixels(T, T, brickPixel()), { group: 'Ground', label: 'Brick', walk: 'walk' });
   add('snow', pixels(T, T, (x, y) => {
     const n = fbm(x, y, 200);
     return hash(x, y, 201) > 0.99 ? SNOW[0] : n < 0.4 ? SNOW[1] : n < 0.75 ? SNOW[2] : SNOW[3];
