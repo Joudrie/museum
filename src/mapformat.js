@@ -60,3 +60,66 @@ export function unpackTiles(p) {
 // a map file with its tile layer as a plain dictionary, whichever way it was stored
 export const withTiles = (d) => (d?.tileRows ? { ...d, tiles: { ...unpackTiles(d.tileRows), ...d.tiles } } : d);
 export const hasTiles = (d) => !!d?.tileRows || Object.keys(d?.tiles || {}).length > 0;
+
+// ---------- angled borders ----------
+// A map may have `border: { poly: { "x,y": [[x0,y0,x1,y1,...], ...] } }`: tiles the map's edge
+// (the town line) cuts through. Each lists the land part as polygons in pixels inside the tile, so the
+// edge is a straight line at any angle instead of a stair of whole tiles. Water fills the rest.
+export const edgePolys = (border, w) => {
+  const m = new Map();
+  Object.entries(border?.poly || {}).forEach(([k, polys]) => {
+    const [x, y] = k.split(',').map(Number);
+    m.set(y * w + x, polys);
+  });
+  return m;
+};
+
+// is the point (px, py), in pixels inside the tile, on the land part?
+export const onLand = (polys, px, py) => {
+  let inside = false;
+  polys.forEach((p) => {
+    for (let i = 0, j = p.length - 2; i < p.length; j = i, i += 2) {
+      const [xi, yi, xj, yj] = [p[i], p[i + 1], p[j], p[j + 1]];
+      if (yi > py !== yj > py && px < ((xj - xi) * (py - yi)) / (yj - yi) + xi) inside = !inside;
+    }
+  });
+  return inside;
+};
+
+// Draw a cut tile at (x, y): water, a beach along the line, then the land clipped to the line.
+export function drawEdgeCell(ctx, polys, x, y, size, water, drawLand) {
+  ctx.drawImage(water, x, y);
+  if (!polys.length) return;
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(x, y, size, size);
+  ctx.clip();
+  ctx.strokeStyle = '#e2c68a';
+  ctx.lineWidth = 10;
+  ctx.lineCap = 'butt';
+  ctx.beginPath();
+  polys.forEach((p) => {
+    for (let i = 0; i < p.length; i += 2) {
+      const [ax, ay, bx, by] = [p[i], p[i + 1], p[(i + 2) % p.length], p[(i + 3) % p.length]];
+      const onSide = (ax === bx && (ax === 0 || ax === size)) || (ay === by && (ay === 0 || ay === size)); // along the tile's own edge
+      if (!onSide) {
+        // run a little past both ends (the tile clips it) so strokes of neighbouring tiles meet with no notch
+        const len = Math.hypot(bx - ax, by - ay) || 1;
+        const [ux, uy] = [((bx - ax) / len) * 8, ((by - ay) / len) * 8];
+        ctx.moveTo(x + ax - ux, y + ay - uy);
+        ctx.lineTo(x + bx + ux, y + by + uy);
+      }
+    }
+  });
+  ctx.stroke();
+  ctx.restore();
+  ctx.save();
+  ctx.beginPath();
+  polys.forEach((p) => {
+    p.forEach((v, i) => (i % 2 ? null : (i ? ctx.lineTo(x + v, y + p[i + 1]) : ctx.moveTo(x + v, y + p[i + 1]))));
+    ctx.closePath();
+  });
+  ctx.clip();
+  drawLand();
+  ctx.restore();
+}

@@ -133,6 +133,10 @@ Scenes (`src/main.js`):
   (`tileRows`, run-length rows; `src/mapformat.js`, read by the builder, the game and the boat list) so they fit phone storage
   (Wakefield is ~300 KB). The game draws only the ground chunks near the player (`streamChunks`) and drops far ones, snow is made per
   chunk, and the night-light texture is capped near a megapixel. Wakefield: loads in ~3 s, ~45 MB heap, ~20–30 chunks alive.
+- **Angled borders:** the town line is straight, not a stair of tiles. The generator cuts each tile the line crosses along
+  the real line and stores the land part as polygons (`border.poly`, ~2,300 tiles). Builder and game clip land to them
+  (`drawEdgeCell`), draw a beach along the line, and in the game the character walks only on the land side (`onLand` in `free`).
+  Roads, bricks and ponds are still whole tiles; cutting their edges along the real lines is the obvious next step.
 - A map may carry `overlay: {src}`. Builder: 🗺 Map button (toggle plus strength slider). Game: 🗺 button (off, faint, strong).
   The builder seeds Wakefield once into My maps (flag `wakefield2`; the coarse first version is replaced unless it was edited);
   the boat also lists it before the builder was ever opened.

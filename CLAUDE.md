@@ -52,4 +52,6 @@ Read docs/VISION.md first: every feature should serve it. Then docs/HANDOFF.md f
 ## Wakefield, MA (the user's hometown map)
 - Built from real map data (tools/wakefield_map.py). **Every road goes in, even the smallest streets,
   and no road is narrower than two tiles** so the character can always walk it. A huge map is fine.
+- Wakefield is a separate project that shares the tech, so the museum's grid rules don't bind it: **angled tiles are fine**
+  and borders should be proper straight lines (the town line is cut along the real line, see `border` in src/mapformat.js).
 - The overlay button (builder and game) lays the real street map over the tiles so the user can fix blocks by hand.
