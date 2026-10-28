@@ -6,12 +6,17 @@ import { candidate, getJson, sortCandidates } from './common.mjs';
 
 export const id = 'commons';
 export const name = 'Wikimedia Commons';
-export const hosts = ['commons.wikimedia.org', 'upload.wikimedia.org'];
+export const hosts = ['commons.wikimedia.org', 'upload.wikimedia.org', 'thumb.wikimedia.org'];
 export const needsKey = false;
 
 const API = 'https://commons.wikimedia.org/w/api.php';
 const get = (url) => getJson(url, { source: id, interval: 300 });
-const val = (m, k) => m?.[k]?.value ?? '';
+// Commons appends machine-readable Wikidata statements to some fields ("The Horse Fair title QS:P1476,en:..."), and ObjectName/Artist arrive as html; reduce to plain text and drop them.
+const clean = (v) => String(v ?? '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').replace(/\s+(?:title|date|label|description)?\s*QS:.*$/s, '').trim();
+const val = (m, k) => clean(m?.[k]?.value);
+
+// A name that opens with a language label ("Dutch: Sterrennacht The Starry Night") is several labels run together: use the file name instead.
+const fileTitle = (t) => (/^[A-Z][a-z]+: /.test(t) ? '' : t);
 
 /** One raw Commons page (with imageinfo + extmetadata) -> a candidate. */
 export function parse(page) {
@@ -22,7 +27,7 @@ export function parse(page) {
   return candidate({
     source: id,
     sourceId: page.title,
-    title: val(m, 'ObjectName') || String(page.title || '').replace(/^File:/, '').replace(/\.[a-z]+$/i, '').replace(/_/g, ' '),
+    title: fileTitle(val(m, 'ObjectName')) || String(page.title || '').replace(/^File:/, '').replace(/\.[a-z]+$/i, '').replace(/_/g, ' '),
     maker: val(m, 'Artist'),
     year: val(m, 'DateTimeOriginal') || val(m, 'DateTime'),
     medium: '',

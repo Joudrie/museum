@@ -42,7 +42,8 @@ export async function fetch(objectId) {
 }
 
 export async function search(query, { limit = 10 } = {}) {
-  const r = await get(`${BASE}/search?hasImages=true&isPublicDomain=true&q=${encodeURIComponent(query)}`);
+  // /v1/search was retired 2026-10-01; /v1.1/search has the same { total, objectIDs } shape, paginated by offset and limit.
+  const r = await get(`https://collectionapi.metmuseum.org/public/collection/v1.1/search?hasImages=true&isPublicDomain=true&limit=${limit}&offset=0&q=${encodeURIComponent(query)}`);
   const ids = (r.objectIDs || []).slice(0, limit);
   return sortCandidates(await Promise.all(ids.map((i) => fetch(i))));
 }

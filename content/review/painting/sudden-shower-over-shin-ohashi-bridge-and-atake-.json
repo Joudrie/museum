@@ -1,0 +1,95 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "sudden-shower-over-shin-ohashi-bridge-and-atake-",
+  "notes": "region: Japan",
+  "entry": {
+    "id": "painting:sudden-shower-over-shin-ohashi-bridge-and-atake-",
+    "collection": "painting",
+    "title": "Sudden Shower over Shin-Ōhashi Bridge and Atake (Ōhashi Atake no yūdachi), from the series One Hundred Famous Views of Edo (Meisho Edo hyakkei)",
+    "by": "Utagawa Hiroshige",
+    "year": "1857",
+    "era": "romantic",
+    "ratio": 0.7088,
+    "blurb": "By Utagawa Hiroshige, 1857, Woodblock print; ink and color on paper.",
+    "rarity": 1,
+    "tags": [
+      "japan",
+      "woodblock print",
+      "ink"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://images.metmuseum.org/CRDImages/as/original/DP130156.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Metropolitan Museum of Art, New York. The Howard Mansfield Collection, Purchase, Rogers Fund, 1936",
+      "url": "https://www.metmuseum.org/art/collection/search/55433"
+    },
+    "value": 5
+  },
+  "candidate": {
+    "source": "met",
+    "sourceId": "55433",
+    "title": "Sudden Shower over Shin-Ōhashi Bridge and Atake (Ōhashi Atake no yūdachi), from the series One Hundred Famous Views of Edo (Meisho Edo hyakkei)",
+    "maker": "Utagawa Hiroshige",
+    "year": "1857",
+    "medium": "Woodblock print; ink and color on paper",
+    "dimensions": "Oban 13 3/8 x 9 1/2 in. (34 x 24.1 cm)",
+    "widthCm": 24.1,
+    "heightCm": 34,
+    "ratio": 0.7088,
+    "imageUrl": "https://images.metmuseum.org/CRDImages/as/original/DP130156.jpg",
+    "pageUrl": "https://www.metmuseum.org/art/collection/search/55433",
+    "license": "CC0",
+    "credit": "The Metropolitan Museum of Art, New York. The Howard Mansfield Collection, Purchase, Rogers Fund, 1936",
+    "description": "",
+    "culture": "Japan",
+    "classification": "Prints",
+    "tags": [
+      "Bridges",
+      "Rain",
+      "Umbrellas"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Sudden Shower over Shin-Ōhashi Bridge and Atake (Ōhashi Atake no yūdachi), from the series One Hundred Famous Views of Edo (Meisho Edo hyakkei)",
+      "maker": "Utagawa Hiroshige",
+      "year": "1857",
+      "medium": "Woodblock print; ink and color on paper",
+      "dimensions": "Oban 13 3/8 x 9 1/2 in. (34 x 24.1 cm)",
+      "culture": "Japan",
+      "classification": "Prints",
+      "credit": "The Metropolitan Museum of Art, New York. The Howard Mansfield Collection, Purchase, Rogers Fund, 1936",
+      "description": "",
+      "objectName": "Print",
+      "department": "Asian Art",
+      "period": "Edo period (1615–1868)",
+      "dynasty": "",
+      "artistBio": "Japanese, Tokyo (Edo) 1797–1858 Tokyo (Edo)",
+      "region": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "By Utagawa Hiroshige, 1857, Woodblock print; ink and color on paper.",
+      "quote": "By Utagawa Hiroshige, 1857, Woodblock print; ink and color on paper",
+      "source": "record",
+      "placeholderFor": "needs a real hook"
+    }
+  ],
+  "problems": [
+    "claim 1: needs a real hook; it only restates the record's own details (maker, date, medium)",
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

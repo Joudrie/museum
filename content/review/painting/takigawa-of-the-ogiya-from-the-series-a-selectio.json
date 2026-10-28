@@ -1,0 +1,113 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "takigawa-of-the-ogiya-from-the-series-a-selectio",
+  "notes": "region: Japan",
+  "entry": {
+    "id": "painting:takigawa-of-the-ogiya-from-the-series-a-selectio",
+    "collection": "painting",
+    "title": "Takigawa of the Ōgiya from the series A Selection of Eastern Beauties",
+    "by": "Kitagawa Utamaro",
+    "year": "c. 1798",
+    "era": "romantic",
+    "ratio": 0.6758,
+    "blurb": "Here, she smokes tobacco, a fashionable trend in 18th-century Edo.",
+    "rarity": 1,
+    "tags": [
+      "japan",
+      "woodblock print"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1930.219/1930.219_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Bequest of Edward L. Whittemore",
+      "url": "https://clevelandart.org/art/1930.219"
+    },
+    "value": 5,
+    "facts": [
+      "The strands of hair at her temple were printed from thin pieces of wood left in relief when the areas on either side of them were carved away.",
+      "The courtesan Takigawa worked for the Ōgiya, \"House of Fans\" brothel, one of the most prestigious in the Yoshiwara.",
+      "Takigawa became the most senior courtesan of the Ōgiya following the retirement of Hanaōgi."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "111690",
+    "title": "Takigawa of the Ōgiya from the series A Selection of Eastern Beauties",
+    "maker": "Kitagawa Utamaro",
+    "year": "c. 1798",
+    "medium": "color woodblock print",
+    "dimensions": "Sheet: 33 x 22.3 cm (13 x 8 3/4 in.)",
+    "widthCm": 22.3,
+    "heightCm": 33,
+    "ratio": 0.6758,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1930.219/1930.219_web.jpg",
+    "imageWidth": 621,
+    "imageHeight": 900,
+    "pageUrl": "https://clevelandart.org/art/1930.219",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Bequest of Edward L. Whittemore",
+    "description": "The courtesan Takigawa worked for the Ōgiya, \"House of Fans\" brothel, one of the most prestigious in the Yoshiwara. Here, she smokes tobacco, a fashionable trend in 18th-century Edo. Fashion-conscious women in Edo purchased prints of the most famous beauties just as contemporary women buy fashion magazines to learn about the latest styles in make-up and hair. The strands of hair at her temple were printed from thin pieces of wood left in relief when the areas on either side of them were carved away. Takigawa became the most senior courtesan of the Ōgiya following the retirement of Hanaōgi.",
+    "culture": "Japan, Edo period (1615–1868)",
+    "classification": "Print",
+    "tags": [
+      "Japanese Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Takigawa of the Ōgiya from the series A Selection of Eastern Beauties",
+      "maker": "Kitagawa Utamaro",
+      "year": "c. 1798",
+      "medium": "color woodblock print",
+      "dimensions": "Sheet: 33 x 22.3 cm (13 x 8 3/4 in.)",
+      "culture": "Japan, Edo period (1615–1868)",
+      "classification": "Print",
+      "credit": "The Cleveland Museum of Art. Bequest of Edward L. Whittemore",
+      "description": "The courtesan Takigawa worked for the Ōgiya, \"House of Fans\" brothel, one of the most prestigious in the Yoshiwara. Here, she smokes tobacco, a fashionable trend in 18th-century Edo. Fashion-conscious women in Edo purchased prints of the most famous beauties just as contemporary women buy fashion magazines to learn about the latest styles in make-up and hair. The strands of hair at her temple were printed from thin pieces of wood left in relief when the areas on either side of them were carved away. Takigawa became the most senior courtesan of the Ōgiya following the retirement of Hanaōgi.",
+      "tombstone": "Takigawa of the Ōgiya from the series A Selection of Eastern Beauties (吾妻美人ゑらみ 扇屋内滝川), c. 1798. Kitagawa Utamaro (Japanese, c. 1754–1806). Color woodblock print; sheet: 33 x 22.3 cm (13 x 8 3/4 in.). The Cleveland Museum of Art, Bequest of Edward L. Whittemore, 1930.219",
+      "funFact": "",
+      "didYouKnow": "Takigawa became the most senior courtesan of the Ōgiya following the retirement of Hanaōgi.",
+      "creators": "Kitagawa Utamaro (Japanese, c. 1754–1806)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "Here, she smokes tobacco, a fashionable trend in 18th-century Edo.",
+      "quote": "Here, she smokes tobacco, a fashionable trend in 18th-century Edo.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The strands of hair at her temple were printed from thin pieces of wood left in relief when the areas on either side of them were carved away.",
+      "quote": "The strands of hair at her temple were printed from thin pieces of wood left in relief when the areas on either side of them were carved away.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The courtesan Takigawa worked for the Ōgiya, \"House of Fans\" brothel, one of the most prestigious in the Yoshiwara.",
+      "quote": "The courtesan Takigawa worked for the Ōgiya, \"House of Fans\" brothel, one of the most prestigious in the Yoshiwara.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Takigawa became the most senior courtesan of the Ōgiya following the retirement of Hanaōgi.",
+      "quote": "Takigawa became the most senior courtesan of the Ōgiya following the retirement of Hanaōgi.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

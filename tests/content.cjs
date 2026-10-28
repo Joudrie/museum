@@ -49,6 +49,27 @@ const has = (list, re) => list.some((x) => re.test(x));
   check(rij.imageUrl.endsWith('=s1280') && rij.widthCm === 45 && rij.heightCm === 30, 'rijks: 1280px image, size in cm', 'rijks parse wrong: ' + rij.imageUrl);
   check(com.imageUrl.includes('1280px') && com.maker === 'C. Farmer' && com.ratio === 1.3333, 'commons: 1280px thumbnail, artist without html, ratio from image', 'commons parse wrong: ' + JSON.stringify([com.maker, com.ratio]));
 
+  // ---------- Real recordings (Met, Cleveland, Commons were recorded from the live APIs on 2026-10-28) ----------
+  console.log('Live recordings');
+  const liveMet = S.SOURCES.met.parse(fx('met-object-live.json'));
+  const liveCle = S.SOURCES.cleveland.parse(fx('cleveland-artwork-live.json').data);
+  const liveCom = S.SOURCES.commons.parse(Object.values(fx('commons-query-live.json').query.pages)[0]);
+  [['met', liveMet], ['cleveland', liveCle], ['commons', liveCom]].forEach(([id, c]) => {
+    const need = ['title', 'imageUrl', 'pageUrl', 'license', 'credit'].filter((k) => !c[k]);
+    check(!need.length && c.publicDomain && !c.rejected && c.ratio > 0 && /^https:/.test(c.imageUrl), `${id} (live): complete public-domain candidate (${c.title.slice(0, 40)})`, `${id} (live): missing ${need.join(', ')} or not accepted: ${c.rejected}`);
+  });
+  check(Array.isArray(fx('met-search-live.json').objectIDs) && fx('met-search-live.json').objectIDs.length > 0, 'met v1.1 search returns { total, objectIDs }', 'met search shape changed');
+  check(fx('cleveland-search-live.json').data.every((a) => a.share_license_status === 'CC0') && S.SOURCES.cleveland.parse(fx('cleveland-search-live.json').data[0]).sourceId, 'cleveland search: CC0 rows', 'cleveland search shape changed');
+  check(!/QS:/.test(JSON.stringify(liveCom)) && liveCom.title === 'The Horse Fair', 'commons: Wikidata "QS:" statements are stripped from title and date', 'commons QS junk left in: ' + liveCom.title.slice(0, 60));
+  check(/^Dutch: /.test('Dutch: x') && S.SOURCES.commons.parse({ title: 'File:A_B.jpg', imageinfo: [{ url: 'https://x/a.jpg', width: 10, height: 10, extmetadata: { ObjectName: { value: 'Dutch: Sterrennacht The Starry Night title QS:P1476,nl:"x"' }, LicenseShortName: { value: 'Public domain' }, Copyrighted: { value: 'False' } } }] }).title === 'A B', 'commons: a run-together multi-language name falls back to the file name', 'commons language-run title kept');
+  check(bl.eraFor('1620s') === 'baroque' && bl.eraFor('early 1600s') === 'baroque' && bl.eraFor('ca. 750') === 'renaissance' && bl.eraFor('960–85') === 'renaissance', 'era: decades, "early 1600s" and 3-digit years are bucketed', 'eraFor wrong on decades/3-digit years');
+  const dup = bl.pickClaims({ ...liveCle, texts: { ...liveCle.texts, didYouKnow: 'Twenty-nine Cretan icons are still venerated (honored) in Ethiopian churches. ' + liveCle.texts.didYouKnow } });
+  check(new Set(dup.map((k) => k.text)).size === dup.length, 'a sentence found in two fields becomes one claim', 'duplicate claim text');
+  const seen = [];
+  common.configure({ cache: false, fetch: async (url) => (seen.push(url), { ok: true, status: 200, json: async () => ({ total: 1, objectIDs: [] }) }) });
+  await S.SOURCES.met.search('x', { limit: 3 });
+  check(/\/v1\.1\/search\?/.test(seen[0]) && /limit=3/.test(seen[0]) && /isPublicDomain=true/.test(seen[0]), 'met search uses /v1.1/search (the old /v1/search was retired 2026-10-01)', 'met search url wrong: ' + seen[0]);
+
   console.log('Public-domain gate');
   const rej = {
     met: S.SOURCES.met.parse(fx('met-object-copyright.json')),

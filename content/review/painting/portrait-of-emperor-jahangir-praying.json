@@ -1,0 +1,93 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "portrait-of-emperor-jahangir-praying",
+  "notes": "region: India",
+  "entry": {
+    "id": "painting:portrait-of-emperor-jahangir-praying",
+    "collection": "painting",
+    "title": "Portrait of Emperor Jahangir Praying",
+    "year": "early 17th century",
+    "era": "baroque",
+    "ratio": 0.5739,
+    "blurb": "early 17th century, Ink and opaque watercolor on paper.",
+    "rarity": 1,
+    "tags": [
+      "watercolor",
+      "ink",
+      "portrait"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://images.metmuseum.org/CRDImages/is/original/sf1929-160-19a.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Metropolitan Museum of Art, New York. H. O. Havemeyer Collection, Gift of Horace Havemeyer, 1929",
+      "url": "https://www.metmuseum.org/art/collection/search/448277"
+    },
+    "value": 5
+  },
+  "candidate": {
+    "source": "met",
+    "sourceId": "448277",
+    "title": "Portrait of Emperor Jahangir Praying",
+    "maker": "",
+    "year": "early 17th century",
+    "medium": "Ink and opaque watercolor on paper",
+    "dimensions": "Page: 11 × 6 5/16 in. (27.9 × 16 cm) Matted with 29.160.20: 19 1/4 × 14 1/4 in. (48.9 × 36.2 cm) Frame: 21 1/2 × 16 3/4 in. (54.6 × 42.5 cm)",
+    "widthCm": 16.033783,
+    "heightCm": 27.940056,
+    "ratio": 0.5739,
+    "imageUrl": "https://images.metmuseum.org/CRDImages/is/original/sf1929-160-19a.jpg",
+    "pageUrl": "https://www.metmuseum.org/art/collection/search/448277",
+    "license": "CC0",
+    "credit": "The Metropolitan Museum of Art, New York. H. O. Havemeyer Collection, Gift of Horace Havemeyer, 1929",
+    "description": "",
+    "culture": "",
+    "classification": "Codices",
+    "tags": [
+      "Men",
+      "Praying"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Portrait of Emperor Jahangir Praying",
+      "maker": "",
+      "year": "early 17th century",
+      "medium": "Ink and opaque watercolor on paper",
+      "dimensions": "Page: 11 × 6 5/16 in. (27.9 × 16 cm) Matted with 29.160.20: 19 1/4 × 14 1/4 in. (48.9 × 36.2 cm) Frame: 21 1/2 × 16 3/4 in. (54.6 × 42.5 cm)",
+      "culture": "",
+      "classification": "Codices",
+      "credit": "The Metropolitan Museum of Art, New York. H. O. Havemeyer Collection, Gift of Horace Havemeyer, 1929",
+      "description": "",
+      "objectName": "Illustrated single work",
+      "department": "Islamic Art",
+      "period": "",
+      "dynasty": "",
+      "artistBio": "",
+      "region": "India"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "early 17th century, Ink and opaque watercolor on paper.",
+      "quote": "early 17th century, Ink and opaque watercolor on paper",
+      "source": "record",
+      "placeholderFor": "needs a real hook"
+    }
+  ],
+  "problems": [
+    "claim 1: needs a real hook; it only restates the record's own details (maker, date, medium)",
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

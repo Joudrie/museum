@@ -1,0 +1,113 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "icon-of-the-mother-of-god-and-infant-christ-virg",
+  "notes": "region: Ethiopia",
+  "entry": {
+    "id": "painting:icon-of-the-mother-of-god-and-infant-christ-virg",
+    "collection": "painting",
+    "title": "Icon of the Mother of God and Infant Christ (Virgin Eleousa)",
+    "by": "Angelos Akotantos",
+    "year": "c. 1425–50",
+    "era": "renaissance",
+    "ratio": 0.7292,
+    "blurb": "In the early 1500s, Emperor Lebna Dengel sent monks Zekre and Pawli to acquire Cretan icons for him.",
+    "rarity": 1,
+    "tags": [
+      "republic of venice",
+      "tempera"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/2010.154/2010.154_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Leonard C. Hanna Jr. Fund",
+      "url": "https://clevelandart.org/art/2010.154"
+    },
+    "value": 5,
+    "facts": [
+      "Based in Byzantium’s artistic center in his hometown of Candia, he painted for imperial clients and beyond.",
+      "This is the only known work by Angelos Akotantos in the United States.",
+      "A skilled painter of faces and draperies, Angelos Akotantos was among Crete’s most sought-after artists."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "168322",
+    "title": "Icon of the Mother of God and Infant Christ (Virgin Eleousa)",
+    "maker": "Angelos Akotantos",
+    "year": "c. 1425–50",
+    "medium": "tempera and gold on wood",
+    "dimensions": "Unframed: 96 x 70 cm (37 13/16 x 27 9/16 in.)",
+    "widthCm": 70,
+    "heightCm": 96,
+    "ratio": 0.7292,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/2010.154/2010.154_web.jpg",
+    "imageWidth": 659,
+    "imageHeight": 900,
+    "pageUrl": "https://clevelandart.org/art/2010.154",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Leonard C. Hanna Jr. Fund",
+    "description": "This large icon of a tender embrace between the Virgin Mary and Christ likely hung on a Greek Orthodox church’s iconostasis, a screen separating the congregation from the altar-containing sanctuary, which only clergy could enter. A skilled painter of faces and draperies, Angelos Akotantos was among Crete’s most sought-after artists. Based in Byzantium’s artistic center in his hometown of Candia, he painted for imperial clients and beyond. Despite theological differences, Cretan icons of Mary were popular in Ethiopia. In the early 1500s, Emperor Lebna Dengel sent monks Zekre and Pawli to acquire Cretan icons for him. Twenty-nine Cretan icons are still venerated (honored) in Ethiopian churches. This is the only known work by Angelos Akotantos in the United States.",
+    "culture": "Republic of Venice, Kingdom of Candia, Candia (Heraklion, Crete, Greece) or Byzantine Empire, Constantinople (Istanbul, Turkey)",
+    "classification": "Painting",
+    "tags": [
+      "Medieval Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Icon of the Mother of God and Infant Christ (Virgin Eleousa)",
+      "maker": "Angelos Akotantos",
+      "year": "c. 1425–50",
+      "medium": "tempera and gold on wood",
+      "dimensions": "Unframed: 96 x 70 cm (37 13/16 x 27 9/16 in.)",
+      "culture": "Republic of Venice, Kingdom of Candia, Candia (Heraklion, Crete, Greece) or Byzantine Empire, Constantinople (Istanbul, Turkey)",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Leonard C. Hanna Jr. Fund",
+      "description": "This large icon of a tender embrace between the Virgin Mary and Christ likely hung on a Greek Orthodox church’s iconostasis, a screen separating the congregation from the altar-containing sanctuary, which only clergy could enter. A skilled painter of faces and draperies, Angelos Akotantos was among Crete’s most sought-after artists. Based in Byzantium’s artistic center in his hometown of Candia, he painted for imperial clients and beyond. Despite theological differences, Cretan icons of Mary were popular in Ethiopia. In the early 1500s, Emperor Lebna Dengel sent monks Zekre and Pawli to acquire Cretan icons for him. Twenty-nine Cretan icons are still venerated (honored) in Ethiopian churches. This is the only known work by Angelos Akotantos in the United States.",
+      "tombstone": "Icon of the Mother of God and Infant Christ (Virgin Eleousa), c. 1425–50. Attributed to Angelos Akotantos (Cretan, died 1450). Tempera and gold on wood; unframed: 96 x 70 cm (37 13/16 x 27 9/16 in.). The Cleveland Museum of Art, Leonard C. Hanna Jr. Fund, 2010.154",
+      "funFact": "",
+      "didYouKnow": "This is the only known work by Angelos Akotantos in the United States.",
+      "creators": "Angelos Akotantos (Cretan, died 1450)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "In the early 1500s, Emperor Lebna Dengel sent monks Zekre and Pawli to acquire Cretan icons for him.",
+      "quote": "In the early 1500s, Emperor Lebna Dengel sent monks Zekre and Pawli to acquire Cretan icons for him.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Based in Byzantium’s artistic center in his hometown of Candia, he painted for imperial clients and beyond.",
+      "quote": "Based in Byzantium’s artistic center in his hometown of Candia, he painted for imperial clients and beyond.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "This is the only known work by Angelos Akotantos in the United States.",
+      "quote": "This is the only known work by Angelos Akotantos in the United States.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "A skilled painter of faces and draperies, Angelos Akotantos was among Crete’s most sought-after artists.",
+      "quote": "A skilled painter of faces and draperies, Angelos Akotantos was among Crete’s most sought-after artists.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

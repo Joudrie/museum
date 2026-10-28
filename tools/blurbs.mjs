@@ -56,7 +56,10 @@ function score(s) {
 /** The sentences a claim may be drawn from, with the field each came from. */
 function pool(c) {
   const fields = ['description', 'funFact', 'didYouKnow', 'label', 'altText'];
-  return fields.flatMap((f) => sentences(c.texts?.[f] ?? (f === 'description' ? c.description : '')).map((text) => ({ text, field: f })));
+  const seen = new Set(); // the same sentence often sits in both description and didYouKnow; keep the first
+  return fields
+    .flatMap((f) => sentences(c.texts?.[f] ?? (f === 'description' ? c.description : '')).map((text) => ({ text, field: f })))
+    .filter((p) => !seen.has(fold(p.text)) && seen.add(fold(p.text)));
 }
 
 export function pickClaims(c) {
@@ -74,7 +77,7 @@ export function pickClaims(c) {
   return claims;
 }
 
-const year4 = (s) => Number(/\b(\d{4})\b/.exec(s || '')?.[1]) || (/(\d{1,2})(?:st|nd|rd|th)[ -]century/i.exec(s || '') ? (Number(/(\d{1,2})(?:st|nd|rd|th)[ -]century/i.exec(s)[1]) - 1) * 100 + 50 : 0);
+const year4 = (s) => Number(/\b(\d{3,4})(?:s\b|\b)/.exec(s || '')?.[1]) || (/(\d{1,2})(?:st|nd|rd|th)[ -]century/i.exec(s || '') ? (Number(/(\d{1,2})(?:st|nd|rd|th)[ -]century/i.exec(s)[1]) - 1) * 100 + 50 : 0);
 /** Era keys follow the paintings collection (date buckets, not styles). */
 export function eraFor(year) {
   const y = year4(year);

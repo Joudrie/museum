@@ -1,0 +1,92 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "the-drawing-lesson-berthe-morisot-and-her-daught",
+  "notes": "region: France (a woman painter)",
+  "entry": {
+    "id": "painting:the-drawing-lesson-berthe-morisot-and-her-daught",
+    "collection": "painting",
+    "title": "The Drawing Lesson (Berthe Morisot and her Daughter)",
+    "by": "Berthe Morisot",
+    "year": "1889",
+    "era": "impressionist",
+    "ratio": 0.7787,
+    "blurb": "By Berthe Morisot, 1889, Drypoint on wove paper.",
+    "rarity": 1,
+    "tags": [
+      "portrait"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://images.metmuseum.org/CRDImages/dp/original/DP884481.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Metropolitan Museum of Art, New York. Purchase, Rogers Fund and Jacob H. Schiff Bequest, 1922",
+      "url": "https://www.metmuseum.org/art/collection/search/336670"
+    },
+    "value": 5
+  },
+  "candidate": {
+    "source": "met",
+    "sourceId": "336670",
+    "title": "The Drawing Lesson (Berthe Morisot and her Daughter)",
+    "maker": "Berthe Morisot",
+    "year": "1889",
+    "medium": "Drypoint on wove paper",
+    "dimensions": "sheet: 14 1/16 x 10 15/16 in. (35.7 x 27.8 cm) plate: 7 1/2 x 5 1/2 in. (19 x 13.9 cm)",
+    "widthCm": 27.8,
+    "heightCm": 35.7,
+    "ratio": 0.7787,
+    "imageUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP884481.jpg",
+    "pageUrl": "https://www.metmuseum.org/art/collection/search/336670",
+    "license": "CC0",
+    "credit": "The Metropolitan Museum of Art, New York. Purchase, Rogers Fund and Jacob H. Schiff Bequest, 1922",
+    "description": "",
+    "culture": "",
+    "classification": "Prints",
+    "tags": [
+      "Self-portraits",
+      "Women"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "The Drawing Lesson (Berthe Morisot and her Daughter)",
+      "maker": "Berthe Morisot",
+      "year": "1889",
+      "medium": "Drypoint on wove paper",
+      "dimensions": "sheet: 14 1/16 x 10 15/16 in. (35.7 x 27.8 cm) plate: 7 1/2 x 5 1/2 in. (19 x 13.9 cm)",
+      "culture": "",
+      "classification": "Prints",
+      "credit": "The Metropolitan Museum of Art, New York. Purchase, Rogers Fund and Jacob H. Schiff Bequest, 1922",
+      "description": "",
+      "objectName": "Print",
+      "department": "Drawings and Prints",
+      "period": "",
+      "dynasty": "",
+      "artistBio": "French, Bourges 1841–1895 Paris",
+      "region": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "By Berthe Morisot, 1889, Drypoint on wove paper.",
+      "quote": "By Berthe Morisot, 1889, Drypoint on wove paper",
+      "source": "record",
+      "placeholderFor": "needs a real hook"
+    }
+  ],
+  "problems": [
+    "claim 1: needs a real hook; it only restates the record's own details (maker, date, medium)",
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

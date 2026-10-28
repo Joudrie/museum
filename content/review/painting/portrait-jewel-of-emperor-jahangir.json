@@ -1,0 +1,113 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "portrait-jewel-of-emperor-jahangir",
+  "notes": "region: India",
+  "entry": {
+    "id": "painting:portrait-jewel-of-emperor-jahangir",
+    "collection": "painting",
+    "title": "Portrait Jewel of Emperor Jahangir",
+    "year": "early 1600s",
+    "era": "baroque",
+    "ratio": 0.6667,
+    "blurb": "The fourth Mughal emperor of India, Jahangir, had tiny portraits of himself made to give as gifts to his friends, family, and nobles of the court as a sign of royal favor.",
+    "rarity": 1,
+    "tags": [
+      "mughal india",
+      "tempera",
+      "portrait"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1944.496/1944.496_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Purchase from the J. H. Wade Fund",
+      "url": "https://clevelandart.org/art/1944.496"
+    },
+    "value": 5,
+    "facts": [
+      "These portraits were mounted and worn as jewels or turban ornaments.",
+      "The carpet or textile under his hands references the covered rail of a balcony where the emperor addressed the public three times a day to hear complaints or petitions.",
+      "The pearl earring denotes Jahangir’s affiliation with an order of Sufi mystics."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "124010",
+    "title": "Portrait Jewel of Emperor Jahangir",
+    "maker": "",
+    "year": "early 1600s",
+    "medium": "Gum tempera and gold on paper",
+    "dimensions": "Image: 4.8 x 3.2 cm (1 7/8 x 1 1/4 in.)",
+    "widthCm": 3.2,
+    "heightCm": 4.8,
+    "ratio": 0.6667,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1944.496/1944.496_web.jpg",
+    "imageWidth": 714,
+    "imageHeight": 900,
+    "pageUrl": "https://clevelandart.org/art/1944.496",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Purchase from the J. H. Wade Fund",
+    "description": "The fourth Mughal emperor of India, Jahangir, had tiny portraits of himself made to give as gifts to his friends, family, and nobles of the court as a sign of royal favor. These portraits were mounted and worn as jewels or turban ornaments. The carpet or textile under his hands references the covered rail of a balcony where the emperor addressed the public three times a day to hear complaints or petitions. The pearl earring denotes Jahangir’s affiliation with an order of Sufi mystics.",
+    "culture": "Mughal India, court of Jahangir (reigned 1605–27)",
+    "classification": "Painting",
+    "tags": [
+      "Indian and Southeast Asian Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Portrait Jewel of Emperor Jahangir",
+      "maker": "",
+      "year": "early 1600s",
+      "medium": "Gum tempera and gold on paper",
+      "dimensions": "Image: 4.8 x 3.2 cm (1 7/8 x 1 1/4 in.)",
+      "culture": "Mughal India, court of Jahangir (reigned 1605–27)",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Purchase from the J. H. Wade Fund",
+      "description": "The fourth Mughal emperor of India, Jahangir, had tiny portraits of himself made to give as gifts to his friends, family, and nobles of the court as a sign of royal favor. These portraits were mounted and worn as jewels or turban ornaments. The carpet or textile under his hands references the covered rail of a balcony where the emperor addressed the public three times a day to hear complaints or petitions. The pearl earring denotes Jahangir’s affiliation with an order of Sufi mystics.",
+      "tombstone": "Portrait Jewel of Emperor Jahangir, early 1600s. Mughal India, court of Jahangir (reigned 1605–27). Gum tempera and gold on paper; image: 4.8 x 3.2 cm (1 7/8 x 1 1/4 in.). The Cleveland Museum of Art, Purchase from the J. H. Wade Fund, 1944.496",
+      "funFact": "",
+      "didYouKnow": "The pearl earring denotes Jahangir’s affiliation with an order of Sufi mystics.",
+      "creators": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "The fourth Mughal emperor of India, Jahangir, had tiny portraits of himself made to give as gifts to his friends, family, and nobles of the court as a sign of royal favor.",
+      "quote": "The fourth Mughal emperor of India, Jahangir, had tiny portraits of himself made to give as gifts to his friends, family, and nobles of the court as a sign of royal favor.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "These portraits were mounted and worn as jewels or turban ornaments.",
+      "quote": "These portraits were mounted and worn as jewels or turban ornaments.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The carpet or textile under his hands references the covered rail of a balcony where the emperor addressed the public three times a day to hear complaints or petitions.",
+      "quote": "The carpet or textile under his hands references the covered rail of a balcony where the emperor addressed the public three times a day to hear complaints or petitions.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The pearl earring denotes Jahangir’s affiliation with an order of Sufi mystics.",
+      "quote": "The pearl earring denotes Jahangir’s affiliation with an order of Sufi mystics.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}
