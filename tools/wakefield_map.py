@@ -102,6 +102,34 @@ def rings(ways):
     return out
 
 
+def clip_rect(poly, x0, y0, x1, y1):
+    """Sutherland-Hodgman: the part of a polygon inside a rectangle."""
+    def pass_(pts, inside, cut):
+        out = []
+        for i, b in enumerate(pts):
+            a = pts[i - 1]
+            ia, ib = inside(a), inside(b)
+            if ia != ib:
+                out.append(cut(a, b))
+            if ib:
+                out.append(b)
+        return out
+    def cut_x(v):
+        return lambda a, b: (v, a[1] + (b[1] - a[1]) * (v - a[0]) / (b[0] - a[0]))
+    def cut_y(v):
+        return lambda a, b: (a[0] + (b[0] - a[0]) * (v - a[1]) / (b[1] - a[1]), v)
+    pts = poly[:-1] if poly and poly[0] == poly[-1] else poly
+    for inside, cut in ((lambda q: q[0] >= x0, cut_x(x0)), (lambda q: q[0] <= x1, cut_x(x1)), (lambda q: q[1] >= y0, cut_y(y0)), (lambda q: q[1] <= y1, cut_y(y1))):
+        if not pts:
+            return []
+        pts = pass_(pts, inside, cut)
+    return pts
+
+
+def area(poly):
+    return abs(sum(a[0] * b[1] - b[0] * a[1] for a, b in zip(poly, poly[1:] + poly[:1]))) / 2
+
+
 def canvas(scale):
     return Image.new('L', (W * scale + 1, H * scale + 1), 0)
 
@@ -148,17 +176,47 @@ def build(d):
     water = np.array(img) > 127
     wet = np.array(wetland) > 127
 
-    # terrain corners: 0 sea outside the town line, 2 grass inside, 3 pond
-    corners = np.zeros((H + 1, W + 1), dtype=np.uint8)
-    ys, xs = np.mgrid[0:H + 1, 0:W + 1]
-    py = np.minimum(ys * S, town.shape[0] - 1)
-    px = np.minimum(xs * S, town.shape[1] - 1)
-    inside = town[py, px]
-    corners[inside] = 2
-    corners[inside & water[py, px]] = 3
-
+    # The town line is straight, not stair-stepped: tiles it crosses are cut along the real line
+    # (the builder and the game clip the land to it). 0 = outside, 1 = inside, 2 = cut by the line.
     cy, cx = np.mgrid[0:H, 0:W]
-    centre_in = town[cy * S + S // 2, cx * S + S // 2]
+    kind = np.where(town[cy * S + S // 2, cx * S + S // 2], 1, 0)
+    touched = set()
+    for r in town_rings:
+        for (ax, ay), (bx, by) in zip(r, r[1:] + r[:1]):
+            n = max(1, int(math.hypot(bx - ax, by - ay) * 20))
+            for i in range(n + 1):
+                touched.add((int(ax + (bx - ax) * i / n), int(ay + (by - ay) * i / n)))
+    border = {}
+    for x, y in touched:
+        if not (0 <= x < W and 0 <= y < H):
+            continue
+        polys = [clip_rect(r, x, y, x + 1, y + 1) for r in town_rings]
+        polys = [q for q in polys if len(q) >= 3]
+        a = sum(area(q) for q in polys)
+        if a < 1e-6:
+            kind[y, x] = 0
+        elif a > 1 - 1e-6:
+            kind[y, x] = 1
+        else:
+            kind[y, x] = 2
+            border[f'{x},{y}'] = [[int(round(v * 32)) for pt in q for v in ((pt[0] - x), (pt[1] - y))] for q in polys]
+    # an outside tile that touches an inside tile at a corner is cut too (with no land in it), so no stray beach shows
+    inn = kind == 1
+    for y, x in zip(*np.nonzero(kind == 0)):
+        if any(0 <= y + dy < H and 0 <= x + dx < W and inn[y + dy, x + dx] for dx in (-1, 1) for dy in (-1, 1)):
+            kind[y, x] = 2
+            border[f'{x},{y}'] = []
+
+    # terrain corners: grass at the corners of inside tiles, sea elsewhere, pond where there is water
+    corners = np.zeros((H + 1, W + 1), dtype=np.uint8)
+    for dy in (0, 1):
+        for dx in (0, 1):
+            corners[dy:dy + H, dx:dx + W][kind == 1] = 2
+    ys, xs = np.mgrid[0:H + 1, 0:W + 1]
+    wy = np.minimum(ys * S, water.shape[0] - 1)
+    wx = np.minimum(xs * S, water.shape[1] - 1)
+    corners[(corners == 2) & water[wy, wx]] = 3
+    centre_in = kind > 0
 
     # roads: walk each way in small steps and mark the tiles it crosses
     road = np.zeros((H, W), dtype=np.uint8)  # 1 stone, 2 dirt
@@ -228,7 +286,7 @@ def build(d):
     data = {
         'format': 'curation-map', 'version': 2, 'tile': 32, 'name': 'Wakefield, MA', 'kind': 'island', 'w': W, 'h': H,
         'corners': [''.join(map(str, row)) for row in corners],
-        'tiles': {}, 'tileRows': {'legend': legend, 'rows': rows}, 'objects': [],
+        'border': {'poly': border}, 'tiles': {}, 'tileRows': {'legend': legend, 'rows': rows}, 'objects': [],
         'overlay': {'src': './maps/wakefield-detail-overlay.png', 'meters': round(METERS, 2), 'credit': 'Map data © OpenStreetMap contributors'},
     }
     print(f'{W}x{H} tiles at {METERS:.1f} m: {int((road == 1).sum())} stone, {int((road == 2).sum())} dirt, {int((road == 3).sum())} rail, {int(brick.sum())} brick, {int((corners == 3).sum())} pond corners')
