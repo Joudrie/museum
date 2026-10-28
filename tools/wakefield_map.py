@@ -4,14 +4,15 @@
   python3 tools/wakefield_map.py --fetch DIR    download the OSM data into DIR (once)
   python3 tools/wakefield_map.py DIR            build from DIR
 
-Writes public/maps/wakefield.json (a curation-map v2 island) and
-public/maps/wakefield-overlay.png (a labelled street map that lines up with it
+Writes public/maps/wakefield-detail.json (a curation-map v2 island) and
+public/maps/wakefield-detail-overlay.png (a labelled street map that lines up with it
 exactly, for the builder's and the game's "map overlay" button).
 
-Scale: the builder tops out at 300 x 300 tiles, so one tile is about 22 m
-(METERS below). Every street is one tile wide (the interstate is two), and a
-tile is brick where buildings cover most of it. Lower METERS for a finer map,
-if the builder's limit is ever raised.
+Scale: one tile is 12 m (METERS below), so the map is about 450 x 550 tiles.
+Every road is in, even the small service lanes, and none is narrower than two
+tiles, so the character can always walk it (primary and secondary roads are
+three wide, the interstate four). A tile is brick where buildings cover most
+of it. The ground tiles are stored run-length packed (src/mapformat.js).
 
 Map data (c) OpenStreetMap contributors, ODbL.
 """
@@ -23,15 +24,14 @@ BBOX = (42.4716, -71.1007, 42.5311, -71.0348)  # south, west, north, east: Wakef
 RELATION = 1842129
 OVERPASS = 'https://overpass.openstreetmap.fr/api/interpreter'
 M_PER_DEG = 111320.0
-MAX_H = 300
+METERS = 12.0
 S = 4          # supersampling for polygon coverage
-PX = 8         # overlay pixels per tile
+PX = 6         # overlay pixels per tile (the game's texture limit is 4096 px)
 
 lat0, lon0, lat1, lon1 = BBOX
 COS = math.cos(math.radians((lat0 + lat1) / 2))
-METERS = (lat1 - lat0) * M_PER_DEG / MAX_H
 W = math.ceil((lon1 - lon0) * M_PER_DEG * COS / METERS)
-H = MAX_H
+H = math.ceil((lat1 - lat0) * M_PER_DEG / METERS)
 
 
 def to_cell(lat, lon):
@@ -40,7 +40,7 @@ def to_cell(lat, lon):
 
 # ---------- download ----------
 QUERIES = {
-    'roads': 'way["highway"]["highway"!~"footway|path|steps|cycleway|pedestrian|corridor|bridleway|proposed|construction|elevator|service"];way["highway"="service"]["name"];',
+    'roads': 'way["highway"]["highway"!~"footway|path|steps|cycleway|pedestrian|corridor|bridleway|proposed|construction|elevator|raceway|platform"];',
     'buildings': 'way["building"];',
     'water': 'way["natural"="water"];rel["natural"="water"];way["waterway"~"river|stream|canal"];way["natural"="wetland"];',
     'rail': 'way["railway"~"rail|light_rail"];',
@@ -164,40 +164,44 @@ def build(d):
     road = np.zeros((H, W), dtype=np.uint8)  # 1 stone, 2 dirt
     names = {}
 
-    def mark(x, y, v, wide):
-        for dx, dy in ((0, 0), (1, 0), (0, 1), (1, 1)) if wide else ((0, 0),):
-            ix, iy = int(x) + dx, int(y) + dy
-            if 0 <= ix < W and 0 <= iy < H and (road[iy, ix] == 0 or v < road[iy, ix]):
-                road[iy, ix] = v
+    # how many tiles across a road is drawn (never under two)
+    WIDTH = {'motorway': 4, 'motorway_link': 3, 'trunk': 4, 'trunk_link': 3, 'primary': 3, 'primary_link': 2, 'secondary': 3, 'secondary_link': 2}
 
+    def mark(x, y, v, k):
+        # a k x k block of tiles centred on the point, so the road is k wide in every direction
+        x0, y0 = math.floor(x - k / 2 + 0.5), math.floor(y - k / 2 + 0.5)
+        for iy in range(y0, y0 + k):
+            for ix in range(x0, x0 + k):
+                if 0 <= ix < W and 0 <= iy < H and (road[iy, ix] == 0 or v < road[iy, ix]):
+                    road[iy, ix] = v
+
+    skipped = 0
     for e in load(d, 'roads'):
         t = e['tags']
-        if t.get('tunnel') in ('yes', 'building_passage'):
+        if t.get('tunnel') in ('yes', 'building_passage') or t.get('service') in ('driveway', 'parking_aisle', 'drive-through'):
+            skipped += 1
             continue
         p = pts(e['geometry'])
         dirt = t['highway'] == 'track' or t.get('surface') in ('unpaved', 'ground', 'dirt', 'gravel', 'compacted', 'grass', 'sand')
-        wide = t['highway'] in ('motorway', 'motorway_link', 'trunk')
+        k = WIDTH.get(t['highway'], 2)
         v = 2 if dirt else 1
-        last = None
         for (ax, ay), (bx, by) in zip(p, p[1:]):
             n = max(1, int(math.hypot(bx - ax, by - ay) * 4))
             for i in range(n + 1):
-                x, y = ax + (bx - ax) * i / n, ay + (by - ay) * i / n
-                c = (int(x), int(y))
-                if last and c[0] != last[0] and c[1] != last[1]:
-                    mark(c[0], last[1], v, wide)  # keep diagonal streets connected for walking
-                mark(x, y, v, wide)
-                last = c
+                mark(ax + (bx - ax) * i / n, ay + (by - ay) * i / n, v, k)
         if t.get('name'):
             names.setdefault(t['name'], []).append((p, t['highway']))
+    print(f'{len(load(d, "roads")) - skipped} road ways in, {skipped} driveways, parking aisles and tunnels left out')
     for e in load(d, 'rail'):
         p = pts(e['geometry'])
         for (ax, ay), (bx, by) in zip(p, p[1:]):
             n = max(1, int(math.hypot(bx - ax, by - ay) * 4))
             for i in range(n + 1):
                 x, y = ax + (bx - ax) * i / n, ay + (by - ay) * i / n
-                if 0 <= int(x) < W and 0 <= int(y) < H and road[int(y), int(x)] == 0:
-                    road[int(y), int(x)] = 3  # rail bed: rock
+                for iy in (int(y), int(y) + 1):
+                    for ix in (int(x), int(x) + 1):
+                        if 0 <= ix < W and 0 <= iy < H and road[iy, ix] == 0:
+                            road[iy, ix] = 3  # rail bed: rock, two wide like the roads
     road[~centre_in] = 0
 
     # buildings: a tile is brick when buildings cover enough of it
@@ -209,19 +213,23 @@ def build(d):
     brick = (cover >= 0.35) & centre_in & (road == 0)
 
     ref = {1: 't:cobble', 2: 't:dirt_1', 3: 't:rock_1'}
-    tiles = {}
+    legend = ['t:cobble', 't:dirt_1', 't:rock_1', 't:brick']
+    cell = np.where(road > 0, road - 1, np.where(brick, 3, -1))
+    rows = []
     for y in range(H):
-        for x in range(W):
-            r = road[y, x]
-            if r:
-                tiles[f'{x},{y}'] = ref[r]
-            elif brick[y, x]:
-                tiles[f'{x},{y}'] = 't:brick'
+        s_, x = '', 0
+        while x < W:
+            v, n = cell[y, x], 1
+            while x + n < W and cell[y, x + n] == v:
+                n += 1
+            s_ += ('.' if v < 0 else 'abcd'[v]) + (str(n) if n > 1 else '')
+            x += n
+        rows.append(s_)
     data = {
         'format': 'curation-map', 'version': 2, 'tile': 32, 'name': 'Wakefield, MA', 'kind': 'island', 'w': W, 'h': H,
         'corners': [''.join(map(str, row)) for row in corners],
-        'tiles': tiles, 'objects': [],
-        'overlay': {'src': './maps/wakefield-overlay.png', 'meters': round(METERS, 2), 'credit': 'Map data © OpenStreetMap contributors'},
+        'tiles': {}, 'tileRows': {'legend': legend, 'rows': rows}, 'objects': [],
+        'overlay': {'src': './maps/wakefield-detail-overlay.png', 'meters': round(METERS, 2), 'credit': 'Map data © OpenStreetMap contributors'},
     }
     print(f'{W}x{H} tiles at {METERS:.1f} m: {int((road == 1).sum())} stone, {int((road == 2).sum())} dirt, {int((road == 3).sum())} rail, {int(brick.sum())} brick, {int((corners == 3).sum())} pond corners')
     overlay(d, town, water, wet, names)
@@ -274,7 +282,7 @@ def overlay(d, town, water, wet, names):
     for e in load(d, 'buildings'):
         fill(bd, pts(e['geometry']), k, 255)
     im.paste(Image.new('RGBA', im.size, (190, 150, 130, 255)), (0, 0), bl.crop((0, 0, W * k, H * k)))
-    widths = {'motorway': 7, 'motorway_link': 4, 'primary': 5, 'secondary': 4, 'tertiary': 3, 'primary_link': 3, 'secondary_link': 3}
+    widths = {'motorway': 8, 'motorway_link': 4, 'primary': 6, 'secondary': 5, 'tertiary': 4, 'primary_link': 3, 'secondary_link': 3, 'residential': 3}
     roads = load(d, 'roads')
     for casing in (True, False):
         for e in sorted(roads, key=lambda e: widths.get(e['tags']['highway'], 2)):
@@ -298,14 +306,14 @@ def overlay(d, town, water, wet, names):
                 (ax, ay), (bx, by) = p[i], p[i + 1]
                 seg = math.hypot(bx - ax, by - ay)
                 mx, my = (ax + bx) / 2, (ay + by) / 2
-                if seg < len(name) * 0.55 or not (0 <= mx < W and 0 <= my < H) or not town[int(my) * S, int(mx) * S]:
+                if seg < len(name) * 0.9 or not (0 <= mx < W and 0 <= my < H) or not town[int(my) * S, int(mx) * S]:
                     continue
-                if any(n == name and math.hypot(mx - x, my - y) < 28 for n, x, y in placed) or any(math.hypot(mx - x, my - y) < 3.2 for n, x, y in placed):
+                if any(n == name and math.hypot(mx - x, my - y) < 45 for n, x, y in placed) or any(math.hypot(mx - x, my - y) < 5 for n, x, y in placed):
                     continue
                 placed.append((name, mx, my))
                 ang = -math.degrees(math.atan2(by - ay, bx - ax))
                 ang = ang + 180 if ang > 90 else ang - 180 if ang < -90 else ang
-                label(im, name, mx * k, my * k, ang, 9, (40, 40, 40, 255), (255, 255, 255, 230))
+                label(im, name, mx * k, my * k, ang, 8, (40, 40, 40, 255), (255, 255, 255, 230))
     # places: schools, parks, lakes and so on
     seen = set()
     spots = []
@@ -319,13 +327,13 @@ def overlay(d, town, water, wet, names):
         x, y = to_cell(c['lat'], c['lon'])
         if not (0 <= x < W and 0 <= y < H) or not town[int(y) * S, int(x) * S]:
             continue
-        if any(math.hypot(x - sx, y - sy) < 7 for sx, sy in spots):
+        if any(math.hypot(x - sx, y - sy) < 12 for sx, sy in spots):
             continue
         seen.add(t['name'])
         spots.append((x, y))
         water_like = t.get('natural') == 'water'
-        label(im, t['name'], x * k, y * k, 0, 14 if water_like else 11, (20, 60, 130, 255) if water_like else (120, 30, 30, 255), (255, 255, 255, 235))
-    out = 'public/maps/wakefield-overlay.png'
+        label(im, t['name'], x * k, y * k, 0, 15 if water_like else 11, (20, 60, 130, 255) if water_like else (120, 30, 30, 255), (255, 255, 255, 235))
+    out = 'public/maps/wakefield-detail-overlay.png'
     im.save(out, optimize=True)
     print('wrote', out, os.path.getsize(out) // 1024, 'KB')
 
@@ -336,7 +344,7 @@ if __name__ == '__main__':
     elif len(sys.argv) == 2:
         os.makedirs('public/maps', exist_ok=True)
         data = build(sys.argv[1])
-        json.dump(data, open('public/maps/wakefield.json', 'w'), separators=(',', ':'))
-        print('wrote public/maps/wakefield.json', os.path.getsize('public/maps/wakefield.json') // 1024, 'KB')
+        json.dump(data, open('public/maps/wakefield-detail.json', 'w'), separators=(',', ':'))
+        print('wrote public/maps/wakefield-detail.json', os.path.getsize('public/maps/wakefield-detail.json') // 1024, 'KB')
     else:
         sys.exit(__doc__)

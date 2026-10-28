@@ -121,15 +121,22 @@ Scenes (`src/main.js`):
 - Test: `node tests/content.cjs` (no browser, no network).
 
 ### Wakefield, MA (the user's hometown, from real map data)
-- `tools/wakefield_map.py` turns OpenStreetMap data into `public/maps/wakefield.json` (245×300, ~22 m a tile, because the builder
-  caps at 300) and `public/maps/wakefield-overlay.png` (a labelled street map that lines up with the grid).
-  `--fetch DIR` downloads (the `overpass.openstreetmap.fr` mirror works from the sandbox; the main Overpass host does not), then `python3 tools/wakefield_map.py DIR`.
-- Outside the town line is sea, inside is grass, lakes are pond, streets are `t:cobble` (dirt for tracks), rail is `t:rock_1`,
-  and buildings are `t:brick` (new tile) where they cover 35% of a tile. Interstates are two tiles wide.
-- A map may carry `overlay: {src}`. The builder shows a 🗺 Map button (toggle plus strength slider) and the game a 🗺 button
-  (off, faint, strong). Builder seeds Wakefield once into My maps; the boat also lists it before the builder was ever opened.
-- Next: finer scale (raise `MAX` in the builder, check game speed on a phone), tuning which houses show, landmarks and
-  named buildings, a spawn on the Town Common.
+- **Rule from the user:** every road is in, even the smallest streets, and **no road is narrower than two tiles** (so the
+  character can always walk it). Big map is fine. It's also in CLAUDE.md.
+- `tools/wakefield_map.py` turns OpenStreetMap data into `public/maps/wakefield-detail.json` (451×552, **12 m a tile**) and
+  `wakefield-detail-overlay.png` (a labelled street map that lines up with the grid, 6 px a tile: the game's texture limit is 4096).
+  `--fetch DIR` downloads (the `overpass.openstreetmap.fr` mirror works from the sandbox; the main Overpass host does not), then
+  `python3 tools/wakefield_map.py DIR`. Only driveways, parking aisles and tunnels are left out.
+- Outside the town line is sea, inside is grass, lakes are pond, roads are `t:cobble` (dirt for tracks), rail is `t:rock_1`,
+  buildings are `t:brick` where they cover 35% of a tile. Roads 2 wide, primary/secondary 3, interstate 4.
+- **Big maps:** the builder's cap is now 700 (New map boxes still stop at 300). Maps of 40,000+ tiles save the tile layer packed
+  (`tileRows`, run-length rows; `src/mapformat.js`, read by the builder, the game and the boat list) so they fit phone storage
+  (Wakefield is ~300 KB). The game draws only the ground chunks near the player (`streamChunks`) and drops far ones, snow is made per
+  chunk, and the night-light texture is capped near a megapixel. Wakefield: loads in ~3 s, ~45 MB heap, ~20–30 chunks alive.
+- A map may carry `overlay: {src}`. Builder: 🗺 Map button (toggle plus strength slider). Game: 🗺 button (off, faint, strong).
+  The builder seeds Wakefield once into My maps (flag `wakefield2`; the coarse first version is replaced unless it was edited);
+  the boat also lists it before the builder was ever opened.
+- Next: tune which houses show, landmarks and named buildings, a spawn on the Town Common, paths and trails (left out: not roads).
 
 ### Gotchas we hit
 - **Phaser reuses the previous scene data** if you call `scene.start('island')` with no data.

@@ -23,6 +23,7 @@ import { Fishing, catchOpen } from './fishing.js';
 import { openJournal } from './journal.js';
 import isle1 from './maps/isle-1.json';
 import mainIsland from './maps/main-island.json';
+import { withTiles } from './mapformat.js';
 import { PEOPLE, ANIMALS } from './landmarks.js';
 import { makePet } from './pets.js';
 import { critterTextures } from './critters.js';
@@ -60,6 +61,24 @@ const hash = (x, y, s = 0) => {
   return n - Math.floor(n);
 };
 
+// smooth value noise for the snow: big drifts plus small clumps, and a little grain
+const vnoise = (x, y, size, seed) => {
+  const gx = x / size;
+  const gy = y / size;
+  const x0 = Math.floor(gx);
+  const y0 = Math.floor(gy);
+  const fx = gx - x0;
+  const fy = gy - y0;
+  const sx = fx * fx * (3 - 2 * fx);
+  const sy = fy * fy * (3 - 2 * fy);
+  const a = hash(x0, y0, seed);
+  const b = hash(x0 + 1, y0, seed);
+  const c = hash(x0, y0 + 1, seed);
+  const d = hash(x0 + 1, y0 + 1, seed);
+  return a + (b - a) * sx + (c - a) * sy + (a - b - c + d) * sx * sy;
+};
+const snowNoise = (x, y) => 0.6 * vnoise(x, y, 40, 7) + 0.3 * vnoise(x, y, 12, 8) + 0.1 * hash(x, y, 9);
+
 let TILES = null; // built once, shared
 
 export class IslandScene extends Phaser.Scene {
@@ -71,7 +90,7 @@ export class IslandScene extends Phaser.Scene {
     this.spawnAt = data?.spawn;
     const id = data?.map || 'main';
     this.mapId = data?.mapData ? 'test' : id === 'one' ? null : MAPS[id] ? id : 'main';
-    this.map = data?.mapData || (this.mapId ? MAPS[this.mapId] : null); // null: Island One
+    this.map = data?.mapData ? withTiles(data.mapData) : this.mapId ? MAPS[this.mapId] : null; // null: Island One
   }
 
   create() {
@@ -213,79 +232,120 @@ export class IslandScene extends Phaser.Scene {
     return [c[y][x], c[y][x + 1], c[y + 1][x], c[y + 1][x + 1]].map((m) => (test(m) ? 1 : 0)).join('');
   }
 
-  // The ground is drawn into one big picture per animation frame.
+  // What's painted on each cell, bottom to top.
+  groundCells(x, y) {
+    const out = [(x * 7 + y * 3) % 5 ? 'sand_1' : 'sand_2'];
+    const shore = this.key(x, y, (m) => m === 0);
+    if (shore === '1111') out.push('water');
+    else if (shore !== '0000') out.push(`shore_${shore}`);
+    const grass = this.key(x, y, (m) => m >= 2);
+    const path = this.key(x, y, (m) => m === 4);
+    if (path !== '0000') {
+      // the path: dirt with the grass growing over its edges
+      out.push('dirt_1');
+      const g = this.key(x, y, (m) => m === 2 || m === 3);
+      if (g !== '0000') out.push(`grass_dirt_${g}`);
+    } else if (grass === '1111') out.push(['grass_1', 'grass_2', 'grass_1', 'grass_3'][(x * 3 + y * 5) % 4]);
+    else if (grass !== '0000') out.push(`grass_sand_${grass}`);
+    const pond = this.key(x, y, (m) => m === 3);
+    if (pond === '1111') out.push('water');
+    else if (pond !== '0000') out.push(`bank_${pond}`);
+    out.push(...(this.paint[y]?.[x] || []));
+    return out;
+  }
+
+  // The ground is drawn in chunks of C×C cells, and only the chunks near the
+  // player exist at any moment (a town-sized map would be a gigabyte of
+  // pictures otherwise). Chunks with nothing moving get one picture, chunks
+  // with water get four (the water ebbs), and open sea chunks share one set.
   drawGround() {
-    // what's painted on each cell, bottom to top
-    const cells = (x, y) => {
-      const out = [(x * 7 + y * 3) % 5 ? 'sand_1' : 'sand_2'];
-      const shore = this.key(x, y, (m) => m === 0);
-      if (shore === '1111') out.push('water');
-      else if (shore !== '0000') out.push(`shore_${shore}`);
-      const grass = this.key(x, y, (m) => m >= 2);
-      const path = this.key(x, y, (m) => m === 4);
-      if (path !== '0000') {
-        // the path: dirt with the grass growing over its edges
-        out.push('dirt_1');
-        const g = this.key(x, y, (m) => m === 2 || m === 3);
-        if (g !== '0000') out.push(`grass_dirt_${g}`);
-      } else if (grass === '1111') out.push(['grass_1', 'grass_2', 'grass_1', 'grass_3'][(x * 3 + y * 5) % 4]);
-      else if (grass !== '0000') out.push(`grass_sand_${grass}`);
-      const pond = this.key(x, y, (m) => m === 3);
-      if (pond === '1111') out.push('water');
-      else if (pond !== '0000') out.push(`bank_${pond}`);
-      out.push(...(this.paint[y]?.[x] || []));
-      // water you can't walk into (3+ corners wet)
-      const wet = [...shore].filter((v) => v === '1').length;
-      const pondWet = [...pond].filter((v) => v === '1').length;
-      if (wet >= 3 || pondWet >= 3) this.solid[y][x] = true;
-      return out;
-    };
-    // The ground is drawn in chunks of C×C cells. Chunks with nothing moving
-    // get one picture, chunks with water get four (the water ebbs), and open
-    // sea chunks all share one set, which keeps a big map light on memory.
     const C = 8;
-    const canvasFor = (key, w, h, draw) => {
-      if (!this.textures.exists(key)) {
-        const tex = this.textures.createCanvas(key, w, h);
-        const ctx = tex.getContext();
-        ctx.imageSmoothingEnabled = false;
-        draw(ctx);
-        tex.refresh();
+    this.chunk = C;
+    // water you can't walk into (3+ corners wet), for the whole map at once
+    const c = this.corners;
+    for (let y = 0; y < H; y++)
+      for (let x = 0; x < W; x++) {
+        const q = [c[y][x], c[y][x + 1], c[y + 1][x], c[y + 1][x + 1]];
+        if (q.filter((m) => m === 0).length >= 3 || q.filter((m) => m === 3).length >= 3) this.solid[y][x] = true;
       }
-      return key;
-    };
-    const sea = [0, 1, 2, 3].map((f) =>
-      canvasFor(`island_sea_${f}`, C * T, C * T, (ctx) => {
+    this.seaKeys = [0, 1, 2, 3].map((f) =>
+      this.chunkCanvas(`island_sea_${f}`, (ctx) => {
         for (let y = 0; y < C; y++) for (let x = 0; x < C; x++) ctx.drawImage(TILES.water.frames[f], x * T, y * T);
       }),
     );
-    this.groundAnim = [];
-    this.groundChunks = [];
-    for (let cy = 0; cy * C < H; cy++)
-      for (let cx = 0; cx * C < W; cx++) {
-        const list = [];
-        for (let y = cy * C; y < Math.min(H, cy * C + C); y++) for (let x = cx * C; x < Math.min(W, cx * C + C); x++) list.push({ x, y, names: cells(x, y) });
-        let keys;
-        if (list.every((c) => c.names[c.names.length - 1] === 'water')) keys = sea;
-        else {
-          const frames = list.some((c) => c.names.some((n) => TILES[n]?.frames.length > 1)) ? 4 : 1;
-          keys = Array.from({ length: frames }, (_, f) =>
-            canvasFor(`island_g${W}x${H}_${cx}_${cy}_${f}`, C * T, C * T, (ctx) =>
-              list.forEach(({ x, y, names }) =>
-                names.forEach((n) => {
-                  const t = TILES[n];
-                  if (t) ctx.drawImage(t.frames[f % t.frames.length], (x - cx * C) * T, (y - cy * C) * T);
-                }),
-              ),
-            ),
-          );
-        }
-        const img = this.add.image(cx * C * T, cy * C * T, keys[0]).setOrigin(0).setDepth(0);
-        img.setCrop(0, 0, Math.min(C, W - cx * C) * T, Math.min(C, H - cy * C) * T); // edge chunks stop at the map's edge
-        this.groundChunks.push({ img, keys, cx, cy });
-        if (keys.length > 1) this.groundAnim.push({ img, keys });
-      }
-    this.chunk = C;
+    this.groundAnim = new Set();
+    this.chunks = new Map(); // "cx,cy" -> { img, keys, snow }
+    this.chunkRange = '';
+    this.events.once('shutdown', () => [...this.chunks.values()].forEach((e) => this.dropChunk(e)));
+  }
+
+  chunkCanvas(key, draw) {
+    if (this.textures.exists(key)) this.textures.remove(key);
+    const size = this.chunk * T;
+    const tex = this.textures.createCanvas(key, size, size);
+    const ctx = tex.getContext();
+    ctx.imageSmoothingEnabled = false;
+    draw(ctx);
+    tex.refresh();
+    return key;
+  }
+
+  buildChunk(cx, cy) {
+    const C = this.chunk;
+    const list = [];
+    for (let y = cy * C; y < Math.min(H, cy * C + C); y++) for (let x = cx * C; x < Math.min(W, cx * C + C); x++) list.push({ x, y, names: this.groundCells(x, y) });
+    let keys;
+    if (list.every((c) => c.names[c.names.length - 1] === 'water')) keys = this.seaKeys;
+    else {
+      const frames = list.some((c) => c.names.some((n) => TILES[n]?.frames.length > 1)) ? 4 : 1;
+      keys = Array.from({ length: frames }, (_, f) =>
+        this.chunkCanvas(`island_g_${cx}_${cy}_${f}`, (ctx) =>
+          list.forEach(({ x, y, names }) =>
+            names.forEach((n) => {
+              const t = TILES[n];
+              if (t) ctx.drawImage(t.frames[f % t.frames.length], (x - cx * C) * T, (y - cy * C) * T);
+            }),
+          ),
+        ),
+      );
+    }
+    const img = this.add.image(cx * C * T, cy * C * T, keys[0]).setOrigin(0).setDepth(0);
+    img.setCrop(0, 0, Math.min(C, W - cx * C) * T, Math.min(C, H - cy * C) * T); // edge chunks stop at the map's edge
+    const entry = { img, keys, cx, cy, snow: null };
+    if (keys.length > 1) this.groundAnim.add(entry);
+    if (this.season === 'winter' && keys !== this.seaKeys) entry.snow = this.snowChunk(cx, cy, keys[0]);
+    this.chunks.set(`${cx},${cy}`, entry);
+  }
+
+  dropChunk(e) {
+    this.groundAnim.delete(e);
+    e.img.destroy();
+    if (e.snow) {
+      e.snow.img.destroy();
+      this.textures.remove(e.snow.key);
+    }
+    if (e.keys !== this.seaKeys) e.keys.forEach((k) => this.textures.remove(k));
+    this.chunks.delete(`${e.cx},${e.cy}`);
+  }
+
+  // make the chunks around the player, and let go of the far ones
+  streamChunks() {
+    if (!this.chunks || !this.player) return;
+    const C = this.chunk;
+    const S = C * T;
+    const cam = this.cameras.main;
+    const hw = this.scale.gameSize.width / cam.zoom / 2;
+    const hh = this.scale.gameSize.height / cam.zoom / 2;
+    const { x, y } = this.player;
+    const x0 = Math.max(0, Math.floor((x - hw) / S) - 1);
+    const x1 = Math.min(Math.ceil(W / C) - 1, Math.floor((x + hw) / S) + 1);
+    const y0 = Math.max(0, Math.floor((y - hh) / S) - 1);
+    const y1 = Math.min(Math.ceil(H / C) - 1, Math.floor((y + hh) / S) + 1);
+    const range = `${x0},${x1},${y0},${y1}`;
+    if (range === this.chunkRange) return;
+    this.chunkRange = range;
+    for (let cy = y0; cy <= y1; cy++) for (let cx = x0; cx <= x1; cx++) if (!this.chunks.has(`${cx},${cy}`)) this.buildChunk(cx, cy);
+    [...this.chunks.values()].forEach((e) => (e.cx < x0 - 2 || e.cx > x1 + 2 || e.cy < y0 - 2 || e.cy > y1 + 2) && this.dropChunk(e));
   }
 
   // A tile or object, standing on cell (x, y) (its bottom row), sorted by depth.
@@ -553,7 +613,7 @@ export class IslandScene extends Phaser.Scene {
     if (!lit) return;
     lightTextures(this);
     // the shade is soft, so a quarter-size texture stretched over the map does
-    const Q = 4;
+    const Q = Math.max(4, Math.ceil(Math.sqrt((W * T * H * T) / 1.5e6)));
     const rt = this.add.renderTexture(0, 0, (W * T) / Q, (H * T) / Q).setOrigin(0).setScale(Q).setDepth(5000).setBlendMode(Phaser.BlendModes.MULTIPLY);
     rt.fill((r << 16) | (g << 8) | b, 1);
     const k = 0.4 + 0.6 * this.dark;
@@ -611,71 +671,60 @@ export class IslandScene extends Phaser.Scene {
       else if (a) this.animated.splice(this.animated.indexOf(a), 1);
       else if (keys.length > 1) this.animated.push({ img, keys });
     });
-    if (this.season !== 'winter') return;
-    // smooth value noise: big drifts plus small clumps, and a little grain
-    const vnoise = (x, y, size, seed) => {
-      const gx = x / size;
-      const gy = y / size;
-      const x0 = Math.floor(gx);
-      const y0 = Math.floor(gy);
-      const fx = gx - x0;
-      const fy = gy - y0;
-      const sx = fx * fx * (3 - 2 * fx);
-      const sy = fy * fy * (3 - 2 * fy);
-      const a = hash(x0, y0, seed);
-      const b = hash(x0 + 1, y0, seed);
-      const c = hash(x0, y0 + 1, seed);
-      const d = hash(x0 + 1, y0 + 1, seed);
-      return a + (b - a) * sx + (c - a) * sy + (a - b - c + d) * sx * sy;
+    // (the snow on the ground is made chunk by chunk: see snowChunk)
+  }
+
+  // Winter: snow settles on a chunk's grass (and the path), right up to the
+  // grass's ragged edge, and ponds freeze. Reads the chunk's first frame.
+  snowChunk(gx, gy, groundKey) {
+    const S = this.chunk * T;
+    const ground = this.textures.get(groundKey).getSourceImage().getContext('2d').getImageData(0, 0, S, S).data;
+    const cell = (test) => {
+      const m = new Map();
+      return (cx, cy) => {
+        const k = cy * W + cx;
+        if (!m.has(k)) m.set(k, this.key(cx, cy, test) !== '0000');
+        return m.get(k);
+      };
     };
-    const n = (x, y) => 0.6 * vnoise(x, y, 40, 7) + 0.3 * vnoise(x, y, 12, 8) + 0.1 * hash(x, y, 9);
-    // snow settles on grass (and the path), right up to the grass's ragged edge
-    // done chunk by chunk, reading the ground's first frame
-    const C = this.chunk;
-    const S = C * T;
-    const flag = (test) => Array.from({ length: H }, (_, y) => Array.from({ length: W }, (_, x) => this.key(x, y, test) !== '0000'));
-    const isPond = flag((m) => m === 3);
-    const isLand = flag((m) => m === 2 || m === 4);
-    const isPath = flag((m) => m === 4);
-    this.groundChunks.forEach(({ keys, cx: gx, cy: gy }) => {
-      if (keys[0].startsWith('island_sea')) return; // nothing settles on the sea
-      const ground = this.textures.get(keys[0]).getSourceImage().getContext('2d').getImageData(0, 0, S, S).data;
-      const img = new ImageData(S, S);
-      let any = false;
-      for (let py = 0; py < S; py++)
-        for (let px = 0; px < S; px++) {
-          const x = gx * S + px;
-          const y = gy * S + py;
-          const cx = Math.floor(x / T);
-          const cy = Math.floor(y / T);
-          if (cx >= W || cy >= H) continue;
-          const j = (py * S + px) * 4;
-        if (isPond[cy][cx] && ground[j + 2] > ground[j] + 40 && ground[j + 2] > ground[j + 1]) {
+    const isPond = cell((m) => m === 3);
+    const isLand = cell((m) => m === 2 || m === 4);
+    const isPath = cell((m) => m === 4);
+    const img = new ImageData(S, S);
+    let any = false;
+    for (let py = 0; py < S; py++)
+      for (let px = 0; px < S; px++) {
+        const x = gx * S + px;
+        const y = gy * S + py;
+        const cx = Math.floor(x / T);
+        const cy = Math.floor(y / T);
+        if (cx >= W || cy >= H) continue;
+        const j = (py * S + px) * 4;
+        if (isPond(cx, cy) && ground[j + 2] > ground[j] + 40 && ground[j + 2] > ground[j + 1]) {
           // the pond freezes: pale ice with a few streaks
-          const v = n(x, y);
+          const v = snowNoise(x, y);
           const streak = Math.abs(((x + y * 0.4) % 23) - 11) < 0.6 && v > 0.45;
           img.data.set(streak ? [255, 255, 255, 255] : v > 0.55 ? [206, 230, 244, 255] : [178, 214, 236, 255], j);
           any = true;
           continue;
         }
-        if (!isLand[cy][cx]) continue;
+        if (!isLand(cx, cy)) continue;
         const grassy = ground[j + 1] > ground[j] && ground[j + 1] > ground[j + 2];
-        const path = !grassy && isPath[cy][cx];
+        const path = !grassy && isPath(cx, cy);
         if (!grassy && !path) continue;
-        const v = n(x, y);
+        const v = snowNoise(x, y);
         if (v < (path ? 0.5 : 0.36)) continue; // grass peeks through; the path is trodden
         const c = v > 0.62 ? 250 : v > 0.42 ? 236 : 214;
         img.data.set([c, c + 2 > 255 ? 255 : c + 2, 255, v < 0.4 ? 170 : 255], j);
         any = true;
       }
-      if (!any) return;
-      const key = `island_snow_${gx}_${gy}`;
-      if (this.textures.exists(key)) this.textures.remove(key);
-      const tex = this.textures.createCanvas(key, S, S);
-      tex.getContext().putImageData(img, 0, 0);
-      tex.refresh();
-      this.add.image(gx * S, gy * S, key).setOrigin(0).setDepth(0.4);
-    });
+    if (!any) return null;
+    const key = `island_snow_${gx}_${gy}`;
+    if (this.textures.exists(key)) this.textures.remove(key);
+    const tex = this.textures.createCanvas(key, S, S);
+    tex.getContext().putImageData(img, 0, 0);
+    tex.refresh();
+    return { key, img: this.add.image(gx * S, gy * S, key).setOrigin(0).setDepth(0.4) };
   }
 
   light(x, y, r, color, a = 1, extra = {}) {
@@ -698,6 +747,7 @@ export class IslandScene extends Phaser.Scene {
       cam.setZoom(width / (VIEW_TILES * T));
     };
     fit();
+    this.streamChunks();
     this.scale.on('resize', fit);
     this.events.once('shutdown', () => this.scale.off('resize', fit));
   }
@@ -769,6 +819,7 @@ export class IslandScene extends Phaser.Scene {
     this.flickers.forEach((g) => g.setAlpha((0.1 + 0.5 * this.dark) * (0.8 + Math.random() * 0.35)));
     this.frame = (this.frame + 1) % 4;
     this.groundAnim.forEach(({ img, keys }) => img.setTexture(keys[this.frame]));
+    this.streamChunks();
     this.animated.forEach(({ img, keys }) => img.setTexture(keys[this.frame % keys.length]));
   }
 
@@ -993,6 +1044,7 @@ export class IslandScene extends Phaser.Scene {
 
   // the pond's extent (for ducks and dragonflies), or null
   pondRect() {
+    if (this.map?.overlay) return null; // a real place: its lakes are many and far apart
     if (!this.map) return { x: 5 * T, y: 16 * T, w: 5 * T, h: 5 * T };
     let x0 = 1e9, y0 = 1e9, x1 = -1, y1 = -1;
     this.corners.forEach((row, y) => row.forEach((m, x) => m === 3 && ((x0 = Math.min(x0, x)), (x1 = Math.max(x1, x)), (y0 = Math.min(y0, y)), (y1 = Math.max(y1, y)))));
@@ -1046,7 +1098,7 @@ export class IslandScene extends Phaser.Scene {
     Object.entries(MAPS).forEach(([id, m]) => id !== 'main' && id !== this.mapId && options.push({ label: m.name === 'Untitled island' ? 'The far isle' : m.name, sub: 'An island to explore', go: { map: id } }));
     const mine = builderIslands();
     mine.forEach((m) => m.name !== here && options.push({ label: m.name, sub: m.overlay ? `A real place · ${m.w}×${m.h}` : `Your island · ${m.w}×${m.h}`, go: { mapData: m } }));
-    if (here !== 'Wakefield, MA' && !mine.some((m) => m.name === 'Wakefield, MA')) options.push({ label: 'Wakefield, MA', sub: 'A real place · every street', go: { mapUrl: './maps/wakefield.json' } });
+    if (!/^Wakefield, MA/.test(here || '') && !mine.some((m) => /^Wakefield, MA/.test(m.name))) options.push({ label: 'Wakefield, MA', sub: 'A real place · every street', go: { mapUrl: './maps/wakefield-detail.json' } });
     this.paused = true;
     openSail(options, (pick) => {
       this.paused = false;
