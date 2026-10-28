@@ -8,7 +8,7 @@ Read docs/VISION.md first: every feature should serve it. Then docs/HANDOFF.md f
 - When the user sends a hand-drawn sketch or blueprint, study it closely. If any
   part is unclear, **ask before building**. Never guess on a sketch.
 - Test in a phone-sized portrait browser (390×844) before shipping.
-- **Always send the links when done:** game https://seanjoudrie.github.io/museum/ and builder https://seanjoudrie.github.io/museum/builder.html
+- **Always send the links when done:** game https://joudrie.github.io/museum/ and builder https://joudrie.github.io/museum/builder.html
 
 ## Hard rules for the game
 - **Portrait only.** The phone is never held sideways.

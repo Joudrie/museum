@@ -3,7 +3,7 @@
 For a Claude session that only knows the repo. Read `CLAUDE.md` (the rules) and
 `docs/VISION.md` (the north star) first, then this file.
 
-Live: game https://seanjoudrie.github.io/museum/ · builder https://seanjoudrie.github.io/museum/builder.html
+Live: game https://joudrie.github.io/museum/ · builder https://joudrie.github.io/museum/builder.html
 (GitHub Pages redeploys on every merge to `main` via `.github/workflows/pages.yml`).
 
 ---
