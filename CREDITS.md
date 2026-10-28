@@ -11,3 +11,5 @@ from those sheets by `tools/extract_sprites.py` into `public/sprites/lpc/`.
 | Fire | [LPC Fireplace](https://opengameart.org/content/lpc-fireplace) | Lanea Zimmerman (Sharm) | CC-BY 3.0 |
 | Bookshelves | [LPC Shelves Rework](https://opengameart.org/content/lpc-shelves-rework) | AntumDeluge (from LPC artwork) | CC-BY-SA 3.0 |
 | Armchairs, round table | [LPC Upholstery](https://opengameart.org/content/lpc-upholstery) | bluecarrot16 and contributors (see the pack's credits) | CC-BY-SA 3.0 |
+
+Wakefield, MA map (`public/maps/wakefield*`): map data © OpenStreetMap contributors, licensed ODbL (https://www.openstreetmap.org/copyright).

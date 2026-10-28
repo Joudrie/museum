@@ -98,6 +98,30 @@ select {
   height: 100%;
   touch-action: none;
 }
+#overlay-ctl {
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+#overlay-btn {
+  min-height: 40px;
+  padding: 0 12px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  color: var(--text, #fff);
+  font-size: 14px;
+}
+#overlay-btn[aria-pressed='true'] {
+  background: #e8c867;
+  color: #1d1714;
+}
+#overlay-alpha {
+  width: 120px;
+  accent-color: #e8c867;
+}
 #zoom-chip {
   position: absolute;
   right: 8px;

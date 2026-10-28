@@ -2343,3 +2343,16 @@ body.outside #hud {
   object-fit: contain;
   image-rendering: pixelated;
 }
+
+#map-overlay-btn {
+  position: fixed;
+  left: 10px;
+  top: calc(64px + env(safe-area-inset-top, 0px));
+  z-index: 20;
+  min-width: 44px;
+  min-height: 44px;
+  font-size: 22px;
+}
+#map-overlay-btn.on {
+  outline: 2px solid #e8c867;
+}
