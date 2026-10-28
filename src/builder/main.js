@@ -30,6 +30,7 @@ const SKIP_GROUP = /on |bank|Shoreline/; // the corner pieces terrain picks for 
 
 let TILES = null;
 let ROOM = null; // pieces.json
+const FAMILY = {}; // ref -> its turning family (rotations.json): the same object seen from each side
 const PIECES = {}; // ref -> { img, sx, sy, w, h, layer: 'tile' | 'object', label, src }
 let map = null;
 let chosen = null; // a ref: 'm:2' terrain, 't:palm' island tile, 'p:seating/3' room piece
@@ -97,6 +98,11 @@ async function loadPieces() {
     PIECES[`t:${name}`] = { img: t.frames[0], sx: 0, sy: 0, w: t.w, h: t.h, layer: flat ? 'tile' : 'object', label: t.label || name, group: t.group, skip: SKIP_GROUP.test(t.group || '') };
   });
   try {
+    try {
+      (await (await fetch('./builder/rotations.json')).json()).families.forEach((f) => f.forEach((ref) => (FAMILY[ref] = f)));
+    } catch (e) {
+      /* no families: nothing turns */
+    }
     ROOM = await (await fetch('./builder/pieces.json')).json();
     await Promise.all(
       ROOM.groups.map(
@@ -185,7 +191,7 @@ function buildPalette() {
   (ROOM?.groups || []).forEach((g) => lists.push({ name: `Room: ${g.name}`, refs: g.pieces.map((p) => `p:${p.id}`) }));
   lists.forEach((list, li) => {
     const det = document.createElement('details');
-    det.innerHTML = `<summary>${list.name}<small>${list.refs.length}</small></summary><div class="pieces"></div>`;
+    det.innerHTML = `<summary>${list.name}<small>${list.refs.filter((r) => !FAMILY[r] || FAMILY[r][0] === r).length}</small></summary><div class="pieces"></div>`;
     const grid = det.querySelector('.pieces');
     let built = false;
     det.addEventListener('toggle', () => {
@@ -194,12 +200,19 @@ function buildPalette() {
       if (!built) {
         built = true;
         list.refs.forEach((ref) => {
+          if (FAMILY[ref] && FAMILY[ref][0] !== ref) return; // a family is one entry; Turn shows the other sides
           const b = document.createElement('button');
           b.className = 'piece';
           b.dataset.ref = ref;
           const pic = document.createElement('div');
           pic.className = 'pic';
           pic.appendChild(thumb(ref, 72));
+          if (FAMILY[ref]) {
+            const badge = document.createElement('i');
+            badge.className = 'turnbadge';
+            badge.textContent = '⟳';
+            pic.appendChild(badge);
+          }
           b.appendChild(pic);
           const name = ref.startsWith('m:') ? MATS.find((m) => `m:${m.m}` === ref).name : ref.startsWith('t:') ? PIECES[ref].label : '';
           if (name) {
@@ -227,7 +240,7 @@ function choose(ref) {
   showChosen();
 }
 function markChosen() {
-  document.querySelectorAll('.piece').forEach((b) => b.classList.toggle('on', b.dataset.ref === chosen));
+  document.querySelectorAll('.piece').forEach((b) => b.classList.toggle('on', b.dataset.ref === (FAMILY[chosen]?.[0] || chosen)));
 }
 function refLabel(ref) {
   if (ref.startsWith('m:')) return MATS.find((m) => `m:${m.m}` === ref).name;
@@ -249,8 +262,9 @@ function showChosen() {
   else g.drawImage(t, (48 - t.width) / 2, (48 - t.height) / 2);
   g.restore();
   $('chosen-name').textContent = refLabel(chosen);
+  $('chosen-turn').hidden = !FAMILY[chosen];
   const p = PIECES[chosen];
-  $('chosen-meta').textContent = chosen.startsWith('m:') ? 'Terrain · shores and edges draw themselves' : p.layer === 'tile' ? 'Ground tile · drag to paint' : `Piece · ${Math.ceil(p.w / T)}×${Math.ceil(p.h / T)} tiles · tap to place${flip ? ' · flipped' : ''}`;
+  $('chosen-meta').textContent = chosen.startsWith('m:') ? 'Terrain · shores and edges draw themselves' : p.layer === 'tile' ? 'Ground tile · drag to paint' : `Piece · ${Math.ceil(p.w / T)}×${Math.ceil(p.h / T)} tiles · tap to place${flip ? ' · flipped' : ''}${FAMILY[chosen] ? ' · ⟳ turns it' : ''}`;
 }
 
 // ---------- drawing ----------
@@ -573,6 +587,7 @@ function select(o) {
   selected = o;
   $('selbar').hidden = !o;
   if (o) $('sel-text').textContent = refLabel(o.ref);
+  $('sel-turn').hidden = !(o && FAMILY[o.ref]);
   draw();
 }
 
@@ -915,6 +930,25 @@ $('sel-del').onclick = () => {
   map.objects.splice(map.objects.indexOf(selected), 1);
   select(null);
   changed();
+};
+// turning: step to the next side of a piece that has a family
+const turned = (ref) => {
+  const f = FAMILY[ref];
+  return f ? f[(f.indexOf(ref) + 1) % f.length] : ref;
+};
+$('sel-turn').onclick = () => {
+  if (!selected || !FAMILY[selected.ref]) return;
+  record();
+  const bottom = selected.y + PIECES[selected.ref].h; // keep the feet where they were
+  selected.ref = turned(selected.ref);
+  selected.y = bottom - PIECES[selected.ref].h;
+  $('sel-text').textContent = refLabel(selected.ref);
+  changed();
+};
+$('chosen-turn').onclick = () => {
+  if (!FAMILY[chosen]) return;
+  chosen = turned(chosen);
+  showChosen();
 };
 // flipping the chosen piece: tap its picture
 $('chosen-pic').onclick = () => {

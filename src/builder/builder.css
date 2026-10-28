@@ -150,7 +150,7 @@ select {
   font-size: 13px;
 }
 #selbar {
-  grid-template-columns: 1fr auto auto auto;
+  grid-template-columns: 1fr auto auto auto auto;
   align-items: center;
   background: var(--panel2);
 }
@@ -447,4 +447,26 @@ button.link {
   border: 1px solid var(--gold);
   border-radius: 8px;
   font-size: 13px;
+}
+
+/* turnable pieces */
+#sel-turn[hidden],
+#chosen-turn[hidden] {
+  display: none;
+}
+#chosen-turn {
+  padding: 6px 12px;
+  font-size: 18px;
+}
+.piece .pic {
+  position: relative;
+}
+.turnbadge {
+  position: absolute;
+  top: 2px;
+  right: 3px;
+  font-style: normal;
+  font-size: 13px;
+  line-height: 1;
+  color: var(--gold);
 }
