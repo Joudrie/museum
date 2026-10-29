@@ -1,0 +1,110 @@
+{
+  "status": "draft",
+  "collection": "archaeology",
+  "slug": "red-figure-calyx-krater-mixing-vessel-medea-in-c",
+  "notes": "region: Greek South Italy. era removed: the paintings date buckets do not fit antiquity; Chat 8 defines this collection",
+  "entry": {
+    "id": "archaeology:red-figure-calyx-krater-mixing-vessel-medea-in-c",
+    "collection": "archaeology",
+    "title": "Red-Figure Calyx-Krater (Mixing Vessel): Medea in Chariot (A); Telephos with Baby Orestes (B)",
+    "by": "Policoro Painter",
+    "year": "c. 400 BCE",
+    "ratio": 0.9311,
+    "blurb": "A different tragedy unfolds on the other side of the vase, from Euripides’s Telephos (438 BC).",
+    "rarity": 1,
+    "tags": [
+      "south italian"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1991.1/1991.1_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Leonard C. Hanna Jr. Fund",
+      "url": "https://clevelandart.org/art/1991.1"
+    },
+    "value": 5,
+    "facts": [
+      "Framed in the center by a halo (recalling her sun god grandfather Helios), the sorceress Medea flies off in a dragon-drawn chariot.",
+      "Seeking revenge against her husband Jason, leader of the Argonauts, Medea has just slain their two children.",
+      "Two Furies flank her, while Jason and a distraught nurse and teacher approach the bodies on the altar below."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "155665",
+    "title": "Red-Figure Calyx-Krater (Mixing Vessel): Medea in Chariot (A); Telephos with Baby Orestes (B)",
+    "maker": "Policoro Painter",
+    "year": "c. 400 BCE",
+    "medium": "ceramic",
+    "dimensions": "Diameter of mouth: 49.9 cm (19 5/8 in.); Overall: 50.5 cm (19 7/8 in.); Diameter of foot: 22 cm (8 11/16 in.)",
+    "ratio": 0.9311,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1991.1/1991.1_web.jpg",
+    "imageWidth": 838,
+    "imageHeight": 900,
+    "pageUrl": "https://clevelandart.org/art/1991.1",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Leonard C. Hanna Jr. Fund",
+    "description": "The remarkable scene on the front of this vase relates to the famous tragedy Medea , written by Euripides and first produced in Athens in 431 BC. Framed in the center by a halo (recalling her sun god grandfather Helios), the sorceress Medea flies off in a dragon-drawn chariot. Seeking revenge against her husband Jason, leader of the Argonauts, Medea has just slain their two children. Two Furies flank her, while Jason and a distraught nurse and teacher approach the bodies on the altar below. A different tragedy unfolds on the other side of the vase, from Euripides’s Telephos (438 BC). The wounded warrior Telephos holds the baby Orestes hostage at an altar, with Agamemnon and Clytemnestra rushing to save their son. This vase includes scenes connected to two Athenian tragedies dealing with children— Medea and Telephos .",
+    "culture": "South Italian, Lucanian",
+    "classification": "Ceramic",
+    "tags": [
+      "Greek and Roman Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Red-Figure Calyx-Krater (Mixing Vessel): Medea in Chariot (A); Telephos with Baby Orestes (B)",
+      "maker": "Policoro Painter",
+      "year": "c. 400 BCE",
+      "medium": "ceramic",
+      "dimensions": "Diameter of mouth: 49.9 cm (19 5/8 in.); Overall: 50.5 cm (19 7/8 in.); Diameter of foot: 22 cm (8 11/16 in.)",
+      "culture": "South Italian, Lucanian",
+      "classification": "Ceramic",
+      "credit": "The Cleveland Museum of Art. Leonard C. Hanna Jr. Fund",
+      "description": "The remarkable scene on the front of this vase relates to the famous tragedy Medea , written by Euripides and first produced in Athens in 431 BC. Framed in the center by a halo (recalling her sun god grandfather Helios), the sorceress Medea flies off in a dragon-drawn chariot. Seeking revenge against her husband Jason, leader of the Argonauts, Medea has just slain their two children. Two Furies flank her, while Jason and a distraught nurse and teacher approach the bodies on the altar below. A different tragedy unfolds on the other side of the vase, from Euripides’s Telephos (438 BC). The wounded warrior Telephos holds the baby Orestes hostage at an altar, with Agamemnon and Clytemnestra rushing to save their son. This vase includes scenes connected to two Athenian tragedies dealing with children— Medea and Telephos .",
+      "tombstone": "Red-Figure Calyx-Krater (Mixing Vessel): Medea in Chariot (A); Telephos with Baby Orestes (B), c. 400 BCE. Near the Policoro Painter (South Italian, Lucanian, active c. 400 BCE). Ceramic; diameter of mouth: 49.9 cm (19 5/8 in.); overall: 50.5 cm (19 7/8 in.); diameter of foot: 22 cm (8 11/16 in.). The Cleveland Museum of Art, Leonard C. Hanna Jr. Fund, 1991.1",
+      "funFact": "",
+      "didYouKnow": "This vase includes scenes connected to two Athenian tragedies dealing with children— Medea and Telephos .",
+      "creators": "Policoro Painter (South Italian, Lucanian, active c. 400 BCE)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "A different tragedy unfolds on the other side of the vase, from Euripides’s Telephos (438 BC).",
+      "quote": "A different tragedy unfolds on the other side of the vase, from Euripides’s Telephos (438 BC).",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Framed in the center by a halo (recalling her sun god grandfather Helios), the sorceress Medea flies off in a dragon-drawn chariot.",
+      "quote": "Framed in the center by a halo (recalling her sun god grandfather Helios), the sorceress Medea flies off in a dragon-drawn chariot.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Seeking revenge against her husband Jason, leader of the Argonauts, Medea has just slain their two children.",
+      "quote": "Seeking revenge against her husband Jason, leader of the Argonauts, Medea has just slain their two children.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Two Furies flank her, while Jason and a distraught nurse and teacher approach the bodies on the altar below.",
+      "quote": "Two Furies flank her, while Jason and a distraught nurse and teacher approach the bodies on the altar below.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "unknown collection \"archaeology\"",
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

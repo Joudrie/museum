@@ -1,0 +1,113 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "the-farm-at-the-entrance-of-the-wood-rosa",
+  "notes": "region: France (woman artist)",
+  "entry": {
+    "id": "painting:the-farm-at-the-entrance-of-the-wood-rosa",
+    "collection": "painting",
+    "title": "The Farm at the Entrance of the Wood",
+    "by": "Rosa Bonheur",
+    "year": "1860–80",
+    "era": "impressionist",
+    "ratio": 1.419,
+    "blurb": "One of the most celebrated female artists of the 19th century, Bonheur established an international reputation by exhibiting at the Paris Salons.",
+    "rarity": 1,
+    "tags": [
+      "france",
+      "oil"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1978.73/1978.73_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Gift of Mrs. John B. Dempsey",
+      "url": "https://clevelandart.org/art/1978.73"
+    },
+    "value": 5,
+    "facts": [
+      "Empress Eug​é​nie, wife of Napoleon III, visited her studio to personally confer the Legion of Honor, making Bonheur the first woman to receive the award.",
+      "Bonheur's artistic work led her to pastures, fairs, and even slaughterhouses—unlikely places for a proper 19th- century lady.",
+      "This painting may have been inspired by the rustic houses in the vicinity of the Forest of Fontainebleau, where Bonheur lived for more than 40 years."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "149421",
+    "title": "The Farm at the Entrance of the Wood",
+    "maker": "Rosa Bonheur",
+    "year": "1860–80",
+    "medium": "oil on fabric",
+    "dimensions": "Unframed: 28.4 x 40.3 cm (11 3/16 x 15 7/8 in.)",
+    "widthCm": 40.3,
+    "heightCm": 28.4,
+    "ratio": 1.419,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1978.73/1978.73_web.jpg",
+    "imageWidth": 1263,
+    "imageHeight": 873,
+    "pageUrl": "https://clevelandart.org/art/1978.73",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Gift of Mrs. John B. Dempsey",
+    "description": "One of the most celebrated female artists of the 19th century, Bonheur established an international reputation by exhibiting at the Paris Salons. Empress Eug​é​nie, wife of Napoleon III, visited her studio to personally confer the Legion of Honor, making Bonheur the first woman to receive the award. This painting may have been inspired by the rustic houses in the vicinity of the Forest of Fontainebleau, where Bonheur lived for more than 40 years. Bonheur's artistic work led her to pastures, fairs, and even slaughterhouses—unlikely places for a proper 19th- century lady. Long dresses were too cumbersome for her rugged lifestyle; in order to wear trousers on the job she had to seek permission from the local government.",
+    "culture": "France, 19th century",
+    "classification": "Painting",
+    "tags": [
+      "Modern European Painting and Sculpture"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "The Farm at the Entrance of the Wood",
+      "maker": "Rosa Bonheur",
+      "year": "1860–80",
+      "medium": "oil on fabric",
+      "dimensions": "Unframed: 28.4 x 40.3 cm (11 3/16 x 15 7/8 in.)",
+      "culture": "France, 19th century",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Gift of Mrs. John B. Dempsey",
+      "description": "One of the most celebrated female artists of the 19th century, Bonheur established an international reputation by exhibiting at the Paris Salons. Empress Eug​é​nie, wife of Napoleon III, visited her studio to personally confer the Legion of Honor, making Bonheur the first woman to receive the award. This painting may have been inspired by the rustic houses in the vicinity of the Forest of Fontainebleau, where Bonheur lived for more than 40 years. Bonheur's artistic work led her to pastures, fairs, and even slaughterhouses—unlikely places for a proper 19th- century lady. Long dresses were too cumbersome for her rugged lifestyle; in order to wear trousers on the job she had to seek permission from the local government.",
+      "tombstone": "The Farm at the Entrance of the Wood, 1860–80. Rosa Bonheur (French, 1822–1899). Oil on fabric; unframed: 28.4 x 40.3 cm (11 3/16 x 15 7/8 in.). The Cleveland Museum of Art, Gift of Mrs. John B. Dempsey, 1978.73",
+      "funFact": "",
+      "didYouKnow": "Bonheur's artistic work led her to pastures, fairs, and even slaughterhouses—unlikely places for a proper 19th- century lady. Long dresses were too cumbersome for her rugged lifestyle; in order to wear trousers on the job she had to seek permission from the local government.",
+      "creators": "Rosa Bonheur (French, 1822–1899)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "One of the most celebrated female artists of the 19th century, Bonheur established an international reputation by exhibiting at the Paris Salons.",
+      "quote": "One of the most celebrated female artists of the 19th century, Bonheur established an international reputation by exhibiting at the Paris Salons.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Empress Eug​é​nie, wife of Napoleon III, visited her studio to personally confer the Legion of Honor, making Bonheur the first woman to receive the award.",
+      "quote": "Empress Eug​é​nie, wife of Napoleon III, visited her studio to personally confer the Legion of Honor, making Bonheur the first woman to receive the award.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Bonheur's artistic work led her to pastures, fairs, and even slaughterhouses—unlikely places for a proper 19th- century lady.",
+      "quote": "Bonheur's artistic work led her to pastures, fairs, and even slaughterhouses—unlikely places for a proper 19th- century lady.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "This painting may have been inspired by the rustic houses in the vicinity of the Forest of Fontainebleau, where Bonheur lived for more than 40 years.",
+      "quote": "This painting may have been inspired by the rustic houses in the vicinity of the Forest of Fontainebleau, where Bonheur lived for more than 40 years.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

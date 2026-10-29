@@ -1,0 +1,113 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "twenty-three-deity-nairatma-mandala",
+  "notes": "region: Tibet. a sacred image: say what the painting is for",
+  "entry": {
+    "id": "painting:twenty-three-deity-nairatma-mandala",
+    "collection": "painting",
+    "title": "Twenty-three Deity Nairatma Mandala",
+    "year": "c. 1375",
+    "era": "renaissance",
+    "ratio": 0.8776,
+    "blurb": "A mandala is a diagram of a realm of enlightened beings.",
+    "rarity": 1,
+    "tags": [
+      "central tibet",
+      "tempera",
+      "ink"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1993.4/1993.4_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Purchase from the J. H. Wade Fund",
+      "url": "https://clevelandart.org/art/1993.4"
+    },
+    "value": 5,
+    "facts": [
+      "The outermost ring contains depictions of eight cremation grounds, where corpses burn, and dogs and vultures feed on human remains.",
+      "Buddhist practitioners spend time in cremation grounds in order to overcome fear of death and attachment to their physical bodies.",
+      "A practitioner can then reach the splendid realm of eternal bliss in the center."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "157147",
+    "title": "Twenty-three Deity Nairatma Mandala",
+    "maker": "",
+    "year": "c. 1375",
+    "medium": "Gum tempera, ink, and gold on cloth",
+    "dimensions": "Overall: 82.5 x 72.4 cm (32 1/2 x 28 1/2 in.)",
+    "widthCm": 72.4,
+    "heightCm": 82.5,
+    "ratio": 0.8776,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1993.4/1993.4_web.jpg",
+    "imageWidth": 783,
+    "imageHeight": 900,
+    "pageUrl": "https://clevelandart.org/art/1993.4",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Purchase from the J. H. Wade Fund",
+    "description": "A mandala is a diagram of a realm of enlightened beings. This mandala depicts the palace of Nairatma, who dances in the center. The outermost ring contains depictions of eight cremation grounds, where corpses burn, and dogs and vultures feed on human remains. Buddhist practitioners spend time in cremation grounds in order to overcome fear of death and attachment to their physical bodies. A practitioner can then reach the splendid realm of eternal bliss in the center. Accomplished teachers guide a practitioner’s meditations through the cremation grounds and every section of the mandala. Virupa is depicted twice, always pointing to arrest the sun with his raised left hand. He sits among the lineage masters along the top edge, and is also depicted in the topmost segment of the ring of cremation grounds, being served a cup of liquor.",
+    "culture": "Central Tibet",
+    "classification": "Painting",
+    "tags": [
+      "Indian and Southeast Asian Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Twenty-three Deity Nairatma Mandala",
+      "maker": "",
+      "year": "c. 1375",
+      "medium": "Gum tempera, ink, and gold on cloth",
+      "dimensions": "Overall: 82.5 x 72.4 cm (32 1/2 x 28 1/2 in.)",
+      "culture": "Central Tibet",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Purchase from the J. H. Wade Fund",
+      "description": "A mandala is a diagram of a realm of enlightened beings. This mandala depicts the palace of Nairatma, who dances in the center. The outermost ring contains depictions of eight cremation grounds, where corpses burn, and dogs and vultures feed on human remains. Buddhist practitioners spend time in cremation grounds in order to overcome fear of death and attachment to their physical bodies. A practitioner can then reach the splendid realm of eternal bliss in the center. Accomplished teachers guide a practitioner’s meditations through the cremation grounds and every section of the mandala. Virupa is depicted twice, always pointing to arrest the sun with his raised left hand. He sits among the lineage masters along the top edge, and is also depicted in the topmost segment of the ring of cremation grounds, being served a cup of liquor.",
+      "tombstone": "Twenty-three Deity Nairatma Mandala, c. 1375. Central Tibet. Gum tempera, ink, and gold on cloth; overall: 82.5 x 72.4 cm (32 1/2 x 28 1/2 in.). The Cleveland Museum of Art, Purchase from the J. H. Wade Fund, 1993.4",
+      "funFact": "",
+      "didYouKnow": "Virupa is depicted twice, always pointing to arrest the sun with his raised left hand. He sits among the lineage masters along the top edge, and is also depicted in the topmost segment of the ring of cremation grounds, being served a cup of liquor.",
+      "creators": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "A mandala is a diagram of a realm of enlightened beings.",
+      "quote": "A mandala is a diagram of a realm of enlightened beings.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The outermost ring contains depictions of eight cremation grounds, where corpses burn, and dogs and vultures feed on human remains.",
+      "quote": "The outermost ring contains depictions of eight cremation grounds, where corpses burn, and dogs and vultures feed on human remains.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Buddhist practitioners spend time in cremation grounds in order to overcome fear of death and attachment to their physical bodies.",
+      "quote": "Buddhist practitioners spend time in cremation grounds in order to overcome fear of death and attachment to their physical bodies.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "A practitioner can then reach the splendid realm of eternal bliss in the center.",
+      "quote": "A practitioner can then reach the splendid realm of eternal bliss in the center.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

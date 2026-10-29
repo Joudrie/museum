@@ -1,0 +1,109 @@
+{
+  "status": "draft",
+  "collection": "archaeology",
+  "slug": "torso-of-a-kouros",
+  "notes": "region: Greece. era removed: the paintings date buckets do not fit antiquity; Chat 8 defines this collection",
+  "entry": {
+    "id": "archaeology:torso-of-a-kouros",
+    "collection": "archaeology",
+    "title": "Torso of a Kouros",
+    "year": "c. 550 BCE",
+    "ratio": 0.83,
+    "blurb": "A nude youth standing with arms to the sides and one foot slightly advanced, the type probably originated under Egyptian influence, but then developed along entirely Greek lines.",
+    "rarity": 1,
+    "tags": [
+      "greece"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1953.125/1953.125_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Gift of the Hanna Fund",
+      "url": "https://clevelandart.org/art/1953.125"
+    },
+    "value": 5,
+    "facts": [
+      "Found in sanctuaries as well as cemeteries across the ancient Greek world, kouroi may represent gods—especially Apollo—as well as mortals.",
+      "Although incomplete, this kouros retains much of its beautifully finished and patterned surface.",
+      "In antiquity, brightly colored paint would probably have rendered this kouros more lifelike."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "130360",
+    "title": "Torso of a Kouros",
+    "maker": "",
+    "year": "c. 550 BCE",
+    "medium": "marble",
+    "dimensions": "Overall: 62.5 cm (24 5/8 in.)",
+    "ratio": 0.83,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1953.125/1953.125_web.jpg",
+    "imageWidth": 747,
+    "imageHeight": 900,
+    "pageUrl": "https://clevelandart.org/art/1953.125",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Gift of the Hanna Fund",
+    "description": "Known as a kouros , the ancient Greek word for a youth, this fragmentary statue belongs to a relatively rare type of large-scale stone sculpture made for little more than a century—shortly before 600 BCE to soon after 500 BCE. A nude youth standing with arms to the sides and one foot slightly advanced, the type probably originated under Egyptian influence, but then developed along entirely Greek lines. Found in sanctuaries as well as cemeteries across the ancient Greek world, kouroi may represent gods—especially Apollo—as well as mortals. Although incomplete, this kouros retains much of its beautifully finished and patterned surface. In antiquity, brightly colored paint would probably have rendered this kouros more lifelike.",
+    "culture": "Greece, Archaic period",
+    "classification": "Sculpture",
+    "tags": [
+      "Greek and Roman Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Torso of a Kouros",
+      "maker": "",
+      "year": "c. 550 BCE",
+      "medium": "marble",
+      "dimensions": "Overall: 62.5 cm (24 5/8 in.)",
+      "culture": "Greece, Archaic period",
+      "classification": "Sculpture",
+      "credit": "The Cleveland Museum of Art. Gift of the Hanna Fund",
+      "description": "Known as a kouros , the ancient Greek word for a youth, this fragmentary statue belongs to a relatively rare type of large-scale stone sculpture made for little more than a century—shortly before 600 BCE to soon after 500 BCE. A nude youth standing with arms to the sides and one foot slightly advanced, the type probably originated under Egyptian influence, but then developed along entirely Greek lines. Found in sanctuaries as well as cemeteries across the ancient Greek world, kouroi may represent gods—especially Apollo—as well as mortals. Although incomplete, this kouros retains much of its beautifully finished and patterned surface. In antiquity, brightly colored paint would probably have rendered this kouros more lifelike.",
+      "tombstone": "Torso of a Kouros, c. 550 BCE. Greece, Archaic period. Marble; overall: 62.5 cm (24 5/8 in.). The Cleveland Museum of Art, Gift of the Hanna Fund, 1953.125",
+      "funFact": "",
+      "didYouKnow": "In antiquity, brightly colored paint would probably have rendered this kouros more lifelike.",
+      "creators": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "A nude youth standing with arms to the sides and one foot slightly advanced, the type probably originated under Egyptian influence, but then developed along entirely Greek lines.",
+      "quote": "A nude youth standing with arms to the sides and one foot slightly advanced, the type probably originated under Egyptian influence, but then developed along entirely Greek lines.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Found in sanctuaries as well as cemeteries across the ancient Greek world, kouroi may represent gods—especially Apollo—as well as mortals.",
+      "quote": "Found in sanctuaries as well as cemeteries across the ancient Greek world, kouroi may represent gods—especially Apollo—as well as mortals.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Although incomplete, this kouros retains much of its beautifully finished and patterned surface.",
+      "quote": "Although incomplete, this kouros retains much of its beautifully finished and patterned surface.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "In antiquity, brightly colored paint would probably have rendered this kouros more lifelike.",
+      "quote": "In antiquity, brightly colored paint would probably have rendered this kouros more lifelike.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "unknown collection \"archaeology\"",
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

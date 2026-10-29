@@ -1,0 +1,94 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "prince-holding-a-falcon",
+  "notes": "region: Iran (Qajar). the Met has no description text: needs a real hook",
+  "entry": {
+    "id": "painting:prince-holding-a-falcon",
+    "collection": "painting",
+    "title": "Prince Holding a Falcon",
+    "year": "ca 1820",
+    "era": "romantic",
+    "blurb": "ca 1820, Oil on canvas.",
+    "rarity": 1,
+    "tags": [
+      "oil",
+      "portrait"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://images.metmuseum.org/CRDImages/is/original/DP-15521-001.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Metropolitan Museum of Art, New York. Purchase, 2017 NoRuz at The Met Benefit, 2017",
+      "url": "https://www.metmuseum.org/art/collection/search/767842"
+    },
+    "value": 5,
+    "ratio": 0.3921
+  },
+  "candidate": {
+    "source": "met",
+    "sourceId": "767842",
+    "title": "Prince Holding a Falcon",
+    "maker": "",
+    "year": "ca 1820",
+    "medium": "Oil on canvas",
+    "dimensions": "H. 75 3/16 in. (191 cm) W. 29 1/2 in. (74.9 cm)",
+    "imageUrl": "https://images.metmuseum.org/CRDImages/is/original/DP-15521-001.jpg",
+    "pageUrl": "https://www.metmuseum.org/art/collection/search/767842",
+    "license": "CC0",
+    "credit": "The Metropolitan Museum of Art, New York. Purchase, 2017 NoRuz at The Met Benefit, 2017",
+    "description": "",
+    "culture": "",
+    "classification": "Paintings",
+    "tags": [
+      "Falcons",
+      "Princes",
+      "Men",
+      "Portraits"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Prince Holding a Falcon",
+      "maker": "",
+      "year": "ca 1820",
+      "medium": "Oil on canvas",
+      "dimensions": "H. 75 3/16 in. (191 cm) W. 29 1/2 in. (74.9 cm)",
+      "culture": "",
+      "classification": "Paintings",
+      "credit": "The Metropolitan Museum of Art, New York. Purchase, 2017 NoRuz at The Met Benefit, 2017",
+      "description": "",
+      "objectName": "Painting",
+      "department": "Islamic Art",
+      "period": "",
+      "dynasty": "",
+      "artistBio": "",
+      "region": "Iran"
+    },
+    "widthCm": 74.9,
+    "heightCm": 191,
+    "ratio": 0.3921
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "ca 1820, Oil on canvas.",
+      "quote": "ca 1820, Oil on canvas",
+      "source": "record",
+      "placeholderFor": "needs a real hook"
+    }
+  ],
+  "problems": [
+    "claim 1: needs a real hook; it only restates the record's own details (maker, date, medium)",
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}
