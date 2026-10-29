@@ -32,7 +32,7 @@ globalThis.localStorage = { getItem: (k) => mem[k] ?? null, setItem: (k, v) => (
   });
   check(P.validateHall({ ...halls[0], theme: 'nope' }).length > 0, 'a bad theme is caught', 'bad theme not caught');
   check(P.validateHall({ ...halls[0], facts: ['x'] }).length > 0, 'unsourced facts on a hall are refused', 'facts not refused');
-  check(P.validateHall({ ...halls[0], collections: [{ id: 'coin' }] }).length > 0, 'an unregistered collection is caught', 'unregistered collection not caught');
+  check(P.validateHall({ ...halls[0], collections: [{ id: 'no-such-collection' }] }).length > 0, 'an unregistered collection is caught', 'unregistered collection not caught');
 
   console.log('Fit in every room shape');
   for (const orient of ['vertical', 'horizontal', 'square']) {

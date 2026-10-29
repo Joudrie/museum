@@ -427,10 +427,15 @@
      "y": 0.75
     }
    ],
-   "collections": [],
-   "planned": [
-    "meteorite"
-   ]
+   "collections": [
+    {
+     "id": "meteorite",
+     "sets": [
+      "sky-stones"
+     ]
+    }
+   ],
+   "planned": []
   },
   {
    "id": "minerals",
@@ -560,6 +565,12 @@
      "sets": [
       "pond-fish"
      ]
+    },
+    {
+     "id": "shell",
+     "sets": [
+      "shell-box"
+     ]
     }
    ],
    "note": "A whale skeleton waits for chat 5's skeleton display."
@@ -652,10 +663,15 @@
      "y": 0.8
     }
    ],
-   "collections": [],
-   "planned": [
-    "pottery"
-   ]
+   "collections": [
+    {
+     "id": "pottery",
+     "sets": [
+      "potters-shelf"
+     ]
+    }
+   ],
+   "planned": []
   },
   {
    "id": "maritime",
