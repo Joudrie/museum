@@ -22,6 +22,7 @@ import { animateWalker, footstep, dust } from './motion.js';
 import { Pet } from './pets.js';
 import { Fishing, catchOpen } from './fishing.js';
 import { startDig, readyIn, DIG_TILES, siteOf, siteKey, siteBonusReady, bonusEntry } from './dig.js';
+import { Puzzles } from './puzzles.js';
 import { openJournal } from './journal.js';
 import isle1 from './maps/isle-1.json';
 import mainIsland from './maps/main-island.json';
@@ -123,6 +124,7 @@ export class IslandScene extends Phaser.Scene {
     this.things = []; // signs and chests you can interact with
     this.digs = []; // dig spots (src/dig.js)
     this.exp = expeditionFor(this); // an expedition island's spots, patrols and clock (src/expedition.js)
+    this.puzzles = new Puzzles(this, TILES); // push boulders, plates, levers, gates, ice, fog, riddles (src/puzzles.js)
     this.flickers = []; // campfire glows
     this.flowerSpots = [];
     // the scene object is reused on every visit, so start these afresh
@@ -935,6 +937,7 @@ export class IslandScene extends Phaser.Scene {
       if (PEOPLE[name] !== undefined) return this.islanders.push(this.islander(o.x + T / 2, o.y + t.h - 4, PEOPLE[name], this.islanders.length));
       if (name === 'museum') return this.mapMuseum(x, y, t);
       if (DIG_TILES[name]) return this.addDig(x, y, DIG_TILES[name]);
+      if (this.puzzles.piece(name, x, y)) return;
       if (name === 'tall_grass' || name === 'tall_grass_front') {
         if (!this.grassCells.has(`${x},${y}`)) this.tallGrass(x, y);
         return;
@@ -1211,6 +1214,13 @@ export class IslandScene extends Phaser.Scene {
       best = ex;
       bestD = ex.d;
     }
+    if (this.puzzles.any) {
+      const pz = this.puzzles.focusAt(x, y);
+      if (pz && Math.hypot(x - pz.puzzle.cx, y - pz.puzzle.cy) < bestD + 4) {
+        best = pz;
+        bestD = Math.hypot(x - pz.puzzle.cx, y - pz.puzzle.cy);
+      }
+    }
     if (this.pet) {
       const dp = Math.hypot(x - this.pet.s.x, y - this.pet.s.y) + 4;
       if (dp < bestD) {
@@ -1269,6 +1279,7 @@ export class IslandScene extends Phaser.Scene {
     if (f.locked) return this.toast('The doors are locked. The museum is on Main Island now.');
     if (f.dig) return this.digAt(f.dig);
     if (f.exp) return this.exp.interact(f.exp);
+    if (f.puzzle) return this.puzzles.interact(f);
     if (f.animal) return this.petAnimal(f.animal);
     if (f.cottage) return this.enterCottage();
     if (f.fish) {
@@ -1371,6 +1382,7 @@ export class IslandScene extends Phaser.Scene {
       ({ x: vx, y: vy } = this.dragVec);
       pace = this.dragMag > 0.7 ? 1 : 0.62;
     }
+    if (this.puzzles.sliding) vx = vy = 0; // sliding on ice: no steering
     const len = Math.hypot(vx, vy);
     const p = this.player;
     if (len) {
@@ -1386,7 +1398,8 @@ export class IslandScene extends Phaser.Scene {
         this.facing = vy < 0 ? 'up' : 'down';
       }
     }
-    if (animateWalker(this, p, len > 0, dt, 0.8 + pace * 0.5)) this.onStep(p, pace);
+    if (this.puzzles.any) this.puzzles.update(dt, len ? vx / len : 0, len ? vy / len : 0);
+    if (animateWalker(this, p, len > 0 || !!this.puzzles.sliding, dt, 0.8 + pace * 0.5)) this.onStep(p, pace);
     this.pet?.update(dt);
     this.exp?.update(dt);
     this.critters.update(dt, p);

@@ -85,7 +85,7 @@ Owns: `src/dig.js`, `src/puzzles*.js`, `src/collections/data/{minerals,fossils}.
 - [x] Dig tools (brush, trowel, pick) that change speed and what turns up; a bone that needs several spots to complete (PR 123).
 - [x] Bigger dig sites: a cliff face or trench worked across several tiles (touching spots of one kind form a site; dig them all in one rest period for a bonus rare find) (PR 123). A dig-site sandbox map is still to do (see Needs Sean).
 - [ ] Metal-detector hunt (warmer / colder); map fragments (collect 4 and the X appears).
-- [ ] Puzzle pieces as builder tiles and runtime: push blocks, boulders to smash, pressure plates and levers, iron gates, ice sliding, fog that clears as you walk, riddles from NPCs, mazes.
+- [x] Puzzle pieces as builder tiles and runtime: push blocks, boulders to smash, pressure plates and levers, iron gates, ice sliding, fog that clears as you walk, riddles from NPCs, mazes (hedges; build them in the builder) (PR 150). `src/puzzles.js`; the test bed is `content/maps/puzzle-yard.json`.
 - [ ] Dig spots in the builder palette under "Dig sites" (done, PR 106); spots show their rest time; daily dig goals.
 - [ ] Finds arrive dirty where Chat 4 expects them (`dirty: true` on a stack).
 

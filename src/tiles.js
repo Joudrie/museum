@@ -945,6 +945,37 @@ function addProps(add, anim) {
     R(4, 19, 24, 4, css(STONE[1]));
   }), { group: 'Puzzles', label: 'Stone head (1×2)', w: T, h: 2 * T, walk: 'block' });
 
+  // Puzzle pieces with a runtime (src/puzzles.js): a boulder that only a pick can crack, drifting fog that clears as you
+  // walk through it, and a riddler who gives a find for a right answer. (Boulder (push), plates, levers and gates are above.)
+  add('rock_crack', draw(T, T, ({ R, E }) => {
+    E(16, 28, 12, 3, 'rgba(0,0,0,0.28)');
+    E(16, 18, 13, 11, OUT);
+    E(16, 18, 12, 10, css(STONE[2]));
+    E(13, 14, 7, 5, css(STONE[3]));
+    for (let i = 0; i < 12; i++) R(18 - ((i * 5) % 4), 8 + i, 2, 2, OUT); // the crack
+    R(9, 22, 4, 2, css(STONE[1]));
+    R(21, 21, 4, 2, css(STONE[1]));
+  }), { group: 'Puzzles', label: 'Cracked boulder (needs a pick)', walk: 'block' });
+  add('fog', draw(T, T, ({ E }) => {
+    [[10, 12, 10, 7], [20, 14, 10, 8], [15, 20, 12, 7], [8, 22, 8, 5], [23, 22, 8, 5]].forEach(([x, y, rx, ry]) => E(x, y, rx, ry, 'rgba(236,240,246,0.78)'));
+    [[14, 14, 7, 4], [21, 19, 6, 3]].forEach(([x, y, rx, ry]) => E(x, y, rx, ry, 'rgba(255,255,255,0.5)'));
+  }), { group: 'Puzzles', label: 'Fog (clears as you walk)', walk: 'over' });
+  add('riddler', draw(T, 2 * T, ({ R, E }) => {
+    E(16, 60, 10, 3, 'rgba(0,0,0,0.28)');
+    R(8, 24, 16, 34, OUT); // robe
+    R(9, 25, 14, 32, '#5a4a8a');
+    R(9, 25, 14, 4, '#7a6ab0');
+    R(12, 10, 8, 14, OUT); // face
+    R(13, 11, 6, 12, '#e8c49a');
+    R(11, 6, 10, 6, OUT); // hat
+    R(12, 7, 8, 4, '#3a2f66');
+    R(14, 15, 1, 2, OUT);
+    R(18, 15, 1, 2, OUT);
+    R(14, 31, 4, 4, '#f2d36b'); // a glowing question mark
+    R(16, 29, 2, 2, '#f2d36b');
+    R(15, 37, 2, 2, '#f2d36b');
+  }), { group: 'Puzzles', label: 'Riddler (1×2)', w: T, h: 2 * T, walk: 'block' });
+
   addOutdoor(add, anim, WOOD);
 }
 
