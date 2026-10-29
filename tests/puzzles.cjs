@@ -35,7 +35,10 @@ const check = (c, good, bad) => (c ? console.log('  ✓ ' + good) : (problems.pu
 
   // 1. push the boulder two tiles onto the plate; the gate opens and stays open
   await at(29, 30);
-  await walk(1, 0, 1050);
+  await scene((s, a) => { s.dragging = true; s.dragVec = { x: 1, y: 0 }; s.dragMag = 1; });
+  for (let i = 0; i < 60 && (await scene((s) => s.puzzles.boulders[0].x)) < 33; i++) await page.waitForTimeout(100);
+  await scene((s) => { s.dragging = false; s.dragVec = null; });
+  await page.waitForTimeout(300);
   const r1 = await scene((s) => ({ bx: s.puzzles.boulders[0].x, on: s.puzzles.plates[0].on, open: s.puzzles.gates[0].open, solid: s.solid[30][40] }));
   check(r1.bx === 33 && r1.on && r1.open && !r1.solid, 'pushing the boulder onto the plate opens the gate', 'boulder/plate/gate wrong: ' + JSON.stringify(r1));
   await page.screenshot({ path: `${OUT}/plate-gate.png` });
