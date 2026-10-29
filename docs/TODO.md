@@ -71,19 +71,19 @@ Owns: new `src/restore.js`, `src/restorestudio.js`, `src/storage_room.js`. Claim
 ## CHAT 5: Display, exhibits and the aquarium
 Owns: `src/showcase.js`, `src/viewer.js`, `src/collections/render.js`, new `src/display*.js`. Claim: `claimed: 2026-10-29`
 - [x] Display cases, plinths, specimen shelves, easels and tanks that **place collection entries in rooms** (entries already say how they display: wall, case, plinth). (#127)
-- [x] **Aquarium** for caught fish: tanks in a room, fish swim, tap for the card; a giant tank wing. (tanks, giant tank, swimming fish: #127; tap-a-fish card still to do)
+- [x] **Aquarium** for caught fish: tanks in a room, fish swim, tap for the card; a giant tank wing. (tanks, giant tank, swimming fish: #127; tapping a fish or piece opens its card)
 - [x] Dinosaur skeleton assembled from dug bones; the big T. rex as a goal. (the T-rex skeleton item needs 6 dinosaur bones and a T. rex tooth in the codex; the toolkit shows what is missing)
-- [ ] Specimen shelves for everything with the HD viewer; rarity frames and special cases for rare items.
+- [x] Specimen shelves for everything with the HD viewer; rarity frames and special cases for rare items. (shelf + case + plinth; rare pieces glow blue, legendary breathe gold)
 - [x] Set completion plaques and rewards on display ("Fossil drawer", "Crystal cabinet"). (a set fully on display earns double; shown in the display panel)
 - [x] Every displayed piece earns and counts toward room rating. (#127)
-- [ ] Viewer polish: swipe along a wall of cases, notes, your rating and journal note.
+- [x] Viewer polish: swipe along a wall of cases, notes, your rating and journal note. (tap any displayed piece in a room, or in the panel, to open its card; swipe to the next; rating and note save to the journal)
 - [x] Rope barriers, stanchions and signage as placeable decor. (Display tab: rope, stanchion, exhibit sign)
 
 ## CHAT 6: Digging v2 and puzzle mechanics
 Owns: `src/dig.js`, `src/puzzles*.js`, `src/collections/data/{minerals,fossils}.js`. Claim: `claimed: 2026-10-29`
-- [x] More finds as data collections: pottery shards, coins, arrowheads, shells, meteorites (amber was already a fossil) (PR 106). Dig kinds: mineral, fossil, ruin, shore, crater.
-- [ ] Dig tools (brush, trowel, pick) that change speed and what turns up; a bone that needs several spots to complete.
-- [ ] Bigger dig sites: a cliff face or trench worked across several tiles; a dig-site room sandbox.
+- [x] More finds as data collections: pottery shards, coins, arrowheads, shells, meteorites (amber was already a fossil) (PR 122). Dig kinds: mineral, fossil, ruin, shore, crater.
+- [x] Dig tools (brush, trowel, pick) that change speed and what turns up; a bone that needs several spots to complete (PR 123).
+- [x] Bigger dig sites: a cliff face or trench worked across several tiles (touching spots of one kind form a site; dig them all in one rest period for a bonus rare find) (PR 123). A dig-site sandbox map is still to do (see Needs Sean).
 - [ ] Metal-detector hunt (warmer / colder); map fragments (collect 4 and the X appears).
 - [ ] Puzzle pieces as builder tiles and runtime: push blocks, boulders to smash, pressure plates and levers, iron gates, ice sliding, fog that clears as you walk, riddles from NPCs, mazes.
 - [ ] Dig spots in the builder palette under "Dig sites" (done, PR 106); spots show their rest time; daily dig goals.

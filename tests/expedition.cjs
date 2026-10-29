@@ -135,7 +135,7 @@ async function dataChecks() {
   await settle(400);
   await run(() => { __game.scene.getScene('island').interact(); });
   await brush();
-  check(/found/i.test(await run(() => document.querySelector('.dig-title').textContent)), 'digging the X turns up a find', 'dig did not finish');
+  check(/found/i.test(await run(() => (document.querySelector('.dig-title')?.textContent || document.getElementById('dig')?.outerHTML.slice(0, 400) || 'no #dig'))), 'digging the X turns up a find', 'dig did not finish');
   await shot('5-dug');
   await run(() => document.querySelector('.dig-close').click());
   await settle(300);

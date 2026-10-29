@@ -286,7 +286,7 @@ export class Expedition {
   }
 
   find(sp) {
-    const entries = list({ collection: sp.collection || 'mineral' });
+    const entries = list({ collection: sp.collection || 'mineral' }).filter((e) => !e.parts); // (a bone in several pieces needs the dig spots at home)
     const fresh = entries.filter((e) => !seen(e.id));
     return pick(fresh.length && Math.random() < 0.7 ? fresh : entries);
   }

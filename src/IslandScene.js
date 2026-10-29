@@ -20,7 +20,7 @@ import { settings, hourNow } from './settings.js';
 import { animateWalker, footstep, dust } from './motion.js';
 import { Pet } from './pets.js';
 import { Fishing, catchOpen } from './fishing.js';
-import { startDig, readyIn, DIG_TILES } from './dig.js';
+import { startDig, readyIn, DIG_TILES, siteOf, siteKey, siteBonusReady, bonusEntry } from './dig.js';
 import { openJournal } from './journal.js';
 import isle1 from './maps/isle-1.json';
 import mainIsland from './maps/main-island.json';
@@ -787,8 +787,19 @@ export class IslandScene extends Phaser.Scene {
         if (!found) return;
         d.img.setVisible(false); // (kept, not destroyed: the season code re-textures every placed image)
         d.img = this.place('dig_spot@dug', d.gx, d.gy, { flat: true });
+        const site = siteOf(d, this.digs);
+        if (siteBonusReady(site)) {
+          this.toast('The whole site is worked. Something deeper turns up!');
+          this.time.delayedCall(900, () => this.bonusDig(site, d.kind));
+        }
       },
     });
+  }
+
+  // The bonus for finishing a trench or cliff face (several touching spots of one kind)
+  bonusDig(site, kind) {
+    this.paused = true;
+    startDig(siteKey(site), { collection: kind, entry: bonusEntry(kind), onClose: () => (this.paused = false) });
   }
 
   thing(name, x, y, text) {
