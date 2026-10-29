@@ -31,7 +31,7 @@ import {
   LIGHT_TINTS,
 } from './art.js';
 import { setTrack, sfx, setAmbience } from './music.js';
-import { weatherToday, season } from './weather.js';
+import { weatherToday, season, holiday } from './weather.js';
 import { ORIENT_LABELS, SIZE_LABELS, BREAK, roomAt, MAIN_HALL_PRICE, ATRIUM_PRICE, isFixed, seedEntry, loadRooms, addRoom, resetRooms, updateRoom, swapRooms, roomName, layout, paintingsFor, slotStates, setSlot, hungAnywhere, placeArt, wallItems, plantSpots, carpetRect } from './rooms.js';
 import { openSlotMenu } from './slotmenu.js';
 import { applyPreset, presetCost } from './presets.js';
@@ -175,6 +175,19 @@ export function visitorLook(kind, r) {
     colors.U = '#c99a1a';
     colors.c = '#e8762c'; // safety orange
     colors.p = '#3c4a63';
+  }
+  // seasonal visitors: kids trick-or-treat in costume near Halloween, and woolly hats come out in winter
+  const day = holiday();
+  if (day === 'halloween' && (kind === 'kid' || (kind === 'student' && r(20) < 0.3))) {
+    const costume = Math.floor(r(21) * 3);
+    look.hat = costume === 2 ? 'beanie' : 'top';
+    if (costume === 0) Object.assign(colors, { c: '#3a2a52', p: '#2a1e3a', T: '#2a1a3a', U: '#6a3a9a' }); // witch
+    else if (costume === 1) Object.assign(colors, { c: '#f4f4f4', p: '#e0e0e8', T: '#f4f4f4', U: '#c8c8d8' }); // ghost
+    else Object.assign(colors, { c: '#e8762c', p: '#6a4a1a', T: '#e8762c', U: '#4f8a4a' }); // pumpkin
+  } else if (day === 'winter' && !['barista', 'caretaker', 'guard', 'guide', 'carpenter', 'janitor'].includes(kind) && !look.hat && !look.bald && r(22) < 0.5) {
+    look.hat = 'beanie';
+    colors.T = pick(['#c0392b', '#2e5a8a', '#f4f0e6', '#2e7d7a'], 23);
+    colors.U = '#f4f0e6';
   }
   if (kind === 'guard') {
     colors.c = '#1e1e22';
