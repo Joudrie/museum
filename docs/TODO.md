@@ -153,14 +153,14 @@ Owns: `src/staffmenu.js`, `src/officemenu.js`, `src/office.js`, `src/incomemenu.
 - [ ] ON HOLD (needs the user): gems as time (skip construction, "X days of income"), rewarded ads, cosmetics, a seasonal exhibition pass, crates with odds and pity. Rule: **no pay-to-win; never a gem or crate economy as the core.**
 
 ## CHAT 13: Share, visit and retention
-Owns: new `src/share*.js`, `src/daily.js`. Claim: `open`
+Owns: new `src/share*.js`, `src/daily.js`. Claim: `claimed: 2026-10-29`
 - [ ] Export a museum as a link; a short tour image strip or clip; "rate my museum" screenshot card.
 - [ ] Visit a friend's museum asynchronously (no multiplayer server); friends' islands in the boat picker (the map format is shareable).
 - [ ] Daily wheel spin, first-game-of-the-day and streak bonuses, daily guests, Painting of the Day surfaced in the UI.
 - [ ] Auction house and co-op cleanup (later, social; ON HOLD).
 
 ## CHAT 14: Halls (the content that fills the rooms)
-Owns: new `src/halls/`, room-preset JSON in `content/halls/`. Claim: `open`. Depends on Chats 5, 8 and 9 landing; start with presets and decor lists.
+Owns: new `src/halls/`, room-preset JSON in `content/halls/`. Claim: `claimed: 2026-10-29`. Depends on Chats 5, 8 and 9 landing; start with presets and decor lists.
 - [ ] **Art:** galleries by era (Renaissance, Dutch, Impressionist, American, Japanese prints); sculpture court; **the Gardner Room** (salon walls around a courtyard garden; the empty heist frames); modern wing (white cube, when copyright allows); prints and early photography.
 - [ ] **Science:** dinosaur hall (T. rex centrepiece, fossil shelves in HD); space (planetarium dome, meteorites, moon rock, rocket); electricity (Van de Graaff and a timed lightning show); human body, optics, illusions (mirror maze, camera obscura).
 - [ ] **Natural history:** glass flowers, minerals and gems, taxidermy dioramas, ocean hall with a whale skeleton, aquarium wing.
@@ -171,7 +171,7 @@ Owns: new `src/halls/`, room-preset JSON in `content/halls/`. Claim: `open`. Dep
 - [ ] Each hall = a themed room preset + decor + which collections and sets belong there.
 
 ## CHAT 15: Asset hunt and art swap support
-Owns: `assets/vendor/`, `docs/ASSETS.md`, `tools/extract_sprites.py`, `tools/` sprite scripts. Claim: `open`
+Owns: `assets/vendor/`, `docs/ASSETS.md`, `tools/extract_sprites.py`, `tools/` sprite scripts. Claim: `claimed: 2026-10-29`
 - [ ] Run the **super dig** in `docs/ASSET-HUNT.md` (find, don't make; CC0 / CC-BY / CC-BY-SA / OGA-BY / GPL only; no non-commercial). Check network access first and don't get around bot checks; list itch.io links for the user to download by hand. Save results to `docs/ASSETS.md` (round 3), ranked top 20.
 - [ ] Categories: statues and sculpture (busts, plinths, display cases, rope barriers); jagged rocks and nature; museum architecture pieces (glass, curved, arches, domes, skylights, spiral stairs, facades); exhibits (dinosaur skeletons, mummies, armour, pottery, meteorites, ship models, taxidermy, aquarium tanks); furniture with four facings; island buildings, fences, docks, boats, market stalls, playground, festival decor; characters and animals; dig-site props (tents, crates, tools).
 - [ ] A script that lists every placeholder sprite and tile by name, size and where it's used, so the user can redraw one at a time.
