@@ -168,7 +168,7 @@ Owns: new `src/halls/`, room-preset JSON in `content/halls/`. Claim: `claimed: 2
 - [ ] **Architecture:** model hall (famous buildings in miniature, Gothic arches, column orders).
 - [ ] **Themed wings:** Japanese (cherry blossoms, ukiyo-e), Chinese (ink scrolls), and other non-European wings.
 - [ ] **Outside:** huge garden (swan-boat pond, Japanese garden, hedge maze, greenhouse, koi pond, sculpture garden), petting zoo or farm floor.
-- [ ] Each hall = a themed room preset + decor + which collections and sets belong there.
+- [x] Each hall = a themed room preset + decor + which collections and sets belong there. (PR pending: 18 presets in `content/halls/halls.json`, loader in `src/halls/`, `node tests/halls.cjs`. Hooking a hall into a menu waits on chat 9's room presets / chat 5's displays.)
 
 ## CHAT 15: Asset hunt and art swap support
 Owns: `assets/vendor/`, `docs/ASSETS.md`, `tools/extract_sprites.py`, `tools/` sprite scripts. Claim: `claimed: 2026-10-29`
@@ -194,6 +194,8 @@ Mini-games (Mop Rush, No Flash!, Restoration-as-minigame, Crate Tetris, Hang it 
 - Open design questions: free-roam map or chain of rooms; should paintings come only from expeditions; can you fail an expedition; seasons automatic or chosen; split the shared core now?
 
 ## Cross-chat requests (add a line, carry on)
+- Chat 14 → Chat 9/12: `applyHall(roomIndex, hall)` (`src/halls/apply.js`) restyles a built room for free and returns `before` for `undoHall`. A menu button and any price are yours to decide; it refuses fixed rooms.
+- Chat 14 → Chat 1/8: halls list `planned` collections (sculpture, flower, egyptian, ship-model, armor, clock, invention; meteorite, pottery and shell are in now) and Japanese prints: add the data and move the id into the hall's `collections`.
 - Chat 10 → Chat 7: story chapters offer leads by writing `{id, text, from, at}` to `curation.leads_offered` (see HANDOFF, "Story and leads"). Read it, show the lead, start the trip; ids so far: `heist-hideout`, `sphinx-letter`, `studio-chest`, `last-scrolls`.
 
 ## Order

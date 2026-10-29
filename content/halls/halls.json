@@ -1,0 +1,852 @@
+{
+ "format": "curation-halls",
+ "version": 1,
+ "halls": [
+  {
+   "id": "renaissance",
+   "name": "Renaissance gallery",
+   "wing": "art",
+   "blurb": "Warm wood, red damask and a bench to sit on.",
+   "fit": {
+    "orient": "vertical",
+    "size": "medium"
+   },
+   "theme": "classical",
+   "items": [
+    {
+     "type": "bench",
+     "x": 0.5,
+     "y": 0.5
+    },
+    {
+     "type": "lamp",
+     "x": 0.1,
+     "y": 0.2
+    },
+    {
+     "type": "lamp",
+     "x": 0.9,
+     "y": 0.2
+    },
+    {
+     "type": "bust",
+     "x": 0.1,
+     "y": 0.8
+    },
+    {
+     "type": "bust",
+     "x": 0.9,
+     "y": 0.8
+    }
+   ],
+   "collections": [
+    {
+     "id": "painting",
+     "sets": []
+    }
+   ],
+   "paintings": {
+    "eras": [
+     "renaissance"
+    ]
+   }
+  },
+  {
+   "id": "dutch",
+   "name": "Dutch golden age",
+   "wing": "art",
+   "blurb": "Dim light and dark panelling, the way these rooms felt.",
+   "fit": {
+    "orient": "vertical",
+    "size": "medium"
+   },
+   "theme": "moody",
+   "items": [
+    {
+     "type": "candelabra",
+     "x": 0.1,
+     "y": 0.25
+    },
+    {
+     "type": "candelabra",
+     "x": 0.9,
+     "y": 0.25
+    },
+    {
+     "type": "bench",
+     "x": 0.5,
+     "y": 0.55
+    },
+    {
+     "type": "globe",
+     "x": 0.9,
+     "y": 0.8
+    }
+   ],
+   "collections": [
+    {
+     "id": "painting",
+     "sets": []
+    }
+   ],
+   "paintings": {
+    "eras": [
+     "baroque"
+    ]
+   }
+  },
+  {
+   "id": "impressionist",
+   "name": "Impressionist salon",
+   "wing": "art",
+   "blurb": "Light and airy, with plants and a seat in front of every canvas.",
+   "fit": {
+    "orient": "vertical",
+    "size": "medium"
+   },
+   "theme": "classical",
+   "decor": {
+    "paper": "#b3c3cf",
+    "light": "day"
+   },
+   "items": [
+    {
+     "type": "bench",
+     "x": 0.5,
+     "y": 0.35
+    },
+    {
+     "type": "bench",
+     "x": 0.5,
+     "y": 0.7
+    },
+    {
+     "type": "orchid",
+     "x": 0.1,
+     "y": 0.15
+    },
+    {
+     "type": "orchid",
+     "x": 0.9,
+     "y": 0.15
+    },
+    {
+     "type": "fern",
+     "x": 0.1,
+     "y": 0.9
+    },
+    {
+     "type": "fern",
+     "x": 0.9,
+     "y": 0.9
+    }
+   ],
+   "collections": [
+    {
+     "id": "painting",
+     "sets": []
+    }
+   ],
+   "paintings": {
+    "eras": [
+     "impressionist"
+    ]
+   }
+  },
+  {
+   "id": "american",
+   "name": "American gallery",
+   "wing": "art",
+   "blurb": "Plain walls, big canvases and room to stand back.",
+   "fit": {
+    "orient": "vertical",
+    "size": "medium"
+   },
+   "theme": "classical",
+   "decor": {
+    "paperStyle": "plain",
+    "paper": "#2f4a3a"
+   },
+   "items": [
+    {
+     "type": "bench",
+     "x": 0.5,
+     "y": 0.5
+    },
+    {
+     "type": "banner",
+     "x": 0.1,
+     "y": 0.15
+    },
+    {
+     "type": "banner",
+     "x": 0.9,
+     "y": 0.15
+    }
+   ],
+   "collections": [
+    {
+     "id": "painting",
+     "sets": []
+    }
+   ],
+   "paintings": {
+    "eras": [
+     "romantic"
+    ]
+   }
+  },
+  {
+   "id": "japanese-prints",
+   "name": "Japanese prints",
+   "wing": "art",
+   "blurb": "Pale walls and cherry blossom, for prints that need soft light.",
+   "fit": {
+    "orient": "vertical",
+    "size": "medium"
+   },
+   "theme": "japanese",
+   "items": [
+    {
+     "type": "cherry",
+     "x": 0.1,
+     "y": 0.2
+    },
+    {
+     "type": "cherry",
+     "x": 0.9,
+     "y": 0.2
+    },
+    {
+     "type": "bonsai",
+     "x": 0.1,
+     "y": 0.8
+    },
+    {
+     "type": "lantern",
+     "x": 0.9,
+     "y": 0.8
+    },
+    {
+     "type": "bench",
+     "x": 0.5,
+     "y": 0.5
+    }
+   ],
+   "collections": [
+    {
+     "id": "painting",
+     "sets": []
+    }
+   ],
+   "note": "Add ukiyo-e to the paintings collection (chat 1), then list its era here."
+  },
+  {
+   "id": "sculpture-court",
+   "name": "Sculpture court",
+   "wing": "art",
+   "blurb": "Statues on the floor, benches between them.",
+   "fit": {
+    "orient": "square",
+    "size": "medium"
+   },
+   "theme": "classical",
+   "items": [
+    {
+     "type": "statue",
+     "x": 0.5,
+     "y": 0.25
+    },
+    {
+     "type": "statue",
+     "x": 0.5,
+     "y": 0.75
+    },
+    {
+     "type": "bust",
+     "x": 0.1,
+     "y": 0.5
+    },
+    {
+     "type": "bust",
+     "x": 0.9,
+     "y": 0.5
+    },
+    {
+     "type": "bench",
+     "x": 0.1,
+     "y": 0.15
+    },
+    {
+     "type": "bench",
+     "x": 0.9,
+     "y": 0.85
+    }
+   ],
+   "collections": [],
+   "planned": [
+    "sculpture"
+   ]
+  },
+  {
+   "id": "gardner-room",
+   "name": "The Gardner Room",
+   "wing": "art",
+   "blurb": "Frames hung close on all four walls, a garden in the middle, and some frames left empty.",
+   "fit": {
+    "orient": "square",
+    "size": "large"
+   },
+   "theme": "moody",
+   "items": [
+    {
+     "type": "fountain",
+     "x": 0.5,
+     "y": 0.5
+    },
+    {
+     "type": "fern",
+     "x": 0.1,
+     "y": 0.2
+    },
+    {
+     "type": "fern",
+     "x": 0.9,
+     "y": 0.2
+    },
+    {
+     "type": "palm",
+     "x": 0.1,
+     "y": 0.8
+    },
+    {
+     "type": "palm",
+     "x": 0.9,
+     "y": 0.8
+    },
+    {
+     "type": "bench",
+     "x": 0.5,
+     "y": 0.15
+    },
+    {
+     "type": "bench",
+     "x": 0.5,
+     "y": 0.85
+    }
+   ],
+   "collections": [
+    {
+     "id": "painting",
+     "sets": []
+    }
+   ],
+   "paintings": {
+    "eras": [
+     "renaissance",
+     "baroque"
+    ]
+   },
+   "note": "The empty heist frames belong to chat 10's story arc; leave wall spots empty. Any heist facts must be quoted."
+  },
+  {
+   "id": "dinosaur",
+   "name": "Dinosaur hall",
+   "wing": "science",
+   "blurb": "A big skeleton in the middle, fossil slabs along the walls.",
+   "fit": {
+    "orient": "square",
+    "size": "large"
+   },
+   "theme": "science",
+   "items": [
+    {
+     "type": "trex",
+     "x": 0.5,
+     "y": 0.45
+    },
+    {
+     "type": "fossil_slab",
+     "x": 0.1,
+     "y": 0.85
+    },
+    {
+     "type": "fossil_slab",
+     "x": 0.9,
+     "y": 0.85
+    },
+    {
+     "type": "skull",
+     "x": 0.5,
+     "y": 0.88
+    }
+   ],
+   "collections": [
+    {
+     "id": "fossil",
+     "sets": [
+      "fossil-drawer"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "space",
+   "name": "Space hall",
+   "wing": "science",
+   "blurb": "Dark and quiet, with a telescope and meteorites.",
+   "fit": {
+    "orient": "vertical",
+    "size": "medium"
+   },
+   "theme": "science",
+   "decor": {
+    "light": "moody",
+    "paper": "#1e2a3a",
+    "wainscotStyle": "none"
+   },
+   "items": [
+    {
+     "type": "telescope",
+     "x": 0.5,
+     "y": 0.25
+    },
+    {
+     "type": "meteorite",
+     "x": 0.1,
+     "y": 0.5
+    },
+    {
+     "type": "meteorite",
+     "x": 0.9,
+     "y": 0.5
+    },
+    {
+     "type": "globe",
+     "x": 0.5,
+     "y": 0.75
+    }
+   ],
+   "collections": [
+    {
+     "id": "meteorite",
+     "sets": [
+      "sky-stones"
+     ]
+    }
+   ],
+   "planned": []
+  },
+  {
+   "id": "minerals",
+   "name": "Minerals and gems",
+   "wing": "nature",
+   "blurb": "Cases of glittering stones under cool light.",
+   "fit": {
+    "orient": "vertical",
+    "size": "medium"
+   },
+   "theme": "science",
+   "items": [
+    {
+     "type": "geode",
+     "x": 0.1,
+     "y": 0.2
+    },
+    {
+     "type": "geode",
+     "x": 0.9,
+     "y": 0.2
+    },
+    {
+     "type": "display_case",
+     "x": 0.5,
+     "y": 0.4
+    },
+    {
+     "type": "display_case",
+     "x": 0.5,
+     "y": 0.7
+    },
+    {
+     "type": "specimens",
+     "x": 0.1,
+     "y": 0.85
+    }
+   ],
+   "collections": [
+    {
+     "id": "mineral",
+     "sets": [
+      "crystal-cabinet"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "glass-flowers",
+   "name": "Glass flowers",
+   "wing": "nature",
+   "blurb": "Quiet cases of flowers and a bench to look from.",
+   "fit": {
+    "orient": "vertical",
+    "size": "medium"
+   },
+   "theme": "science",
+   "decor": {
+    "paper": "#bcc6a5"
+   },
+   "items": [
+    {
+     "type": "orchid",
+     "x": 0.1,
+     "y": 0.25
+    },
+    {
+     "type": "orchid",
+     "x": 0.9,
+     "y": 0.25
+    },
+    {
+     "type": "butterflies",
+     "x": 0.5,
+     "y": 0.45
+    },
+    {
+     "type": "bench",
+     "x": 0.5,
+     "y": 0.75
+    }
+   ],
+   "collections": [],
+   "planned": [
+    "flower"
+   ]
+  },
+  {
+   "id": "ocean",
+   "name": "Ocean hall",
+   "wing": "nature",
+   "blurb": "A tank wall and a long bench under blue light.",
+   "fit": {
+    "orient": "vertical",
+    "size": "medium"
+   },
+   "theme": "science",
+   "decor": {
+    "light": "cool",
+    "paper": "#3c4a63"
+   },
+   "items": [
+    {
+     "type": "aquarium",
+     "x": 0.1,
+     "y": 0.25
+    },
+    {
+     "type": "aquarium",
+     "x": 0.9,
+     "y": 0.25
+    },
+    {
+     "type": "aquarium",
+     "x": 0.5,
+     "y": 0.55
+    },
+    {
+     "type": "bench",
+     "x": 0.5,
+     "y": 0.85
+    }
+   ],
+   "collections": [
+    {
+     "id": "fish",
+     "sets": [
+      "pond-fish"
+     ]
+    },
+    {
+     "id": "shell",
+     "sets": [
+      "shell-box"
+     ]
+    }
+   ],
+   "note": "A whale skeleton waits for chat 5's skeleton display."
+  },
+  {
+   "id": "egypt",
+   "name": "Egyptian hall",
+   "wing": "history",
+   "blurb": "Sand floor, hieroglyph walls and sarcophagi in a row.",
+   "fit": {
+    "orient": "vertical",
+    "size": "medium"
+   },
+   "theme": "egyptian",
+   "items": [
+    {
+     "type": "sarcophagus",
+     "x": 0.5,
+     "y": 0.3
+    },
+    {
+     "type": "sarcophagus",
+     "x": 0.5,
+     "y": 0.65
+    },
+    {
+     "type": "obelisk",
+     "x": 0.1,
+     "y": 0.15
+    },
+    {
+     "type": "obelisk",
+     "x": 0.9,
+     "y": 0.15
+    },
+    {
+     "type": "canopic",
+     "x": 0.1,
+     "y": 0.85
+    },
+    {
+     "type": "canopic",
+     "x": 0.9,
+     "y": 0.85
+    }
+   ],
+   "collections": [],
+   "planned": [
+    "egyptian"
+   ]
+  },
+  {
+   "id": "greek-roman",
+   "name": "Greek and Roman hall",
+   "wing": "history",
+   "blurb": "Urns, busts and statues on pale marble.",
+   "fit": {
+    "orient": "vertical",
+    "size": "medium"
+   },
+   "theme": "classical",
+   "decor": {
+    "paperStyle": "plain",
+    "paper": "#e2d3b4"
+   },
+   "items": [
+    {
+     "type": "urn",
+     "x": 0.1,
+     "y": 0.25
+    },
+    {
+     "type": "urn",
+     "x": 0.9,
+     "y": 0.25
+    },
+    {
+     "type": "statue",
+     "x": 0.5,
+     "y": 0.5
+    },
+    {
+     "type": "bust",
+     "x": 0.1,
+     "y": 0.8
+    },
+    {
+     "type": "bust",
+     "x": 0.9,
+     "y": 0.8
+    }
+   ],
+   "collections": [
+    {
+     "id": "pottery",
+     "sets": [
+      "potters-shelf"
+     ]
+    }
+   ],
+   "planned": []
+  },
+  {
+   "id": "maritime",
+   "name": "Maritime hall",
+   "wing": "history",
+   "blurb": "Ship models in cases and a globe by the door.",
+   "fit": {
+    "orient": "vertical",
+    "size": "medium"
+   },
+   "theme": "moody",
+   "decor": {
+    "paper": "#3c4a63"
+   },
+   "items": [
+    {
+     "type": "ship_model",
+     "x": 0.1,
+     "y": 0.3
+    },
+    {
+     "type": "ship_model",
+     "x": 0.9,
+     "y": 0.3
+    },
+    {
+     "type": "globe",
+     "x": 0.5,
+     "y": 0.55
+    },
+    {
+     "type": "ship_model",
+     "x": 0.5,
+     "y": 0.8
+    }
+   ],
+   "collections": [],
+   "planned": [
+    "ship-model"
+   ]
+  },
+  {
+   "id": "arms-armor",
+   "name": "Arms and armor",
+   "wing": "history",
+   "blurb": "Suits of armor stand guard on both sides.",
+   "fit": {
+    "orient": "vertical",
+    "size": "medium"
+   },
+   "theme": "moody",
+   "items": [
+    {
+     "type": "armor",
+     "x": 0.1,
+     "y": 0.2
+    },
+    {
+     "type": "armor",
+     "x": 0.9,
+     "y": 0.2
+    },
+    {
+     "type": "armor",
+     "x": 0.1,
+     "y": 0.5
+    },
+    {
+     "type": "armor",
+     "x": 0.9,
+     "y": 0.5
+    },
+    {
+     "type": "armor",
+     "x": 0.1,
+     "y": 0.8
+    },
+    {
+     "type": "armor",
+     "x": 0.9,
+     "y": 0.8
+    }
+   ],
+   "collections": [],
+   "planned": [
+    "armor"
+   ]
+  },
+  {
+   "id": "clocks",
+   "name": "Clocks and inventions",
+   "wing": "history",
+   "blurb": "Grandfather clocks and a gramophone.",
+   "fit": {
+    "orient": "vertical",
+    "size": "medium"
+   },
+   "theme": "classical",
+   "items": [
+    {
+     "type": "clock",
+     "x": 0.1,
+     "y": 0.2
+    },
+    {
+     "type": "clock",
+     "x": 0.9,
+     "y": 0.2
+    },
+    {
+     "type": "gramophone",
+     "x": 0.5,
+     "y": 0.5
+    },
+    {
+     "type": "globe",
+     "x": 0.1,
+     "y": 0.8
+    },
+    {
+     "type": "bookshelf",
+     "x": 0.9,
+     "y": 0.8
+    }
+   ],
+   "collections": [],
+   "planned": [
+    "clock",
+    "invention"
+   ]
+  },
+  {
+   "id": "garden",
+   "name": "Garden",
+   "wing": "outside",
+   "blurb": "A walk under trees, with a fountain in the middle.",
+   "fit": {
+    "orient": "vertical",
+    "size": "medium"
+   },
+   "theme": "japanese",
+   "items": [
+    {
+     "type": "fountain",
+     "x": 0.5,
+     "y": 0.5
+    },
+    {
+     "type": "tree",
+     "x": 0.1,
+     "y": 0.2
+    },
+    {
+     "type": "tree",
+     "x": 0.9,
+     "y": 0.2
+    },
+    {
+     "type": "cherry",
+     "x": 0.1,
+     "y": 0.8
+    },
+    {
+     "type": "cherry",
+     "x": 0.9,
+     "y": 0.8
+    },
+    {
+     "type": "bench",
+     "x": 0.5,
+     "y": 0.15
+    }
+   ],
+   "collections": [],
+   "note": "The large outdoor garden (pond, maze, greenhouse) needs island-scale maps, not a room preset. This is the indoor courtyard version."
+  }
+ ]
+}

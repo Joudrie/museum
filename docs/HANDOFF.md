@@ -137,6 +137,10 @@ Scenes (`src/main.js`):
   49 paintings** (no network here); `content/batches/first-batch.json` (12 works, 9+ regions) is waiting to be built.
 - Test: `node tests/content.cjs` (no browser, no network).
 
+### Halls (chat 14): themed room presets
+- `content/halls/halls.json` holds 18 halls (art, science, nature, history, garden): a theme from `src/themes.js` (moved out of decor.js, still re-exported), decor tweaks, items placed as 0-1 fractions of the floor, painting eras for the walls, and the collections/sets that belong there. `planned` lists collections that don't exist yet.
+- `src/halls/preset.js` is pure (validate, fit items to any room size without blocking doors, `hallEntries`); `apply.js` writes a hall into a built room and returns what it replaced for `undoHall`. Fixed rooms are refused. Test: `node tests/halls.cjs` (plain Node).
+- Halls carry no facts of their own; true, quoted facts live in collection entries. Nothing in the UI uses halls yet.
 ### Story and leads (Chat 10)
 - `src/story.js` tells the next chapter of an arc or a famous visitor's chain when its condition is met; data is in `src/stories/` (`heist.js`, `chains.js`). State: `curation.story` `{done:{beatId:true}}`.
 - **The Empty Frames** (heist arc): Edmund tells 5 chapters of the real 1990 Gardner theft. Every line has the museum's quoted sentence; `node tests/people.cjs --live` checks each quote is still on its source page.
