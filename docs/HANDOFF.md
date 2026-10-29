@@ -215,6 +215,9 @@ island scene streams ground chunks around the player.
 - **Drop-in swap:** a PNG with the same name as a placeholder, put in `public/swap/` (`tiles/<name>.png`, `sprites/<name>.png`, `pieces/<group>/<n>.png`), overrides it with no code change. See `public/swap/README.md`. Code: `src/swap.js`; `vite.config.js` writes `swap/index.json`; `src/boot.js` waits for it before the game starts. A wrong-size file is ignored with a console warning.
 - **Placeholder list:** `node tools/list_placeholders.mjs` (add `--md` to rewrite `docs/PLACEHOLDERS.md`) lists every tile, room sprite and builder piece by name, size and where it's used, and marks swapped ones. Needs playwright (`PW=` path).
 
+### Asset hunt round 3 (Chat 15)
+- `docs/ASSETS.md` "Round 3": 30 OpenGameArt packs (licences read on each page) saved in `assets/vendor/<dir>/` with a `SOURCE.txt`, a ranked top 20, itch.io links to download by hand, and the gaps still open (display cases, plinths, glass walls, dig-site tools). `tools/fetch_oga.sh` downloads a pack. None are in the game yet.
+
 ## 4. Tests
 
 The preview server must run first (it dies between turns):
