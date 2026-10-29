@@ -83,6 +83,8 @@ const SCREENS = {
   '40-large-text-hud': async (p) => { await p.evaluate(() => { const s = JSON.parse(localStorage.getItem('curation.settings') || '{}'); s.text = 'large'; localStorage.setItem('curation.settings', JSON.stringify(s)); window.dispatchEvent(new CustomEvent('settings', { detail: { key: 'x', value: 1 } })); }); await sleep(300); await click(p, '#menu-btn'); },
   '41-large-text-settings': async (p) => { await p.evaluate(() => { const s = JSON.parse(localStorage.getItem('curation.settings') || '{}'); s.text = 'large'; localStorage.setItem('curation.settings', JSON.stringify(s)); window.dispatchEvent(new CustomEvent('settings', { detail: { key: 'x', value: 1 } })); }); await sleep(300); await click(p, '#menu-btn'); await click(p, '#settings-btn'); },
   '42-left-handed': async (p) => { await p.evaluate(() => { const s = JSON.parse(localStorage.getItem('curation.settings') || '{}'); s.leftHanded = true; localStorage.setItem('curation.settings', JSON.stringify(s)); window.dispatchEvent(new CustomEvent('settings', { detail: { key: 'x', value: 1 } })); }); await sleep(300); },
+  // the richest museum: twelve-digit gold must not push the status strip off the screen
+  '43-huge-numbers': async (p) => { await p.evaluate(() => localStorage.setItem('curation.coins', '123456789012')); await p.reload({ waitUntil: 'domcontentloaded' }); await sleep(3000); await click(p, '#hud'); },
   '30-builder': async (p) => { await p.goto(URL + 'builder.html', { waitUntil: 'domcontentloaded' }); await sleep(2500); },
   '31-builder-menu': async (p) => { await p.goto(URL + 'builder.html', { waitUntil: 'domcontentloaded' }); await sleep(2500); if (await p.isVisible('#resume-go')) await p.click('#resume-go'); await sleep(500); await click(p, '#menu-btn'); },
 };

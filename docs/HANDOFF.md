@@ -233,6 +233,7 @@ island scene streams ground chunks around the player.
 - **HUD:** labelled buttons (Journal, Build, Style) on the left, **Menu** on the right; the Menu hub (`src/ui/hud.js`) holds Today, Your museum (income), Share & visit and Settings, on islands too. The old ids (`#daily-btn`, `#settings-btn`) now live in the hub, so tests call `openHub(p)` from `tests/nav.cjs` first.
 - **Journal** opens on an **overview** (stats, next goals, a card per collection, Codex / Storage / Gallery Shop) instead of 17 tabs; each card has `data-jtab`, a page has a back button. Tests use `jtab(p, id)` from `tests/nav.cjs`. Overview code: `src/ui/journalhome.js`.
 - **Older menus are on the system through a skin** (`src/ui/skin.css`, `chrome.js`, `prefs.js`, `toast.js`, `hint.js`): no logic rewritten, ids unchanged. Toasts queue through `say()` (`src/ui/toast.js`); one-time tips use `hint(id, text, anchor)` and obey Settings → Tips. Settings is grouped (Sound, Look, Play, Friends & data, Testing) and has Text size, Reduce motion and Left-handed layout; Customize → This room is collapsible groups. Prices read "Free (X gold)" while testing. `node tests/ui-flows.cjs` holds the tap budgets.
+- **Panels close the way a phone expects:** tap the dimmed world or swipe the sheet down by its handle (`src/ui/chrome.js`; nothing to wire in a new menu, except that a panel with half-typed text or work in progress should be left out of `BACKDROP` there). Esc closes the top panel. Celebrations queue (`celebrate(title, sub, icon)` in `src/ui.js`). Numbers in the status strip use `shortNum()` (`src/ui/num.js`). The bundled pixel font had two defects (a 5 that looks like S, and "fi" drawn as A); both are fixed in the file, see `docs/UI.md` before swapping it.
 - **Guard:** `node tests/ui-layout.cjs` (slow set) fails on sideways scroll or "undefined" text and ratchets tap targets and text size per screen (`tests/ui-budget.json`). Screenshots: `node tests/ui-shots.cjs docs/ui/after`.
 
 
@@ -247,7 +248,7 @@ island scene streams ground chunks around the player.
 - Things the old code did that changed: fishing is now the cast, wait, "!" and reel minigame; the museum's rarity scale has 5 tiers (Epic added); the daily reset is 4:00; boats are bought (rank, then gold); locked islands show in the boat menu (expedition tests were updated).
 
 ### Aesthetics audit (29 Oct 2026)
-- `docs/AESTHETICS-AUDIT.md`: 684 visual flaws found for the overhaul (none fixed), with the cross-cutting problems, quick bugs that look like art problems, and a redesign order. Per-area detail with code locations and screenshots in `docs/aesthetics/` (people, terrain/water, structures, interiors, creatures/items, ui). IDs P-, T-, S-, R-, C-, U-.
+- `docs/AESTHETICS-AUDIT.md`: 860 visual flaws found for the overhaul (none fixed; a second pass covered main up to #195), with the cross-cutting problems, quick bugs that look like art problems, and a redesign order. Per-area detail with code locations and screenshots in `docs/aesthetics/` (people, terrain/water, structures, interiors, creatures/items, ui). IDs P-, T-, S-, R-, C-, U-.
 - Read it before redrawing anything: it says what each sprite should become (e.g. P-23/P-24 glasses, S-45 scarecrow, S-51 fountain statues).
 
 ### Gotchas we hit

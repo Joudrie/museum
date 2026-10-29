@@ -4,22 +4,59 @@
 
 **Visual version** (every finding with its screenshots, filters by area and severity): https://claude.ai/artifact/5TdJk17Mx4g36tciuXPfvW (private to the owner).
 
-Since the audit, main gained new people classes and parts (#190, #192, #194), 31 column designs (#191) and UI font and dialogue fixes (#189, #193). The old glasses, base body and walk code are unchanged, so those findings stand; a few UI and column findings may be partly fixed already.
+A **second pass** on main `38cb3e3` covered what landed during the audit (new people classes, columns, new fish and water effects, the progression menus, UI font fixes) and re-checked the older findings those PRs touched. See "Second pass" below.
 
 ## The numbers
 
-**684 findings**: 145 high (wrong at phone size), 362 medium, 177 low (polish).
+**860 findings**: 183 high (wrong at phone size), 452 medium, 225 low (polish).
 
 | Area | File | Findings | High | Med | Low |
 |---|---|---|---|---|---|
-| People | [aesthetics/people.md](aesthetics/people.md) | 123 | 31 | 66 | 26 |
-| Water, land, weather and light | [aesthetics/terrain.md](aesthetics/terrain.md) | 122 | 22 | 60 | 40 |
-| Buildings, landmarks and props | [aesthetics/structures.md](aesthetics/structures.md) | 125 | 28 | 61 | 36 |
-| Museum rooms and decor | [aesthetics/interiors.md](aesthetics/interiors.md) | 112 | 29 | 61 | 22 |
-| Animals and collection items | [aesthetics/creatures.md](aesthetics/creatures.md) | 109 | 20 | 66 | 23 |
-| Menus, text and the builder | [aesthetics/ui.md](aesthetics/ui.md) | 93 | 15 | 48 | 30 |
+| People | [aesthetics/people.md](aesthetics/people.md) | 200 | 46 | 101 | 53 |
+| Water, land, weather and light | [aesthetics/terrain.md](aesthetics/terrain.md) | 129 | 25 | 64 | 40 |
+| Buildings, landmarks and props | [aesthetics/structures.md](aesthetics/structures.md) | 131 | 28 | 65 | 38 |
+| Museum rooms and decor | [aesthetics/interiors.md](aesthetics/interiors.md) | 138 | 31 | 76 | 31 |
+| Animals and collection items | [aesthetics/creatures.md](aesthetics/creatures.md) | 119 | 23 | 72 | 24 |
+| Menus, text and the builder | [aesthetics/ui.md](aesthetics/ui.md) | 143 | 30 | 74 | 39 |
 
 IDs: P people, T terrain and water, S structures, R rooms, C creatures and items, U UI. Screenshots are in `docs/aesthetics/shots/<area>/`.
+
+## Second pass (main 38cb3e3)
+
+176 new findings are folded into the counts above. Files:
+
+- [aesthetics/second-pass-people.md](aesthetics/second-pass-people.md): 77 new findings
+- [aesthetics/second-pass-world.md](aesthetics/second-pass-world.md): 49 new findings
+- [aesthetics/second-pass-ui.md](aesthetics/second-pass-ui.md): 50 new findings
+
+Earlier findings that main has since changed (every other re-checked finding still stands):
+
+- **P-21** partly fixed: 63 two-frame job poses exist (#190, #192, #194), but only builder-placed people use them. The museum staff and visitors are still frozen, and there is no idle breathing.
+- **P-43** partly fixed: The 29 new hats drop the hair's `pre` rows and the 16 new hairstyles hide their crowns under any hat. The old cap, sun hat, flower crown and laurel still let buns through, and the new classes pair them often (P-167).
+- **P-45** partly fixed: Customize now has a "Hat trim" swatch for `U` (decor.js), and most classes set `U`. The default and all visitors are still brown.
+- **P-49** partly fixed: Most new hats have their own side and back views. The 10 original hats are unchanged.
+- **P-50** partly fixed: The old beanie pompom is still 1 px. The new `pompom` hat has a 4x2 knob, but in the brown default it reads as a bun (P-164).
+- **P-56** partly fixed: `bigbeard` and `wizard` long beards now exist and read as beards. `famous.js` is unchanged, so Leonardo, Socrates and the other sages still wear the 2-row chin band.
+- **P-58** partly fixed: The 24 new work outfits replace the shirt and tie. Classes on suit, vest, coat and labcoat still wear the mustard tie (P-182, P-183).
+- **P-121** partly fixed: Builder islands can now be filled with 137 job classes, but the shipped islands and the named NPCs still roll museum visitor kinds (P-124, P-125).
+- **P-123** partly fixed: There are now 4 builds, 84 carried props, 33 ground props, 2 shoulder pets and 63 poses. There are still 0 expressions, 0 dialogue busts, and no kid, teen or elder build.
+- **R-29** partly fixed: #191's Ionic and Composite have real 5 px spiral volutes (`volute()`), a proper abacus and 3-tone fluting with entasis. There is still no egg-and-dart band, and the default Corinthian capital is noise (R-116).
+- **R-42** worse: Shaped-room columns are now 88 px (were 72), still holding nothing (terraces and cross examples), and the toolkit adds 31 free-standing column items (R-135).
+- **R-82** partly fixed: The columns now have stepped 11-tone shading and selective outlines, close to the LPC target. The rails, newels, stairs and walls around them are still flat 1-2 tones, so the gap between styles is now inside the hall itself.
+- **R-111** worse: At 34 px wide a column now hides a curator standing behind it completely (no red pixels left).
+- **C-57** worse: 72 fish now share the 8 templates (C-110).
+- **U-01** partly fixed: #189 redrew the 5 with a flat top ("25%" and "3,500" now read right) and #193 removed the fi ligature ("fish" reads as fish). Still wrong at 13/15/17px: - C reads as O ("Oatch 4 fish", "Oarp", "Oommon", and "Ouration" on the new title card). - Z reads as 2 ("2ara"). - B reads as G ("Guild"). - New pairs found: 0 = O, 8 ≈ B, 6 ≈ G, and E looks like €.
+- **U-07** partly fixed: #189 staff rows put the text at full width with the button underneath, so no more 7-line wraps. Toasts are still ~230px and four lines ("The map is whole. An X shows on the ground somewhere on this island.").
+- **U-09** worse: The new progression cards and panels are square-cornered, while the catch card, celebrate card and conversation box (#189/#193) were made rounded (`--ui-r`).
+- **U-13** partly fixed: - Fixed: Ask dialogs ("Not now" brown, "Open it" gold) and Today's Collect and Spin are now gold. - Still wrong: Today now shows two gold primaries at once, the Field journal's only action ("Claim today's calendar reward") is brown, and the legendary catch card makes the non-button hint gold (U-113).
+- **U-28** partly fixed: `hint.js` (#189) now puts the tip away when a panel opens over it. On the world screen it still covers the "Your Museum / gold" strip, and at 360px the "M" of Menu ("enu").
+- **U-29** worse: Toasts still land at top+112: - In rooms they now sit under the rank pill (U-95). - On islands they get cut by the skill bar (U-96) and hit by +XP pops (U-97). - Behind sheets they peek out clipped ("The map is whole. An X" above the Field journal).
+- **U-47** partly fixed: - Fixed in #193: choices are now bevel buttons, the "more" marker is a gold pixel chevron, and the box has an aria label and inset gold ring. - Still wrong: the portrait is still the tiny full-body sprite, the box is ~210px tall for one line, and the corners are smooth-rounded. - Typing is still slow: "A good day is" after 2.5 s, "What would you like to giv" after 4.5 s.
+- **U-49** partly fixed: `celebrate()` now queues with an icon tile and an "n more" line (#189). The card takes ~0.9 s to fade in, its confetti is 46 smooth rotated CSS squares, and the card is smooth-rounded. The black fade on room unlock was not re-checked.
+- **U-73** partly fixed: The catch card is now on the system (#189: gold inner ring, rarity border, chips). It is still smooth-rounded, the blurb is Georgia, and the fish tails are still detached.
+- **U-75** partly fixed: The crash screen is now in the pixel font, says the museum is safe, offers "Try again" first and erases only on a second tap (#189). The error is still shown in monospace, and the buttons are flat inline blocks (U-140).
+- **U-76** partly fixed: The rotate screen is now in the UI font with a turning phone (#189). The phone is a smooth rounded CSS rectangle (6px radius), not pixel art.
+- **U-81** partly fixed: Builder checkboxes are now 44px pixel squares with a pixel tick, and the favourite star is pixel (#189). "Snap pieces" is still a native select with the system chevron.
 
 ## What you asked about
 
@@ -27,19 +64,19 @@ IDs: P people, T terrain and water, S structures, R rooms, C creatures and items
 
 *“The sunglasses just look like big black eyes”*
 
-The sunglasses are one solid black bar with no bridge, no arms and no lens shape. In side view the glint sits where the eye is, so the guard seems to stare with one white eye (P-24). Round glasses turn each eye into a solid black square (P-23). Edmund the caretaker, every nerd and most teachers, elders and historians wear them, so they read as skulls: the first person you meet looks like a skeleton (P-77). Influencers were meant to get sunglasses but get the skull glasses through a code slip (P-25). Redraw as thin frames with a 1px bridge, arms back to the ears (people have no ears yet, P-03) and a light glint on each lens.
+The sunglasses are one solid black bar with no bridge, no arms and no lens shape. In side view the glint sits where the eye is, so the guard seems to stare with one white eye (P-24). Round glasses turn each eye into a solid black square (P-23). Edmund the caretaker, every nerd and most teachers, elders and historians wear them, so they read as skulls: the first person you meet looks like a skeleton (P-77). Influencers were meant to get sunglasses but get the skull glasses through a code slip (P-25). Redraw as thin frames with a 1px bridge, arms back to the ears (people have no ears yet, P-03) and a light glint on each lens. The new job classes keep both: every librarian and bookworm is a skull, the guard and thief classes keep the blindfold shades, and the new diving masks and goggle straps repeat the black-bar mistake (P-192, P-191, P-178).
 
 ### Yes, a lot clips
 
 *“Look at water, see if anything is clipping”*
 
-You can walk into the sea on every straight shore tile (T-01). The fishing bobber lands on dock planks and, casting upward, on your own head (T-20, T-21). Dock posts stand on dry sand wearing foam rings (T-23). Reeds, frogs, a parrot and lily pads sit in open sea, and jellyfish glow on the dry beach (T-30, T-31). The beach hut and a torch stand in deep water on Island One (S-24, S-28). Ducks and the swan float like toys with no waterline, and the swan, the jumping fish and builder ducks swim backwards (C-26, C-22, C-24). Boats, rocks and dolphins are never cut by a waterline (T-26, T-27, T-33). Indoors, the atrium waterfall's rocks are sliced flat by the water (R-32) and tank fish poke through the glass (C-71). Water painted in the builder is a square blue sticker the game does not treat as water (T-11, T-12).
+You can walk into the sea on every straight shore tile (T-01). The fishing bobber lands on dock planks and, casting upward, on your own head (T-20, T-21). Dock posts stand on dry sand wearing foam rings (T-23). Reeds, frogs, a parrot and lily pads sit in open sea, and jellyfish glow on the dry beach (T-30, T-31). The beach hut and a torch stand in deep water on Island One (S-24, S-28). Ducks and the swan float like toys with no waterline, and the swan, the jumping fish and builder ducks swim backwards (C-26, C-22, C-24). Boats, rocks and dolphins are never cut by a waterline (T-26, T-27, T-33). Indoors, the atrium waterfall's rocks are sliced flat by the water (R-32) and tank fish poke through the glass (C-71). Water painted in the builder is a square blue sticker the game does not treat as water (T-11, T-12). The new fishing effects repeat it: hot-spot bubbles, frenzy rings and fish shadows show on grass, sand and snow, and ice fishing has no hole in the ice (T-123, T-125, T-128).
 
 ### None of the statues or the scarecrow read as what they are
 
 *“Judge everything: scarecrow, statues”*
 
-The scarecrow reads as a man standing in a blue box, with a smooth human face, at twice a person's height; only its arms sway (S-45, S-46, S-47). The garden statue is a green finger in a white tub (S-48). The stone head reads as a robot or a bin, and it stands in for every culture, the Egyptian tomb and the jungle temple included (S-49, S-50). The fountain statues outside the museum are brown lumps, and their 3 animation frames were cut into 3 separate pieces, so they never move (S-51, S-52). Indoors, the classical statue's arms float free of its body, the bust is an egg on a column and the suit of armour has no arms (R-85, R-86, R-87).
+The scarecrow reads as a man standing in a blue box, with a smooth human face, at twice a person's height; only its arms sway (S-45, S-46, S-47). The garden statue is a green finger in a white tub (S-48). The stone head reads as a robot or a bin, and it stands in for every culture, the Egyptian tomb and the jungle temple included (S-49, S-50). The fountain statues outside the museum are brown lumps, and their 3 animation frames were cut into 3 separate pieces, so they never move (S-51, S-52). Indoors, the classical statue's arms float free of its body, the bust is an egg on a column and the suit of armour has no arms (R-85, R-86, R-87). The new Caryatid column reads as a ghost or a robot (R-117).
 
 ## Problems that run through everything
 
@@ -48,12 +85,14 @@ The scarecrow reads as a man standing in a blue box, with a smooth human face, a
 3. **Pixels of uneven size.** The room camera zoom (about 4.06×) and the people's 1.15× scale are not whole numbers, and many sprites are shrunk or rotated in code, so outlines wobble and pixels shimmer (R-05, P-120, C-53, S-37).
 4. **Near-black outline used as paint.** Glasses, legs, tails, heads, hats and dark clothes are filled with the outline colour, so details read as holes and dark things merge into blobs (P-23, P-62, P-44, C-03, C-08).
 5. **Recolours pretending to be variety.** Every person is one body, recoloured (P-83). About 40 of 103 collection items share a drawing with another item (C-57, C-86 to C-94). 1,016 of 1,150 builder pieces are recolours (U-87). Every leafy tree has the same outline (T-67).
-6. **Front views in a top-down world, and skewed side walls.** The museum, cottage, huts, lighthouse, benches and crates are drawn straight-on with no roof or top surface while the ground and trees are seen from above (S-01, S-18). Inside, everything on a side wall is pushed through the same 45° skew, so paintings lie sideways and doors look like ramps (R-59, R-14).
-7. **Things do not sit in the world.** No waterlines, no seat fronts, few contact shadows. People spawn stacked on one spot and stand inside furniture; wildlife walks on roofs and signs (T-26, P-117, P-85, C-52, S-118).
-8. **Repeating 32px textures and hard square edges.** Grass, sea, rock, sand and dirt repeat the same marks every tile. Painted paths and water end in staircase blocks because edge tiles are opaque (T-41, T-03, T-15, T-52).
-9. **Two-frame animation, or none.** The side walk has one frame, pets and critters glide on two, the museum fountain never animates (P-14, C-11, S-52).
-10. **Light and seasons are colour filters.** Night is a tint whose blocky light pools turn grass lime; ceiling lights polka-dot the floor; weather falls as one line; winter turns every tree into the same bare tree (T-112, R-69, T-104, T-97).
-11. **Text and icons come from the browser, not the game.** Pixelify Sans makes C look like O and 5 like S; four font families appear; emoji and Unicode stand in for icons; the museum sign, plaques, stars and quips are system text (U-01, U-02, U-16, S-04, P-105).
+6. **New content repeats the old mistakes.** The 137 new job classes sit on the same blank-face body and appear nowhere in the shipped game (P-124). The 54 new fish are recolours of the 8 old shapes (C-110). All 9 cosmetic hats are one flat box, and outfits tint the skin (P-126, P-127). New water effects reuse the broken water test (T-123). The progression pages are text lists (U-120 to U-123).
+7. **Front views in a top-down world, and skewed side walls.** The museum, cottage, huts, lighthouse, benches and crates are drawn straight-on with no roof or top surface while the ground and trees are seen from above (S-01, S-18). Inside, everything on a side wall is pushed through the same 45° skew, so paintings lie sideways and doors look like ramps (R-59, R-14).
+8. **Things do not sit in the world.** No waterlines, no seat fronts, few contact shadows. People spawn stacked on one spot and stand inside furniture; wildlife walks on roofs and signs (T-26, P-117, P-85, C-52, S-118).
+9. **Repeating 32px textures and hard square edges.** Grass, sea, rock, sand and dirt repeat the same marks every tile. Painted paths and water end in staircase blocks because edge tiles are opaque (T-41, T-03, T-15, T-52).
+10. **Two-frame animation, or none.** The side walk has one frame, pets and critters glide on two, the museum fountain never animates (P-14, C-11, S-52).
+11. **Light and seasons are colour filters.** Night is a tint whose blocky light pools turn grass lime; ceiling lights polka-dot the floor; weather falls as one line; winter turns every tree into the same bare tree (T-112, R-69, T-104, T-97).
+12. **Text and icons come from the browser, not the game.** Pixelify Sans makes C look like O and 5 like S; four font families appear; emoji and Unicode stand in for icons; the museum sign, plaques, stars and quips are system text (U-01, U-02, U-16, S-04, P-105).
+13. **Some designs need cultural care.** The Haida and Yoruba column posts read as cartoon emoji faces, and one moai stands in for every culture (R-119, S-50).
 
 ## Bugs that look like art problems
 
@@ -75,6 +114,12 @@ Small code mistakes behind some of the worst looks; each is quick to fix without
 - The dig cliff and dig trench tiles turn into brown mounds in the game (S-90).
 - A green see-through "decor pad" square sits on the floor of every room (R-76).
 - The stairs-up exit cuts a hole through the back wall, which the gap test cannot see (R-06).
+- Golden, albino and ghost catches show as plain fish: the reveal animation's end state cancels the variant colour (U-109).
+- Only 2 of the 11 named islanders ever appear: the region check compares a map id with a region id (C-118).
+- Cosmetic outfits tint the whole sprite, skin included (P-127, U-137).
+- Four column designs come apart, so the wall shows between capital and shaft (R-115).
+- The rank pill sits above every open sheet and hides room toasts (U-94, U-95).
+- The new title card reads "Ouration" because of the font (U-139).
 
 ## A sensible order for the redesign
 

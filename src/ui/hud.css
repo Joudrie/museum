@@ -52,7 +52,18 @@ body #hud {
   max-width: calc(min(100vw, 100dvh * 9 / 16) - 2 * (60px + 18px));
 }
 body .museum-name { font: 600 var(--fs-body) / 1.1 var(--ui-font); color: var(--ui-gold-hi); }
-body .hud-stats { font: 600 var(--fs-small) / 1.2 var(--ui-font); letter-spacing: 0; }
+body .hud-stats {
+  font: 600 var(--fs-small) / 1.2 var(--ui-font);
+  letter-spacing: 0;
+  /* a very rich museum: the numbers wrap onto a second line instead of being cut off */
+  flex-wrap: wrap;
+  justify-content: center;
+  row-gap: 2px;
+  overflow: visible;
+  white-space: normal;
+}
+/* Collect all hangs under the strip, wherever the strip ends (hud.js keeps --hud-bottom up to date) */
+body #collect-all { top: calc(var(--hud-bottom, 66px) + 9px); }
 body #collect-all {
   top: calc(var(--hud-top) + 62px);
   min-height: var(--ui-hit);

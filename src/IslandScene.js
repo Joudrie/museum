@@ -8,7 +8,8 @@ import { patchSheet } from './swap.js';
 import { makeCharacter } from './art.js';
 import { load } from './storage.js';
 import { DEFAULT_CHARACTER } from './decor.js';
-import { showTalk, hideTalk, talking } from './talk.js';
+import { showTalk, hideTalk, talking, followSpeaker } from './talk.js';
+import { chatOpen } from './dialogue.js';
 import { iconSvg } from './icons.js';
 import { sfx, setTrack, setAmbience } from './music.js';
 import { Weather, weatherToday, season, holiday, stormRumble } from './weather.js';
@@ -71,6 +72,7 @@ const PLAYER_SCALE = 1.15;
 const STEP_MS = 260; // animation frame time
 const DOOR = { x: 12 * T, y: 8 * T }; // the museum's front doors (bottom middle of the building)
 const COTTAGE = { x: 4 * T + 48, y: 29 * T }; // the cottage door, which leads to the angled room
+const WATER_ONLY = new Set(['bubbles', 'lily']); // overlays that are dropped anywhere but water
 
 // Tall things you can walk behind: only the trunk (or post) at the bottom is
 // solid, w × h px, centred; the leaves and lamp tops are above you.
@@ -602,9 +604,12 @@ export class IslandScene extends Phaser.Scene {
     if (this.map) {
       // the builder's tile layer: ground tiles painted over the terrain
       this.paint = [];
+      // bubbles and lily pads only ever sit on water (sea or pond under 3+ corners)
+      const wet = (x, y) => [...this.key(x, y, (m) => m === 0 || m === 3)].filter((b) => b === '1').length >= 3;
       Object.entries(this.map.tiles || {}).forEach(([k, ref]) => {
         const [x, y] = k.split(',').map(Number);
         const name = ref.slice(2);
+        if (WATER_ONLY.has(name) && !wet(x, y)) return;
         if (ref.startsWith('t:') && TILES[name] && y < H && x < W) ((this.paint[y] ||= [])[x] ||= []).push(name);
       });
       // grass grows over the edges of painted dirt and rock (src/groundblend.js)
@@ -1127,11 +1132,11 @@ export class IslandScene extends Phaser.Scene {
       const { s } = n;
       // (people well off screen stand still: nobody sees them, and hundreds of them cost frames)
       if (!n.target && (s.x < v.x - 160 || s.x > v.right + 160 || s.y < v.y - 160 || s.y > v.bottom + 160)) return;
-      if (this.focus?.npc === n && talking()) n.target = null; // stops to chat
+      if (this.focus?.npc === n && (talking() || chatOpen())) n.target = null; // stops to chat
       const a = n.animal;
       if (n.pose && !n.target) {
         // at work, two frames on a loop; they look up at you while you chat
-        if (this.focus?.npc === n && talking()) {
+        if (this.focus?.npc === n && (talking() || chatOpen())) {
           const dx = this.player.x - s.x;
           const dy = this.player.y - s.y;
           if (Math.abs(dx) > Math.abs(dy)) s.setTexture(`${n.prefix}_side`).setFlipX(dx < 0);
@@ -1192,7 +1197,7 @@ export class IslandScene extends Phaser.Scene {
     const r = this.game.canvas.getBoundingClientRect();
     const cam = this.cameras.main;
     const k = r.width / this.scale.gameSize.width;
-    showTalk(n.name, n.title || 'Islander', line, { x: r.left + (n.s.x - cam.worldView.x) * cam.zoom * k, y: r.top + (n.s.y - 40 - cam.worldView.y) * cam.zoom * k });
+    showTalk(n.name, n.title || 'Islander', line, { x: r.left + (n.s.x - cam.worldView.x) * cam.zoom * k, y: r.top + (n.s.y - 40 - cam.worldView.y) * cam.zoom * k }, 6000, followSpeaker(this, n.s, { head: 40, leave: 64 }));
   }
 
   // where you step off the boat: the nearest walkable spot to the first boat
@@ -1372,6 +1377,7 @@ export class IslandScene extends Phaser.Scene {
   interact() {
     const f = this.focus;
     if (!f || this.leaving) return;
+    if (chatOpen()) return; // a conversation is up (walk away or say bye to end it)
     if (this.fishing.busy) return this.fishing.tap();
     if (f.boat) return this.sail();
     if (f.door) return this.goInside();
@@ -1394,7 +1400,7 @@ export class IslandScene extends Phaser.Scene {
     const r = this.game.canvas.getBoundingClientRect();
     const cam = this.cameras.main;
     const k = r.width / this.scale.gameSize.width;
-    showTalk(f.thing.name === 'chest' ? 'Treasure chest' : 'Sign', 'The island', f.thing.text, { x: r.left + (f.thing.x - cam.worldView.x) * cam.zoom * k, y: r.top + (f.thing.y - 30 - cam.worldView.y) * cam.zoom * k });
+    showTalk(f.thing.name === 'chest' ? 'Treasure chest' : 'Sign', 'The island', f.thing.text, { x: r.left + (f.thing.x - cam.worldView.x) * cam.zoom * k, y: r.top + (f.thing.y - 30 - cam.worldView.y) * cam.zoom * k }, 6000, followSpeaker(this, f.thing, { head: 30, leave: 64 }));
   }
 
   enterCottage() {

@@ -40,7 +40,7 @@ export function mountLayer(p) {
       <span class="pp-rank"><span><small>RANK</small><b class="pp-lv">1</b></span></span>
       <div class="pp-bar"><i class="pp-rested"></i><i class="pp-fill"></i></div>
       <div class="pp-goal"><span class="pp-goal-text"></span><span class="pp-n"></span></div>
-      <button class="pp-fold" aria-label="Fold the goal">⌃</button>
+      <button class="pp-fold" aria-label="Fold the goal">${uiIcon('up', 's')}</button>
     </div>
     <div id="prog-pops"></div>
     <div id="prog-skill" class="hidden"><div class="sk-row"><span class="sk-name"></span><span class="sk-lv"></span></div><div class="sk-bar"><i></i></div><div class="sk-perk"></div></div>
