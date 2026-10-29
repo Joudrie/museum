@@ -140,6 +140,7 @@ Scenes (`src/main.js`):
 - **The Empty Frames** (heist arc): Edmund tells 5 chapters of the real 1990 Gardner theft. Every line has the museum's quoted sentence; `node tests/people.cjs --live` checks each quote is still on its source page.
 - **Chains** for Vermeer, Rembrandt, Hokusai: talk to them again after each ask is met (hang their painting, meet more visitors). Add a visitor = add an entry in `chains.js`.
 - **Hook for expeditions (Chat 7):** finished beats with a `lead` append `{id, text, from, at}` to `curation.leads_offered` (`leadsOffered()` in `story.js`). Chat 7 reads that list and starts the trip. Ids so far: `heist-hideout`, `sphinx-letter`, `studio-chest`, `last-scrolls`.
+- **Regulars:** `src/regulars.js` counts talks per visitor (name + type, `curation.regulars`); the 3rd talk they recognise you, later talks use regular lines. `regularCount()` is there for goals/Journal later.
 
 ### Display: fixtures that hold collection entries (Chat 5)
 - A fixture is a decor item with a `fixture` block in `src/items.js` (kind, `accepts` display tags, `slots`). Today: easel, plinth, glass case,
