@@ -1,5 +1,5 @@
 // Digging: walk up to a dig spot, tap Dig, and brush the dirt off with your
-// finger. What's underneath is a real mineral (the minerals collection), and
+// finger. What's underneath is a real mineral or fossil (those collections), and
 // it goes into the journal. A spot rests for a while after it has been dug.
 import { load, save } from './storage.js';
 import { list, RARITY } from './collections/index.js';
@@ -15,7 +15,7 @@ const BRUSH = 22;
 
 export const readyIn = (key, now = Date.now()) => Math.max(0, (load(KEY, {})[key] || 0) - now);
 
-// Rarer minerals turn up less often.
+// Rarer finds turn up less often.
 export function pick(entries = list({ collection: 'mineral' }), rnd = Math.random) {
   const w = entries.map((e) => 5 - (e.rarity || 1));
   let r = rnd() * w.reduce((a, b) => a + b, 0);
@@ -34,7 +34,7 @@ function build() {
 }
 
 /** Opens the digging patch. onClose({ found }) fires when it closes. */
-export function startDig(key, { onClose, entry = pick() } = {}) {
+export function startDig(key, { onClose, collection = 'mineral', entry = pick(list({ collection })) } = {}) {
   if (!el) build();
   const q = (s) => el.querySelector(s);
   const cv = q('.dig-canvas');

@@ -32,7 +32,7 @@ async function dataChecks() {
   check(reg.problems().length === 0, 'registry loaded with no problems', 'registry problems: ' + reg.problems().join(' | '));
   const all = reg.list({ all: true });
   const cols = reg.collections();
-  check(cols.length >= 4, `${cols.length} collections, ${all.length} entries`, 'too few collections');
+  check(cols.length >= 5, `${cols.length} collections, ${all.length} entries`, 'too few collections');
 
   const bad = all.flatMap((e) => schema.validateEntry(e, reg.collection(e.collection)));
   check(!bad.length, 'every entry validates', 'invalid entries: ' + bad.slice(0, 5).join(' | '));
@@ -180,7 +180,7 @@ async function dataChecks() {
   await boot({});
   await openJournal();
   const tabs = await S(() => [...document.querySelectorAll('.journal-tabs button')].map((b) => b.textContent));
-  check(tabs.join() === 'Goals,Paintings,Visitors,Fish,Minerals', `tabs: ${tabs.join(', ')}`, `unexpected tabs: ${tabs.join(', ')}`);
+  check(tabs.join() === 'Goals,Paintings,Visitors,Fish,Minerals,Fossils', `tabs: ${tabs.join(', ')}`, `unexpected tabs: ${tabs.join(', ')}`);
   const tabFits = await S(() => [...document.querySelectorAll('.journal-tabs button')].every((b) => b.scrollWidth <= b.clientWidth + 1));
   check(tabFits, 'tab labels fit on one line', 'a tab label is clipped');
   await shot('journal-goals');
@@ -227,7 +227,7 @@ async function dataChecks() {
   await p.click('text=Collect one of everything');
   await wait(300);
   const msg = await S(() => [...document.querySelectorAll('#settings button')].find((b) => /^Added/.test(b.textContent))?.textContent);
-  check(/Added 29/.test(msg || ''), `testing button: ${msg}`, `testing button said: ${msg}`); // 18 fish + 3 finds + 8 minerals
+  check(/Added 37/.test(msg || ''), `testing button: ${msg}`, `testing button said: ${msg}`); // 18 fish + 3 finds + 8 minerals + 8 fossils
   await p.click('.settings-close');
   await wait(300);
   await openJournal('minerals');
