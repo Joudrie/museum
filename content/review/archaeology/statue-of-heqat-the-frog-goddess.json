@@ -1,0 +1,111 @@
+{
+  "status": "draft",
+  "collection": "archaeology",
+  "slug": "statue-of-heqat-the-frog-goddess",
+  "notes": "region: Egypt. era removed: the paintings date buckets do not fit antiquity; Chat 8 defines this collection",
+  "entry": {
+    "id": "archaeology:statue-of-heqat-the-frog-goddess",
+    "collection": "archaeology",
+    "title": "Statue of Heqat, the Frog Goddess",
+    "year": "c. 2950 BCE",
+    "ratio": 1.0544,
+    "blurb": "During the Predynastic period statues of animals are much more common than those of humans.",
+    "rarity": 1,
+    "tags": [
+      "egypt"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1976.5/1976.5_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Andrew R. and Martha Holden Jennings Fund",
+      "url": "https://clevelandart.org/art/1976.5"
+    },
+    "value": 5,
+    "facts": [
+      "The sculptor has shown great sensitivity to the natural banding of the stone, using it to enhance the roundness of the animal's form.",
+      "Small frogs, mostly of faience, are among the most common votive offerings deposited at early temple sites.",
+      "The frog's exact religious significance in the Predynastic period is unknown, but in later times it was most often identified with Heqat, the goddess who assisted at childbirth."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "148796",
+    "title": "Statue of Heqat, the Frog Goddess",
+    "maker": "",
+    "year": "c. 2950 BCE",
+    "medium": "travertine (Egyptian alabaster)",
+    "dimensions": "Overall: 15.4 x 14.7 x 15.5 cm (6 1/16 x 5 13/16 x 6 1/8 in.)",
+    "widthCm": 15.5,
+    "heightCm": 14.7,
+    "ratio": 1.0544,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1976.5/1976.5_web.jpg",
+    "imageWidth": 1116,
+    "imageHeight": 893,
+    "pageUrl": "https://clevelandart.org/art/1976.5",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Andrew R. and Martha Holden Jennings Fund",
+    "description": "During the Predynastic period statues of animals are much more common than those of humans. This statue of a frog stands at the beginning of a great tradition of animal sculpture in Egyptian art. The sculptor has shown great sensitivity to the natural banding of the stone, using it to enhance the roundness of the animal's form. Small frogs, mostly of faience, are among the most common votive offerings deposited at early temple sites. The frog's exact religious significance in the Predynastic period is unknown, but in later times it was most often identified with Heqat, the goddess who assisted at childbirth. This probably represents a puffed-up Bufo viridis , one of two types of \"frogs\" (it is actually a toad) represented in Egyptian art.",
+    "culture": "Egypt, Predynastic (5000–2950 BCE), Naqada III (3200–3000 BCE)–Egypt, Early Dynastic (2950–2647 BCE), Dynasty 1",
+    "classification": "Sculpture",
+    "tags": [
+      "Egyptian and Ancient Near Eastern Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Statue of Heqat, the Frog Goddess",
+      "maker": "",
+      "year": "c. 2950 BCE",
+      "medium": "travertine (Egyptian alabaster)",
+      "dimensions": "Overall: 15.4 x 14.7 x 15.5 cm (6 1/16 x 5 13/16 x 6 1/8 in.)",
+      "culture": "Egypt, Predynastic (5000–2950 BCE), Naqada III (3200–3000 BCE)–Egypt, Early Dynastic (2950–2647 BCE), Dynasty 1",
+      "classification": "Sculpture",
+      "credit": "The Cleveland Museum of Art. Andrew R. and Martha Holden Jennings Fund",
+      "description": "During the Predynastic period statues of animals are much more common than those of humans. This statue of a frog stands at the beginning of a great tradition of animal sculpture in Egyptian art. The sculptor has shown great sensitivity to the natural banding of the stone, using it to enhance the roundness of the animal's form. Small frogs, mostly of faience, are among the most common votive offerings deposited at early temple sites. The frog's exact religious significance in the Predynastic period is unknown, but in later times it was most often identified with Heqat, the goddess who assisted at childbirth. This probably represents a puffed-up Bufo viridis , one of two types of \"frogs\" (it is actually a toad) represented in Egyptian art.",
+      "tombstone": "Statue of Heqat, the Frog Goddess, c. 2950 BCE. Egypt, Predynastic (5000–2950 BCE), Naqada III (3200–3000 BCE)–Egypt, Early Dynastic (2950–2647 BCE), Dynasty 1. Travertine (Egyptian alabaster); overall: 15.4 x 14.7 x 15.5 cm (6 1/16 x 5 13/16 x 6 1/8 in.). The Cleveland Museum of Art, Andrew R. and Martha Holden Jennings Fund, 1976.5",
+      "funFact": "",
+      "didYouKnow": "This probably represents a puffed-up Bufo viridis , one of two types of \"frogs\" (it is actually a toad) represented in Egyptian art.",
+      "creators": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "During the Predynastic period statues of animals are much more common than those of humans.",
+      "quote": "During the Predynastic period statues of animals are much more common than those of humans.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The sculptor has shown great sensitivity to the natural banding of the stone, using it to enhance the roundness of the animal's form.",
+      "quote": "The sculptor has shown great sensitivity to the natural banding of the stone, using it to enhance the roundness of the animal's form.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Small frogs, mostly of faience, are among the most common votive offerings deposited at early temple sites.",
+      "quote": "Small frogs, mostly of faience, are among the most common votive offerings deposited at early temple sites.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The frog's exact religious significance in the Predynastic period is unknown, but in later times it was most often identified with Heqat, the goddess who assisted at childbirth.",
+      "quote": "The frog's exact religious significance in the Predynastic period is unknown, but in later times it was most often identified with Heqat, the goddess who assisted at childbirth.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "unknown collection \"archaeology\"",
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

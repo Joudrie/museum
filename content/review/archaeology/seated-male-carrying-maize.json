@@ -1,0 +1,111 @@
+{
+  "status": "draft",
+  "collection": "archaeology",
+  "slug": "seated-male-carrying-maize",
+  "notes": "region: Aztec (Central Mexico). era removed: the paintings date buckets do not fit antiquity; Chat 8 defines this collection",
+  "entry": {
+    "id": "archaeology:seated-male-carrying-maize",
+    "collection": "archaeology",
+    "title": "Seated Male Carrying Maize",
+    "year": "1325–1521",
+    "ratio": 1.2656,
+    "blurb": "Both names include the Aztec word for \"flower,\" and in one hand the figure holds a cone of flowers, perhaps the blossoming crown of a cactus.",
+    "rarity": 1,
+    "tags": [
+      "central mexico"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1949.555/1949.555_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. The Norweb Collection",
+      "url": "https://clevelandart.org/art/1949.555"
+    },
+    "value": 5,
+    "facts": [
+      "For the Aztecs, flowers signified beauty, refinement, and fertility in general and sexuality in particular.",
+      "The burden of maize cobs on his back also may allude to his creative energies.",
+      "Macuilxochitl is one of five gods of excess pleasure, and the punishment that follows."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "127239",
+    "title": "Seated Male Carrying Maize",
+    "maker": "",
+    "year": "1325–1521",
+    "medium": "stone, pigment",
+    "dimensions": "Overall: 31.1 x 24.1 x 30.5 cm (12 1/4 x 9 1/2 x 12 in.)",
+    "widthCm": 30.5,
+    "heightCm": 24.1,
+    "ratio": 1.2656,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1949.555/1949.555_web.jpg",
+    "imageWidth": 915,
+    "imageHeight": 893,
+    "pageUrl": "https://clevelandart.org/art/1949.555",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. The Norweb Collection",
+    "description": "This figure probably represents an Aztec deity-either Macuilxochitl or Xochipilli-whose domain was beauty, the arts, and such pleasures as gameplaying, dancing, and sex. Both names include the Aztec word for \"flower,\" and in one hand the figure holds a cone of flowers, perhaps the blossoming crown of a cactus. For the Aztecs, flowers signified beauty, refinement, and fertility in general and sexuality in particular. The burden of maize cobs on his back also may allude to his creative energies. Macuilxochitl is one of five gods of excess pleasure, and the punishment that follows.",
+    "culture": "Central Mexico, Aztec style, 13th-16th century",
+    "classification": "Sculpture",
+    "tags": [
+      "Art of the Americas"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Seated Male Carrying Maize",
+      "maker": "",
+      "year": "1325–1521",
+      "medium": "stone, pigment",
+      "dimensions": "Overall: 31.1 x 24.1 x 30.5 cm (12 1/4 x 9 1/2 x 12 in.)",
+      "culture": "Central Mexico, Aztec style, 13th-16th century",
+      "classification": "Sculpture",
+      "credit": "The Cleveland Museum of Art. The Norweb Collection",
+      "description": "This figure probably represents an Aztec deity-either Macuilxochitl or Xochipilli-whose domain was beauty, the arts, and such pleasures as gameplaying, dancing, and sex. Both names include the Aztec word for \"flower,\" and in one hand the figure holds a cone of flowers, perhaps the blossoming crown of a cactus. For the Aztecs, flowers signified beauty, refinement, and fertility in general and sexuality in particular. The burden of maize cobs on his back also may allude to his creative energies. Macuilxochitl is one of five gods of excess pleasure, and the punishment that follows.",
+      "tombstone": "Seated Male Carrying Maize, 1325–1521. Central Mexico, Aztec style, 13th-16th century. Stone, pigment; overall: 31.1 x 24.1 x 30.5 cm (12 1/4 x 9 1/2 x 12 in.). The Cleveland Museum of Art, The Norweb Collection, 1949.555",
+      "funFact": "",
+      "didYouKnow": "Macuilxochitl is one of five gods of excess pleasure, and the punishment that follows.",
+      "creators": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "Both names include the Aztec word for \"flower,\" and in one hand the figure holds a cone of flowers, perhaps the blossoming crown of a cactus.",
+      "quote": "Both names include the Aztec word for \"flower,\" and in one hand the figure holds a cone of flowers, perhaps the blossoming crown of a cactus.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "For the Aztecs, flowers signified beauty, refinement, and fertility in general and sexuality in particular.",
+      "quote": "For the Aztecs, flowers signified beauty, refinement, and fertility in general and sexuality in particular.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The burden of maize cobs on his back also may allude to his creative energies.",
+      "quote": "The burden of maize cobs on his back also may allude to his creative energies.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Macuilxochitl is one of five gods of excess pleasure, and the punishment that follows.",
+      "quote": "Macuilxochitl is one of five gods of excess pleasure, and the punishment that follows.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "unknown collection \"archaeology\"",
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

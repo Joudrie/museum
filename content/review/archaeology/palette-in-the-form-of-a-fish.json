@@ -1,0 +1,95 @@
+{
+  "status": "draft",
+  "collection": "archaeology",
+  "slug": "palette-in-the-form-of-a-fish",
+  "notes": "region: Egypt. era removed: the paintings date buckets do not fit antiquity; Chat 8 defines this collection",
+  "entry": {
+    "id": "archaeology:palette-in-the-form-of-a-fish",
+    "collection": "archaeology",
+    "title": "Palette in the Form of a Fish",
+    "year": "c. 3500–2950 BCE",
+    "ratio": 1.8278,
+    "blurb": "Stone palettes were used for grinding eye paint worn for cosmetic purposes and to protect against sun glare and eye infections.",
+    "rarity": 1,
+    "tags": [
+      "egypt"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1989.32/1989.32_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Bequest of Elizabeth M. Skala",
+      "url": "https://clevelandart.org/art/1989.32"
+    },
+    "value": 5,
+    "facts": [
+      "There were two types: green, made from malachite (copper ore), and black, made from galena (lead ore)."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "154738",
+    "title": "Palette in the Form of a Fish",
+    "maker": "",
+    "year": "c. 3500–2950 BCE",
+    "medium": "graywacke",
+    "dimensions": "Overall: 10.5 cm (4 1/8 in.)",
+    "ratio": 1.8278,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1989.32/1989.32_web.jpg",
+    "imageWidth": 1263,
+    "imageHeight": 691,
+    "pageUrl": "https://clevelandart.org/art/1989.32",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Bequest of Elizabeth M. Skala",
+    "description": "Stone palettes were used for grinding eye paint worn for cosmetic purposes and to protect against sun glare and eye infections. There were two types: green, made from malachite (copper ore), and black, made from galena (lead ore). As funerary items, these ores may have had a deep significance for the deceased as symbols of regeneration and rebirth: the rich soil of the banks of the Nile (black), and the lush vegetation it sustained (green). This fish shape is one of the most common for Egyptian cosmetic palettes.",
+    "culture": "Egypt, Predynastic (5000–2950 BCE), Naqada II–III (3650–3000 BCE)",
+    "classification": "Tools and Equipment",
+    "tags": [
+      "Egyptian and Ancient Near Eastern Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Palette in the Form of a Fish",
+      "maker": "",
+      "year": "c. 3500–2950 BCE",
+      "medium": "graywacke",
+      "dimensions": "Overall: 10.5 cm (4 1/8 in.)",
+      "culture": "Egypt, Predynastic (5000–2950 BCE), Naqada II–III (3650–3000 BCE)",
+      "classification": "Tools and Equipment",
+      "credit": "The Cleveland Museum of Art. Bequest of Elizabeth M. Skala",
+      "description": "Stone palettes were used for grinding eye paint worn for cosmetic purposes and to protect against sun glare and eye infections. There were two types: green, made from malachite (copper ore), and black, made from galena (lead ore). As funerary items, these ores may have had a deep significance for the deceased as symbols of regeneration and rebirth: the rich soil of the banks of the Nile (black), and the lush vegetation it sustained (green). This fish shape is one of the most common for Egyptian cosmetic palettes.",
+      "tombstone": "Palette in the Form of a Fish, c. 3500–2950 BCE. Egypt, Predynastic (5000–2950 BCE), Naqada II–III (3650–3000 BCE). Graywacke; overall: 10.5 cm (4 1/8 in.). The Cleveland Museum of Art, Bequest of Elizabeth M. Skala, 1989.32",
+      "funFact": "",
+      "didYouKnow": "This fish shape is one of the most common for Egyptian cosmetic palettes.",
+      "creators": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "Stone palettes were used for grinding eye paint worn for cosmetic purposes and to protect against sun glare and eye infections.",
+      "quote": "Stone palettes were used for grinding eye paint worn for cosmetic purposes and to protect against sun glare and eye infections.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "There were two types: green, made from malachite (copper ore), and black, made from galena (lead ore).",
+      "quote": "There were two types: green, made from malachite (copper ore), and black, made from galena (lead ore).",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "unknown collection \"archaeology\"",
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}
