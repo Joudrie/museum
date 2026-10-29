@@ -38,9 +38,9 @@ Owns: `tools/`, `content/`, `docs/CONTENT*.md`, `public/paintings/`, `src/collec
 
 ## CHAT 2: Builder and ground tools
 Owns: `src/builder/`, `builder.html`, `public/builder/`, `tools/build_palette.py`, `src/mapformat.js`. Claim: `claimed: 2026-10-29`
-- [ ] **Turn families (started, #117: 4 armchair colours verified; more sets to check with `tools/rotation_sheet.py`):** `public/builder/rotations.json` links the sides of one object (one chair so far). Find the true sets in the free packs (verify each by eye, never auto-group), add them. Keep the file format so the user's new sprites drop in.
+- [ ] **Turn families (checked seating, decor, tables, shelves: the armchairs are the only complete 4-side sets; sofas and chairs have no back or no matching front, the rest are composites or colour variants. Revisit when the user's new sprites land) (started, #117: 4 armchair colours verified; more sets to check with `tools/rotation_sheet.py`):** `public/builder/rotations.json` links the sides of one object (one chair so far). Find the true sets in the free packs (verify each by eye, never auto-group), add them. Keep the file format so the user's new sprites drop in.
 - [x] Search box for pieces; recently used at the top; favourites. (#150)
-- [ ] **Grass that blends** into painted dirt and rock is in (`src/groundblend.js`, used by builder and game; #132). Still open: other ground types have no edge tiles yet; jagged rocks instead of round ones.
+- [ ] **Grass that blends** into painted dirt and rock is in (`src/groundblend.js`, used by builder and game; #132). Jagged rocks added as new pieces (Jagged rock, 2×2, Rock spire; the round ones stay because maps use them) (#166). Still open: other ground types have no edge tiles yet.
 - [ ] Every ground type, path block and furniture piece is its own named, placeable item (so the user can redraw them one by one).
 - [x] Builder palette organisation (duplicate lists merged, "What's new" row from `public/builder/whatsnew.json`; a Dig sites list waits for Chat 6's tiles) (#120).
 - [x] Copy / paste regions, multi-select move (cut + paste), layers view (menu → Options: Ground / Pieces), grid toggle, measure (the Area tool shows W×H). Mirror the copied area is in; rotating a whole area is not (sprites don't turn without a family) (#121).
@@ -148,7 +148,7 @@ Owns: `src/staffmenu.js`, `src/officemenu.js`, `src/office.js`, `src/incomemenu.
 - [x] Break-room upgrade menu (slower mess, guide training, carpenter toolbox); Curator's Office level costs and unlocks now in `src/economy.js` (#126).
 - [x] Gift shop, food court stall, kids' discovery table and lecture stage as Services items (max 1 each, rules in `SERVICES` in `src/economy.js`); coffee depth via the Better beans upgrade (#144). Not done: library and archive (the Library room exists; where the stored collection lives belongs with Chats 5 and 8); the lecture stage pays per famous visitor met but has no live talk event yet.
 - [x] Income formula numbers in `src/economy.js`; 8-hour cap messaging (welcome-back toast, FULL flag, income-menu note); "Collect all" is now free of ads and keeps a 15% fee (#128).
-- [x] Security: four tiers (none, dummy cameras, cameras, alarm) in `src/economy.js`; stopped thieves at camera tiers are caught for a gold bounty (#135).
+- [x] Security: four tiers (none, dummy cameras, cameras, alarm) in `src/economy.js`; stopped thieves at camera tiers are caught for a gold bounty (#166).
 - [ ] Late-game sink: frame your own artwork (very expensive). Parked: the game has no way to make your own artwork yet, so it is a question under Needs Sean.
 - [ ] ON HOLD (needs the user): gems as time (skip construction, "X days of income"), rewarded ads, cosmetics, a seasonal exhibition pass, crates with odds and pity. Rule: **no pay-to-win; never a gem or crate economy as the core.**
 
@@ -206,7 +206,7 @@ Mini-games (Mop Rush, No Flash!, Restoration-as-minigame, Crate Tetris, Hang it 
 - **Chat 13 to Chat 10:** "daily guests" belong with the famous visitors. `src/daily.js` has `dayNum()`; if you want a "today's guest" pick, key it on that and I'll show it on the Today panel.
 
 - Chat 14 → Chat 9/12: `applyHall(roomIndex, hall)` (`src/halls/apply.js`) restyles a built room for free and returns `before` for `undoHall`. A menu button and any price are yours to decide; it refuses fixed rooms.
-- Chat 14 → Chat 1/8: halls list `planned` collections (sculpture, flower, egyptian, ship-model, armor, clock, invention; meteorite, pottery and shell are in now) and Japanese prints: add the data and move the id into the hall's `collections`.
+- Chat 14 → Chat 1/8: halls list `planned` collections (only sculpture and egyptian are still missing; the rest are now wired in) and Japanese prints: add the data and move the id into the hall's `collections`.
 - Chat 10 → Chat 7: story chapters offer leads by writing `{id, text, from, at}` to `curation.leads_offered` (see HANDOFF, "Story and leads"). Read it, show the lead, start the trip; ids so far: `heist-hideout`, `sphinx-letter`, `studio-chest`, `last-scrolls`.
 - **Chat 5 / 8:** `foundAt(entryId)` (`src/foundat.js`) returns "Skull Isle" etc. for any find from an expedition; `provenanceLine` already uses it.
 - **Chat 10:** expeditions read `curation.leads_offered` (your four ids open islands); `grantLead('id')` in `src/leads.js` is the other way to hand one out.
