@@ -38,9 +38,9 @@ Owns: `tools/`, `content/`, `docs/CONTENT*.md`, `public/paintings/`, `src/collec
 
 ## CHAT 2: Builder and ground tools
 Owns: `src/builder/`, `builder.html`, `public/builder/`, `tools/build_palette.py`, `src/mapformat.js`. Claim: `claimed: 2026-10-29`
-- [ ] **Turn families (started, #117: 4 armchair colours verified; more sets to check with `tools/rotation_sheet.py`):** `public/builder/rotations.json` links the sides of one object (one chair so far). Find the true sets in the free packs (verify each by eye, never auto-group), add them. Keep the file format so the user's new sprites drop in.
+- [ ] **Turn families (checked seating, decor, tables, shelves: the armchairs are the only complete 4-side sets; sofas and chairs have no back or no matching front, the rest are composites or colour variants. Revisit when the user's new sprites land) (started, #117: 4 armchair colours verified; more sets to check with `tools/rotation_sheet.py`):** `public/builder/rotations.json` links the sides of one object (one chair so far). Find the true sets in the free packs (verify each by eye, never auto-group), add them. Keep the file format so the user's new sprites drop in.
 - [x] Search box for pieces; recently used at the top; favourites. (#150)
-- [ ] **Grass that blends** into painted dirt and rock is in (`src/groundblend.js`, used by builder and game; #132). Still open: other ground types have no edge tiles yet; jagged rocks instead of round ones.
+- [ ] **Grass that blends** into painted dirt and rock is in (`src/groundblend.js`, used by builder and game; #132). Jagged rocks added as new pieces (Jagged rock, 2×2, Rock spire; the round ones stay because maps use them) (#135). Still open: other ground types have no edge tiles yet.
 - [ ] Every ground type, path block and furniture piece is its own named, placeable item (so the user can redraw them one by one).
 - [x] Builder palette organisation (duplicate lists merged, "What's new" row from `public/builder/whatsnew.json`; a Dig sites list waits for Chat 6's tiles) (#120).
 - [x] Copy / paste regions, multi-select move (cut + paste), layers view (menu → Options: Ground / Pieces), grid toggle, measure (the Area tool shows W×H). Mirror the copied area is in; rotating a whole area is not (sprites don't turn without a family) (#121).

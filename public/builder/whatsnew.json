@@ -1,4 +1,4 @@
 {
   "note": "Refs shown in the builder's \"What's new\" row at the top of the palette. Add the newest pieces here (t:name for island tiles, p:group/n for room pieces); refs that do not exist are ignored.",
-  "refs": ["p:seating/37", "p:seating/47", "p:seating/172", "p:seating/182", "t:plate", "t:lever", "t:gate"]
+  "refs": ["p:seating/37", "p:seating/47", "p:seating/172", "p:seating/182", "t:rock_jagged", "t:rock_jagged_big", "t:rock_spire", "t:plate", "t:lever", "t:gate"]
 }

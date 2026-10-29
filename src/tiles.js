@@ -368,6 +368,7 @@ export function buildTiles() {
 
   // Rocks and boulders
   addRocks(add);
+  addJaggedRocks(add);
 
   // Props
   addProps(add, anim);
@@ -717,6 +718,37 @@ function addRocks(add) {
       ctx.fillRect(x - 1, top + 4, 1, 10);
     });
   }), { group: 'Rocks', label: 'Crystals', walk: 'block' });
+}
+
+// Jagged rocks: faceted outcrops instead of round blobs (new pieces; the round rocks stay, maps use them)
+function addJaggedRocks(add) {
+  const shard = (w, h, pts, ridge) =>
+    draw(w, h, ({ ctx }) => {
+      const poly = (list, fill, grow = 0) => {
+        ctx.fillStyle = fill;
+        ctx.beginPath();
+        list.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
+        ctx.closePath();
+        ctx.fill();
+        if (grow) ctx.stroke();
+      };
+      ctx.fillStyle = 'rgba(0,0,0,0.28)';
+      ctx.fillRect(pts[0][0] - 1, h - 6, pts[pts.length - 1][0] - pts[0][0] + 2, 3);
+      ctx.strokeStyle = OUT;
+      ctx.lineWidth = 2;
+      ctx.lineJoin = 'miter';
+      poly(pts, css(STONE[1]), 1);
+      // lit left planes and a dark right plane, split along a ridge
+      poly([...pts.filter(([x]) => x <= ridge[0]), [ridge[0], h - 5]], css(STONE[3]));
+      poly([[ridge[0], ridge[1]], ...pts.filter(([x]) => x >= ridge[0]), [ridge[0], h - 5]], css(STONE[0]));
+      ctx.fillStyle = css(STONE[4]);
+      ctx.fillRect(ridge[0] - 3, ridge[1] + 3, 2, 3);
+      ctx.fillStyle = OUT;
+      ctx.fillRect(ridge[0], ridge[1], 1, h - 5 - ridge[1]);
+    });
+  add('rock_jagged', shard(T, T, [[5, 26], [8, 14], [13, 9], [17, 15], [22, 11], [27, 26]], [17, 15]), { group: 'Rocks', label: 'Jagged rock', walk: 'block' });
+  add('rock_jagged_big', shard(2 * T, 2 * T, [[6, 58], [10, 36], [20, 26], [28, 8], [36, 22], [46, 18], [58, 58]], [30, 22]), { group: 'Rocks', label: 'Jagged rock (2×2)', w: 2 * T, h: 2 * T, walk: 'block' });
+  add('rock_spire', shard(T, 2 * T, [[6, 58], [10, 34], [14, 18], [18, 6], [22, 20], [27, 36], [28, 58]], [18, 24]), { group: 'Rocks', label: 'Rock spire (1×2)', w: T, h: 2 * T, walk: 'block' });
 }
 
 // ---------- Props ----------
