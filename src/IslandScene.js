@@ -28,7 +28,7 @@ import { withTiles } from './mapformat.js';
 import { PEOPLE, ANIMALS } from './landmarks.js';
 import { makePet } from './pets.js';
 import { critterTextures } from './critters.js';
-import { openSail, builderIslands } from './sailmenu.js';
+import { openSail, builderIslands, friendIslands } from './sailmenu.js';
 import { visitorLook, KINDS } from './RoomScene.js';
 import { PERSONALITIES, QUIPS } from './lines.js';
 
@@ -1089,6 +1089,7 @@ export class IslandScene extends Phaser.Scene {
     Object.entries(MAPS).forEach(([id, m]) => id !== 'main' && id !== this.mapId && options.push({ label: m.name === 'Untitled island' ? 'The far isle' : m.name, sub: 'An island to explore', go: { map: id } }));
     const mine = builderIslands();
     mine.forEach((m) => m.name !== here && options.push({ label: m.name, sub: `Your island · ${m.w}×${m.h}`, go: { mapData: m } }));
+    friendIslands().forEach((m) => m.name !== here && options.push({ label: m.name, sub: `A friend’s island · ${m.w}×${m.h}`, go: { mapData: m } }));
     this.paused = true;
     openSail(options, (pick) => {
       this.paused = false;

@@ -122,6 +122,11 @@ Scenes (`src/main.js`):
   49 paintings** (no network here); `content/batches/first-batch.json` (12 works, 9+ regions) is waiting to be built.
 - Test: `node tests/content.cjs` (no browser, no network).
 
+### Share, visit and daily (Chat 13)
+- No server. `src/sharecode.js` packs a museum "postcard" (rooms, painting ids, decor counts, rating; **no gold, saves or character**) or a builder island into a link (`?visit=` / `?island=`), read back with strict cleaning. `src/share.js` is the Settings → "Share & visit friends" panel: copy link, rating card and tour strip pictures (canvas), paste a link or open a map file. Visiting is a look-around card; "Keep" stores it in `curation.friends`. Friends' islands join the boat list (`friendIslands()` in sailmenu.js).
+- `src/daily.js` is the gift icon under the journal: welcome gift, one wheel spin a day, Painting of the Day (same for everyone, stepped through `PAINTINGS`). Gentle: a streak survives up to 3 missed days and never nags. Numbers sit at the top of the file.
+- Test: `PW=/opt/node-tools/node_modules/playwright OUT=<dir> node tests/share.cjs`.
+
 ### Wakefield, MA is NOT part of the game
 A separate personal project (the user's hometown, for friends) that only shares the engine. Its page is `wakefield.html`, its code
 `src/wakefield/`, its notes `docs/WAKEFIELD.md`. Never add it to the game. Engine improvements made along the way and kept in the
