@@ -2747,6 +2747,8 @@ body.outside #hud {
   flex: none;
   margin-left: auto;
   white-space: nowrap;
+}
+
 .dig-tools {
   display: flex;
   gap: 6px;
