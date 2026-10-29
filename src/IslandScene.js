@@ -1172,7 +1172,7 @@ export class IslandScene extends Phaser.Scene {
   dressPlayer(ch = { ...DEFAULT_CHARACTER, ...load('curation.character', {}) }) {
     const { colors, look } = curatorLook(ch, wornLooks());
     makeCharacter(this, 'player', colors, look);
-    if (this.player) this.player.setTexture(this.player.texture.key);
+    if (this.player?.active) this.player.setTexture(this.player.texture.key); // (not the last visit's sprite, gone with it)
   }
 
   // Someone who lives on the island: walks Pokémon-style, a tile or two at a
