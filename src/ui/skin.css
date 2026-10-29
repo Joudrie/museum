@@ -513,3 +513,34 @@ body #chat .chat-more .ui-ic { width: 14px; height: 14px; }
   touch-action: none;
   cursor: grab;
 }
+
+/* ---- the progression layer (src/progression/ui) held to the same floors: 13 px text, 44 px targets, one panel at a time ---- */
+body #prog-pill .pp-rank { width: 44px; height: 44px; }
+body #prog-pill { grid-template-columns: 44px 1fr; }
+body #prog-pill .pp-rank small { font-size: var(--fs-small); letter-spacing: 0; margin-bottom: -3px; }
+/* the fold button: a 44 px target that hangs under the pill, glyph at its top edge */
+body #prog-pill .pp-fold {
+  right: -4px;
+  bottom: -36px;
+  width: var(--ui-hit);
+  height: var(--ui-hit);
+  padding-bottom: 26px;
+  display: grid;
+  place-items: center;
+  color: var(--ui-muted);
+}
+body #prog-pill .pp-fold .ui-ic { width: 14px; height: 14px; }
+body #prog-pill.collapsed .pp-fold .ui-ic { transform: rotate(180deg); }
+body .prog-pop small,
+body #prog-skill .sk-perk,
+body #prog-card .stamp,
+body #catch .chip,
+body .pg-cell .hint,
+body .pg-cell .new-dot { font-size: var(--fs-small); }
+/* a panel is open: the pill gets out of the way instead of sitting on top of the sheet's handle */
+body:has(.overlay:not(.hidden)) #prog-pill,
+body:has(#toolkit:not(.hidden)) #prog-pill,
+body:has(#viewer:not(.hidden)) #prog-pill {
+  visibility: hidden;
+  pointer-events: none;
+}
