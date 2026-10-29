@@ -52,7 +52,7 @@ Owns: `src/builder/`, `builder.html`, `public/builder/`, `tools/build_palette.py
 Owns: `tests/`, `.github/`, `vite.config.js`, `src/settings*.js`, `src/ui.js`. Claim: `claimed: 2026-10-29`
 - [x] **Stabilise the flaky tests** (playtest, smoke "cottage door"). Real causes: walking took one big step per slow frame and jumped over the strip in front of the door (now sub-steps of 3 px), and the ambient life probed `isPond` past the island edge and crashed (now bounds-checked). (#170)
 - [x] Phone performance: measure on huge islands, many NPCs and lighting; budgets in HANDOFF; `tests/perf.cjs`; off-screen culling and idle islanders far away (#173)
-- [x] Tests for dig, fossils, turn families and the content pipeline (`dig.cjs`, `builder.cjs`, `content.cjs`); CI runs every test on every PR (`.github/workflows/tests.yml`, `npm test`) (#PRNUM)
+- [x] Tests for dig, fossils, turn families and the content pipeline (`dig.cjs`, `builder.cjs`, `content.cjs`); CI runs every test on every PR (`.github/workflows/tests.yml`, `npm test`) (#174)
 - [ ] Save safety: versioned saves and corrupt-save recovery for every store (`curation.digs`, codex, builder).
 - [ ] Bundle size (the build warns about a large chunk): split by scene, lazy-load.
 - [ ] Accessibility and settings polish that doesn't change the look the user is about to set. Menu and collection-screen **redesign waits for the user's direction.**
