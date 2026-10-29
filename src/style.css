@@ -2882,3 +2882,13 @@ body.outside #hud {
 #detector[data-heat='4'] {
   color: #ff7a5a;
 }
+
+/* Anyone who asked their phone for less motion gets still menus (the game world itself is unchanged). */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
