@@ -174,9 +174,56 @@ function avg(ref) {
 }
 
 // ---------- the palette (dropdowns) ----------
+function pieceButton(ref) {
+  const b = document.createElement('button');
+  b.className = 'piece';
+  b.dataset.ref = ref;
+  const pic = document.createElement('div');
+  pic.className = 'pic';
+  pic.appendChild(thumb(ref, 72));
+  if (FAMILY[ref]) {
+    const badge = document.createElement('i');
+    badge.className = 'turnbadge';
+    badge.textContent = '⟳';
+    pic.appendChild(badge);
+  }
+  b.appendChild(pic);
+  const name = ref.startsWith('m:') ? MATS.find((m) => `m:${m.m}` === ref).name : ref.startsWith('t:') ? PIECES[ref].label : '';
+  if (name) {
+    const sp = document.createElement('span');
+    sp.textContent = name;
+    b.appendChild(sp);
+  }
+  b.title = name || PIECES[ref]?.label || '';
+  b.onclick = () => choose(ref);
+  return b;
+}
+
 function buildPalette() {
   const pal = $('palette');
   const lists = [];
+  pal.innerHTML = '<input id="search" type="search" placeholder="Search pieces…" autocomplete="off" /><div id="results" class="pieces" hidden></div><div id="quick"></div>';
+  const search = $('search');
+  search.oninput = () => {
+    const q = search.value.trim().toLowerCase();
+    const box = $('results');
+    box.hidden = !q;
+    $('quick').hidden = !!q;
+    pal.querySelectorAll('details').forEach((d) => (d.hidden = !!q));
+    box.innerHTML = '';
+    if (!q) return;
+    const words = q.split(/\s+/);
+    const hits = Object.keys(PIECES).filter((ref) => {
+      const p = PIECES[ref];
+      if (p.skip || (FAMILY[ref] && FAMILY[ref][0] !== ref)) return false;
+      const hay = `${p.label} ${p.group || ''} ${ref}`.toLowerCase();
+      return words.every((w) => hay.includes(w));
+    });
+    hits.slice(0, 80).forEach((ref) => box.appendChild(pieceButton(ref)));
+    if (!hits.length) box.innerHTML = '<p class="none">Nothing matches.</p>';
+    markChosen();
+  };
+  refreshQuick();
   lists.push({ name: 'Terrain', refs: MATS.map((m) => `m:${m.m}`) });
   const byGroup = {};
   Object.entries(PIECES).forEach(([ref, p]) => {
@@ -201,28 +248,7 @@ function buildPalette() {
         built = true;
         list.refs.forEach((ref) => {
           if (FAMILY[ref] && FAMILY[ref][0] !== ref) return; // a family is one entry; Turn shows the other sides
-          const b = document.createElement('button');
-          b.className = 'piece';
-          b.dataset.ref = ref;
-          const pic = document.createElement('div');
-          pic.className = 'pic';
-          pic.appendChild(thumb(ref, 72));
-          if (FAMILY[ref]) {
-            const badge = document.createElement('i');
-            badge.className = 'turnbadge';
-            badge.textContent = '⟳';
-            pic.appendChild(badge);
-          }
-          b.appendChild(pic);
-          const name = ref.startsWith('m:') ? MATS.find((m) => `m:${m.m}` === ref).name : ref.startsWith('t:') ? PIECES[ref].label : '';
-          if (name) {
-            const sp = document.createElement('span');
-            sp.textContent = name;
-            b.appendChild(sp);
-          }
-          b.title = name || PIECES[ref]?.label || '';
-          b.onclick = () => choose(ref);
-          grid.appendChild(b);
+          grid.appendChild(pieceButton(ref));
         });
         markChosen();
       }
@@ -233,8 +259,59 @@ function buildPalette() {
   });
 }
 
+// favourites (starred) and recently used pieces sit at the top of the palette
+const loadList = (k) => {
+  try {
+    const v = JSON.parse(localStorage.getItem(k) || '[]');
+    return Array.isArray(v) ? v.filter((r) => typeof r === 'string') : [];
+  } catch {
+    return [];
+  }
+};
+const saveList = (k, v) => {
+  try {
+    localStorage.setItem(k, JSON.stringify(v));
+  } catch {
+    /* storage full or blocked: the lists are a convenience */
+  }
+};
+function refreshQuick() {
+  const q = $('quick');
+  if (!q) return;
+  q.innerHTML = '';
+  [['Favourites', 'curation.mapbuilder.favs'], ['Recently used', 'curation.mapbuilder.recent']].forEach(([title, k]) => {
+    const refs = loadList(k).filter((r) => r.startsWith('m:') || PIECES[r]);
+    if (!refs.length) return;
+    const h = document.createElement('div');
+    h.className = 'quickhead';
+    h.textContent = title;
+    const row = document.createElement('div');
+    row.className = 'pieces quickrow';
+    refs.forEach((r) => row.appendChild(pieceButton(r)));
+    q.append(h, row);
+  });
+  markChosen();
+}
+function toggleFav() {
+  if (!chosen) return;
+  const favs = loadList('curation.mapbuilder.favs');
+  const i = favs.indexOf(chosen);
+  if (i >= 0) favs.splice(i, 1);
+  else favs.unshift(chosen);
+  saveList('curation.mapbuilder.favs', favs);
+  showChosen();
+  refreshQuick();
+}
+function noteRecent(ref) {
+  const r = loadList('curation.mapbuilder.recent').filter((x) => x !== ref);
+  r.unshift(ref);
+  saveList('curation.mapbuilder.recent', r.slice(0, 12));
+}
+
 function choose(ref) {
   chosen = ref;
+  noteRecent(ref);
+  refreshQuick();
   if (tool !== 'paint' && tool !== 'fill') setTool('paint');
   markChosen();
   showChosen();
@@ -263,6 +340,8 @@ function showChosen() {
   g.restore();
   $('chosen-name').textContent = refLabel(chosen);
   $('chosen-turn').hidden = !FAMILY[chosen];
+  $('chosen-fav').textContent = loadList('curation.mapbuilder.favs').includes(chosen) ? '★' : '☆';
+  $('chosen-fav').hidden = false;
   const p = PIECES[chosen];
   $('chosen-meta').textContent = chosen.startsWith('m:') ? 'Terrain · shores and edges draw themselves' : p.layer === 'tile' ? 'Ground tile · drag to paint' : `Piece · ${Math.ceil(p.w / T)}×${Math.ceil(p.h / T)} tiles · tap to place${flip ? ' · flipped' : ''}${FAMILY[chosen] ? ' · ⟳ turns it' : ''}`;
 }
@@ -943,6 +1022,7 @@ $('sel-turn').onclick = () => {
   $('sel-text').textContent = refLabel(selected.ref);
   changed();
 };
+$('chosen-fav').onclick = toggleFav;
 $('chosen-turn').onclick = () => {
   if (!FAMILY[chosen]) return;
   chosen = turned(chosen);
