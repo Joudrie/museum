@@ -14,7 +14,7 @@
 .share-card h3 {
   margin: 0;
   color: var(--gold);
-  font-size: 15px;
+  font-size: var(--fs-body);
 }
 .share-card .wide-btn {
   width: 100%;
@@ -27,7 +27,7 @@
 .share-box {
   width: 100%;
   box-sizing: border-box;
-  font-size: 16px;
+  font-size: calc(16px * var(--ui-text-scale));
   resize: none;
 }
 .share-note:empty {
@@ -43,7 +43,7 @@
   width: calc(50% - 5px);
   display: grid;
   gap: 4px;
-  font-size: 13px;
+  font-size: var(--fs-small);
 }
 .visit-img {
   height: 110px;

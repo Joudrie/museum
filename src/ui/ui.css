@@ -432,6 +432,15 @@ html[data-text='large'] {
   border-left: 3px solid var(--ui-gold);
   border-bottom: 3px solid var(--ui-gold);
 }
+.ui-tip[data-side='left']::before {
+  top: var(--arrow, 24px);
+  left: auto;
+  right: -9px;
+  margin: -7px 0 0;
+  border: 0;
+  border-right: 3px solid var(--ui-gold);
+  border-top: 3px solid var(--ui-gold);
+}
 @keyframes ui-tip-in {
   from { opacity: 0; transform: translateY(-6px); }
 }

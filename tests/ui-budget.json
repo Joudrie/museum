@@ -208,6 +208,30 @@
   "29-field-records": {
    "smallTargets": 0,
    "minFont": 13
+  },
+  "44-large-journal": {
+   "smallTargets": 0,
+   "minFont": 15
+  },
+  "45-large-toolkit": {
+   "smallTargets": 0,
+   "minFont": 15
+  },
+  "46-large-customize": {
+   "smallTargets": 0,
+   "minFont": 15
+  },
+  "47-large-staff": {
+   "smallTargets": 0,
+   "minFont": 15
+  },
+  "48-large-field": {
+   "smallTargets": 0,
+   "minFont": 15
+  },
+  "49-large-conversation": {
+   "smallTargets": 0,
+   "minFont": 15
   }
  }
 }

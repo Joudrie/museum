@@ -2,6 +2,8 @@
 :root {
   --frame-pad: max(10px, calc((100vw - min(100vw, 100dvh * 9 / 16)) / 2 + 10px));
   --hud-top: max(10px, env(safe-area-inset-top));
+  --hud-btn: calc(60px * var(--ui-text-scale)); /* the labelled buttons grow with the text size so "Journal" is never cut */
+  --hud-step: calc(var(--hud-btn) + 8px);
 }
 
 /* labelled HUD buttons */
@@ -11,8 +13,8 @@ body #home-btn,
 body #menu-btn {
   position: fixed;
   z-index: 9; /* under the viewer (10) and every panel */
-  width: 60px;
-  height: 60px;
+  width: var(--hud-btn);
+  height: var(--hud-btn);
   padding: 4px 2px;
   display: flex;
   flex-direction: column;
@@ -27,10 +29,10 @@ body .hud-btn .ui-ic {
   height: 24px;
 }
 body #journal-btn { left: var(--frame-pad); top: var(--hud-top); }
-body #build-btn { left: var(--frame-pad); top: calc(var(--hud-top) + 68px); }
-body #home-btn { left: var(--frame-pad); top: calc(var(--hud-top) + 136px); }
+body #build-btn { left: var(--frame-pad); top: calc(var(--hud-top) + var(--hud-step)); }
+body #home-btn { left: var(--frame-pad); top: calc(var(--hud-top) + 2 * var(--hud-step)); }
 body #menu-btn { right: var(--frame-pad); top: var(--hud-top); }
-body #detector { right: var(--frame-pad); top: calc(var(--hud-top) + 68px); z-index: 9; }
+body #detector { right: var(--frame-pad); top: calc(var(--hud-top) + var(--hud-step)); z-index: 9; }
 body .hud-btn .badge {
   top: -6px;
   right: -6px;
@@ -49,7 +51,7 @@ body #hud {
   background: rgba(22, 16, 13, 0.88);
   box-shadow: inset 2px 2px 0 rgba(255, 240, 200, 0.1), inset -2px -2px 0 rgba(0, 0, 0, 0.4), 0 3px 0 var(--ui-shadow);
   font-family: var(--ui-font);
-  max-width: calc(min(100vw, 100dvh * 9 / 16) - 2 * (60px + 18px));
+  max-width: calc(min(100vw, 100dvh * 9 / 16) - 2 * (var(--hud-btn) + 18px));
 }
 body .museum-name { font: 600 var(--fs-body) / 1.1 var(--ui-font); color: var(--ui-gold-hi); }
 body .hud-stats {
@@ -63,15 +65,17 @@ body .hud-stats {
   white-space: normal;
 }
 /* Collect all hangs under the strip, wherever the strip ends (hud.js keeps --hud-bottom up to date) */
-body #collect-all { top: calc(var(--hud-bottom, 66px) + 9px); }
 body #collect-all {
-  top: calc(var(--hud-top) + 62px);
+  top: calc(var(--hud-bottom, 64px) + 9px); /* hangs under the strip, wherever the strip ends (hud.js keeps --hud-bottom up to date) */
   min-height: var(--ui-hit);
   padding: 6px 14px;
   font: 600 var(--fs-small) / 1 var(--ui-font);
   z-index: 9;
 }
-body #toast { top: calc(var(--hud-top) + 112px); }
+body #toast { top: calc(var(--hud-bottom, 64px) + 58px); }
+/* the goal pill (progression) sits under Collect all, or right under the strip on islands */
+html body:not(.outside) #prog-pill { top: calc(var(--hud-bottom, 64px) + 58px); }
+html body.outside #prog-pill { top: calc(var(--hud-bottom, 64px) + 4px); }
 
 /* the Menu hub */
 #hub { z-index: 22; }
