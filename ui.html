@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#1d1714" />
+    <title>Curation UI</title>
+    <link rel="stylesheet" href="./src/ui/tokens.css" />
+    <link rel="stylesheet" href="./src/ui/ui.css" />
+    <style>
+      * { box-sizing: border-box; }
+      body { margin: 0; background: var(--ui-bg); color: var(--ui-ink); font-family: var(--ui-font); }
+      main { max-width: 430px; margin: 0 auto; padding: 16px 16px 80px; }
+      h1 { margin: 0 0 4px; font: 600 var(--fs-title) / 1.1 var(--ui-font); }
+      section { margin: 28px 0 0; }
+      .swatches { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+      .sw { display: grid; gap: 4px; font-size: var(--fs-small); }
+      .sw i { height: 40px; border: 2px solid var(--ui-shadow); }
+      .stack { display: grid; gap: 12px; }
+      .rowflex { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+      .icons { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+      .icons div { display: grid; gap: 4px; justify-items: center; padding: 10px 4px; background: var(--ui-fill); border: 2px solid var(--ui-line); font-size: 11px; color: var(--ui-muted); }
+      .frame { position: relative; background: var(--ui-panel); border: 3px solid var(--ui-shadow); border-radius: var(--ui-r-sheet); box-shadow: inset 0 2px 0 var(--ui-gold), 0 -6px 20px rgba(0, 0, 0, 0.5); padding: 18px 16px; }
+      .scale p { margin: 4px 0; }
+      nav.sizes { position: sticky; top: 0; z-index: 5; display: flex; gap: 8px; padding: 8px 0; background: var(--ui-bg); }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Curation UI</h1>
+      <p class="ui-sub">The one design system for every menu. Tokens in <code>src/ui/tokens.css</code>, components in <code>src/ui/ui.css</code>, icons in <code>src/ui/icons.js</code>. Notes: <code>docs/UI.md</code>.</p>
+      <nav class="sizes" aria-label="Preview options">
+        <button class="ui-btn" id="text-normal">Normal text</button>
+        <button class="ui-btn" id="text-large">Large text</button>
+      </nav>
+      <div id="guide"></div>
+    </main>
+    <script type="module" src="./src/ui/guide.js"></script>
+  </body>
+</html>

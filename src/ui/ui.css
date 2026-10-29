@@ -1,0 +1,397 @@
+/* UI components. Every class starts with ui-. See docs/UI.md for how to use them.
+   Buttons share one bevel language: dark outline, a light top edge, a dark bottom edge, pressed = 2px down. */
+
+.ui-btn {
+  --btn-fill: var(--ui-panel-2);
+  --btn-hi: rgba(255, 240, 200, 0.16);
+  --btn-lo: rgba(0, 0, 0, 0.4);
+  --btn-ink: var(--ui-ink);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  min-height: var(--ui-hit);
+  min-width: var(--ui-hit);
+  padding: 8px 14px;
+  font: 600 var(--fs-body) / 1.15 var(--ui-font);
+  letter-spacing: 0.02em;
+  color: var(--btn-ink);
+  text-align: center;
+  background: var(--btn-fill);
+  border: 3px solid var(--ui-shadow);
+  border-radius: 0;
+  box-shadow: inset 2px 2px 0 var(--btn-hi), inset -2px -2px 0 var(--btn-lo), 0 3px 0 var(--ui-shadow);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: transform calc(var(--ui-t) / 2), filter var(--ui-t);
+}
+.ui-btn:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: inset 2px 2px 0 var(--btn-hi), inset -2px -2px 0 var(--btn-lo), 0 1px 0 var(--ui-shadow);
+}
+.ui-btn:focus-visible {
+  outline: 3px solid var(--ui-gold-hi);
+  outline-offset: 2px;
+}
+.ui-btn:disabled,
+.ui-btn[aria-disabled='true'] {
+  filter: grayscale(0.7) brightness(0.8);
+  cursor: default;
+}
+.ui-btn--primary {
+  --btn-fill: #e8c867;
+  --btn-hi: #fff0b0;
+  --btn-lo: #a87f2c;
+  --btn-ink: var(--ui-on-gold);
+}
+.ui-btn--danger {
+  --btn-fill: #b4503f;
+  --btn-hi: #f0a090;
+  --btn-lo: #6a2418;
+  --btn-ink: #fff0e8;
+}
+.ui-btn--quiet {
+  --btn-fill: transparent;
+  --btn-hi: transparent;
+  --btn-lo: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  color: var(--ui-gold-hi);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.ui-btn--wide {
+  display: flex;
+  width: 100%;
+}
+.ui-btn small {
+  display: block;
+  font: 400 var(--fs-small) / 1.2 var(--ui-font);
+  opacity: 0.85;
+}
+.ui-btn .ui-ic {
+  flex: none;
+}
+
+/* icons */
+.ui-ic {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  color: currentColor;
+  image-rendering: pixelated;
+  vertical-align: middle;
+}
+.ui-ic--s {
+  width: 16px;
+  height: 16px;
+}
+.ui-ic--l {
+  width: 33px;
+  height: 33px;
+}
+
+/* the one close button */
+.ui-close {
+  flex: none;
+  width: var(--ui-hit);
+  height: var(--ui-hit);
+  padding: 0;
+  display: grid;
+  place-items: center;
+}
+
+/* header: title with the gold diamond, one close on the right */
+.ui-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-3);
+}
+.ui-title {
+  margin: 0;
+  font: 600 var(--fs-title) / 1.1 var(--ui-font);
+  letter-spacing: 0.01em;
+  color: var(--ui-ink);
+}
+.ui-title::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin: 0 10px 3px 0;
+  background: var(--ui-gold);
+  transform: rotate(45deg);
+  box-shadow: 0 0 0 2px var(--ui-gold-lo);
+}
+.ui-sub {
+  margin: 2px 0 0;
+  font: 400 var(--fs-small) / 1.3 var(--ui-font);
+  color: var(--ui-muted);
+}
+.ui-label {
+  margin: var(--sp-5) 0 var(--sp-2);
+  font: 600 var(--fs-small) / 1.2 var(--ui-font);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ui-muted);
+}
+.ui-prose {
+  font: 400 var(--fs-body) / 1.45 var(--ui-prose);
+  color: var(--ui-ink);
+}
+
+/* segmented control (tabs and options): fused buttons, one selected */
+.ui-seg {
+  display: flex;
+  gap: 0;
+  padding: 3px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 3px solid var(--ui-shadow);
+}
+.ui-seg > button {
+  flex: 1;
+  min-height: 38px;
+  padding: 6px 8px;
+  font: 600 var(--fs-body) / 1.1 var(--ui-font);
+  color: var(--ui-muted);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.ui-seg > button[aria-pressed='true'],
+.ui-seg > button.on {
+  color: var(--ui-on-gold);
+  background: #e8c867;
+  box-shadow: inset 2px 2px 0 #fff0b0, inset -2px -2px 0 #a87f2c;
+}
+
+/* chips: filters and categories */
+.ui-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+.ui-chip {
+  min-height: var(--ui-hit);
+  padding: 6px 14px;
+  font: 600 var(--fs-small) / 1.1 var(--ui-font);
+  color: var(--ui-ink);
+  background: var(--ui-fill);
+  border: 2px solid var(--ui-line);
+  border-radius: 999px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.ui-chip[aria-pressed='true'],
+.ui-chip.on {
+  color: var(--ui-gold-hi);
+  border-color: var(--ui-gold);
+  background: rgba(201, 162, 63, 0.2);
+}
+
+/* cards and rows */
+.ui-card {
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--ui-fill);
+  border: 2px solid var(--ui-line);
+  border-radius: var(--ui-r);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
+}
+.ui-card--hot {
+  border-color: var(--ui-gold);
+  background: rgba(201, 162, 63, 0.12);
+}
+.ui-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  min-height: 56px;
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--ui-fill);
+  border: 2px solid var(--ui-line);
+  border-radius: var(--ui-r);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
+}
+.ui-row > .ui-grow {
+  flex: 1;
+  min-width: 0;
+}
+.ui-row b {
+  display: block;
+  font: 600 var(--fs-body) / 1.2 var(--ui-font);
+}
+.ui-row small {
+  display: block;
+  margin-top: 2px;
+  font: 400 var(--fs-small) / 1.25 var(--ui-font);
+  color: var(--ui-muted);
+}
+.ui-list {
+  display: grid;
+  gap: var(--sp-2);
+}
+.ui-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--sp-2);
+}
+.ui-grid--3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* stat tile: a big number with a label */
+.ui-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-2);
+}
+.ui-stat {
+  display: grid;
+  gap: 2px;
+  justify-items: center;
+  padding: var(--sp-3) var(--sp-2);
+  background: var(--ui-fill);
+  border: 2px solid var(--ui-line);
+  border-radius: var(--ui-r);
+  text-align: center;
+}
+.ui-stat b {
+  font: 700 var(--fs-num) / 1 var(--ui-font);
+  color: var(--ui-gold-hi);
+}
+.ui-stat span {
+  font: 400 var(--fs-small) / 1.2 var(--ui-font);
+  color: var(--ui-muted);
+}
+
+/* progress bar */
+.ui-bar {
+  position: relative;
+  height: 12px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 2px solid var(--ui-shadow);
+  overflow: hidden;
+}
+.ui-bar > i {
+  display: block;
+  height: 100%;
+  width: var(--v, 0%);
+  background: repeating-linear-gradient(90deg, var(--ui-gold) 0 6px, #a88428 6px 8px);
+}
+.ui-bar--good > i {
+  background: repeating-linear-gradient(90deg, var(--ui-good) 0 6px, #4a9a56 6px 8px);
+}
+
+/* badges: NEW, counts, a dot */
+.ui-badge {
+  display: inline-block;
+  min-width: 20px;
+  padding: 2px 6px;
+  font: 700 var(--fs-small) / 1.2 var(--ui-font);
+  color: var(--ui-on-gold);
+  text-align: center;
+  background: var(--ui-gold-hi);
+  border: 2px solid var(--ui-shadow);
+}
+.ui-dot {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 14px;
+  height: 14px;
+  background: #e0405a;
+  border: 2px solid var(--ui-shadow);
+  border-radius: 50%;
+}
+
+/* a switch for one on / off setting */
+.ui-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  min-height: var(--ui-hit);
+}
+.ui-toggle > span {
+  font: 400 var(--fs-body) / 1.25 var(--ui-font);
+}
+.ui-toggle > button {
+  position: relative;
+  flex: none;
+  width: 64px;
+  height: 36px;
+  padding: 0;
+  background: rgba(0, 0, 0, 0.4);
+  border: 3px solid var(--ui-shadow);
+  cursor: pointer;
+}
+.ui-toggle > button::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 24px;
+  height: 24px;
+  background: var(--ui-muted);
+  transition: transform var(--ui-t) var(--ui-ease), background var(--ui-t);
+}
+.ui-toggle > button[aria-checked='true']::after {
+  transform: translateX(28px);
+  background: #e8c867;
+}
+
+/* empty and locked states teach, they don't just sit there */
+.ui-empty {
+  display: grid;
+  gap: var(--sp-2);
+  justify-items: center;
+  padding: var(--sp-6) var(--sp-4);
+  text-align: center;
+  color: var(--ui-muted);
+  font: 400 var(--fs-body) / 1.4 var(--ui-font);
+}
+.ui-empty b {
+  color: var(--ui-ink);
+  font-size: var(--fs-lead);
+}
+.ui-hint {
+  padding: var(--sp-2) var(--sp-3);
+  font: 400 var(--fs-small) / 1.35 var(--ui-font);
+  color: var(--ui-muted);
+  background: rgba(0, 0, 0, 0.25);
+  border-left: 3px solid var(--ui-gold);
+}
+
+/* rarity: a pip plus a label, so it is never colour alone */
+.ui-rarity {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font: 600 var(--fs-small) / 1 var(--ui-font);
+}
+.ui-rarity::before {
+  content: '';
+  width: 9px;
+  height: 9px;
+  background: currentColor;
+  transform: rotate(45deg);
+}
+.ui-rarity[data-r='1'] { color: var(--ui-r1); }
+.ui-rarity[data-r='2'] { color: var(--ui-r2); }
+.ui-rarity[data-r='3'] { color: var(--ui-r3); }
+.ui-rarity[data-r='4'] { color: var(--ui-r4); }
+.ui-rarity[data-r='3']::before { border-radius: 50%; }
+.ui-rarity[data-r='4']::before { box-shadow: 0 0 0 2px var(--ui-shadow), 0 0 0 4px currentColor; }
+
+/* text size (Settings → Look): every ui text honours the multiplier */
+html[data-text='large'] {
+  --ui-text-scale: 1.15;
+  --fs-small: 15px;
+  --fs-body: 17px;
+  --fs-lead: 19px;
+  --fs-title: 26px;
+  --fs-num: 22px;
+}
