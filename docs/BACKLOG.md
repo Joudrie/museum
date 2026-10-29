@@ -1,5 +1,7 @@
 # Curation: Backlog (base-building first, mini-games later)
 
+> The live, shared to-do list is `docs/TODO.md`. This file is history and notes.
+
 ## Noted from the user (islands)
 - Grass should blend into other surfaces (paths, dirt, stone), not hard square edges.
 - The island being built in the builder ("Recovered island", backup in docs/maps/) will become the default spawn island.
