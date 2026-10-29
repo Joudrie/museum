@@ -125,7 +125,7 @@ Owns: `src/rooms.js`, `src/shaped.js`, `src/walldraw.js`, `src/atrium.js`, `src/
 
 ## CHAT 10: Living museum, people and story
 Owns: `src/famous.js`, `src/lines.js`, `src/quests.js`, `src/talk.js`, `src/staff.js`. Claim: `claimed: 2026-10-29`
-- [ ] Visitors with memories, goals and relationships; regulars that grow into characters; personalities (nerd, casual, superfan, snob, kid, grump, tourist) with more lines.
+- [~] **Memories done (#this PR: `src/regulars.js`, visitors you chat with 3 times become regulars with their own lines).** Left: goals, relationships, more lines per personality. Visitors with memories, goals and relationships; regulars that grow into characters; personalities (nerd, casual, superfan, snob, kid, grump, tourist) with more lines.
 - [~] Famous visitors with quest chains and period-accurate dialogue; they send you places (feeds Chat 7). Odds rise with their works in your codex; permanent boosts. **Done: chains for Vermeer, Rembrandt, Hokusai (3 sourced steps each, last step offers a lead).** Left: the other 17 visitors, odds by codex.
 - [x] A **Gardner-style heist mystery** as the first full story arc. "The Empty Frames", told by Edmund in 5 chapters, every line quoted from the Gardner Museum's own theft page (this PR).
 - [ ] Semi-mythological famous visitors (the user said later).
