@@ -34,7 +34,7 @@ function build() {
 }
 
 /** Opens the digging patch. onClose({ found }) fires when it closes. */
-export function startDig(key, { onClose, collection = 'mineral', entry = pick(list({ collection })) } = {}) {
+export function startDig(key, { onClose, onFound, collection = 'mineral', entry = pick(list({ collection })) } = {}) {
   if (!el) build();
   const q = (s) => el.querySelector(s);
   const cv = q('.dig-canvas');
@@ -87,12 +87,12 @@ export function startDig(key, { onClose, collection = 'mineral', entry = pick(li
   const finish = () => {
     done = true;
     render();
-    const got = collect(entry.id);
+    const got = onFound ? onFound(entry) : collect(entry.id); // (expeditions bring finds home dirty instead)
     sfx('unlock');
     haptic?.();
     q('.dig-title').textContent = `You found ${/^[aeiou]/i.test(entry.title) ? 'an' : 'a'} ${entry.title}!`;
     q('.dig-meta').innerHTML = `<span class="r${entry.rarity}">${RARITY[entry.rarity]}</span>${!got || got.fresh ? ' · <b class="catch-new">New!</b>' : ''}`;
-    q('.dig-note').textContent = entry.blurb || '';
+    q('.dig-note').textContent = got?.note || entry.blurb || '';
     q('.dig-close').textContent = 'Nice';
     const t = load(KEY, {});
     t[key] = Date.now() + REST;

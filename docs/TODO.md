@@ -91,13 +91,13 @@ Owns: `src/dig.js`, `src/puzzles*.js`, `src/collections/data/{minerals,fossils}.
 
 ## CHAT 7: Expeditions, leads and expedition islands
 Owns: new `src/expedition*.js`, `src/leads.js`, `src/maps/` (new islands). Claim: `claimed: 2026-10-29`
-- [ ] **Leads:** a letter, a torn map, a pirate's note, a rumour from a famous visitor sends you to an island.
-- [ ] Boat flow to expedition islands (the boat menu lists every island); a short boat scene.
-- [ ] Levels as playable island maps: pirate island (jungle maze, traps, captain's map, chest), shipwreck dive (water-damaged crates), desert tomb (sliding stones), dinosaur badlands (fossil cliff), lost temple (plates, hidden rooms), heist hideout (stealth), frozen north (ice cave, mammoth).
-- [ ] Each level can be slow puzzle, chase with light parkour, a dig, or a mix; failing is gentle (caught by pirates, tide comes in: retry).
-- [ ] Come home with finds that need restoring (Chat 4), then display (Chat 5); the plaque says where.
+- [x] **Leads:** a letter, a torn map, a pirate's note, a rumour from a famous visitor sends you to an island. (#108: `src/leads.js`, Letters at the boat)
+- [x] Boat flow to expedition islands (the boat menu lists every island); a short boat scene. (#108)
+- [x] Levels as playable island maps (#108: all seven, `src/maps/exp-*.json`, drawn by `tools/gen_expeditions.mjs`): pirate island (jungle maze, traps, captain's map, chest), shipwreck dive (water-damaged crates), desert tomb (sliding stones), dinosaur badlands (fossil cliff), lost temple (plates, hidden rooms), heist hideout (stealth), frozen north (ice cave, mammoth).
+- [x] Each level can be slow puzzle, chase with light parkour, a dig, or a mix; failing is gentle (caught by pirates, tide comes in: retry). (#108; the "parkour" is dodging patrols through long grass, there is no jump yet)
+- [x] Come home with finds that need restoring (Chat 4), then display (Chat 5); the plaque says where. (#108: the crate and `foundAt()`, see HANDOFF)
 - [ ] More island buildings and props, island seasons and weather, animals and people to meet.
-- [ ] The user's builder-made island as the default spawn (Main Island is already home).
+- [x] The user's builder-made island as the default spawn (Main Island is already home; nothing to do).
 - [ ] Rule: **earned, not bought, no throwaway mini-games.**
 
 ## CHAT 8: Collections, codex, journal and the shop
@@ -192,7 +192,10 @@ Mini-games (Mop Rush, No Flash!, Restoration-as-minigame, Crate Tetris, Hang it 
 - Open design questions: free-roam map or chain of rooms; should paintings come only from expeditions; can you fail an expedition; seasons automatic or chosen; split the shared core now?
 
 ## Cross-chat requests (add a line, carry on)
-- (none yet)
+- **Chat 4:** dirty finds from expeditions wait in `crate()` (`src/expedition.js`, save `curation.expedition`). When one is cleaned call `cleaned(entryId)`: it moves it into the codex. Until `src/restore.js` exists, finds are cleaned automatically when you get home.
+- **Chat 5 / 8:** `foundAt(entryId)` returns "Skull Isle" etc. for the plaque / journal line.
+- **Chat 10:** `grantLead('id')` from `src/leads.js` hands out a lead (add entries to `LEADS`); a famous visitor's rumour can use it.
+- **Chat 6:** I added an optional `onFound(entry)` to `startDig` in `src/dig.js` (expeditions bring finds home dirty). Left your files otherwise alone.
 
 ## Order
 The chat numbers **are the priority order**: 1 is most important, 15 least. If you can't run all 15, run them in number order. Chat 14 (halls) needs 5, 8 and 9 first; chat 15 (asset hunt) is placeholder support and can wait.

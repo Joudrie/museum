@@ -29,6 +29,8 @@ import { PEOPLE, ANIMALS } from './landmarks.js';
 import { makePet } from './pets.js';
 import { critterTextures } from './critters.js';
 import { openSail, builderIslands } from './sailmenu.js';
+import { EXPEDITION_MAPS, expeditionFor, expeditionOptions, expeditionTitles, EXPEDITIONS, boatScene, unpackCrate } from './expedition.js';
+import { openLeads, grantStartLeads, foundLeads } from './leads.js';
 import { visitorLook, KINDS } from './RoomScene.js';
 import { PERSONALITIES, QUIPS } from './lines.js';
 
@@ -36,7 +38,7 @@ import { PERSONALITIES, QUIPS } from './lines.js';
 // main island's dock. Each is a 'curation-map' file (see src/builder/main.js).
 // Main Island (drawn in the map builder) is home: the museum is there. Island
 // One is the first island, drawn in code; its museum doors stay shut.
-const MAPS = { main: mainIsland, 'isle-1': isle1 };
+const MAPS = { main: mainIsland, 'isle-1': isle1, ...EXPEDITION_MAPS };
 
 // The main island is 24×40 tiles; the tile garden (see showcase.js) lies
 // east of it, joined by a path, and sets the full map size.
@@ -117,6 +119,7 @@ export class IslandScene extends Phaser.Scene {
     this.animated = []; // images whose texture changes every frame
     this.things = []; // signs and chests you can interact with
     this.digs = []; // dig spots (src/dig.js)
+    this.exp = expeditionFor(this); // an expedition island's spots, patrols and clock (src/expedition.js)
     this.flickers = []; // campfire glows
     this.flowerSpots = [];
     // the scene object is reused on every visit, so start these afresh
@@ -137,6 +140,7 @@ export class IslandScene extends Phaser.Scene {
     if (this.map) this.walkableTiles();
     this.placeMuseum();
     this.placeThings();
+    this.exp?.build();
 
     const ch = { ...DEFAULT_CHARACTER, ...load('curation.character', {}) };
     if (!this.textures.exists('player_down')) makeCharacter(this, 'player', ch, {});
@@ -184,6 +188,10 @@ export class IslandScene extends Phaser.Scene {
     if (this.map && this.door && this.spawnAt !== 'dock') this.toast(`${this.mapName()} · walk back into the doors to go inside`);
     else if (this.map) this.toast(`${this.mapName()} · sail on from the rowboat`);
     else if (this.spawnAt !== 'cottage') this.toast('Island One · the museum here is shut; sail home from the dock');
+    if (!this.exp) {
+      const home = unpackCrate();
+      if (home) setTimeout(() => this.toast(home), 2800);
+    }
   }
 
   // ---------- The map ----------
@@ -230,7 +238,8 @@ export class IslandScene extends Phaser.Scene {
 
   key(x, y, test) {
     const c = this.corners;
-    return [c[y][x], c[y][x + 1], c[y + 1][x], c[y + 1][x + 1]].map((m) => (test(m) ? 1 : 0)).join('');
+    const at = (yy, xx) => c[yy]?.[xx]; // (off the map is open sea: ambient life asks about spots out there)
+    return [at(y, x), at(y, x + 1), at(y + 1, x), at(y + 1, x + 1)].map((m) => (test(m) ? 1 : 0)).join('');
   }
 
   // What's painted on each cell, bottom to top.
@@ -1086,14 +1095,38 @@ export class IslandScene extends Phaser.Scene {
     const options = [];
     if (this.mapId !== 'main') options.push({ label: 'Main Island', sub: 'Home: the museum’s island', go: { map: 'main', spawn: 'dock' } });
     if (this.map) options.push({ label: 'Island One', sub: 'The first island (museum shut)', go: { map: 'one', spawn: 'dock' } });
-    Object.entries(MAPS).forEach(([id, m]) => id !== 'main' && id !== this.mapId && options.push({ label: m.name === 'Untitled island' ? 'The far isle' : m.name, sub: 'An island to explore', go: { map: id } }));
+    Object.entries(MAPS).forEach(([id, m]) => id !== 'main' && !id.startsWith('exp-') && id !== this.mapId && options.push({ label: m.name === 'Untitled island' ? 'The far isle' : m.name, sub: 'An island to explore', go: { map: id } }));
     const mine = builderIslands();
     mine.forEach((m) => m.name !== here && options.push({ label: m.name, sub: `Your island · ${m.w}×${m.h}`, go: { mapData: m } }));
+    const first = grantStartLeads()[0];
+    if (first) this.toast(`${first.title}: read it under Letters`);
+    expeditionOptions().forEach((o) => o.go.expedition !== this.exp?.def.id && options.push(o));
+    options.push({ label: 'Letters & leads', sub: `${foundLeads().length} found · letters, maps and rumours`, go: { leads: true } });
     this.paused = true;
     openSail(options, (pick) => {
       this.paused = false;
-      if (pick) this.sailTo(pick.go);
+      if (!pick) return;
+      if (pick.go.leads) return this.readLeads();
+      this.setSail(pick.go);
     });
+  }
+
+  readLeads() {
+    this.paused = true;
+    const unlocked = Object.fromEntries(expeditionOptions().map((o) => [o.go.expedition, o]));
+    openLeads({
+      titles: expeditionTitles(),
+      onClose: () => (this.paused = false),
+      onSail: (island) => unlocked[island] && this.setSail(unlocked[island].go),
+    });
+  }
+
+  // an expedition gets a short boat scene first
+  setSail(go) {
+    const e = go.expedition && EXPEDITIONS[go.expedition];
+    if (!e) return this.sailTo(go);
+    this.paused = true;
+    boatScene(e, () => this.sailTo(go));
   }
 
   sailTo(go) {
@@ -1124,6 +1157,11 @@ export class IslandScene extends Phaser.Scene {
         bestD = dd;
       }
     });
+    const ex = this.exp?.focus(x, y, bestD);
+    if (ex) {
+      best = ex;
+      bestD = ex.d;
+    }
     if (this.pet) {
       const dp = Math.hypot(x - this.pet.s.x, y - this.pet.s.y) + 4;
       if (dp < bestD) {
@@ -1181,6 +1219,7 @@ export class IslandScene extends Phaser.Scene {
     if (f.door) return this.goInside();
     if (f.locked) return this.toast('The doors are locked. The museum is on Main Island now.');
     if (f.dig) return this.digAt(f.dig);
+    if (f.exp) return this.exp.interact(f.exp);
     if (f.animal) return this.petAnimal(f.animal);
     if (f.cottage) return this.enterCottage();
     if (f.fish) {
@@ -1300,6 +1339,7 @@ export class IslandScene extends Phaser.Scene {
     }
     if (animateWalker(this, p, len > 0, dt, 0.8 + pace * 0.5)) this.onStep(p, pace);
     this.pet?.update(dt);
+    this.exp?.update(dt);
     this.critters.update(dt, p);
     this.ambient.update(dt, p);
     this.beams?.forEach((b) => (b.rotation += dt * 0.7));
@@ -1326,7 +1366,7 @@ export class IslandScene extends Phaser.Scene {
     if (!this.fishing.busy) this.focus = this.findFocus();
     this.interactBtn.classList.toggle('hidden', !this.focus || (this.fishing.busy && this.fishing.state === 'reel'));
     if (this.focus && this.focus.icon !== prev) this.interactBtn.querySelector('.bang').innerHTML = iconSvg(this.focus.icon);
-    if (!this.fishing.busy) this.interactBtn.querySelector('.label').textContent = this.focus?.fish ? 'Fish' : this.focus?.dig ? 'Dig' : this.focus?.boat ? 'Sail' : 'Interact';
+    if (!this.fishing.busy) this.interactBtn.querySelector('.label').textContent = this.focus?.fish ? 'Fish' : this.focus?.dig ? 'Dig' : this.focus?.exp ? this.focus.exp.label : this.focus?.boat ? 'Sail' : 'Interact';
     if (this.focus && (Phaser.Input.Keyboard.JustDown(k.SPACE) || Phaser.Input.Keyboard.JustDown(k.ENTER))) this.interact();
   }
 }
