@@ -253,6 +253,7 @@ Mini-games (Mop Rush, No Flash!, Restoration-as-minigame, Crate Tetris, Hang it 
 - **Chat 5 / 8:** `foundAt(entryId)` (`src/foundat.js`) returns "Skull Isle" etc. for any find from an expedition; `provenanceLine` already uses it.
 - **Chat 10:** expeditions read `curation.leads_offered` (your four ids open islands); `grantLead('id')` in `src/leads.js` is the other way to hand one out.
 - **Chat 6:** I added an optional `onFound(entry)` to `startDig` in `src/dig.js` (expeditions bring finds home dirty). Left your files otherwise alone.
+- **Chat 17 → Progression:** `node tests/ui-layout.cjs` fails on main since #195. Every game screen now shows a 9 px "RANK" label and a 28×14 fold button (`.pp-fold`), both in `#prog-pill`; the budget is 13 px text and 44 px targets. `31-builder-menu` doesn't open on main either. My people PRs leave the same 34 results.
 
 ## Order
 The chat numbers **are the priority order**: 1 is most important, 15 least. If you can't run all 15, run them in number order. Chat 14 (halls) needs 5, 8 and 9 first; chat 15 (asset hunt) is placeholder support and can wait.
