@@ -26,10 +26,13 @@ const MATS = [
   { m: 4, name: 'Dirt path', color: '#b08458' },
 ];
 const FLAT_GROUPS = ['Ground', 'Paths', 'Water', 'Cliffs & ledges'];
+// palette lists that are really one: shown together under the first name
+const MERGE = { Plants: 'Flowers & plants', 'Grounds & garden': 'Garden & park' };
 const SKIP_GROUP = /on |bank|Shoreline/; // the corner pieces terrain picks for you
 
 let TILES = null;
 let ROOM = null; // pieces.json
+let NEW = []; // refs listed in public/builder/whatsnew.json
 const FAMILY = {}; // ref -> its turning family (rotations.json): the same object seen from each side
 const PIECES = {}; // ref -> { img, sx, sy, w, h, layer: 'tile' | 'object', label, src }
 let map = null;
@@ -102,6 +105,11 @@ async function loadPieces() {
       (await (await fetch('./builder/rotations.json')).json()).families.forEach((f) => f.forEach((ref) => (FAMILY[ref] = f)));
     } catch (e) {
       /* no families: nothing turns */
+    }
+    try {
+      NEW = (await (await fetch('./builder/whatsnew.json')).json()).refs || [];
+    } catch (e) {
+      /* no what's new row */
     }
     ROOM = await (await fetch('./builder/pieces.json')).json();
     await Promise.all(
@@ -224,17 +232,19 @@ function buildPalette() {
     markChosen();
   };
   refreshQuick();
+  NEW = NEW.filter((r) => PIECES[r]);
+  if (NEW.length) lists.push({ name: "What's new", refs: NEW });
   lists.push({ name: 'Terrain', refs: MATS.map((m) => `m:${m.m}`) });
   const byGroup = {};
   Object.entries(PIECES).forEach(([ref, p]) => {
     if (!ref.startsWith('t:') || p.skip || ref === 't:tall_grass_front') return; // (tall grass draws its own front)
-    const name = p.layer === 'tile' ? `Ground: ${p.group}` : p.group || 'Other';
+    const name = p.layer === 'tile' ? `Ground: ${p.group}` : MERGE[p.group] || p.group || 'Other';
     (byGroup[name] ||= []).push(ref);
   });
-  const order = ['Ground: Ground', 'Ground: Paths', 'Ground: Water', 'Buildings', 'People', 'Animals', 'Trees', 'Plants', 'Flowers & plants', 'Rocks', 'Buildings', 'Garden & park', 'Grounds & garden', 'Props', 'Puzzles', 'Ground: Cliffs & ledges', 'Cliffs & ledges'];
+  const order = ['Ground: Ground', 'Ground: Paths', 'Ground: Water', 'Buildings', 'People', 'Animals', 'Trees', 'Plants', 'Flowers & plants', 'Rocks', 'Buildings', 'Garden & park', 'Grounds & garden', 'Props', 'Dig sites', 'Puzzles', 'Ground: Cliffs & ledges', 'Cliffs & ledges'];
   Object.keys(byGroup)
     .sort((a, b) => (order.indexOf(a) + 1 || 99) - (order.indexOf(b) + 1 || 99))
-    .forEach((name) => lists.push({ name: name.replace('Ground: Ground', 'Ground tiles').replace('Ground: ', ''), refs: byGroup[name] }));
+    .forEach((name) => lists.push({ name: name.replace('Ground: Ground', 'Ground tiles').replace('Ground: Cliffs & ledges', 'Cliff ground pieces').replace('Ground: ', ''), refs: byGroup[name] }));
   (ROOM?.groups || []).forEach((g) => lists.push({ name: `Room: ${g.name}`, refs: g.pieces.map((p) => `p:${p.id}`) }));
   lists.forEach((list, li) => {
     const det = document.createElement('details');
@@ -371,7 +381,7 @@ function chunk(cx, cy) {
         g.fillRect(px, py, T, T);
       }
       const ref = map.tiles[y * map.w + x];
-      if (ref) drawRef(g, ref, px, py, T, T);
+      if (ref && showTiles) drawRef(g, ref, px, py, T, T);
     }
   chunks.set(k, c);
   while (chunks.size > 160) chunks.delete(chunks.keys().next().value);
@@ -445,6 +455,11 @@ function drawObj(g, o, alpha = 1) {
   g.globalAlpha = 1;
 }
 
+let showTiles = true; // layers view (menu → Options)
+let showObjs = true;
+let area = null; // the chosen region, in cells: { x0, y0, x1, y1 }
+let clip = null; // copied region: { w, h, tiles, corners, objects }
+let pasteArmed = false;
 let ghost = null; // a piece being placed: { ref, x, y, flip }
 let raf = 0;
 function draw() {
@@ -475,7 +490,8 @@ function render() {
       for (let cx = Math.max(0, Math.floor(wx0 / (C * T))); cx <= Math.min(Math.ceil(map.w / C) - 1, Math.floor(wx1 / (C * T))); cx++) ctx.drawImage(chunk(cx, cy), cx * C * T, cy * C * T);
   }
   // pieces standing on the map, back to front
-  sorted().forEach((o) => {
+  if (showObjs)
+    sorted().forEach((o) => {
     const b = objectBox(o);
     if (b.x1 < wx0 || b.x0 > wx1 || b.y1 < wy0 || b.y0 > wy1) return;
     drawObj(ctx, o);
@@ -504,6 +520,15 @@ function render() {
     ctx.strokeStyle = '#e8c867';
     ctx.setLineDash([4 / view.z, 3 / view.z]);
     ctx.strokeRect(b.x0 - 1, b.y0 - 1, b.x1 - b.x0 + 2, b.y1 - b.y0 + 2);
+    ctx.setLineDash([]);
+  }
+  if (area) {
+    ctx.fillStyle = 'rgba(232,200,103,0.18)';
+    ctx.fillRect(area.x0 * T, area.y0 * T, (area.x1 - area.x0 + 1) * T, (area.y1 - area.y0 + 1) * T);
+    ctx.strokeStyle = '#e8c867';
+    ctx.setLineDash([4 / view.z, 3 / view.z]);
+    ctx.lineWidth = 2 / view.z;
+    ctx.strokeRect(area.x0 * T, area.y0 * T, (area.x1 - area.x0 + 1) * T, (area.y1 - area.y0 + 1) * T);
     ctx.setLineDash([]);
   }
   if (brushAt) {
@@ -753,6 +778,8 @@ window.addEventListener('pagehide', flush);
 window.addEventListener('blur', flush);
 function loadMap(m, keepView) {
   map = m;
+  area = null;
+  pasteArmed = false;
   select(null);
   $('map-name').textContent = map.name;
   rebuildAll();
@@ -915,6 +942,18 @@ function startStroke(sx, sy, now) {
   } else if (tool === 'pick') {
     pickAt(wx, wy);
     gesture = { kind: 'none' };
+  } else if (tool === 'area') {
+    const c = cellAt(wx, wy);
+    if (pasteArmed && clip) {
+      pasteAt(c.x, c.y);
+      gesture = { kind: 'none' };
+    } else {
+      const x = clamp(c.x, 0, map.w - 1);
+      const y = clamp(c.y, 0, map.h - 1);
+      area = { x0: x, y0: y, x1: x, y1: y };
+      gesture.anchor = { x, y };
+      showAreaBar();
+    }
   } else if (tool === 'move') {
     const o = hitObject(wx, wy);
     select(o || null);
@@ -938,6 +977,12 @@ function moveStroke(p) {
       const y = g.last.wy + ((wy - g.last.wy) * i) / steps;
       g.did = (tool === 'paint' ? paintCells(x, y) : eraseAt(x, y)) || g.did;
     }
+  } else if (tool === 'area' && g.anchor) {
+    const c = cellAt(wx, wy);
+    const x = clamp(c.x, 0, map.w - 1);
+    const y = clamp(c.y, 0, map.h - 1);
+    area = { x0: Math.min(g.anchor.x, x), y0: Math.min(g.anchor.y, y), x1: Math.max(g.anchor.x, x), y1: Math.max(g.anchor.y, y) };
+    showAreaBar();
   } else if (tool === 'move' && g.drag) {
     const p2 = PIECES[g.drag.o.ref];
     const s = g.drag.o.ref.startsWith('t:') ? T : Number($('snap').value);
@@ -975,8 +1020,120 @@ function setTool(t) {
   tool = t;
   document.querySelectorAll('[data-tool]').forEach((b) => b.classList.toggle('on', b.dataset.tool === t));
   if (t !== 'move') select(null);
+  if (t !== 'area') pasteArmed = false;
+  $('areabar').hidden = t !== 'area';
+  if (t === 'area') showAreaBar();
   draw();
 }
+
+
+// ---------- area: copy, cut, clear, mirror, paste (and measure) ----------
+function showAreaBar() {
+  const has = !!area;
+  const w = has ? area.x1 - area.x0 + 1 : 0;
+  const h = has ? area.y1 - area.y0 + 1 : 0;
+  $('area-text').textContent = pasteArmed && clip ? `Tap to paste ${clip.w}×${clip.h}` : has ? `${w}×${h} tiles` : clip ? `${clip.w}×${clip.h} copied` : 'Drag to choose an area';
+  ['area-copy', 'area-cut', 'area-del'].forEach((id) => ($(id).disabled = !has));
+  $('area-mirror').disabled = !clip;
+  $('area-paste').disabled = !clip;
+  $('area-paste').textContent = pasteArmed ? 'Stop' : 'Paste';
+  draw();
+}
+// an object belongs to the area if its feet (bottom-left cell) are inside it
+const footCell = (o) => ({ x: Math.floor(o.x / T), y: Math.floor((o.y + PIECES[o.ref].h - 1) / T) });
+const inArea = (o) => {
+  if (!PIECES[o.ref]) return false;
+  const f = footCell(o);
+  return f.x >= area.x0 && f.x <= area.x1 && f.y >= area.y0 && f.y <= area.y1;
+};
+function copyArea() {
+  const w = area.x1 - area.x0 + 1;
+  const h = area.y1 - area.y0 + 1;
+  const tiles = [];
+  for (let y = area.y0; y <= area.y1; y++) for (let x = area.x0; x <= area.x1; x++) tiles.push(map.tiles[y * map.w + x]);
+  const corners = [];
+  if (map.kind === 'island') for (let y = area.y0; y <= area.y1 + 1; y++) for (let x = area.x0; x <= area.x1 + 1; x++) corners.push(corner(x, y));
+  const objects = map.objects.filter(inArea).map((o) => ({ ref: o.ref, dx: o.x - area.x0 * T, dy: o.y - area.y0 * T, flip: !!o.flip }));
+  clip = { w, h, kind: map.kind, tiles, corners, objects };
+}
+function clearArea() {
+  record();
+  for (let y = area.y0; y <= area.y1; y++) for (let x = area.x0; x <= area.x1; x++) map.tiles[y * map.w + x] = null;
+  map.objects = map.objects.filter((o) => !inArea(o));
+  select(null);
+  dirty(area.x0, area.y0, area.x1, area.y1);
+  changed();
+}
+function mirrorClip() {
+  const { w, h } = clip;
+  const tiles = [];
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) tiles.push(clip.tiles[y * w + (w - 1 - x)]);
+  const cw = w + 1;
+  const corners = [];
+  if (clip.corners.length) for (let y = 0; y <= h; y++) for (let x = 0; x <= w; x++) corners.push(clip.corners[y * cw + (w - x)]);
+  const objects = clip.objects.map((o) => ({ ref: o.ref, dx: w * T - o.dx - PIECES[o.ref].w, dy: o.dy, flip: !o.flip }));
+  clip = { ...clip, tiles, corners, objects };
+}
+function pasteAt(cx, cy) {
+  if (clip.kind !== map.kind) return toast(`That was copied from ${clip.kind === 'island' ? 'an island' : 'a room'}; paste it on one too.`);
+  record();
+  for (let y = 0; y < clip.h; y++)
+    for (let x = 0; x < clip.w; x++) {
+      const tx = cx + x;
+      const ty = cy + y;
+      if (tx < 0 || ty < 0 || tx >= map.w || ty >= map.h) continue;
+      const r = clip.tiles[y * clip.w + x];
+      if (r || clip.kind === 'room') map.tiles[ty * map.w + tx] = r;
+      else map.tiles[ty * map.w + tx] = null;
+    }
+  if (clip.corners.length)
+    for (let y = 0; y <= clip.h; y++)
+      for (let x = 0; x <= clip.w; x++) {
+        const tx = cx + x;
+        const ty = cy + y;
+        if (tx <= map.w && ty <= map.h) map.corners[ty * (map.w + 1) + tx] = clip.corners[y * (clip.w + 1) + x];
+      }
+  clip.objects.forEach((o) => {
+    const n = { ref: o.ref, x: cx * T + o.dx, y: cy * T + o.dy, flip: o.flip };
+    if (n.x >= 0 && n.y >= 0 && n.x < map.w * T && n.y < map.h * T && !map.objects.some((q) => q.ref === n.ref && q.x === n.x && q.y === n.y)) map.objects.push(n);
+  });
+  rebuildAll();
+  changed();
+  toast('Pasted. Tap again to paste another.');
+}
+$('area-copy').onclick = () => {
+  if (!area) return;
+  copyArea();
+  toast(`Copied ${clip.w}×${clip.h}`);
+  showAreaBar();
+};
+$('area-cut').onclick = () => {
+  if (!area) return;
+  copyArea();
+  clearArea();
+  showAreaBar();
+};
+$('area-del').onclick = () => area && clearArea();
+$('area-mirror').onclick = () => {
+  if (!clip) return;
+  mirrorClip();
+  toast('Copied area mirrored');
+  showAreaBar();
+};
+$('area-paste').onclick = () => {
+  if (!clip) return;
+  pasteArmed = !pasteArmed;
+  if (pasteArmed) area = null;
+  showAreaBar();
+};
+$('show-tiles').onchange = () => {
+  showTiles = $('show-tiles').checked;
+  rebuildAll();
+};
+$('show-objs').onchange = () => {
+  showObjs = $('show-objs').checked;
+  draw();
+};
 
 // ---------- buttons and menus ----------
 document.querySelectorAll('[data-tool]').forEach((b) => (b.onclick = () => setTool(b.dataset.tool)));

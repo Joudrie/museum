@@ -115,7 +115,7 @@ select {
 #tools,
 #selbar {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(7, 1fr);
   gap: 4px;
   padding: 6px max(8px, env(safe-area-inset-left, 0px)) 6px max(8px, env(safe-area-inset-right, 0px));
   background: var(--panel);
@@ -130,8 +130,32 @@ select {
   align-items: center;
   background: var(--panel2);
 }
-#selbar[hidden] {
+#selbar[hidden],
+#areabar[hidden] {
   display: none;
+}
+#areabar {
+  display: grid;
+  grid-template-columns: 1fr repeat(5, auto);
+  gap: 4px;
+  align-items: center;
+  padding: 6px 8px;
+  background: var(--panel2);
+  border-top: 1px solid var(--line);
+}
+#area-text {
+  font-size: 12px;
+  color: var(--muted);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+#areabar button {
+  padding: 6px 7px;
+  font-size: 13px;
+}
+#areabar button:disabled {
+  opacity: 0.4;
 }
 #sel-text {
   font-size: 12px;

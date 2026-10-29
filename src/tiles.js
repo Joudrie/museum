@@ -786,7 +786,7 @@ function addProps(add, anim) {
       }
     });
   // dig spots: a mound that can be brushed open (src/dig.js); "@dug" is the same spot while it rests (hidden from the builder)
-  const mound = (dug, bone) =>
+  const mound = (dug, kind) =>
     draw(T, T, ({ R, E }) => {
       E(16, 24, 12, 5, 'rgba(0,0,0,0.2)');
       if (dug) {
@@ -798,17 +798,32 @@ function addProps(add, anim) {
       E(16, 18, 10, 7, '#946640');
       E(15, 16, 7, 4, '#ad7c50');
       [[11, 15], [18, 13], [21, 18], [14, 20], [9, 19]].forEach(([x, y]) => R(x, y, 2, 1, '#c49464'));
-      if (bone) {
+      if (kind === 'fossil') {
         R(19, 10, 1, 4, '#5a3a20'); // a bone tip poking out
         R(18, 9, 3, 2, '#e8dfc8');
+      } else if (kind === 'ruin') {
+        R(17, 11, 5, 4, '#b8603c'); // a clay sherd
+        R(18, 11, 3, 1, '#d88a5c');
+        R(10, 17, 3, 3, '#8a8478'); // flat stones around it
+      } else if (kind === 'shore') {
+        E(19, 14, 3, 2, '#f0c8a8'); // a shell in damp sand
+        R(18, 13, 1, 3, '#c88c68');
+        E(16, 22, 11, 4, 'rgba(60,40,20,0.35)');
+      } else if (kind === 'crater') {
+        E(16, 20, 8, 4, '#3a3028'); // a scorched dip with a dark stone
+        E(17, 19, 4, 3, '#6a6258');
+        R(16, 18, 2, 1, '#a89a84');
       } else {
         R(18, 12, 3, 3, '#9a5ac8'); // a glint of crystal
         R(19, 11, 1, 1, '#f0e0ff');
       }
     });
-  add('dig_spot', mound(false, false), { group: 'Props', label: 'Dig spot (minerals)', walk: 'walk' });
-  add('dig_fossil', mound(false, true), { group: 'Props', label: 'Dig spot (fossils)', walk: 'walk' });
-  add('dig_spot@dug', mound(true), { group: 'Props', label: 'Dug spot', walk: 'walk' });
+  add('dig_spot', mound(false), { group: 'Dig sites', label: 'Dig spot (minerals)', walk: 'walk' });
+  add('dig_fossil', mound(false, 'fossil'), { group: 'Dig sites', label: 'Dig spot (fossils)', walk: 'walk' });
+  add('dig_ruin', mound(false, 'ruin'), { group: 'Dig sites', label: 'Dig spot (ruins)', walk: 'walk' });
+  add('dig_shore', mound(false, 'shore'), { group: 'Dig sites', label: 'Dig spot (shore)', walk: 'walk' });
+  add('dig_crater', mound(false, 'crater'), { group: 'Dig sites', label: 'Dig spot (crater)', walk: 'walk' });
+  add('dig_spot@dug', mound(true), { group: 'Dig sites', label: 'Dug spot', walk: 'walk' });
   add('chest', chest(false), { group: 'Props', label: 'Treasure chest', walk: 'block' });
   add('chest_open', chest(true), { group: 'Props', label: 'Chest (open)', walk: 'block' });
   add('barrel', draw(T, T, ({ R, E }) => {
@@ -834,7 +849,7 @@ function addProps(add, anim) {
     const s = [[18, 9], [9, 12], [22, 14], [15, 7]][f];
     R(s[0], s[1] - 2, 1, 5, '#ffffff');
     R(s[0] - 2, s[1], 5, 1, '#ffffff');
-  })), { group: 'Props', label: 'Dig spot (sparkles)', walk: 'walk' });
+  })), { group: 'Dig sites', label: 'Dig spot (sparkles)', walk: 'walk' });
   add('x_mark', draw(T, T, ({ R }) => {
     for (let i = 0; i < 16; i++) {
       R(8 + i, 8 + i, 3, 2, '#b0413e');
