@@ -1,0 +1,92 @@
+/* The map builder on the design system (loaded after builder.css). Same warm palette, the same bevel buttons,
+   Pixelify Sans for the interface, 44 px targets. The layout is unchanged. */
+:root {
+  --bg: var(--ui-bg);
+  --panel: var(--ui-panel);
+  --panel2: var(--ui-panel-2);
+  --line: var(--ui-line);
+  --ink: var(--ui-ink);
+  --muted: var(--ui-muted);
+  --gold: #e8c867;
+}
+body {
+  font: 400 var(--fs-body) / 1.35 var(--ui-font);
+}
+
+/* buttons: the secondary bevel, gold when selected or main */
+body button {
+  min-height: var(--ui-hit);
+  padding: 6px 12px;
+  font-family: var(--ui-font);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--ui-ink);
+  background: var(--ui-panel-2);
+  border: 3px solid var(--ui-shadow);
+  border-radius: 0;
+  box-shadow: inset 2px 2px 0 rgba(255, 240, 200, 0.16), inset -2px -2px 0 rgba(0, 0, 0, 0.4), 0 3px 0 var(--ui-shadow);
+  touch-action: manipulation;
+}
+body button:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: inset 2px 2px 0 rgba(255, 240, 200, 0.16), inset -2px -2px 0 rgba(0, 0, 0, 0.4), 0 1px 0 var(--ui-shadow);
+}
+body button.on,
+body button.main {
+  color: var(--ui-on-gold);
+  background: #e8c867;
+  border-color: var(--ui-shadow);
+  box-shadow: inset 2px 2px 0 #fff0b0, inset -2px -2px 0 #a87f2c, 0 3px 0 var(--ui-shadow);
+}
+body button:disabled { filter: grayscale(0.7) brightness(0.8); opacity: 1; }
+body button.link,
+body #sheet-handle,
+body #chosen-fav {
+  min-height: var(--ui-hit);
+  color: var(--ui-gold-hi);
+  background: none;
+  border: 0;
+  box-shadow: none;
+}
+body #sheet-handle { min-height: 28px; }
+body input,
+body select {
+  min-height: var(--ui-hit);
+  font-family: var(--ui-font);
+  background: rgba(0, 0, 0, 0.3);
+  border: 3px solid var(--ui-shadow);
+  border-radius: 0;
+}
+body .check input { min-height: 0; width: 22px; height: 22px; }
+
+/* top bar and rows */
+body #top { border-bottom: 3px solid var(--ui-shadow); }
+body #top button { min-width: var(--ui-hit); font-size: var(--fs-lead); }
+body #map-name { font: 600 var(--fs-lead) / 1.1 var(--ui-font); color: var(--ui-gold-hi); }
+body #tools,
+body #selbar,
+body #areabar { border-top: 3px solid var(--ui-shadow); }
+body #tools button,
+body #areabar button { font-size: var(--fs-small); padding: 4px 2px; }
+body #selbar button,
+body #areabar button { padding-inline: 8px; }
+
+/* the pieces sheet */
+body #sheet { border-top: 3px solid var(--ui-shadow); box-shadow: inset 0 2px 0 var(--ui-gold); }
+body #palette summary { min-height: var(--ui-hit); font: 600 var(--fs-body) / 1.1 var(--ui-font); }
+body #palette summary::after { content: ''; width: 10px; height: 10px; border-right: 3px solid var(--ui-gold); border-bottom: 3px solid var(--ui-gold); transform: rotate(-45deg); }
+body #palette details[open] summary::after { content: ''; transform: rotate(45deg); }
+body .piece { border: 2px solid var(--ui-line); border-radius: var(--ui-r); }
+body .piece.on { border-color: var(--ui-gold); box-shadow: 0 0 0 2px var(--ui-gold); }
+body .piece span { font: 400 var(--fs-small) / 1.2 var(--ui-font); }
+body #chosen-name { font: 600 var(--fs-body) / 1.2 var(--ui-font); }
+body #chosen small { font: 400 var(--fs-small) / 1.2 var(--ui-font); }
+
+/* menus */
+body .menu-card { border-top: 3px solid var(--ui-gold); border-radius: var(--ui-r-sheet) var(--ui-r-sheet) 0 0; box-shadow: inset 0 2px 0 var(--ui-gold), 0 -10px 30px rgba(0, 0, 0, 0.55); }
+body .menu-card h2 { font: 600 var(--fs-small) / 1.2 var(--ui-font); letter-spacing: 0.12em; }
+body .resume-name { font: 600 var(--fs-title) / 1.1 var(--ui-font); }
+body .hint,
+body .field,
+body .check { font-family: var(--ui-font); font-size: var(--fs-small); }
+body #toast { font: 600 var(--fs-body) / 1.25 var(--ui-font); border: 3px solid var(--ui-shadow); border-radius: 0; background: var(--ui-panel-2); }

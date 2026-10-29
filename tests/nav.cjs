@@ -13,4 +13,12 @@ async function jtab(p, id) {
   }
   await p.click(`[data-jtab="${id}"]`);
 }
-module.exports = { openHub, jtab };
+// Customize → This room keeps its sections in collapsible groups (floor, walls, extras, mood, room).
+async function openGroup(p, id) {
+  if (!(await p.$(`details[data-group="${id}"]`))) return; // (older build: no groups)
+  if (!(await p.$(`details[data-group="${id}"][open]`))) {
+    await p.click(`details[data-group="${id}"] > summary`);
+    await p.waitForTimeout(150);
+  }
+}
+module.exports = { openHub, jtab, openGroup };

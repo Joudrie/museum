@@ -106,7 +106,7 @@ select {
   border-radius: 10px;
   background: rgba(0, 0, 0, 0.55);
   color: var(--muted);
-  font-size: 11px;
+  font-size: 13px;
   font-variant-numeric: tabular-nums;
   pointer-events: none;
 }
@@ -144,7 +144,7 @@ select {
   border-top: 1px solid var(--line);
 }
 #area-text {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--muted);
   overflow: hidden;
   white-space: nowrap;
@@ -158,7 +158,7 @@ select {
   opacity: 0.4;
 }
 #sel-text {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--muted);
   overflow: hidden;
   white-space: nowrap;
@@ -219,7 +219,7 @@ select {
 }
 #chosen small {
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -229,7 +229,7 @@ select {
   gap: 4px;
   align-items: center;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
 }
 #palette {
   flex: 1;
@@ -305,7 +305,7 @@ select {
   border-radius: 5px;
 }
 .piece span {
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.2;
   color: var(--muted);
   text-align: center;
@@ -339,7 +339,7 @@ select {
 }
 .menu-card h2 {
   margin: 14px 0 6px;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -361,7 +361,7 @@ select {
   display: grid;
   gap: 3px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
 }
 .field input {
   width: 100%;
@@ -374,7 +374,7 @@ select {
 }
 .hint {
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
 }
 .wide {
   width: 100%;
@@ -430,7 +430,7 @@ button.link {
 #credits-list {
   padding-left: 18px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
 }
 #credits-list a {
   color: var(--gold);
@@ -484,7 +484,7 @@ button.link {
 }
 .quickhead {
   padding: 4px 14px;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--muted);
 }
 .none {

@@ -68,3 +68,15 @@
     --ui-t: 0ms;
   }
 }
+
+/* Settings → Look → Reduce motion */
+html[data-motion='reduce'] {
+  --ui-t: 0ms;
+}
+html[data-motion='reduce'] *,
+html[data-motion='reduce'] *::before,
+html[data-motion='reduce'] *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+}

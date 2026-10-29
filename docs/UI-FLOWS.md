@@ -4,7 +4,7 @@ Facts about how the game's screens are reached today, and the journeys with thei
 Taps marked ~ are estimated from the code; `tests/ui-flows.cjs` (to come) will measure and guard the targets.
 
 ## 1. Entry-point map (what opens what)
-**HUD (fixed buttons, museum scene).** Stats pill → Income. Book → Journal (badge = unclaimed). Gift → Daily (Today). House → Customize. Hammer → Toolkit. Gear → Settings. "Collect all" → a placeholder ad, then collects every room. Interact button (bottom-right) → whatever you stand near.
+**HUD (fixed buttons, museum scene).** Stats pill → Income. Book → Journal (badge = unclaimed). Gift → Daily (Today). House → Customize. Hammer → Toolkit. Gear → Settings. "Collect all" → collects every room (Chat 12 removed the ad; it keeps a 15% fee). Interact button (bottom-right) → whatever you stand near.
 **HUD (island scene).** Book and gift only. Settings, Customize and Toolkit are not reachable on islands. A "Detector" button appears with a metal detector.
 **Through the Interact button / world:** wall spot → Wall spot menu (or the painting viewer if a painting hangs there); case / plinth / shelf / tank → Display; Curator's desk or door → Office; staff board → Staff board; build spot / exit door → Build a room; double doors → Ask (unlock main hall); a visitor → Conversation (staff and famous visitors → bubble / story modal); the guard → Ask (cameras); a dirt mound → Dig; the boat or rowboat → Sail menu; the water → fishing, then the Catch card; a painting on display → Viewer.
 **Inside Settings:** Share & visit, Testing (gold, collect everything), reset.
@@ -34,7 +34,7 @@ Taps marked ~ are estimated from the code; `tests/ui-flows.cjs` (to come) will m
 | Toast | top pill | anywhere | no | nothing |
 
 ## 3. Depth map (taps from the world to the action)
-Deepest and slowest today: **Journal → a specific collection (2 taps but a 17-tab grid to read first)**, **Buy and place decor (5+)**, **Clean a find and display it (6+)**, **Change a room's theme (4: house, scroll, Customize list, theme)**, **Collect all (1 tap + a forced 5-second placeholder ad)**.
+Deepest and slowest today: **Journal → a specific collection (2 taps but a 17-tab grid to read first)**, **Buy and place decor (5+)**, **Clean a find and display it (6+)**, **Change a room's theme (4: house, scroll, Customize list, theme)**, **Collect all (1 tap)**.
 
 ## 4. Duplicates, orphans, oddities
 - Two buttons for "change my museum" (hammer = items, house = look) that look like unrelated icons.
@@ -51,7 +51,7 @@ Today panels call `pause(true)`, which also closes a conversation. A story promp
 | Journey | Now | Target |
 |---|---|---|
 | Collect coins from a pad | 1 (+ walk) | 1 |
-| Collect all | 1 + 5 s ad wait | 1, no forced wait |
+| Collect all | 1 | 1 |
 | Hang a painting on an empty wall spot | ~3 | 3 |
 | Swap or remove a painting | ~3 | 3 |
 | Buy and place a decor item | ~5 | 4 |
