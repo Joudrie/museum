@@ -121,26 +121,24 @@ Scenes (`src/main.js`):
 - Test: `node tests/content.cjs` (no browser, no network).
 
 ### Wakefield, MA (the user's hometown, from real map data)
-- **Rule from the user:** every road is in, even the smallest streets, and **no road is narrower than two tiles** (so the
-  character can always walk it). Big map is fine. It's also in CLAUDE.md.
-- `tools/wakefield_map.py` turns OpenStreetMap data into `public/maps/wakefield-detail.json` (451×552, **12 m a tile**) and
-  `wakefield-detail-overlay.png` (a labelled street map that lines up with the grid, 6 px a tile: the game's texture limit is 4096).
-  `--fetch DIR` downloads (the `overpass.openstreetmap.fr` mirror works from the sandbox; the main Overpass host does not), then
-  `python3 tools/wakefield_map.py DIR`. Only driveways, parking aisles and tunnels are left out.
-- Outside the town line is sea, inside is grass, lakes are pond, roads are `t:cobble` (dirt for tracks), rail is `t:rock_1`,
-  buildings are `t:brick` where they cover 35% of a tile. Roads 2 wide, primary/secondary 3, interstate 4.
-- **Big maps:** the builder's cap is now 700 (New map boxes still stop at 300). Maps of 40,000+ tiles save the tile layer packed
-  (`tileRows`, run-length rows; `src/mapformat.js`, read by the builder, the game and the boat list) so they fit phone storage
-  (Wakefield is ~300 KB). The game draws only the ground chunks near the player (`streamChunks`) and drops far ones, snow is made per
-  chunk, and the night-light texture is capped near a megapixel. Wakefield: loads in ~3 s, ~45 MB heap, ~20–30 chunks alive.
-- **Angled borders:** the town line is straight, not a stair of tiles. The generator cuts each tile the line crosses along
-  the real line and stores the land part as polygons (`border.poly`, ~2,300 tiles). Builder and game clip land to them
-  (`drawEdgeCell`), draw a beach along the line, and in the game the character walks only on the land side (`onLand` in `free`).
-  Roads, bricks and ponds are still whole tiles; cutting their edges along the real lines is the obvious next step.
-- A map may carry `overlay: {src}`. Builder: 🗺 Map button (toggle plus strength slider). Game: 🗺 button (off, faint, strong).
-  The builder seeds Wakefield once into My maps (flag `wakefield2`; the coarse first version is replaced unless it was edited);
-  the boat also lists it before the builder was ever opened.
-- Next: tune which houses show, landmarks and named buildings, a spawn on the Town Common, paths and trails (left out: not roads).
+- **The user's rules (CLAUDE.md has them):** the real town as exact shapes with **no grid**, roads **two tiles wide** at least
+  (the character sets the scale), every road in, dirt for roads, brick for buildings, diagonal roads must be straight lines. The
+  first two attempts (22 m then 12 m **tile** maps, with cut border tiles) were rejected and scrapped: tiles can't make straight
+  diagonals or true proportions.
+- `tools/wakefield_vector.py` turns OpenStreetMap data into `public/maps/wakefield.vec.json` (700 KB): town line, lakes, rivers,
+  rail, 1,460 roads (only driveways, parking aisles and tunnels left out), 11,218 buildings, whole pixels at **8 px to the metre**
+  (a 32 px tile is 4 m), delta-encoded. `--fetch DIR` downloads (the `overpass.openstreetmap.fr` mirror works from the sandbox).
+- `src/WakefieldScene.js` extends IslandScene and overrides only what the tile grid decided. Chunks of 16x16 tiles are painted
+  on demand near the player (like the islands): sea, a beach along the town line, grass, lakes and rivers, rail, roads as strokes
+  of their own width (dirt art as the fill), buildings as brick polygons. Fills are anchored to the town so chunks never show seams.
+  Walking uses the exact shapes: you can walk on roads, grass and buildings; the sea and water block you, except where a road
+  crosses (a bridge). Fishing, weather and the boat work as on islands.
+- Start: `index.html?wakefield`, or sail there from any rowboat (the boat lists "Wakefield, MA"). You start on a road in the middle.
+- Next (not done): street names on the roads, landmarks and place names, a way to edit shapes by hand, trees, a faster way
+  to cross 6 km (it is about 5 minutes end to end on foot), cutting the museum doors in.
+- Generic things built along the way and kept: the builder cap is 700 (New map boxes stay 300), big builder maps save their tiles
+  packed (`src/mapformat.js`), the island scene streams ground chunks around the player, and a map can carry an `overlay` picture
+  (builder 🗺 button, game 🗺 button). No map uses the overlay now.
 
 ### Gotchas we hit
 - **Phaser reuses the previous scene data** if you call `scene.start('island')` with no data.

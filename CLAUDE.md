@@ -50,8 +50,12 @@ Read docs/VISION.md first: every feature should serve it. Then docs/HANDOFF.md f
   the right end. Vertical rooms: enter at the bottom; the end piece is the top.
 
 ## Wakefield, MA (the user's hometown map)
-- Built from real map data (tools/wakefield_map.py). **Every road goes in, even the smallest streets,
-  and no road is narrower than two tiles** so the character can always walk it. A huge map is fine.
-- Wakefield is a separate project that shares the tech, so the museum's grid rules don't bind it: **angled tiles are fine**
-  and borders should be proper straight lines (the town line is cut along the real line, see `border` in src/mapformat.js).
-- The overlay button (builder and game) lays the real street map over the tiles so the user can fix blocks by hand.
+- Wakefield is a **separate project that shares the tech**. The museum's grid rules do **not** apply to it.
+- It is drawn from **exact real shapes, never tiles** (tools/wakefield_vector.py -> public/maps/wakefield.vec.json, drawn by
+  src/WakefieldScene.js). **No grid anywhere**: a 45° road is a straight 45° line, never a staircase. No tile may ever sit
+  on both a road and grass, or on both grass and a building. It must be a precise overlay of the real map.
+- **Scale:** the character sets it. A tile is about 4 m, so an ordinary street is **two tiles wide** and no road is narrower.
+  Wakefield is about 1,350 x 1,650 tiles. A huge map is fine.
+- **Every road goes in**, even the smallest streets. Roads are plain **dirt path** for now (no cobblestone), buildings are brick.
+  No trees or elevation yet.
+- Open it with index.html?wakefield or sail there from a rowboat.

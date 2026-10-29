@@ -23,11 +23,12 @@ import { Fishing, catchOpen } from './fishing.js';
 import { openJournal } from './journal.js';
 import isle1 from './maps/isle-1.json';
 import mainIsland from './maps/main-island.json';
-import { withTiles, edgePolys, onLand, drawEdgeCell } from './mapformat.js';
+import { withTiles } from './mapformat.js';
 import { PEOPLE, ANIMALS } from './landmarks.js';
 import { makePet } from './pets.js';
 import { critterTextures } from './critters.js';
 import { openSail, builderIslands } from './sailmenu.js';
+import { loadWakefield } from './wakefieldData.js';
 import { visitorLook, KINDS } from './RoomScene.js';
 import { PERSONALITIES, QUIPS } from './lines.js';
 
@@ -80,10 +81,11 @@ const vnoise = (x, y, size, seed) => {
 const snowNoise = (x, y) => 0.6 * vnoise(x, y, 40, 7) + 0.3 * vnoise(x, y, 12, 8) + 0.1 * hash(x, y, 9);
 
 let TILES = null; // built once, shared
+export const islandTiles = () => TILES; // (the Wakefield scene paints with the same art)
 
 export class IslandScene extends Phaser.Scene {
-  constructor() {
-    super('island');
+  constructor(key = 'island') {
+    super(key);
   }
 
   init(data) {
@@ -189,13 +191,10 @@ export class IslandScene extends Phaser.Scene {
   // Corner materials: 0 water, 1 sand, 2 grass, 3 pond water.
   makeMap() {
     const c = [];
-    this.edges = new Map();
     if (this.map) {
       for (let y = 0; y <= H; y++) c.push(Array.from({ length: W + 1 }, (_, x) => Number(this.map.corners[y]?.[x]) || 0));
-      // tiles the map's edge cuts through (a real town line): land is clipped to the straight line
-      this.edges = edgePolys(this.map.border, W);
-      // grass never touches the sea directly: there's always a bit of beach (a cut edge draws its own)
-      for (let y = 0; y <= H && !this.edges.size; y++)
+      // grass never touches the sea directly: there's always a bit of beach
+      for (let y = 0; y <= H; y++)
         for (let x = 0; x <= W; x++) {
           if (c[y][x] !== 2) continue;
           if ([[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [-1, -1], [1, -1], [-1, 1]].some(([dx, dy]) => c[y + dy]?.[x + dx] === 0)) c[y][x] = 1;
@@ -271,7 +270,6 @@ export class IslandScene extends Phaser.Scene {
         const q = [c[y][x], c[y][x + 1], c[y + 1][x], c[y + 1][x + 1]];
         if (q.filter((m) => m === 0).length >= 3 || q.filter((m) => m === 3).length >= 3) this.solid[y][x] = true;
       }
-    this.edges.forEach((polys, i) => (this.solid[Math.floor(i / W)][i % W] = !polys.length)); // a cut tile: walkable on its land (see free)
     this.seaKeys = [0, 1, 2, 3].map((f) =>
       this.chunkCanvas(`island_sea_${f}`, (ctx) => {
         for (let y = 0; y < C; y++) for (let x = 0; x < C; x++) ctx.drawImage(TILES.water.frames[f], x * T, y * T);
@@ -297,29 +295,19 @@ export class IslandScene extends Phaser.Scene {
   buildChunk(cx, cy) {
     const C = this.chunk;
     const list = [];
-    for (let y = cy * C; y < Math.min(H, cy * C + C); y++)
-      for (let x = cx * C; x < Math.min(W, cx * C + C); x++) {
-        const cut = this.edges.get(y * W + x);
-        // a cut tile: grass under whatever is painted on it, drawn clipped to the line
-        list.push({ x, y, cut, names: cut ? [['grass_1', 'grass_2', 'grass_1', 'grass_3'][(x * 3 + y * 5) % 4], ...(this.paint[y]?.[x] || [])] : this.groundCells(x, y) });
-      }
+    for (let y = cy * C; y < Math.min(H, cy * C + C); y++) for (let x = cx * C; x < Math.min(W, cx * C + C); x++) list.push({ x, y, names: this.groundCells(x, y) });
     let keys;
     if (list.every((c) => c.names[c.names.length - 1] === 'water')) keys = this.seaKeys;
     else {
       const frames = list.some((c) => c.names.some((n) => TILES[n]?.frames.length > 1)) ? 4 : 1;
       keys = Array.from({ length: frames }, (_, f) =>
         this.chunkCanvas(`island_g_${cx}_${cy}_${f}`, (ctx) =>
-          list.forEach(({ x, y, names, cut }) => {
-            const px = (x - cx * C) * T;
-            const py = (y - cy * C) * T;
-            const draw = () =>
-              names.forEach((n) => {
-                const t = TILES[n];
-                if (t) ctx.drawImage(t.frames[f % t.frames.length], px, py);
-              });
-            if (cut) drawEdgeCell(ctx, cut, px, py, T, TILES.water.frames[f], draw);
-            else draw();
-          }),
+          list.forEach(({ x, y, names }) =>
+            names.forEach((n) => {
+              const t = TILES[n];
+              if (t) ctx.drawImage(t.frames[f % t.frames.length], (x - cx * C) * T, (y - cy * C) * T);
+            }),
+          ),
         ),
       );
     }
@@ -825,10 +813,7 @@ export class IslandScene extends Phaser.Scene {
     return pts.every(([px, py]) => {
       const cx = Math.floor(px / T);
       const cy = Math.floor(py / T);
-      if (cx < 0 || cy < 0 || cx >= W || cy >= H) return false;
-      const cut = this.edges.get(cy * W + cx);
-      if (cut) return cut.length > 0 && onLand(cut, px - cx * T, py - cy * T) && !this.solid[cy][cx];
-      return !this.solid[cy][cx];
+      return cx >= 0 && cy >= 0 && cx < W && cy < H && !this.solid[cy][cx];
     });
   }
 
@@ -1115,7 +1100,7 @@ export class IslandScene extends Phaser.Scene {
     Object.entries(MAPS).forEach(([id, m]) => id !== 'main' && id !== this.mapId && options.push({ label: m.name === 'Untitled island' ? 'The far isle' : m.name, sub: 'An island to explore', go: { map: id } }));
     const mine = builderIslands();
     mine.forEach((m) => m.name !== here && options.push({ label: m.name, sub: m.overlay ? `A real place · ${m.w}×${m.h}` : `Your island · ${m.w}×${m.h}`, go: { mapData: m } }));
-    if (!/^Wakefield, MA/.test(here || '') && !mine.some((m) => /^Wakefield, MA/.test(m.name))) options.push({ label: 'Wakefield, MA', sub: 'A real place · every street', go: { mapUrl: './maps/wakefield-detail.json' } });
+    if (this.mapId !== 'wakefield') options.push({ label: 'Wakefield, MA', sub: 'The real town · every street', go: { vecUrl: './maps/wakefield.vec.json' } });
     this.paused = true;
     openSail(options, (pick) => {
       this.paused = false;
@@ -1131,10 +1116,9 @@ export class IslandScene extends Phaser.Scene {
     sfx('door');
     this.cameras.main.fadeOut(400, 20, 40, 70);
     this.cameras.main.once('camerafadeoutcomplete', () => {
-      if (!go.mapUrl) return this.scene.start('island', go);
-      fetch(go.mapUrl)
-        .then((r) => r.json())
-        .then((mapData) => this.scene.start('island', { mapData }))
+      if (!go.vecUrl) return this.scene.start('island', go);
+      loadWakefield(go.vecUrl)
+        .then((vec) => this.scene.start('wakefield', { vec }))
         .catch(() => {
           this.leaving = false;
           this.cameras.main.fadeIn(300);
