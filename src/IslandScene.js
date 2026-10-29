@@ -36,13 +36,18 @@ import { openLeads, grantStartLeads, foundLeads } from './leads.js';
 import { visitorLook, KINDS } from './RoomScene.js';
 import { PERSONALITIES, QUIPS } from './lines.js';
 import { blendAt } from './groundblend.js';
-import { reachCost, headY } from './focus.js';
+import { resolver, headY } from './focus.js';
 import { popEmote, startChat, EMOTES, SEASON_EMOTE } from './emotes.js';
 import { makeEmotes } from './art.js';
 import { Prints } from './prints.js';
 import { islandLine } from './island_lines.js';
 import { Boat } from './boat.js';
+import { remember, rareFor } from './regulars.js';
+import { ask } from './ask.js';
 import { FocusMark } from './focusmark.js';
+import { Wind } from './wind.js';
+import { Tells } from './tells.js';
+import { Shadows } from './shadows.js';
 import { buildVignettes } from './vignettes.js';
 import { converse, giftStatus, recordGift } from './chatter.js';
 import { runDialogue } from './dialogue.js';
@@ -99,6 +104,7 @@ const vnoise = (x, y, size, seed) => {
 const snowNoise = (x, y) => 0.6 * vnoise(x, y, 40, 7) + 0.3 * vnoise(x, y, 12, 8) + 0.1 * hash(x, y, 9);
 
 let TILES = null; // built once, shared
+const SEASON_LOOKS = new Map(); // 'tree|autumn' -> that piece's frames in that season (or null), kept between visits
 
 export class IslandScene extends Phaser.Scene {
   constructor() {
@@ -113,7 +119,9 @@ export class IslandScene extends Phaser.Scene {
   }
 
   create() {
+    performance.mark('island:create');
     TILES = TILES || buildTiles();
+    performance.mark('island:tiles'); // (the marks show where a visit's time goes: see tests/loadtime.cjs)
     if (this.map) {
       this.plan = { floors: [], items: [], streets: [], labels: [], headers: [], x0: 0, y0: 0, width: 0, height: 0 };
       W = this.map.w;
@@ -135,6 +143,7 @@ export class IslandScene extends Phaser.Scene {
     this.events.once('shutdown', () => setAmbience([]));
     this.frame = 0;
     this.solid = Array.from({ length: H }, () => Array(W).fill(false));
+    this.smokeSpots = []; // campfires and chimneys: smoke rises here (src/wind.js)
     this.blockSet = new Set(); // cells something stands in (a boat can't go there)
     this.dockCells = new Set();
     this.animated = []; // images whose texture changes every frame
@@ -178,10 +187,11 @@ export class IslandScene extends Phaser.Scene {
     this.fishing = new Fishing(this, this.player);
     makeEmotes(this);
     this.prints = new Prints(this);
+    this.prints.snowing = this.weatherKind === 'snow';
     this.boat = new Boat(this);
     this.makeWaterButton();
     this.mark = new FocusMark(this);
-    this.shadowsG = this.add.graphics().setDepth(0.5); // soft shadows under the people and animals on screen
+    this.shadowsP = new Shadows(this, 0.5); // soft shadows under the people and animals on screen
 
     this.lightUp();
     if (this.mapId === 'main' || !this.map) {
@@ -215,6 +225,9 @@ export class IslandScene extends Phaser.Scene {
       { night: this.dark > 0.45, dusk: this.dark <= 0.45 && (hour > 17.5 && hour < 21), weather: this.weatherKind, season: this.season },
     );
 
+    if (!this.map) this.smokeSpots.push({ x: COTTAGE.x + 24, y: COTTAGE.y - 86 }); // the cottage chimney
+    this.wind = new Wind(this, { season: this.season, weather: this.weatherKind, smokeSpots: this.smokeSpots });
+    this.tells = new Tells(this);
     this.holidayDecor();
     this.seasonal();
     this.setupCamera();
@@ -224,6 +237,7 @@ export class IslandScene extends Phaser.Scene {
     this.setupInput();
     this.time.addEvent({ delay: STEP_MS, loop: true, callback: () => this.tick() });
     this.cameras.main.fadeIn(300, 29, 21, 18);
+    performance.mark('island:ready');
     if (this.map && this.door && this.spawnAt !== 'dock') this.toast(`${this.mapName()} · walk back into the doors to go inside`);
     else if (this.map) this.toast(`${this.mapName()} · sail on from the rowboat`);
     else if (this.spawnAt !== 'cottage') this.toast('Island One · the museum here is shut; sail home from the dock');
@@ -425,6 +439,7 @@ export class IslandScene extends Phaser.Scene {
     img.setDepth(opts.depth ?? (opts.flat ? 1 : (y + 1) * T - 2));
     if (keys.length > 1) this.animated.push({ img, keys });
     (this.placed ||= []).push({ img, name, flat: opts.flat });
+    if (name === 'campfire') this.smokeSpots.push({ x: x * T + t.w / 2, y: (y + 1) * T - 10 });
     (TILE_LIGHTS[name] || []).forEach(([lx, ly, r, color, a, extra]) => this.light(x * T + lx, (y + 1) * T + ly, r, color, a, { ...extra, gy: (y + 1) * T + ly }));
     const trunk = TRUNKS[name] || (/tree|palm|pine|willow/.test(name) && t.h >= 2 * T ? [14, 8] : null);
     if (opts.solid !== false && trunk) {
@@ -754,8 +769,14 @@ export class IslandScene extends Phaser.Scene {
         if (['lily', 'flowers', 'tulips', 'daisies', 'poppies', 'wildflowers', 'dandelions', 'clover', 'fern', 'mushrooms'].includes(name)) img.setVisible(false);
         return; // flat things lie under the snow layer
       }
-      const other = seasonTile(name, this.season);
-      const frames = other ? TILES[other].frames : seasonFrames(name, TILES[name], this.season);
+      // (worked out once per kind of piece, not once per tree: a whole island of them took seconds)
+      const mk = `${name}|${this.season}`;
+      let frames = SEASON_LOOKS.get(mk);
+      if (frames === undefined) {
+        const other = seasonTile(name, this.season);
+        frames = other ? TILES[other].frames : seasonFrames(name, TILES[name], this.season);
+        SEASON_LOOKS.set(mk, frames);
+      }
       if (!frames) return;
       const keys = frames.map((fr, i) => {
         const k = `isl_${name}@${this.season}_${i}`;
@@ -1098,6 +1119,7 @@ export class IslandScene extends Phaser.Scene {
     for (let r = 0; r <= 1; r++) for (let i = 0; i < wide; i++) if (!(r === 0 && (i === wide / 2 - 1 || i === wide / 2))) this.block(x + i, y - r);
     this.door = { x: img.x + t.w / 2, y: img.y - 8 };
     this.light(this.door.x, this.door.y + 6, 46, 0xffd89a, 1, { glow: 40, gy: this.door.y - 20 });
+    [-1, 1].forEach((d) => this.light(this.door.x + d * 32, this.door.y - 88, 30, 0xffd080, 0.8, { glow: 34 })); // the windows come on at dusk
   }
 
   // Someone who lives on the island: walks Pokémon-style, a tile or two at a
@@ -1114,7 +1136,7 @@ export class IslandScene extends Phaser.Scene {
     if (!this.textures.exists(`${prefix}_down`)) makeCharacter(this, prefix, colors, look);
     const s = this.add.sprite(x, y, `${prefix}_down`).setOrigin(0.5, 1).setScale(scale).setDepth(y);
     const names = PERSONALITIES[kind].names;
-    return { s, prefix, kind, home: { x, y }, range: range * T, name: names[Math.floor(r(2) * names.length)], wait: 500 + r(3) * 2500, target: null };
+    return { s, prefix, kind, skin: colors.s, home: { x, y }, range: range * T, name: names[Math.floor(r(2) * names.length)], wait: 500 + r(3) * 2500, target: null };
   }
 
   moveIslanders(dt) {
@@ -1133,7 +1155,18 @@ export class IslandScene extends Phaser.Scene {
       const a = n.animal;
       if (!n.target) {
         if (a) s.setTexture(a.pet ? (s.texture.key.includes('_side') ? `${n.prefix}_side` : `${n.prefix}_down`) : `${n.prefix}_${a.critter === 'duck' ? this.frame % 2 : 0}`);
-        else animateWalker(this, s, false, dt);
+        else {
+          animateWalker(this, s, false, dt);
+          // a glance round now and then
+          n.lookT = (n.lookT ?? 1 + Math.random() * 3) - dt;
+          if (n.lookT <= 0) {
+            n.lookT = 2 + Math.random() * 3.5;
+            if (Math.random() < 0.4) {
+              const [lx, ly] = [[1, 0], [-1, 0], [0, 1], [0, -1]][Math.floor(Math.random() * 4)];
+              this.faceNpc(n, s.x + lx * 50, s.y + ly * 50);
+            }
+          }
+        }
         n.wait -= dt * 1000;
         if (n.wait > 0 || !n.range) return;
         n.wait = 1500 + Math.random() * 3500;
@@ -1179,15 +1212,14 @@ export class IslandScene extends Phaser.Scene {
       }
       s.setDepth(s.y);
     });
-    // (one drawing for every shadow on screen)
-    const sg = this.shadowsG.clear();
-    sg.fillStyle(0x000000, 0.22);
+    const sh = this.shadowsP;
+    sh.begin();
     this.islanders.forEach((n) => {
       const s = n.s;
       if (n.animal?.pet === 'parrot' || s.x < v.x - 16 || s.x > v.right + 16 || s.y < v.y - 16 || s.y > v.bottom + 40) return;
-      const w = n.animal ? (n.animal.critter === 'crab' ? 9 : 13) : 16 * (s.scaleX / PLAYER_SCALE);
-      sg.fillEllipse(s.x, s.y - 1, w, w * 0.34);
+      sh.add(s.x, s.y - 1, n.animal ? (n.animal.critter === 'crab' ? 9 : 13) : 16 * (s.scaleX / PLAYER_SCALE));
     });
+    sh.end();
   }
 
   // ---------- People meeting people ----------
@@ -1225,7 +1257,7 @@ export class IslandScene extends Phaser.Scene {
   socializeIslanders(dt) {
     this.socialT = (this.socialT ?? 2) - dt;
     if (this.socialT > 0 || !this.islanders.length) return;
-    this.socialT = 1.1 + Math.random() * 1.2;
+    this.socialT = this.socialDt = 1.1 + Math.random() * 1.2;
     const v = this.cameras.main.worldView;
     const seen = (n) => n.s.x > v.x - 24 && n.s.x < v.right + 24 && n.s.y > v.y - 24 && n.s.y < v.bottom + 24;
     const free = this.islanders.filter((n) => this.canChat(n) && seen(n));
@@ -1239,9 +1271,24 @@ export class IslandScene extends Phaser.Scene {
         n.greetAt = now;
         n.wait = Math.max(n.wait, 1800);
         this.faceNpc(n, p.x, p.y);
-        popEmote(this, n, ['smile', 'heart', 'note', 'sparkle', SEASON_EMOTE[this.season] || 'star'][Math.floor(Math.random() * 5)]);
+        // a start if you came running up, a smile if you strolled
+        popEmote(this, n, this.running ? 'bang' : ['smile', 'heart', 'note', 'sparkle', SEASON_EMOTE[this.season] || 'star'][Math.floor(Math.random() * 5)]);
+        if (this.running) this.tweens.add({ targets: n.s, y: n.s.y - 2, duration: 90, yoyo: true });
       }
     });
+    // stand facing someone for a while without a word and they wonder what you want
+    const gaze = free.find((n) => Math.hypot(p.x - n.s.x, p.y - n.s.y) < 40 && this.focus?.npc === n);
+    if (gaze && this.stare?.n === gaze) {
+      this.stare.t += this.socialDt;
+      if (this.stare.t > 6 && !gaze.stared) {
+        gaze.stared = true;
+        popEmote(this, gaze, 'q');
+        this.time.delayedCall(1600, () => gaze.s.active && popEmote(this, gaze, 'dots'));
+      }
+    } else {
+      if (this.stare?.n) this.stare.n.stared = false;
+      this.stare = gaze ? { n: gaze, t: 0 } : null;
+    }
     // the ones busy at their one thing glance up and smile as you pass, without stopping
     this.islanders.forEach((n) => {
       if (!n.script || n.talking || !seen(n)) return;
@@ -1302,16 +1349,20 @@ export class IslandScene extends Phaser.Scene {
     const store = { get: load, set: save };
     const { giftOK, given } = giftStatus(n.name, n.kind, store);
     const finds = { mineral: listEntries({ collection: 'mineral' }).filter((e) => (e.rarity || 1) <= 2), fossil: listEntries({ collection: 'fossil' }).filter((e) => (e.rarity || 1) <= 2) };
-    const opener = n.opener?.() || islandLine({ season: this.season, weather: this.weatherKind, night: this.dark > 0.45, holiday: holiday() });
+    // people who know you say so (src/regulars.js), and after very many talks something only they say
+    const knows = n.animal ? null : remember(n.name, n.kind);
+    const rare = n.animal ? null : rareFor(n.name, n.kind);
+    const opener = rare?.line || knows || n.opener?.() || islandLine({ season: this.season, weather: this.weatherKind, night: this.dark > 0.45, holiday: holiday() });
     this.paused = true;
     this.interactBtn.classList.add('hidden');
     n.talking = true;
     n.target = null;
     n.after = null;
     this.talkingTo = n;
+    if (!n.animal) n.prevFace = { key: n.s.texture.key, flip: n.s.flipX };
     this.faceNpc(n, this.player.x, this.player.y);
     sfx('talk');
-    const gen = converse({ kind: n.kind, name: n.name, opener, giftOK, given, finds });
+    const gen = converse({ kind: n.kind, name: n.name, opener, openerMood: rare?.mood, giftOK, given, finds });
     const tex = this.textures.get(`${n.prefix}_down`)?.getSourceImage?.();
     this.chatHandle = runDialogue(gen, {
       name: n.name,
@@ -1336,6 +1387,10 @@ export class IslandScene extends Phaser.Scene {
         this.paused = false;
         n.talking = false;
         n.wait = 1500;
+        // back to what they were looking at a moment after the talk
+        const f = n.prevFace;
+        n.prevFace = null;
+        if (f) this.time.delayedCall(900, () => n.s.active && !n.talking && !n.target && n.s.setTexture(f.key).setFlipX(f.flip));
       },
     });
   }
@@ -1422,18 +1477,9 @@ export class IslandScene extends Phaser.Scene {
   // while you face the museum doors is not who you mean. Things underfoot (dig spots) need no facing.
   findFocus() {
     const { x, y } = this.player;
-    const facing = this.facing;
-    let best = null;
-    let bestC = Infinity;
+    const r = resolver(x, y, this.facing);
     // reach: how close it has to be; d: how close it is; (tx, ty): where it is, for the facing test
-    const consider = (reach, d, focus, tx, ty) => {
-      if (d >= reach) return;
-      const c = tx === undefined ? d : reachCost(x, y, facing, tx, ty, d);
-      if (c < bestC) {
-        best = focus;
-        bestC = c;
-      }
-    };
+    const consider = (reach, d, focus, tx, ty) => r.consider(reach, d, focus, tx, ty);
     this.things.forEach((t) => consider(26, Math.hypot(x - t.x, y - t.y), { thing: t, icon: 'look' }, t.x, t.y));
     this.digs.forEach((d) => consider(30, Math.hypot(x - d.x, y - d.y), { dig: d, icon: 'look' }));
     // (digging is done standing on the spot: no facing needed)
@@ -1458,11 +1504,11 @@ export class IslandScene extends Phaser.Scene {
       consider(22, Math.hypot(x - COTTAGE.x, y - (COTTAGE.y + 8)), { cottage: true, icon: 'door' }, COTTAGE.x, COTTAGE.y);
       consider(56, Math.hypot(x - 14 * T, y - 39.4 * T), { boat: true, icon: 'door' }, 14 * T, 39.4 * T); // the rowboat at the dock
     }
-    if (!best) {
+    if (!r.best) {
       const spot = this.waterAhead();
-      if (spot) best = { fish: spot, icon: 'fish' };
+      if (spot) return { fish: spot, icon: 'fish' };
     }
-    return best;
+    return r.best;
   }
 
   // Where the arrow goes: over the head of what Interact will act on.
@@ -1573,17 +1619,28 @@ export class IslandScene extends Phaser.Scene {
     b.querySelector('.bang').innerHTML = iconSvg(mode === 'hop' ? 'door' : 'boat');
   }
 
+  // Boat / Hop out ask first, like any other "do you want to?" in the game: a Yes / No box.
   useWaterButton() {
-    if (this.paused || this.leaving) return;
-    if (this.waterMode === 'hop') {
-      const land = this.landAhead();
-      if (land) this.boat.hopOut(land);
-    } else if (this.waterMode === 'boat') {
-      const spot = this.boatSpot();
-      if (spot) this.boat.board(spot, this.facing);
-    }
+    if (this.paused || this.leaving || !this.waterMode) return;
+    const mode = this.waterMode;
     this.waterMode = null;
     this.waterBtn.classList.add('hidden');
+    this.paused = true; // (the walk stops while the question is up)
+    this.interactBtn.classList.add('hidden');
+    sfx('open');
+    const done = (yes) => {
+      this.paused = false;
+      if (!yes) return;
+      if (mode === 'hop') {
+        const land = this.landAhead();
+        if (land) this.boat.hopOut(land);
+      } else {
+        const spot = this.boatSpot();
+        if (spot) this.boat.board(spot, this.facing);
+      }
+    };
+    if (mode === 'hop') ask('Hop out?', 'Step out onto the shore?', 'Yes', done, 'Stay aboard');
+    else ask('Take the boat?', 'Want to take the boat?', 'Yes', done, 'No');
   }
 
   // Open water a short cast ahead of where you're facing: { x, y, water }.
@@ -1629,7 +1686,7 @@ export class IslandScene extends Phaser.Scene {
     if (talking()) return hideTalk();
     sfx('talk');
     const t = f.thing;
-    showTalk(t.name === 'chest' ? 'Treasure chest' : 'Sign', 'The island', t.text, () => (this.sys.isActive() ? this.screenAt(t.x, t.y - 30) : null));
+    showTalk(t.name === 'chest' ? 'Treasure chest' : 'Sign', 'The island', t.text, () => (this.sys.isActive() ? this.screenAt(t.x, t.y - 30) : null), undefined, () => Math.hypot(this.player.x - t.x, this.player.y - t.y) > 52);
   }
 
   // A speech bubble's anchor: the top of someone's head, followed as they (or the camera) move.
@@ -1722,6 +1779,22 @@ export class IslandScene extends Phaser.Scene {
     const snowy = this.snowAt(p.x, p.y - 2, ground);
     footstep(snowy ? 'snow' : ground === 'sand' || ground === 'shore' ? 'sand' : ground === 'grass' || ground === 'tall' ? 'grass' : 'floor');
     this.stepSide = !this.stepSide;
+    // a puddle: ripples and drops fly up where you step in it
+    const pd = this.puddles?.find((q) => ((p.x - q.x) / (q.w / 2 + 3)) ** 2 + ((p.y - 2 - q.y) / (q.h / 2 + 3)) ** 2 < 1);
+    if (pd) {
+      for (let i = 0; i < 2; i++) {
+        const ring = this.add.ellipse(p.x, p.y - 1, 8, 3).setStrokeStyle(1, 0xe8f4ff, 0.9).setDepth(p.y + 0.5);
+        this.tweens.add({ targets: ring, scaleX: 3 + i * 1.5, scaleY: 3 + i * 1.5, alpha: 0, delay: i * 110, duration: 650, onComplete: () => ring.destroy() });
+      }
+      for (let i = 0; i < 4; i++) {
+        const d = this.add.rectangle(p.x, p.y - 2, 1.5, 1.5, 0xe8f4ff).setDepth(p.y + 2);
+        this.tweens.add({ targets: d, x: p.x + (Math.random() - 0.5) * 16, y: p.y - 7 - Math.random() * 7, alpha: 0, duration: 380, ease: 'Quad.easeOut', onComplete: () => d.destroy() });
+      }
+      sfx('tap');
+      return;
+    }
+    // leaves skitter up from your feet on an autumn path
+    if (this.season === 'autumn' && (ground === 'grass' || ground === 'path') && Math.random() < 0.35) this.wind.flick(p.x, p.y - 2);
     if (snowy) {
       this.prints.step(p.x, p.y - 2, vx, vy, this.stepSide, 'snow');
       if (pace === 1) dust(this, p.x, p.y, 0xf4f8ff);
@@ -1754,8 +1827,17 @@ export class IslandScene extends Phaser.Scene {
     this.fishing.update(dt);
     this.prints.update();
     this.moveIslanders(dt);
+    this.tells.update(dt, this.islanders, this.cameras.main.worldView);
     this.socializeIslanders(dt);
-    if (this.paused) return;
+    if (this.paused) {
+      // (a conversation or a panel took over mid-drag: let go of the stick so you don't walk off afterwards)
+      if (this.dragging) {
+        this.dragging = false;
+        this.dragVec = null;
+        this.stick.classList.remove('active');
+      }
+      return;
+    }
     const k = this.keys;
     let vx = (k.D.isDown || k.RIGHT.isDown ? 1 : 0) - (k.A.isDown || k.LEFT.isDown ? 1 : 0);
     let vy = (k.S.isDown || k.DOWN.isDown ? 1 : 0) - (k.W.isDown || k.UP.isDown ? 1 : 0);
@@ -1772,6 +1854,7 @@ export class IslandScene extends Phaser.Scene {
     if (this.puzzles.sliding) vx = vy = 0; // sliding on ice: no steering
     const len = Math.hypot(vx, vy);
     const p = this.player;
+    this.running = len > 0 && pace === 1;
     if (len) {
       // small sub-steps, so a slow frame still stops against a wall where a fast one would
       // (otherwise one big step skips over the strip in front of a door that triggers it)
@@ -1804,6 +1887,7 @@ export class IslandScene extends Phaser.Scene {
     this.ambient.update(dt, p);
     this.beams?.forEach((b) => (b.rotation += dt * 0.7));
     this.weather.update(dt);
+    this.wind.update(dt, this.cameras.main.worldView);
     this.playerGlow?.setPosition(p.x, p.y - 12);
     p.setDepth(p.y);
     this.shadow.setPosition(p.x, p.y - 1);

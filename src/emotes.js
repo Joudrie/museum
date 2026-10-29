@@ -59,7 +59,8 @@ export function popEmote(scene, who, id, { hold = 1500, lift = 5 } = {}) {
   img.once('destroy', () => scene.events.off('update', follow));
   scene.tweens.add({ targets: img, scale: 1, duration: 180, ease: 'Back.easeOut' });
   scene.tweens.add({ targets: off, v: -3, duration: hold, ease: 'Sine.easeOut' });
-  scene.tweens.add({ targets: img, alpha: 0, delay: hold, duration: 300, onComplete: () => img.destroy() });
+  // pop in, hold, pop out
+  scene.tweens.add({ targets: img, scale: 0, delay: hold, duration: 160, ease: 'Back.easeIn', onComplete: () => img.destroy() });
   return img;
 }
 

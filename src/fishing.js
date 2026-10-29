@@ -290,6 +290,7 @@ export class Fishing {
     }
     if (this.state === 'bite') return { x: tip.x, y: tip.y + 3 + Math.sin(this.t * 40) * 1.2 };
     if (this.state === 'wait') return { x: tip.x, y: tip.y + Math.sin(this.t * 2) * 0.5 };
+    if (this.state === 'reel') return { x: tip.x, y: tip.y - 2 + Math.sin(this.t * 28) * 1.6 };
     return tip;
   }
 
@@ -309,8 +310,17 @@ export class Fishing {
   update(dt) {
     const g = this.g;
     g.clear();
-    if (!this.busy || !this.bob) return;
+    if (!this.busy) return;
     this.t += dt;
+    if (this.state === 'reel' && this.fishImg?.active) {
+      // reeling in: the rod jerks and the line runs tight to the catch as it flies to you
+      const p = this.player;
+      const a = this.rodTip();
+      g.lineStyle(1.5, 0x5a3a24, 1).lineBetween(p.x + (a.x - p.x) * 0.25, p.y - 14, a.x, a.y);
+      g.lineStyle(0.6, 0xf4f0e6, 0.9).lineBetween(a.x, a.y, this.fishImg.x, this.fishImg.y - 3);
+      return;
+    }
+    if (!this.bob) return;
     const tgt = this.target;
     if (this.state === 'wait') {
       let y = tgt.y + 3 + Math.sin(this.t * 3) * 0.6;
@@ -378,6 +388,8 @@ export class Fishing {
     if (!s.textures.exists(key)) s.textures.addCanvas(key, pic);
     const p = this.player;
     const fish = s.add.image(this.target.x, this.target.y, key).setDepth(4002).setScale(0.9);
+    this.fishImg = fish;
+    this.t = 0;
     this.splash(this.target.x, this.target.y + 2, 1);
     this.bob.destroy();
     this.bob = null;

@@ -13,6 +13,10 @@ export function facingOf(s) {
   return 'down';
 }
 
+// How straight ahead something has to be to count as "facing" it (the dot product of your
+// facing and the way to it: 1 dead ahead, 0 beside you). About 66 degrees either side.
+export const FACING_MIN = 0.4;
+
 // Lower is better; Infinity = can't be reached from here.
 // (px, py) is the player, (tx, ty) the thing, d the distance already measured for it.
 export function reachCost(px, py, facing, tx, ty, d) {
@@ -22,8 +26,32 @@ export function reachCost(px, py, facing, tx, ty, d) {
   if (len < 7) return d; // underfoot
   const [fx, fy] = facingVec(facing);
   const dot = (dx * fx + dy * fy) / len; // 1: dead ahead, 0: beside you, -1: behind you
-  if (dot < -0.35) return Infinity;
-  return d * (1.3 - 0.45 * Math.max(dot, 0));
+  if (dot < FACING_MIN) return Infinity;
+  return d * (1.25 - 0.4 * dot);
+}
+
+// The one rule for what Interact means, shared by the museum and the islands: every candidate
+// (a person, a door, a sign, the water, an item) is offered here, and the nearest one you are
+// facing wins. Offer a thing with where it is; things under your feet (a dig spot, a stain)
+// are offered without a place and need no facing. Nothing facing you = nothing.
+//   const r = resolver(player.x, player.y, 'up');
+//   r.consider(26, distance, { npc }, npc.x, npc.y);      r.best  -> the focus or null
+export function resolver(px, py, facing) {
+  let best = null;
+  let bestC = Infinity;
+  return {
+    consider(reach, d, focus, tx, ty) {
+      if (d >= reach) return;
+      const c = tx === undefined ? d : reachCost(px, py, facing, tx, ty, d);
+      if (c < bestC) {
+        best = focus;
+        bestC = c;
+      }
+    },
+    get best() {
+      return best;
+    },
+  };
 }
 
 // Where the top of a character's head is (the picture has some empty space above it),

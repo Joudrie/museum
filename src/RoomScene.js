@@ -43,7 +43,7 @@ import { hasCameras, buyCameras, resetSecurity, CAMERA_COST, trackSeen, maybeRob
 import { officeLevel, setOfficeLevel, resetOffice, perks, itemLevel, LEVELS, MAX_LEVEL } from './office.js';
 import { openOffice } from './officemenu.js';
 import { ask } from './ask.js';
-import { remember } from './regulars.js';
+import { remember, rareFor } from './regulars.js';
 import { converse, giftStatus, recordGift } from './chatter.js';
 import { runDialogue } from './dialogue.js';
 import { list as listEntries } from './collections/index.js';
@@ -66,9 +66,11 @@ import { openDisplay } from './displaymenu.js';
 import { openDecor, closeDecor, load, save, DEFAULT_CHARACTER } from './decor.js';
 import { openBuild } from './build.js';
 import { showTalk, hideTalk, talking } from './talk.js';
-import { facingOf, reachCost, headY } from './focus.js';
+import { facingOf, resolver, headY } from './focus.js';
 import { EMOTES, popEmote, startChat } from './emotes.js';
 import { FocusMark } from './focusmark.js';
+import { Tells } from './tells.js';
+import { Shadows } from './shadows.js';
 import { Lighting, timeOfDay, makeTextures as lightTextures } from './lighting.js';
 import { animateWalker, footstep, dust } from './motion.js';
 import { Pet, PET_COLORS } from './pets.js';
@@ -383,7 +385,8 @@ export class RoomScene extends Phaser.Scene {
     this.refreshDirt();
     this.bubble = this.add.image(0, 0, 'bubble').setOrigin(0.5, 1).setDepth(5000).setVisible(false);
     this.mark = new FocusMark(this);
-    this.shadowG = this.add.graphics().setDepth(0.9); // soft shadows under everyone
+    this.tells = new Tells(this); // breathing and blinking
+    this.shadowsP = new Shadows(this, 0.9, 0.2); // soft shadows under everyone
     this.lighting = new Lighting(this);
     setAmbience(weatherToday() === 'rain' && !this.isBreak ? ['rainSoft'] : []); // rain on the roof
     if (!this.isBreak) stormRumble(this, weatherToday());
@@ -850,7 +853,7 @@ export class RoomScene extends Phaser.Scene {
     }
     const s = this.add.sprite(x, y, `${prefix}_down`).setOrigin(0.5, 1).setScale(scale);
     const speed = kind === 'elder' || kind === 'grump' ? 0.65 : kind === 'kid' ? 1.25 : 1;
-    const n = { s, prefix, kind, speed, name: names[Math.floor(hash(seed, 6, 50) * names.length)], wait: 400 + Math.random() * 1500, target: null };
+    const n = { s, prefix, kind, speed, skin: colors.s, name: names[Math.floor(hash(seed, 6, 50) * names.length)], wait: 400 + Math.random() * 1500, target: null };
     // some visitors bring their dog (on a leash)
     if (!this.isBreak && ['casual', 'elder', 'tourist', 'couple', 'student'].includes(kind) && hash(seed, 30, 70) < 0.22) {
       const col = PET_COLORS.dog[Math.floor(hash(seed, 31, 70) * PET_COLORS.dog.length)];
@@ -883,7 +886,7 @@ export class RoomScene extends Phaser.Scene {
     makeCharacter(this, prefix, colors, look);
     const names = PERSONALITIES[kind].names;
     const s = this.add.sprite(x, y, `${prefix}_down`).setOrigin(0.5, 1).setScale(scale);
-    const n = { s, prefix, kind, staff: true, name: names[Math.floor(hash(seed, 6, 50) * names.length)], wait: 1000, target: null };
+    const n = { s, prefix, kind, staff: true, skin: colors.s, name: names[Math.floor(hash(seed, 6, 50) * names.length)], wait: 1000, target: null };
     this.npcs.push(n);
     return n;
   }
@@ -896,7 +899,7 @@ export class RoomScene extends Phaser.Scene {
       makeCharacter(this, prefix, colors, look);
       const names = PERSONALITIES[kind].names;
       const s = this.add.sprite(x, y, `${prefix}_down`).setOrigin(0.5, 1).setScale(scale);
-      const n = { s, prefix, kind, staff: true, name: names[Math.floor(hash(seed, 6, 50) * names.length)], wait: 1000, target: null };
+      const n = { s, prefix, kind, staff: true, skin: colors.s, name: names[Math.floor(hash(seed, 6, 50) * names.length)], wait: 1000, target: null };
       this.npcs.push(n);
       return n;
     };
@@ -1030,7 +1033,23 @@ export class RoomScene extends Phaser.Scene {
     this.refreshDirt();
   }
 
+  // Turn to the player for a talk, remembering which way they were facing; a moment after
+  // the talk they turn back (or go on with what they were doing).
+  turnToPlayer(n) {
+    if (n.seat || n.follow) return;
+    if (!n.prevFace) n.prevFace = { key: n.s.texture.key, flip: n.s.flipX };
+    n.faceUntil = this.time.now + 4000;
+    this.faceSprite(n.s, n.prefix, this.player.x - n.s.x, this.player.y - n.s.y);
+  }
+
+  turnBack(n) {
+    const f = n.prevFace;
+    n.prevFace = null;
+    if (f && !n.target && !n.seat && n.s.active) n.s.setTexture(f.key).setFlipX(f.flip);
+  }
+
   updateVisitor(n, dt) {
+    if (n.prevFace && !n.talking && !n.chatting && this.time.now > (n.faceUntil || 0)) this.turnBack(n);
     if (n.talking || n.fixed || n.chatting) return;
     if (n.follow) {
       // trail the tour guide along the path they walked
@@ -1201,6 +1220,19 @@ export class RoomScene extends Phaser.Scene {
     if (this.socialT > 0) return;
     this.socialT = 1.4 + Math.random();
     const free = this.npcs.filter((n) => this.canChat(n));
+    // visitors notice you walking by: a glance, and a picture (a start if you came running up)
+    const p = this.player;
+    const now = this.time.now;
+    free.forEach((n) => {
+      const d = Math.hypot(p.x - n.s.x, p.y - n.s.y);
+      if (d < 56 && d > 14 && (!n.noticeAt || now - n.noticeAt > 40000)) {
+        n.noticeAt = now;
+        this.turnToPlayer(n);
+        n.faceUntil = now + 1600;
+        popEmote(this, n, this.running ? 'bang' : ['smile', 'heart', 'note', 'sparkle'][Math.floor(Math.random() * 4)]);
+        if (this.running) this.tweens.add({ targets: n.s, y: n.s.y - 2, duration: 90, yoyo: true });
+      }
+    });
     for (let i = 0; i < free.length; i++)
       for (let j = i + 1; j < free.length; j++)
         if (Math.hypot(free[i].s.x - free[j].s.x, free[i].s.y - free[j].s.y) < 34 && Math.random() < 0.5) return this.chatBetween(free[i], free[j]);
@@ -1325,7 +1357,12 @@ export class RoomScene extends Phaser.Scene {
       line = `There ${j === 1 ? 'is 1 of us' : `are ${j} of us`}. One janitor per room keeps the whole place spotless.`;
     }
     if (!n.staff && Math.random() < 0.3) line = this.contextLine() || line;
-    if (!n.staff) line = remember(n.name, n.kind) || line;
+    n.rare = null;
+    if (!n.staff) {
+      line = remember(n.name, n.kind) || line;
+      n.rare = rareFor(n.name, n.kind); // a line only heard after many talks
+      if (n.rare) line = n.rare.line;
+    }
     if (KINDS.includes(n.kind) && !n.staff && n.kind !== 'caretaker') return this.chat(n, line);
     if (n.kind === 'guard' && nextSecurity()) return this.offerCameras(n, line);
     if (n.kind === 'caretaker' && this.tellStory(n, heistBeat(this.storyContext()), 'The Empty Frames')) return;
@@ -1333,10 +1370,10 @@ export class RoomScene extends Phaser.Scene {
     n.target = null;
     n.path = null;
     n.goal = null;
-    if (!n.seat) this.faceSprite(n.s, n.prefix, this.player.x - n.s.x, this.player.y - n.s.y);
+    this.turnToPlayer(n);
     this.talkingTo = n;
     sfx('talk');
-    showTalk(n.name, PERSONALITIES[n.kind].label, line, this.speakerAt(n.s));
+    showTalk(n.name, PERSONALITIES[n.kind].label, line, this.speakerAt(n.s), undefined, this.walkedAway(n.s));
   }
 
   // A real conversation with a visitor (src/chatter.js): about the painting they stand by,
@@ -1357,9 +1394,9 @@ export class RoomScene extends Phaser.Scene {
     n.goal = null;
     n.hasGift = false;
     this.talkingTo = n; // (so endTalk, and anything that opens a panel, closes the conversation)
-    if (!n.seat) this.faceSprite(n.s, n.prefix, this.player.x - n.s.x, this.player.y - n.s.y);
+    this.turnToPlayer(n);
     sfx('talk');
-    const gen = converse({ kind: n.kind, name: n.name, opener, painting: info && { title: info.title, by: info.by, year: info.year, blurb: info.blurb }, hungBy: hungBy.length ? PAINTINGS.filter((p) => hungBy.includes(p.artist)).map((p) => p.by) : [], wantBy, giftOK, given, finds });
+    const gen = converse({ kind: n.kind, name: n.name, opener, openerMood: n.rare?.mood, painting: info && { title: info.title, by: info.by, year: info.year, blurb: info.blurb }, hungBy: hungBy.length ? PAINTINGS.filter((p) => hungBy.includes(p.artist)).map((p) => p.by) : [], wantBy, giftOK, given, finds });
     const tex = this.textures.get(`${n.prefix}_down`)?.getSourceImage?.();
     this.chatHandle = runDialogue(gen, {
       name: n.name,
@@ -1385,6 +1422,7 @@ export class RoomScene extends Phaser.Scene {
         if (!this.chatExternal) this.pause(false); // (closed by pause(true): that panel is in charge of the pause)
         n.talking = false;
         n.wait = 1500;
+        n.faceUntil = this.time.now + 900;
       },
     });
   }
@@ -1399,7 +1437,7 @@ export class RoomScene extends Phaser.Scene {
   // Tell the next chapter (a modal so long lines are easy to read). Returns true if one was told.
   tellStory(n, beat, title) {
     if (!beat) return false;
-    this.faceSprite(n.s, n.prefix, this.player.x - n.s.x, this.player.y - n.s.y);
+    this.turnToPlayer(n);
     sfx('talk');
     this.pause(true);
     ask(`${n.name} · ${title}`, `“${beat.line}”`, 'Go on', () => {
@@ -1435,7 +1473,7 @@ export class RoomScene extends Phaser.Scene {
 
   // The guard offers to put up cameras (no change to how the rooms look).
   offerCameras(n, line) {
-    this.faceSprite(n.s, n.prefix, this.player.x - n.s.x, this.player.y - n.s.y);
+    this.turnToPlayer(n);
     sfx('talk');
     this.pause(true);
     const next = nextSecurity();
@@ -1464,10 +1502,10 @@ export class RoomScene extends Phaser.Scene {
     n.target = null;
     n.path = null;
     n.goal = null;
-    if (!n.seat) this.faceSprite(n.s, n.prefix, this.player.x - n.s.x, this.player.y - n.s.y);
+    this.turnToPlayer(n);
     this.talkingTo = n;
     sfx(first ? 'build' : 'talk');
-    showTalk(def.name, first ? 'Famous visitor · first meeting!' : 'Famous visitor', line, this.speakerAt(n.s), 8000);
+    showTalk(def.name, first ? 'Famous visitor · first meeting!' : 'Famous visitor', line, this.speakerAt(n.s), 8000, this.walkedAway(n.s, 90));
     if (first) {
       this.toast(`You met ${def.name}! +5% income forever`);
       this.updateHud();
@@ -1478,6 +1516,11 @@ export class RoomScene extends Phaser.Scene {
   // Gone (null) once they're gone, so a bubble never hangs over a scene it doesn't belong to.
   speakerAt(sprite) {
     return () => (sprite.active && this.sys.isActive() ? this.screenAt(sprite.x, headY(sprite)) : null);
+  }
+
+  // True once the player has walked away from `sprite` (a speech bubble goes at that moment).
+  walkedAway(sprite, r = 70) {
+    return () => Math.hypot(this.player.x - sprite.x, this.player.y - sprite.y) > r;
   }
 
   // Where a point in the room is on the page (for speech bubbles).
@@ -1510,7 +1553,7 @@ export class RoomScene extends Phaser.Scene {
 
   caretakerSays(line) {
     const n = this.npcs.find((v) => v.kind === 'caretaker');
-    showTalk('Edmund', PERSONALITIES.caretaker.label, line, this.speakerAt(n ? n.s : this.player), 10000);
+    showTalk('Edmund', PERSONALITIES.caretaker.label, line, this.speakerAt(n ? n.s : this.player), 10000, n ? this.walkedAway(n.s, 120) : undefined);
   }
 
   endTalk(fromPause = false) {
@@ -1524,6 +1567,7 @@ export class RoomScene extends Phaser.Scene {
     if (!this.talkingTo) return;
     this.talkingTo.talking = false;
     this.talkingTo.wait = 1500;
+    this.talkingTo.faceUntil = this.time.now + 900;
     this.talkingTo = null;
     hideTalk();
   }
@@ -1937,18 +1981,9 @@ export class RoomScene extends Phaser.Scene {
   // isn't who you mean. Things under your feet (mess) need no facing.
   findFocus() {
     const { x, y } = this.player;
-    const facing = facingOf(this.player);
-    let best = null;
-    let bestC = Infinity;
+    const r = resolver(x, y, facingOf(this.player));
     // d: how far it is; (tx, ty): where it is, for the facing test (leave out for things underfoot)
-    const consider = (d, focus, tx, ty) => {
-      if (d >= REACH) return;
-      const c = tx === undefined ? d : reachCost(x, y, facing, tx, ty, d);
-      if (c < bestC) {
-        best = focus;
-        bestC = c;
-      }
-    };
+    const consider = (d, focus, tx, ty) => r.consider(REACH, d, focus, tx, ty);
     for (const p of this.hung) {
       const s = this.standFor(p);
       const half = (p.art.u1 - p.art.u0) / 2;
@@ -2002,7 +2037,7 @@ export class RoomScene extends Phaser.Scene {
       consider(Math.hypot(x - exit.ax, y - exit.ay), { exit: true, icon }, exit.ax, exit.ay);
     }
     if (this.roomIndex > 0) consider(Math.hypot(x - entrance.ax, y - entrance.ay), { entrance: true, icon: 'back' }, entrance.ax, entrance.ay);
-    return best;
+    return r.best;
   }
 
   // What the Interact button says for what you're facing.
@@ -2858,15 +2893,13 @@ export class RoomScene extends Phaser.Scene {
       this.leashes.lineStyle(1, 0x7a2232, 1).beginPath().moveTo(hx, hy).lineTo((hx + px) / 2, Math.max(hy, py) + 4).lineTo(px, py).strokePath();
       this.leashes.setDepth(Math.min(n.s.y, n.pet.s.y) - 1);
     });
+    this.tells.update(dt, this.npcs, this.cameras.main.worldView);
     // a soft shadow under everyone
-    const sg = this.shadowG.clear();
-    sg.fillStyle(0x000000, 0.2);
-    this.npcs.forEach((n) => {
-      if (n.seat) return;
-      const w = 15 * (n.s.scaleX / PLAYER_SCALE);
-      sg.fillEllipse(n.s.x, n.s.y - 1, w, w * 0.34);
-    });
-    sg.fillEllipse(this.player.x, this.player.y - 1, 15, 5);
+    const sh = this.shadowsP;
+    sh.begin();
+    this.npcs.forEach((n) => !n.seat && sh.add(n.s.x, n.s.y - 1, 15 * (n.s.scaleX / PLAYER_SCALE)));
+    sh.add(this.player.x, this.player.y - 1, 15);
+    sh.end();
     this.starT = (this.starT || 0) + dt;
     if (this.starT > 5) {
       this.starT = 0;
@@ -2895,6 +2928,7 @@ export class RoomScene extends Phaser.Scene {
     }
 
     const len = Math.hypot(vx, vy);
+    this.running = len > 0 && pace === 1;
     if (len > 0) {
       const b = this.bounds();
       const arch = this.archOpening();

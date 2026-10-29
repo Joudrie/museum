@@ -13,6 +13,7 @@ import { popEmote } from './emotes.js';
 import { animateWalker, dust } from './motion.js';
 import { sfx } from './music.js';
 import { T } from './tiles.js';
+import { Reader, TailDog, Dozer, Jogger } from './vignettes2.js';
 
 const TAU = Math.PI * 2;
 const pickOf = (a, r) => a[Math.floor(r * a.length) % a.length];
@@ -80,14 +81,14 @@ function makePerson(scene, id, kind, seed, tweak = {}) {
   Object.assign(look, tweak.look);
   const prefix = `vig_${id}`;
   if (!scene.textures.exists(`${prefix}_down`)) makeCharacter(scene, prefix, colors, look);
-  return { prefix, scale: tweak.scale || scale };
+  return { prefix, scale: tweak.scale || scale, skin: colors.s };
 }
 
 function addPerson(scene, spec) {
   const { x, y, kind, name, label, id, seed } = spec;
-  const { prefix, scale } = makePerson(scene, id, kind, seed, spec);
+  const { prefix, scale, skin } = makePerson(scene, id, kind, seed, spec);
   const s = scene.add.sprite(x, y, `${prefix}_down`).setOrigin(0.5, 1).setScale(scale).setDepth(y);
-  const n = { s, prefix, kind, name, label, home: { x, y }, range: 0, wait: 0, target: null, vignette: id };
+  const n = { s, prefix, kind, name, label, skin, home: { x, y }, range: 0, wait: 0, target: null, vignette: id };
   n.opener = () => pickOf(spec.lines, Math.random());
   scene.islanders.push(n);
   return n;
@@ -100,10 +101,11 @@ const JOBS = {
   autumn: { tool: 'rake', pile: ['#e8702a', '#c84a2a', '#f2a03a', '#a8642a', '#d4862a'], dark: '#6b3a1a', verb: 'raking', lines: ['These leaves come down faster than I can rake them.', 'I think the trees do it on purpose.', 'The pile’s getting big. Jump in, if you like!', 'Autumn: half beauty, half raking.'] },
   winter: { tool: 'shovel', pile: ['#ffffff', '#eef6ff', '#d6e6f6', '#c4d8ee'], dark: '#7a96b8', verb: 'shovelling', lines: ['Snow again. Third time this morning.', 'Dig out the path, and in an hour it’s gone again.', 'Nice footprints you’re leaving, though.', 'Hot tea is the whole secret to winter.'] },
   spring: { tool: 'can', verb: 'watering', lines: ['Water them every day and they’ll show off all summer.', 'The pink ones are the thirstiest.', 'Spring! Everything’s trying to grow at once.', 'A flower never says thank you, but you can tell.'] },
-  summer: { tool: 'broom', pile: ['#e2c68a', '#d6b87a', '#caa86a', '#efd9a0'], dark: '#8a6a3c', verb: 'sweeping', lines: ['Sand gets everywhere. Everywhere.', 'I sweep it up, the tide brings it back.', 'Hot one today, isn’t it?', 'It’s a never-ending job. I love it.'] },
+  summer: { tool: 'can', verb: 'watering', lines: ['Hot one today. The flowers are guzzling it.', 'Early morning and late evening: that’s when you water.', 'Look at them go. Worth every can.', 'I talk to them. They don’t answer, but they grow.'] },
+  sweep: { id: 'porch', tool: 'broom', pile: ['#b8b0a0', '#d0c8b8', '#a39a8a', '#c8c0b0'], dark: '#5a5448', verb: 'sweeping', lines: ['Eighty visitors a day, and every one tracks in the island.', 'A swept porch is a polite porch.', 'I sweep it up, the wind brings it back.', 'Mind the step. I just did it!'] },
 };
 
-class Keeper {
+export class Keeper {
   constructor(scene, n, job, dir) {
     this.scene = scene;
     this.n = n;
@@ -119,7 +121,7 @@ class Keeper {
     if (job.tool === 'can') {
       this.heap = scene.add.image(this.px, y + 3, bed(scene)).setOrigin(0.5, 1).setDepth(y - 1);
     } else {
-      this.heap = scene.add.image(this.px, y + 3, pile(scene, `vig_pile_${job.tool}`, job.pile, job.dark)).setOrigin(0.5, 1).setDepth(y - 1);
+      this.heap = scene.add.image(this.px, y + 3, pile(scene, `vig_pile_${job.id || job.tool}`, job.pile, job.dark)).setOrigin(0.5, 1).setDepth(y - 1);
       this.heap.setScale(0.85);
     }
     this.size = 0;
@@ -495,6 +497,80 @@ export function buildVignettes(scene, { season, weather, night, day }) {
       const n = addPerson(scene, { id: 'kite', kind: 'kid', seed: 203, x: at.x, y: at.y, name: 'Wren', label: 'Kid', lines: ['Look how high it goes!', 'The wind’s perfect today.', 'I’ve got four metres of string left. Four!', 'Don’t let go. Never let go.'] });
       n.script = new Kite(scene, n);
       out.push(n);
+    }
+  }
+
+  // sweeping the porch (by the museum steps)
+  if (!rain && season !== 'winter' && from) {
+    let placed = false;
+    for (const side of rnd() < 0.5 ? [-1, 1] : [1, -1]) {
+      for (const dx of [56, 48, 62]) {
+        for (const dy of [26, 34, 20]) {
+          if (placed) break;
+          const x = Math.round(from.x + side * dx);
+          const y = Math.round(from.y + dy);
+          if (!scene.free(x, y) || !scene.free(x - side * 30, y) || taken.some((t) => Math.hypot(t.x - x, t.y - y) < 60)) continue;
+          placed = true;
+          taken.push({ x, y });
+          const n = addPerson(scene, { id: 'sweeper', kind: 'elder', seed: 77, x, y, name: pickOf(['Gus', 'Ilse', 'Tomas'], rnd()), label: 'Caretaker', lines: JOBS.sweep.lines, colors: { c: '#6a7a8a', p: '#4a4a52', h: '#d8d4cc' } });
+          n.script = new Keeper(scene, n, JOBS.sweep, -side);
+          out.push(n);
+        }
+      }
+    }
+  }
+
+  // someone reading on a bench
+  {
+    const at = spot({ near: 5, far: 14, r: 22 });
+    if (at) {
+      const n = addPerson(scene, { id: 'reader', kind: 'student', seed: 118, x: at.x, y: at.y, name: pickOf(['Maren', 'Tobias', 'Wanda'], rnd()), label: 'Reader', lines: ['Shh! ...Sorry. Chapter nine, it just got good.', 'No spoilers! I mean it.', 'Best bench on the island. I found it first.', 'I read the same page three times. Beautiful, though.'] });
+      n.script = new Reader(scene, n);
+      out.push(n);
+    }
+  }
+
+  // a dog chasing its own tail
+  {
+    const at = spot({ near: 4, far: 13, r: 16 });
+    if (at) {
+      const n = scene.animal(pickOf(['dog_brown', 'dog_golden', 'dog_black'], rnd()), at.x, at.y, scene.islanders.length);
+      n.name = pickOf(['Biscuit', 'Pickle', 'Waffles'], rnd());
+      n.vignette = 'dog';
+      n.script = new TailDog(scene, n);
+      scene.islanders.push(n);
+      out.push(n);
+    }
+  }
+
+  // someone dozing under a tree
+  if (!rain && weather !== 'snow') {
+    const trees = (scene.trees || [])
+      .filter((t) => t.active && t.visible !== false)
+      .map((t) => ({ x: Math.round(t.x + t.displayWidth / 2 + 14), y: Math.round(t.y) + 1, h: t.displayHeight }))
+      .map((t) => ({ ...t, d: Math.hypot(t.x - from.x, t.y - from.y) }))
+      .filter((t) => t.h >= 40 && t.d > 4 * T && t.d < 16 * T)
+      .sort((a, b) => a.d - b.d);
+    const t = trees.find((c) => scene.free(c.x, c.y) && scene.free(c.x, c.y + 10) && scene.free(c.x + 12, c.y) && scene.surfaceAt(c.x, c.y) === 'grass' && !taken.some((o) => Math.hypot(o.x - c.x, o.y - c.y) < 70));
+    if (t) {
+      taken.push(t);
+      const n = addPerson(scene, { id: 'dozer', kind: 'elder', seed: 140, x: t.x, y: t.y, name: pickOf(['Hal', 'Edda', 'Percy'], rnd()), label: 'Napper', lines: ['Hm? I was only resting my eyes.', 'Zzz... Oh! Is it lunchtime?', 'Napping is a hobby. I’m very dedicated.', 'Don’t tell the groundskeeper. This is my tree.'] });
+      n.script = new Dozer(scene, n);
+      out.push(n);
+    }
+  }
+
+  // a jogger running laps round a block of lawn
+  {
+    const at = spot({ near: 6, far: 15, r: 20, apart: 150 });
+    if (at) {
+      const rect = { x0: at.x - 56, x1: at.x + 56, y0: at.y - 34, y1: at.y + 34 };
+      const edges = [[rect.x0, rect.y0, rect.x1, rect.y0], [rect.x1, rect.y0, rect.x1, rect.y1], [rect.x1, rect.y1, rect.x0, rect.y1], [rect.x0, rect.y1, rect.x0, rect.y0]];
+      if (edges.every((e) => scene.lineFree(...e))) {
+        const n = addPerson(scene, { id: 'jogger', kind: 'student', seed: 166, x: rect.x0, y: rect.y0, name: pickOf(['Kit', 'Sunny', 'Dara'], rnd()), label: 'Jogger', lines: ['Can’t talk! Two more laps!', '...pant... just getting my steps in.', 'Any weather is jogging weather.', 'Stretching is half the run. I do the other half.'], colors: { c: '#e0405a', p: '#2e3a4e' } });
+        n.script = new Jogger(scene, n, rect);
+        out.push(n);
+      }
     }
   }
   return out;

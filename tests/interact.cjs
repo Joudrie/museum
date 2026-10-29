@@ -93,11 +93,11 @@ const check = (cond, good, bad) => (cond ? ok(good) : fail(bad));
     return { started, both: !!(a.chatting && c.chatting) };
   });
   check(chatting.started && chatting.both, 'two neighbours start a chat', `chat did not start ${JSON.stringify(chatting)}`);
-  await wait(1500);
-  const emoting = await p.evaluate(() => {
-    const humans = __game.scene.getScene('island').islanders.filter((o) => !o.animal && !o.script);
-    return humans.slice(0, 2).some((o) => o.emoteImg?.active);
-  });
+  let emoting = false;
+  for (let i = 0; i < 16 && !emoting; i++) {
+    await wait(200);
+    emoting = await p.evaluate(() => __game.scene.getScene('island').islanders.filter((o) => !o.animal && !o.script).slice(0, 2).some((o) => o.emoteImg?.active));
+  }
   check(emoting, 'they trade pictures over their heads', 'no emote appeared during the chat');
   await wait(7500);
   const over = await p.evaluate(() => __game.scene.getScene('island').islanders.filter((o) => o.chatting).length);
@@ -183,6 +183,8 @@ const check = (cond, good, bad) => (cond ? ok(good) : fail(bad));
   const shore = await p.evaluate(() => { const s = __game.scene.getScene('island'); return { mode: s.waterMode, shown: !document.querySelector('#interact2').classList.contains('hidden'), label: document.querySelector('#interact2 .label').textContent }; });
   check(shore.mode === 'boat' && shore.shown && shore.label === 'Boat', 'facing the water offers a Boat next to Fish', `no Boat button at the shore ${JSON.stringify(shore)}`);
   await p.click('#interact2');
+  check(await p.evaluate(() => !document.querySelector('#ask').classList.contains('hidden') && /take the boat/i.test(document.querySelector('.ask-text').textContent)), 'it asks "Want to take the boat?" first', 'no Yes / No question before boarding');
+  await p.click('.ask-yes');
   await wait(900);
   const aboard = await p.evaluate(() => { const s = __game.scene.getScene('island'); return { afloat: s.boat.active, paused: s.paused, pet: s.pet ? s.pet.s.visible : null }; });
   check(aboard.afloat && !aboard.paused, 'you hop into the boat', `not afloat ${JSON.stringify(aboard)}`);
@@ -194,6 +196,7 @@ const check = (cond, good, bad) => (cond ? ok(good) : fail(bad));
   const near = await p.evaluate(() => { const s = __game.scene.getScene('island'); return { mode: s.waterMode, onWater: s.boatWater(s.player.x, s.player.y) }; });
   check(near.onWater && near.mode === 'hop', 'the boat stops at the shore and offers Hop out', `at the shore: ${JSON.stringify(near)}`);
   await p.click('#interact2');
+  await p.click('.ask-yes');
   await wait(800);
   const out = await p.evaluate(() => { const s = __game.scene.getScene('island'); s.facing = 'down'; s.player.setTexture('player_down'); const f = s.findFocus(); return { afloat: s.boat.active, moored: !!s.boat.skiff, walkable: s.free(s.player.x, s.player.y), focus: f ? Object.keys(f)[0] : 'none', label: s.focusLabel(f) }; });
   check(!out.afloat && out.moored && out.walkable, 'hopping out leaves the boat moored and you on the shore', `hop out ${JSON.stringify(out)}`);
@@ -224,6 +227,116 @@ const check = (cond, good, bad) => (cond ? ok(good) : fail(bad));
   check(/keeper/.test(scenes.ids) && /kid0/.test(scenes.ids), `the lawn has its little scenes (${scenes.ids})`, `no little scenes: ${scenes.ids}`);
   check(scenes.keeper && ['work', 'rest'].includes(scenes.keeper.state) && scenes.keeper.pile >= 0.85, 'the groundskeeper works and rests', `keeper ${JSON.stringify(scenes.keeper)}`);
   check(scenes.kids && new Set(scenes.kids).size === scenes.kids.length, 'the kids run their circle, each in a different place', `kids ${JSON.stringify(scenes.kids)}`);
+
+  console.log('Targeting, dialogue and details');
+  await open('?season=summer&weather=clear&holiday=none');
+  await island({ map: 'main' });
+  const t2 = await p.evaluate(() => {
+    const s = __game.scene.getScene('island');
+    const n = s.islanders.find((o) => !o.animal && !o.script);
+    s.islanders.forEach((o) => o !== n && o.s.setPosition(-999, -999));
+    s.boats.length = 0;
+    s.landingSpot = null;
+    n.target = null;
+    n.wait = 99999;
+    const kind = () => Object.keys(s.findFocus() || {}).find((k) => k !== 'icon') || 'none';
+    const out = {};
+    // someone right beside you (not in front) is not who you mean
+    s.player.setPosition(n.s.x - 22, n.s.y);
+    s.facing = 'up';
+    s.player.setTexture('player_up');
+    out.beside = kind();
+    s.facing = 'right';
+    s.player.setTexture('player_side').setFlipX(false);
+    out.faced = kind();
+    // facing nothing: Interact does nothing (no panel, no talk)
+    s.player.setPosition(n.s.x - 200, n.s.y - 200);
+    s.facing = 'up';
+    out.nothing = kind();
+    const before = document.querySelector('#chat').classList.contains('hidden');
+    s.focus = s.findFocus();
+    s.interact();
+    out.noop = before && document.querySelector('#chat').classList.contains('hidden') && !s.paused;
+    // a talk: the person turns to you, then back
+    s.player.setPosition(n.s.x, n.s.y + 22);
+    s.facing = 'up';
+    s.player.setTexture('player_up');
+    const was = n.s.texture.key + '|' + n.s.flipX;
+    n.s.setTexture(`${n.prefix}_side`).setFlipX(true);
+    const prior = n.s.texture.key + '|' + n.s.flipX;
+    s.talkTo(n);
+    out.turned = n.s.texture.key === `${n.prefix}_down` || n.s.texture.key.endsWith('_down');
+    // mid-drag when the talk opened: no walking away afterwards
+    s.dragging = true;
+    s.dragVec = { x: 1, y: 0 };
+    s.update(0, 16);
+    out.dragCleared = !s.dragging;
+    s.endTalk();
+    out.prior = prior;
+    return out;
+  });
+  check(t2.beside === 'none', 'someone beside you is not in front of you', `a sideways person was picked: ${t2.beside}`);
+  check(t2.faced === 'npc', 'turn toward them and they are', `facing them gave ${t2.faced}`);
+  check(t2.nothing === 'none' && t2.noop, 'facing nothing, Interact does nothing', `nothing: ${JSON.stringify(t2)}`);
+  check(t2.turned, 'the person turns to face you when you talk', 'they did not turn');
+  check(t2.dragCleared, 'a drag in progress is let go when a talk opens', 'the stick stayed down (you would walk off afterwards)');
+  await wait(1500);
+  const back = await p.evaluate(() => { const s = __game.scene.getScene('island'); const n = s.islanders.find((o) => !o.animal && !o.script); return n.s.texture.key.endsWith('_side') && n.s.flipX; });
+  check(back, 'afterwards they turn back to what they were looking at', 'they stayed facing you');
+  // a speech bubble goes the moment you walk off
+  const gone = await p.evaluate(async () => {
+    const s = __game.scene.getScene('island');
+    const t = { x: s.player.x + 10, y: s.player.y, name: 'sign', text: 'A sign.' };
+    s.things.push(t);
+    s.focus = { thing: t, icon: 'look' };
+    s.interact();
+    const shown = !document.querySelector('#talk').classList.contains('hidden');
+    s.player.setPosition(s.player.x + 120, s.player.y);
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    return { shown, hidden: document.querySelector('#talk').classList.contains('hidden') };
+  });
+  check(gone.shown && gone.hidden, 'a bubble is gone the moment you walk away', `bubble ${JSON.stringify(gone)}`);
+  const em = await p.evaluate(() => ['heart', 'star', 'clover', 'note', 'bang', 'q', 'dots', 'sweat'].filter((k) => !__game.textures.exists(`emote_${k}`)));
+  check(em.length === 0, 'the emote set is all there (heart, star, shamrock, note, !, ?, ..., sweat)', `missing emotes: ${em.join(', ')}`);
+  const life = await p.evaluate(() => {
+    const s = __game.scene.getScene('island');
+    s.player.setPosition(s.door.x, s.door.y + 100);
+    let blinks = 0;
+    for (let i = 0; i < 400; i++) {
+      s.tells.update(0.05, s.islanders, s.cameras.main.worldView);
+      blinks = Math.max(blinks, s.tells.blinks.length);
+    }
+    const breathing = s.islanders.some((n) => !n.animal && n.baseScale !== undefined && n.s.scaleY !== n.baseScale);
+    return { blinks, breathing, smoke: s.wind.spots.length };
+  });
+  check(life.blinks > 0 && life.breathing, 'people blink and breathe', `blink/breath ${JSON.stringify(life)}`);
+
+  console.log('Weather details');
+  await open('?season=winter&weather=snow&holiday=none');
+  await island({ map: 'main' });
+  const snowy = await p.evaluate(() => { const s = __game.scene.getScene('island'); return { fast: s.prints.snowing }; });
+  check(snowy.fast, 'footprints fill in faster while it snows', 'prints do not know it is snowing');
+  await open('?season=autumn&weather=rain&holiday=none');
+  await island({ map: 'main' });
+  const wet = await p.evaluate(() => {
+    const s = __game.scene.getScene('island');
+    if (!s.puddles?.length) return { ok: true, none: true };
+    const q = s.puddles[0];
+    s.player.setPosition(q.x, q.y + 2);
+    const n0 = s.children.length;
+    s.onStep(s.player, 1, 0, 1);
+    return { ok: s.children.length > n0 + 3 };
+  });
+  check(wet.ok, 'stepping in a puddle sends up ripples and drops', 'a puddle step did nothing');
+  await open('?season=autumn&weather=leaves&holiday=none');
+  await island({ map: 'main' });
+  const gust = await p.evaluate(() => {
+    const s = __game.scene.getScene('island');
+    s.wind.gustIn = 0;
+    for (let i = 0; i < 20; i++) s.wind.update(0.05, s.cameras.main.worldView);
+    return { leaves: s.wind.leaves.length };
+  });
+  check(gust.leaves >= 5, 'a gust blows leaves along the ground in autumn', `no gust leaves (${gust.leaves})`);
 
   check(errs.length === 0, 'no page errors', `page errors: ${errs.slice(0, 2).join(' | ')}`);
   await b.close();

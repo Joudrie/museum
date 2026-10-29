@@ -79,7 +79,7 @@ export const giftScale = (given) => (given < GIFT_FULL ? 1 : given < GIFT_FULL *
  */
 export function* converse(o) {
   const rnd = o.rnd || Math.random;
-  yield line(o.opener, null, 'smile');
+  yield line(o.opener, null, o.openerMood || 'smile');
   const all = topics(o, rnd);
   const used = new Set();
   let pleased = false;

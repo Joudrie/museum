@@ -37,6 +37,7 @@ export class Prints {
     this.pool = Array.from({ length: size }, () => ({ img: scene.add.image(0, 0, KEY).setVisible(false).setDepth(0.6), born: 0, life: 1, alpha: 1 }));
     this.next = 0;
     this.live = 0;
+    this.snowing = false; // while it snows, prints in the snow fill in about twice as fast
   }
 
   // One footprint at (x, y) for someone heading (hx, hy); `left` alternates the foot.
@@ -56,7 +57,9 @@ export class Prints {
       .setAlpha(look.alpha)
       .setVisible(true);
     p.born = this.scene.time.now;
-    p.life = look.life;
+    const filling = this.snowing && surface === 'snow';
+    p.life = filling ? look.life * 0.4 : look.life;
+    p.hold = filling ? 0.15 : 0.5; // how long it stays crisp before it starts to fill in
     p.alpha = look.alpha;
     this.live = this.pool.length;
   }
@@ -70,8 +73,8 @@ export class Prints {
       const age = (now - p.born) / p.life;
       if (age >= 1) return p.img.setVisible(false);
       any = true;
-      // solid for the first half of its life, then it fills in
-      if (age > 0.5) p.img.setAlpha(p.alpha * (1 - (age - 0.5) * 2));
+      // crisp for a while, then it fills in
+      if (age > p.hold) p.img.setAlpha(p.alpha * (1 - (age - p.hold) / (1 - p.hold)));
     });
     if (!any) this.live = 0;
   }

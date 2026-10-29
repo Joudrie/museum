@@ -9,7 +9,7 @@
 //       'ledge' (jump down only) | 'push' (a boulder you can shove) | 'over' (draw above people)
 
 import { addLandmarks } from './landmarks.js';
-import { addScenery } from './scenery.js';
+import { addScenerySlices } from './scenery.js';
 import { applyTileSwap } from './swap.js';
 
 export const T = 32;
@@ -23,6 +23,22 @@ export const hash = (x, y, s = 0) => {
 export const hex = (h) => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16), 255];
 const smooth = (t) => t * t * (3 - 2 * t);
 
+// The corner values of the noise grid: the same numbers `hash` gives, worked out once per
+// (grid size, seed) instead of four times for every pixel (this was nearly half of the time
+// it takes to build the island's tiles).
+const lattices = new Map(); // cells -> Map(seed -> Float64Array(cells * cells))
+function lattice(cells, seed) {
+  let m = lattices.get(cells);
+  if (!m) lattices.set(cells, (m = new Map()));
+  let t = m.get(seed);
+  if (!t) {
+    t = new Float64Array(cells * cells);
+    for (let j = 0; j < cells; j++) for (let i = 0; i < cells; i++) t[j * cells + i] = hash(i, j, seed);
+    m.set(seed, t);
+  }
+  return t;
+}
+
 // Value noise that repeats every tile, so neighbors always line up.
 function tnoise(x, y, cells, seed) {
   const s = T / cells;
@@ -32,11 +48,15 @@ function tnoise(x, y, cells, seed) {
   const y0 = Math.floor(gy);
   const fx = smooth(gx - x0);
   const fy = smooth(gy - y0);
-  const h = (i, j) => hash(((i % cells) + cells) % cells, ((j % cells) + cells) % cells, seed);
-  const a = h(x0, y0);
-  const b = h(x0 + 1, y0);
-  const c = h(x0, y0 + 1);
-  const d = h(x0 + 1, y0 + 1);
+  const t = lattice(cells, seed);
+  const i0 = ((x0 % cells) + cells) % cells;
+  const i1 = (((x0 + 1) % cells) + cells) % cells;
+  const j0 = ((y0 % cells) + cells) % cells;
+  const j1 = (((y0 + 1) % cells) + cells) % cells;
+  const a = t[j0 * cells + i0];
+  const b = t[j0 * cells + i1];
+  const c = t[j1 * cells + i0];
+  const d = t[j1 * cells + i1];
   return a + (b - a) * fx + (c - a) * fy + (a - b - c + d) * fx * fy;
 }
 export const fbm = (x, y, seed) => 0.55 * tnoise(x, y, 4, seed) + 0.3 * tnoise(x, y, 8, seed + 1) + 0.15 * tnoise(x, y, 16, seed + 2);
@@ -264,7 +284,53 @@ function shoreTile(key, frame, seed = 150) {
 }
 
 // ---------- Build ----------
+// The tiles take a while to draw (every pixel of hundreds of pictures), so they're drawn in
+// slices: `buildTiles()` runs them all at once; `warmTiles()` runs one slice whenever the browser
+// is idle (the game starts it a moment after the museum appears), so the first walk out of the
+// door finds them already drawn. Either way, the same tiles come out.
+let staged = null; // the slices still to run, while a warm-up is under way
+let warmed = null; // the finished tiles of a warm-up
+const finish = (it) => {
+  let r;
+  do r = it.next();
+  while (!r.done);
+  return r.value;
+};
+
 export function buildTiles() {
+  if (warmed) return warmed;
+  if (staged) {
+    const it = staged;
+    staged = null;
+    return (warmed = finish(it)); // (finish what the warm-up started)
+  }
+  return finish(tileSlices());
+}
+
+export function warmTiles() {
+  if (staged || warmed) return;
+  staged = tileSlices();
+  performance.mark('tiles:warm-start');
+  // a slice only runs while nobody is touching the screen, so walking about stays smooth
+  let touched = performance.now();
+  const note = () => (touched = performance.now());
+  ['pointerdown', 'pointermove', 'keydown'].forEach((e) => window.addEventListener(e, note, { passive: true }));
+  const step = () => {
+    const it = staged;
+    if (!it) return void ['pointerdown', 'pointermove', 'keydown'].forEach((e) => window.removeEventListener(e, note)); // somebody needed the tiles meanwhile
+    if (performance.now() - touched < 700) return void setTimeout(step, 350);
+    const r = it.next();
+    if (r.done) {
+      warmed = r.value;
+      staged = null;
+      performance.mark('tiles:warm-done');
+      ['pointerdown', 'pointermove', 'keydown'].forEach((e) => window.removeEventListener(e, note));
+    } else setTimeout(step, 60);
+  };
+  setTimeout(step, 0);
+}
+
+function* tileSlices() {
   const tiles = {};
   const add = (name, frames, opts) => (tiles[name] = { frames: Array.isArray(frames) ? frames : [frames], w: opts.w || T, h: opts.h || T, ...opts });
   const anim = (fn) => Array.from({ length: FRAMES }, (_, f) => fn(f));
@@ -291,6 +357,7 @@ export function buildTiles() {
     return fbm(x, y, 210) < 0.5 ? ICE[1] : ICE[2];
   }), { group: 'Ground', label: 'Ice (slide)', walk: 'walk' });
 
+  yield;
   // Water
   add('water', anim((f) => pixels(T, T, waterPixel(f))), { group: 'Water', label: 'Deep water', walk: 'water' });
   add('water_shallow', anim((f) => pixels(T, T, shallowPixel(f))), { group: 'Water', label: 'Shallow water', walk: 'walk' });
@@ -338,6 +405,7 @@ export function buildTiles() {
     R(18, 20, 4, 1, '#56545a');
   })), { group: 'Water', label: 'Rock in water', walk: 'block' });
 
+  yield;
   // Edges: every corner combination for each pair
   const sets = [
     ['grass_sand', 'Grass on sand', grassPixel(GRASS, 0), sandPixel(0, false), GRASS[0], 0.12, 300],
@@ -360,24 +428,29 @@ export function buildTiles() {
     add(`bank_${k}`, anim((f) => edgeTile(k, waterPixel(f), grassPixel(GRASS, 0), WATER[0], 0.18, 340)), { group: 'Pond bank (water on grass)', label: k, walk: 'walk' });
   });
 
+  yield;
   // Cliffs and ledges (facing the camera)
   addCliffs(add);
 
+  yield;
   // Plants
   addPlants(add, anim);
 
+  yield;
   // Rocks and boulders
   addRocks(add);
   addJaggedRocks(add);
 
+  yield;
   // Props
   addProps(add, anim);
 
   // Flowers, garden plants, more trees and rocks, paths and buildings
-  addScenery(add, anim);
+  yield* addScenerySlices(add, anim);
 
   // the museum and people, for builder islands
   addLandmarks(add);
+  yield;
 
   return applyTileSwap(tiles); // art dropped in public/swap/tiles replaces the code-drawn tile
 }

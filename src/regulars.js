@@ -50,4 +50,13 @@ export function remember(name, kind, r = Math.random()) {
   return pool[Math.floor(r * 997) % pool.length].replace('{n}', n);
 }
 
+// Things only said after a great many talks with the same person: the 10th, 25th and 50th time.
+const RARE = {
+  10: { line: 'Ten conversations! I’ll tell you a secret: the light on this island is best just before sunset.', mood: 'clover' },
+  25: { line: 'Twenty-five talks. I think that makes us friends. Real ones.', mood: 'heart' },
+  50: { line: 'Fifty chats! I’ve told you everything I know, and I’ve enjoyed every word.', mood: 'sparkle' },
+};
+// The rare line for this person if the talk just recorded by remember() was one of those (else null).
+export const rareFor = (name, kind) => RARE[talks(name, kind)] || null;
+
 export const resetRegulars = () => save(KEY, {});

@@ -520,10 +520,9 @@ body {
   inset: 0;
   z-index: 15;
   pointer-events: none;
-  transition: opacity 0.15s;
 }
 #talk.hidden {
-  opacity: 0;
+  display: none; /* gone at once: no fade to linger */
 }
 #talk.hidden .talk-box {
   pointer-events: none;

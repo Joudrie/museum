@@ -3,6 +3,7 @@ import { RoomScene } from './RoomScene.js';
 import { IslandScene } from './IslandScene.js';
 import { IsoScene } from './IsoScene.js';
 import { makeCharacter } from './art.js';
+import { warmTiles } from './tiles.js';
 import './ui.js';
 import './daily.css';
 import './daily.js';
@@ -22,6 +23,7 @@ const game = new Phaser.Game({
   height,
   backgroundColor: '#1d1512',
   pixelArt: true,
+  audio: { noAudio: true }, // (every sound is made by src/music.js, which starts on the first tap; Phaser's own audio is never used)
   scale: { mode: Phaser.Scale.NONE },
   scene: [RoomScene, IslandScene, IsoScene],
 });
@@ -53,9 +55,12 @@ if (new URLSearchParams(location.search).has('play')) {
   const done = () => {
     if (!splash?.isConnected) return;
     splash.classList.add('gone');
-    setTimeout(() => splash.remove(), 450);
+    setTimeout(() => splash.remove(), 300);
   };
-  game.events.once('ready', () => requestAnimationFrame(() => requestAnimationFrame(done)));
+  game.events.once('ready', () => {
+    requestAnimationFrame(() => requestAnimationFrame(done));
+    setTimeout(warmTiles, 2500); // the island's tiles, drawn in idle moments while you look round the museum
+  });
   setTimeout(done, 12000); // (never hide the game behind it)
 }
 

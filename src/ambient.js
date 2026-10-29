@@ -11,6 +11,7 @@
 //          the lamps, an owl in a tree at night
 //   dock:  an old fisherman who now and then lands a fish
 import { makeCharacter } from './art.js';
+import { sfx } from './music.js';
 
 const OUT = '#1d1714';
 const rnd = (a, b) => a + Math.random() * (b - a);
@@ -535,7 +536,9 @@ export class Ambient {
         });
         return;
       }
-      if (birds.some((b) => this.near(pl, b, 58))) {
+      // (run past and they go up from further off than if you stroll)
+      if (birds.some((b) => this.near(pl, b, this.scene.running ? 96 : 58))) {
+        sfx('chirp');
         const to = this.spot((g, x, y) => (g === 'grass' || g === 'sand') && Math.hypot(x - f.x, y - f.y) > 140 && Math.hypot(x - f.x, y - f.y) < 360);
         if (!to) return;
         birds.forEach((b) => {
@@ -735,7 +738,7 @@ export class Ambient {
     const g = { birds };
     g.update = (dt, pl) => {
       birds.forEach((b) => {
-        const scared = this.near(pl, b, 44);
+        const scared = this.near(pl, b, this.scene.running ? 84 : 44);
         if (b.to) {
           const dx = b.to.x - b.x;
           const dy = b.to.y - b.y;

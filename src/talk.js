@@ -4,9 +4,10 @@
 // tap, when its time is up, or the moment the speaker can't be found any more
 // (`at` returns null, e.g. the scene was left).
 //
-//   showTalk(name, label, line, at, ms)
+//   showTalk(name, label, line, at, ms, away)
 //   at: { x, y } in screen pixels (the top of the speaker's head), or a
 //       function returning one (or null), called every frame.
+//   away: optional function; when it returns true (the player has walked off) the bubble goes at once.
 import { sfx } from './music.js';
 
 const el = document.getElementById('talk');
@@ -23,6 +24,7 @@ const GAP = 8; // between the speaker's head and the tail tip
 let timer = null;
 let raf = 0;
 let getAt = null;
+let getAway = null;
 let size = { w: 0, h: 0 };
 let typed = null;
 
@@ -63,14 +65,15 @@ function follow() {
   raf = 0;
   if (el.classList.contains('hidden')) return;
   const a = readAt();
-  if (!a) return hideTalk();
+  if (!a || getAway?.()) return hideTalk();
   place(a);
   raf = requestAnimationFrame(follow);
 }
 
-export function showTalk(name, label, line, at, ms) {
+export function showTalk(name, label, line, at, ms, away) {
   const was = !el.classList.contains('hidden');
   getAt = at;
+  getAway = away || null;
   who.innerHTML = '';
   who.append(name + ' ');
   const sp = document.createElement('span');
@@ -132,6 +135,7 @@ export function hideTalk() {
   if (typed) clearInterval(typed.iv);
   typed = null;
   getAt = null;
+  getAway = null;
   cancelAnimationFrame(raf);
   raf = 0;
   el.classList.add('hidden');
