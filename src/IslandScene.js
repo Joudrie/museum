@@ -38,11 +38,22 @@ import { visitorLook, KINDS } from './RoomScene.js';
 import { personOfTile, personFor } from './people/index.js';
 import { PERSONALITIES, QUIPS } from './lines.js';
 import { blendAt } from './groundblend.js';
+import { IslandLife } from './progression/ui/islandlife.js';
+import { PlayerLook } from './progression/ui/lookfx.js';
+import { progression } from './progression/index.js';
+import { regionOfMap, REGIONS, speciesOfRegion } from './progression/species.js';
+import { regionAccess } from './progression/access.js';
 
 // Islands drawn in the map builder (builder.html), reached by boat from the
 // main island's dock. Each is a 'curation-map' file (see src/builder/main.js).
 // Main Island (drawn in the map builder) is home: the museum is there. Island
 // One is the first island, drawn in code; its museum doors stay shut.
+// what a locked island holds: how many fish, and the rarest kinds as "???" (a reason to want the way there)
+function lockedPreview(reg, prog) {
+  const list = speciesOfRegion(reg);
+  const left = list.filter((s) => !prog.state.fish.species[s.id]?.n).length;
+  return list.length ? `${left} fish you have not found live here: ${list.filter((s) => s.rarity >= 3).slice(0, 4).map(() => '???').join(' ')}` : '';
+}
 const MAPS = { main: mainIsland, 'isle-1': isle1, ...EXPEDITION_MAPS };
 
 // The main island is 24×40 tiles; the tile garden (see showcase.js) lies
@@ -112,6 +123,9 @@ export class IslandScene extends Phaser.Scene {
       W = SX + SW + 1;
       H = Math.max(MH, this.plan.y0 + this.plan.height + 2);
     }
+    this.tilesW = W; // (the progression layer reads these to find water near the shore)
+    this.tilesH = H;
+    this.regionKey = this.mapId === null ? 'one' : this.mapId; // which fishing region this island belongs to (src/progression/data/regions.json)
     document.body.classList.add('outside');
     this.events.once('shutdown', () => document.body.classList.remove('outside'));
     setTrack('none');
@@ -197,6 +211,8 @@ export class IslandScene extends Phaser.Scene {
     stormRumble(this, this.weatherKind);
     if (this.weatherKind === 'rain') this.makePuddles();
     this.setupInput();
+    this.look = new PlayerLook(this, this.player); // hat and outfit (src/progression/ui/lookfx.js)
+    this.life = new IslandLife(this); // named people, emotes and the stuck nudge (src/progression/)
     this.time.addEvent({ delay: STEP_MS, loop: true, callback: () => this.tick() });
     this.cameras.main.fadeIn(300, 29, 21, 18);
     if (this.map && this.door && this.spawnAt !== 'dock') this.toast(`${this.mapName()} · walk back into the doors to go inside`);
@@ -1074,7 +1090,7 @@ export class IslandScene extends Phaser.Scene {
 
   // Someone who lives on the island: walks Pokémon-style, a tile or two at a
   // time, never further than `range` tiles from home. Tap to chat.
-  islander(x, y, range, i, id, flip) {
+  islander(x, y, range, i, id, flip, forced) {
     const seed = 700 + i * 7 + Math.round(x + y);
     const r = (k) => {
       const v = Math.sin(seed * 12.9898 + k * 78.233) * 43758.5453;
@@ -1089,13 +1105,13 @@ export class IslandScene extends Phaser.Scene {
       if (p.alpha) s.setAlpha(p.alpha);
       return { s, prefix, kind: 'casual', home: { x, y }, range: p.range * T, name: p.name, title: p.title, lines: p.lines, pose: p.pose, rate: p.rate, flip: !!flip, wait: 500 + r(3) * 2500, target: null };
     }
-    const kind = KINDS[Math.floor(r(1) * KINDS.length)];
+    const kind = forced?.kind || KINDS[Math.floor(r(1) * KINDS.length)];
     const { colors, look, scale } = visitorLook(kind, r);
-    const prefix = `islander${seed}`;
+    const prefix = `islander${seed}${forced ? forced.id : ''}`;
     if (!this.textures.exists(`${prefix}_down`)) makeCharacter(this, prefix, colors, look);
     const s = this.add.sprite(x, y, `${prefix}_down`).setOrigin(0.5, 1).setScale(scale).setDepth(y);
     const names = PERSONALITIES[kind].names;
-    return { s, prefix, kind, home: { x, y }, range: range * T, name: names[Math.floor(r(2) * names.length)], wait: 500 + r(3) * 2500, target: null };
+    return { s, prefix, kind, npcId: forced?.id, home: { x, y }, range: range * T, name: forced?.name || names[Math.floor(r(2) * names.length)], wait: 500 + r(3) * 2500, target: null };
   }
 
   moveIslanders(dt) {
@@ -1163,6 +1179,7 @@ export class IslandScene extends Phaser.Scene {
 
   talkTo(n) {
     sfx('talk');
+    if (this.life?.talk(n)) return; // a named person: a real conversation (src/progression/ui/talkflow.js)
     const lines = n.lines || QUIPS?.island || ['Lovely day for it.', 'Have you been to the museum yet?', 'I come out here to think.', 'The fish are biting by the dock, they say.', 'Every rock on this island has a story.'];
     const line = lines[Math.floor(Math.random() * lines.length)];
     const r = this.game.canvas.getBoundingClientRect();
@@ -1204,9 +1221,23 @@ export class IslandScene extends Phaser.Scene {
     const mine = builderIslands();
     mine.forEach((m) => m.name !== here && options.push({ label: m.name, sub: `Your island · ${m.w}×${m.h}`, go: { mapData: m } }));
     friendIslands().forEach((m) => m.name !== here && options.push({ label: m.name, sub: `A friend’s island · ${m.w}×${m.h}`, go: { mapData: m } }));
+    progression().firstHour.mark('chart'); // (looking at the chart counts for the first-hour script)
     const first = grantStartLeads()[0];
     if (first) this.toast(`${first.title}: read it under Letters`);
     expeditionOptions().forEach((o) => o.go.expedition !== this.exp?.def.id && options.push(o));
+    // every island is on the chart; the ones you cannot reach yet are locked and say what they need
+    const prog = progression();
+    options.forEach((o) => {
+      if (!o.go.map && !o.go.expedition) return;
+      const reg = regionOfMap(o.go.map || 'main');
+      const a = regionAccess(prog.state, reg);
+      if (!a.open) Object.assign(o, { locked: true, sub: a.need, preview: lockedPreview(reg, prog), onLocked: () => { const o = a.reason === 'sub' && prog.sub.moment('locked_dock', reg); if (o) prog.hooks.paywall?.(o); this.toast(a.need); } });
+    });
+    Object.keys(REGIONS).forEach((reg) => {
+      if (reg === this.regionKey || options.some((o) => o.go.map && REGIONS[reg].maps.includes(o.go.map))) return;
+      const a = regionAccess(prog.state, reg);
+      options.push({ label: REGIONS[reg].name, sub: a.open ? 'Follow a lead to find the way' : a.need, locked: true, preview: lockedPreview(reg, prog), onLocked: () => this.toast(a.open ? 'Read your letters at the boat for a lead.' : a.need), go: {} });
+    });
     options.push({ label: 'Letters & leads', sub: `${foundLeads().length} found · letters, maps and rumours`, go: { leads: true } });
     this.paused = true;
     openSail(options, (pick) => {
@@ -1223,14 +1254,20 @@ export class IslandScene extends Phaser.Scene {
     openLeads({
       titles: expeditionTitles(),
       onClose: () => (this.paused = false),
-      onSail: (island) => unlocked[island] && this.setSail(unlocked[island].go),
+      onSail: (island) => {
+        const o = unlocked[island];
+        if (!o) return;
+        const a = regionAccess(progression().state, regionOfMap(o.go.map));
+        if (!a.open) return this.toast(a.need); // a lead shows the way; the boat still has to be able to make the trip
+        this.setSail(o.go);
+      },
     });
   }
 
   // an expedition gets a short boat scene first
   setSail(go) {
     const e = go.expedition && EXPEDITIONS[go.expedition];
-    if (!e) return this.sailTo(go);
+    if (!e || progression().has('sailing.fast_travel')) return this.sailTo(go); // dock to dock (Sailing 12)
     this.paused = true;
     boatScene(e, () => this.sailTo(go));
   }
@@ -1238,10 +1275,11 @@ export class IslandScene extends Phaser.Scene {
   sailTo(go) {
     if (this.leaving) return;
     this.leaving = true;
+    progression().bus.emit('TRAVERSAL_USED', { kind: 'boat', region: regionOfMap(go.map || go.expedition && 'exp-' + go.expedition || 'main') });
     hideTalk();
     this.interactBtn.classList.add('hidden');
     sfx('door');
-    this.cameras.main.fadeOut(400, 20, 40, 70);
+    this.cameras.main.fadeOut(progression().has('sailing.speed2') ? 220 : progression().has('sailing.speed1') ? 320 : 400, 20, 40, 70); // faster crossings with Sailing 2 and 8
     this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start('island', go));
   }
 
@@ -1337,7 +1375,6 @@ export class IslandScene extends Phaser.Scene {
     if (f.animal) return this.petAnimal(f.animal);
     if (f.cottage) return this.enterCottage();
     if (f.fish) {
-      if (this.season === 'winter' && f.fish.water === 'pond') return this.toast('The pond is frozen solid. Try the sea.');
       this.fishing.facing = this.facing;
       this.fishing.cast(f.fish, f.fish.water, this.weatherKind);
       this.interactBtn.querySelector('.label').textContent = 'Hook';
@@ -1417,6 +1454,8 @@ export class IslandScene extends Phaser.Scene {
     if (this.leaving) return;
     const dt = Math.min(dtMs, 50) / 1000;
     this.fishing.update(dt);
+    this.life?.update(dt);
+    this.look?.update();
     this.moveIslanders(dt);
     if (this.paused) return;
     const k = this.keys;
@@ -1425,13 +1464,15 @@ export class IslandScene extends Phaser.Scene {
     let pace = 1;
     if (this.fishing.busy) {
       // walking off reels the line in
-      if ((vx || vy) && this.fishing.state !== 'reel') this.fishing.end();
+      if ((vx || vy) && this.fishing.state !== 'reel' && this.fishing.state !== 'reelin') this.fishing.end();
       else vx = vy = 0;
     }
     if (!vx && !vy && this.dragging && this.dragVec) {
       ({ x: vx, y: vy } = this.dragVec);
       pace = this.dragMag > 0.7 ? 1 : 0.62;
     }
+    if (progression().has('exploring.light_foot')) pace *= 1.06; // Exploring 16
+    if (this.season === 'winter' && progression().has('exploring.snow_speed')) pace *= 1.1; // Exploring 6: deep snow
     if (this.puzzles.sliding) vx = vy = 0; // sliding on ice: no steering
     const len = Math.hypot(vx, vy);
     const p = this.player;

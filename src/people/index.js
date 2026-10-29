@@ -72,7 +72,7 @@ export function personFor(id, seed = Math.random) {
   return {
     colors,
     look,
-    scale: kid ? ADULT * 0.85 : ADULT,
+    scale: v.tiny ? ADULT * 0.7 : kid ? ADULT * 0.85 : ADULT,
     pose: look.pose || null,
     rate: POSE_RATE[look.pose] || 2,
     range,

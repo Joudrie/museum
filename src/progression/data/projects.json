@@ -1,0 +1,612 @@
+[
+ {
+  "id": "proj:1",
+  "kind": "project",
+  "name": "Town project: Mend the dock lamp",
+  "rank": 5,
+  "minutes": 30,
+  "text": "Helps the island, and the island thanks you.",
+  "reward": [
+   {
+    "bait": [
+     "squidstrip",
+     6
+    ]
+   }
+  ]
+ },
+ {
+  "id": "proj:2",
+  "kind": "project",
+  "name": "Town project: A bench by the pond",
+  "rank": 6,
+  "minutes": 30,
+  "text": "Helps the island, and the island thanks you.",
+  "reward": [
+   {
+    "bait": [
+     "goldenfly",
+     2
+    ]
+   }
+  ]
+ },
+ {
+  "id": "proj:3",
+  "kind": "project",
+  "name": "Town project: Planters for the square",
+  "rank": 7,
+  "minutes": 30,
+  "text": "Helps the island, and the island thanks you.",
+  "reward": [
+   {
+    "bait": [
+     "squidstrip",
+     6
+    ]
+   }
+  ]
+ },
+ {
+  "id": "proj:4",
+  "kind": "project",
+  "name": "Town project: Paint the lighthouse door",
+  "rank": 8,
+  "minutes": 30,
+  "text": "Helps the island, and the island thanks you.",
+  "reward": [
+   {
+    "cosmetic": "hat:bucket"
+   }
+  ]
+ },
+ {
+  "id": "proj:5",
+  "kind": "project",
+  "name": "Town project: A new rope for the ferry",
+  "rank": 9,
+  "minutes": 30,
+  "text": "Helps the island, and the island thanks you.",
+  "reward": [
+   {
+    "bait": [
+     "squidstrip",
+     6
+    ]
+   }
+  ]
+ },
+ {
+  "id": "proj:6",
+  "kind": "project",
+  "name": "Town project: Repair the footbridge",
+  "rank": 10,
+  "minutes": 30,
+  "text": "Helps the island, and the island thanks you.",
+  "reward": [
+   {
+    "bait": [
+     "goldenfly",
+     2
+    ]
+   }
+  ]
+ },
+ {
+  "id": "proj:7",
+  "kind": "project",
+  "name": "Town project: Fresh gravel on the path",
+  "rank": 11,
+  "minutes": 30,
+  "text": "Helps the island, and the island thanks you.",
+  "reward": [
+   {
+    "bait": [
+     "squidstrip",
+     6
+    ]
+   }
+  ]
+ },
+ {
+  "id": "proj:8",
+  "kind": "project",
+  "name": "Town project: A noticeboard for the dock",
+  "rank": 12,
+  "minutes": 30,
+  "text": "Helps the island, and the island thanks you.",
+  "reward": [
+   {
+    "cosmetic": "outfit:sweater"
+   }
+  ]
+ },
+ {
+  "id": "proj:9",
+  "kind": "project",
+  "name": "Town project: Window boxes for every house",
+  "rank": 13,
+  "minutes": 30,
+  "text": "Helps the island, and the island thanks you.",
+  "reward": [
+   {
+    "bait": [
+     "squidstrip",
+     6
+    ]
+   }
+  ]
+ },
+ {
+  "id": "proj:10",
+  "kind": "project",
+  "name": "Town project: Lanterns along the shore",
+  "rank": 14,
+  "minutes": 30,
+  "text": "Helps the island, and the island thanks you.",
+  "reward": [
+   {
+    "bait": [
+     "goldenfly",
+     2
+    ]
+   }
+  ]
+ },
+ {
+  "id": "proj:11",
+  "kind": "project",
+  "name": "Town project: A bird bath",
+  "rank": 16,
+  "minutes": 30,
+  "text": "Helps the island, and the island thanks you.",
+  "reward": [
+   {
+    "bait": [
+     "squidstrip",
+     6
+    ]
+   }
+  ]
+ },
+ {
+  "id": "proj:12",
+  "kind": "project",
+  "name": "Town project: Stone steps to the beach",
+  "rank": 17,
+  "minutes": 30,
+  "text": "Helps the island, and the island thanks you.",
+  "reward": [
+   {
+    "cosmetic": "rodskin:walnut"
+   }
+  ]
+ },
+ {
+  "id": "proj:13",
+  "kind": "project",
+  "name": "Town project: A little library box",
+  "rank": 18,
+  "minutes": 30,
+  "text": "Helps the island, and the island thanks you.",
+  "reward": [
+   {
+    "bait": [
+     "squidstrip",
+     6
+    ]
+   }
+  ]
+ },
+ {
+  "id": "proj:14",
+  "kind": "project",
+  "name": "Town project: A shaded picnic table",
+  "rank": 19,
+  "minutes": 30,
+  "text": "Helps the island, and the island thanks you.",
+  "reward": [
+   {
+    "bait": [
+     "goldenfly",
+     2
+    ]
+   }
+  ]
+ },
+ {
+  "id": "proj:15",
+  "kind": "project",
+  "name": "Town project: Re-roof the boathouse",
+  "rank": 20,
+  "minutes": 30,
+  "text": "Helps the island, and the island thanks you.",
+  "reward": [
+   {
+    "bait": [
+     "squidstrip",
+     6
+    ]
+   }
+  ]
+ },
+ {
+  "id": "proj:16",
+  "kind": "project",
+  "name": "Town project: Flag poles at the dock",
+  "rank": 21,
+  "minutes": 30,
+  "text": "Helps the island, and the island thanks you.",
+  "reward": [
+   {
+    "cosmetic": "boatpaint:cream"
+   }
+  ]
+ },
+ {
+  "id": "proj:17",
+  "kind": "project",
+  "name": "Town project: A bell for the harbour",
+  "rank": 22,
+  "minutes": 30,
+  "text": "Helps the island, and the island thanks you.",
+  "reward": [
+   {
+    "bait": [
+     "squidstrip",
+     6
+    ]
+   }
+  ]
+ },
+ {
+  "id": "proj:18",
+  "kind": "project",
+  "name": "Town project: A drinking fountain",
+  "rank": 23,
+  "minutes": 30,
+  "text": "Helps the island, and the island thanks you.",
+  "reward": [
+   {
+    "bait": [
+     "goldenfly",
+     2
+    ]
+   }
+  ]
+ },
+ {
+  "id": "proj:19",
+  "kind": "project",
+  "name": "Town project: A wind vane for the roof",
+  "rank": 24,
+  "minutes": 30,
+  "text": "Helps the island, and the island thanks you.",
+  "reward": [
+   {
+    "bait": [
+     "squidstrip",
+     6
+    ]
+   }
+  ]
+ },
+ {
+  "id": "proj:20",
+  "kind": "project",
+  "name": "Town project: Mosaic by the market",
+  "rank": 25,
+  "minutes": 30,
+  "text": "Helps the island, and the island thanks you.",
+  "reward": [
+   {
+    "cosmetic": "frame:shell"
+   }
+  ]
+ },
+ {
+  "id": "proj:21",
+  "kind": "project",
+  "name": "Town project: Rain barrels",
+  "rank": 27,
+  "minutes": 30,
+  "text": "Helps the island, and the island thanks you.",
+  "reward": [
+   {
+    "bait": [
+     "squidstrip",
+     6
+    ]
+   }
+  ]
+ },
+ {
+  "id": "proj:22",
+  "kind": "project",
+  "name": "Town project: A herb garden",
+  "rank": 28,
+  "minutes": 30,
+  "text": "Helps the island, and the island thanks you.",
+  "reward": [
+   {
+    "bait": [
+     "goldenfly",
+     2
+    ]
+   }
+  ]
+ },
+ {
+  "id": "proj:23",
+  "kind": "project",
+  "name": "Town project: A tide clock",
+  "rank": 29,
+  "minutes": 30,
+  "text": "Helps the island, and the island thanks you.",
+  "reward": [
+   {
+    "bait": [
+     "squidstrip",
+     6
+    ]
+   }
+  ]
+ },
+ {
+  "id": "proj:24",
+  "kind": "project",
+  "name": "Town project: A carved welcome sign",
+  "rank": 30,
+  "minutes": 30,
+  "text": "Helps the island, and the island thanks you.",
+  "reward": [
+   {
+    "cosmetic": "hat:beanie"
+   }
+  ]
+ },
+ {
+  "id": "proj:25",
+  "kind": "project",
+  "name": "Town project: Bunting for festival days",
+  "rank": 31,
+  "minutes": 30,
+  "text": "Helps the island, and the island thanks you.",
+  "reward": [
+   {
+    "bait": [
+     "squidstrip",
+     6
+    ]
+   }
+  ]
+ },
+ {
+  "id": "proj:26",
+  "kind": "project",
+  "name": "Town project: A sheltered bus stop",
+  "rank": 32,
+  "minutes": 30,
+  "text": "Helps the island, and the island thanks you.",
+  "reward": [
+   {
+    "bait": [
+     "goldenfly",
+     2
+    ]
+   }
+  ]
+ },
+ {
+  "id": "proj:27",
+  "kind": "project",
+  "name": "Town project: Repaint the ferry",
+  "rank": 33,
+  "minutes": 30,
+  "text": "Helps the island, and the island thanks you.",
+  "reward": [
+   {
+    "bait": [
+     "squidstrip",
+     6
+    ]
+   }
+  ]
+ },
+ {
+  "id": "proj:28",
+  "kind": "project",
+  "name": "Town project: A stage for the band",
+  "rank": 34,
+  "minutes": 30,
+  "text": "Helps the island, and the island thanks you.",
+  "reward": [
+   {
+    "cosmetic": "outfit:tuxedo"
+   }
+  ]
+ },
+ {
+  "id": "proj:29",
+  "kind": "project",
+  "name": "Town project: A sundial",
+  "rank": 35,
+  "minutes": 30,
+  "text": "Helps the island, and the island thanks you.",
+  "reward": [
+   {
+    "bait": [
+     "squidstrip",
+     6
+    ]
+   }
+  ]
+ },
+ {
+  "id": "proj:30",
+  "kind": "project",
+  "name": "Town project: New nets for the net shed",
+  "rank": 36,
+  "minutes": 30,
+  "text": "Helps the island, and the island thanks you.",
+  "reward": [
+   {
+    "bait": [
+     "goldenfly",
+     2
+    ]
+   }
+  ]
+ },
+ {
+  "id": "proj:31",
+  "kind": "project",
+  "name": "Town project: A reading corner",
+  "rank": 38,
+  "minutes": 30,
+  "text": "Helps the island, and the island thanks you.",
+  "reward": [
+   {
+    "bait": [
+     "squidstrip",
+     6
+    ]
+   }
+  ]
+ },
+ {
+  "id": "proj:32",
+  "kind": "project",
+  "name": "Town project: Lights for the pier",
+  "rank": 39,
+  "minutes": 30,
+  "text": "Helps the island, and the island thanks you.",
+  "reward": [
+   {
+    "cosmetic": "rodskin:coral"
+   }
+  ]
+ },
+ {
+  "id": "proj:33",
+  "kind": "project",
+  "name": "Town project: A mural on the harbour wall",
+  "rank": 40,
+  "minutes": 30,
+  "text": "Helps the island, and the island thanks you.",
+  "reward": [
+   {
+    "bait": [
+     "squidstrip",
+     6
+    ]
+   }
+  ]
+ },
+ {
+  "id": "proj:34",
+  "kind": "project",
+  "name": "Town project: A memorial bench",
+  "rank": 41,
+  "minutes": 30,
+  "text": "Helps the island, and the island thanks you.",
+  "reward": [
+   {
+    "bait": [
+     "goldenfly",
+     2
+    ]
+   }
+  ]
+ },
+ {
+  "id": "proj:35",
+  "kind": "project",
+  "name": "Town project: A wooden lookout",
+  "rank": 42,
+  "minutes": 30,
+  "text": "Helps the island, and the island thanks you.",
+  "reward": [
+   {
+    "bait": [
+     "squidstrip",
+     6
+    ]
+   }
+  ]
+ },
+ {
+  "id": "proj:36",
+  "kind": "project",
+  "name": "Town project: Bell tower repairs",
+  "rank": 43,
+  "minutes": 30,
+  "text": "Helps the island, and the island thanks you.",
+  "reward": [
+   {
+    "cosmetic": "boatpaint:red"
+   }
+  ]
+ },
+ {
+  "id": "proj:37",
+  "kind": "project",
+  "name": "Town project: A tide pool garden",
+  "rank": 44,
+  "minutes": 30,
+  "text": "Helps the island, and the island thanks you.",
+  "reward": [
+   {
+    "bait": [
+     "squidstrip",
+     6
+    ]
+   }
+  ]
+ },
+ {
+  "id": "proj:38",
+  "kind": "project",
+  "name": "Town project: A fish-shaped weathervane",
+  "rank": 45,
+  "minutes": 30,
+  "text": "Helps the island, and the island thanks you.",
+  "reward": [
+   {
+    "bait": [
+     "goldenfly",
+     2
+    ]
+   }
+  ]
+ },
+ {
+  "id": "proj:39",
+  "kind": "project",
+  "name": "Town project: A statue of a heron",
+  "rank": 46,
+  "minutes": 30,
+  "text": "Helps the island, and the island thanks you.",
+  "reward": [
+   {
+    "bait": [
+     "squidstrip",
+     6
+    ]
+   }
+  ]
+ },
+ {
+  "id": "proj:40",
+  "kind": "project",
+  "name": "Town project: The great harbour light",
+  "rank": 47,
+  "minutes": 30,
+  "text": "Helps the island, and the island thanks you.",
+  "reward": [
+   {
+    "cosmetic": "hat:lantern"
+   }
+  ]
+ }
+]

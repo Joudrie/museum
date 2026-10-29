@@ -235,6 +235,21 @@ island scene streams ground chunks around the player.
 - **Older menus are on the system through a skin** (`src/ui/skin.css`, `chrome.js`, `prefs.js`, `toast.js`, `hint.js`): no logic rewritten, ids unchanged. Toasts queue through `say()` (`src/ui/toast.js`); one-time tips use `hint(id, text, anchor)` and obey Settings → Tips. Settings is grouped (Sound, Look, Play, Friends & data, Testing) and has Text size, Reduce motion and Left-handed layout; Customize → This room is collapsible groups. Prices read "Free (X gold)" while testing. `node tests/ui-flows.cjs` holds the tap budgets.
 - **Guard:** `node tests/ui-layout.cjs` (slow set) fails on sideways scroll or "undefined" text and ratchets tap targets and text size per screen (`tests/ui-budget.json`). Screenshots: `node tests/ui-shots.cjs docs/ui/after`.
 
+
+### Progression and retention layer (docs/PROGRESSION.md)
+- **Read `docs/PROGRESSION.md` first**: it maps every part of the spec to code, logs the conflicts with VISION.md, and holds the tuning tables and sim results.
+- Code is `src/progression/` (pure, Node-safe modules + `ui/` for the screens). **Gameplay only emits events** on the bus (`bus.js`); `service.js` + the modules in `modules.js` route them to rank, skills, journal, tasks, friendship, economy and telemetry. Never call XP or journal code directly from a scene.
+- **All tuning numbers live in `src/progression/config.js`**; content is data in `src/progression/data/` (ranks, skills, rods, baits, shop ladder, regions, legends, NPCs, gifts, tasks, events, monthly, cosmetics) and the fish in `src/collections/data/fish*.js` (72 species: 60 plus 12 festival fish).
+- Save: one versioned key `curation.progress` (`store.js`, with migrations). Time is `clock.js` (day turns at 4:00, never runs backwards). Randomness is `rng.js` (seeded).
+- Rewards go through one `RewardQueue` (`rewardqueue.js`); `ui/juice.js` draws them; `index.js` holds it while a dialogue, menu, catch card or the reel is open.
+- Tests: `node tests/progression.cjs` (headless), `progression-content` (validator), `progression-ui` (browser), `progression-sim` (acceptance targets). Tools: `node tools/validate_progression.mjs`, `node tools/sim_progression.mjs --hours 150 --runs 3 --csv out.csv`, `node tools/telemetry_report.mjs events.json`.
+- Dev panel: open the game with `?debug=1`.
+- Things the old code did that changed: fishing is now the cast, wait, "!" and reel minigame; the museum's rarity scale has 5 tiers (Epic added); the daily reset is 4:00; boats are bought (rank, then gold); locked islands show in the boat menu (expedition tests were updated).
+
+### Aesthetics audit (29 Oct 2026)
+- `docs/AESTHETICS-AUDIT.md`: 684 visual flaws found for the overhaul (none fixed), with the cross-cutting problems, quick bugs that look like art problems, and a redesign order. Per-area detail with code locations and screenshots in `docs/aesthetics/` (people, terrain/water, structures, interiors, creatures/items, ui). IDs P-, T-, S-, R-, C-, U-.
+- Read it before redrawing anything: it says what each sprite should become (e.g. P-23/P-24 glasses, S-45 scarecrow, S-51 fountain statues).
+
 ### Gotchas we hit
 - **Phaser reuses the previous scene data** if you call `scene.start('island')` with no data.
   Always pass data explicitly, e.g. `{ map: 'main' }`. Leaving the museum once dropped you on
@@ -251,8 +266,8 @@ island scene streams ground chunks around the player.
 - Main hall columns are 34 px wide (were 22) and still end under the railing; the newels keep the old small post.
 
 ### People sprites (Chat 17: `src/people/`, plan in `docs/PEOPLE-SPRITES.md`)
-- **Parts** (`src/people/parts.js`, merged into the menus in `art.js`): 23 more hats, 16 hairstyles, 7 facial hair, 6 glasses, 21 outfits, 12 accessories, legs (shorts, rolled, tall boots, peg leg), bare feet, 4 builds, 67 things to carry, 26 things to set down, a parrot or gull on the shoulder, and 46 two-frame work poses (`<prefix>_pose_0/1`; kneeling ones too). They draw after the first looks, so **old looks are pixel-identical**; `personRows(view, look, frame)` and `poseRows(look)` in `art.js` give the rows. The creator offers them too (Build, Legs, Feet, Hat trim).
-- **Classes** (`src/people/classes.js`, data): 98 jobs in 227 variants so far (cleaning & grounds, builders & trades, sea & shore, dig & expedition, museum jobs), each a builder piece `t:npc_<class>_<variant>` in the People lists. `personFor(id, seed)` rolls skin, hair, build and the class colors per person; a variant with a pose or a thing set down stays put and works, the rest wander. On islands they loop their pose, look up at you to chat, and talk with their job title and own lines. Previews draw one frame lazily (the game never builds them; the builder reads a piece's picture only when it draws it, so its start time is unchanged).
+- **Parts** (`src/people/parts.js`, merged into the menus in `art.js`): 29 more hats, 16 hairstyles, 7 facial hair, 6 glasses, 24 outfits, 14 accessories, legs (shorts, rolled, tall boots, peg leg), bare feet, 4 builds, 84 things to carry, 33 things to set down, a parrot or gull on the shoulder, and 63 two-frame work poses (`<prefix>_pose_0/1`; kneeling ones too). They draw after the first looks, so **old looks are pixel-identical**; `personRows(view, look, frame)` and `poseRows(look)` in `art.js` give the rows. The creator offers them too (Build, Legs, Feet, Hat trim).
+- **Classes** (`src/people/classes.js`, data): 137 jobs in 312 variants so far (cleaning & grounds, builders & trades, sea & shore, dig & expedition, museum jobs, visitors & townsfolk, food & market), each a builder piece `t:npc_<class>_<variant>` in the People lists. `personFor(id, seed)` rolls skin, hair, build and the class colors per person; a variant with a pose or a thing set down stays put and works, the rest wander. On islands they loop their pose, look up at you to chat, and talk with their job title and own lines. Previews draw one frame lazily (the game never builds them; the builder reads a piece's picture only when it draws it, so its start time is unchanged).
 - Gallery: `art.html` → People. Test: `node tests/people-sprites.cjs` (in `npm test`). The builder hides groups with "on " in the name, so group labels must avoid it.
 
 ### Art swap and placeholder list (Chat 15)

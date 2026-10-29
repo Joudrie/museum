@@ -1,0 +1,443 @@
+{
+ "hat:straw": {
+  "name": "Straw hat",
+  "slot": "hat",
+  "rarity": 1,
+  "source": "rank",
+  "color": "#e8c867"
+ },
+ "hat:beanie": {
+  "name": "Fisher beanie",
+  "slot": "hat",
+  "rarity": 1,
+  "source": "shop",
+  "price": 120,
+  "color": "#5a7aa8"
+ },
+ "hat:bucket": {
+  "name": "Bucket hat",
+  "slot": "hat",
+  "rarity": 2,
+  "source": "shop",
+  "price": 260,
+  "color": "#8aa86a"
+ },
+ "hat:captain": {
+  "name": "Captain\u2019s cap",
+  "slot": "hat",
+  "rarity": 3,
+  "source": "rank",
+  "color": "#2f4a7a"
+ },
+ "hat:flower": {
+  "name": "Flower crown",
+  "slot": "hat",
+  "rarity": 2,
+  "source": "rank",
+  "color": "#e88aa8"
+ },
+ "hat:lantern": {
+  "name": "Lantern hat",
+  "slot": "hat",
+  "rarity": 3,
+  "source": "shop",
+  "price": 640,
+  "color": "#f2b84b"
+ },
+ "hat:antlers": {
+  "name": "Winter antlers",
+  "slot": "hat",
+  "rarity": 3,
+  "source": "event",
+  "color": "#8a5a3a"
+ },
+ "hat:witch": {
+  "name": "Witch hat",
+  "slot": "hat",
+  "rarity": 3,
+  "source": "event",
+  "color": "#4a2a6a"
+ },
+ "hat:crown": {
+  "name": "Curator\u2019s crown",
+  "slot": "hat",
+  "rarity": 5,
+  "source": "rank",
+  "color": "#f2d36b"
+ },
+ "outfit:oilskin": {
+  "name": "Yellow oilskin",
+  "slot": "outfit",
+  "rarity": 1,
+  "source": "rank",
+  "color": "#e8c040"
+ },
+ "outfit:sweater": {
+  "name": "Cable sweater",
+  "slot": "outfit",
+  "rarity": 2,
+  "source": "shop",
+  "price": 300,
+  "color": "#c8c0a8"
+ },
+ "outfit:explorer": {
+  "name": "Explorer vest",
+  "slot": "outfit",
+  "rarity": 2,
+  "source": "rank",
+  "color": "#8a7a4a"
+ },
+ "outfit:tuxedo": {
+  "name": "Gallery tuxedo",
+  "slot": "outfit",
+  "rarity": 3,
+  "source": "shop",
+  "price": 900,
+  "color": "#2a2a34"
+ },
+ "outfit:parka": {
+  "name": "Frostline parka",
+  "slot": "outfit",
+  "rarity": 3,
+  "source": "rank",
+  "color": "#4a7aa8"
+ },
+ "outfit:kimono": {
+  "name": "Spring kimono",
+  "slot": "outfit",
+  "rarity": 3,
+  "source": "event",
+  "color": "#e88aa8"
+ },
+ "outfit:regatta": {
+  "name": "Regatta blazer",
+  "slot": "outfit",
+  "rarity": 3,
+  "source": "event",
+  "color": "#e0405a"
+ },
+ "outfit:ghost": {
+  "name": "Ghost sheet",
+  "slot": "outfit",
+  "rarity": 4,
+  "source": "event",
+  "color": "#e8f0f8"
+ },
+ "rodskin:bamboo": {
+  "name": "Bamboo rod",
+  "slot": "rodskin",
+  "rarity": 1,
+  "source": "rank",
+  "color": "#c8b060"
+ },
+ "rodskin:walnut": {
+  "name": "Walnut rod",
+  "slot": "rodskin",
+  "rarity": 2,
+  "source": "shop",
+  "price": 400,
+  "color": "#6a4a2a"
+ },
+ "rodskin:coral": {
+  "name": "Coral rod",
+  "slot": "rodskin",
+  "rarity": 3,
+  "source": "shop",
+  "price": 800,
+  "color": "#e87a6a"
+ },
+ "rodskin:aurora": {
+  "name": "Aurora rod",
+  "slot": "rodskin",
+  "rarity": 4,
+  "source": "event",
+  "color": "#7ae0c8"
+ },
+ "rodskin:golden": {
+  "name": "Golden rod",
+  "slot": "rodskin",
+  "rarity": 5,
+  "source": "skill",
+  "color": "#f2d36b"
+ },
+ "boatpaint:red": {
+  "name": "Lighthouse red",
+  "slot": "boatpaint",
+  "rarity": 1,
+  "source": "shop",
+  "price": 150,
+  "color": "#c0392b"
+ },
+ "boatpaint:teal": {
+  "name": "Lagoon teal",
+  "slot": "boatpaint",
+  "rarity": 2,
+  "source": "rank",
+  "color": "#2a8a8a"
+ },
+ "boatpaint:cream": {
+  "name": "Sailcloth cream",
+  "slot": "boatpaint",
+  "rarity": 2,
+  "source": "shop",
+  "price": 300,
+  "color": "#e8dcb8"
+ },
+ "boatpaint:stripe": {
+  "name": "Regatta stripe",
+  "slot": "boatpaint",
+  "rarity": 3,
+  "source": "event",
+  "color": "#2f4a7a"
+ },
+ "boatpaint:gold": {
+  "name": "Gilded hull",
+  "slot": "boatpaint",
+  "rarity": 5,
+  "source": "skill",
+  "color": "#f2d36b"
+ },
+ "frame:plain": {
+  "name": "Plain frame",
+  "slot": "frame",
+  "rarity": 1,
+  "source": "rank",
+  "color": "#c8c0a8"
+ },
+ "frame:rope": {
+  "name": "Rope frame",
+  "slot": "frame",
+  "rarity": 2,
+  "source": "rank",
+  "color": "#c8a060"
+ },
+ "frame:shell": {
+  "name": "Shell frame",
+  "slot": "frame",
+  "rarity": 2,
+  "source": "shop",
+  "price": 200,
+  "color": "#e8c8c0"
+ },
+ "frame:map": {
+  "name": "Map frame",
+  "slot": "frame",
+  "rarity": 4,
+  "source": "skill",
+  "color": "#8aa86a"
+ },
+ "frame:heart": {
+  "name": "Heart frame",
+  "slot": "frame",
+  "rarity": 4,
+  "source": "skill",
+  "color": "#e0405a"
+ },
+ "frame:leaf": {
+  "name": "Leaf frame",
+  "slot": "frame",
+  "rarity": 4,
+  "source": "skill",
+  "color": "#6fd07a"
+ },
+ "frame:gold": {
+  "name": "Gilt frame",
+  "slot": "frame",
+  "rarity": 5,
+  "source": "rank",
+  "color": "#f2d36b"
+ },
+ "frame:aurora": {
+  "name": "Aurora frame",
+  "slot": "frame",
+  "rarity": 4,
+  "source": "event",
+  "color": "#7ae0c8"
+ },
+ "title:newcomer": {
+  "name": "Newcomer",
+  "slot": "title",
+  "rarity": 1,
+  "source": "rank"
+ },
+ "title:angler": {
+  "name": "Angler",
+  "slot": "title",
+  "rarity": 1,
+  "source": "rank"
+ },
+ "title:islander": {
+  "name": "Islander",
+  "slot": "title",
+  "rarity": 2,
+  "source": "rank"
+ },
+ "title:collector": {
+  "name": "Collector",
+  "slot": "title",
+  "rarity": 2,
+  "source": "journal"
+ },
+ "title:curator": {
+  "name": "Curator",
+  "slot": "title",
+  "rarity": 3,
+  "source": "rank"
+ },
+ "title:friend": {
+  "name": "Friend of the Island",
+  "slot": "title",
+  "rarity": 3,
+  "source": "journal"
+ },
+ "title:fishing_master": {
+  "name": "Master Angler",
+  "slot": "title",
+  "rarity": 5,
+  "source": "skill"
+ },
+ "title:sailing_master": {
+  "name": "Admiral",
+  "slot": "title",
+  "rarity": 5,
+  "source": "skill"
+ },
+ "title:exploring_master": {
+  "name": "Cartographer",
+  "slot": "title",
+  "rarity": 5,
+  "source": "skill"
+ },
+ "title:friendship_master": {
+  "name": "Beloved",
+  "slot": "title",
+  "rarity": 5,
+  "source": "skill"
+ },
+ "title:foraging_master": {
+  "name": "Gatherer",
+  "slot": "title",
+  "rarity": 5,
+  "source": "skill"
+ },
+ "title:grand_curator": {
+  "name": "Grand Curator",
+  "slot": "title",
+  "rarity": 5,
+  "source": "rank"
+ },
+ "title:complete_fish": {
+  "name": "Fish Log Complete",
+  "slot": "title",
+  "rarity": 5,
+  "source": "journal"
+ },
+ "title:legend_hunter": {
+  "name": "Legend Hunter",
+  "slot": "title",
+  "rarity": 5,
+  "source": "journal"
+ },
+ "title:trophy": {
+  "name": "Trophy Hunter",
+  "slot": "title",
+  "rarity": 4,
+  "source": "journal"
+ },
+ "title:storyteller": {
+  "name": "Keeper of Stories",
+  "slot": "title",
+  "rarity": 4,
+  "source": "journal"
+ },
+ "title:harvest": {
+  "name": "Harvest Regular",
+  "slot": "title",
+  "rarity": 3,
+  "source": "event"
+ },
+ "title:frostbite": {
+  "name": "Frostbitten",
+  "slot": "title",
+  "rarity": 3,
+  "source": "event"
+ },
+ "title:sprout": {
+  "name": "Early Bloom",
+  "slot": "title",
+  "rarity": 3,
+  "source": "event"
+ },
+ "title:regatta": {
+  "name": "Regatta Racer",
+  "slot": "title",
+  "rarity": 3,
+  "source": "event"
+ },
+ "title:friend_edmund": {
+  "name": "Edmund's Friend",
+  "slot": "title",
+  "rarity": 4,
+  "source": "friendship"
+ },
+ "title:friend_wen": {
+  "name": "Wen's Friend",
+  "slot": "title",
+  "rarity": 4,
+  "source": "friendship"
+ },
+ "title:friend_mara": {
+  "name": "Mara's Friend",
+  "slot": "title",
+  "rarity": 4,
+  "source": "friendship"
+ },
+ "title:friend_tal": {
+  "name": "Tal's Friend",
+  "slot": "title",
+  "rarity": 4,
+  "source": "friendship"
+ },
+ "title:friend_rook": {
+  "name": "Rook's Friend",
+  "slot": "title",
+  "rarity": 4,
+  "source": "friendship"
+ },
+ "title:friend_ines": {
+  "name": "Ines's Friend",
+  "slot": "title",
+  "rarity": 4,
+  "source": "friendship"
+ },
+ "title:friend_oda": {
+  "name": "Oda's Friend",
+  "slot": "title",
+  "rarity": 4,
+  "source": "friendship"
+ },
+ "title:friend_bram": {
+  "name": "Bram's Friend",
+  "slot": "title",
+  "rarity": 4,
+  "source": "friendship"
+ },
+ "title:friend_sefu": {
+  "name": "Sefu's Friend",
+  "slot": "title",
+  "rarity": 4,
+  "source": "friendship"
+ },
+ "title:friend_dune": {
+  "name": "Dune's Friend",
+  "slot": "title",
+  "rarity": 4,
+  "source": "friendship"
+ },
+ "title:friend_yuki": {
+  "name": "Yuki's Friend",
+  "slot": "title",
+  "rarity": 4,
+  "source": "friendship"
+ }
+}

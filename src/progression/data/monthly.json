@@ -1,0 +1,14 @@
+[
+  { "month": 1, "title": "Deep winter", "ships": ["species", "secrets"], "text": "Ice-hole fish are at their best. New secrets under the snow." },
+  { "month": 2, "title": "The long dark", "ships": ["cosmetics", "secrets"], "text": "A knitwear set for the lodge and a few quiet secrets." },
+  { "month": 3, "title": "Thaw", "ships": ["species", "npc"], "text": "Spring Bloom opens on the 20th. A new visitor arrives with a story." },
+  { "month": 4, "title": "Bloom", "ships": ["species", "area"], "text": "River runs of shad and lamprey, and a new corner of the Far Isle." },
+  { "month": 5, "title": "Long light", "ships": ["cosmetics", "secrets"], "text": "Straw hats, and more to find on the shore." },
+  { "month": 6, "title": "Regatta", "ships": ["species", "cosmetics"], "text": "The Summer Regatta begins on the 15th: fast fish and a racing set." },
+  { "month": 7, "title": "High summer", "ships": ["area", "secrets"], "text": "A new reef chunk and bright secrets." },
+  { "month": 8, "title": "Late summer", "ships": ["npc", "species"], "text": "A new islander with a questline; the last Regatta week." },
+  { "month": 9, "title": "First leaves", "ships": ["cosmetics", "secrets"], "text": "Autumn colours for the lodge." },
+  { "month": 10, "title": "Harvest", "ships": ["species", "cosmetics"], "text": "Harvest Festival from the 1st: lanterns, ghost variants and three new fish." },
+  { "month": 11, "title": "Grey days", "ships": ["species", "area"], "text": "Fog fish and a new channel through the mist." },
+  { "month": 12, "title": "Lights", "ships": ["species", "cosmetics"], "text": "Winter Festival from the 10th: the ice-fishing derby and a lights set." }
+]

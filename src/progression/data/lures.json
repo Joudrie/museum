@@ -1,0 +1,5 @@
+{
+  "spinner": { "name": "Spinner", "price": 60, "desc": "Fish bite 25% sooner.", "biteMult": 0.75 },
+  "heavyjig": { "name": "Heavy jig", "price": 90, "desc": "Nudges the size roll up.", "sizeNudge": 0.35 },
+  "mirror": { "name": "Mirror lure", "price": 120, "desc": "Wider catch window.", "windowMult": 1.2 }
+}

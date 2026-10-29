@@ -7,7 +7,8 @@ The prompt to paste into a new chat is in section 7.
 - Tier 0 parts are in (`src/people/parts.js`): see section 3; the new ones are listed in the gallery (`art.html` → Characters).
 - Tier 1 classes are in (`src/people/classes.js`): A cleaning & grounds (8 classes), B builders & trades (24), D sea & shore (22), 137 placeable variants in the builder's People lists. `art.html` → People shows them all.
 - Tier 2 classes are in: E dig, field & expedition (21 classes), G museum jobs (23). 98 classes, 227 variants in all.
-- Next: Tier 3 (J visitors and townspeople; H food and market).
+- Tier 3 classes are in: J visitors & townsfolk (26 classes), H food & market (13). 137 classes, 312 variants in all.
+- Next: Tier 4 (I arts and performance; F science and medicine; C artisans).
 
 Today: 1 body, 8 skin tones, 11 hair colours, 13 hairstyles, 11 hats, 7 facial-hair options, 3 glasses,
 10 outfits, 7 accessories, 14 visitor kinds, 6 staff kinds, 19 famous visitors. All drawn in code in

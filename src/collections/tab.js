@@ -8,6 +8,11 @@ import { load, save } from '../storage.js';
 import { openViewer } from '../viewer.js';
 
 const EXTRAS = {};
+const HINTS = {};
+/** { text(entry) -> hint line, open(entry, refresh) } for the silhouettes of one tab (the progression layer's tiered hints). */
+export function registerTileHint(tab, h) {
+  HINTS[tab] = h;
+}
 /** fn({ refresh, ctx }) -> nodes, shown between the intro and the log of that tab. */
 export function registerTabExtra(tab, fn) {
   EXTRAS[tab] = fn;
@@ -168,16 +173,23 @@ function card(e, ctx, snap, tabId) {
   return b;
 }
 
-function tile(e, snap, onOpen, tabId) {
+function tile(e, snap, onOpen, tabId, refresh) {
   const got = snap.seen[e.id];
   const cell = el('div', 'fish-cell' + (got ? '' : ' unknown'));
   cell.innerHTML = `<div class="fish-pic"></div><b></b><small></small>`;
   fillPicture(cell.querySelector('.fish-pic'), e, { scale: e.image.kind === 'pixels' ? 4 : 3, shadow: !got });
   cell.querySelector('b').textContent = got ? e.title : '???';
   const when = [e.acquire?.time, e.acquire?.weather].filter(Boolean).join(', ');
+  const hint = !got && HINTS[tabId];
   cell.querySelector('small').textContent = got
     ? `×${got.n}${got.best ? ` · best ${sizeText(got.best)}` : ''}`
-    : `${e.provenance?.where || ''}${when ? ` · ${when}` : ''} · ${RARITY[e.rarity ?? 1]}`;
+    : hint
+      ? `${RARITY[e.rarity ?? 1]} · ${hint.text(e)}`
+      : `${e.provenance?.where || ''}${when ? ` · ${when}` : ''} · ${RARITY[e.rarity ?? 1]}`;
+  if (hint) {
+    cell.classList.add('openable');
+    cell.onclick = () => hint.open(e, refresh);
+  }
   const mk = got && marks(e, snap, tabId);
   if (mk) cell.appendChild(mk);
   if (got) {
@@ -215,7 +227,7 @@ export function collectionTab(tabId, ctx, refresh) {
     const known = entries.filter((e) => snap.seen[e.id]);
     const open = (e) => openViewer(known, known.indexOf(e), null, null, { over: true });
     entries.forEach((e) => {
-      const node = tile(e, snap, open, tabId);
+      const node = tile(e, snap, open, tabId, refresh);
       items.push({ node, e, got: !!snap.seen[e.id] });
       grid.appendChild(node);
     });

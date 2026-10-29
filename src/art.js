@@ -1949,7 +1949,7 @@ function sitRows(look, down = baseRows('down', look)) {
 export function poseRows(look) {
   if (!look.pose) return null;
   const held = { ...look, carry: null, hat: look.pose === 'weld' && look.hat === 'welder' ? 'welderdown' : look.hat };
-  return poseFrames(look.pose, (v) => (v === 'sit' ? sitRows(held) : personRows(v, held)), look);
+  return poseFrames(look.pose, (v, f = 0) => (v === 'sit' ? sitRows(held) : personRows(v, held, f)), look);
 }
 export { poseView };
 
@@ -2078,9 +2078,11 @@ const EMOTE_ICONS = {
   zzz: ['kkkk...', '..k....', '.k.....', 'kkkkkk.', '....k..', '...k...', '..kkkk.'],
   note: ['...kkk.', '...k.k.', '...k.k.', '...k.k.', '.kkk.k.', 'kkkk.k.', '.kk..k.'],
   star: ['...Y...', '..YYY..', 'YYYYYYY', '.YYYYY.', '.YY.YY.', 'Y.....Y', '.......'],
+  dots: ['.......', '.......', '.......', 'k.k.k.k', '.......', '.......', '.......'],
+  sweat: ['...B...', '..BBB..', '.BBBBB.', '.BBBBB.', '..BBB..', '.......', '.......'],
 };
 export function makeEmotes(scene) {
-  const col = { o: '#1d1714', w: '#fff8e6', k: '#2a1a14', R: '#e0405a', Y: '#e8b02a' };
+  const col = { o: '#1d1714', w: '#fff8e6', k: '#2a1a14', R: '#e0405a', Y: '#e8b02a', B: '#4a90d8' };
   Object.entries(EMOTE_ICONS).forEach(([id, icon]) => {
     if (scene.textures.exists(`emote_${id}`)) return;
     bake(scene, `emote_${id}`, 11, EMOTE_BOX.length, (x, y) => {

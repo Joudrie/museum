@@ -12,7 +12,7 @@
 import { list, get, collectionOf } from './index.js';
 import { acquire, displayCount, restockSold, sellOne, snapshot } from './codex.js';
 
-export const PRICES = [0, 40, 120, 400, 1500]; // by rarity; an entry's own `price` wins
+export const PRICES = [0, 40, 120, 400, 900, 1500]; // by rarity; an entry's own `price` wins
 export const SELL_RATE = 0.5;
 export const BUYBACK_RATE = 0.75;
 export const SHOP_RATE = 1.5;

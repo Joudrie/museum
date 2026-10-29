@@ -48,6 +48,7 @@ import { remember } from './regulars.js';
 import { converse, giftStatus, recordGift } from './chatter.js';
 import { say } from './ui/toast.js';
 import { runDialogue } from './dialogue.js';
+import { progression } from './progression/index.js';
 import { list as listEntries } from './collections/index.js';
 import { collect as collectEntry } from './collections/codex.js';
 import { load as loadStore, save as saveStore } from './storage.js';
@@ -1308,6 +1309,8 @@ export class RoomScene extends Phaser.Scene {
     }
     if (!n.staff && Math.random() < 0.3) line = this.contextLine() || line;
     if (!n.staff) line = remember(n.name, n.kind) || line;
+    // the progression layer counts every talk (Edmund the caretaker is a named friend; visitors are anonymous)
+    progression().bus.emit('NPC_TALKED', { npcId: n.kind === 'caretaker' ? 'edmund' : `anon:visitor:${n.name}`, kind: n.kind, region: 'main' });
     if (KINDS.includes(n.kind) && !n.staff && n.kind !== 'caretaker') return this.chat(n, line);
     if (n.kind === 'guard' && nextSecurity()) return this.offerCameras(n, line);
     if (n.kind === 'caretaker' && this.tellStory(n, heistBeat(this.storyContext()), 'The Empty Frames')) return;
