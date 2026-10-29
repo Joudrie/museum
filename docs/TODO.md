@@ -134,6 +134,67 @@ Owns: `src/*menu.js`, `src/ui.js`, `src/journal.js`, `src/style.css` (shared). C
 
 ---
 
+## Stream O: Every other feature from the design doc (the long tail)
+Pulled from `docs/DESIGN.md`, `docs/BACKLOG.md` and `docs/VISION.md` so nothing is lost. Claim a **line**, not the whole stream, and put it under the stream it fits best when you start (e.g. a hall goes under H, a collection under F). Owner: `open`.
+
+**Art halls (rooms, each with its own look and collection)**
+- [ ] Painting galleries by era: Renaissance, Dutch, Impressionist, American, Japanese prints.
+- [ ] Sculpture court (marble and plaster casts, big courtyard).
+- [ ] **The Gardner Room:** salon walls floor to ceiling around a courtyard garden; the empty heist frames and the hunt for the stolen art (ties to Stream I).
+- [ ] Modern wing (white cube), once copyright allows. Prints and early photography.
+
+**Science halls**
+- [ ] Dinosaur hall: a big T. rex skeleton centrepiece, fossil shelves you tap to see the real fossil in HD (ties to B and D).
+- [ ] Space: planetarium dome, meteorites, moon rock, rocket.
+- [ ] Electricity: a Van de Graaff generator and a timed lightning show.
+- [ ] Human body, optics and illusions (mirror maze, camera obscura).
+
+**Natural history**
+- [ ] Glass flowers (a perfect collectible set). Taxidermy dioramas.
+- [ ] Ocean hall with a whale skeleton overhead; aquarium wing with a giant tank (ties to D).
+
+**History and archaeology**
+- [ ] Egypt (mummies, sarcophagi, canopic jars), Greek and Roman (urns, mosaics, columns).
+- [ ] Dig-site room (a sandbox you excavate; ties to B).
+- [ ] Maritime: ship models, figureheads. Arms and armor. Clocks, inventions and robots.
+
+**Architecture**
+- [ ] Model hall: famous buildings in miniature, Gothic arches, the column orders side by side.
+- [ ] Facade styles that change the museum's own outside (ties to H).
+
+**Outside**
+- [ ] **Front lawn** you walk out onto: steps, banners, a fountain, the museum sign. The base for seasons and exterior decorating.
+- [ ] **Garden (huge):** swan-boat pond, Japanese garden, hedge maze, greenhouse, koi pond, sculpture garden.
+- [ ] Rooftop terrace with a telescope at night. Petting zoo or farm (its own floor).
+
+**Visitor services**
+- [ ] Gift shop (merch of your best paintings), food court, kids' discovery room, lecture hall (events: a famous visitor gives a talk), library and archive where the stored collection lives. (Coffee shop is built.)
+
+**Systems that make expansions easy**
+- [ ] Elevator in the lobby: every floor a self-contained pack.
+- [ ] **Room presets:** save a room's layout ("Winter", "Halloween") and load it again.
+- [ ] Seasons on the real calendar: snow on the lawn, fall leaves, holiday decor, seasonal visitors (trick-or-treaters), limited-time collectibles.
+- [ ] Specimen shelves for everything with the HD viewer; sets with plaques; rarity frames and cases.
+- [ ] Ways to get things: expeditions, digs, donations, auctions, trades with famous visitors.
+
+**Retention and events**
+- [ ] Daily guests, Painting of the Day, daily quests.
+- [ ] Events: "Impressionism Week", "Hokusai Festival" with exclusive decor.
+- [ ] Offline earnings stop at 8 hours (built); first-game-of-the-day and streak bonuses; a daily wheel spin.
+
+**Mini-games (ON HOLD: the user said "mini-games later", and VISION #7 forbids throwaway ones; do not start without the user)**
+- [ ] MVP picks if the user says go: Mop Rush, No Flash!, Restoration (scrub grime off the HD painting; overlaps Stream C), Crate Tetris.
+- [ ] Others: Hang it Straight, Tour Guide, Night Watch, Catch the Thief, Paparazzi; later social ones (Auction House, Co-op Cleanup).
+
+**Money (ON HOLD: needs the user's decision; "earned, not bought" is the rule)**
+- [ ] Gems as *time* (skip construction, "X days of income"), rewarded ads, cosmetics, a seasonal exhibition pass. No pay-to-win, no gem or crate economy as the core.
+- [ ] Open questions: crate odds, buy-back price, gem pricing, Curator's Office level costs.
+
+**Islands and world (from the notes)**
+- [ ] The user's builder-made island becomes the default spawn island (Main Island is already home).
+- [ ] More island buildings and props; island seasons and weather; more animals and people.
+- [ ] A sequel or expansion where the museum is part of a city (someday).
+
 ## Needs Sean (questions parked here; chats keep working without them)
 - **Review tonight:** the 27 painting drafts (rarity for each, hooks for 4), and which of the 22 flagged images to replace.
 - API keys: Smithsonian (`SI_API_KEY`) and Rijksmuseum (`RIJKS_API_KEY`) for more sources.
@@ -142,6 +203,7 @@ Owns: `src/*menu.js`, `src/ui.js`, `src/journal.js`, `src/style.css` (shared). C
 - Break-room upgrades: what should they do?
 - Are the goals at the right pace; daily goals?
 - Dig spots on Main Island: place them in the builder where you want them.
+- Mini-games and gems/ads: go or no-go? (Both are on hold in Stream O.)
 
 ## Suggested start for a fleet of chats
 Highest value first, and they barely touch each other's files: **A** (host the images), **G** (turn families, grass blend), **C** (restoration), **D** (display cases and aquarium), **L** (stable tests, performance). Then **B**, **E**, **F**, **I**.
