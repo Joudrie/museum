@@ -10,6 +10,7 @@
 
 import { addLandmarks } from './landmarks.js';
 import { addScenery } from './scenery.js';
+import { applyTileSwap } from './swap.js';
 
 export const T = 32;
 const FRAMES = 4;
@@ -377,7 +378,7 @@ export function buildTiles() {
   // the museum and people, for builder islands
   addLandmarks(add);
 
-  return tiles;
+  return applyTileSwap(tiles); // art dropped in public/swap/tiles replaces the code-drawn tile
 }
 
 const WATER_CSS = ['#2a5ea8', '#3474bc', '#4890d0', '#6cb0e4', '#a6d8f6'];

@@ -6,6 +6,7 @@
 // Pieces come from the game's island tiles (src/tiles.js) and the room pieces
 // cut from the free packs (public/builder, tools/build_palette.py).
 import { buildTiles, T } from '../tiles.js';
+import { swapReady, patchSheet } from '../swap.js';
 import { backup, backupsFor, latestBackup, keepStorage } from './vault.js';
 import recovered from './recovered.json';
 import { BIG_MAP, packCells, withTiles, hasTiles } from '../mapformat.js';
@@ -91,6 +92,7 @@ function groundNames(x, y) {
 
 // ---------- pieces ----------
 async function loadPieces() {
+  await swapReady;
   TILES = buildTiles();
   Object.entries(TILES).forEach(([name, t]) => {
     if (name.includes('@')) return;
@@ -109,7 +111,11 @@ async function loadPieces() {
         (g) =>
           new Promise((res) => {
             const img = new Image();
-            img.onload = res;
+            img.onload = () => {
+              const shown = patchSheet(img, g);
+              g.pieces.forEach((p) => PIECES[`p:${p.id}`] && (PIECES[`p:${p.id}`].img = shown));
+              res();
+            };
             img.onerror = res;
             img.src = `./${g.sheet}`;
             g.pieces.forEach((p) => {

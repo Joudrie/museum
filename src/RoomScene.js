@@ -66,6 +66,7 @@ import { celebrate } from './ui.js';
 import { addLove, loveOf, resetLove } from './love.js';
 import { hasCameras as camerasOn } from './security.js';
 import { hourNow } from './settings.js';
+import { spriteUrl } from './swap.js';
 
 const VIEW_TILES = 9; // the camera always shows 9 tiles across
 const SPEED = 176; // px per second
@@ -268,7 +269,7 @@ export class RoomScene extends Phaser.Scene {
     // furniture sprites from the free art packs (see docs/ASSETS.md)
     const sprites = new Set((this.L.props || []).map((q) => q.s));
     if ((this.L.props || []).some((q) => q.flames)) [0, 1, 2, 3].forEach((f) => sprites.add(`flame_${f}`));
-    sprites.forEach((s) => this.textures.exists(`lpc_${s}`) || this.load.image(`lpc_${s}`, `sprites/lpc/${s}.png`));
+    sprites.forEach((s) => this.textures.exists(`lpc_${s}`) || this.load.image(`lpc_${s}`, spriteUrl(s, `sprites/lpc/${s}.png`)));
     this.load.setCORS('anonymous');
     this.hung.forEach((p) => {
       if (!this.textures.exists(`art_${p.id}`)) this.load.image(`art_${p.id}`, p.src);
