@@ -1,0 +1,113 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "fight-between-a-tiger-and-a-buffalo-henri",
+  "notes": "region: France, 1908",
+  "entry": {
+    "id": "painting:fight-between-a-tiger-and-a-buffalo-henri",
+    "collection": "painting",
+    "title": "Fight Between a Tiger and a Buffalo",
+    "by": "Henri Rousseau",
+    "year": "1908",
+    "era": "modern",
+    "ratio": 1.1147,
+    "blurb": "Having never ventured outside France, Henri Rousseau derived his jungle scenes from reading travel books and visiting the Paris botanical garden.",
+    "rarity": 1,
+    "tags": [
+      "france",
+      "oil"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1949.186/1949.186_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Gift of the Hanna Fund",
+      "url": "https://clevelandart.org/art/1949.186"
+    },
+    "value": 5,
+    "facts": [
+      "Officials granted him an early release to finish it for exhibition at the Salon des Indépendants, where this major composition, one of the artist's largest and most important, appeared in March 1908.",
+      "Rousseau was working on this painting while imprisoned for fraud in December 1907.",
+      "However, Rousseau never left France, but drew inspiration from visiting botanical gardens and reading travel books."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "126769",
+    "title": "Fight Between a Tiger and a Buffalo",
+    "maker": "Henri Rousseau",
+    "year": "1908",
+    "medium": "oil on fabric",
+    "dimensions": "Framed: 183 x 203 x 4.5 cm (72 1/16 x 79 15/16 x 1 3/4 in.); Unframed: 170 x 189.5 cm (66 15/16 x 74 5/8 in.)",
+    "widthCm": 189.5,
+    "heightCm": 170,
+    "ratio": 1.1147,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1949.186/1949.186_web.jpg",
+    "imageWidth": 900,
+    "imageHeight": 806,
+    "pageUrl": "https://clevelandart.org/art/1949.186",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Gift of the Hanna Fund",
+    "description": "Having never ventured outside France, Henri Rousseau derived his jungle scenes from reading travel books and visiting the Paris botanical garden. He placed this imaginary scene of a tiger attacking a buffalo within a fantastic jungle environment in which botanical accuracy was of little importance (note the bananas growing upside down). Here, sharply outlined hothouse plants are enlarged to fearsome proportions. Rousseau was working on this painting while imprisoned for fraud in December 1907. Officials granted him an early release to finish it for exhibition at the Salon des Indépendants, where this major composition, one of the artist's largest and most important, appeared in March 1908. A self-taught artist and retired customs inspector, Rousseau was admired by Pablo Picasso and other avant-garde artists for his originality and the naïve purity of his vision. Many of Henri Rousseau's paintings depict wild animals and tropical jungles that might lead one to believe he traveled widely. However, Rousseau never left France, but drew inspiration from visiting botanical gardens and reading travel books.",
+    "culture": "France, late 19th-early 20th Century",
+    "classification": "Painting",
+    "tags": [
+      "Modern European Painting and Sculpture"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Fight Between a Tiger and a Buffalo",
+      "maker": "Henri Rousseau",
+      "year": "1908",
+      "medium": "oil on fabric",
+      "dimensions": "Framed: 183 x 203 x 4.5 cm (72 1/16 x 79 15/16 x 1 3/4 in.); Unframed: 170 x 189.5 cm (66 15/16 x 74 5/8 in.)",
+      "culture": "France, late 19th-early 20th Century",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Gift of the Hanna Fund",
+      "description": "Having never ventured outside France, Henri Rousseau derived his jungle scenes from reading travel books and visiting the Paris botanical garden. He placed this imaginary scene of a tiger attacking a buffalo within a fantastic jungle environment in which botanical accuracy was of little importance (note the bananas growing upside down). Here, sharply outlined hothouse plants are enlarged to fearsome proportions. Rousseau was working on this painting while imprisoned for fraud in December 1907. Officials granted him an early release to finish it for exhibition at the Salon des Indépendants, where this major composition, one of the artist's largest and most important, appeared in March 1908. A self-taught artist and retired customs inspector, Rousseau was admired by Pablo Picasso and other avant-garde artists for his originality and the naïve purity of his vision. Many of Henri Rousseau's paintings depict wild animals and tropical jungles that might lead one to believe he traveled widely. However, Rousseau never left France, but drew inspiration from visiting botanical gardens and reading travel books.",
+      "tombstone": "Fight Between a Tiger and a Buffalo, 1908. Henri Rousseau (French, 1844–1910). Oil on fabric; framed: 183 x 203 x 4.5 cm (72 1/16 x 79 15/16 x 1 3/4 in.); unframed: 170 x 189.5 cm (66 15/16 x 74 5/8 in.). The Cleveland Museum of Art, Gift of the Hanna Fund, 1949.186",
+      "funFact": "",
+      "didYouKnow": "Many of Henri Rousseau's paintings depict wild animals and tropical jungles that might lead one to believe he traveled widely. However, Rousseau never left France, but drew inspiration from visiting botanical gardens and reading travel books.",
+      "creators": "Henri Rousseau (French, 1844–1910)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "Having never ventured outside France, Henri Rousseau derived his jungle scenes from reading travel books and visiting the Paris botanical garden.",
+      "quote": "Having never ventured outside France, Henri Rousseau derived his jungle scenes from reading travel books and visiting the Paris botanical garden.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Officials granted him an early release to finish it for exhibition at the Salon des Indépendants, where this major composition, one of the artist's largest and most important, appeared in March 1908.",
+      "quote": "Officials granted him an early release to finish it for exhibition at the Salon des Indépendants, where this major composition, one of the artist's largest and most important, appeared in March 1908.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Rousseau was working on this painting while imprisoned for fraud in December 1907.",
+      "quote": "Rousseau was working on this painting while imprisoned for fraud in December 1907.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "However, Rousseau never left France, but drew inspiration from visiting botanical gardens and reading travel books.",
+      "quote": "However, Rousseau never left France, but drew inspiration from visiting botanical gardens and reading travel books.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

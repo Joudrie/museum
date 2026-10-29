@@ -1,0 +1,112 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "shri-raga-from-a-ragamala",
+  "notes": "region: Rajasthan, India",
+  "entry": {
+    "id": "painting:shri-raga-from-a-ragamala",
+    "collection": "painting",
+    "title": "Shri Raga, from a Ragamala",
+    "year": "c. 1695",
+    "era": "baroque",
+    "ratio": 0.6541,
+    "blurb": "The codified iconography of Shri Raga involves a royal couple listening to recitations.",
+    "rarity": 1,
+    "tags": [
+      "northwestern india",
+      "tempera"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1931.451/1931.451_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Edward L. Whittemore Fund",
+      "url": "https://clevelandart.org/art/1931.451"
+    },
+    "value": 5,
+    "facts": [
+      "By the great sages he is called Shri Raga King.\" Amar Singh has playfully substituted his own portrait for that of the generic king, and a woman for that of the sage.",
+      "In music, Shri Raga is associated with the season of autumn and the harvest festivals, here evoked by the dancing female musicians in the lower register.",
+      "Nevertheless, the artist still adheres to the use of horizontal registers and bold planes of color."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "112858",
+    "title": "Shri Raga, from a Ragamala",
+    "maker": "",
+    "year": "c. 1695",
+    "medium": "Gum tempera and gold on paper",
+    "dimensions": "Image: 34.4 x 22.5 cm (13 9/16 x 8 7/8 in.); Overall: 38 x 25 cm (14 15/16 x 9 13/16 in.)",
+    "widthCm": 22.5,
+    "heightCm": 34.4,
+    "ratio": 0.6541,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1931.451/1931.451_web.jpg",
+    "imageWidth": 593,
+    "imageHeight": 900,
+    "pageUrl": "https://clevelandart.org/art/1931.451",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Edward L. Whittemore Fund",
+    "description": "This painting is from an important series made at a turning point in the history of court painting at the Rajput kingdom of Mewar. For the first time, a royal patron, Amar Singh II (r. 1698–1710), even before his accession to the throne, decided to incorporate Mughal elements into secular art, as seen in the white domed architecture and interest in conveying some sense of spatial depth. Nevertheless, the artist still adheres to the use of horizontal registers and bold planes of color. The codified iconography of Shri Raga involves a royal couple listening to recitations. Shri Raga is described as: \"Splendidly enthroned of peerless beauty and lovely as the autumn moon, he sits hearing stories from Narada and Tumburu. By the great sages he is called Shri Raga King.\" Amar Singh has playfully substituted his own portrait for that of the generic king, and a woman for that of the sage. In music, Shri Raga is associated with the season of autumn and the harvest festivals, here evoked by the dancing female musicians in the lower register. The horse-headed musician playing the cymbals is a celestial being (gandharva) famed for his sweet voice.",
+    "culture": "Northwestern India, Rajasthan, Rajput Kingdom of Mewar",
+    "classification": "Painting",
+    "tags": [
+      "Indian and Southeast Asian Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Shri Raga, from a Ragamala",
+      "maker": "",
+      "year": "c. 1695",
+      "medium": "Gum tempera and gold on paper",
+      "dimensions": "Image: 34.4 x 22.5 cm (13 9/16 x 8 7/8 in.); Overall: 38 x 25 cm (14 15/16 x 9 13/16 in.)",
+      "culture": "Northwestern India, Rajasthan, Rajput Kingdom of Mewar",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Edward L. Whittemore Fund",
+      "description": "This painting is from an important series made at a turning point in the history of court painting at the Rajput kingdom of Mewar. For the first time, a royal patron, Amar Singh II (r. 1698–1710), even before his accession to the throne, decided to incorporate Mughal elements into secular art, as seen in the white domed architecture and interest in conveying some sense of spatial depth. Nevertheless, the artist still adheres to the use of horizontal registers and bold planes of color. The codified iconography of Shri Raga involves a royal couple listening to recitations. Shri Raga is described as: \"Splendidly enthroned of peerless beauty and lovely as the autumn moon, he sits hearing stories from Narada and Tumburu. By the great sages he is called Shri Raga King.\" Amar Singh has playfully substituted his own portrait for that of the generic king, and a woman for that of the sage. In music, Shri Raga is associated with the season of autumn and the harvest festivals, here evoked by the dancing female musicians in the lower register. The horse-headed musician playing the cymbals is a celestial being (gandharva) famed for his sweet voice.",
+      "tombstone": "Shri Raga, from a Ragamala, c. 1695. Northwestern India, Rajasthan, Rajput Kingdom of Mewar. Gum tempera and gold on paper; image: 34.4 x 22.5 cm (13 9/16 x 8 7/8 in.); overall: 38 x 25 cm (14 15/16 x 9 13/16 in.). The Cleveland Museum of Art, Edward L. Whittemore Fund, 1931.451",
+      "funFact": "",
+      "didYouKnow": "The horse-headed musician playing the cymbals is a celestial being (gandharva) famed for his sweet voice.",
+      "creators": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "The codified iconography of Shri Raga involves a royal couple listening to recitations.",
+      "quote": "The codified iconography of Shri Raga involves a royal couple listening to recitations.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "By the great sages he is called Shri Raga King.\" Amar Singh has playfully substituted his own portrait for that of the generic king, and a woman for that of the sage.",
+      "quote": "By the great sages he is called Shri Raga King.\" Amar Singh has playfully substituted his own portrait for that of the generic king, and a woman for that of the sage.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "In music, Shri Raga is associated with the season of autumn and the harvest festivals, here evoked by the dancing female musicians in the lower register.",
+      "quote": "In music, Shri Raga is associated with the season of autumn and the harvest festivals, here evoked by the dancing female musicians in the lower register.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Nevertheless, the artist still adheres to the use of horizontal registers and bold planes of color.",
+      "quote": "Nevertheless, the artist still adheres to the use of horizontal registers and bold planes of color.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

@@ -1,0 +1,114 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "prince-and-ascetics-from-the-late-shah-jahan-alb",
+  "notes": "region: Mughal India",
+  "entry": {
+    "id": "painting:prince-and-ascetics-from-the-late-shah-jahan-alb",
+    "collection": "painting",
+    "title": "Prince and ascetics, from the Late Shah Jahan Album",
+    "by": "Govardhan",
+    "year": "c. 1630",
+    "era": "baroque",
+    "ratio": 0.7044,
+    "blurb": "This painting of a Mughal prince visiting a Sufi holy man in his cave dwelling is one example, chosen probably because it underscores the importance of the religious dimension of Mughal life.",
+    "rarity": 1,
+    "tags": [
+      "india",
+      "tempera",
+      "ink"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1971.79/1971.79_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Andrew R. and Martha Holden Jennings Fund",
+      "url": "https://clevelandart.org/art/1971.79"
+    },
+    "value": 5,
+    "facts": [
+      "The conch on the ground before the ascetic is blown at the beginning of prayer, which in the Sufi tradition is often sung to the accompaniment of music.",
+      "The pair of ducks in the foreground imply the harmonious union of the spiritual and temporal in the Mughal realm.",
+      "Mendicant Islamic ascetics fill the borders on this page, except for the one noble retainer standing by the prince."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "146186",
+    "title": "Prince and ascetics, from the Late Shah Jahan Album",
+    "maker": "Govardhan",
+    "year": "c. 1630",
+    "medium": "Gum tempera, ink, and gold on paper",
+    "dimensions": "Image: 20.3 x 14.3 cm (8 x 5 5/8 in.); Sheet with border: 37.5 x 25.2 cm (14 3/4 x 9 15/16 in.)",
+    "widthCm": 14.3,
+    "heightCm": 20.3,
+    "ratio": 0.7044,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1971.79/1971.79_web.jpg",
+    "imageWidth": 605,
+    "imageHeight": 893,
+    "pageUrl": "https://clevelandart.org/art/1971.79",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Andrew R. and Martha Holden Jennings Fund",
+    "description": "Most paintings in the Late Shah Jahan Album were commissioned specifically for the album, but some older finished works were chosen to be incorporated; they were removed from their original housings and inserted into the new borders. This painting of a Mughal prince visiting a Sufi holy man in his cave dwelling is one example, chosen probably because it underscores the importance of the religious dimension of Mughal life. The conch on the ground before the ascetic is blown at the beginning of prayer, which in the Sufi tradition is often sung to the accompaniment of music. The pair of ducks in the foreground imply the harmonious union of the spiritual and temporal in the Mughal realm. Mendicant Islamic ascetics fill the borders on this page, except for the one noble retainer standing by the prince. The holy man sits under a tree, an ancient Indian place of honor.",
+    "culture": "India, Mughal court, reign of Shah Jahan (1628-1658), Mughal Dynasty (1526-1756)",
+    "classification": "Painting",
+    "tags": [
+      "Indian and Southeast Asian Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Prince and ascetics, from the Late Shah Jahan Album",
+      "maker": "Govardhan",
+      "year": "c. 1630",
+      "medium": "Gum tempera, ink, and gold on paper",
+      "dimensions": "Image: 20.3 x 14.3 cm (8 x 5 5/8 in.); Sheet with border: 37.5 x 25.2 cm (14 3/4 x 9 15/16 in.)",
+      "culture": "India, Mughal court, reign of Shah Jahan (1628-1658), Mughal Dynasty (1526-1756)",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Andrew R. and Martha Holden Jennings Fund",
+      "description": "Most paintings in the Late Shah Jahan Album were commissioned specifically for the album, but some older finished works were chosen to be incorporated; they were removed from their original housings and inserted into the new borders. This painting of a Mughal prince visiting a Sufi holy man in his cave dwelling is one example, chosen probably because it underscores the importance of the religious dimension of Mughal life. The conch on the ground before the ascetic is blown at the beginning of prayer, which in the Sufi tradition is often sung to the accompaniment of music. The pair of ducks in the foreground imply the harmonious union of the spiritual and temporal in the Mughal realm. Mendicant Islamic ascetics fill the borders on this page, except for the one noble retainer standing by the prince. The holy man sits under a tree, an ancient Indian place of honor.",
+      "tombstone": "Prince and ascetics, from the Late Shah Jahan Album, c. 1630. Attributed to Govardhan (Indian, active c.1596–1645). Gum tempera, ink, and gold on paper; image: 20.3 x 14.3 cm (8 x 5 5/8 in.); sheet with border: 37.5 x 25.2 cm (14 3/4 x 9 15/16 in.). The Cleveland Museum of Art, Andrew R. and Martha Holden Jennings Fund, 1971.79",
+      "funFact": "",
+      "didYouKnow": "The holy man sits under a tree, an ancient Indian place of honor.",
+      "creators": "Govardhan (Indian, active c.1596–1645)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "This painting of a Mughal prince visiting a Sufi holy man in his cave dwelling is one example, chosen probably because it underscores the importance of the religious dimension of Mughal life.",
+      "quote": "This painting of a Mughal prince visiting a Sufi holy man in his cave dwelling is one example, chosen probably because it underscores the importance of the religious dimension of Mughal life.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The conch on the ground before the ascetic is blown at the beginning of prayer, which in the Sufi tradition is often sung to the accompaniment of music.",
+      "quote": "The conch on the ground before the ascetic is blown at the beginning of prayer, which in the Sufi tradition is often sung to the accompaniment of music.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The pair of ducks in the foreground imply the harmonious union of the spiritual and temporal in the Mughal realm.",
+      "quote": "The pair of ducks in the foreground imply the harmonious union of the spiritual and temporal in the Mughal realm.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Mendicant Islamic ascetics fill the borders on this page, except for the one noble retainer standing by the prince.",
+      "quote": "Mendicant Islamic ascetics fill the borders on this page, except for the one noble retainer standing by the prince.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

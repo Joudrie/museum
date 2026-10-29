@@ -1,0 +1,106 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "early-morning-after-a-storm-at-sea-winslow",
+  "notes": "region: United States, 1900-03",
+  "entry": {
+    "id": "painting:early-morning-after-a-storm-at-sea-winslow",
+    "collection": "painting",
+    "title": "Early Morning After a Storm at Sea",
+    "by": "Winslow Homer",
+    "year": "1900–1903",
+    "era": "modern",
+    "ratio": 1.6536,
+    "blurb": "The powerful Atlantic surf pounding against the desolate coast of Prouts Neck, Maine, provided primary subject matter for the dramatic paintings that Homer created during his final decades.",
+    "rarity": 1,
+    "tags": [
+      "united states",
+      "oil"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1924.195/1924.195_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Gift of J. H. Wade",
+      "url": "https://clevelandart.org/art/1924.195"
+    },
+    "value": 5,
+    "facts": [
+      "This example, which the artist proclaimed as \"the best picture of the sea that I have painted,\" was initially conceived as a watercolor.",
+      "Winslow Homer's studio in Prouts Neck, Maine, is a National Historic Landmark."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "106088",
+    "title": "Early Morning After a Storm at Sea",
+    "maker": "Winslow Homer",
+    "year": "1900–1903",
+    "medium": "oil on canvas",
+    "dimensions": "Framed: 111 x 160 x 12 cm (43 11/16 x 63 x 4 3/4 in.); Unframed: 76.8 x 127 cm (30 1/4 x 50 in.)",
+    "widthCm": 127,
+    "heightCm": 76.8,
+    "ratio": 1.6536,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1924.195/1924.195_web.jpg",
+    "imageWidth": 1263,
+    "imageHeight": 762,
+    "pageUrl": "https://clevelandart.org/art/1924.195",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Gift of J. H. Wade",
+    "description": "The powerful Atlantic surf pounding against the desolate coast of Prouts Neck, Maine, provided primary subject matter for the dramatic paintings that Homer created during his final decades. This example, which the artist proclaimed as \"the best picture of the sea that I have painted,\" was initially conceived as a watercolor. Undertaking the composition in oil after a lapse of nearly two decades, Homer patiently waited for the appropriate atmospheric conditions, executing the work in four different sessions spread over two years. Winslow Homer's studio in Prouts Neck, Maine, is a National Historic Landmark.",
+    "culture": "United States",
+    "classification": "Painting",
+    "tags": [
+      "American Painting and Sculpture"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Early Morning After a Storm at Sea",
+      "maker": "Winslow Homer",
+      "year": "1900–1903",
+      "medium": "oil on canvas",
+      "dimensions": "Framed: 111 x 160 x 12 cm (43 11/16 x 63 x 4 3/4 in.); Unframed: 76.8 x 127 cm (30 1/4 x 50 in.)",
+      "culture": "United States",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Gift of J. H. Wade",
+      "description": "The powerful Atlantic surf pounding against the desolate coast of Prouts Neck, Maine, provided primary subject matter for the dramatic paintings that Homer created during his final decades. This example, which the artist proclaimed as \"the best picture of the sea that I have painted,\" was initially conceived as a watercolor. Undertaking the composition in oil after a lapse of nearly two decades, Homer patiently waited for the appropriate atmospheric conditions, executing the work in four different sessions spread over two years. Winslow Homer's studio in Prouts Neck, Maine, is a National Historic Landmark.",
+      "tombstone": "Early Morning After a Storm at Sea, 1900–1903. Winslow Homer (American, 1836–1910). Oil on canvas; framed: 111 x 160 x 12 cm (43 11/16 x 63 x 4 3/4 in.); unframed: 76.8 x 127 cm (30 1/4 x 50 in.). The Cleveland Museum of Art, Gift of J. H. Wade, 1924.195",
+      "funFact": "",
+      "didYouKnow": "Winslow Homer's studio in Prouts Neck, Maine, is a National Historic Landmark.",
+      "creators": "Winslow Homer (American, 1836–1910)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "The powerful Atlantic surf pounding against the desolate coast of Prouts Neck, Maine, provided primary subject matter for the dramatic paintings that Homer created during his final decades.",
+      "quote": "The powerful Atlantic surf pounding against the desolate coast of Prouts Neck, Maine, provided primary subject matter for the dramatic paintings that Homer created during his final decades.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "This example, which the artist proclaimed as \"the best picture of the sea that I have painted,\" was initially conceived as a watercolor.",
+      "quote": "This example, which the artist proclaimed as \"the best picture of the sea that I have painted,\" was initially conceived as a watercolor.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Winslow Homer's studio in Prouts Neck, Maine, is a National Historic Landmark.",
+      "quote": "Winslow Homer's studio in Prouts Neck, Maine, is a National Historic Landmark.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

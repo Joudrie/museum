@@ -31,6 +31,7 @@ import { critterTextures } from './critters.js';
 import { openSail, builderIslands } from './sailmenu.js';
 import { visitorLook, KINDS } from './RoomScene.js';
 import { PERSONALITIES, QUIPS } from './lines.js';
+import { blendAt } from './groundblend.js';
 
 // Islands drawn in the map builder (builder.html), reached by boat from the
 // main island's dock. Each is a 'curation-map' file (see src/builder/main.js).
@@ -550,6 +551,23 @@ export class IslandScene extends Phaser.Scene {
         const [x, y] = k.split(',').map(Number);
         const name = ref.slice(2);
         if (ref.startsWith('t:') && TILES[name] && y < H && x < W) ((this.paint[y] ||= [])[x] ||= []).push(name);
+      });
+      // grass grows over the edges of painted dirt and rock (src/groundblend.js)
+      const tiles = this.map.tiles || {};
+      const refAt = (x, y) => tiles[`${x},${y}`] || null;
+      const grassAt = (x, y) => x >= 0 && y >= 0 && x < W && y < H && this.key(x, y, (m) => m === 2) === '1111';
+      const seen = new Set();
+      Object.keys(tiles).forEach((k) => {
+        const [px, py] = k.split(',').map(Number);
+        for (let dy = -1; dy <= 1; dy++)
+          for (let dx = -1; dx <= 1; dx++) {
+            const x = px + dx;
+            const y = py + dy;
+            if (seen.has(`${x},${y}`)) continue;
+            seen.add(`${x},${y}`);
+            const edge = blendAt(x, y, refAt, grassAt);
+            if (edge && TILES[edge] && x >= 0 && y >= 0 && x < W && y < H) ((this.paint[y] ||= [])[x] ||= []).push(edge);
+          }
       });
       return;
     }

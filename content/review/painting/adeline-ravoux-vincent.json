@@ -1,0 +1,113 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "adeline-ravoux-vincent",
+  "notes": "region: Netherlands/France, 1890",
+  "entry": {
+    "id": "painting:adeline-ravoux-vincent",
+    "collection": "painting",
+    "title": "Adeline Ravoux",
+    "by": "Vincent van Gogh",
+    "year": "1890",
+    "era": "impressionist",
+    "ratio": 1.006,
+    "blurb": "In May 1890, Vincent van Gogh arrived in Auvers, a small town north of Paris, where he rented a room at the inn of Arthur Ravoux.",
+    "rarity": 1,
+    "tags": [
+      "netherlands",
+      "oil"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1958.31/1958.31_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Bequest of Leonard C. Hanna Jr.",
+      "url": "https://clevelandart.org/art/1958.31"
+    },
+    "value": 5,
+    "facts": [
+      "This portrait, completed during the last months of the artist’s life, depicts Ravoux’s 13-year-old daughter, Adeline.",
+      "Adeline Ravoux, at age 13, was not pleased with her portrait and did not think the image resembled her.",
+      "Today, a photograph exists of Adeline in her late seventies and the resemblance is truly remarkable."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "135299",
+    "title": "Adeline Ravoux",
+    "maker": "Vincent van Gogh",
+    "year": "1890",
+    "medium": "oil on fabric",
+    "dimensions": "Framed: 72.5 x 73.5 x 8.5 cm (28 9/16 x 28 15/16 x 3 3/8 in.); Unframed: 50.2 x 50.5 cm (19 3/4 x 19 7/8 in.)",
+    "widthCm": 50.5,
+    "heightCm": 50.2,
+    "ratio": 1.006,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1958.31/1958.31_web.jpg",
+    "imageWidth": 900,
+    "imageHeight": 897,
+    "pageUrl": "https://clevelandart.org/art/1958.31",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Bequest of Leonard C. Hanna Jr.",
+    "description": "In May 1890, Vincent van Gogh arrived in Auvers, a small town north of Paris, where he rented a room at the inn of Arthur Ravoux. This portrait, completed during the last months of the artist’s life, depicts Ravoux’s 13-year-old daughter, Adeline. Van Gogh wrote that rather than photographic resemblance, he wanted his portraits to convey the “impassioned aspects” of contemporary life through the “modern taste for color.” Adeline Ravoux, at age 13, was not pleased with her portrait and did not think the image resembled her. Today, a photograph exists of Adeline in her late seventies and the resemblance is truly remarkable.",
+    "culture": "Netherlands",
+    "classification": "Painting",
+    "tags": [
+      "Modern European Painting and Sculpture"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Adeline Ravoux",
+      "maker": "Vincent van Gogh",
+      "year": "1890",
+      "medium": "oil on fabric",
+      "dimensions": "Framed: 72.5 x 73.5 x 8.5 cm (28 9/16 x 28 15/16 x 3 3/8 in.); Unframed: 50.2 x 50.5 cm (19 3/4 x 19 7/8 in.)",
+      "culture": "Netherlands",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Bequest of Leonard C. Hanna Jr.",
+      "description": "In May 1890, Vincent van Gogh arrived in Auvers, a small town north of Paris, where he rented a room at the inn of Arthur Ravoux. This portrait, completed during the last months of the artist’s life, depicts Ravoux’s 13-year-old daughter, Adeline. Van Gogh wrote that rather than photographic resemblance, he wanted his portraits to convey the “impassioned aspects” of contemporary life through the “modern taste for color.” Adeline Ravoux, at age 13, was not pleased with her portrait and did not think the image resembled her. Today, a photograph exists of Adeline in her late seventies and the resemblance is truly remarkable.",
+      "tombstone": "Adeline Ravoux, 1890. Vincent van Gogh (Dutch, 1853–1890). Oil on fabric; framed: 72.5 x 73.5 x 8.5 cm (28 9/16 x 28 15/16 x 3 3/8 in.); unframed: 50.2 x 50.5 cm (19 3/4 x 19 7/8 in.). The Cleveland Museum of Art, Bequest of Leonard C. Hanna Jr., 1958.31",
+      "funFact": "",
+      "didYouKnow": "Adeline Ravoux, at age 13, was not pleased with her portrait and did not think the image resembled her. Today, a photograph exists of Adeline in her late seventies and the resemblance is truly remarkable.",
+      "creators": "Vincent van Gogh (Dutch, 1853–1890)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "In May 1890, Vincent van Gogh arrived in Auvers, a small town north of Paris, where he rented a room at the inn of Arthur Ravoux.",
+      "quote": "In May 1890, Vincent van Gogh arrived in Auvers, a small town north of Paris, where he rented a room at the inn of Arthur Ravoux.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "This portrait, completed during the last months of the artist’s life, depicts Ravoux’s 13-year-old daughter, Adeline.",
+      "quote": "This portrait, completed during the last months of the artist’s life, depicts Ravoux’s 13-year-old daughter, Adeline.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Adeline Ravoux, at age 13, was not pleased with her portrait and did not think the image resembled her.",
+      "quote": "Adeline Ravoux, at age 13, was not pleased with her portrait and did not think the image resembled her.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Today, a photograph exists of Adeline in her late seventies and the resemblance is truly remarkable.",
+      "quote": "Today, a photograph exists of Adeline in her late seventies and the resemblance is truly remarkable.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

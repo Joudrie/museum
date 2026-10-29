@@ -1,0 +1,106 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "dragon-and-tiger-sesson",
+  "notes": "region: Japan",
+  "entry": {
+    "id": "painting:dragon-and-tiger-sesson",
+    "collection": "painting",
+    "title": "Dragon and Tiger",
+    "by": "Sesson Shūkei",
+    "year": "c. 1546–56",
+    "era": "renaissance",
+    "ratio": 2.1551,
+    "blurb": "A tiger sits in a bamboo grove whipped with fierce wind, while a dragon claws through clouds above rough waves.",
+    "rarity": 1,
+    "tags": [
+      "japan",
+      "ink"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1959.136/1959.136_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Purchase from the J. H. Wade Fund",
+      "url": "https://clevelandart.org/art/1959.136"
+    },
+    "value": 5,
+    "facts": [
+      "Tiger and dragon are Chinese cosmological symbols of the balancing forces in the world, yin (the feminine aspect) and yang (the masculine aspect).",
+      "The tiger's roar is also said to generate wind, and the dragon clouds."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "135592",
+    "title": "Dragon and Tiger",
+    "maker": "Sesson Shūkei",
+    "year": "c. 1546–56",
+    "medium": "Pair of six-panel folding screens; ink on paper",
+    "dimensions": "Each: 157.3 x 339 cm (61 15/16 x 133 7/16 in.); Framed: 172.3 x 354 cm (67 13/16 x 139 3/8 in.)",
+    "widthCm": 339,
+    "heightCm": 157.3,
+    "ratio": 2.1551,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1959.136/1959.136_web.jpg",
+    "imageWidth": 899,
+    "imageHeight": 900,
+    "pageUrl": "https://clevelandart.org/art/1959.136",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Purchase from the J. H. Wade Fund",
+    "description": "A tiger sits in a bamboo grove whipped with fierce wind, while a dragon claws through clouds above rough waves. Tiger and dragon are Chinese cosmological symbols of the balancing forces in the world, yin (the feminine aspect) and yang (the masculine aspect). The tiger's roar is also said to generate wind, and the dragon clouds. The screens may have originally been meant to express the fluctuating nature of the world as envisioned in the practice of military divination, or forecasting, based on the Yijing ( Book of Changes ). This pair of screens is considered the masterpiece of Sesson's body of work, and may have been created for the lord of Odawara in eastern Japan.",
+    "culture": "Japan, Muromachi period (1392–1573) to Momoyama period (1573–1615)",
+    "classification": "Painting",
+    "tags": [
+      "Japanese Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Dragon and Tiger",
+      "maker": "Sesson Shūkei",
+      "year": "c. 1546–56",
+      "medium": "Pair of six-panel folding screens; ink on paper",
+      "dimensions": "Each: 157.3 x 339 cm (61 15/16 x 133 7/16 in.); Framed: 172.3 x 354 cm (67 13/16 x 139 3/8 in.)",
+      "culture": "Japan, Muromachi period (1392–1573) to Momoyama period (1573–1615)",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Purchase from the J. H. Wade Fund",
+      "description": "A tiger sits in a bamboo grove whipped with fierce wind, while a dragon claws through clouds above rough waves. Tiger and dragon are Chinese cosmological symbols of the balancing forces in the world, yin (the feminine aspect) and yang (the masculine aspect). The tiger's roar is also said to generate wind, and the dragon clouds. The screens may have originally been meant to express the fluctuating nature of the world as envisioned in the practice of military divination, or forecasting, based on the Yijing ( Book of Changes ). This pair of screens is considered the masterpiece of Sesson's body of work, and may have been created for the lord of Odawara in eastern Japan.",
+      "tombstone": "Dragon and Tiger (龍虎図屏風), c. 1546–56. Sesson Shūkei (Japanese, c. 1492–c. 1577). Pair of six-panel folding screens; ink on paper; each: 157.3 x 339 cm (61 15/16 x 133 7/16 in.); framed: 172.3 x 354 cm (67 13/16 x 139 3/8 in.). The Cleveland Museum of Art, Purchase from the J. H. Wade Fund, 1959.136",
+      "funFact": "",
+      "didYouKnow": "This pair of screens is considered the masterpiece of Sesson's body of work, and may have been created for the lord of Odawara in eastern Japan.",
+      "creators": "Sesson Shūkei (Japanese, c. 1492–c. 1577)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "A tiger sits in a bamboo grove whipped with fierce wind, while a dragon claws through clouds above rough waves.",
+      "quote": "A tiger sits in a bamboo grove whipped with fierce wind, while a dragon claws through clouds above rough waves.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Tiger and dragon are Chinese cosmological symbols of the balancing forces in the world, yin (the feminine aspect) and yang (the masculine aspect).",
+      "quote": "Tiger and dragon are Chinese cosmological symbols of the balancing forces in the world, yin (the feminine aspect) and yang (the masculine aspect).",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The tiger's roar is also said to generate wind, and the dragon clouds.",
+      "quote": "The tiger's roar is also said to generate wind, and the dragon clouds.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}
