@@ -20,6 +20,7 @@ import { settings, hourNow } from './settings.js';
 import { animateWalker, footstep, dust } from './motion.js';
 import { Pet } from './pets.js';
 import { Fishing, catchOpen } from './fishing.js';
+import { startDig, readyIn } from './dig.js';
 import { openJournal } from './journal.js';
 import isle1 from './maps/isle-1.json';
 import mainIsland from './maps/main-island.json';
@@ -115,6 +116,7 @@ export class IslandScene extends Phaser.Scene {
     this.solid = Array.from({ length: H }, () => Array(W).fill(false));
     this.animated = []; // images whose texture changes every frame
     this.things = []; // signs and chests you can interact with
+    this.digs = []; // dig spots (src/dig.js)
     this.flickers = []; // campfire glows
     this.flowerSpots = [];
     // the scene object is reused on every visit, so start these afresh
@@ -471,6 +473,8 @@ export class IslandScene extends Phaser.Scene {
     }
     this.placeScenery();
     this.buildShowcase();
+    this.addDig(20, 24);
+    this.addDig(12, 24);
     this.thing('chest', 18, 25, 'A heavy chest, locked tight. Expeditions will turn up the keys.');
     // the dock at the south end
     for (let y = 36; y <= 39; y++) this.place('dock_v', 12, y, { flat: true });
@@ -745,6 +749,28 @@ export class IslandScene extends Phaser.Scene {
     (this.lamps ||= []).push({ x, y, r, color, a, ...extra });
   }
 
+  // A spot to brush open (src/dig.js). It rests, shown as a flattened patch, after it has been dug.
+  addDig(x, y) {
+    const key = `${this.mapId || 'one'}:${x},${y}`;
+    const d = { key, x: (x + 0.5) * T, y: (y + 0.5) * T, gx: x, gy: y };
+    d.img = this.place(readyIn(key) > 0 ? 'dig_spot@dug' : 'dig_spot', x, y, { flat: true });
+    this.digs.push(d);
+  }
+
+  digAt(d) {
+    const wait = readyIn(d.key);
+    if (wait > 0) return this.toast(`Freshly dug. Come back in ${Math.ceil(wait / 60000)} min.`);
+    this.paused = true;
+    startDig(d.key, {
+      onClose: ({ found }) => {
+        this.paused = false;
+        if (!found) return;
+        d.img.setVisible(false); // (kept, not destroyed: the season code re-textures every placed image)
+        d.img = this.place('dig_spot@dug', d.gx, d.gy, { flat: true });
+      },
+    });
+  }
+
   thing(name, x, y, text) {
     this.place(name, x, y);
     this.things.push({ x: (x + 0.5) * T, y: (y + 1) * T + 10, text, name });
@@ -877,6 +903,7 @@ export class IslandScene extends Phaser.Scene {
       if (name.startsWith('animal_') && ANIMALS[name.slice(7)]) return this.islanders.push(this.animal(name.slice(7), o.x + T / 2, o.y + t.h - 3, this.islanders.length));
       if (PEOPLE[name] !== undefined) return this.islanders.push(this.islander(o.x + T / 2, o.y + t.h - 4, PEOPLE[name], this.islanders.length));
       if (name === 'museum') return this.mapMuseum(x, y, t);
+      if (name === 'dig_spot') return this.addDig(x, y);
       if (name === 'tall_grass' || name === 'tall_grass_front') {
         if (!this.grassCells.has(`${x},${y}`)) this.tallGrass(x, y);
         return;
@@ -1154,6 +1181,13 @@ export class IslandScene extends Phaser.Scene {
         bestD = d;
       }
     });
+    this.digs.forEach((d) => {
+      const dd = Math.hypot(x - d.x, y - d.y);
+      if (dd < 30 && dd < bestD + 4) {
+        best = { dig: d, icon: 'look' };
+        bestD = dd;
+      }
+    });
     if (this.pet) {
       const dp = Math.hypot(x - this.pet.s.x, y - this.pet.s.y) + 4;
       if (dp < bestD) {
@@ -1210,6 +1244,7 @@ export class IslandScene extends Phaser.Scene {
     if (f.boat) return this.sail();
     if (f.door) return this.goInside();
     if (f.locked) return this.toast('The doors are locked. The museum is on Main Island now.');
+    if (f.dig) return this.digAt(f.dig);
     if (f.animal) return this.petAnimal(f.animal);
     if (f.cottage) return this.enterCottage();
     if (f.fish) {
@@ -1355,7 +1390,7 @@ export class IslandScene extends Phaser.Scene {
     if (!this.fishing.busy) this.focus = this.findFocus();
     this.interactBtn.classList.toggle('hidden', !this.focus || (this.fishing.busy && this.fishing.state === 'reel'));
     if (this.focus && this.focus.icon !== prev) this.interactBtn.querySelector('.bang').innerHTML = iconSvg(this.focus.icon);
-    if (!this.fishing.busy) this.interactBtn.querySelector('.label').textContent = this.focus?.fish ? 'Fish' : this.focus?.boat ? 'Sail' : 'Interact';
+    if (!this.fishing.busy) this.interactBtn.querySelector('.label').textContent = this.focus?.fish ? 'Fish' : this.focus?.dig ? 'Dig' : this.focus?.boat ? 'Sail' : 'Interact';
     if (this.focus && (Phaser.Input.Keyboard.JustDown(k.SPACE) || Phaser.Input.Keyboard.JustDown(k.ENTER))) this.interact();
   }
 }

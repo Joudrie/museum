@@ -142,6 +142,14 @@ Scenes (`src/main.js`):
   the boat also lists it before the builder was ever opened.
 - Next: tune which houses show, landmarks and named buildings, a spawn on the Town Common, paths and trails (left out: not roads).
 
+### Digging (`src/dig.js`): the first dig site
+- A **Dig spot** (builder → Props, `t:dig_spot`) is a dirt mound. Walk up, tap **Dig**, drag a finger to brush the dirt off; at 70% clear
+  the mineral underneath is revealed and goes into the codex (Journal → Minerals). Rarer minerals turn up less often.
+- A spot rests **10 minutes** after a dig (`curation.digs`, keyed by map and tile) and shows as a flattened patch (`dig_spot@dug`, hidden from the builder).
+- Island One has two spots by the cliff (`addDig` in `IslandScene`). Main Island is the user's own map, so none were added there: place spots in the builder.
+- Not built yet: bones and fossils (same overlay, a different entry list), dig tools, excavation levels. The overlay takes an `entry`, so another collection plugs in.
+- Test by hand: `__game.scene.start('island', { map: 'one' })`, stand by a spot, `__game.scene.getScene('island').interact()`.
+
 ### Gotchas we hit
 - **Phaser reuses the previous scene data** if you call `scene.start('island')` with no data.
   Always pass data explicitly, e.g. `{ map: 'main' }`. Leaving the museum once dropped you on

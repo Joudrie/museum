@@ -2356,3 +2356,42 @@ body.outside #hud {
 #map-overlay-btn.on {
   outline: 2px solid #e8c867;
 }
+
+/* digging (src/dig.js) */
+#dig {
+  position: fixed;
+  inset: 0;
+  z-index: 31;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(10, 8, 6, 0.55);
+}
+#dig.hidden {
+  display: none;
+}
+.dig-card {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  max-width: 320px;
+  padding: 16px 20px 14px;
+  text-align: center;
+  background: var(--panel);
+  border: 3px solid var(--shadow);
+  border-radius: 12px;
+}
+.dig-canvas {
+  border: 3px solid var(--shadow);
+  border-radius: 8px;
+  touch-action: none;
+  image-rendering: pixelated;
+}
+.dig-meta {
+  font-size: 13px;
+}
+.dig-note {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.35;
+}
