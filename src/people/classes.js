@@ -1804,7 +1804,7 @@ export const CLASSES = {
     names: ['Laurence', 'Judi', 'Kenneth', 'Viola'],
     lines: ['To be, or not to be…', 'All the world’s a stage!', 'Alas, poor visitor! I knew you well.'],
     colors: { c: ['#5a1f2a', '#2a3a6a', '#2f4a3a'], w: '#f4f4f0', p: '#2a2a2e', T: '#1e1e22', U: '#c9a23f' },
-    look: { outfit: 'doublet' },
+    look: { outfit: 'doublet', collar: 'ruff' },
     hair: ['part', 'long', 'curly', 'bob', 'wavy'], facial: ['vandyke', 'goatee', 'none', 'stache'], build: BUILDS,
     variants: {
       skull: { label: 'With a skull', pose: 'soliloquy' },
