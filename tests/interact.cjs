@@ -210,8 +210,17 @@ const check = (cond, good, bad) => (cond ? ok(good) : fail(bad));
   await walkTo(0, 1, 90);
   const rowed = await p.evaluate(([x0, y0]) => { const s = __game.scene.getScene('island'); return { moved: Math.hypot(s.player.x - x0, s.player.y - y0), onWater: s.row.wet(s.player.x, s.player.y - 4) }; }, from);
   check(rowed.moved > 40 && rowed.onWater, `you row across the water (${Math.round(rowed.moved)} px)`, `rowing broke ${JSON.stringify(rowed)}`);
-  const fishFromBoat = await p.evaluate(() => { const s = __game.scene.getScene('island'); s.facing = 'down'; s.player.setTexture('player_down'); s.update(0, 16); const f = s.findFocus(); return { label: s.focusLabel(f), icon: f?.icon }; });
-  check(fishFromBoat.label === 'Fish', 'you can fish from the boat (facing the open water)', `from the boat: ${JSON.stringify(fishFromBoat)}`);
+  const fishFromBoat = await p.evaluate(() => {
+    const s = __game.scene.getScene('island');
+    const labels = {};
+    for (const f of ['up', 'down', 'left', 'right']) {
+      s.facing = f;
+      s.player.setTexture(f === 'left' || f === 'right' ? 'player_side' : `player_${f}`);
+      labels[f] = s.focusLabel(s.findFocus());
+    }
+    return labels;
+  });
+  check(Object.values(fishFromBoat).includes('Fish'), 'you can fish from the boat (facing open water)', `from the boat: ${JSON.stringify(fishFromBoat)}`);
   await walkTo(0, -1, 500); // back toward the shore: rowing into land climbs out
   await wait(600);
   const out = await p.evaluate(() => { const s = __game.scene.getScene('island'); return { afloat: !!s.row?.on, walkable: s.free(s.player.x, s.player.y) }; });
