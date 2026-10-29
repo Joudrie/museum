@@ -52,7 +52,7 @@ import { PERSONALITIES, lineFor, QUIPS, CONTEXT } from './lines.js';
 import { iconSvg } from './icons.js';
 import { bakeFountain, bakeSideStairs, FOUNTAIN } from './atrium.js';
 import { openViewer } from './viewer.js';
-import { isFixture, newId, clear as clearDisplay } from './display.js';
+import { isFixture, newId, clear as clearDisplay, missingFor } from './display.js';
 import { showDisplays } from './displayart.js';
 import { openDisplay } from './displaymenu.js';
 import { openDecor, closeDecor, load, save, DEFAULT_CHARACTER } from './decor.js';
@@ -2409,9 +2409,12 @@ export class RoomScene extends Phaser.Scene {
       icon: (type) => this.textures.get(this.itemKey(type, 0)).getSourceImage().toDataURL(),
       canAfford,
       level: () => officeLevel(),
+      blocked: (type) => missingFor(type),
       onPick: (type) => {
         if (ITEMS[type].season && ITEMS[type].season !== season()) return this.toast(`Only for sale in ${ITEMS[type].season}`);
         if (itemLevel(type) > officeLevel()) return this.toast(`Unlocks at Curator’s Office level ${itemLevel(type)}`);
+        const missing = missingFor(type);
+        if (missing) return this.toast(missing);
         const max = ITEMS[type].max;
         if (max && countPlaced(type, this.rooms.length) >= max) return this.toast(`Only ${max} allowed in the museum`);
         if (!canAfford(ITEMS[type].price)) return this.toast(`Need ${(ITEMS[type].price - coins()).toLocaleString()} more gold`);

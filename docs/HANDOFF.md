@@ -142,6 +142,8 @@ Scenes (`src/main.js`):
   picture opens its card in the viewer. `src/displayart.js` draws the pieces over the sprite (fish swim); rare and legendary pieces get a glow.
 - Pieces on display earn `value` (or 2 x rarity) gold/hr (`wallet.js`) and count as decor in the room rating (`rating.js`). Moving a fixture keeps its
   pieces; selling empties it. Test: `node tests/display.cjs`.
+- A set with every piece on display (any rooms) earns double for those pieces; the panel shows each started set's progress and plaque. Items can
+  carry `needs: { entryId: count }` (the T-rex skeleton: 6 dinosaur bones + a T. rex tooth); `missingFor()` blocks buying and the toolkit says what is missing.
 
 ### Wakefield, MA is NOT part of the game
 A separate personal project (the user's hometown, for friends) that only shares the engine. Its page is `wakefield.html`, its code
