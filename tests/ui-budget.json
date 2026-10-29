@@ -1,0 +1,105 @@
+{
+ "_note": "A ratchet: each screen may not get worse than this. Lower the numbers as screens are migrated (node tests/ui-layout.cjs --update). Goal: smallTargets 0 and minFont 13 everywhere.",
+ "screens": {
+  "01-world": {
+   "smallTargets": 1,
+   "minFont": 11
+  },
+  "02-hud-income": {
+   "smallTargets": 2,
+   "minFont": 11
+  },
+  "03-journal-goals": {
+   "smallTargets": 4,
+   "minFont": 11
+  },
+  "03-journal-paintings": {
+   "smallTargets": 2,
+   "minFont": 11
+  },
+  "04-toolkit": {
+   "smallTargets": 12,
+   "minFont": 11
+  },
+  "05-customize-room": {
+   "smallTargets": 4,
+   "minFont": 11
+  },
+  "06-customize-rooms": {
+   "smallTargets": 2,
+   "minFont": 11
+  },
+  "07-customize-character": {
+   "smallTargets": 2,
+   "minFont": 11
+  },
+  "08-settings": {
+   "smallTargets": 4,
+   "minFont": 11
+  },
+  "09-build-room": {
+   "smallTargets": 2,
+   "minFont": 11
+  },
+  "10-wall-spot": {
+   "smallTargets": 10,
+   "minFont": 11
+  },
+  "11-viewer": {
+   "smallTargets": 7,
+   "minFont": 11
+  },
+  "12-staff-board": {
+   "smallTargets": 7,
+   "minFont": 11
+  },
+  "13-office": {
+   "smallTargets": 2,
+   "minFont": 11
+  },
+  "14-ask-unlock": {
+   "smallTargets": 1,
+   "minFont": 11
+  },
+  "15-daily": {
+   "smallTargets": 2,
+   "minFont": 11
+  },
+  "16-share": {
+   "smallTargets": 3,
+   "minFont": 11
+  },
+  "17-conversation": {
+   "smallTargets": 1,
+   "minFont": 11
+  },
+  "18-staff-bubble": {
+   "smallTargets": 1,
+   "minFont": 11
+  },
+  "19-toast": {
+   "smallTargets": 1,
+   "minFont": 11
+  },
+  "20-island-world": {
+   "smallTargets": 0,
+   "minFont": 11
+  },
+  "21-island-sail": {
+   "smallTargets": 5,
+   "minFont": 11
+  },
+  "22-dig": {
+   "smallTargets": 4,
+   "minFont": 11
+  },
+  "23-dig-fossil": {
+   "smallTargets": 4,
+   "minFont": 11
+  },
+  "30-builder": {
+   "smallTargets": 16,
+   "minFont": 11
+  }
+ }
+}
