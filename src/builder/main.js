@@ -8,7 +8,7 @@
 import { buildTiles, T } from '../tiles.js';
 import { backup, backupsFor, latestBackup, keepStorage } from './vault.js';
 import recovered from './recovered.json';
-import { BIG_MAP, packCells, withTiles, hasTiles, edgePolys, drawEdgeCell } from '../mapformat.js';
+import { BIG_MAP, packCells, withTiles, hasTiles } from '../mapformat.js';
 
 const $ = (id) => document.getElementById(id);
 const canvas = $('canvas');
@@ -17,7 +17,7 @@ const STORE = 'curation.mapbuilder.maps';
 const CURRENT = 'curation.mapbuilder.current';
 const VIEW = 'curation.mapbuilder.view';
 const OVERLAY = 'curation.mapbuilder.overlay';
-const MAX = 700; // Wakefield is 451 x 552; the New map boxes stay at 300
+const MAX = 700; // maps can be big; the New map boxes stay at 300
 const C = 8; // cells per cached ground chunk
 const MATS = [
   { m: 2, name: 'Grass', color: '#5aa84e' },
@@ -64,7 +64,7 @@ const corner = (x, y) => (x < 0 || y < 0 || x > map.w || y > map.h ? 0 : map.cor
 // grass never meets the sea directly: there's always a little beach
 function eff(x, y) {
   const m = corner(x, y);
-  if (m !== 2 || map.kind !== 'island' || map.border) return m;
+  if (m !== 2 || map.kind !== 'island') return m;
   for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) if ((dx || dy) && corner(x + dx, y + dy) === 0) return 1;
   return m;
 }
@@ -287,16 +287,6 @@ function chunk(cx, cy) {
     for (let x = cx * C; x < Math.min(map.w, cx * C + C); x++) {
       const px = (x - cx * C) * T;
       const py = (y - cy * C) * T;
-      const cut = map.edges?.get(y * map.w + x);
-      if (cut) {
-        // a tile the town line cuts through: the land is clipped to the straight line
-        drawEdgeCell(g, cut, px, py, T, TILES.water.frames[0], () => {
-          g.drawImage(TILES[['grass_1', 'grass_2', 'grass_1', 'grass_3'][(x * 3 + y * 5) % 4]].frames[0], px, py);
-          const r = map.tiles[y * map.w + x];
-          if (r) drawRef(g, r, px, py, T, T);
-        });
-        continue;
-      }
       if (map.kind === 'island') groundNames(x, y).forEach((n) => TILES[n] && g.drawImage(TILES[n].frames[0], px, py));
       else {
         g.fillStyle = '#2a211b';
@@ -318,9 +308,7 @@ function paintOverview(x, y) {
   const g = overview.getContext('2d');
   const ref = map.tiles[y * map.w + x];
   let color;
-  const cut = map.edges?.get(y * map.w + x);
-  if (cut) color = cut.length ? avg(ref || 't:grass_1') : avg('t:water');
-  else if (ref) color = avg(ref);
+  if (ref) color = avg(ref);
   else if (map.kind === 'island') {
     const names = groundNames(x, y);
     const top = names[names.length - 1];
@@ -617,7 +605,7 @@ function serialize() {
     Object.assign(tiles, map.keep?.tiles);
   }
   const objects = sorted().map((o) => ({ ref: o.ref, x: o.x, y: o.y, ...(o.flip ? { flip: true } : {}) }));
-  return { format: 'curation-map', version: 2, tile: T, name: map.name, kind: map.kind, w: map.w, h: map.h, corners: map.kind === 'island' ? rows : [], tiles, ...(tileRows ? { tileRows } : {}), objects: objects.concat(map.keep?.objects || []), ...(map.overlay ? { overlay: map.overlay } : {}), ...(map.border ? { border: map.border } : {}) };
+  return { format: 'curation-map', version: 2, tile: T, name: map.name, kind: map.kind, w: map.w, h: map.h, corners: map.kind === 'island' ? rows : [], tiles, ...(tileRows ? { tileRows } : {}), objects: objects.concat(map.keep?.objects || []), ...(map.overlay ? { overlay: map.overlay } : {}) };
 }
 function deserialize(d) {
   d = withTiles(d);
@@ -635,10 +623,6 @@ function deserialize(d) {
   m.tiles.fill(null);
   m.name = String(d.name || m.name).slice(0, 60);
   if (d.overlay?.src) m.overlay = d.overlay;
-  if (d.border?.poly) {
-    m.border = d.border;
-    m.edges = edgePolys(d.border, m.w);
-  }
   (d.corners || []).forEach((row, y) => [...String(row)].forEach((ch, x) => x <= m.w && y <= m.h && (m.corners[y * (m.w + 1) + x] = Number(ch) || 0)));
   // pieces that didn't load (a bad connection) are kept as they are, not dropped
   m.keep = { tiles: {}, objects: [] };
@@ -1239,18 +1223,19 @@ async function boot() {
       if (!all[cur] || isBlank(all[cur])) cur = recovered.name;
     }
   }
-  // Wakefield, Massachusetts, built from OpenStreetMap, with its real map to lay over it (added once;
-  // the first, coarse version is swapped out unless it was edited)
-  if (!localStorage.getItem('curation.mapbuilder.wakefield2')) {
-    try {
-      const w = await (await fetch('./maps/wakefield-detail.json')).json();
-      const old = all[w.name];
-      if (old && old.saved > 1 && !old.overlay?.src.includes('detail')) all[`${w.name} (detailed)`] = { ...w, name: `${w.name} (detailed)`, saved: 1 };
-      else all[w.name] = { ...w, saved: 1 };
-      localStorage.setItem(STORE, JSON.stringify(all));
-      localStorage.setItem('curation.mapbuilder.wakefield2', '1');
-    } catch {
-      // offline or storage full: try again next time
+  // Wakefield is no longer a tile map (it is drawn from real shapes in the game): clear the first
+  // version that was added here, unless it was edited
+  if (!localStorage.getItem('curation.mapbuilder.wakefield3')) {
+    localStorage.setItem('curation.mapbuilder.wakefield3', '1');
+    const old = all['Wakefield, MA'];
+    if (old && old.saved <= 1 && /wakefield/.test(old.overlay?.src || '')) {
+      delete all['Wakefield, MA'];
+      if (cur === 'Wakefield, MA') cur = Object.keys(all)[0];
+      try {
+        localStorage.setItem(STORE, JSON.stringify(all));
+      } catch {
+        // fine
+      }
     }
   }
   let data = all[cur];

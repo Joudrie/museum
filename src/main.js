@@ -1,6 +1,8 @@
 import Phaser from 'phaser';
 import { RoomScene } from './RoomScene.js';
 import { IslandScene } from './IslandScene.js';
+import { WakefieldScene } from './WakefieldScene.js';
+import { loadWakefield } from './wakefieldData.js';
 import { IsoScene } from './IsoScene.js';
 import { makeCharacter } from './art.js';
 import './ui.js';
@@ -19,8 +21,17 @@ const game = new Phaser.Game({
   backgroundColor: '#1d1512',
   pixelArt: true,
   scale: { mode: Phaser.Scale.NONE },
-  scene: [RoomScene, IslandScene, IsoScene],
+  scene: [RoomScene, IslandScene, IsoScene, WakefieldScene],
 });
+
+// index.html?wakefield opens straight onto the real town
+if (new URLSearchParams(location.search).has('wakefield')) {
+  const go = (vec) => setTimeout(() => {
+    game.scene.stop('room');
+    game.scene.start('wakefield', { vec });
+  }, 50);
+  loadWakefield().then((vec) => (game.isBooted ? go(vec) : game.events.once('ready', () => go(vec))));
+}
 
 // "Walk around this island" from the map builder
 if (new URLSearchParams(location.search).has('play')) {
