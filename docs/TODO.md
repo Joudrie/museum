@@ -39,7 +39,7 @@ Owns: `tools/`, `content/`, `docs/CONTENT*.md`, `public/paintings/`, `src/collec
 ## CHAT 2: Builder and ground tools
 Owns: `src/builder/`, `builder.html`, `public/builder/`, `tools/build_palette.py`, `src/mapformat.js`. Claim: `claimed: 2026-10-29`
 - [ ] **Turn families (started, #117: 4 armchair colours verified; more sets to check with `tools/rotation_sheet.py`):** `public/builder/rotations.json` links the sides of one object (one chair so far). Find the true sets in the free packs (verify each by eye, never auto-group), add them. Keep the file format so the user's new sprites drop in.
-- [x] Search box for pieces; recently used at the top; favourites. (#117)
+- [x] Search box for pieces; recently used at the top; favourites. (#150)
 - [ ] **Grass that blends** into painted dirt and rock is in (`src/groundblend.js`, used by builder and game; #132). Still open: other ground types have no edge tiles yet; jagged rocks instead of round ones.
 - [ ] Every ground type, path block and furniture piece is its own named, placeable item (so the user can redraw them one by one).
 - [x] Builder palette organisation (duplicate lists merged, "What's new" row from `public/builder/whatsnew.json`; a Dig sites list waits for Chat 6's tiles) (#120).
@@ -174,9 +174,9 @@ Owns: new `src/halls/`, room-preset JSON in `content/halls/`. Claim: `claimed: 2
 Owns: `assets/vendor/`, `docs/ASSETS.md`, `tools/extract_sprites.py`, `tools/` sprite scripts. Claim: `claimed: 2026-10-29`
 - [ ] Run the **super dig** in `docs/ASSET-HUNT.md` (find, don't make; CC0 / CC-BY / CC-BY-SA / OGA-BY / GPL only; no non-commercial). Check network access first and don't get around bot checks; list itch.io links for the user to download by hand. Save results to `docs/ASSETS.md` (round 3), ranked top 20.
 - [ ] Categories: statues and sculpture (busts, plinths, display cases, rope barriers); jagged rocks and nature; museum architecture pieces (glass, curved, arches, domes, skylights, spiral stairs, facades); exhibits (dinosaur skeletons, mummies, armour, pottery, meteorites, ship models, taxidermy, aquarium tanks); furniture with four facings; island buildings, fences, docks, boats, market stalls, playground, festival decor; characters and animals; dig-site props (tents, crates, tools).
-- [x] (#117) A script that lists every placeholder sprite and tile by name, size and where it's used, so the user can redraw one at a time.
-- [x] (#117) **Drop-in swap:** a PNG with the same name in a folder overrides the placeholder, no code change.
-- [x] (#117) Keep `tools/build_palette.py` outputs stable (piece ids never shift). Nothing here touches it; piece swaps are keyed by the existing ids.
+- [x] (#150) A script that lists every placeholder sprite and tile by name, size and where it's used, so the user can redraw one at a time.
+- [x] (#150) **Drop-in swap:** a PNG with the same name in a folder overrides the placeholder, no code change.
+- [x] (#150) Keep `tools/build_palette.py` outputs stable (piece ids never shift). Nothing here touches it; piece swaps are keyed by the existing ids.
 - [ ] (Not wanted now: `docs/ART-AUDIT.md`, `ART-BIBLE.md`, `ART-BRIEF.md`. Don't continue them.)
 
 ## Hold list (parked by the user; no chat builds these)
