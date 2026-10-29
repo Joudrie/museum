@@ -123,6 +123,9 @@ Scenes (`src/main.js`):
   `"status": "approved"` → `publish_content.mjs` writes the data file and `CREDITS.md`.
   Every blurb and fact is a claim with the museum's exact sentence quoted; unsourced claims, invented numbers,
   filler, duplicates and missing licenses are flagged. The Met has no description text, so its drafts need a hook written.
+- **Hosted paintings (Chat 1, #113/#118):** 46 of the 49 paintings are our own 1280px JPEGs in `public/paintings/` (same pictures; `tools/host_paintings.mjs`
+  re-makes them, `content/hosted-images.json` records each original URL). The 3 broken ones (horse-fair, temeraire, crossing-delaware) keep their dead
+  link until the user approves a file in `content/image-proposals.md` (all 11 flagged images have a proposal there; nothing applied).
 - `check_images.mjs` flags broken, tiny, heavy and wrong-shaped images for every painting. **Not run yet on the
   49 paintings** (no network here); `content/batches/first-batch.json` (12 works, 9+ regions) is waiting to be built.
 - Test: `node tests/content.cjs` (no browser, no network).
