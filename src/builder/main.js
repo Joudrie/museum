@@ -8,6 +8,7 @@
 import { buildTiles, T } from '../tiles.js';
 import { backup, backupsFor, latestBackup, keepStorage } from './vault.js';
 import recovered from './recovered.json';
+import { blendAt } from '../groundblend.js';
 import { BIG_MAP, packCells, withTiles, hasTiles } from '../mapformat.js';
 
 const $ = (id) => document.getElementById(id);
@@ -196,7 +197,7 @@ function pieceButton(ref) {
     pic.appendChild(badge);
   }
   b.appendChild(pic);
-  const name = ref.startsWith('m:') ? MATS.find((m) => `m:${m.m}` === ref).name : ref.startsWith('t:') ? PIECES[ref].label : '';
+  const name = ref.startsWith('m:') ? MATS.find((m) => `m:${m.m}` === ref).name : PIECES[ref]?.label || '';
   if (name) {
     const sp = document.createElement('span');
     sp.textContent = name;
@@ -382,11 +383,17 @@ function chunk(cx, cy) {
       }
       const ref = map.tiles[y * map.w + x];
       if (ref && showTiles) drawRef(g, ref, px, py, T, T);
+      else if (showTiles && map.kind === 'island') {
+        const edge = blendAt(x, y, tileAt, grassAt); // grass growing over painted dirt and rock
+        if (edge && TILES[edge]) g.drawImage(TILES[edge].frames[0], px, py);
+      }
     }
   chunks.set(k, c);
   while (chunks.size > 160) chunks.delete(chunks.keys().next().value);
   return c;
 }
+const tileAt = (x, y) => (x < 0 || y < 0 || x >= map.w || y >= map.h ? null : map.tiles[y * map.w + x]);
+const grassAt = (x, y) => key(x, y, (m) => m === 2) === '1111';
 // a cell changed: forget the chunks that show it (and its neighbours' edges)
 function dirty(x0, y0, x1, y1) {
   for (let cy = Math.floor((y0 - 1) / C); cy <= Math.floor((y1 + 1) / C); cy++) for (let cx = Math.floor((x0 - 1) / C); cx <= Math.floor((x1 + 1) / C); cx++) chunks.delete(`${cx},${cy}`);
