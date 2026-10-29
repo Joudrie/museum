@@ -58,7 +58,8 @@ import { list as listEntries } from './collections/index.js';
 import { collect as collectEntry } from './collections/codex.js';
 import { addCoins } from './wallet.js';
 import { IslandLife } from './progression/ui/islandlife.js';
-import { PlayerLook } from './progression/ui/lookfx.js';
+import { PlayerLook, wornLooks } from './progression/ui/lookfx.js';
+import { curatorLook } from './people/wardrobe.js';
 import { progression } from './progression/index.js';
 import { regionOfMap, REGIONS, speciesOfRegion } from './progression/species.js';
 import { regionAccess } from './progression/access.js';
@@ -196,7 +197,7 @@ export class IslandScene extends Phaser.Scene {
     this.exp?.build();
 
     const ch = { ...DEFAULT_CHARACTER, ...load('curation.character', {}) };
-    if (!this.textures.exists('player_down')) makeCharacter(this, 'player', ch, {});
+    this.dressPlayer(ch);
     const start = this.map ? (this.door && this.spawnAt !== 'dock' ? { x: this.door.x, y: this.door.y + 22 } : this.landing()) : this.spawnAt === 'cottage' ? { x: COTTAGE.x, y: COTTAGE.y + 16 } : this.spawnAt === 'dock' ? { x: 12.5 * T, y: 38.6 * T } : { x: DOOR.x, y: DOOR.y + 22 };
     this.player = this.add.sprite(start.x, start.y, 'player_down').setOrigin(0.5, 1).setScale(PLAYER_SCALE);
     this.shadow = this.add.ellipse(0, 0, 18, 6, 0x000000, 0.25).setDepth(0.5);
@@ -1164,6 +1165,14 @@ export class IslandScene extends Phaser.Scene {
     this.door = { x: img.x + t.w / 2, y: img.y - 8 };
     this.light(this.door.x, this.door.y + 6, 46, 0xffd89a, 1, { glow: 40, gy: this.door.y - 20 });
     [-1, 1].forEach((d) => this.light(this.door.x + d * 32, this.door.y - 88, 30, 0xffd080, 0.8, { glow: 34 })); // the windows come on at dusk
+  }
+
+  // The curator: their character, the cosmetics they wear and any costume (people/wardrobe.js).
+  // PlayerLook calls this again when what they wear changes.
+  dressPlayer(ch = { ...DEFAULT_CHARACTER, ...load('curation.character', {}) }) {
+    const { colors, look } = curatorLook(ch, wornLooks());
+    makeCharacter(this, 'player', colors, look);
+    if (this.player) this.player.setTexture(this.player.texture.key);
   }
 
   // Someone who lives on the island: walks Pokémon-style, a tile or two at a

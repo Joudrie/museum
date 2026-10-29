@@ -2,7 +2,9 @@
 // "Character" changes the curator. Each color row is a swipeable strip of
 // swatches, ending in a + that opens a full color picker.
 import { HATS, FACIAL, GLASSES, HAIRSTYLES, OUTFITS, ACCESSORIES, PALETTES, FLOOR_PATTERNS, WOOD_FLOORS, TWO_COLOR_FLOORS, FLOOR_DEFAULTS, WALL_PATTERNS, WAINSCOT_STYLES, LIGHTS, PLANTS, personRows } from './art.js';
-import { BUILDS, LEGS, FEET, ACCENT_OUTFITS } from './people/parts.js';
+import { BUILDS, LEGS, FEET, ACCENT_OUTFITS, CARRY } from './people/parts.js';
+import { COSTUMES, COSTUME_GROUPS, HOLD, SHOULDER, lockHint } from './people/wardrobe.js';
+import { uiIcon } from './ui/icons.js';
 import { TRACKS } from './music.js';
 import { PETS, PET_COLORS } from './pets.js';
 
@@ -107,14 +109,21 @@ export function strip(colors, value, onPick, opts = {}) {
 }
 
 // A row of labelled choice buttons that wraps (no scrolling).
-export function choices(options, value, onPick, icon) {
+// lockOf(id): the hint for something still locked behind a challenge (people/wardrobe.js), or null
+export function choices(options, value, onPick, icon, lockOf) {
   const row = document.createElement('div');
   row.className = 'choices';
   Object.entries(options).forEach(([id, label]) => {
     const b = document.createElement('button');
     b.className = id === value ? 'on' : '';
     const img = icon?.(id);
-    b.innerHTML = img ? `<img src="${img}" alt="" />${label}` : label;
+    const lock = lockOf?.(id);
+    b.innerHTML = (lock ? uiIcon('lock', 's') : '') + (img ? `<img src="${img}" alt="" />${label}` : label);
+    if (lock) {
+      b.disabled = true;
+      b.title = lock;
+      b.setAttribute('aria-label', `${label}, locked: ${lock}`);
+    }
     b.onclick = () => onPick(id);
     row.appendChild(b);
   });
@@ -388,6 +397,11 @@ function renderCharacter() {
   const colorRow = (key, label) => section(label || CHARACTER_PALETTES[key].label, strip(CHARACTER_PALETTES[key].colors, ch[key] || CHARACTER_PALETTES[key].colors[0], (color, live) => setChar({ [key]: color }, live)));
   const style = ch.outfit || 'suit';
   const pick = (key) => (v) => setChar({ [key]: v });
+  const lockOf = (kind) => (id) => lockHint(`${kind}:${id}`);
+  // a whole costume over everything else (people/wardrobe.js); None takes it off again
+  const costume = COSTUMES[ch.costume] ? ch.costume : 'none';
+  const byGroup = Object.entries(COSTUME_GROUPS).map(([g, title]) => section(title, choices(Object.fromEntries(Object.entries(COSTUMES).filter(([, c]) => c.group === g).map(([id, c]) => [id, c.label])), costume, pick('costume'), null, lockOf('costume'))));
+  parts.push(group('costume', 'Costume', costume === 'none' ? 'None' : COSTUMES[costume].label, choices({ none: 'None' }, costume, pick('costume')), ...byGroup));
   parts.push(section('Hairstyle', choices(HAIRSTYLES, ch.hair || 'short', pick('hair'))));
   if (ch.hair !== 'bald') parts.push(colorRow('h'));
   parts.push(colorRow('s'));
@@ -411,7 +425,7 @@ function renderCharacter() {
       for (const c of r) drawn.add(c);
     }),
   );
-  parts.push(section('Outfit', choices(OUTFITS, style, pick('outfit'))));
+  parts.push(section('Outfit', choices(OUTFITS, style, pick('outfit'), null, lockOf('outfit'))));
   if (drawn.has('c')) parts.push(colorRow('c', MAIN_LABEL[style] || OUTFITS[style]));
   if (drawn.has('w')) parts.push(colorRow('w', W_LABEL[style] || 'Shirt'));
   if (drawn.has('g')) parts.push(colorRow('g', G_LABEL[style] || 'Tie & trim'));
@@ -422,12 +436,14 @@ function renderCharacter() {
   parts.push(section('Feet', choices(FEET, ch.feet || 'shoes', pick('feet'))));
   if (drawn.has('b')) parts.push(colorRow('b'));
   parts.push(section('Build', choices(BUILDS, ch.build || 'standard', pick('build'))));
-  parts.push(section('Hat', choices(HATS, ch.hat || 'none', pick('hat'))));
+  parts.push(section('Hat', choices(HATS, ch.hat || 'none', pick('hat'), null, lockOf('hat'))));
   if (ch.hat && ch.hat !== 'none' && ch.hat !== 'crown' && ch.hat !== 'laurel') {
     if (ch.hat !== 'hairnet') parts.push(section('Hat color', strip(HAT_COLORS, ch.T || '#e8d8a0', (T, live) => setChar({ T }, live))));
     parts.push(section(ch.hat === 'hairnet' ? 'Net color' : 'Hat trim', strip(HAT_COLORS, ch.U || '#5a3b2c', (U, live) => setChar({ U }, live))));
   }
   parts.push(section('Glasses', choices(GLASSES, ch.glasses || 'none', pick('glasses'))));
+  parts.push(section('Hold', choices({ none: 'Nothing', ...Object.fromEntries(HOLD.map((id) => [id, CARRY[id]])) }, ch.hold || 'none', pick('hold'), null, lockOf('hold'))));
+  parts.push(section('On the shoulder', choices({ none: 'Nothing', ...SHOULDER }, ch.shoulder || 'none', pick('shoulder'), null, lockOf('shoulder'))));
   parts.push(section('Pet', choices(PETS, ch.pet || 'none', (v) => setChar({ pet: v, petColor: PET_COLORS[v]?.[0] }))));
   if (ch.pet && ch.pet !== 'none') parts.push(section('Pet color', strip(PET_COLORS[ch.pet], ch.petColor || PET_COLORS[ch.pet][0], (v, live) => setChar({ petColor: v }, live))));
   parts.push(section('Accessory', choices(ACCESSORIES, ch.acc || 'none', pick('acc'))));

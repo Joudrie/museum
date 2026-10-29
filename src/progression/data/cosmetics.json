@@ -4,7 +4,14 @@
   "slot": "hat",
   "rarity": 1,
   "source": "rank",
-  "color": "#e8c867"
+  "color": "#e8c867",
+  "look": {
+   "hat": "straw"
+  },
+  "colors": {
+   "T": "#e8c867",
+   "U": "#a0703f"
+  }
  },
  "hat:beanie": {
   "name": "Fisher beanie",
@@ -12,7 +19,14 @@
   "rarity": 1,
   "source": "shop",
   "price": 120,
-  "color": "#5a7aa8"
+  "color": "#5a7aa8",
+  "look": {
+   "hat": "beanie"
+  },
+  "colors": {
+   "T": "#5a7aa8",
+   "U": "#3a5a88"
+  }
  },
  "hat:bucket": {
   "name": "Bucket hat",
@@ -20,21 +34,38 @@
   "rarity": 2,
   "source": "shop",
   "price": 260,
-  "color": "#8aa86a"
+  "color": "#8aa86a",
+  "look": {
+   "hat": "bucket"
+  },
+  "colors": {
+   "T": "#8aa86a",
+   "U": "#5a7a4a"
+  }
  },
  "hat:captain": {
   "name": "Captain\u2019s cap",
   "slot": "hat",
   "rarity": 3,
   "source": "rank",
-  "color": "#2f4a7a"
+  "color": "#2f4a7a",
+  "look": {
+   "hat": "captain"
+  },
+  "colors": {
+   "T": "#2f4a7a",
+   "U": "#1e1e22"
+  }
  },
  "hat:flower": {
   "name": "Flower crown",
   "slot": "hat",
   "rarity": 2,
   "source": "rank",
-  "color": "#e88aa8"
+  "color": "#e88aa8",
+  "look": {
+   "hat": "crown"
+  }
  },
  "hat:lantern": {
   "name": "Lantern hat",
@@ -42,35 +73,64 @@
   "rarity": 3,
   "source": "shop",
   "price": 640,
-  "color": "#f2b84b"
+  "color": "#f2b84b",
+  "look": {
+   "hat": "miner"
+  },
+  "colors": {
+   "T": "#f2b84b",
+   "U": "#5a3b2c"
+  }
  },
  "hat:antlers": {
   "name": "Winter antlers",
   "slot": "hat",
   "rarity": 3,
   "source": "event",
-  "color": "#8a5a3a"
+  "color": "#8a5a3a",
+  "look": {
+   "hat": "antlers"
+  },
+  "colors": {
+   "T": "#8a5a3a"
+  }
  },
  "hat:witch": {
   "name": "Witch hat",
   "slot": "hat",
   "rarity": 3,
   "source": "event",
-  "color": "#4a2a6a"
+  "color": "#4a2a6a",
+  "look": {
+   "hat": "witchhat"
+  },
+  "colors": {
+   "T": "#4a2a6a",
+   "U": "#6a3a9a"
+  }
  },
  "hat:crown": {
   "name": "Curator\u2019s crown",
   "slot": "hat",
   "rarity": 5,
   "source": "rank",
-  "color": "#f2d36b"
+  "color": "#f2d36b",
+  "look": {
+   "hat": "kingcrown"
+  }
  },
  "outfit:oilskin": {
   "name": "Yellow oilskin",
   "slot": "outfit",
   "rarity": 1,
   "source": "rank",
-  "color": "#e8c040"
+  "color": "#e8c040",
+  "look": {
+   "outfit": "oilskins"
+  },
+  "colors": {
+   "c": "#e8c040"
+  }
  },
  "outfit:sweater": {
   "name": "Cable sweater",
@@ -78,14 +138,27 @@
   "rarity": 2,
   "source": "shop",
   "price": 300,
-  "color": "#c8c0a8"
+  "color": "#c8c0a8",
+  "look": {
+   "outfit": "sweater"
+  },
+  "colors": {
+   "c": "#c8c0a8"
+  }
  },
  "outfit:explorer": {
   "name": "Explorer vest",
   "slot": "outfit",
   "rarity": 2,
   "source": "rank",
-  "color": "#8a7a4a"
+  "color": "#8a7a4a",
+  "look": {
+   "outfit": "fieldvest"
+  },
+  "colors": {
+   "c": "#8a7a4a",
+   "w": "#e8dcc0"
+  }
  },
  "outfit:tuxedo": {
   "name": "Gallery tuxedo",
@@ -93,35 +166,78 @@
   "rarity": 3,
   "source": "shop",
   "price": 900,
-  "color": "#2a2a34"
+  "color": "#2a2a34",
+  "look": {
+   "outfit": "suit",
+   "acc": "bowtie"
+  },
+  "colors": {
+   "c": "#2a2a34",
+   "w": "#f4f4f0",
+   "g": "#1e1e22",
+   "X": "#1e1e22"
+  }
  },
  "outfit:parka": {
   "name": "Frostline parka",
   "slot": "outfit",
   "rarity": 3,
   "source": "rank",
-  "color": "#4a7aa8"
+  "color": "#4a7aa8",
+  "look": {
+   "outfit": "parka"
+  },
+  "colors": {
+   "c": "#4a7aa8"
+  }
  },
  "outfit:kimono": {
   "name": "Spring kimono",
   "slot": "outfit",
   "rarity": 3,
   "source": "event",
-  "color": "#e88aa8"
+  "color": "#e88aa8",
+  "look": {
+   "outfit": "robe"
+  },
+  "colors": {
+   "c": "#e88aa8"
+  }
  },
  "outfit:regatta": {
   "name": "Regatta blazer",
   "slot": "outfit",
   "rarity": 3,
   "source": "event",
-  "color": "#e0405a"
+  "color": "#e0405a",
+  "look": {
+   "outfit": "blazer"
+  },
+  "colors": {
+   "c": "#e0405a",
+   "w": "#f4f4f0"
+  }
  },
  "outfit:ghost": {
   "name": "Ghost sheet",
   "slot": "outfit",
   "rarity": 4,
   "source": "event",
-  "color": "#e8f0f8"
+  "color": "#e8f0f8",
+  "look": {
+   "outfit": "sheet",
+   "feet": "bare",
+   "hat": null
+  },
+  "colors": {
+   "c": "#e8f0f8",
+   "w": "#e8f0f8",
+   "s": "#e8f0f8",
+   "S": "#d0d8e0",
+   "h": "#e8f0f8",
+   "p": "#e0e8f0",
+   "b": "#d0d8e0"
+  }
  },
  "rodskin:bamboo": {
   "name": "Bamboo rod",

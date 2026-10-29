@@ -3,6 +3,7 @@ import { RoomScene } from './RoomScene.js';
 import { IslandScene } from './IslandScene.js';
 import { IsoScene } from './IsoScene.js';
 import { makeCharacter } from './art.js';
+import * as wardrobe from './people/wardrobe.js';
 import { warmTiles } from './tiles.js';
 import './ui.js';
 import './daily.css';
@@ -63,6 +64,7 @@ game.events.once('ready', () => setTimeout(warmTiles, 2500)); // the island's ti
 
 window.__game = game; // handy for debugging in the console
 window.__makeCharacter = makeCharacter; // (and for sprite contact sheets in tests)
+window.__wardrobe = wardrobe; // costumes and their locks: a quest calls unlockLook(id) (people/wardrobe.js)
 
 window.addEventListener('resize', () => {
   game.scale.resize(...size());

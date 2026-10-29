@@ -198,7 +198,7 @@ Owns: `src/progression/`, `tools/{validate,sim}_progression.mjs`, `tests/progres
 - [x] Phase 4: traversal ladder, fog chunks, viewpoints, secrets, rumours, legendary trails, locked docks.
 - [x] Phase 5: weekly rhythm, login calendar, streak shields, rested XP, return and leaving cards, seasons, events.
 - [x] Phase 6: subscription gating (flag, not enforced), telemetry and report, sim, validator, tuning.
-- [ ] Open: the race with the kids, notifications that fire while the game is closed (needs a push backend), a real payment path, player-facing art for hats and outfits (placeholder colours now), the lantern radius perk, art for the ghost variant.
+- [ ] Open: the race with the kids, notifications that fire while the game is closed (needs a push backend), a real payment path, player-facing art for hats and outfits (done by Chat 17: each has a `look` in cosmetics.json, drawn into the sprite; the Spring kimono is a placeholder robe), the lantern radius perk, art for the ghost variant.
 ## CHAT 17: People sprites (classes the Pokémon way)
 Owns: new `src/people/`, the character section of `src/art.js` (looks, `makeCharacter`), `src/library.js` and `art.html` (people gallery), `docs/PEOPLE-SPRITES.md`, new `tests/people-sprites.cjs`. Small additive edits only in `src/IslandScene.js`, `src/RoomScene.js` and the builder palette. Claim: `claimed: 2026-10-29`
 - [x] (this PR) Tier 0: parts (builds, hats, hair, facial hair, glasses, outfits, accessories, held props, poses), all recoloured through the palette letters.
@@ -207,7 +207,9 @@ Owns: new `src/people/`, the character section of `src/art.js` (looks, `makeChar
 - [x] (this PR) Tier 2: dig, field and expedition; museum professions (sections E, G): 44 more classes, 98 in all, 227 variants.
 - [x] (this PR) Tier 3: visitors and townspeople; food and market (sections J, H): 39 more classes, 137 in all, 312 variants.
 - [x] (this PR) Tier 4: arts and performance; science and medicine; artisans (sections I, F, C): 50 more classes, 187 in all, 402 variants. Raised arms now keep the outfit's sleeve (bare arms stay bare); a test catches a class name used twice (the artist had replaced the house painter).
-- [x] (this PR) Tier 5: history; fantasy and seasonal (sections K, L): 22 more classes, 209 in all, 471 variants, each period outfit with a museum reference; and 10 crews (section M): one builder piece (`t:crew_<id>`) places a whole group. Parked for your OK: East Asia, South Asia and Mesoamerica history, and the genie (see Needs Sean).
+- [x] Tier 5: history; fantasy and seasonal (sections K, L): 22 more classes, 209 in all, 471 variants, each period outfit with a museum reference; and 10 crews (section M): one builder piece (`t:crew_<id>`) places a whole group. Parked for your OK: East Asia, South Asia and Mesoamerica history, and the genie (see Needs Sean).
+- [x] (this PR) Wardrobe: costumes (51, from the classes), things to hold and on the shoulder in Customize → Character; the shop's hats and outfits drawn into the curator's sprite in every scene; locks ready for quests (nothing locked yet). The Spring kimono is a pink robe for now (a real kimono waits with East Asia).
+- [ ] Next: the new people in the shipped game (museum staff, islanders on the shipped islands, named friends), then the worst readability findings from `docs/aesthetics/second-pass-people.md`.
 
 ## CHAT 18: Progression evidence (measure first, then design)
 Owns: new `docs/progression/` (write-ups, CSV, Python models and analysis), new `src/progression/` (flags, event log, telemetry adapter), new `tests/progression.cjs`. Small additive edits only in shared files to emit events and read the flag. Builds no progression features; it measures what exists and sets the tests a progression design must pass. Claim: `claimed: 2026-10-29`

@@ -49,6 +49,8 @@ import { converse, giftStatus, recordGift } from './chatter.js';
 import { say } from './ui/toast.js';
 import { runDialogue } from './dialogue.js';
 import { progression } from './progression/index.js';
+import { wornLooks } from './progression/ui/lookfx.js';
+import { curatorLook } from './people/wardrobe.js';
 import { list as listEntries } from './collections/index.js';
 import { collect as collectEntry } from './collections/codex.js';
 import { load as loadStore, save as saveStore } from './storage.js';
@@ -101,22 +103,6 @@ const HD = 4; // resolution multiplier for paintings on the wall
 
 const DECOR_KEY = 'curation.roomDecor'; // { [roomIndex]: decor }
 // The curator's chosen hat, facial hair and glasses.
-const lookOf = (ch) => ({
-  hat: ch.hat && ch.hat !== 'none' ? ch.hat : null,
-  facial: ch.facial,
-  glasses: ch.glasses && ch.glasses !== 'none' ? ch.glasses : null,
-  hair: ch.hair === 'bald' ? null : ch.hair,
-  bald: ch.hair === 'bald',
-  outfit: ch.outfit,
-  acc: ch.acc,
-  freckles: !!ch.freckles,
-  blush: !!ch.blush,
-  earrings: !!ch.earrings,
-  build: ch.build,
-  legs: ch.legs,
-  feet: ch.feet,
-  second: !!ch.u, // the outfit's optional second color (outfitAccent in people/parts.js)
-});
 const TUTORIAL_KEY = 'curation.tutorial'; // how far the first-time walkthrough has got
 const BREAK_SEEDED_KEY = 'curation.breakSeeded';
 const CHARACTER_KEY = 'curation.character';
@@ -304,7 +290,7 @@ export class RoomScene extends Phaser.Scene {
     const base = baseDecor(this.room, this.roomIndex);
     this.decor = { ...base, ...(load(DECOR_KEY, {})[this.roomIndex] || {}) };
     this.character = { ...DEFAULT_CHARACTER, ...load(CHARACTER_KEY, {}) };
-    makeCharacter(this, 'player', this.character, lookOf(this.character));
+    this.dressPlayer();
 
     if (!this.textures.exists('bubble')) {
       Object.keys(PLANTS).forEach((k) => k !== 'none' && bakePlant(this, `plant_${k}`, k));
@@ -1979,10 +1965,16 @@ export class RoomScene extends Phaser.Scene {
     this.character = character;
     save(CHARACTER_KEY, character);
     const key = this.player.texture.key;
-    makeCharacter(this, 'player', character, lookOf(character));
+    this.dressPlayer();
     this.player.setTexture(key);
     if (character.pet !== this.pet?.kind || character.petColor !== this.petColor) this.makePet();
     this.petColor = character.petColor;
+  }
+
+  // The curator's sprite: their character, the cosmetics they wear and any costume (people/wardrobe.js).
+  dressPlayer() {
+    const { colors, look } = curatorLook(this.character, wornLooks());
+    makeCharacter(this, 'player', colors, look);
   }
 
   // Big front/side/back views of the curator for the Character tab.
