@@ -135,6 +135,14 @@ Scenes (`src/main.js`):
   49 paintings** (no network here); `content/batches/first-batch.json` (12 works, 9+ regions) is waiting to be built.
 - Test: `node tests/content.cjs` (no browser, no network).
 
+### Display: fixtures that hold collection entries (Chat 5)
+- A fixture is a decor item with a `fixture` block in `src/items.js` (kind, `accepts` display tags, `slots`). Today: easel, plinth, glass case,
+  specimen shelf, aquarium, giant tank. Placed fixtures get a stable id `d`; `curation.display` = `{ [d]: [entryId] }` (`src/display.js`, Node-safe).
+- Stand by one and tap Interact: `src/displaymenu.js` lists what is on it and what you own that fits (needs `ownedCount > on display`). Tapping a
+  picture opens its card in the viewer. `src/displayart.js` draws the pieces over the sprite (fish swim); rare and legendary pieces get a glow.
+- Pieces on display earn `value` (or 2 x rarity) gold/hr (`wallet.js`) and count as decor in the room rating (`rating.js`). Moving a fixture keeps its
+  pieces; selling empties it. Test: `node tests/display.cjs`.
+
 ### Wakefield, MA is NOT part of the game
 A separate personal project (the user's hometown, for friends) that only shares the engine. Its page is `wakefield.html`, its code
 `src/wakefield/`, its notes `docs/WAKEFIELD.md`. Never add it to the game. Engine improvements made along the way and kept in the

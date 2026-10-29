@@ -70,12 +70,12 @@ Owns: new `src/restore.js`, `src/restorestudio.js`, `src/storage_room.js`. Claim
 
 ## CHAT 5: Display, exhibits and the aquarium
 Owns: `src/showcase.js`, `src/viewer.js`, `src/collections/render.js`, new `src/display*.js`. Claim: `claimed: 2026-10-29`
-- [ ] Display cases, plinths, specimen shelves, easels and tanks that **place collection entries in rooms** (entries already say how they display: wall, case, plinth).
-- [ ] **Aquarium** for caught fish: tanks in a room, fish swim, tap for the card; a giant tank wing.
+- [x] Display cases, plinths, specimen shelves, easels and tanks that **place collection entries in rooms** (entries already say how they display: wall, case, plinth). (PR below)
+- [x] **Aquarium** for caught fish: tanks in a room, fish swim, tap for the card; a giant tank wing. (tanks + giant tank done; PR below)
 - [ ] Dinosaur skeleton assembled from dug bones; the big T. rex as a goal.
 - [ ] Specimen shelves for everything with the HD viewer; rarity frames and special cases for rare items.
 - [ ] Set completion plaques and rewards on display ("Fossil drawer", "Crystal cabinet").
-- [ ] Every displayed piece earns and counts toward room rating.
+- [x] Every displayed piece earns and counts toward room rating. (PR below)
 - [ ] Viewer polish: swipe along a wall of cases, notes, your rating and journal note.
 - [ ] Rope barriers, stanchions and signage as placeable decor.
 
