@@ -2242,7 +2242,7 @@ export class RoomScene extends Phaser.Scene {
         cost: upgradeCost(id),
         now: u.show(upgradeValue(id)),
         next: lvl < u.cost.length ? u.show(u.effect[lvl]) : null,
-        locked: id === 'toolbox' && !hasCarpenter() ? 'Hire the carpenter' : id === 'training' && !guides() ? 'Hire a guide' : null,
+        locked: id === 'toolbox' && !hasCarpenter() ? 'Hire the carpenter' : id === 'training' && !guides() ? 'Hire a guide' : id === 'beans' && !this.rooms.some((_, i) => loadItems(i).some((it) => it.type === 'counter')) ? 'Build a coffee counter' : null,
       };
     });
   }
