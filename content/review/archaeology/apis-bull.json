@@ -1,0 +1,111 @@
+{
+  "status": "draft",
+  "collection": "archaeology",
+  "slug": "apis-bull",
+  "notes": "region: Egypt. era removed: the paintings date buckets do not fit antiquity; Chat 8 defines this collection",
+  "entry": {
+    "id": "archaeology:apis-bull",
+    "collection": "archaeology",
+    "title": "Apis Bull",
+    "year": "400–100 BCE",
+    "ratio": 3.1053,
+    "blurb": "A larger base, likely inscribed, may have hidden the rough, unfinished lower edges of this statue.",
+    "rarity": 1,
+    "tags": [
+      "egypt"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1969.118/1969.118_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Leonard C. Hanna Jr. Fund",
+      "url": "https://clevelandart.org/art/1969.118"
+    },
+    "value": 5,
+    "facts": [
+      "Sacred animal cults have a long history in ancient Egypt, but they became even more important in the Ptolemaic and Roman periods.",
+      "Apis, the bull of Memphis, was a god in his own right.",
+      "But he was also associated with other deities, such as Ptah, the god of Memphis, and Osiris, in the form of Osiris-Apis (or Serapis)."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "144280",
+    "title": "Apis Bull",
+    "maker": "",
+    "year": "400–100 BCE",
+    "medium": "serpentinite",
+    "dimensions": "Overall: 53 x 19 x 59 cm (20 7/8 x 7 1/2 x 23 1/4 in.)",
+    "widthCm": 59,
+    "heightCm": 19,
+    "ratio": 3.1053,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1969.118/1969.118_web.jpg",
+    "imageWidth": 900,
+    "imageHeight": 675,
+    "pageUrl": "https://clevelandart.org/art/1969.118",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Leonard C. Hanna Jr. Fund",
+    "description": "Sacred animal cults have a long history in ancient Egypt, but they became even more important in the Ptolemaic and Roman periods. Because each god could incarnate himself into any animal species, beasts of all sorts--dogs, cats, ibises, crocodiles--were protected, venerated, mummified, and collected by the thousands in specialized animal cemeteries. The sacred bull cults were different. Apis, the bull of Memphis, was a god in his own right. But he was also associated with other deities, such as Ptah, the god of Memphis, and Osiris, in the form of Osiris-Apis (or Serapis). Statues and reliefs always show him crowned with a sun disk and cobra. When an Apis bull died, he was given a burial fit for a king in an area of the Memphite cemetery known as the Serapeum. A larger base, likely inscribed, may have hidden the rough, unfinished lower edges of this statue.",
+    "culture": "Egypt, Greco-Roman period (332 BCE–395 CE), Ptolemaic dynasty (305–30 BCE)",
+    "classification": "Sculpture",
+    "tags": [
+      "Egyptian and Ancient Near Eastern Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Apis Bull",
+      "maker": "",
+      "year": "400–100 BCE",
+      "medium": "serpentinite",
+      "dimensions": "Overall: 53 x 19 x 59 cm (20 7/8 x 7 1/2 x 23 1/4 in.)",
+      "culture": "Egypt, Greco-Roman period (332 BCE–395 CE), Ptolemaic dynasty (305–30 BCE)",
+      "classification": "Sculpture",
+      "credit": "The Cleveland Museum of Art. Leonard C. Hanna Jr. Fund",
+      "description": "Sacred animal cults have a long history in ancient Egypt, but they became even more important in the Ptolemaic and Roman periods. Because each god could incarnate himself into any animal species, beasts of all sorts--dogs, cats, ibises, crocodiles--were protected, venerated, mummified, and collected by the thousands in specialized animal cemeteries. The sacred bull cults were different. Apis, the bull of Memphis, was a god in his own right. But he was also associated with other deities, such as Ptah, the god of Memphis, and Osiris, in the form of Osiris-Apis (or Serapis). Statues and reliefs always show him crowned with a sun disk and cobra. When an Apis bull died, he was given a burial fit for a king in an area of the Memphite cemetery known as the Serapeum. A larger base, likely inscribed, may have hidden the rough, unfinished lower edges of this statue.",
+      "tombstone": "Apis Bull, 400–100 BCE. Egypt, Greco-Roman period (332 BCE–395 CE), Ptolemaic dynasty (305–30 BCE). Serpentinite; overall: 53 x 19 x 59 cm (20 7/8 x 7 1/2 x 23 1/4 in.). The Cleveland Museum of Art, Leonard C. Hanna Jr. Fund, 1969.118",
+      "funFact": "",
+      "didYouKnow": "A larger base, likely inscribed, may have hidden the rough, unfinished lower edges of this statue.",
+      "creators": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "A larger base, likely inscribed, may have hidden the rough, unfinished lower edges of this statue.",
+      "quote": "A larger base, likely inscribed, may have hidden the rough, unfinished lower edges of this statue.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Sacred animal cults have a long history in ancient Egypt, but they became even more important in the Ptolemaic and Roman periods.",
+      "quote": "Sacred animal cults have a long history in ancient Egypt, but they became even more important in the Ptolemaic and Roman periods.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Apis, the bull of Memphis, was a god in his own right.",
+      "quote": "Apis, the bull of Memphis, was a god in his own right.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "But he was also associated with other deities, such as Ptah, the god of Memphis, and Osiris, in the form of Osiris-Apis (or Serapis).",
+      "quote": "But he was also associated with other deities, such as Ptah, the god of Memphis, and Osiris, in the form of Osiris-Apis (or Serapis).",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "unknown collection \"archaeology\"",
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

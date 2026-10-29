@@ -227,6 +227,25 @@ const has = (list, re) => list.some((x) => re.test(x));
   check(first.items.length === 12 && first.items.every((i) => i.query && i.sources.every((s) => ids.includes(s))), 'the first batch has 12 searches, each with known sources', 'first batch malformed');
   check(new Set(first.items.map((i) => i.region)).size >= 9, 'the first batch spans at least 9 regions', 'first batch too narrow');
 
+  // ---------- Painting of the Day and rarity (proposals only) ----------
+  console.log('Painting of the Day and rarity');
+  const potd = await load('tools/potd.mjs');
+  const dr = { claims: [{ kind: 'blurb', text: 'Needs a hook.', quote: 'Needs a hook', source: 'record', placeholderFor: 'needs a real hook' }] };
+  check(potd.whyFor(dr) === null, 'potd: a placeholder blurb is never a "why it matters"', 'potd used a placeholder claim');
+  const dr2 = { claims: [{ kind: 'blurb', text: 'Blurb.', quote: 'Blurb.', source: 'description' }, { kind: 'fact', text: 'Fact.', quote: 'Fact.', source: 'description' }] };
+  check(potd.whyFor(dr2).why === 'Fact.', 'potd: prefers a quoted fact', 'potd picked the wrong claim');
+  const list = [{ id: 'a' }, { id: 'b' }, { id: 'c' }];
+  const d1 = new Date(2026, 5, 1);
+  const d2 = new Date(2026, 5, 2);
+  check(potd.pickFor(d1, list).id === potd.pickFor(new Date(2026, 5, 1, 23, 59), list).id && potd.pickFor(d1, list).id !== potd.pickFor(d2, list).id && potd.pickFor(d1, []) === null, 'potd: one pick per date, a new one the next day, none from an empty list', 'potd rotation wrong');
+  const pd = JSON.parse(fs.readFileSync(path.join(root, 'content/potd/draft.json'), 'utf8'));
+  check(pd.entries.length > 0 && pd.entries.every((e) => e.quote && e.why === e.quote && e.why.length <= potd.WHY_MAX && e.credit && e.url), 'potd drafts: every line is an exact quote with a credit and a link', 'a potd draft line is unsourced or too long');
+  check(pd.entries.every((e) => e.status === 'draft' || e.status === 'approved'), 'potd drafts: status is draft or approved', 'bad potd status');
+  const rp = JSON.parse(fs.readFileSync(path.join(root, 'content/rarity-proposals.json'), 'utf8'));
+  const slugs = reg.list({ collection: 'painting' }).map((e) => e.id.slice(9));
+  check(slugs.every((s) => [1, 2, 3, 4].includes(rp.rarity[s])) && Object.keys(rp.rarity).length === slugs.length, 'rarity proposals cover all 49 paintings with 1 to 4', 'rarity proposals do not match the paintings');
+  check(rp.status !== 'approved' || reg.list({ collection: 'painting' }).every((e) => e.rarity === rp.rarity[e.id.slice(9)]), 'rarity proposals are applied only after approval', 'approved rarity proposals are not in the data (run tools/apply_rarity.mjs)');
+
   // ---------- Nothing unreviewed is in the game ----------
   console.log('Game');
   check(reg.list({ collection: 'painting' }).length === 49, 'still 49 paintings in the game', 'the painting count changed: ' + reg.list({ collection: 'painting' }).length);

@@ -4,6 +4,10 @@ import { IslandScene } from './IslandScene.js';
 import { IsoScene } from './IsoScene.js';
 import { makeCharacter } from './art.js';
 import './ui.js';
+import './daily.css';
+import './daily.js';
+import './share.css';
+import './share.js';
 
 // Render at device resolution so pixel art stays sharp on phones.
 const parent = document.getElementById('game');

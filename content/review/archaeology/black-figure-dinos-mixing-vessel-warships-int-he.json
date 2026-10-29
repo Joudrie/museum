@@ -1,0 +1,103 @@
+{
+  "status": "draft",
+  "collection": "archaeology",
+  "slug": "black-figure-dinos-mixing-vessel-warships-int-he",
+  "notes": "region: Greece. era removed: the paintings date buckets do not fit antiquity; Chat 8 defines this collection",
+  "entry": {
+    "id": "archaeology:black-figure-dinos-mixing-vessel-warships-int-he",
+    "collection": "archaeology",
+    "title": "Black-Figure Dinos (Mixing Vessel): Warships (Int.); Heroic Scenes (Top)",
+    "by": "Antimenes Painter",
+    "year": "c. 520–515 BCE",
+    "ratio": 1.29,
+    "blurb": "While drinking, symposiasts would often recite poetry and celebrate the mythological exploits of gods and heroes, perhaps prompted by the images painted on their pottery.",
+    "rarity": 1,
+    "tags": [
+      "greek"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1971.46/1971.46_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. John L. Severance Fund",
+      "url": "https://clevelandart.org/art/1971.46"
+    },
+    "value": 5,
+    "facts": [
+      "Other heroic scenes, including Herakles wrestling the Nemean lion and Theseus battling the Minotaur, appear on top of the rim, interspersed with chariots and anonymous combats.",
+      "Unable to stand on its own, this round-bottomed vessel probably once had a separately made base."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "146147",
+    "title": "Black-Figure Dinos (Mixing Vessel): Warships (Int.); Heroic Scenes (Top)",
+    "maker": "Antimenes Painter",
+    "year": "c. 520–515 BCE",
+    "medium": "ceramic",
+    "dimensions": "Diameter: 50.8 cm (20 in.); Overall: 33.6 cm (13 1/4 in.); Diameter of rim: 34 cm (13 3/8 in.)",
+    "ratio": 1.29,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1971.46/1971.46_web.jpg",
+    "imageWidth": 1152,
+    "imageHeight": 893,
+    "pageUrl": "https://clevelandart.org/art/1971.46",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. John L. Severance Fund",
+    "description": "Designed for use at a symposium, or drinking party, this large dinos has a wide mouth allowing easy access to its contents—wine mixed with water (and sometimes other ingredients for flavoring). While drinking, symposiasts would often recite poetry and celebrate the mythological exploits of gods and heroes, perhaps prompted by the images painted on their pottery. Here, the vase-painter clearly anticipated such use; when the vessel was full, the ships painted on the inside of the rim would appear to sail across the “wine-dark sea” (to borrow a phrase found frequently in Homer’s Iliad and Odyssey ) . Other heroic scenes, including Herakles wrestling the Nemean lion and Theseus battling the Minotaur, appear on top of the rim, interspersed with chariots and anonymous combats. Unable to stand on its own, this round-bottomed vessel probably once had a separately made base.",
+    "culture": "Greek, Attic",
+    "classification": "Ceramic",
+    "tags": [
+      "Greek and Roman Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Black-Figure Dinos (Mixing Vessel): Warships (Int.); Heroic Scenes (Top)",
+      "maker": "Antimenes Painter",
+      "year": "c. 520–515 BCE",
+      "medium": "ceramic",
+      "dimensions": "Diameter: 50.8 cm (20 in.); Overall: 33.6 cm (13 1/4 in.); Diameter of rim: 34 cm (13 3/8 in.)",
+      "culture": "Greek, Attic",
+      "classification": "Ceramic",
+      "credit": "The Cleveland Museum of Art. John L. Severance Fund",
+      "description": "Designed for use at a symposium, or drinking party, this large dinos has a wide mouth allowing easy access to its contents—wine mixed with water (and sometimes other ingredients for flavoring). While drinking, symposiasts would often recite poetry and celebrate the mythological exploits of gods and heroes, perhaps prompted by the images painted on their pottery. Here, the vase-painter clearly anticipated such use; when the vessel was full, the ships painted on the inside of the rim would appear to sail across the “wine-dark sea” (to borrow a phrase found frequently in Homer’s Iliad and Odyssey ) . Other heroic scenes, including Herakles wrestling the Nemean lion and Theseus battling the Minotaur, appear on top of the rim, interspersed with chariots and anonymous combats. Unable to stand on its own, this round-bottomed vessel probably once had a separately made base.",
+      "tombstone": "Black-Figure Dinos (Mixing Vessel): Warships (Int.); Heroic Scenes (Top), c. 520–515 BCE. Circle of Antimenes Painter (Greek, Attic, active c. 530–510 BCE). Ceramic; diameter: 50.8 cm (20 in.); overall: 33.6 cm (13 1/4 in.); diameter of rim: 34 cm (13 3/8 in.). The Cleveland Museum of Art, John L. Severance Fund, 1971.46",
+      "funFact": "",
+      "didYouKnow": "Unable to stand on its own, this round-bottomed vessel probably once had a separately made base.",
+      "creators": "Antimenes Painter (Greek, Attic, active c. 530–510 BCE)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "While drinking, symposiasts would often recite poetry and celebrate the mythological exploits of gods and heroes, perhaps prompted by the images painted on their pottery.",
+      "quote": "While drinking, symposiasts would often recite poetry and celebrate the mythological exploits of gods and heroes, perhaps prompted by the images painted on their pottery.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Other heroic scenes, including Herakles wrestling the Nemean lion and Theseus battling the Minotaur, appear on top of the rim, interspersed with chariots and anonymous combats.",
+      "quote": "Other heroic scenes, including Herakles wrestling the Nemean lion and Theseus battling the Minotaur, appear on top of the rim, interspersed with chariots and anonymous combats.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Unable to stand on its own, this round-bottomed vessel probably once had a separately made base.",
+      "quote": "Unable to stand on its own, this round-bottomed vessel probably once had a separately made base.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "unknown collection \"archaeology\"",
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

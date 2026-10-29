@@ -2682,6 +2682,24 @@ export function bakeItem(scene, key, type, def, rot) {
       [10, 52].forEach((x) => [0, 1, 2, 3].forEach((k) => R(x + (k % 2), gy - 16 - k * 4, 2, 4, '#3f8f4a')));
       R(4, gy - 38, 56, 2, '#1e1a20');
       break;
+    case 'stanchion':
+      // one brass post with a short red belt, to line up with ropes
+      shadow(16, gy, 9, 3);
+      E(16, gy - 1, 6, 2, '#7a5a1e');
+      box(14, gy - 26, 4, 25, BRASS, OUT);
+      R(14, gy - 26, 1, 25, BRASS_L);
+      E(16, gy - 28, 3, 3, BRASS_L);
+      R(18, gy - 22, 8, 3, '#6a1420');
+      R(19, gy - 22, 6, 1, '#b8404e');
+      break;
+    case 'info_sign':
+      // a little sign on a stand for the exhibit's name
+      shadow(16, gy, 9, 3);
+      R(15, gy - 18, 2, 17, WOOD_D);
+      box(5, gy - 36, 22, 18, WOOD, OUT);
+      R(7, gy - 34, 18, 14, '#f4f0e6');
+      [30, 26, 22].forEach((y, k) => R(9, gy - y - 7 + 8, k === 2 ? 8 : 14, 1, '#6a5a4a'));
+      break;
     case 'plinth':
       // a marble pedestal; the exhibit stands on top
       shadow(16, gy, 11, 3);
