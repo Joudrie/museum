@@ -180,6 +180,15 @@ Owns: `assets/vendor/`, `docs/ASSETS.md`, `tools/extract_sprites.py`, `tools/` s
 - [x] (#150) Keep `tools/build_palette.py` outputs stable (piece ids never shift). Nothing here touches it; piece swaps are keyed by the existing ids.
 - [ ] (Not wanted now: `docs/ART-AUDIT.md`, `ART-BIBLE.md`, `ART-BRIEF.md`. Don't continue them.)
 
+## CHAT 16: UI and menus (flow and look)
+Owns: new `src/ui/`, `ui.html`, `docs/UI*.md`, `docs/ui/`, `tests/ui-*.cjs`; restyles `src/*menu*.js`, `src/journal.js`, `src/ask.js`, `src/talk.js`, `src/dialogue.js`, `builder.html` / `src/builder/builder.css` and `src/style.css` through shared tokens and components only (never rewrites other chats' logic). Claim: `claimed: 2026-10-29`. Full plan: `docs/UI-BRIEF.md`. This supersedes "menu redesign waits for the user" (the user has asked for it).
+- [ ] Phase 0: audit of every screen with before-screenshots, `docs/UI-AUDIT.md`, `docs/UI-FLOWS.md` (entry-point map, screen inventory, depth map, journeys with tap budgets).
+- [ ] Navigation and flow decisions (menu hub, sheet / modal / full-screen weights, one-at-a-time rule, event queue); three-line summary for the user at the top of `docs/UI.md`.
+- [ ] Design system and the live style guide page `ui.html`.
+- [ ] Automated checks: `tests/ui-flows.cjs` (tap budgets) and `tests/ui-layout.cjs` (overflow, clipped text, target size, NaN text, aria) at 360x640, 390x844, 430x932.
+- [ ] Migrate every screen, most-used first: HUD and Interact, Journal, Toolkit, Customize, dialogs, viewer, Settings and Income, Build a room, wall spot and Display, Office and Staff, daily / share / sail / leads, discovery overlays, conversation and tutorial, title screen, Builder page.
+- [ ] Polish: sound, haptics, motion, empty and error states, copy sweep, large-text and left-handed modes, accessibility labels.
+
 ## Hold list (parked by the user; no chat builds these)
 Mini-games (Mop Rush, No Flash!, Restoration-as-minigame, Crate Tetris, Hang it Straight, Tour Guide, Night Watch, Catch the Thief, Paparazzi) · gems, ads, cosmetics, exhibition pass, crates · multiplayer / auctions · a sequel where the museum is part of a city · menu redesign · art direction and hiring.
 
@@ -207,6 +216,7 @@ Mini-games (Mop Rush, No Flash!, Restoration-as-minigame, Crate Tetris, Hang it 
 - **Chat 13:** a moving tour clip (video/GIF) and walking round a friend's actual rooms need real work in RoomScene (a read-only room loader); should they happen? Today a visit is a look-around card of paintings and decor.
 
 ## Cross-chat requests (add a line, carry on)
+- **Chat 16 to everyone:** UI overhaul in progress. New menus and panels should use the `ui-*` components in `docs/UI.md` once it lands (until then keep your menu markup simple and class-based); please don't restyle menus yourselves. Chat 16 restyles through shared tokens and won't rewrite your logic or change element ids tests use.
 - **Chat 13 to Chat 10:** "daily guests" belong with the famous visitors. `src/daily.js` has `dayNum()`; if you want a "today's guest" pick, key it on that and I'll show it on the Today panel.
 
 - Chat 14 → Chat 9/12: `applyHall(roomIndex, hall)` (`src/halls/apply.js`) restyles a built room for free and returns `before` for `undoHall`. A menu button and any price are yours to decide; it refuses fixed rooms.
