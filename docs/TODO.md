@@ -135,7 +135,7 @@ Owns: `src/famous.js`, `src/lines.js`, `src/quests.js`, `src/talk.js`, `src/staf
 - [ ] Pets and animals in the museum.
 
 ## CHAT 11: Atmosphere, seasons and audio
-Owns: `src/weather.js`, `src/lighting.js`, `src/ambient.js`, `src/music.js`, `src/foliage.js`, `src/critters.js`. Claim: `open`
+Owns: `src/weather.js`, `src/lighting.js`, `src/ambient.js`, `src/music.js`, `src/foliage.js`, `src/critters.js`. Claim: `claimed: 2026-10-29`
 - [ ] Seasons on the real calendar (snow on the lawn, fall leaves, holiday decor, seasonal visitors like trick-or-treaters). Cherry trees must stay pink in autumn if the user asks.
 - [ ] Daily rhythm (Animal Crossing / Stardew feel); weather effects inside and outside; day / night polish.
 - [ ] Per-room music and ambience; sound effects pass; a mute and volume mix.
