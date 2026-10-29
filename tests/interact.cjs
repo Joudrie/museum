@@ -234,10 +234,15 @@ const check = (cond, good, bad) => (cond ? ok(good) : fail(bad));
   check(scenes.kids && new Set(scenes.kids).size === scenes.kids.length, 'the kids run their circle, each in a different place', `kids ${JSON.stringify(scenes.kids)}`);
   const life = await p.evaluate(() => {
     const s = __game.scene.getScene('island');
-    const keeper = s.islanders.find((n) => n.vignette === 'keeper');
-    if (keeper) s.player.setPosition(keeper.home.x, keeper.home.y + 70);
+    // someone standing in view, facing us
+    const who = s.islanders.find((n) => !n.animal && !n.script && n.skin);
+    const v0 = s.cameras.main.worldView;
+    who.target = null;
+    who.wait = 99999;
+    who.s.setPosition(v0.x + v0.width / 2, v0.y + v0.height / 2).setTexture(`${who.prefix}_down`);
     let blinks = 0;
     for (let i = 0; i < 600; i++) {
+      who.s.setTexture(`${who.prefix}_down`);
       s.tells.update(0.05, s.islanders, s.cameras.main.worldView);
       blinks = Math.max(blinks, s.tells.blinks.length);
     }
