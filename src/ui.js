@@ -41,6 +41,26 @@ let partyTimer = null;
 let showing = false;
 const colors = ['#f2d36b', '#e0405a', '#6fd07a', '#5aa8e0', '#f08a3a', '#fff4d0'];
 
+// "+1,200 gold" counts up from 0 (skipped when motion is reduced); the final text is always what was asked for.
+let countFrame = 0;
+function countUp(node, title) {
+  cancelAnimationFrame(countFrame);
+  const m = /^\+([\d,]+)(.*)$/.exec(title);
+  const reduce = document.documentElement.dataset.motion === 'reduce' || matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!m || reduce) return;
+  const to = Number(m[1].replace(/,/g, ''));
+  if (!(to >= 20)) return;
+  const t0 = performance.now();
+  const tick = (now) => {
+    const k = Math.min(1, (now - t0) / 650);
+    const n = Math.round(to * (1 - (1 - k) ** 3)); // eases out
+    node.textContent = `+${(k < 1 ? n : to).toLocaleString()}${m[2]}`;
+    if (k < 1) countFrame = requestAnimationFrame(tick);
+  };
+  node.textContent = `+0${m[2]}`;
+  countFrame = requestAnimationFrame(tick);
+}
+
 function showNext() {
   const it = waiting.shift();
   if (!it) {
@@ -50,7 +70,9 @@ function showNext() {
   }
   showing = true;
   party.querySelector('.celebrate-icon').innerHTML = uiIcon(it.icon);
-  party.querySelector('.celebrate-title').textContent = it.title;
+  const titleEl = party.querySelector('.celebrate-title');
+  titleEl.textContent = it.title;
+  countUp(titleEl, it.title);
   party.querySelector('.celebrate-sub').textContent = it.sub;
   party.querySelector('.celebrate-more').textContent = waiting.length ? `${waiting.length} more` : '';
   const card = party.querySelector('.celebrate-card');
