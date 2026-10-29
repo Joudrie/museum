@@ -1,0 +1,94 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "julie-le-brun-1780-1819-looking-in-a-mirror-elis",
+  "notes": "region: France (woman artist). the Met has no description text: needs a real hook",
+  "entry": {
+    "id": "painting:julie-le-brun-1780-1819-looking-in-a-mirror-elis",
+    "collection": "painting",
+    "title": "Julie Le Brun (1780–1819) Looking in a Mirror",
+    "by": "Elisabeth Louise Vigée Le Brun",
+    "year": "1787",
+    "era": "romantic",
+    "ratio": 0.813,
+    "blurb": "By Elisabeth Louise Vigée Le Brun, 1787, Oil on canvas.",
+    "rarity": 1,
+    "tags": [
+      "oil",
+      "portrait"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://images.metmuseum.org/CRDImages/ep/original/DP-26883-001.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Metropolitan Museum of Art, New York. Bequest of Mrs. Charles Wrightsman, 2019",
+      "url": "https://www.metmuseum.org/art/collection/search/438132"
+    },
+    "value": 5
+  },
+  "candidate": {
+    "source": "met",
+    "sourceId": "438132",
+    "title": "Julie Le Brun (1780–1819) Looking in a Mirror",
+    "maker": "Elisabeth Louise Vigée Le Brun",
+    "year": "1787",
+    "medium": "Oil on canvas",
+    "dimensions": "28 3/4 × 23 3/8 in. (73 × 59.4 cm)",
+    "widthCm": 59.37262,
+    "heightCm": 73.02515,
+    "ratio": 0.813,
+    "imageUrl": "https://images.metmuseum.org/CRDImages/ep/original/DP-26883-001.jpg",
+    "pageUrl": "https://www.metmuseum.org/art/collection/search/438132",
+    "license": "CC0",
+    "credit": "The Metropolitan Museum of Art, New York. Bequest of Mrs. Charles Wrightsman, 2019",
+    "description": "",
+    "culture": "",
+    "classification": "Paintings",
+    "tags": [
+      "Girls",
+      "Portraits",
+      "Mirrors"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Julie Le Brun (1780–1819) Looking in a Mirror",
+      "maker": "Elisabeth Louise Vigée Le Brun",
+      "year": "1787",
+      "medium": "Oil on canvas",
+      "dimensions": "28 3/4 × 23 3/8 in. (73 × 59.4 cm)",
+      "culture": "",
+      "classification": "Paintings",
+      "credit": "The Metropolitan Museum of Art, New York. Bequest of Mrs. Charles Wrightsman, 2019",
+      "description": "",
+      "objectName": "Painting",
+      "department": "European Paintings",
+      "period": "",
+      "dynasty": "",
+      "artistBio": "French, Paris 1755–1842 Paris",
+      "region": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "By Elisabeth Louise Vigée Le Brun, 1787, Oil on canvas.",
+      "quote": "By Elisabeth Louise Vigée Le Brun, 1787, Oil on canvas",
+      "source": "record",
+      "placeholderFor": "needs a real hook"
+    }
+  ],
+  "problems": [
+    "claim 1: needs a real hook; it only restates the record's own details (maker, date, medium)",
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

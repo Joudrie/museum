@@ -1,0 +1,113 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "antelope-and-deer-hunt-govardhan",
+  "notes": "region: Mughal India",
+  "entry": {
+    "id": "painting:antelope-and-deer-hunt-govardhan",
+    "collection": "painting",
+    "title": "Antelope and deer hunt",
+    "by": "Govardhan",
+    "year": "c. 1602–4",
+    "era": "baroque",
+    "ratio": 0.59,
+    "blurb": "Between 1600 and 1605, when Prince Salim set up his own royal court in defiance of his father, he convinced some imperial artists to join him.",
+    "rarity": 1,
+    "tags": [
+      "mughal india",
+      "tempera"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1939.66/1939.66_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Dudley P. Allen Fund",
+      "url": "https://clevelandart.org/art/1939.66"
+    },
+    "value": 5,
+    "facts": [
+      "The gray antelope in the foreground is called a nilgai and is the largest antelope in Asia.",
+      "The Mughals used trained cheetahs, such as this one wearing a red collar, to capture prey during hunting expeditions in the wilderness.",
+      "The metaphor of the hunt was also a potent image in Persian literature, in which the protagonist finally achieves a desired goal."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "118643",
+    "title": "Antelope and deer hunt",
+    "maker": "Govardhan",
+    "year": "c. 1602–4",
+    "medium": "Gum tempera and gold on paper",
+    "dimensions": "Image: 20 x 11.8 cm (7 7/8 x 4 5/8 in.); Overall: 37 x 25.3 cm (14 9/16 x 9 15/16 in.)",
+    "widthCm": 11.8,
+    "heightCm": 20,
+    "ratio": 0.59,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1939.66/1939.66_web.jpg",
+    "imageWidth": 553,
+    "imageHeight": 893,
+    "pageUrl": "https://clevelandart.org/art/1939.66",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Dudley P. Allen Fund",
+    "description": "The Mughals used trained cheetahs, such as this one wearing a red collar, to capture prey during hunting expeditions in the wilderness. The metaphor of the hunt was also a potent image in Persian literature, in which the protagonist finally achieves a desired goal. The central image of the cheetah catching the black buck—a frequently repeated visual trope—resonates with the desire of Prince Salim (who was passionate about hunting) to capture the throne of the Mughal Empire from Akbar, his father. Between 1600 and 1605, when Prince Salim set up his own royal court in defiance of his father, he convinced some imperial artists to join him. The young Govardhan, a Hindu who would go on to achieve high stature in the atelier of the next two emperors, was one of them. The gray antelope in the foreground is called a nilgai and is the largest antelope in Asia.",
+    "culture": "Mughal India, Allahabad, made for Prince Salim (1569–1627)",
+    "classification": "Painting",
+    "tags": [
+      "Indian and Southeast Asian Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Antelope and deer hunt",
+      "maker": "Govardhan",
+      "year": "c. 1602–4",
+      "medium": "Gum tempera and gold on paper",
+      "dimensions": "Image: 20 x 11.8 cm (7 7/8 x 4 5/8 in.); Overall: 37 x 25.3 cm (14 9/16 x 9 15/16 in.)",
+      "culture": "Mughal India, Allahabad, made for Prince Salim (1569–1627)",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Dudley P. Allen Fund",
+      "description": "The Mughals used trained cheetahs, such as this one wearing a red collar, to capture prey during hunting expeditions in the wilderness. The metaphor of the hunt was also a potent image in Persian literature, in which the protagonist finally achieves a desired goal. The central image of the cheetah catching the black buck—a frequently repeated visual trope—resonates with the desire of Prince Salim (who was passionate about hunting) to capture the throne of the Mughal Empire from Akbar, his father. Between 1600 and 1605, when Prince Salim set up his own royal court in defiance of his father, he convinced some imperial artists to join him. The young Govardhan, a Hindu who would go on to achieve high stature in the atelier of the next two emperors, was one of them. The gray antelope in the foreground is called a nilgai and is the largest antelope in Asia.",
+      "tombstone": "Antelope and deer hunt, c. 1602–4. Govardhan (Indian, active c.1596–1645). Gum tempera and gold on paper; image: 20 x 11.8 cm (7 7/8 x 4 5/8 in.); overall: 37 x 25.3 cm (14 9/16 x 9 15/16 in.). The Cleveland Museum of Art, Dudley P. Allen Fund, 1939.66",
+      "funFact": "",
+      "didYouKnow": "The gray antelope in the foreground is called a nilgai and is the largest antelope in Asia.",
+      "creators": "Govardhan (Indian, active c.1596–1645)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "Between 1600 and 1605, when Prince Salim set up his own royal court in defiance of his father, he convinced some imperial artists to join him.",
+      "quote": "Between 1600 and 1605, when Prince Salim set up his own royal court in defiance of his father, he convinced some imperial artists to join him.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The gray antelope in the foreground is called a nilgai and is the largest antelope in Asia.",
+      "quote": "The gray antelope in the foreground is called a nilgai and is the largest antelope in Asia.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The Mughals used trained cheetahs, such as this one wearing a red collar, to capture prey during hunting expeditions in the wilderness.",
+      "quote": "The Mughals used trained cheetahs, such as this one wearing a red collar, to capture prey during hunting expeditions in the wilderness.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The metaphor of the hunt was also a potent image in Persian literature, in which the protagonist finally achieves a desired goal.",
+      "quote": "The metaphor of the hunt was also a potent image in Persian literature, in which the protagonist finally achieves a desired goal.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

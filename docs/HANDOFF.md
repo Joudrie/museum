@@ -131,6 +131,8 @@ Scenes (`src/main.js`):
 - **Hosted paintings (Chat 1, #113/#118):** 46 of the 49 paintings are our own 1280px JPEGs in `public/paintings/` (same pictures; `tools/host_paintings.mjs`
   re-makes them, `content/hosted-images.json` records each original URL). The 3 broken ones (horse-fair, temeraire, crossing-delaware) keep their dead
   link until the user approves a file in `content/image-proposals.md` (all 11 flagged images have a proposal there; nothing applied).
+- **Batches 3 to 5 (Chat 1, #130):** `content/batches/{third,fourth,fifth}-batch.json` built 55 more drafts (82 in all, none approved). Cleveland ids carry a
+  quotable description; Met and Commons ones are flagged "needs a real hook". Live APIs: the Met rate-limits (HTML block page) and Cleveland's `fields=` param 500s.
 - `check_images.mjs` flags broken, tiny, heavy and wrong-shaped images for every painting. **Not run yet on the
   49 paintings** (no network here); `content/batches/first-batch.json` (12 works, 9+ regions) is waiting to be built.
 - Test: `node tests/content.cjs` (no browser, no network).
