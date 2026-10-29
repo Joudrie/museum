@@ -99,7 +99,7 @@ export default {
     id: 'mineral',
     name: 'Minerals',
     noun: 'minerals',
-    icon: '💎',
+    icon: 'star',
     kinds: ['mineral'],
     display: 'case',
     ownership: 'earned',

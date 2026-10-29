@@ -47,7 +47,7 @@ export default {
     id: 'visitor',
     name: 'Famous visitors',
     noun: 'famous visitors',
-    icon: '🎩',
+    icon: 'people',
     kinds: ['visitor'],
     display: 'floor',
     ownership: 'earned',

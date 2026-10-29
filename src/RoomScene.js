@@ -1372,6 +1372,7 @@ export class RoomScene extends Phaser.Scene {
         n.talking = false;
         n.wait = 1500;
       },
+      onBye: (text) => showTalk(n.name, PERSONALITIES[n.kind].label, text, this.screenAt(n.s.x, n.s.y - 34), 2600, followSpeaker(this, n.s, { leave: TALK_LEAVE })),
     });
   }
 

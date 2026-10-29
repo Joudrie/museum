@@ -90,7 +90,7 @@ export default {
     id: 'shell',
     name: 'Shells',
     noun: 'shells',
-    icon: '🐚',
+    icon: 'box',
     kinds: ['shell'],
     display: 'case',
     ownership: 'earned',

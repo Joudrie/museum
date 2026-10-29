@@ -9,7 +9,7 @@ export default {
     id: 'painting',
     name: 'Paintings',
     noun: 'paintings',
-    icon: '🖼️',
+    icon: 'book',
     kinds: ['painting'],
     display: 'wall',
     ownership: 'all',

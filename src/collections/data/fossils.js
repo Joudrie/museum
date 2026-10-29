@@ -180,7 +180,7 @@ export default {
     id: 'fossil',
     name: 'Fossils',
     noun: 'fossils',
-    icon: '🦴',
+    icon: 'box',
     kinds: ['fossil'],
     display: 'case',
     ownership: 'earned',
