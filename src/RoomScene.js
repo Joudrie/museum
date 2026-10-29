@@ -41,6 +41,8 @@ import { hasCameras, buyCameras, resetSecurity, CAMERA_COST, trackSeen, maybeRob
 import { officeLevel, setOfficeLevel, resetOffice, perks, itemLevel, LEVELS, MAX_LEVEL } from './office.js';
 import { openOffice } from './officemenu.js';
 import { ask } from './ask.js';
+import { heistBeat, chainStep, chainAsk, complete as completeBeat } from './story.js';
+import { PAINTINGS } from './paintings.js';
 import { showAd } from './ad.js';
 import { roomRating, museumRating, starText } from './rating.js';
 import { FAMOUS, meet, resetMet, metList, famousBoost } from './famous.js';
@@ -1254,6 +1256,7 @@ export class RoomScene extends Phaser.Scene {
     }
     if (!n.staff && Math.random() < 0.3) line = this.contextLine() || line;
     if (n.kind === 'guard' && !hasCameras()) return this.offerCameras(n, line);
+    if (n.kind === 'caretaker' && this.tellStory(n, heistBeat(this.storyContext()), 'The Empty Frames')) return;
     n.talking = true;
     n.target = null;
     n.path = null;
@@ -1263,6 +1266,33 @@ export class RoomScene extends Phaser.Scene {
     sfx('talk');
     const at = this.screenAt(n.s.x, n.s.y - 34);
     showTalk(n.name, PERSONALITIES[n.kind].label, line, at);
+  }
+
+  // What the story chapters ask about: who you've met and whose paintings are hung.
+  storyContext() {
+    const met = metList();
+    const hungIds = new Set(hungAnywhere(this.rooms).keys());
+    return { met: met.length, metIds: met, hungBy: [...new Set(PAINTINGS.filter((p) => hungIds.has(p.id)).map((p) => p.artist))] };
+  }
+
+  // Tell the next chapter (a modal so long lines are easy to read). Returns true if one was told.
+  tellStory(n, beat, title) {
+    if (!beat) return false;
+    this.faceSprite(n.s, n.prefix, this.player.x - n.s.x, this.player.y - n.s.y);
+    sfx('talk');
+    this.pause(true);
+    ask(`${n.name} · ${title}`, `“${beat.line}”`, 'Go on', () => {
+      this.pause(false);
+      const gold = completeBeat(beat, n.famous || n.kind);
+      if (gold) {
+        addCoins(gold);
+        sfx('coin');
+        this.updateHud();
+      }
+      if (beat.lead) this.toast(beat.lead.text);
+      else if (gold) this.toast(`+${gold} gold`);
+    }, null);
+    return true;
   }
 
   // Something about this room right now: mess, rating, time of day.
@@ -1305,6 +1335,8 @@ export class RoomScene extends Phaser.Scene {
     const near = this.paintingNear(n.s.x, n.s.y);
     let line = def.lines[Math.floor(Math.random() * def.lines.length)];
     if (first) line = def.hello;
+    else if (this.tellStory(n, chainStep(n.famous, this.storyContext()), def.name)) return;
+    else if (chainAsk(n.famous) && Math.random() < 0.4) line = chainAsk(n.famous);
     else if (near?.artist === n.famous && Math.random() < 0.7) line = def.own.replace('{title}', near.title);
     n.talking = true;
     n.target = null;
