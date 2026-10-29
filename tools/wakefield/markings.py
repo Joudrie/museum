@@ -131,10 +131,12 @@ def lines_along(photos, proj, line_world, tags):
             if 1 < b_ - a_ <= 3:
                 filled[a_:b_ + 1] = True
         duty = float(filled.mean())
-        if duty < 0.12:
+        if duty < 0.3:
             continue
         ycol = float(np.mean([yellow[i0 + q, int(round(d[q]))] for q in range(len(d)) if filled[q]] or [0]))
         colour = 'y' if ycol > YELLOW_T else 'w'
+        if colour == 'w' and duty < 0.55:  # a faint white track is a curb, a car or a crack; edge lines are mostly there
+            continue
         solid = duty >= 0.8
         lat = (d - len(off) // 2) * STEP  # metres from the centre line, + to the left
         # the line as points in world px
@@ -144,7 +146,9 @@ def lines_along(photos, proj, line_world, tags):
             wx, wy = proj.m2w(mxp, myp)
             return (float(wx), float(wy))
         if solid:
-            out.append((colour, [pt(q) for q in range(0, len(d), 3)] + [pt(len(d) - 1)], True, float(np.median(lat))))
+            line = np.array([pt(q) for q in range(0, len(d), 3)] + [pt(len(d) - 1)], np.float32)
+            line = cv2.approxPolyDP(line.reshape(-1, 1, 2), 3.0, False).reshape(-1, 2)  # straight where it is straight
+            out.append((colour, [tuple(map(float, q)) for q in line], True, float(np.median(lat))))
         else:
             q = 0
             while q < len(filled):
@@ -194,8 +198,8 @@ def crosswalk_bars(line_world):
 def analyze(roads, proj, cache, crossings=()):
     """roads: [(id, polyline in world px, tags)]. Returns {'yellow': [[polyline]], 'white': [[polyline]]} in world px."""
     saved = f'{cache}/paint.pkl'
-    if os.path.exists(saved) and not os.environ.get('WAKEFIELD_REMEASURE'):
-        print('  using the paint read last time (WAKEFIELD_REMEASURE=1 to read it again)')
+    if os.path.exists(saved) and not os.environ.get('WAKEFIELD_REREAD_PAINT'):
+        print('  using the paint read last time (WAKEFIELD_REREAD_PAINT=1 to read it again)')
         return pickle.load(open(saved, 'rb'))
     photos = Photos(cache)
     photos.limit = 400
