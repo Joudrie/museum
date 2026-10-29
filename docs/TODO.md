@@ -168,7 +168,7 @@ Owns: new `src/halls/`, room-preset JSON in `content/halls/`. Claim: `claimed: 2
 - [ ] **Architecture:** model hall (famous buildings in miniature, Gothic arches, column orders).
 - [ ] **Themed wings:** Japanese (cherry blossoms, ukiyo-e), Chinese (ink scrolls), and other non-European wings.
 - [ ] **Outside:** huge garden (swan-boat pond, Japanese garden, hedge maze, greenhouse, koi pond, sculpture garden), petting zoo or farm floor.
-- [x] Each hall = a themed room preset + decor + which collections and sets belong there. (PR pending: 18 presets in `content/halls/halls.json`, loader in `src/halls/`, `node tests/halls.cjs`. Hooking a hall into a menu waits on chat 9's room presets / chat 5's displays.)
+- [x] Each hall = a themed room preset + decor + which collections and sets belong there. (PR #136: 18 presets in `content/halls/halls.json`, loader in `src/halls/`, `node tests/halls.cjs`. Hooking a hall into a menu waits on chat 9's room presets / chat 5's displays.)
 
 ## CHAT 15: Asset hunt and art swap support
 Owns: `assets/vendor/`, `docs/ASSETS.md`, `tools/extract_sprites.py`, `tools/` sprite scripts. Claim: `claimed: 2026-10-29`
