@@ -38,6 +38,7 @@ put('dig_shore', 50, 48);
 put('dig_crater', 52, 48);
 [24, 25, 26].forEach((x) => put('dig_cliff', x, 50));
 [30, 31, 32].forEach((x) => put('dig_trench', x, 50));
+put('x_mark', 56, 46); // hidden until you hold all four torn map pieces
 put('rowboat', 22, 20);
 
 fs.mkdirSync('content/maps', { recursive: true });

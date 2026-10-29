@@ -13,6 +13,7 @@ import { load, save } from './storage.js';
 import { startDig, readyIn, toolUnlocked, pick, entriesFor, TOOLS } from './dig.js';
 import { collect } from './collections/codex.js';
 import { RIDDLES } from './puzzles-data.js';
+import { Hunts } from './puzzles-hunt.js';
 
 const T = 32;
 const CLUSTER = 8;
@@ -46,10 +47,11 @@ export class Puzzles {
     this.sliding = null; // { dx, dy } while the player is on ice
     this.wired = false;
     this.fogSeen = load(FOG_KEY, {});
+    this.hunts = new Hunts(scene); // metal detector, map-fragment X, rest labels (src/puzzles-hunt.js)
   }
 
   get any() {
-    return this.boulders.length + this.plates.length + this.levers.length + this.gates.length + this.rocks.length + this.fogs.length + this.riddlers.length > 0;
+    return this.boulders.length + this.plates.length + this.levers.length + this.gates.length + this.rocks.length + this.fogs.length + this.riddlers.length > 0 || this.hunts.any;
   }
 
   tex(name) {
@@ -87,7 +89,7 @@ export class Puzzles {
     } else if (name === 'riddler') {
       const img = s.place(name, x, y);
       this.riddlers.push({ ...base, img, key: `${s.mapId || 'one'}:riddle:${x},${y}`, solved: false });
-    } else return false;
+    } else return this.hunts.piece(name, x, y);
     return true;
   }
 
@@ -149,6 +151,7 @@ export class Puzzles {
       save(FOG_KEY, this.fogSeen);
       s.tweens.add({ targets: f.img, alpha: 0, duration: 900, onComplete: () => f.img.setVisible(false) });
     });
+    this.hunts.update(dt);
     this.ice(dt, dx, dy, cx, cy);
     this.push(dt, dx, dy);
   }
@@ -208,8 +211,8 @@ export class Puzzles {
   // ---- interaction ----
   focusAt(x, y) {
     const all = [...this.levers.map((o) => ({ o, k: 'lever' })), ...this.rocks.map((o) => ({ o, k: 'rock' })), ...this.riddlers.map((o) => ({ o, k: 'riddler' })), ...this.gates.filter((g) => !g.open).map((o) => ({ o, k: 'gate' })), ...this.boulders.map((o) => ({ o, k: 'boulder' }))];
-    let best = null;
-    let bd = 34;
+    let best = this.hunts.focusAt(x, y);
+    let bd = best ? Math.hypot(x - best.puzzle.cx, y - best.puzzle.cy) : 34;
     all.forEach(({ o, k }) => {
       const d = Math.hypot(x - o.cx, y - o.cy);
       if (d < bd) {
@@ -223,6 +226,7 @@ export class Puzzles {
   interact(f) {
     const s = this.s;
     const o = f.puzzle;
+    if (f.kind === 'x' || f.kind === 'buried') return this.hunts.interact(f);
     if (f.kind === 'lever') {
       this.flip(o, !o.on);
       s.toast(o.on ? 'Click. Something stirs.' : 'You pull it back.');

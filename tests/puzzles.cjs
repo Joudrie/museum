@@ -91,6 +91,64 @@ const check = (c, good, bad) => (c ? console.log('  ✓ ' + good) : (problems.pu
   await page.waitForTimeout(500);
   const k2 = await scene((s) => ({ n: s.puzzles.rocks.length, solid: s.solid[40][50] }));
   check(k2.n === 0 && !k2.solid, 'with a pick the rock cracks and the way is clear', 'rock did not smash: ' + JSON.stringify(k2));
+
+  // 6. hunts: the X shows when the four map pieces are held, and the detector is earned
+  const reg2 = await import(path.join(__dirname, '..', 'src', 'collections', 'index.js'));
+  const mapIds = reg2.list({ collection: 'map' }).map((e) => e.id);
+  const dugIds = ['mineral', 'fossil'].flatMap((c) => reg2.list({ collection: c }).map((e) => e.id)).slice(0, 10);
+  const codexWith = (seen, owned) => ({ v: 1, seen: Object.fromEntries(seen.map((id) => [id, { n: 1, first: 1 }])), owned: Object.fromEntries(owned.map((id) => [id, 1])), claimed: {}, dirty: {} });
+  const clearDig = async () => {
+    const box = await page.locator('#dig .dig-canvas').boundingBox();
+    await page.mouse.move(box.x + 4, box.y + 4);
+    await page.mouse.down();
+    for (let y = 8; y < box.height; y += 18) {
+      await page.mouse.move(box.x + 6, box.y + y, { steps: 2 });
+      await page.mouse.move(box.x + box.width - 6, box.y + y, { steps: 8 });
+    }
+    await page.mouse.up();
+    await page.waitForTimeout(200);
+  };
+  const restart = async () => { await scene((s) => s.scene.start('island', { mapData: JSON.parse(JSON.stringify(window.__yard)) })); await page.waitForTimeout(2200); };
+  await S((m) => { window.__yard = m; localStorage.setItem('curation.codex', JSON.stringify(m.codex)); }, { ...map, codex: codexWith(mapIds, mapIds) });
+  await restart();
+  await page.waitForTimeout(900);
+  const x1v = await scene((s) => ({ n: s.puzzles.hunts.xs.length, shown: s.puzzles.hunts.xs[0]?.shown, on: s.puzzles.hunts.on }));
+  check(x1v.n === 1 && x1v.shown && !x1v.on, 'four map pieces make the X appear (and the detector is still locked)', 'X wrong: ' + JSON.stringify(x1v));
+  await scene((s) => { const x = s.puzzles.hunts.xs[0]; s.player.setPosition(x.cx, x.cy + 12); });
+  await page.waitForTimeout(300);
+  const fx = await scene((s) => s.focus && s.focus.kind);
+  check(fx === 'x', 'standing on the X offers a dig', 'X not focusable: ' + fx);
+  await scene((s) => s.interact());
+  await page.waitForTimeout(200);
+  await clearDig();
+  await page.screenshot({ path: `${OUT}/x-dig.png` });
+  await S(() => document.querySelector('#dig .dig-close').click());
+  const spent = await scene((s) => ({ shown: s.puzzles.hunts.xs[0].shown, has: JSON.parse(localStorage.getItem('curation.codex')).owned }));
+  check(!spent.shown && !mapIds.some((id) => spent.has[id]), 'digging the X spends the map pieces', 'X not spent: ' + JSON.stringify(spent));
+
+  // the detector: earned at 10 finds; warmer as you near the day's buried things
+  await S((m) => localStorage.setItem('curation.codex', JSON.stringify(m)), codexWith(dugIds, []));
+  await restart();
+  await page.waitForTimeout(600);
+  const dt = await scene((s) => ({ on: s.puzzles.hunts.on, n: (s.puzzles.hunts.targets || []).length, badge: !!document.querySelector('#detector') }));
+  check(dt.on && dt.n === 3 && dt.badge, 'ten finds earn the detector; three things are buried today', 'detector wrong: ' + JSON.stringify(dt));
+  const far = await scene((s) => { const h = s.puzzles.hunts; const t = h.targets[0]; s.player.setPosition(t.x + 700, t.y); return null; });
+  await page.waitForTimeout(400);
+  const cold = await S(() => document.querySelector('#detector').textContent);
+  await scene((s) => { const t = s.puzzles.hunts.targets[0]; s.player.setPosition(t.x, t.y + 3); });
+  await page.waitForTimeout(400);
+  const hot = await S(() => document.querySelector('#detector').textContent);
+  check(/Cold|Cool/.test(cold) && /Right here/.test(hot), `the badge warms up as you near (${cold.trim()} then ${hot.trim()})`, `heat wrong: ${cold} / ${hot}`);
+  await page.screenshot({ path: `${OUT}/detector.png` });
+  const fb = await scene((s) => s.focus && s.focus.kind);
+  check(fb === 'buried', 'on the spot you can dig', 'buried not focusable: ' + fb);
+  await scene((s) => s.interact());
+  await page.waitForTimeout(200);
+  await clearDig();
+  await S(() => document.querySelector('#dig .dig-close').click());
+  const dn = await scene((s) => s.puzzles.hunts.targets.filter((t) => t.done).length);
+  const daily = await S(() => JSON.parse(localStorage.getItem('curation.digdaily') || '{}'));
+  check(dn === 1 && daily.n >= 1, 'a dug buried thing is done for the day and counts toward the daily goal', `buried/daily wrong: ${dn} ${JSON.stringify(daily)}`);
   check(!errors.length, 'no page errors', 'page errors: ' + errors.join(' | '));
   await browser.close();
   console.log(problems.length ? `\n${problems.length} problem(s)` : '\nAll good');
