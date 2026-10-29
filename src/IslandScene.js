@@ -36,7 +36,8 @@ import { openSail, builderIslands, friendIslands } from './sailmenu.js';
 import { EXPEDITION_MAPS, expeditionOf, expeditionFor, expeditionOptions, expeditionTitles, EXPEDITIONS, boatScene } from './expedition.js';
 import { openLeads, grantStartLeads, foundLeads } from './leads.js';
 import { visitorLook, KINDS } from './RoomScene.js';
-import { personOfTile, personFor } from './people/index.js';
+import { personOfTile, personFor, crewOfTile } from './people/index.js';
+import { crewWidth } from './people/crews.js';
 import { PERSONALITIES, QUIPS } from './lines.js';
 import { blendAt } from './groundblend.js';
 import { IslandLife } from './progression/ui/islandlife.js';
@@ -999,6 +1000,12 @@ export class IslandScene extends Phaser.Scene {
       if (name.startsWith('animal_') && ANIMALS[name.slice(7)]) return this.islanders.push(this.animal(name.slice(7), o.x + T / 2, o.y + t.h - 3, this.islanders.length));
       if (PEOPLE[name] !== undefined) return this.islanders.push(this.islander(o.x + T / 2, o.y + t.h - 4, PEOPLE[name], this.islanders.length));
       if (personOfTile(name)) return this.islanders.push(this.islander(o.x + T / 2, o.y + t.h - 4, 0, this.islanders.length, personOfTile(name).id, o.flip));
+      const crew = crewOfTile(name);
+      if (crew) {
+        // a crew: everyone where they stand in the piece (mirrored with it)
+        const w = crewWidth(crew);
+        return crew.members.forEach(([id, dx, dy, flip]) => this.islanders.push(this.islander(o.x + T / 2 + (o.flip ? w - 1 - dx : dx) * T, o.y + t.h - 4 + Math.round(dy * T), 0, this.islanders.length, id, !flip !== !o.flip)));
+      }
       if (name === 'museum') return this.mapMuseum(x, y, t);
       if (DIG_TILES[name]) return this.addDig(x, y, DIG_TILES[name]);
       if (this.puzzles.piece(name, x, y)) return;
@@ -1118,7 +1125,7 @@ export class IslandScene extends Phaser.Scene {
     // someone with a job (people/classes.js): works in their pose or wanders with their things
     const p = id && personFor(id, r);
     if (p) {
-      const prefix = `islander${seed}`;
+      const prefix = `islander${seed}_${id}`;
       if (!this.textures.exists(`${prefix}_down`)) makeCharacter(this, prefix, p.colors, p.look);
       const s = this.add.sprite(x, y, p.pose ? `${prefix}_pose_0` : `${prefix}_down`).setOrigin(0.5, 1).setScale(p.scale).setDepth(y).setFlipX(!!(p.pose && flip));
       if (p.alpha) s.setAlpha(p.alpha);
