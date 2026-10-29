@@ -818,6 +818,30 @@ function addProps(add, anim) {
         R(19, 11, 1, 1, '#f0e0ff');
       }
     });
+  // a worked-across face: a cliff of stone with a fossil showing, and a trench. Touching spots of one kind form a site (src/dig.js).
+  const face = (trench) =>
+    draw(T, T, ({ R, E }) => {
+      if (trench) {
+        R(2, 8, 28, 20, OUT);
+        R(3, 9, 26, 18, '#5a3a20');
+        R(3, 9, 26, 3, '#946640');
+        R(3, 24, 26, 3, '#3a2410');
+        [[7, 15], [15, 18], [22, 14]].forEach(([x, y]) => R(x, y, 3, 2, '#a89a84'));
+        R(20, 18, 4, 2, '#b8603c');
+      } else {
+        R(2, 3, 28, 25, OUT);
+        R(3, 4, 26, 23, css(STONE[2]));
+        R(3, 4, 26, 3, css(STONE[4]));
+        R(3, 22, 26, 5, css(STONE[1]));
+        R(7, 9, 1, 12, css(STONE[1]));
+        R(21, 8, 1, 10, css(STONE[1]));
+        R(12, 12, 8, 1, '#e8dfc8'); // a rib bone in the rock
+        R(13, 14, 7, 1, '#e8dfc8');
+        R(14, 16, 6, 1, '#e8dfc8');
+      }
+    });
+  add('dig_cliff', face(false), { group: 'Dig sites', label: 'Dig cliff (fossils)', walk: 'walk' });
+  add('dig_trench', face(true), { group: 'Dig sites', label: 'Dig trench (ruins)', walk: 'walk' });
   add('dig_spot', mound(false), { group: 'Dig sites', label: 'Dig spot (minerals)', walk: 'walk' });
   add('dig_fossil', mound(false, 'fossil'), { group: 'Dig sites', label: 'Dig spot (fossils)', walk: 'walk' });
   add('dig_ruin', mound(false, 'ruin'), { group: 'Dig sites', label: 'Dig spot (ruins)', walk: 'walk' });

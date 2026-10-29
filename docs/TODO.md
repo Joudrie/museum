@@ -81,9 +81,9 @@ Owns: `src/showcase.js`, `src/viewer.js`, `src/collections/render.js`, new `src/
 
 ## CHAT 6: Digging v2 and puzzle mechanics
 Owns: `src/dig.js`, `src/puzzles*.js`, `src/collections/data/{minerals,fossils}.js`. Claim: `claimed: 2026-10-29`
-- [x] More finds as data collections: pottery shards, coins, arrowheads, shells, meteorites (amber was already a fossil) (PR 106). Dig kinds: mineral, fossil, ruin, shore, crater.
-- [ ] Dig tools (brush, trowel, pick) that change speed and what turns up; a bone that needs several spots to complete.
-- [ ] Bigger dig sites: a cliff face or trench worked across several tiles; a dig-site room sandbox.
+- [x] More finds as data collections: pottery shards, coins, arrowheads, shells, meteorites (amber was already a fossil) (PR 122). Dig kinds: mineral, fossil, ruin, shore, crater.
+- [x] Dig tools (brush, trowel, pick) that change speed and what turns up; a bone that needs several spots to complete (PR 123).
+- [x] Bigger dig sites: a cliff face or trench worked across several tiles (touching spots of one kind form a site; dig them all in one rest period for a bonus rare find) (PR 123). A dig-site sandbox map is still to do (see Needs Sean).
 - [ ] Metal-detector hunt (warmer / colder); map fragments (collect 4 and the X appears).
 - [ ] Puzzle pieces as builder tiles and runtime: push blocks, boulders to smash, pressure plates and levers, iron gates, ice sliding, fog that clears as you walk, riddles from NPCs, mazes.
 - [ ] Dig spots in the builder palette under "Dig sites" (done, PR 106); spots show their rest time; daily dig goals.
