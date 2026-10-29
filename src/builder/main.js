@@ -26,10 +26,13 @@ const MATS = [
   { m: 4, name: 'Dirt path', color: '#b08458' },
 ];
 const FLAT_GROUPS = ['Ground', 'Paths', 'Water', 'Cliffs & ledges'];
+// palette lists that are really one: shown together under the first name
+const MERGE = { Plants: 'Flowers & plants', 'Grounds & garden': 'Garden & park' };
 const SKIP_GROUP = /on |bank|Shoreline/; // the corner pieces terrain picks for you
 
 let TILES = null;
 let ROOM = null; // pieces.json
+let NEW = []; // refs listed in public/builder/whatsnew.json
 const FAMILY = {}; // ref -> its turning family (rotations.json): the same object seen from each side
 const PIECES = {}; // ref -> { img, sx, sy, w, h, layer: 'tile' | 'object', label, src }
 let map = null;
@@ -102,6 +105,11 @@ async function loadPieces() {
       (await (await fetch('./builder/rotations.json')).json()).families.forEach((f) => f.forEach((ref) => (FAMILY[ref] = f)));
     } catch (e) {
       /* no families: nothing turns */
+    }
+    try {
+      NEW = (await (await fetch('./builder/whatsnew.json')).json()).refs || [];
+    } catch (e) {
+      /* no what's new row */
     }
     ROOM = await (await fetch('./builder/pieces.json')).json();
     await Promise.all(
@@ -224,17 +232,19 @@ function buildPalette() {
     markChosen();
   };
   refreshQuick();
+  NEW = NEW.filter((r) => PIECES[r]);
+  if (NEW.length) lists.push({ name: "What's new", refs: NEW });
   lists.push({ name: 'Terrain', refs: MATS.map((m) => `m:${m.m}`) });
   const byGroup = {};
   Object.entries(PIECES).forEach(([ref, p]) => {
     if (!ref.startsWith('t:') || p.skip || ref === 't:tall_grass_front') return; // (tall grass draws its own front)
-    const name = p.layer === 'tile' ? `Ground: ${p.group}` : p.group || 'Other';
+    const name = p.layer === 'tile' ? `Ground: ${p.group}` : MERGE[p.group] || p.group || 'Other';
     (byGroup[name] ||= []).push(ref);
   });
   const order = ['Ground: Ground', 'Ground: Paths', 'Ground: Water', 'Buildings', 'People', 'Animals', 'Trees', 'Plants', 'Flowers & plants', 'Rocks', 'Buildings', 'Garden & park', 'Grounds & garden', 'Props', 'Puzzles', 'Ground: Cliffs & ledges', 'Cliffs & ledges'];
   Object.keys(byGroup)
     .sort((a, b) => (order.indexOf(a) + 1 || 99) - (order.indexOf(b) + 1 || 99))
-    .forEach((name) => lists.push({ name: name.replace('Ground: Ground', 'Ground tiles').replace('Ground: ', ''), refs: byGroup[name] }));
+    .forEach((name) => lists.push({ name: name.replace('Ground: Ground', 'Ground tiles').replace('Ground: Cliffs & ledges', 'Cliff ground pieces').replace('Ground: ', ''), refs: byGroup[name] }));
   (ROOM?.groups || []).forEach((g) => lists.push({ name: `Room: ${g.name}`, refs: g.pieces.map((p) => `p:${p.id}`) }));
   lists.forEach((list, li) => {
     const det = document.createElement('details');
