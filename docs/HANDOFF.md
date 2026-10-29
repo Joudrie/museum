@@ -179,6 +179,13 @@ Scenes (`src/main.js`):
 - A set with every piece on display (any rooms) earns double for those pieces; the panel shows each started set's progress and plaque. Items can
   carry `needs: { entryId: count }` (the T-rex skeleton: 6 dinosaur bones + a T. rex tooth); `missingFor()` blocks buying and the toolkit says what is missing.
 
+### Expeditions (chat 7): leads, boat scene, seven islands
+- **Leads** (`src/leads.js`): letters, torn maps, notes and rumours, kept in `curation.leads`. The first (a bottle note) turns up when you first open the boat menu; finishing an island hands out the next (`then`). The boat menu only lists an expedition island once a lead points at it, and has a **Letters & leads** entry with a "Set sail" button per lead. Add a lead = one entry in `LEADS`.
+- **Islands** are `src/maps/exp-<id>.json` (builder format) with an `expedition` block: `spots` (note, dig, chest, crate, plate, gate, lever), `patrols`, `clock`, `goals`. `src/expedition.js` runs it (auto-loads every `exp-*.json`). `tools/gen_expeditions.mjs` drew the seven first drafts (Skull Isle, Drowned Reef, Sandstone Tomb, Red Badlands, Lost Temple, Thieves' Rock, Frozen North); repaint them in the builder but keep the block. Failing is gentle: caught or washed out puts you back at the boat, finds and flags stay.
+- **Finds come home dirty** with chat 4's contract: `collect(id, { dirty: true })`, so they are in your bag and the Restoration Studio cleans them. `foundAt(id)` (`src/foundat.js`) remembers the island and `provenanceLine` shows "Recovered from Skull Isle". Leads offered by chat 10's story chapters (`curation.leads_offered`: `heist-hideout`, `sphinx-letter`, `studio-chest`, `last-scrolls`) open Thieves' Rock, the Tomb, the Reef and the Temple.
+- Each map's `expedition.climate` pins its season and weather (Frozen North is always snowing, the Temple always rains); new props are in `src/tiles.js` under the "Expedition" group.
+- Test: `PW=... OUT=<dir> node tests/expedition.cjs` (a whole trip on Skull Isle, and every island's spots are reachable from the boat; run it alone, not next to another browser test).
+
 ### Wakefield, MA is NOT part of the game
 A separate personal project (the user's hometown, for friends) that only shares the engine. Its page is `wakefield.html`, its code
 `src/wakefield/`, its notes `docs/WAKEFIELD.md`. Never add it to the game. Engine improvements made along the way and kept in the
@@ -208,6 +215,9 @@ island scene streams ground chunks around the player.
 ### Art swap and placeholder list (Chat 15)
 - **Drop-in swap:** a PNG with the same name as a placeholder, put in `public/swap/` (`tiles/<name>.png`, `sprites/<name>.png`, `pieces/<group>/<n>.png`), overrides it with no code change. See `public/swap/README.md`. Code: `src/swap.js`; `vite.config.js` writes `swap/index.json`; `src/boot.js` waits for it before the game starts. A wrong-size file is ignored with a console warning.
 - **Placeholder list:** `node tools/list_placeholders.mjs` (add `--md` to rewrite `docs/PLACEHOLDERS.md`) lists every tile, room sprite and builder piece by name, size and where it's used, and marks swapped ones. Needs playwright (`PW=` path).
+
+### Asset hunt round 3 (Chat 15)
+- `docs/ASSETS.md` "Round 3": 30 OpenGameArt packs (licences read on each page) saved in `assets/vendor/<dir>/` with a `SOURCE.txt`, a ranked top 20, itch.io links to download by hand, and the gaps still open (display cases, plinths, glass walls, dig-site tools). `tools/fetch_oga.sh` downloads a pack. None are in the game yet.
 
 ## 4. Tests
 
@@ -259,6 +269,12 @@ See `docs/ASSET-HUNT.md` (the "super dig" prompt plus the to-do list) and `docs/
 
 - `holiday()` in `src/weather.js` (real calendar; `?holiday=halloween|winter|none` pins it). Halloween: pumpkins by the museum doors (`holidayDecor` in IslandScene), kids and some students in witch / ghost / pumpkin costumes (`visitorLook`). Winter: woolly hats.
 - Room presets (`src/presets.js`, `tests/presets.cjs`): Customize > This room > Saved layouts saves a room's decor and items under a name and loads them into any room. Loading sells what is there and buys the preset's items at normal prices, so layouts are not free items.
+
+## Chat 8: collections, codex, journal, shop
+- **New data collections** (stamps, armour, insects, ship models, glass flowers, timekeepers, inventions): `src/collections/data/*.js`, pixel art drawn by the helpers in `data/_px.js` (`pack()`, `draw()`, `sym()`), all placeholder art. Famous visitors are a collection too (`data/visitors.js`, `people: true`, so "Collect one of everything" skips them); their picture comes from the `visitor` renderer registered in `journal.js`, fed by `portraitCanvas` in RoomScene.
+- **Codex tab** (`milestones.js`, `codextab.js`): overall %, milestones 10/25/50/75/100% that pay once (`claimed['milestone-N']`), and ever-collected vs held-now per collection. **Artist sets** (`artistsets.js`) are made from the paintings (any artist with 2+), pay 100 gold per painting, and are journal goals only: `sets()` leaves them out unless you pass `true`, so they never become display bonuses.
+- **Shop** (`shop.js`, `shoptab.js`, Shop tab): sell for 50%, buy back after 7 days at 75% of price, a Gallery Shop of 3 to 5 pieces seeded by the date (150% of price, one of a kind: owned pieces can't be bought). The codex got a `sold` ledger (additive, repaired by `normalize`). Money is passed in, so tests run it in Node with an in-memory save. Paintings have nothing to sell until their collection is `'earned'` (Needs Sean).
+- **Journal polish** (`tab.js`): search and filter chips (hide cells in place), NEW marks (`curation.journalSeen`, cleared when you leave the tab) with a dot on tabs that have something new, and your stars and notes shown on tiles. `normalize` now clamps `dirty` to what you own (a test from the digging chat was failing on it).
 - Weather shades the light: `overcast()` in `src/lighting.js` (rain greyer, snow brighter), used by rooms and islands. `stormRumble(scene, kind)` in `src/weather.js` = thunder (`sfx('thunder')`, generated noise) plus a faint flash on some rainy days.
 - Themed rooms (`roomTheme` in `src/wallet.js`): 3+ paintings all from one era earn 1.5x; Customize > Rating says so. "Section" is read as the painting's `era`.
 
@@ -270,3 +286,5 @@ See `docs/ASSET-HUNT.md` (the "super dig" prompt plus the to-do list) and `docs/
 - **Big finds** use `parts: n` on an entry (T. rex 6, Triceratops 4): each fossil-spot dig that rolls one adds a piece (`curation.digparts`); the entry reaches the codex, dirty, on the last piece. They are `display: ['floor','plinth']` and in no set, for Chat 5 to assemble.
 - **Sites:** touching dig tiles of one kind (`dig_cliff` fossils, `dig_trench` ruins, or any mix of spots) form a site (`siteOf` in `src/dig.js`). With 3 or more tiles, digging every one inside a rest period triggers `IslandScene.bonusDig`: a rare find (rarity 3+ or a skeleton piece). The bonus has its own `site:<key>` rest timer.
 - Daily rhythm: `crowdShift(hour, weather)` in weather.js sets how many visitors a room starts with (only when day/night is on). A swan glides on the pond (`updateSwan` in critters.js). `Lighting.watchSpeed` auto-drops High to Low for the visit on slow phones; the saved setting is untouched.
+- **Puzzles** (`src/puzzles.js`, data in `src/puzzles-data.js`): `IslandScene.placeMapPieces` hands each tile to `puzzles.piece()`. Boulder (push) slides when you walk into it (Interact beside it puts it back); plate, lever, gate (a gate belongs to every plate, lever and riddler within 8 tiles of it, chained; it opens for good once all are done); `rock_crack` needs the pick (16 finds); `ice` ground tiles slide you; `fog` clears for good (`curation.fog`); `riddler` asks a riddle picked by its position, a right answer opens a dig patch (ruin finds), a wrong one costs nothing. Everything resets on reload except fog. Mazes are just hedges: build them.
+- **Puzzle yard**: `node tools/puzzle_yard.mjs` writes `content/maps/puzzle-yard.json` (one of every puzzle piece and dig site). `tests/puzzles.cjs` runs it via `scene.start('island', { mapData })`; it is not in the boat. Import it in the builder to play with it.

@@ -85,30 +85,30 @@ Owns: `src/dig.js`, `src/puzzles*.js`, `src/collections/data/{minerals,fossils}.
 - [x] Dig tools (brush, trowel, pick) that change speed and what turns up; a bone that needs several spots to complete (PR 123).
 - [x] Bigger dig sites: a cliff face or trench worked across several tiles (touching spots of one kind form a site; dig them all in one rest period for a bonus rare find) (PR 123). A dig-site sandbox map is still to do (see Needs Sean).
 - [ ] Metal-detector hunt (warmer / colder); map fragments (collect 4 and the X appears).
-- [ ] Puzzle pieces as builder tiles and runtime: push blocks, boulders to smash, pressure plates and levers, iron gates, ice sliding, fog that clears as you walk, riddles from NPCs, mazes.
+- [x] Puzzle pieces as builder tiles and runtime: push blocks, boulders to smash, pressure plates and levers, iron gates, ice sliding, fog that clears as you walk, riddles from NPCs, mazes (hedges; build them in the builder) (PR 150). `src/puzzles.js`; the test bed is `content/maps/puzzle-yard.json`.
 - [ ] Dig spots in the builder palette under "Dig sites" (done, PR 106); spots show their rest time; daily dig goals.
 - [ ] Finds arrive dirty where Chat 4 expects them (`dirty: true` on a stack).
 
 ## CHAT 7: Expeditions, leads and expedition islands
 Owns: new `src/expedition*.js`, `src/leads.js`, `src/maps/` (new islands). Claim: `claimed: 2026-10-29`
-- [ ] **Leads:** a letter, a torn map, a pirate's note, a rumour from a famous visitor sends you to an island.
-- [ ] Boat flow to expedition islands (the boat menu lists every island); a short boat scene.
-- [ ] Levels as playable island maps: pirate island (jungle maze, traps, captain's map, chest), shipwreck dive (water-damaged crates), desert tomb (sliding stones), dinosaur badlands (fossil cliff), lost temple (plates, hidden rooms), heist hideout (stealth), frozen north (ice cave, mammoth).
-- [ ] Each level can be slow puzzle, chase with light parkour, a dig, or a mix; failing is gentle (caught by pirates, tide comes in: retry).
-- [ ] Come home with finds that need restoring (Chat 4), then display (Chat 5); the plaque says where.
-- [ ] More island buildings and props, island seasons and weather, animals and people to meet.
-- [ ] The user's builder-made island as the default spawn (Main Island is already home).
+- [x] **Leads:** a letter, a torn map, a pirate's note, a rumour from a famous visitor sends you to an island. (#152: `src/leads.js`, Letters at the boat)
+- [x] Boat flow to expedition islands (the boat menu lists every island); a short boat scene. (#152)
+- [x] Levels as playable island maps (#152: all seven, `src/maps/exp-*.json`, drawn by `tools/gen_expeditions.mjs`): pirate island (jungle maze, traps, captain's map, chest), shipwreck dive (water-damaged crates), desert tomb (sliding stones), dinosaur badlands (fossil cliff), lost temple (plates, hidden rooms), heist hideout (stealth), frozen north (ice cave, mammoth).
+- [x] Each level can be slow puzzle, chase with light parkour, a dig, or a mix; failing is gentle (caught by pirates, tide comes in: retry). (#152; the "parkour" is dodging patrols through long grass, there is no jump yet)
+- [x] Come home with finds that need restoring (Chat 4), then display (Chat 5); the plaque says where. (#152: `collect(id, {dirty:true})` and `foundAt()`, see HANDOFF)
+- [x] More island buildings and props, island seasons and weather, animals and people to meet. (Expedition props in the builder's "Expedition" group: tent, pirate flag, shipwreck hull, sarcophagus, mammoth skeleton, ice block. Each expedition has its own `climate` {season, weather}. Parrots, crabs, cats, a dog and castaways to meet. Still open: buildings beyond tents and ruins, e.g. a lighthouse or a village.)
+- [x] The user's builder-made island as the default spawn (Main Island is already home; nothing to do).
 - [ ] Rule: **earned, not bought, no throwaway mini-games.**
 
 ## CHAT 8: Collections, codex, journal and the shop
 Owns: `src/collections/` (except render.js), `src/journal.js`, `tools/import_collection.mjs`. Claim: `claimed: 2026-10-29`
-- [ ] New collections as data (or CSV): coins, butterflies and insects, shells, stamps, ship models, glass flowers, pottery, armour, clocks, inventions.
-- [ ] Famous visitors as a collection (the codex already stamps `visitor:<id>`; their tab is hand-built).
-- [ ] Codex milestones at 10 / 25 / 50 / 75 / 100% with rewards; sets and artist sets (0/12 van Gogh); inventory vs codex.
-- [ ] Selling and buying through the codex: sell for 50%, **buy-back after a 1-week cooldown at a premium**, a **Gallery Shop** with 3 to 5 rotating paintings refreshed daily. (Crates: ON HOLD.)
-- [ ] `value` as income (recorded now, income still uses old rules); "your museum earns while you're away (up to 8 hours)" message.
-- [ ] Journal polish: filters, search, "new" markers, rate and note per item.
-- [ ] One of a kind: you own *the* Starry Night; sold ones go back in the pool.
+- [x] New collections as data (or CSV): coins, butterflies and insects, shells, stamps, ship models, glass flowers, pottery, armour, clocks, inventions. (#129; the digging chat's own coins, pottery and shells won where we overlapped. Tabs: Treasures, Makers, Insects.)
+- [x] Famous visitors as a collection (the codex already stamps `visitor:<id>`; their tab is hand-built). (#155) Now `data/visitors.js`, two sets, drawn by the `visitor` renderer in `journal.js`.
+- [x] Codex milestones at 10 / 25 / 50 / 75 / 100% with rewards; sets and artist sets (0/12 van Gogh); inventory vs codex. (#155: Codex tab, `milestones.js`, `artistsets.js`; held-now vs ever-collected also shows in Storage.)
+- [x] Selling and buying through the codex: sell for 50%, **buy-back after a 1-week cooldown at a premium**, a **Gallery Shop** with 3 to 5 rotating paintings refreshed daily. (Crates: ON HOLD.) (#155: `shop.js`, Shop tab. Paintings join the shelf and the sell list once their collection is switched to `ownership: 'earned'`: see Needs Sean.)
+- [x] `value` as income (recorded now, income still uses old rules); "your museum earns while you're away (up to 8 hours)" message. (Display pieces earn their `value` through `display.js` (#127) and the 8-hour cap message shipped with Chat 12 (#128). Paintings still earn by the old rule.)
+- [x] Journal polish: filters, search, "new" markers, rate and note per item. (#155; the viewer already had stars and notes, the journal now shows them.)
+- [x] One of a kind: you own *the* Starry Night; sold ones go back in the pool. ((#155) The Gallery Shop only offers pieces you don't hold, and a sold piece is back in the pool.)
 
 ## CHAT 9: Rooms and the museum building
 Owns: `src/rooms.js`, `src/shaped.js`, `src/walldraw.js`, `src/atrium.js`, `src/RoomScene.js` (shared, take care). Claim: `claimed: 2026-10-29`
@@ -172,8 +172,8 @@ Owns: new `src/halls/`, room-preset JSON in `content/halls/`. Claim: `claimed: 2
 
 ## CHAT 15: Asset hunt and art swap support
 Owns: `assets/vendor/`, `docs/ASSETS.md`, `tools/extract_sprites.py`, `tools/` sprite scripts. Claim: `claimed: 2026-10-29`
-- [ ] Run the **super dig** in `docs/ASSET-HUNT.md` (find, don't make; CC0 / CC-BY / CC-BY-SA / OGA-BY / GPL only; no non-commercial). Check network access first and don't get around bot checks; list itch.io links for the user to download by hand. Save results to `docs/ASSETS.md` (round 3), ranked top 20.
-- [ ] Categories: statues and sculpture (busts, plinths, display cases, rope barriers); jagged rocks and nature; museum architecture pieces (glass, curved, arches, domes, skylights, spiral stairs, facades); exhibits (dinosaur skeletons, mummies, armour, pottery, meteorites, ship models, taxidermy, aquarium tanks); furniture with four facings; island buildings, fences, docks, boats, market stalls, playground, festival decor; characters and animals; dig-site props (tents, crates, tools).
+- [x] (#153) Run the **super dig** in `docs/ASSET-HUNT.md` (find, don't make; CC0 / CC-BY / CC-BY-SA / OGA-BY / GPL only; no non-commercial). Check network access first and don't get around bot checks; list itch.io links for the user to download by hand. Save results to `docs/ASSETS.md` (round 3), ranked top 20.
+- [x] (#153) Categories: statues and sculpture (busts, plinths, display cases, rope barriers); jagged rocks and nature; museum architecture pieces (glass, curved, arches, domes, skylights, spiral stairs, facades); exhibits (dinosaur skeletons, mummies, armour, pottery, meteorites, ship models, taxidermy, aquarium tanks); furniture with four facings; island buildings, fences, docks, boats, market stalls, playground, festival decor; characters and animals; dig-site props (tents, crates, tools).
 - [x] (#150) A script that lists every placeholder sprite and tile by name, size and where it's used, so the user can redraw one at a time.
 - [x] (#150) **Drop-in swap:** a PNG with the same name in a folder overrides the placeholder, no code change.
 - [x] (#150) Keep `tools/build_palette.py` outputs stable (piece ids never shift). Nothing here touches it; piece swaps are keyed by the existing ids.
@@ -193,8 +193,10 @@ Mini-games (Mop Rush, No Flash!, Restoration-as-minigame, Crate Tetris, Hang it 
 - Chat 9: front lawn and facade (what does the outside look like?); rooftop terrace and telescope (where does it sit, which room reaches it?); elevator (what does each new floor hold?); construction times (is a day of waiting OK with "no wasted time"?); seamless archways showing two rooms at once (how much of the next room should show?).
 - Non-square rooms: what shapes, how they join, how they look (blocks Chat 9's first item).
 - West Wing outline; break-room upgrade ideas (defaults in `src/economy.js`: Better mops 90→120/160/220 min for 250/700/1800 gold, Guide training +10%→12/15/20% for 400/1100/2800, Carpenter's toolbox 10/20/30% off rooms for 350/900/2200; office levels 500/2000/8000/30000; collect-all fee 15%; security 150/400/1500, bounty 120; Better beans x1.25/1.5/2 for 300/800/2000; services: gift shop 600 gold, food court 1200, discovery table 700, lecture stage 1500, earnings in `SERVICES`); goal pacing and daily goals.
+- Asset hunt: download by hand from itch.io (PixelFishes CC0; Idylwild's Armory, check its licence first); links in docs/ASSETS.md round 3. Also: do you want a later dig of CraftPix, GameDev Market and GitHub CC0 tilesets?
 - Dig spots on Main Island: place them in the builder where you want them.
 - Mini-games and gems / ads: go or no-go?
+- **Chat 8: paintings are all yours from the start** (`ownership: 'all'`), so the Gallery Shop and selling have nothing to do with them yet. Switch the painting collection to `'earned'` (start with only the entrance paintings) and they flow through `shop.js` with no code change. Do you want that? Defaults in `src/collections/shop.js`: sell 50%, buy-back after 7 days at 75% of price, shop price 150%, 3 to 5 pieces a day; base price by rarity 40 / 120 / 400 / 1500 (an entry's own `price` wins). Milestone gold 500 / 1,500 / 5,000 / 12,000 / 50,000; artist sets pay 100 per painting.
 - Open design questions: free-roam map or chain of rooms; should paintings come only from expeditions; can you fail an expedition; seasons automatic or chosen; split the shared core now?
 
 - **Chat 13 defaults (change in `src/daily.js`):** welcome gift 40 gold + 10 per streak day (max 7) + 100 on every 7th day; wheel slices 25/40/60/40/100/25/75/250; the streak forgives a gap of up to 3 days and otherwise restarts quietly with no message.
@@ -206,6 +208,9 @@ Mini-games (Mop Rush, No Flash!, Restoration-as-minigame, Crate Tetris, Hang it 
 - Chat 14 → Chat 9/12: `applyHall(roomIndex, hall)` (`src/halls/apply.js`) restyles a built room for free and returns `before` for `undoHall`. A menu button and any price are yours to decide; it refuses fixed rooms.
 - Chat 14 → Chat 1/8: halls list `planned` collections (sculpture, flower, egyptian, ship-model, armor, clock, invention; meteorite, pottery and shell are in now) and Japanese prints: add the data and move the id into the hall's `collections`.
 - Chat 10 → Chat 7: story chapters offer leads by writing `{id, text, from, at}` to `curation.leads_offered` (see HANDOFF, "Story and leads"). Read it, show the lead, start the trip; ids so far: `heist-hideout`, `sphinx-letter`, `studio-chest`, `last-scrolls`.
+- **Chat 5 / 8:** `foundAt(entryId)` (`src/foundat.js`) returns "Skull Isle" etc. for any find from an expedition; `provenanceLine` already uses it.
+- **Chat 10:** expeditions read `curation.leads_offered` (your four ids open islands); `grantLead('id')` in `src/leads.js` is the other way to hand one out.
+- **Chat 6:** I added an optional `onFound(entry)` to `startDig` in `src/dig.js` (expeditions bring finds home dirty). Left your files otherwise alone.
 
 ## Order
 The chat numbers **are the priority order**: 1 is most important, 15 least. If you can't run all 15, run them in number order. Chat 14 (halls) needs 5, 8 and 9 first; chat 15 (asset hunt) is placeholder support and can wait.
