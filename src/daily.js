@@ -40,7 +40,7 @@ export function visitToday(today = dayNum()) {
 export function dailyState(today = dayNum()) {
   const s = visitToday(today);
   const prog = typeof window !== 'undefined' ? window.__prog?.state?.streak?.count : 0;
-  if (prog) s.streak = prog; // one streak: the progression layer's (shields and milestones)
+  if (prog && prog > s.streak) s.streak = prog; // the progression streak (shields, milestones) counts when it is longer
   return { ...s, giftReady: s.gift !== today, wheelReady: s.wheel !== today, giftAmount: giftFor(s.streak) + (isMilestone(s.streak) ? 100 : 0) };
 }
 
