@@ -74,7 +74,9 @@ const check = (c, good, bad) => (c ? ok(good) : fail(bad));
   };
   const ranks = await closeRanks();
   check(ranks >= 1, 'the rank-up ceremony plays (and closes on a tap after its lock)', 'no ceremony');
-  check((await S(() => document.querySelector('#prog-pill .pp-lv').textContent)) === String(await S(() => __prog.level().level)), 'the pill shows the new rank', 'pill not updated');
+  await p.waitForFunction(() => __prog.queue.length === 0 && !__prog.queue.busy, null, { timeout: 8000 }).catch(() => {});
+  await wait(600);
+  check((await S(() => document.querySelector('#prog-pill .pp-lv').textContent)) === String(await S(() => __prog.level().level)), 'the pill shows the new rank', 'pill not updated: ' + await S(() => document.querySelector('#prog-pill').innerText.replace(/\n/g,' ') + ' | ' + document.querySelector('#prog-pill .pp-lv').textContent + ' vs ' + __prog.level().level + ' q' + __prog.queue.length) + ' ' + JSON.stringify(await S(() => ({ ranks: __prog.bus.recent().filter((e) => e.type === 'RANK_UP').map((e) => e.payload.rank), xp: __prog.state.rank.xp, rm: __prog.state.telemetry.rankMinutes, pill: __pill(), busy: __prog.queue.busy }))) + await S(() => document.querySelector('#prog-pill .pp-lv').textContent + ' vs ' + __prog.level().level + ' q' + __prog.queue.length));
 
   console.log('Queue waits for menus');
   await S(() => { __prog.queue.clear(); __prog.xp(5000, 'test'); });

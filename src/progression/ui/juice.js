@@ -72,6 +72,8 @@ export function mountLayer(p) {
 }
 
 /** Redraws the rank bar and the pinned goal from the state. */
+export const pillState = () => ({ dispXp, shownLevel }); // (for tests)
+
 export function syncPill(p = progRef) {
   dispXp = p.state.rank.xp;
   shownLevel = p.level().level;
@@ -209,8 +211,15 @@ function rankCeremony(item, done) {
   haptic(40);
   document.body.classList.add('prog-lock');
   let ready = false;
+  let closed = false;
+  const timer = setTimeout(() => {
+    ready = true;
+    close();
+  }, 6500);
   const close = () => {
-    if (!ready) return; // input is locked for 1.2 s
+    if (!ready || closed) return; // input is locked for 1.2 s; and a ceremony closes once (its timer must not close the next one)
+    closed = true;
+    clearTimeout(timer);
     rankEl.onclick = null;
     rankEl.classList.remove('on', 'ready');
     document.body.classList.remove('prog-lock');
@@ -224,7 +233,6 @@ function rankCeremony(item, done) {
     ready = true;
     rankEl.classList.add('ready');
   }, lockMs);
-  setTimeout(close, 6500);
 }
 
 /** The queue's presenter. */

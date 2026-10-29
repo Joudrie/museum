@@ -12,7 +12,7 @@ import { createClock } from './clock.js';
 import { createProgression } from './service.js';
 import { createRewardQueue } from './rewardqueue.js';
 import { standardModules } from './modules.js';
-import { present, mountLayer, refreshPill, syncPill } from './ui/juice.js';
+import { present, mountLayer, refreshPill, syncPill, pillState } from './ui/juice.js';
 import { bus } from './bus.js';
 
 let P = null;
@@ -54,7 +54,8 @@ export function progression() {
   // the museum's ledger knows the fish Edmund gave you
   if (!snapshot().seen['fish:minnow'] && P.state.journal.stamps['fish:minnow']?.gift) collect('fish:minnow');
   mountLayer(P);
-  queue.onChange(() => refreshPill(P));
+  // when the queue is idle the pill simply shows the truth
+  queue.onChange(() => (!queue.length && !queue.busy ? syncPill(P) : refreshPill(P)));
   setInterval(() => !document.hidden && P.tick(1000), 1000);
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) P.end();
@@ -66,5 +67,6 @@ export function progression() {
   });
   window.addEventListener('pagehide', () => P.end());
   window.__prog = P;
+  window.__pill = pillState;
   return P;
 }
