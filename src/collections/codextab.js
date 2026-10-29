@@ -53,7 +53,7 @@ export function codexTab(ctx, refresh) {
   breakdown(snap).forEach(({ collection: c, have, total: n, held, pct }) => {
     const row = el('div', 'set-row' + (have === n ? ' done' : ''));
     const t = el('div', 'set-text');
-    t.append(el('b', '', `${c.icon} ${c.name}`), el('small', '', `${have} of ${n} collected · ${held} held now · ${pct}%`), bar(n ? Math.round((100 * have) / n) : 0));
+    t.append(el('b', '', c.name), el('small', '', `${have} of ${n} collected · ${held} held now · ${pct}%`), bar(n ? Math.round((100 * have) / n) : 0));
     row.appendChild(t);
     cols.appendChild(row);
   });

@@ -6,6 +6,7 @@ import { list, RARITY } from './collections/index.js';
 import { collect, count, ownedCount } from './collections/codex.js';
 import { drawEntry } from './collections/render.js';
 import { sfx } from './music.js';
+import { uiIcon } from './ui/icons.js';
 import { haptic } from './ui.js';
 import { addCoins } from './wallet.js';
 import { dayNum } from './daily.js';
@@ -119,7 +120,8 @@ export function startDig(key, { onClose, onFound, collection = 'mineral', entry 
       ...Object.entries(TOOLS).map(([id, t]) => {
         const b = document.createElement('button');
         const open = toolUnlocked(id, found);
-        b.textContent = open ? t.name : `${t.name} 🔒`;
+        b.textContent = t.name;
+    if (!open) b.insertAdjacentHTML('beforeend', ' ' + uiIcon('lock', 's'));
         b.title = open ? t.note : `Find ${t.need} different things to unlock`;
         b.className = id === tool ? 'on' : '';
         b.disabled = !open;

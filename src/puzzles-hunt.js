@@ -103,7 +103,7 @@ export class Hunts {
     this.shown = `${h ? h[1] : 'none'}|${this.hide}`;
     this.badge.classList.toggle('mini', this.hide);
     this.badge.dataset.heat = h ? h[2] : 0;
-    this.badge.textContent = this.hide ? '📡' : `📡 ${h ? h[1] : 'All found today'}`;
+    this.badge.textContent = this.hide ? 'Detector' : `Detector: ${h ? h[1] : 'all found today'}`;
   }
 
   near(max = Infinity) {

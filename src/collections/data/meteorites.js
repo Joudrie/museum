@@ -62,7 +62,7 @@ export default {
     id: 'meteorite',
     name: 'Meteorites',
     noun: 'meteorites',
-    icon: '☄️',
+    icon: 'star',
     kinds: ['meteorite'],
     display: 'plinth',
     ownership: 'earned',
