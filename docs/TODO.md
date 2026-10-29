@@ -111,7 +111,7 @@ Owns: `src/collections/` (except render.js), `src/journal.js`, `tools/import_col
 - [ ] One of a kind: you own *the* Starry Night; sold ones go back in the pool.
 
 ## CHAT 9: Rooms and the museum building
-Owns: `src/rooms.js`, `src/shaped.js`, `src/walldraw.js`, `src/atrium.js`, `src/RoomScene.js` (shared, take care). Claim: `open`
+Owns: `src/rooms.js`, `src/shaped.js`, `src/walldraw.js`, `src/atrium.js`, `src/RoomScene.js` (shared, take care). Claim: `claimed: 2026-10-29`
 - [ ] **Non-square rooms** (glass walls, curved, domed, sharp angles, open plan, small quiet rooms). **Blocked: needs a design pass with the user. Do the other items first.**
 - [ ] Corner and L-shaped rooms; truly seamless archways that show both rooms at once.
 - [ ] Elevator in the lobby and the first new floor (each floor a self-contained pack).
