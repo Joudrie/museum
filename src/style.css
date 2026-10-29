@@ -2386,7 +2386,8 @@ body.outside #hud {
 }
 
 /* digging (src/dig.js) */
-#dig {
+#dig,
+#riddle {
   position: fixed;
   inset: 0;
   z-index: 31;
@@ -2395,8 +2396,32 @@ body.outside #hud {
   padding: 16px;
   background: rgba(10, 8, 6, 0.55);
 }
-#dig.hidden {
+#dig.hidden,
+#riddle.hidden {
   display: none;
+}
+#riddle .rd-q {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.4;
+}
+#riddle .rd-opts {
+  display: grid;
+  gap: 6px;
+  width: 100%;
+}
+#riddle .rd-opts button {
+  padding: 9px 10px;
+  border: 2px solid var(--gold-dark);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+}
+#riddle .rd-msg {
+  font-size: 13px;
+  opacity: 0.8;
 }
 .dig-card {
   display: grid;
