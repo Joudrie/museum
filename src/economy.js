@@ -20,6 +20,14 @@ export const CARPENTER_COST = 300;
 // Break-room upgrades, bought on the staff board. cost[n] buys level n+1.
 // effect[n] is the value at level n+1 (level 0 uses `base`).
 export const UPGRADES = {
+  beans: {
+    name: 'Better beans',
+    blurb: 'The coffee counter sells more cups',
+    base: 1, // multiplier on coffee income
+    cost: [300, 800, 2000],
+    effect: [1.25, 1.5, 2],
+    show: (v) => `coffee income x${v}`,
+  },
   mops: {
     name: 'Better mops',
     blurb: 'Rooms without a janitor get messy more slowly',
@@ -44,6 +52,14 @@ export const UPGRADES = {
     effect: [0.1, 0.2, 0.3],
     show: (v) => (v ? `rooms cost ${Math.round(v * 100)}% less` : 'no discount yet'),
   },
+};
+
+// Visitor services: each earns by its own rule (see serviceGold in wallet.js).
+export const SERVICES = {
+  giftshop: { perPainting: 1 }, // gold/hr per hung painting, x2 for each rarity step above common
+  foodcourt: { visitorsPerGold: 50 }, // 1 gold/hr per this many monthly visitors
+  discovery: { flat: 15, visitorsPerGold: 150 },
+  lectern: { perFamousMet: 20 }, // gold/hr per famous visitor you have met
 };
 
 // Income: gold piles up for at most this many hours before you collect.
