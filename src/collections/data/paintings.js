@@ -34,7 +34,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Pieter_Bruegel_the_Elder-_The_Harvesters_-_Google_Art_Project.jpg/1280px-Pieter_Bruegel_the_Elder-_The_Harvesters_-_Google_Art_Project.jpg',
+        src: 'paintings/harvesters.jpg',
         placeholder: '#c9a24a',
       },
       display: ['wall'],
@@ -84,7 +84,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/1280px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg',
+        src: 'paintings/starry-night.jpg',
         placeholder: '#2b4a7a',
       },
       display: ['wall'],
@@ -109,7 +109,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/1280px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg',
+        src: 'paintings/mona-lisa.jpg',
         placeholder: '#5b5a3a',
       },
       display: ['wall'],
@@ -134,7 +134,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Tsunami_by_hokusai_19th_century.jpg/1280px-Tsunami_by_hokusai_19th_century.jpg',
+        src: 'paintings/great-wave.jpg',
         placeholder: '#3d5f7a',
       },
       display: ['wall'],
@@ -159,7 +159,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/1665_Girl_with_a_Pearl_Earring.jpg/1280px-1665_Girl_with_a_Pearl_Earring.jpg',
+        src: 'paintings/pearl-earring.jpg',
         placeholder: '#3a3a4a',
       },
       display: ['wall'],
@@ -184,7 +184,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_Project_-_edited.jpg/1280px-Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_Project_-_edited.jpg',
+        src: 'paintings/venus.jpg',
         placeholder: '#8aa39a',
       },
       display: ['wall'],
@@ -209,7 +209,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Monet_-_Impression%2C_Sunrise.jpg/1280px-Monet_-_Impression%2C_Sunrise.jpg',
+        src: 'paintings/impression-sunrise.jpg',
         placeholder: '#6c7f8a',
       },
       display: ['wall'],
@@ -234,7 +234,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Edvard_Munch%2C_1893%2C_The_Scream%2C_oil%2C_tempera_and_pastel_on_cardboard%2C_91_x_73_cm%2C_National_Gallery_of_Norway.jpg/1280px-Edvard_Munch%2C_1893%2C_The_Scream%2C_oil%2C_tempera_and_pastel_on_cardboard%2C_91_x_73_cm%2C_National_Gallery_of_Norway.jpg',
+        src: 'paintings/scream.jpg',
         placeholder: '#b5602e',
       },
       display: ['wall'],
@@ -259,7 +259,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Caspar_David_Friedrich_-_Wanderer_above_the_sea_of_fog.jpg/1280px-Caspar_David_Friedrich_-_Wanderer_above_the_sea_of_fog.jpg',
+        src: 'paintings/wanderer.jpg',
         placeholder: '#7d8590',
       },
       display: ['wall'],
@@ -284,7 +284,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/The_Kiss_-_Gustav_Klimt_-_Google_Cultural_Institute.jpg/1280px-The_Kiss_-_Gustav_Klimt_-_Google_Cultural_Institute.jpg',
+        src: 'paintings/kiss.jpg',
         placeholder: '#b8902e',
       },
       display: ['wall'],
@@ -309,7 +309,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/A_Sunday_on_La_Grande_Jatte%2C_Georges_Seurat%2C_1884.jpg/1280px-A_Sunday_on_La_Grande_Jatte%2C_Georges_Seurat%2C_1884.jpg',
+        src: 'paintings/grande-jatte.jpg',
         placeholder: '#6f8a4a',
       },
       display: ['wall'],
@@ -334,7 +334,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/The_Night_Watch_-_HD.jpg/1280px-The_Night_Watch_-_HD.jpg',
+        src: 'paintings/night-watch.jpg',
         placeholder: '#4a3a22',
       },
       display: ['wall'],
@@ -359,7 +359,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Johannes_Vermeer_-_Het_melkmeisje_-_Google_Art_Project.jpg/1280px-Johannes_Vermeer_-_Het_melkmeisje_-_Google_Art_Project.jpg',
+        src: 'paintings/milkmaid.jpg',
         placeholder: '#5a6a7a',
       },
       display: ['wall'],
@@ -384,7 +384,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Van_Gogh_-_Terrasse_des_Caf%C3%A9s_an_der_Place_du_Forum_in_Arles_am_Abend1.jpeg/1280px-Van_Gogh_-_Terrasse_des_Caf%C3%A9s_an_der_Place_du_Forum_in_Arles_am_Abend1.jpeg',
+        src: 'paintings/cafe-terrace.jpg',
         placeholder: '#c8a23a',
       },
       display: ['wall'],
@@ -409,7 +409,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Red_Fuji_southern_wind_clear_morning.jpg/1280px-Red_Fuji_southern_wind_clear_morning.jpg',
+        src: 'paintings/red-fuji.jpg',
         placeholder: '#a8452e',
       },
       display: ['wall'],
@@ -434,7 +434,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Van_Eyck_-_Arnolfini_Portrait.jpg/1280px-Van_Eyck_-_Arnolfini_Portrait.jpg',
+        src: 'paintings/arnolfini.jpg',
         placeholder: '#3f4a2a',
       },
       display: ['wall'],
@@ -459,7 +459,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Las_Meninas,_by_Diego_Vel%C3%A1zquez,_from_Prado_in_Google_Earth.jpg/1280px-Las_Meninas,_by_Diego_Vel%C3%A1zquez,_from_Prado_in_Google_Earth.jpg',
+        src: 'paintings/las-meninas.jpg',
         placeholder: '#4a3a2a',
       },
       display: ['wall'],
@@ -484,7 +484,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/The_Garden_of_earthly_delights.jpg/1280px-The_Garden_of_earthly_delights.jpg',
+        src: 'paintings/earthly-delights.jpg',
         placeholder: '#6a7a4a',
       },
       display: ['wall'],
@@ -509,7 +509,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Pieter_Bruegel_the_Elder_-_Hunters_in_the_Snow_(Winter)_-_Google_Art_Project.jpg/1280px-Pieter_Bruegel_the_Elder_-_Hunters_in_the_Snow_(Winter)_-_Google_Art_Project.jpg',
+        src: 'paintings/hunters-snow.jpg',
         placeholder: '#9aa8a8',
       },
       display: ['wall'],
@@ -534,7 +534,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Pieter_Bruegel_the_Elder_-_The_Tower_of_Babel_(Vienna)_-_Google_Art_Project_-_edited.jpg/1280px-Pieter_Bruegel_the_Elder_-_The_Tower_of_Babel_(Vienna)_-_Google_Art_Project_-_edited.jpg',
+        src: 'paintings/tower-babel.jpg',
         placeholder: '#a8865a',
       },
       display: ['wall'],
@@ -559,7 +559,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Claude_Monet_-_Water_Lilies_-_1906,_Ryerson.jpg/1280px-Claude_Monet_-_Water_Lilies_-_1906,_Ryerson.jpg',
+        src: 'paintings/water-lilies.jpg',
         placeholder: '#4a6a7a',
       },
       display: ['wall'],
@@ -584,7 +584,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Claude_Monet_-_Woman_with_a_Parasol_-_Madame_Monet_and_Her_Son_-_Google_Art_Project.jpg/1280px-Claude_Monet_-_Woman_with_a_Parasol_-_Madame_Monet_and_Her_Son_-_Google_Art_Project.jpg',
+        src: 'paintings/woman-parasol.jpg',
         placeholder: '#8ab0c8',
       },
       display: ['wall'],
@@ -609,7 +609,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Vincent_Willem_van_Gogh_127.jpg/1280px-Vincent_Willem_van_Gogh_127.jpg',
+        src: 'paintings/sunflowers.jpg',
         placeholder: '#d8a83a',
       },
       display: ['wall'],
@@ -634,7 +634,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Vincent_van_Gogh_-_Wheatfield_with_crows_-_Google_Art_Project.jpg/1280px-Vincent_van_Gogh_-_Wheatfield_with_crows_-_Google_Art_Project.jpg',
+        src: 'paintings/wheatfield-crows.jpg',
         placeholder: '#c8a03a',
       },
       display: ['wall'],
@@ -659,7 +659,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Vincent_van_Gogh_-_De_slaapkamer_-_Google_Art_Project.jpg/1280px-Vincent_van_Gogh_-_De_slaapkamer_-_Google_Art_Project.jpg',
+        src: 'paintings/bedroom.jpg',
         placeholder: '#5a8ab0',
       },
       display: ['wall'],
@@ -684,7 +684,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Vincent_van_Gogh_-_Self-Portrait_-_Google_Art_Project_(454045).jpg/1280px-Vincent_van_Gogh_-_Self-Portrait_-_Google_Art_Project_(454045).jpg',
+        src: 'paintings/vangogh-self.jpg',
         placeholder: '#4a6a8a',
       },
       display: ['wall'],
@@ -709,7 +709,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Rembrandt_-_The_Anatomy_Lesson_of_Dr_Nicolaes_Tulp.jpg/1280px-Rembrandt_-_The_Anatomy_Lesson_of_Dr_Nicolaes_Tulp.jpg',
+        src: 'paintings/anatomy-lesson.jpg',
         placeholder: '#3a2e22',
       },
       display: ['wall'],
@@ -734,7 +734,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Caravaggio_-_Cena_in_Emmaus.jpg/1280px-Caravaggio_-_Cena_in_Emmaus.jpg',
+        src: 'paintings/emmaus.jpg',
         placeholder: '#4a3420',
       },
       display: ['wall'],
@@ -759,7 +759,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Michelangelo_-_Creation_of_Adam_(cropped).jpg/1280px-Michelangelo_-_Creation_of_Adam_(cropped).jpg',
+        src: 'paintings/creation-adam.jpg',
         placeholder: '#b8a07a',
       },
       display: ['wall'],
@@ -784,7 +784,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/%22The_School_of_Athens%22_by_Raffaello_Sanzio_da_Urbino.jpg/1280px-%22The_School_of_Athens%22_by_Raffaello_Sanzio_da_Urbino.jpg',
+        src: 'paintings/school-athens.jpg',
         placeholder: '#a89070',
       },
       display: ['wall'],
@@ -809,7 +809,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Lady_with_an_Ermine_-_Leonardo_da_Vinci_-_Google_Art_Project.jpg/1280px-Lady_with_an_Ermine_-_Leonardo_da_Vinci_-_Google_Art_Project.jpg',
+        src: 'paintings/lady-ermine.jpg',
         placeholder: '#2a2420',
       },
       display: ['wall'],
@@ -834,7 +834,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Eug%C3%A8ne_Delacroix_-_Le_28_Juillet._La_Libert%C3%A9_guidant_le_peuple.jpg/1280px-Eug%C3%A8ne_Delacroix_-_Le_28_Juillet._La_Libert%C3%A9_guidant_le_peuple.jpg',
+        src: 'paintings/liberty.jpg',
         placeholder: '#6a5a3a',
       },
       display: ['wall'],
@@ -859,7 +859,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/El_Tres_de_Mayo,_by_Francisco_de_Goya,_from_Prado_thin_black_margin.jpg/1280px-El_Tres_de_Mayo,_by_Francisco_de_Goya,_from_Prado_thin_black_margin.jpg',
+        src: 'paintings/third-may.jpg',
         placeholder: '#3a3428',
       },
       display: ['wall'],
@@ -884,7 +884,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/John_William_Waterhouse_-_The_Lady_of_Shalott_-_Google_Art_Project_edit.jpg/1280px-John_William_Waterhouse_-_The_Lady_of_Shalott_-_Google_Art_Project_edit.jpg',
+        src: 'paintings/shalott.jpg',
         placeholder: '#4a5a4a',
       },
       display: ['wall'],
@@ -909,7 +909,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/%C3%89douard_Manet_-_Le_D%C3%A9jeuner_sur_l%27herbe.jpg/1280px-%C3%89douard_Manet_-_Le_D%C3%A9jeuner_sur_l%27herbe.jpg',
+        src: 'paintings/dejeuner.jpg',
         placeholder: '#4a5a3a',
       },
       display: ['wall'],
@@ -934,7 +934,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Pierre-Auguste_Renoir,_Le_Moulin_de_la_Galette.jpg/1280px-Pierre-Auguste_Renoir,_Le_Moulin_de_la_Galette.jpg',
+        src: 'paintings/moulin-galette.jpg',
         placeholder: '#6a7a8a',
       },
       display: ['wall'],
@@ -959,7 +959,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Edgar_Degas_-_The_Ballet_Class_-_Google_Art_Project.jpg/1280px-Edgar_Degas_-_The_Ballet_Class_-_Google_Art_Project.jpg',
+        src: 'paintings/ballet-class.jpg',
         placeholder: '#b8a88a',
       },
       display: ['wall'],
@@ -984,7 +984,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Gustave_Caillebotte_-_Paris_Street%3B_Rainy_Day_-_Google_Art_Project.jpg/1280px-Gustave_Caillebotte_-_Paris_Street%3B_Rainy_Day_-_Google_Art_Project.jpg',
+        src: 'paintings/rainy-day.jpg',
         placeholder: '#8a8a88',
       },
       display: ['wall'],
@@ -1009,7 +1009,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Mary_Cassatt_-_The_Child%27s_Bath_-_Google_Art_Project.jpg/1280px-Mary_Cassatt_-_The_Child%27s_Bath_-_Google_Art_Project.jpg',
+        src: 'paintings/childs-bath.jpg',
         placeholder: '#8a9a7a',
       },
       display: ['wall'],
@@ -1059,7 +1059,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/John_Constable_-_The_Hay_Wain_(1821).jpg/1280px-John_Constable_-_The_Hay_Wain_(1821).jpg',
+        src: 'paintings/hay-wain.jpg',
         placeholder: '#7a8a5a',
       },
       display: ['wall'],
@@ -1084,7 +1084,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Jean-Fran%C3%A7ois_Millet_-_Gleaners_-_Google_Art_Project_2.jpg/1280px-Jean-Fran%C3%A7ois_Millet_-_Gleaners_-_Google_Art_Project_2.jpg',
+        src: 'paintings/gleaners.jpg',
         placeholder: '#c8a868',
       },
       display: ['wall'],
@@ -1109,7 +1109,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Death_of_Marat_by_David.jpg/1280px-Death_of_Marat_by_David.jpg',
+        src: 'paintings/marat.jpg',
         placeholder: '#3a3020',
       },
       display: ['wall'],
@@ -1134,7 +1134,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Whistlers_Mother_high_res.jpg/1280px-Whistlers_Mother_high_res.jpg',
+        src: 'paintings/whistlers-mother.jpg',
         placeholder: '#4a4a48',
       },
       display: ['wall'],
@@ -1184,7 +1184,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Hans_Holbein_the_Younger_-_The_Ambassadors_-_Google_Art_Project.jpg/1280px-Hans_Holbein_the_Younger_-_The_Ambassadors_-_Google_Art_Project.jpg',
+        src: 'paintings/ambassadors.jpg',
         placeholder: '#2a3a2a',
       },
       display: ['wall'],
@@ -1209,7 +1209,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Albrecht_D%C3%BCrer_-_1500_self-portrait_(High_resolution_and_detail).jpg/1280px-Albrecht_D%C3%BCrer_-_1500_self-portrait_(High_resolution_and_detail).jpg',
+        src: 'paintings/durer-self.jpg',
         placeholder: '#3a2a1e',
       },
       display: ['wall'],
@@ -1234,7 +1234,7 @@ export default {
       rarity: 1,
       image: {
         kind: 'url',
-        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Fragonard,_The_Swing.jpg/1280px-Fragonard,_The_Swing.jpg',
+        src: 'paintings/swing.jpg',
         placeholder: '#7a8a5a',
       },
       display: ['wall'],

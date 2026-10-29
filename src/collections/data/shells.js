@@ -1,0 +1,105 @@
+// Seashells: dug up from shore spots (damp sand).
+
+const SPIRAL = [
+  '.....##.....',
+  '....#bb#....',
+  '...#baab#...',
+  '..#bacab#...',
+  '..#bacab#...',
+  '.#bacccab#..',
+  '.#bacccab#..',
+  '#bbaaaaabb#.',
+  '#bb#bbbb#bb#',
+  '.##......##.',
+];
+const FAN = [
+  '............',
+  '.....##.....',
+  '..#.#bb#.#..',
+  '.#b#baab#b#.',
+  '#bb#bcab#bb#',
+  '#ba#bcab#ab#',
+  '#ba#bcab#ab#',
+  '.#bbbaabbb#.',
+  '..#bbbbbb#..',
+  '....####....',
+];
+const CONCH = [
+  '......##....',
+  '.....#bb#...',
+  '....#baab#..',
+  '.##.#bcab#..',
+  '#bb##bcab#.#',
+  '#bbaabccab##',
+  '#bcccccccab#',
+  '#baaaaaaab#.',
+  '.#bbbbbbb#..',
+  '..#######...',
+];
+const STAR = [
+  '.....##.....',
+  '....#bb#....',
+  '....#ba#....',
+  '##..#ba#..##',
+  '#bb#bccb#bb#',
+  '.#bbbccbbb#.',
+  '..#bbccbb#..',
+  '..#bb##bb#..',
+  '.#bb#..#bb#.',
+  '.##......##.',
+];
+const shell = (slug, title, rows, [a, b, c, o], rarity, kind, blurb, facts) => ({
+  id: `shell:${slug}`,
+  collection: 'shell',
+  title,
+  blurb,
+  facts,
+  rarity,
+  set: 'shell-box',
+  tags: [kind],
+  image: { kind: 'pixels', rows, palette: { '#': o, a, b, c } },
+  display: ['case', 'plinth'],
+  provenance: { how: 'dug', where: 'Shore dig spots' },
+  source: { license: 'Original', credit: 'Curation' },
+  value: 2 * rarity,
+});
+
+const entries = [
+  shell('periwinkle', 'Periwinkle', SPIRAL, ['#b8a88c', '#dccfb4', '#7c6c54', '#2c241a'], 1, 'snail',
+    'A small sea snail that lives on rocks between the tides. Its shell grows in a spiral as the snail grows.',
+    ['Periwinkles graze on tiny algae.']),
+  shell('scallop', 'Scallop shell', FAN, ['#f0c8a8', '#fce8d4', '#c88c68', '#5a3420'], 1, 'clam',
+    'Scallops are clams that swim by clapping their two shells together. The ridges are growth lines.',
+    ['A scallop has many tiny eyes along the edge of its shell.']),
+  shell('conch', 'Conch shell', CONCH, ['#f0a890', '#ffd8c4', '#c0705a', '#5a2418'], 2, 'snail',
+    'A large sea snail shell with a pink glossy inside. Hold one to your ear and you hear the sound of the air in the shell.',
+    ['The “sea” sound is really ambient noise echoing in the hollow.']),
+  shell('starfish', 'Sea star', STAR, ['#e8784c', '#f8a478', '#b04828', '#4a1c0c'], 2, 'star',
+    'Sea stars are not fish. They move on hundreds of tiny tube feet, and most can regrow a lost arm.',
+    ['A sea star has no brain.']),
+  shell('nautilus', 'Nautilus shell', SPIRAL, ['#f4e8d8', '#fffaf0', '#c88c58', '#4a2c14'], 3, 'snail',
+    'The nautilus is a relative of the octopus living in a coiled, chambered shell. It has hardly changed in hundreds of millions of years.',
+    ['The animal adjusts gas in its chambers to rise and sink.']),
+  shell('sand-dollar', 'Sand dollar', STAR, ['#e8dcc4', '#faf2e0', '#a89870', '#3a3220'], 3, 'urchin',
+    'A flat relative of the sea urchin. The pattern on top looks like a five-petalled flower.',
+    ['When alive, a sand dollar is covered with tiny spines.']),
+];
+
+export default {
+  collection: {
+    id: 'shell',
+    name: 'Shells',
+    noun: 'shells',
+    icon: '🐚',
+    kinds: ['shell'],
+    display: 'case',
+    ownership: 'earned',
+    meta: ['rarity', 'where'],
+    journal: { tab: 'shells', label: 'Shells', order: 9, layout: 'tiles', intro: '{have} of {total} shells found. Dig them out of damp sand on the shore.' },
+    viewer: { look: 'case' },
+  },
+  sets: [
+    { id: 'shell-box', name: 'Shell box', collection: 'shell', entries: entries.map((e) => e.id), reward: { gold: 400 }, plaque: 'Six treasures of the tide line.' },
+  ],
+  entries,
+};

@@ -2312,9 +2312,11 @@ body.outside #hud {
 /* ---------- Collections ---------- */
 .journal-tabs {
   gap: 6px;
+  flex-wrap: wrap; /* a dozen tabs wrap onto a second row; this page never scrolls sideways */
 }
 .journal-tabs button {
-  min-width: 0;
+  flex: 1 0 auto;
+  min-width: 22%;
   padding-inline: 2px;
   font-size: 13px;
 }

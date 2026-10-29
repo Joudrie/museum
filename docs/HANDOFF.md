@@ -72,6 +72,16 @@ Scenes (`src/main.js`):
   `index.html?play=1`. That starts the game on it, with a "← Builder" button.
 - The user's recovered island seeds once as "Recovered island" (`src/builder/recovered.json`).
 
+- **Palette search, favourites, recents (#117):** search box at the top of the palette (matches label, group and ref), a ★ in the
+  chosen bar, "Favourites" and "Recently used" rows (`curation.mapbuilder.favs` / `.recent`, convenience only).
+- **Turn families:** `tools/rotation_sheet.py <sheet> <from> <to>` draws a labelled contact sheet to check sets by eye. Done so far:
+  the four armchair colours (front, left, back, right). Colour blocks repeat at fixed offsets but never auto-group; look first.
+
+- **"What's new" row:** `public/builder/whatsnew.json` lists refs shown first in the palette; add new pieces there. Duplicate lists (Plants / Flowers & plants, Garden & park) are merged by `MERGE` in `src/builder/main.js`.
+- **Area tool (#121):** drag a rectangle (shows W×H), then Copy / Cut / Clear / Mirror / Paste (tap to paste, repeat). Takes ground tiles, terrain corners and
+  pieces whose feet are inside. ☰ → Options has Ground / Pieces layer toggles. Whole-area rotation is not built.
+- **Builder test:** `PW=<playwright> URL=http://localhost:4173/builder.html node tests/builder.cjs` (place, undo/redo, turn, reload, vault restore after wiping localStorage).
+
 ### Islands (`src/IslandScene.js`)
 - **Main Island** = `src/maps/main-island.json`, the user's own map. It is **home**:
   - The museum's front doors lead out onto it and back in. It is the only museum you can enter.
@@ -118,6 +128,9 @@ Scenes (`src/main.js`):
   `"status": "approved"` → `publish_content.mjs` writes the data file and `CREDITS.md`.
   Every blurb and fact is a claim with the museum's exact sentence quoted; unsourced claims, invented numbers,
   filler, duplicates and missing licenses are flagged. The Met has no description text, so its drafts need a hook written.
+- **Hosted paintings (Chat 1, #113/#118):** 46 of the 49 paintings are our own 1280px JPEGs in `public/paintings/` (same pictures; `tools/host_paintings.mjs`
+  re-makes them, `content/hosted-images.json` records each original URL). The 3 broken ones (horse-fair, temeraire, crossing-delaware) keep their dead
+  link until the user approves a file in `content/image-proposals.md` (all 11 flagged images have a proposal there; nothing applied).
 - `check_images.mjs` flags broken, tiny, heavy and wrong-shaped images for every painting. **Not run yet on the
   49 paintings** (no network here); `content/batches/first-batch.json` (12 works, 9+ regions) is waiting to be built.
 - Test: `node tests/content.cjs` (no browser, no network).
@@ -188,3 +201,13 @@ See `docs/ASSET-HUNT.md` (the "super dig" prompt plus the to-do list) and `docs/
    No silly mini-games; real discovery and preservation.
 7. Seasonal recolouring turns the user's cherry trees orange in autumn. This is expected, but
    be ready to exempt cherry trees if they ask.
+
+### Chat 11 (atmosphere, seasons, audio)
+- Seasons already existed (`src/weather.js`, `seasonFrames` in `src/scenery.js`). Cherry trees now stay pink in autumn: no recolour and no swap to the maple tile.
+### Chat 9: rooms
+- Two new shaped plans in `src/shaped.js`: `lhall` (L-shaped hall) and `corner` (its mirror). They join the end of the shaped row, so old saves get them via `withShaped` and built rooms move back two places. `tests/gaps.cjs` and `tests/smoke.cjs` now count 7 shaped rooms (3 to 9) and built rooms start at index 10.
+
+## Digging v2 (Chat 6)
+- **Dig kinds** live in `src/dig.js` (`DIG_KINDS`, `DIG_TILES`): a builder tile maps to a kind, a kind maps to collections. mineral, fossil, ruin (pottery, coins, stone tools), shore (shells), crater (meteorites). To add a kind: a data collection, one line in `DIG_KINDS`, one tile in `src/tiles.js` (group "Dig sites"), one line in `DIG_TILES`.
+- **`dirty: true` on an entry** means finds of it arrive dirty (pottery, coins, stone tools, meteorites). `collect(id, { dirty })` records `codex.dirty[id]` (a count, never more than you own). Chat 4 owns what cleaning does; it should lower that count. Until then dirty finds display as normal.
+- Journal tabs now wrap to two rows (12 tabs). `tests/dig.cjs` needs the dev server (`npx vite --port 5173`, `URL=http://localhost:5173/`).
