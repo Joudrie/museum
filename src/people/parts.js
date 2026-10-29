@@ -13,7 +13,8 @@ export const MORE_HATS = {
   bucket: 'Bucket hat', souwester: 'Sou’wester', captain: 'Captain’s cap', sailor: 'Sailor cap', bandana: 'Bandana', flatcap: 'Flat cap',
   fedora: 'Fedora', pith: 'Pith helmet', pompom: 'Pom-pom hat', visor: 'Visor', fur: 'Fur hat', hood: 'Hood up', miner: 'Miner’s helmet',
   welder: 'Welding mask', chef: 'Chef’s hat', hairnet: 'Hairnet', pirate: 'Pirate hat', cowboy: 'Cowboy hat', headband: 'Headband', headphones: 'Headphones',
-  swimcap: 'Swim cap', campaign: 'Ranger hat', wrap: 'Head wrap',
+  swimcap: 'Swim cap', campaign: 'Ranger hat', wrap: 'Head wrap', veil: 'Veil', helmet: 'Bike helmet', police: 'Police cap', paperhat: 'Paper hat', tiara: 'Tiara',
+  kingcrown: 'Crown',
 };
 export const MORE_HAIR = {
   pompadour: 'Pompadour', slick: 'Slicked back', spiky: 'Spiky', horseshoe: 'Balding', mullet: 'Mullet', bowl: 'Bowl cut', pixie: 'Pixie',
@@ -28,10 +29,11 @@ export const MORE_OUTFITS = {
   coveralls: 'Coveralls', overalls: 'Overalls', hivis: 'Hi-vis vest', oilskins: 'Oilskins', waders: 'Waders', wetsuit: 'Wetsuit', sailor: 'Sailor top',
   captain: 'Captain’s coat', striped: 'Striped shirt', flannel: 'Flannel shirt', fieldvest: 'Field vest', trunks: 'Swim trunks', swimsuit: 'Swimsuit',
   labcoat: 'Lab coat', blazer: 'Blazer', cardigan: 'Cardigan', turtleneck: 'Turtleneck', parka: 'Parka', uniform: 'Uniform shirt', robe: 'Robe', mummy: 'Mummy wrap',
+  varsity: 'Varsity jacket', tracksuit: 'Track suit', chefwhites: 'Chef’s whites',
 };
 export const MORE_ACCESSORIES = {
   toolbelt: 'Tool belt', keyring: 'Key ring', lanyard: 'Lanyard', backpack: 'Backpack', whistle: 'Whistle', lifejacket: 'Life jacket', radio: 'Radio',
-  gloves: 'Gloves', earmuffs: 'Ear defenders', towel: 'Towel', tank: 'Air tank', hook: 'Hook hand',
+  gloves: 'Gloves', earmuffs: 'Ear defenders', towel: 'Towel', tank: 'Air tank', hook: 'Hook hand', sash: 'Sash', mailbag: 'Mail bag',
 };
 export const LEGS = { trousers: 'Trousers', shorts: 'Shorts', rolled: 'Rolled up', boots: 'Tall boots', peg: 'Peg leg' };
 export const FEET = { shoes: 'Shoes', bare: 'Bare feet' };
@@ -361,6 +363,27 @@ export function moreOutfit(out, view, look) {
     });
     body(18, (c, i) => (side || (i > 1 && i < len(18) - 2)) && (out[18][i] = 'r'));
   }
+  if (style === 'varsity') {
+    swap(torso, ['w', 'g'], 'c');
+    swap([11], ['w'], 'g');
+    arms([12, 13, 14, 15, 16, 17], 'w');
+    swap([20], ['c', 'C', 'd'], 'g');
+    if (front) [14, 15].forEach((r) => set(r, 3, 'Y'));
+  }
+  if (style === 'tracksuit') {
+    swap(torso, ['w', 'g'], 'c');
+    swap([11], ['w'], 'c');
+    swap(legs, ['p'], 'c');
+    if (front) [11, 12, 13, 14].forEach((r) => set(r, mid(r), 'w'));
+    if (!side) legs.forEach((r) => [1, len(r) - 2].forEach((i) => set(r, i, 'w')));
+    else legs.forEach((r) => set(r, Math.floor(len(r) / 2), 'w'));
+  }
+  if (style === 'chefwhites') {
+    swap(torso, ['w', 'g'], 'c');
+    swap([11], ['w'], 'c');
+    if (front) [13, 15, 17].forEach((r) => [4, len(r) - 5].forEach((i) => set(r, i, 'k')));
+    if (side) [13, 15, 17].forEach((r) => set(r, len(r) - 3, 'k'));
+  }
   if (style === 'mummy') {
     // wrapped from head to toe; only the eyes show
     out.forEach((row, r) => row.forEach((c, i) => c !== 'o' && c !== 'e' && c !== '.' && (row[i] = (r + Math.floor(i / 3)) % 3 === 0 ? 'a' : 'r')));
@@ -470,6 +493,22 @@ export function moreAccessories(out, view, look) {
     if (acc === 'earmuffs') {
       if (side) [5, 6, 7].forEach((r) => [3, 4].forEach((i) => set(r, i, 'X')));
       else [5, 6, 7].forEach((r) => (out[r] = ['o', 'X', ...out[r].slice(1, -1), 'X', 'o']));
+    }
+    if (acc === 'sash') {
+      for (let r = 12; r <= 20; r++) {
+        const i = front ? 2 + (r - 12) : len(r) - 3 - (r - 12);
+        if (!side) [i, i + (front ? 1 : -1)].forEach((j) => set(r, j, 'X'));
+      }
+      if (side) [13, 14, 15, 16].forEach((r) => set(r, len(r) - 3, 'X'));
+    }
+    if (acc === 'mailbag') {
+      if (front) {
+        for (let r = 12; r <= 18; r++) set(r, len(r) - 3 - (r - 12), 'K');
+        [18, 19, 20, 21].forEach((r) => [1, 2, 3, 4].forEach((i) => set(r, i, r === 18 ? 'k' : 'K')));
+      } else if (view === 'up') {
+        for (let r = 12; r <= 18; r++) set(r, 2 + (r - 12), 'K');
+        [18, 19, 20, 21].forEach((r) => [len(r) - 5, len(r) - 4, len(r) - 3, len(r) - 2].forEach((i) => set(r, i, 'K')));
+      } else [18, 19, 20, 21].forEach((r) => [1, 2, 3].forEach((i) => set(r, i, r === 18 ? 'k' : 'K')));
     }
     if (acc === 'towel') {
       const is = front ? [2, 3] : view === 'up' ? [len(12) - 4, len(12) - 3] : [2, 3];
@@ -833,6 +872,32 @@ const HAT_ROWS = {
     up: { pre: ['oooooo'], rows: { 0: 'oTTTTTTo', 1: 'oTTTTTTTTo', 2: 'oTUUUUUUUUTo', 3: 'oTTTTTTTTTTo' }, cover: [[4, 5, 6, 7, 8, 9, 10], ['h', 'H', 'S'], 'T'], flaps: [[4, 5, 6, 7, 8, 9], 'T'] },
     side: { pre: ['oooooo'], rows: { 0: 'oTTTTTTo', 1: 'oTTTTTTTTo', 2: 'oTUUUUUUUUTo', 3: 'oTTTTTTTTTTo' }, cover: [[4, 5, 6, 7, 8, 9], ['h', 'H'], 'T'], paint: { 5: [8, 'oT'], 6: [7, 'oTT'], 7: [7, 'oTT'], 8: [7, 'oTT'], 9: [8, 'oo'] } },
   },
+  veil: {
+    down: { rows: { 1: 'oUUUUUUUUo' }, flaps: [[4, 5, 6, 7, 8, 9], 'T'], paint: { 10: [8, 'oT'], 11: [8, 'oT'], 12: [8, 'oT'], 13: [8, 'oo'] } },
+    up: { rows: { 1: 'oUUUUUUUUo' }, cover: [[2, 3, 4, 5, 6, 7, 8, 9, 10], ['h', 'H', 'S'], 'T'], flaps: [[4, 5, 6, 7, 8, 9], 'T'], paint: { 11: [10, 'oTTTTTTTTTTo'], 12: [10, 'oTTTTTTTTTTo'], 13: [11, 'oooooooooo'] } },
+    side: { rows: { 1: 'oUUUUUUUUo' }, cover: [[2, 3, 4, 5, 6, 7, 8], ['h', 'H'], 'T'], paint: { 6: [8, 'oT'], 7: [8, 'oT'], 8: [8, 'oTT'], 9: [8, 'oTT'], 10: [8, 'oTT'], 11: [8, 'oTT'], 12: [8, 'oTT'], 13: [9, 'ooo'] } },
+  },
+  helmet: {
+    down: { pre: ['oooooo'], rows: { 0: 'oTUTTUTo', 1: 'oTTTTTTTTo', 2: 'oTTUTTTTUTTo', 3: 'oUUUUUUUUUUo' } },
+    side: { pre: ['oooooo'], rows: { 0: 'oTUTTUTo', 1: 'oTTTTTTTTo', 2: 'oTTUTTTTUTTo', 3: 'oUUUUUUUUUUo' }, paint: { 2: [8, 'oT'], 3: [8, 'oo'] } },
+  },
+  police: {
+    down: { pre: ['oooooooooooo'], rows: { 0: 'oTTTTTTTTTTTTo', 1: 'oTTTTTYYTTTTTo', 2: 'oUUUUUUUUUUo', 3: 'okkkkkkkkkko' } },
+    up: { pre: ['oooooooooooo'], rows: { 0: 'oTTTTTTTTTTTTo', 1: 'oTTTTTTTTTTTTo', 2: 'oUUUUUUUUUUo' } },
+    side: { pre: [[9, 'oooooooooooo']], rows: { 0: [8, 'oTTTTTTTTTTTTo'], 1: [8, 'oTTTTTTTTTYTTo'], 2: [10, 'oUUUUUUUUUUo'], 3: [10, 'okkkkkkkkkkkko'] } },
+  },
+  paperhat: {
+    down: { pre: ['oo', 'oTTo'], rows: { 0: 'oTTTTTTo', 1: 'oUUUUUUUUo' } },
+    side: { pre: [[11, 'oooooooooo']], rows: { 0: [10, 'oTTTTTTTTTTo'], 1: [10, 'oUUUUUUUUUUo'] } },
+  },
+  tiara: {
+    down: { pre: ['oQo'], rows: { 1: 'oYYQYYQYYo' } },
+    side: { pre: [[17, 'oQo']], rows: { 1: 'oYYYYYYQYo' } },
+    up: { rows: { 1: 'oYYYYYYYYo' } },
+  },
+  kingcrown: {
+    down: { pre: [[12, 'o..oo..o'], [11, 'oYooYYooYo']], rows: { 0: 'oYYYYYYYYYYo', 1: 'oYRYQYYQYRYo' } },
+  },
   swimcap: {
     down: { rows: { 0: 'oooooooo', 1: 'oTTTTTTTTo', 2: 'oTTUTTTTTTTo', 3: 'oTTTTTTTTTTo' }, paint: { 4: [10, 'oTTTTTTTTTTo'] }, cover: [[5, 6], ['h', 'H'], 'T'] },
     up: { rows: { 0: 'oooooooo', 1: 'oTTTTTTTTo', 2: 'oTTUTTTTTTTo', 3: 'oTTTTTTTTTTo' }, cover: [[4, 5, 6, 7, 8, 9], ['h', 'H'], 'T'] },
@@ -909,7 +974,8 @@ export function applyBuild(rows, build) {
 
 // where things are on a person after a build: base row r is at row Y(r) of the grid
 function metrics(g, view, build) {
-  const n = build === 'tall' ? 2 : build === 'short' ? -2 : 0;
+  const n = (build === 'tall' ? 2 : build === 'short' ? -2 : 0) - (view === 'sit' ? 2 : 0);
+  if (view === 'sit') view = 'down';
   const top = g.length - BASE - n;
   const Y = (r) => top + r + (build === 'tall' ? (r > 16) + (r > 22) : build === 'short' ? -((r > 16) + (r > 22)) : 0);
   const wide = build === 'broad' ? 1 : 0;
@@ -962,6 +1028,9 @@ export const CARRY = {
   trowel: 'Trowel', finebrush: 'Fine brush', stick: 'Walking stick', iceaxe: 'Ice axe', pickaxe: 'Pickaxe', machete: 'Machete', flask: 'Water skin', torch: 'Torch',
   tablet: 'Tablet', frame: 'Picture frame', scroll: 'Scroll', books: 'Books', kit: 'Workshop kit', umbrella: 'Umbrella', flashlight: 'Flashlight', giftbag: 'Gift bag',
   hanger: 'Coat on a hanger', mic: 'Microphone', cane: 'Cane', notebook: 'Notebook', cheque: 'Big cheque',
+  balloon: 'Balloon', teddy: 'Teddy bear', scooter: 'Scooter', icecream: 'Ice cream', skateboard: 'Skateboard', shopping: 'Shopping bags', suitcase: 'Suitcase',
+  coffee: 'Coffee', briefcase: 'Briefcase', lunchbag: 'Lunch bag', letter: 'Letter', bouquet: 'Bouquet', bread: 'Tray of bread', tray: 'Serving tray',
+  plates: 'Stack of plates', candyjar: 'Jar of sweets', mug: 'Mug',
 };
 
 // a pole down the outside of the hand, with a head at the bottom (mop, broom, shovel...)
@@ -1236,6 +1305,69 @@ const CARRY_DRAW = {
     if (m.view === 'side') d.pic(m.hx + 2, m.hy - 7, Array(6).fill('Q'));
     else d.pic(8 - m.wide, m.hy - 6, ['QQQQQQQQQQQQQQQQ', 'QkkQQQQQQQQxxxxQ', 'QQQQQQQQQQQQQQQQ', 'QkkkkkkkQQQQQQQQ', 'QQQQQQQQQQQkkkQQ', 'QQQQQQQQQQQQQQQQ']);
   },
+  balloon: (d, m) => {
+    const { hx, hy, view, top } = m;
+    const s = view === 'up' ? 1 : view === 'side' ? 1 : -1;
+    const x = view === 'side' ? hx + 6 : hx + s * 4;
+    d.line(view === 'side' ? hx + 1 : hx + s, hy, x, top - 2, 'l');
+    d.pic(x - 2, top - 7, [' xx ', 'xxxx', 'xQxx', 'xxxx', ' xx ']);
+    hand(d, m);
+  },
+  teddy: (d, m) => {
+    if (m.view === 'up') return;
+    if (m.view === 'side') d.pic(m.hx + 1, m.hy - 3, ['N ', 'nn', 'kn', 'nn']);
+    else d.pic(12 - m.wide, m.hy - 4, ['N   N', 'NnnnN', 'nknkn', 'nnNnn', ' nnn ']);
+  },
+  scooter: (d, m) => beside(d, m, ['AAA', ' A ', ' A ', ' A ', ' A ', ' A ', ' A ', ' A ', ' A ', 'kkkkk', 'k   k']),
+  icecream: (d, m) => {
+    const { hx, hy, view } = m;
+    const x = view === 'down' ? hx - 3 : view === 'up' ? hx + 1 : hx + 1;
+    d.pic(x, hy - 5, [' P ', 'PxP', 'PPP', ' n ', ' n ']);
+    hand(d, m);
+  },
+  skateboard: (d, m) => {
+    if (m.view === 'side') {
+      d.pic(m.hx - 6, m.hy - 1, ['kkkkkkkkkkkk', 'A          A']);
+      hand(d, m);
+      return;
+    }
+    beside(d, m, ['kkk', 'kxk', 'kxk', 'kxk', 'kxk', 'kxk', 'kxk', 'kkk', 'A A']);
+  },
+  shopping: (d, m) => hang(d, m, [' k   k ', 'BBB xxx', 'BBB xxx', 'BBB xxx', 'BBB xxx']),
+  suitcase: (d, m) => {
+    const { hx, hy, gy, view } = m;
+    const x = view === 'down' ? hx - 7 : view === 'up' ? hx + 2 : hx + 2;
+    d.line(x + 2, hy, x + 2, gy - 7, 'k');
+    d.pic(x, gy - 6, ['BBBBB', 'BQBBB', 'BBBBB', 'BBBBB', 'BBBBB', ' k k ']);
+    hand(d, m, x + 2);
+  },
+  coffee: (d, m) => hang(d, m, ['kk', 'QQ', 'nn', 'nn']),
+  briefcase: (d, m) => hang(d, m, [' kk ', 'NNNN', 'NYNN', 'NNNN']),
+  lunchbag: (d, m) => hang(d, m, ['nn ', 'nnn', 'nnn']),
+  letter: (d, m) => hang(d, m, ['QQQ', 'QkQ']),
+  bouquet: (d, m) => {
+    if (m.view === 'up') return hang(d, m, ['G', 'G']);
+    const x = m.view === 'side' ? m.hx + 1 : m.hx - 3;
+    d.pic(x, m.hy - 4, ['xPx', 'PxP', 'GxG', ' G ', ' G ']);
+    hand(d, m);
+  },
+  bread: (d, m) => {
+    if (m.view === 'up') return;
+    if (m.view === 'side') d.pic(m.hx + 2, m.hy - 2, ['nn', 'AA']);
+    else d.pic(10 - m.wide, m.hy - 2, ['nnNnnNnnNnnN', 'AAAAAAAAAAAA']);
+  },
+  tray: (d, m) => {
+    const x = m.view === 'down' ? m.hx - 6 : m.view === 'up' ? m.hx + 1 : m.hx + 1;
+    d.pic(x, m.hy - 3, ['  vv  ', '  vv  ', 'AAAAAA']);
+    hand(d, m);
+  },
+  plates: (d, m) => {
+    if (m.view === 'up') return;
+    if (m.view === 'side') d.pic(m.hx + 2, m.hy - 4, ['QQ', 'aa', 'QQ', 'aa']);
+    else d.pic(11 - m.wide, m.hy - 4, ['QQQQQQQQ', 'aaaaaaaa', 'QQQQQQQQ', 'aaaaaaaa']);
+  },
+  candyjar: (d, m) => hang(d, m, ['AAA', 'vxv', 'vPv', 'vvv']),
+  mug: (d, m) => hang(d, m, ['QQ ', 'QQQ', 'QQ ']),
   blueprint: (d, m) => {
     const { hx, hy, view } = m;
     if (view === 'side') d.pic(hx - 1, hy - 1, ['BBBBBB']);
@@ -1255,6 +1387,7 @@ export const GROUND = {
   bucket: 'Mop bucket', wetsign: 'Wet floor sign', cone: 'Traffic cone', toolbox: 'Toolbox', crate: 'Crate', cooler: 'Cooler', tacklebox: 'Tackle box',
   trap: 'Lobster trap', fishbucket: 'Bucket of fish', bricks: 'Stack of bricks', paint: 'Paint cans', cart: 'Cleaning cart', barrow: 'Wheelbarrow',
   bin: 'Wheelie bin', pot: 'Flower pot', barrel: 'Barrel', buoy: 'Buoy', fishcrate: 'Crate of fish', plants: 'Seedlings', block: 'Stone block', bones: 'Fossil bones', campfire: 'Campfire', tent: 'Tent', sled: 'Sled', dog: 'A dog', tripod: 'Camera on a tripod',
+  bike: 'Bicycle', coffeecart: 'Coffee cart', foodcart: 'Food cart', icecart: 'Ice-cream cart', flowers: 'Bucket of flowers', fruit: 'Crate of fruit', counter: 'Shop counter',
 };
 const GROUND_PICS = {
   bucket: [' kkkk ', 'AAAAAA', 'PPPPPP', 'PvvvvP', 'PPPPPP', ' PPPP '],
@@ -1283,6 +1416,13 @@ const GROUND_PICS = {
   sled: ['N      ', 'NnnnnnN', 'NnnnnnN', ' N   N ', 'AAAAAAA'],
   dog: ['N    N', 'NnnnnN', 'nknnkn', 'nnkknn', ' nnnn ', 'nnnnnn', 'nn  nn'],
   tripod: ['kkkk', 'kQAk', 'kkkk', ' NN ', ' NN ', 'N  N', 'N  N', 'N  N'],
+  bike: ['      kk ', ' kk   x  ', '  xxxxx  ', ' kkx  xk ', 'kAAk kAAk', 'kAAk kAAk', ' kk   kk '],
+  coffeecart: ['  QQQQ  ', ' kkkkkk ', ' nnnnnn ', ' nQnnQn ', ' nnnnnn ', ' nnnnnn ', ' k    k '],
+  foodcart: ['xQxQxQxQ', 'xxxxxxxx', ' AAAAAA ', ' AkkkkA ', ' AAAAAA ', ' AAAAAA ', ' k    k '],
+  icecart: ['PQPQPQPQ', ' QQQQQQ ', ' QxQPvQ ', ' QQQQQQ ', ' QQQQQQ ', ' k    k '],
+  flowers: [' xPx ', 'PGxGP', ' GGG ', ' nnn ', ' nnn ', ' nnn '],
+  fruit: ['xVGxVPx', 'nnnnnnn', 'nNnnnNn', 'nnnnnnn'],
+  counter: ['QQQQQQQQ', 'nnnnnnnn', 'nNnnnnNn', 'nnnnnnnn', 'nNnnnnNn', 'nnnnnnnn'],
 };
 export function drawGround(rows, view, look) {
   const pic = GROUND_PICS[look.ground];
@@ -1324,9 +1464,14 @@ export const POSES = {
   lounge: 'Sunbathing', detect: 'Metal detecting', snow: 'Shovelling snow', read: 'Reading a map',
   brush: 'Brushing a find', pick: 'Pickaxe', sift: 'Sieving', pan: 'Panning for gold', binoculars: 'Binoculars', chop: 'Clearing the path', lurch: 'Lurching',
   inspect: 'Inspecting', shush: 'Shushing', present: 'Leading a tour', photo: 'Taking a photo', gavel: 'Gavel', type: 'Typing',
+  kite: 'Flying a kite', selfie: 'Selfie', stroller: 'Pushing a stroller', knit: 'Knitting', rest: 'Resting', nap: 'Napping', call: 'On the phone', speech: 'Giving a speech',
+  jog: 'Jogging', yoga: 'Yoga', book: 'Reading a book', tvcamera: 'TV camera', magnify: 'Magnifying glass', sneak: 'Sneaking', lookaround: 'Looking around',
+  knead: 'Kneading dough', stir: 'Stirring a pot',
 };
-export const POSE_VIEW = { dust: 'down', wipe: 'up', polish: 'down', jackhammer: 'down', flag: 'down', roll: 'up', plaster: 'up', wave: 'down', swim: 'down', lounge: 'down', read: 'down', sift: 'down', shush: 'down', present: 'down', type: 'down' };
-export const POSE_RATE = { flag: 0.5, survey: 0.7, telescope: 0.6, lounge: 0.3, read: 0.4, point: 1.2, fish: 0.9, wave: 2.5, jackhammer: 10, polish: 5, weld: 7, swim: 2, binoculars: 0.5, inspect: 0.6, shush: 0.5, present: 1.5, photo: 0.4, type: 3, sift: 5, lurch: 1.5, gavel: 1.5 };
+export const POSE_VIEW = { dust: 'down', wipe: 'up', polish: 'down', jackhammer: 'down', flag: 'down', roll: 'up', plaster: 'up', wave: 'down', swim: 'down', lounge: 'down', read: 'down', sift: 'down', shush: 'down', present: 'down', type: 'down',
+  kite: 'down', knit: 'sit', rest: 'sit', nap: 'sit', speech: 'down', yoga: 'down', book: 'down' };
+export const POSE_RATE = { flag: 0.5, survey: 0.7, telescope: 0.6, lounge: 0.3, read: 0.4, point: 1.2, fish: 0.9, wave: 2.5, jackhammer: 10, polish: 5, weld: 7, swim: 2, binoculars: 0.5, inspect: 0.6, shush: 0.5, present: 1.5, photo: 0.4, type: 3, sift: 5, lurch: 1.5, gavel: 1.5,
+  kite: 1, selfie: 0.4, stroller: 2, knit: 2, rest: 0.4, nap: 0.6, call: 0.5, speech: 1, jog: 4, yoga: 0.5, book: 0.3, tvcamera: 1, magnify: 0.8, sneak: 2, lookaround: 0.7, knead: 2, stir: 2 };
 
 // the hand at the side is painted over with the clothes next to it
 function tuck(g, m) {
@@ -1674,6 +1819,117 @@ const POSE_DRAW = {
     const { hy } = m;
     d.pic(10 - m.wide, hy - 3, ['kkkkkkkkkkkk'.slice(0, 12 + m.wide * 2), ('k' + (f ? 'vBvvBvvBvv' : 'vvBvvvBvvv') + 'k').slice(0, 12 + m.wide * 2), 'aaaaaaaaaaaa'.slice(0, 12 + m.wide * 2)]);
   },
+  kite: (d, m, f) => {
+    const { hx, hy, top } = m;
+    const kx = f ? 1 : 2;
+    d.line(hx - 1, hy, kx + 2, top - 3, 'l');
+    d.pic(kx, top - 9, ['  x  ', ' xQx ', 'xxQxx', ' xQx ', '  x  ', '  P  ']);
+    hand(d, m);
+  },
+  selfie: (d, m, f, g) => {
+    tuck(g, m);
+    const { top } = m;
+    armOut(d, [[17, top + 12], [18, top + 11]], [19, top + 9]);
+    d.line(20, top + 9, 24, top + 2, 'k');
+    d.pic(24, top - 1, ['kk', f ? 'QQ' : 'kv', 'kk']);
+  },
+  stroller: (d, m, f, g) => {
+    tuck(g, m);
+    const { top, gy } = m;
+    d.line(18, top + 16, 21, gy - 9, 'k');
+    hands(d, [[17, top + 16]]);
+    d.pic(21, gy - 8, [' BBBBBB ', 'BBBBBBBB', 'BBBBBBBB', ' BBBBBB ', '  k  k  ', f ? ' kAk kAk' : ' Akk Akk', '  k  k  ']);
+  },
+  knit: (d, m, f) => {
+    const { hy, gy } = m;
+    d.pic(12, hy - 2, f ? ['A    A ', ' A  A  ', '  xx   '] : [' A  A  ', 'A    A ', '  xx   ']);
+    d.pic(22, gy - 2, [' xx', 'xxx']);
+  },
+  rest: (d, m, f, g) => {
+    if (f) blink(g, m);
+  },
+  nap: (d, m, f, g) => {
+    blink(g, m);
+    const { top } = m;
+    d.pic(f ? 20 : 22, top - (f ? 4 : 2), ['QQQ', ' Q ', 'QQQ'], null);
+  },
+  call: (d, m, f, g) => {
+    tuck(g, m);
+    const { top } = m;
+    d.line(15, top + 13, 14, top + 10, 'c');
+    d.pic(13, top + 7, ['kk', 'ks', 'ss']);
+    if (f) blink(g, m);
+  },
+  speech: (d, m, f, g) => {
+    tuck(g, { ...m, hx: 21 + m.wide, view: 'down' });
+    const { top, hy } = m;
+    const w = m.wide;
+    if (f) armOut(d, [[22 + w, top + 12], [22 + w, top + 11], [23 + w, top + 10]], [23 + w, top + 8]);
+    else d.pic(22 + w, hy - 1, ['ss']);
+    d.pic(7 - w, hy - 2, ['QQ', 'Qk', 'QQ']);
+  },
+  jog: (d, m, f, g) => {
+    tuck(g, m);
+    const { top } = m;
+    hands(d, [[f ? 12 : 18, top + 15]]);
+  },
+  yoga: (d, m, f, g) => {
+    tuck(g, m);
+    tuck(g, { ...m, hx: 21 + m.wide, view: 'down' });
+    const { top, gy } = m;
+    const w = m.wide;
+    const s = f ? 1 : 0;
+    const left = [];
+    const right = [];
+    for (let y = top + 11; y >= top + 1; y--) {
+      left.push([9 - w, y]);
+      right.push([22 + w, y]);
+    }
+    [[10 - w, top], [11 - w, top - 1], [12, top - 1], [13, top - 2], [14, top - 2]].forEach((c) => left.push(c));
+    [[21 + w, top], [20 + w, top - 1], [19, top - 1], [18, top - 2], [17, top - 2]].forEach((c) => right.push(c));
+    armOut(d, left.map(([x, y]) => [x + s, y]), [15 + s, top - 4]);
+    armOut(d, right.map(([x, y]) => [x + s, y]), [15 + s, top - 4]);
+    d.pic(4, gy, ['PPPPPP            PPPPPP']);
+  },
+  book: (d, m, f) => {
+    const { hy } = m;
+    d.pic(11 - m.wide, hy - 4, f ? ['rrrrkrrrr', 'rkrkkkrkr', 'rrrrkrrrr'] : ['rrrrkrrrr', 'rkrrkrkrr', 'rrrrkrrrr']);
+  },
+  tvcamera: (d, m, f, g) => {
+    tuck(g, m);
+    const { top } = m;
+    d.pic(12, top + 7, ['kkkkkkkkk', 'kkkkkkkAA', 'kkkkkkkAA', 'kkkkkkkkk']);
+    if (f) d.px(13, top + 6, 'x');
+    hands(d, [[18, top + 11]]);
+  },
+  magnify: (d, m, f, g) => {
+    tuck(g, m);
+    const { top } = m;
+    arm(d, [16, top + 14], [20, top + 17]);
+    d.pic(21 + (f ? 1 : 0), top + 14, [' AA ', 'AvvA', 'AvvA', ' AA ', '  n ']);
+  },
+  sneak: (d, m, f, g) => {
+    // tiptoeing, hands up and creeping forward
+    tuck(g, m);
+    const { top } = m;
+    hands(d, f ? [[18, top + 12], [12, top + 14]] : [[17, top + 14], [13, top + 12]]);
+  },
+  lookaround: () => {},
+  knead: (d, m, f, g) => {
+    tuck(g, m);
+    const { gy } = m;
+    d.pic(21, gy - 7, ['nnnnnnnn', ' n    n ', ' n    n ', ' n    n ', ' n    n ', ' n    n ', ' n    n ']);
+    d.pic(22, gy - (f ? 8 : 9), f ? ['rrrrr'] : [' rrr ', 'rrrrr']);
+    arm(d, [16, m.top + 15], [20, gy - 9 + (f ? 1 : 0)]);
+  },
+  stir: (d, m, f, g) => {
+    tuck(g, m);
+    const { top, gy } = m;
+    d.pic(21, gy - 6, ['AAAAAA', 'AvvvvA', 'AAAAAA', ' k  k ', ' k  k ', ' k  k ']);
+    arm(d, [16, top + 15], [19, top + 16]);
+    d.line(21, top + 16, f ? 23 : 25, gy - 6, 'A');
+    d.pic(f ? 22 : 24, top + 12, ['Q', ' ', 'Q'], null);
+  },
   detect: (d, m, f, g) => {
     tuck(g, m);
     const { top, gy } = m;
@@ -1684,6 +1940,13 @@ const POSE_DRAW = {
     hands(d, [[17, top + 16]]);
   },
 };
+// Closed eyes (sleeping, blinking).
+function blink(g, m) {
+  [6, 7].forEach((r) => {
+    const row = g[m.top + r];
+    row?.forEach((c, x) => c === 'e' && (row[x] = r === 7 ? 'k' : 'S'));
+  });
+}
 // Kneeling (side view): drops the body two rows and folds the back leg along the ground.
 // Returns where things now are.
 function kneel(g, m) {
@@ -1750,7 +2013,11 @@ export function poseFrames(pose, base, look) {
     }));
   }
   if (!fn) return null;
-  const rows = base(view);
-  return [0, 1].map((f) => withRoom(rows, (g) => fn(draw(g), metrics(g, view, look.build), f, g)));
+  const stepping = pose === 'jog' || pose === 'sneak';
+  return [0, 1].map((f) => {
+    let rows = base(view, stepping ? f + 1 : 0);
+    if (pose === 'lookaround' && f) rows = fromGrid(toGrid(rows).map((r) => r.reverse()));
+    return withRoom(rows, (g) => fn(draw(g), metrics(g, view, look.build), f, g));
+  });
 }
 export const poseView = (pose) => (pose === 'lounge' ? 'sit' : POSE_VIEW[pose] || 'side');
