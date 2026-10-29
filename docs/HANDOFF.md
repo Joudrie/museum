@@ -139,6 +139,11 @@ Scenes (`src/main.js`):
   49 paintings** (no network here); `content/batches/first-batch.json` (12 works, 9+ regions) is waiting to be built.
 - Test: `node tests/content.cjs` (no browser, no network).
 
+### Share, visit and daily (Chat 13)
+- No server. `src/sharecode.js` packs a museum "postcard" (rooms, painting ids, decor counts, rating; **no gold, saves or character**) or a builder island into a link (`?visit=` / `?island=`), read back with strict cleaning. `src/share.js` is the Settings → "Share & visit friends" panel: copy link, rating card and tour strip pictures (canvas), paste a link or open a map file. Visiting is a look-around card; "Keep" stores it in `curation.friends`. Friends' islands join the boat list (`friendIslands()` in sailmenu.js).
+- `src/daily.js` is the gift icon under the journal: welcome gift, one wheel spin a day, Painting of the Day (same for everyone, stepped through `PAINTINGS`). Gentle: a streak survives up to 3 missed days and never nags. Numbers sit at the top of the file.
+- Test: `PW=/opt/node-tools/node_modules/playwright OUT=<dir> node tests/share.cjs`.
+
 ### Halls (chat 14): themed room presets
 - `content/halls/halls.json` holds 18 halls (art, science, nature, history, garden): a theme from `src/themes.js` (moved out of decor.js, still re-exported), decor tweaks, items placed as 0-1 fractions of the floor, painting eras for the walls, and the collections/sets that belong there. `planned` lists collections that don't exist yet.
 - `src/halls/preset.js` is pure (validate, fit items to any room size without blocking doors, `hallEntries`); `apply.js` writes a hall into a built room and returns what it replaced for `undoHall`. Fixed rooms are refused. Test: `node tests/halls.cjs` (plain Node).

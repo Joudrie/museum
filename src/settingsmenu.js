@@ -2,6 +2,7 @@
 import { section, choices } from './decor.js';
 import { settings, setSetting, LIGHT_QUALITY } from './settings.js';
 import { isMuted, setMuted } from './music.js';
+import { openShare } from './share.js';
 
 const el = document.getElementById('settings');
 const body = el.querySelector('.settings-body');
@@ -43,6 +44,7 @@ function render() {
     section('Lighting', choices(LIGHT_QUALITY, s.lights, (v) => (setSetting('lights', v), render()))),
     section('Day & night', choices(onOff, s.dayNight ? 'on' : 'off', (v) => (setSetting('dayNight', v === 'on'), render()))),
     section('Vibration', choices(onOff, s.haptics ? 'on' : 'off', (v) => (setSetting('haptics', v === 'on'), render()))),
+    section('Share', button('Share & visit friends', () => openShare())),
     section('Design', button('Map builder: islands & rooms', () => (location.href = './builder.html'), 'wide-btn')),
     section('Testing', button('+1,000 gold', () => state.onAddCoins(1000)), button('Collect one of everything', (e) => {
         const n = state.onCollectAll();

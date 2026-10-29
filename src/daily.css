@@ -1,0 +1,91 @@
+/* Daily panel + button (src/daily.js) */
+#daily-btn {
+  position: fixed;
+  top: calc(max(10px, env(safe-area-inset-top)) + 108px);
+  left: max(12px, calc((100vw - min(100vw, 100dvh * 9 / 16)) / 2 + 12px));
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+}
+.daily-body {
+  display: grid;
+  gap: 12px;
+}
+.daily-card {
+  display: grid;
+  gap: 8px;
+  justify-items: center;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 2px solid var(--line, #3a2c22);
+  border-radius: 8px;
+  text-align: center;
+}
+.daily-card h3 {
+  margin: 0;
+  color: var(--gold);
+  font-size: 15px;
+}
+.daily-card .wide-btn {
+  width: 100%;
+}
+.daily-note {
+  margin: 0;
+  font-size: 13px;
+  opacity: 0.85;
+}
+.daily-wheel-wrap {
+  position: relative;
+  width: 170px;
+  height: 170px;
+}
+.daily-wheel {
+  position: absolute;
+  inset: 8px;
+  border-radius: 50%;
+  border: 3px solid var(--gold);
+  display: grid;
+  place-items: center;
+}
+.daily-wheel b {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin: -8px 0 0 -14px;
+  width: 28px;
+  text-align: center;
+  font-size: 13px;
+}
+.daily-pointer {
+  position: absolute;
+  left: 50%;
+  top: -2px;
+  margin-left: -8px;
+  z-index: 2;
+  border: 8px solid transparent;
+  border-top: 14px solid #e0405a;
+  border-bottom: 0;
+}
+.daily-art {
+  width: 100%;
+  max-height: 260px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 3px solid var(--gold-dark);
+  min-height: 120px;
+}
+.daily-art img {
+  max-width: 100%;
+  max-height: 260px;
+  display: block;
+}
+.daily-poty i {
+  opacity: 0.8;
+  font-size: 13px;
+}
+#daily {
+  z-index: 23;
+}

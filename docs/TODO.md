@@ -154,9 +154,9 @@ Owns: `src/staffmenu.js`, `src/officemenu.js`, `src/office.js`, `src/incomemenu.
 
 ## CHAT 13: Share, visit and retention
 Owns: new `src/share*.js`, `src/daily.js`. Claim: `claimed: 2026-10-29`
-- [ ] Export a museum as a link; a short tour image strip or clip; "rate my museum" screenshot card.
-- [ ] Visit a friend's museum asynchronously (no multiplayer server); friends' islands in the boat picker (the map format is shareable).
-- [ ] Daily wheel spin, first-game-of-the-day and streak bonuses, daily guests, Painting of the Day surfaced in the UI.
+- [x] Export a museum as a link; a short tour image strip or clip; "rate my museum" screenshot card. (link, rating card and tour strip picture done; a moving clip is parked under Needs Sean)
+- [x] Visit a friend's museum asynchronously (no multiplayer server); friends' islands in the boat picker (the map format is shareable). (look-around visit; walking round a friend's rooms is parked under Needs Sean)
+- [x] Daily wheel spin, first-game-of-the-day and streak bonuses, Painting of the Day surfaced in the UI. (daily guests: asked of Chat 10, see Cross-chat requests)
 - [ ] Auction house and co-op cleanup (later, social; ON HOLD).
 
 ## CHAT 14: Halls (the content that fills the rooms)
@@ -194,7 +194,12 @@ Mini-games (Mop Rush, No Flash!, Restoration-as-minigame, Crate Tetris, Hang it 
 - Mini-games and gems / ads: go or no-go?
 - Open design questions: free-roam map or chain of rooms; should paintings come only from expeditions; can you fail an expedition; seasons automatic or chosen; split the shared core now?
 
+- **Chat 13 defaults (change in `src/daily.js`):** welcome gift 40 gold + 10 per streak day (max 7) + 100 on every 7th day; wheel slices 25/40/60/40/100/25/75/250; the streak forgives a gap of up to 3 days and otherwise restarts quietly with no message.
+- **Chat 13:** a moving tour clip (video/GIF) and walking round a friend's actual rooms need real work in RoomScene (a read-only room loader); should they happen? Today a visit is a look-around card of paintings and decor.
+
 ## Cross-chat requests (add a line, carry on)
+- **Chat 13 to Chat 10:** "daily guests" belong with the famous visitors. `src/daily.js` has `dayNum()`; if you want a "today's guest" pick, key it on that and I'll show it on the Today panel.
+
 - Chat 14 → Chat 9/12: `applyHall(roomIndex, hall)` (`src/halls/apply.js`) restyles a built room for free and returns `before` for `undoHall`. A menu button and any price are yours to decide; it refuses fixed rooms.
 - Chat 14 → Chat 1/8: halls list `planned` collections (sculpture, flower, egyptian, ship-model, armor, clock, invention; meteorite, pottery and shell are in now) and Japanese prints: add the data and move the id into the hall's `collections`.
 - Chat 10 → Chat 7: story chapters offer leads by writing `{id, text, from, at}` to `curation.leads_offered` (see HANDOFF, "Story and leads"). Read it, show the lead, start the trip; ids so far: `heist-hideout`, `sphinx-letter`, `studio-chest`, `last-scrolls`.
