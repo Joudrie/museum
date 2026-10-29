@@ -81,12 +81,12 @@ Owns: `src/showcase.js`, `src/viewer.js`, `src/collections/render.js`, new `src/
 
 ## CHAT 6: Digging v2 and puzzle mechanics
 Owns: `src/dig.js`, `src/puzzles*.js`, `src/collections/data/{minerals,fossils}.js`. Claim: `claimed: 2026-10-29`
-- [ ] More finds as data collections: pottery shards, coins, arrowheads, shells, meteorites, amber.
+- [x] More finds as data collections: pottery shards, coins, arrowheads, shells, meteorites (amber was already a fossil) (PR 106). Dig kinds: mineral, fossil, ruin, shore, crater.
 - [ ] Dig tools (brush, trowel, pick) that change speed and what turns up; a bone that needs several spots to complete.
 - [ ] Bigger dig sites: a cliff face or trench worked across several tiles; a dig-site room sandbox.
 - [ ] Metal-detector hunt (warmer / colder); map fragments (collect 4 and the X appears).
 - [ ] Puzzle pieces as builder tiles and runtime: push blocks, boulders to smash, pressure plates and levers, iron gates, ice sliding, fog that clears as you walk, riddles from NPCs, mazes.
-- [ ] Dig spots in the builder palette under "Dig sites"; spots show their rest time; daily dig goals.
+- [ ] Dig spots in the builder palette under "Dig sites" (done, PR 106); spots show their rest time; daily dig goals.
 - [ ] Finds arrive dirty where Chat 4 expects them (`dirty: true` on a stack).
 
 ## CHAT 7: Expeditions, leads and expedition islands

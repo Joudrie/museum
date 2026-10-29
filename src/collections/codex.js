@@ -6,6 +6,7 @@
 //     seen:    { [entryId]: { n, first, best? } },  // ever collected
 //     owned:   { [entryId]: count },                // held now (collections with ownership 'earned')
 //     claimed: { [setId]: true },                   // set rewards already paid
+//     dirty:   { [entryId]: count },                // of those held, how many still need cleaning (finds with `dirty: true`)
 //   }
 //
 // A collection with ownership 'all' (paintings, for now) is held from the
@@ -19,7 +20,7 @@ const num = (v, min = 0) => (Number.isFinite(v) && v >= min ? v : undefined);
 
 /** Turns whatever was saved into a valid codex. Junk is dropped, real progress is kept. */
 export function normalize(raw) {
-  const out = { v: 1, seen: {}, owned: {}, claimed: {} };
+  const out = { v: 1, seen: {}, owned: {}, claimed: {}, dirty: {} };
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return out;
   Object.entries(raw.seen && typeof raw.seen === 'object' ? raw.seen : {}).forEach(([id, r]) => {
     if (!ID.test(id) || !r || typeof r !== 'object') return;
@@ -28,6 +29,9 @@ export function normalize(raw) {
   });
   Object.entries(raw.owned && typeof raw.owned === 'object' ? raw.owned : {}).forEach(([id, n]) => {
     if (ID.test(id) && num(n, 1)) out.owned[id] = Math.floor(n);
+  });
+  Object.entries(raw.dirty && typeof raw.dirty === 'object' ? raw.dirty : {}).forEach(([id, n]) => {
+    if (ID.test(id) && num(n, 1) && out.owned[id]) out.dirty[id] = Math.min(Math.floor(n), out.owned[id]);
   });
   Object.entries(raw.claimed && typeof raw.claimed === 'object' ? raw.claimed : {}).forEach(([id, v]) => {
     if (v === true && typeof id === 'string') out.claimed[id] = true;
@@ -94,7 +98,7 @@ export function count(collectionId, c = snapshot()) {
  * Records getting something. `size` (optional) tracks a personal best.
  * Returns { fresh, n, best, improved } or null for junk that is never kept.
  */
-export function collect(id, { size, qty = 1, at = Date.now() } = {}) {
+export function collect(id, { size, qty = 1, at = Date.now(), dirty = false } = {}) {
   const e = get(id);
   if (e && e.collectable === false) return null;
   if (!ID.test(id)) return null;
@@ -103,6 +107,7 @@ export function collect(id, { size, qty = 1, at = Date.now() } = {}) {
   const best = Math.max(prev?.best || 0, size || 0);
   c.seen[id] = { n: (prev?.n || 0) + qty, first: prev?.first || at, ...(best && { best }) };
   c.owned[id] = (c.owned[id] || 0) + qty;
+  if (dirty) c.dirty[id] = (c.dirty[id] || 0) + qty;
   put(c);
   return { fresh: !prev, n: c.seen[id].n, best: best || null, improved: !!(size && prev && size > (prev.best || 0)) };
 }
@@ -125,6 +130,8 @@ export function dispose(id, qty = 1) {
   if (!c.owned[id]) return false;
   c.owned[id] = Math.max(0, c.owned[id] - qty);
   if (!c.owned[id]) delete c.owned[id];
+  if (c.dirty[id]) c.dirty[id] = Math.min(c.dirty[id], c.owned[id] || 0);
+  if (!c.dirty[id]) delete c.dirty[id];
   put(c);
   return true;
 }
