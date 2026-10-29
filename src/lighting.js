@@ -291,6 +291,7 @@ export class Lighting {
   update(dt) {
     this.time += dt;
     const sc = this.scene;
+    this.watchSpeed();
     this.updateShadows();
     if (!this.rt) return;
     if (this.dirty) this.draw();
@@ -310,6 +311,26 @@ export class Lighting {
       });
     }
     void sc;
+  }
+
+  // A slow phone: if High keeps the game under about 22 frames a second for
+  // five seconds, drop to Low for this visit (the setting itself is left alone).
+  watchSpeed() {
+    const now = performance.now() / 1000;
+    const dt = now - (this.lastTick || now); // (real time: Phaser's own delta is smoothed)
+    this.lastTick = now;
+    if (this.quality !== 'high' || dt <= 0 || dt > 0.5) return; // (ignore pauses and tab switches)
+    this.slow = (this.slow || 0) + dt;
+    this.slowFrames = (this.slowFrames || 0) + 1;
+    if (this.slow < 5) return;
+    const avg = this.slow / this.slowFrames;
+    this.slow = 0;
+    this.slowFrames = 0;
+    if (avg > 0.046) {
+      this.quality = 'low';
+      this.makeLayer();
+      this.build();
+    }
   }
 
   draw() {

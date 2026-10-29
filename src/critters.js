@@ -76,6 +76,19 @@ export function critterTextures(scene) {
     R(6, 0, 2, 4, '#a8b8c8');
     R(1, 1, 1, 1, OUT);
   });
+  // swan: white, long curved neck, orange bill
+  tex(scene, 'swan_0', 20, 16, (R) => {
+    R(3, 9, 13, 5, OUT);
+    R(4, 10, 11, 3, '#fafaf8');
+    R(2, 7, 3, 4, OUT);
+    R(13, 2, 4, 9, OUT);
+    R(14, 3, 2, 8, '#fafaf8');
+    R(14, 0, 4, 4, OUT);
+    R(15, 1, 2, 2, '#fafaf8');
+    R(18, 1, 2, 2, '#e8702a');
+    R(16, 1, 1, 1, OUT);
+    R(5, 10, 4, 1, '#dcdcd4');
+  });
   // duck (white, orange bill) and duckling (yellow), feet paddling
   [0, 1].forEach((f) => {
     tex(scene, `duck_${f}`, 14, 11, (R) => {
@@ -161,6 +174,7 @@ export class Critters {
     this.fish = [];
     this.fishTimer = rnd(2, 5);
     this.ducks = [];
+    this.swan = null;
     this.frogs = [];
     this.pads = [];
     const p = map.pond;
@@ -181,6 +195,8 @@ export class Critters {
         this.duckA = rnd(0, 6);
         this.duckSp = 0.35;
       }
+      // a swan glides slowly the other way round the pond, by day
+      if (!night && !cold) this.swan = { s: scene.add.image(0, 0, 'swan_0').setOrigin(0.5, 0.85), a: rnd(0, 6) };
       // frogs on the bank (more of them in the rain)
       if (!cold) {
         const n = wet ? 4 : 2;
@@ -229,6 +245,17 @@ export class Critters {
         this.scene.tweens.add({ targets: ring, scaleX: 2, scaleY: 2, alpha: 0, duration: 900, onComplete: () => ring.destroy() });
       } else if (Math.floor(this.t * 6 + i * 3) % 18 !== 0) d.rippled = false;
     });
+  }
+
+  // The swan drifts the other way round a wider oval, unhurried.
+  updateSwan(dt) {
+    if (!this.swan) return;
+    const p = this.map.pond;
+    const sw = this.swan;
+    sw.a -= dt * 0.12;
+    const x = p.x + p.w / 2 + Math.cos(sw.a) * p.w * 0.28;
+    const y = p.y + p.h / 2 + Math.sin(sw.a) * p.h * 0.28;
+    sw.s.setPosition(x, y + Math.sin(this.t * 1.5) * 0.5).setFlipX(Math.sin(sw.a) > 0).setDepth(y);
   }
 
   // Frogs sit on the bank, puff a croak now and then, and hop into the pond
@@ -343,6 +370,7 @@ export class Critters {
     });
     this.pads.forEach((l) => l.s.setAngle(l.s.angle + Math.sin(this.t * 0.3 + l.ph) * dt * 4));
     this.updateDucks(dt, player);
+    this.updateSwan(dt);
     this.updateFrogs(dt, player);
     // now and then a fish jumps out at sea
     this.fishTimer -= dt;

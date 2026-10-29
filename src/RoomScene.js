@@ -31,7 +31,7 @@ import {
   LIGHT_TINTS,
 } from './art.js';
 import { setTrack, sfx, setAmbience } from './music.js';
-import { weatherToday, season, holiday, stormRumble } from './weather.js';
+import { weatherToday, season, holiday, stormRumble, crowdShift } from './weather.js';
 import { ORIENT_LABELS, SIZE_LABELS, BREAK, roomAt, MAIN_HALL_PRICE, ATRIUM_PRICE, isFixed, seedEntry, loadRooms, addRoom, resetRooms, updateRoom, swapRooms, roomName, layout, paintingsFor, slotStates, setSlot, hungAnywhere, placeArt, wallItems, plantSpots, carpetRect } from './rooms.js';
 import { openSlotMenu } from './slotmenu.js';
 import { applyPreset, presetCost } from './presets.js';
@@ -72,7 +72,7 @@ import { activeQuests, claim, bump, stat, resetQuests } from './quests.js';
 import { celebrate } from './ui.js';
 import { addLove, loveOf, resetLove } from './love.js';
 import { hasCameras as camerasOn } from './security.js';
-import { hourNow } from './settings.js';
+import { hourNow, settings } from './settings.js';
 import { spriteUrl } from './swap.js';
 
 const VIEW_TILES = 9; // the camera always shows 9 tiles across
@@ -382,7 +382,8 @@ export class RoomScene extends Phaser.Scene {
     const start = this.spawnPoint();
     this.player = this.add.sprite(start.x, start.y, start.face).setOrigin(0.5, 1).setScale(PLAYER_SCALE);
     this.makePet();
-    const count = this.isBreak ? 0 : Math.min(5, 3 + Math.floor(this.L.slots.length / 6)); // the break room is staff only
+    const rhythm = settings().dayNight ? crowdShift(hourNow(), weatherToday()) : 0; // quiet mornings, a busy afternoon
+    const count = this.isBreak ? 0 : Math.max(2, Math.min(6, 3 + Math.floor(this.L.slots.length / 6) + rhythm)); // the break room is staff only
     this.npcs = Array.from({ length: count }, (_, i) => this.spawnVisitor(i));
     this.pairCouples();
     if (!this.isBreak && this.roomIndex >= 1 && Math.random() < 0.3) this.spawnSchoolTrip();
@@ -2241,7 +2242,7 @@ export class RoomScene extends Phaser.Scene {
         cost: upgradeCost(id),
         now: u.show(upgradeValue(id)),
         next: lvl < u.cost.length ? u.show(u.effect[lvl]) : null,
-        locked: id === 'toolbox' && !hasCarpenter() ? 'Hire the carpenter' : id === 'training' && !guides() ? 'Hire a guide' : null,
+        locked: id === 'toolbox' && !hasCarpenter() ? 'Hire the carpenter' : id === 'training' && !guides() ? 'Hire a guide' : id === 'beans' && !this.rooms.some((_, i) => loadItems(i).some((it) => it.type === 'counter')) ? 'Build a coffee counter' : null,
       };
     });
   }

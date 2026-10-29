@@ -137,11 +137,11 @@ Owns: `src/famous.js`, `src/lines.js`, `src/quests.js`, `src/talk.js`, `src/staf
 ## CHAT 11: Atmosphere, seasons and audio
 Owns: `src/weather.js`, `src/lighting.js`, `src/ambient.js`, `src/music.js`, `src/foliage.js`, `src/critters.js`. Claim: `claimed: 2026-10-29`
 - [ ] Seasons on the real calendar (snow on the lawn, fall leaves, holiday decor, seasonal visitors like trick-or-treaters). Snow, fall leaves and recoloured trees already exist; **cherry trees stay pink in autumn (done, this PR)**. **Halloween (Oct 24-31): jack-o'-lanterns at the museum doors and costumed trick-or-treat kids; winter (Dec 18-26): woolly hats (done, this PR; `holiday()` in weather.js, `?holiday=halloween|winter`).** Still to do: winter lights, other holidays.
-- [ ] Daily rhythm (Animal Crossing / Stardew feel); weather effects inside and outside; day / night polish. **Rain / snow now shade the light inside and out, and stormy rainy days have distant thunder with a faint flash (done, this PR).** Still to do: daily rhythm (quiet mornings, evening crowds).
+- [ ] Daily rhythm (Animal Crossing / Stardew feel); weather effects inside and outside; day / night polish. **Rain / snow now shade the light inside and out, and stormy rainy days have distant thunder with a faint flash (done, this PR).** **Daily rhythm: fewer visitors early and late, busiest 12-17, a few more on rainy days (done, this PR; `crowdShift`).**
 - [ ] Per-room music and ambience; sound effects pass; a mute and volume mix.
-- [ ] Lighting performance on phones (High / Low / Off already exist).
+- [x] Lighting performance on phones (High / Low / Off already exist). Done, this PR: High drops to Low for the visit if the game stays under ~22 fps for 5 s (`watchSpeed` in lighting.js). Measured in headless 390x844 at 21:00 (avg frame ms, high / low / off): 40 / 41 / 33, so Low saves little there; Off is the real saver.
 - [ ] Critters, birds, fish and bugs that live on the islands and in the garden.
-- [ ] Waterfalls, fountains, swans, fireflies and other life.
+- [ ] Waterfalls, fountains, swans, fireflies and other life. Swan on the pond done (this PR); fireflies and fountain lights already existed. Still to do: waterfalls.
 
 ## CHAT 12: Economy, staff and services
 Owns: `src/staffmenu.js`, `src/officemenu.js`, `src/office.js`, `src/incomemenu.js`, `src/wallet.js`, `src/rating.js`. Claim: `claimed: 2026-10-29`
@@ -206,7 +206,7 @@ Mini-games (Mop Rush, No Flash!, Restoration-as-minigame, Crate Tetris, Hang it 
 - **Chat 13 to Chat 10:** "daily guests" belong with the famous visitors. `src/daily.js` has `dayNum()`; if you want a "today's guest" pick, key it on that and I'll show it on the Today panel.
 
 - Chat 14 → Chat 9/12: `applyHall(roomIndex, hall)` (`src/halls/apply.js`) restyles a built room for free and returns `before` for `undoHall`. A menu button and any price are yours to decide; it refuses fixed rooms.
-- Chat 14 → Chat 1/8: halls list `planned` collections (sculpture, flower, egyptian, ship-model, armor, clock, invention; meteorite, pottery and shell are in now) and Japanese prints: add the data and move the id into the hall's `collections`.
+- Chat 14 → Chat 1/8: halls list `planned` collections (only sculpture and egyptian are still missing; the rest are now wired in) and Japanese prints: add the data and move the id into the hall's `collections`.
 - Chat 10 → Chat 7: story chapters offer leads by writing `{id, text, from, at}` to `curation.leads_offered` (see HANDOFF, "Story and leads"). Read it, show the lead, start the trip; ids so far: `heist-hideout`, `sphinx-letter`, `studio-chest`, `last-scrolls`.
 - **Chat 5 / 8:** `foundAt(entryId)` (`src/foundat.js`) returns "Skull Isle" etc. for any find from an expedition; `provenanceLine` already uses it.
 - **Chat 10:** expeditions read `curation.leads_offered` (your four ids open islands); `grantLead('id')` in `src/leads.js` is the other way to hand one out.

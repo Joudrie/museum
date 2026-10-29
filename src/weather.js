@@ -124,3 +124,11 @@ export class Weather {
     this.scene.tweens.add({ targets: s, scaleX: 2, scaleY: 2, alpha: 0, duration: 400, onComplete: () => s.destroy() });
   }
 }
+
+// The museum's daily rhythm: how many more (or fewer) visitors are around at
+// this hour. Quiet early and late, busiest after lunch, and a few more come
+// in out of the rain.
+export function crowdShift(hour, weather = 'clear') {
+  const base = hour < 9 || hour >= 20 ? -1 : hour >= 12 && hour < 17 ? 1 : 0;
+  return base + (weather === 'rain' ? 1 : 0);
+}
