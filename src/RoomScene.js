@@ -1517,6 +1517,7 @@ export class RoomScene extends Phaser.Scene {
     });
     this.input.on('pointerup', (p) => {
       if (this.mode && this.mode !== 'place' && this.press && !this.dragging) this.tapItem(p.worldX, p.worldY);
+      else if (!this.mode && this.press && !this.dragging && this.input.enabled) this.tapDisplayed(p.worldX, p.worldY);
       this.ghostDrag = null;
       this.press = null;
       this.dragging = false;
@@ -1906,6 +1907,20 @@ export class RoomScene extends Phaser.Scene {
       else this.openBuildMenu();
     }
     this.focus = null;
+  }
+
+  // Tap a piece on display (a fish in a tank, a fossil in a case) to read its card;
+  // swipe along to the others in this room.
+  tapDisplayed(wx, wy) {
+    const shown = this.displayObjs.filter((o) => o.getData?.('entry'));
+    const hit = shown.find((o) => {
+      const b = o.getBounds();
+      return wx > b.x - 3 && wx < b.right + 3 && wy > b.y - 3 && wy < b.bottom + 3;
+    });
+    if (!hit) return;
+    const entries = shown.map((o) => o.getData('entry'));
+    this.pause(true);
+    openViewer(entries, shown.indexOf(hit), () => this.pause(false), null);
   }
 
   // Open the display panel for a case, plinth, shelf, easel or tank.

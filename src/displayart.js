@@ -93,7 +93,12 @@ export function showDisplays(scene, items, g) {
       const y = top + slot.y;
       if (slot.back) out.push(scene.add.rectangle(x, y, slot.w, slot.h, hexNum(slot.back)).setOrigin(0.5, 1).setDepth(depth));
       const glow = GLOW[e.rarity ?? 1];
-      if (glow) out.push(scene.add.ellipse(x, y - slot.h / 2, slot.w + 4, slot.h + 4, hexNum(glow), 0.35).setDepth(depth));
+      if (glow) {
+        const halo = scene.add.ellipse(x, y - slot.h / 2, slot.w + 4, slot.h + 4, hexNum(glow), 0.35).setDepth(depth);
+        // legendary pieces breathe
+        if (e.rarity === 4) scene.tweens.add({ targets: halo, alpha: 0.12, duration: 1100, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+        out.push(halo);
+      }
       const key = textureOf(scene, e, slot);
       const img = scene.add.image(x, y, key).setOrigin(0.5, 1).setDepth(depth + 0.05);
       img.setScale(fit(scene, key, slot));
