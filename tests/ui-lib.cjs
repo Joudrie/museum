@@ -79,6 +79,11 @@ const SCREENS = {
   '23-dig-fossil': async (p) => { await p.evaluate(() => __game.scene.start('island', { map: 'one' })); await sleep(2500); await p.evaluate(() => { const s = __game.scene.getScene('island'); const d = s.digs.find((x) => x.kind === 'fossil'); s.player.setPosition(d.x, d.y + 14); s.digAt(d); }); },
   '24-catch-card': (p) => p.evaluate(() => { const c = document.getElementById('catch'); c.querySelector('.catch-pic').innerHTML = '<canvas width="96" height="48" style="width:96px;height:48px"></canvas>'; c.querySelector('.catch-title').textContent = 'You caught a Golden Koi!'; c.querySelector('.catch-meta').innerHTML = '<span class="r3">Rare</span> · 62 cm · <b class="catch-new">New!</b>'; c.querySelector('.catch-note').textContent = 'Added to your fish log (Journal → Fish).'; c.classList.remove('hidden'); }),
   '25-celebrate': async (p) => { await p.evaluate(() => { window.__celebrate('+1,200 gold', 'Goal complete', 'coin'); window.__celebrate('Office level 3!', 'More rooms unlocked', 'star'); }); await sleep(500); },
+  // the progression layer's cards (src/progression/ui): a task card, the rank ceremony, the goals page
+  '26-prog-card': async (p) => { await p.evaluate(() => __prog.queue.push({ kind: 'task', title: 'Say hello to someone', sub: 'The first task of the day', rewards: [{ text: '50 gold', icon: 'gold' }, { text: '+20 XP', icon: 'xp' }] })); await sleep(900); },
+  '27-rank-ceremony': async (p) => { await p.evaluate(() => __prog.queue.push({ kind: 'rank', rank: 2, level: 2, major: false, rewards: [{ text: '+100 gold', icon: 'gold' }], next: { label: 'Rank 3', text: 'Unlocks fishing' } })); await sleep(1600); },
+  '28-goals': async (p) => { await p.evaluate(() => window.dispatchEvent(new CustomEvent('open-goals'))); await sleep(700); },
+  '29-field-tabs': async () => {}, // (runScreens opens each page of the Field Journal and measures it)
   // the look settings: large text and the left-handed layout
   '40-large-text-hud': async (p) => { await p.evaluate(() => { const s = JSON.parse(localStorage.getItem('curation.settings') || '{}'); s.text = 'large'; localStorage.setItem('curation.settings', JSON.stringify(s)); window.dispatchEvent(new CustomEvent('settings', { detail: { key: 'x', value: 1 } })); }); await sleep(300); await click(p, '#menu-btn'); },
   '41-large-text-settings': async (p) => { await p.evaluate(() => { const s = JSON.parse(localStorage.getItem('curation.settings') || '{}'); s.text = 'large'; localStorage.setItem('curation.settings', JSON.stringify(s)); window.dispatchEvent(new CustomEvent('settings', { detail: { key: 'x', value: 1 } })); }); await sleep(300); await click(p, '#menu-btn'); await click(p, '#settings-btn'); },
@@ -134,6 +139,15 @@ async function runScreens({ size = [390, 844], only = null, onShot, log = () => 
           await p.$eval(`#journal [data-jtab="${ids[i]}"]`, (b) => b.click());
           await sleep(400);
           await onShot(`03-journal-${String(i + 1).padStart(2, '0')}-${ids[i]}`, p, ids[i] === 'goals' || ids[i] === 'paintings' ? await measure(p) : null);
+        }
+      } else if (name === '29-field-tabs') {
+        await p.evaluate(() => window.dispatchEvent(new CustomEvent('open-goals')));
+        await sleep(500);
+        const ids = await p.$$eval('#field-journal [data-fj]', (b) => b.map((x) => x.dataset.fj));
+        for (const id of ids) {
+          await p.$eval(`#field-journal [data-fj="${id}"]`, (b) => b.click());
+          await sleep(350);
+          await onShot(`29-field-${id}`, p, await measure(p));
         }
       } else {
         await open(p);
