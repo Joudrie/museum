@@ -11,6 +11,7 @@
 import { addLandmarks } from './landmarks.js';
 import { addScenerySlices } from './scenery.js';
 import { applyTileSwap } from './swap.js';
+import { addCliffKits } from './cliffkit.js';
 
 export const T = 32;
 const FRAMES = 4;
@@ -431,6 +432,7 @@ function* tileSlices() {
   yield;
   // Cliffs and ledges (facing the camera)
   addCliffs(add);
+  addCliffKits(add, { pixels, tnoise, hash, hex, T }); // grey and brown cliffs on any ground (src/cliffkit.js)
 
   yield;
   // Plants

@@ -6,6 +6,7 @@
 // Pieces come from the game's island tiles (src/tiles.js) and the room pieces
 // cut from the free packs (public/builder, tools/build_palette.py).
 import { buildTiles, T } from '../tiles.js';
+import { CLIFF_GROUPS } from '../cliffkit.js';
 import { swapReady, patchSheet } from '../swap.js';
 import { backup, backupsFor, latestBackup, keepStorage } from './vault.js';
 import recovered from './recovered.json';
@@ -27,7 +28,7 @@ const MATS = [
   { m: 3, name: 'Pond', color: '#4a9ad8' },
   { m: 4, name: 'Dirt path', color: '#b08458' },
 ];
-const FLAT_GROUPS = ['Ground', 'Paths', 'Water', 'Cliffs & ledges'];
+const FLAT_GROUPS = ['Ground', 'Paths', 'Water', 'Cliffs & ledges', ...CLIFF_GROUPS];
 // palette lists that are really one: shown together under the first name
 const MERGE = { Plants: 'Flowers & plants', 'Grounds & garden': 'Garden & park' };
 const SKIP_GROUP = /on |bank|Shoreline/; // the corner pieces terrain picks for you
@@ -253,7 +254,7 @@ function buildPalette() {
     const name = p.layer === 'tile' ? `Ground: ${p.group}` : MERGE[p.group] || p.group || 'Other';
     (byGroup[name] ||= []).push(ref);
   });
-  const order = ['Ground: Ground', 'Ground: Paths', 'Ground: Water', 'Buildings', 'People', 'Animals', 'Trees', 'Plants', 'Flowers & plants', 'Rocks', 'Buildings', 'Garden & park', 'Grounds & garden', 'Props', 'Dig sites', 'Puzzles', 'Ground: Cliffs & ledges', 'Cliffs & ledges'];
+  const order = ['Ground: Ground', 'Ground: Paths', 'Ground: Water', 'Buildings', 'People', 'Animals', 'Trees', 'Plants', 'Flowers & plants', 'Rocks', 'Buildings', 'Garden & park', 'Grounds & garden', 'Props', 'Dig sites', 'Puzzles', 'Ground: Cliffs & ledges', ...CLIFF_GROUPS.map((g) => `Ground: ${g}`), 'Cliffs & ledges'];
   Object.keys(byGroup)
     .sort((a, b) => (order.indexOf(a.startsWith('People') ? 'People' : a) + 1 || 99) - (order.indexOf(b.startsWith('People') ? 'People' : b) + 1 || 99)) // the People: lists sit with People
     .forEach((name) => lists.push({ name: name.replace('Ground: Ground', 'Ground tiles').replace('Ground: Cliffs & ledges', 'Cliff ground pieces').replace('Ground: ', ''), refs: byGroup[name] }));

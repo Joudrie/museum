@@ -18,7 +18,7 @@ const COMPASS = disc(14, (x, y, dx, dy, d) => {
 });
 
 export default pack({
-  id: 'invention', name: 'Inventions', noun: 'inventions', icon: '💡', tab: 'makers', tabLabel: 'Makers', order: 13,
+  id: 'invention', name: 'Inventions', noun: 'inventions', icon: 'gear', tab: 'makers', tabLabel: 'Makers', order: 13,
   intro: '{have} of {total} maker pieces found. Models, glass, clocks and inventions.',
   display: 'plinth', where: 'The workshop', how: 'bought', set: 'inventors-bench', reward: 600,
   plaque: 'Four inventions that changed how people live.',

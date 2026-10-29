@@ -85,7 +85,7 @@ export default {
     id: 'map',
     name: 'Map pieces',
     noun: 'map pieces',
-    icon: '🗺️',
+    icon: 'map',
     kinds: ['map piece'],
     display: 'case',
     ownership: 'earned',

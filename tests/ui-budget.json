@@ -148,6 +148,66 @@
   "43-huge-numbers": {
    "smallTargets": 0,
    "minFont": 13
+  },
+  "26-prog-card": {
+   "smallTargets": 0,
+   "minFont": 13
+  },
+  "27-rank-ceremony": {
+   "smallTargets": 0,
+   "minFont": 13
+  },
+  "28-goals": {
+   "smallTargets": 0,
+   "minFont": 13
+  },
+  "29-field-goals": {
+   "smallTargets": 0,
+   "minFont": 13
+  },
+  "29-field-fish": {
+   "smallTargets": 0,
+   "minFont": 13
+  },
+  "29-field-shop": {
+   "smallTargets": 0,
+   "minFont": 13
+  },
+  "29-field-lodge": {
+   "smallTargets": 0,
+   "minFont": 13
+  },
+  "29-field-leads": {
+   "smallTargets": 0,
+   "minFont": 13
+  },
+  "29-field-events": {
+   "smallTargets": 0,
+   "minFont": 13
+  },
+  "29-field-people": {
+   "smallTargets": 0,
+   "minFont": 13
+  },
+  "29-field-places": {
+   "smallTargets": 0,
+   "minFont": 13
+  },
+  "29-field-emotes": {
+   "smallTargets": 0,
+   "minFont": 13
+  },
+  "29-field-secrets": {
+   "smallTargets": 0,
+   "minFont": 13
+  },
+  "29-field-titles": {
+   "smallTargets": 0,
+   "minFont": 13
+  },
+  "29-field-records": {
+   "smallTargets": 0,
+   "minFont": 13
   }
  }
 }

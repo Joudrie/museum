@@ -111,7 +111,7 @@ async function dataChecks() {
   const imp = await import(path.join(__dirname, '..', 'tools', 'import_collection.mjs'));
   const rows = imp.parseCsv('slug,title,blurb,license,credit,image_src\nmoth,Moth,"Wings, ""dusty"" ones",CC0,Someone,/m.png\nbeetle,Beetle,,,,/b.png\n');
   check(rows.length === 2 && rows[0].blurb === 'Wings, "dusty" ones', 'importer reads quoted CSV', 'csv parse wrong: ' + JSON.stringify(rows));
-  const def = { collection: 'bug', name: 'Bugs', icon: '🐛', noun: 'bugs' };
+  const def = { collection: 'bug', name: 'Bugs', icon: 'paw', noun: 'bugs' };
   const bad2 = imp.buildPack(rows, { ...def, collection: 'bug' }).problems.join(' ');
   check(/license/.test(bad2) && /credit/.test(bad2), 'importer stops on a missing license and credit', 'importer let a row through: ' + bad2);
   const built = imp.buildPack(rows.slice(0, 1).map((r) => ({ ...r, image_kind: 'sprite' })), def);

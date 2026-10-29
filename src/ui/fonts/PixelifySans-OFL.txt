@@ -96,7 +96,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 -----------------------------------------------------------
 NOTE ON THIS COPY
 -----------------------------------------------------------
-This copy of Pixelify Sans was modified for Curation, in two ways:
+This copy of Pixelify Sans was modified for Curation, in three ways:
 1. The numeral 5 was redrawn with a flat top, because in the original it reads as the letter S at small sizes (money and levels such as "3,500" looked like "3,S00").
 2. The "fi", "fl", "ff", "ffi" and "ffl" ligatures were removed. In the original, "fi" is drawn as a glyph that looks like the letter A, so "fish" read as "Ash" and "first" as "Arst".
+3. The capital C has a wider opening on the right (in the original the gap is under one pixel at small sizes, so "Catch" and "Curator" read as "Oatch" and "Ourator").
 Nothing else was changed. The licence above still applies to the modified file.

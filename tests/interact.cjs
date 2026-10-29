@@ -185,7 +185,7 @@ const check = (cond, good, bad) => (cond ? ok(good) : fail(bad));
   });
   check(prints.spot && prints.live >= 2, `walking in snow leaves footprints (${prints.live})`, `no footprints in the snow ${JSON.stringify(prints)}`);
 
-  console.log('The boat');
+  console.log('The rowboat (src/rowing.js)');
   await open('?season=summer&weather=clear&holiday=none');
   await island({ map: 'main', spawn: 'dock' });
   const walkTo = (vx, vy, frames) =>
@@ -199,28 +199,23 @@ const check = (cond, good, bad) => (cond ? ok(good) : fail(bad));
       s.dragVec = null;
       s.update(0, 16);
     }, [vx, vy, frames]);
-  await walkTo(0, 1, 170); // down off the dock to the water's edge
-  const shore = await p.evaluate(() => { const s = __game.scene.getScene('island'); return { mode: s.waterMode, shown: !document.querySelector('#interact2').classList.contains('hidden'), label: document.querySelector('#interact2 .label').textContent }; });
-  check(shore.mode === 'boat' && shore.shown && shore.label === 'Boat', 'facing the water offers a Boat next to Fish', `no Boat button at the shore ${JSON.stringify(shore)}`);
-  await p.click('#interact2');
-  check(await p.evaluate(() => !document.querySelector('#ask').classList.contains('hidden') && /take the boat/i.test(document.querySelector('.ask-text').textContent)), 'it asks "Want to take the boat?" first', 'no Yes / No question before boarding');
-  await p.click('.ask-yes');
+  await walkTo(0, 1, 200); // down off the dock into the water
+  const asked = await p.evaluate(() => { const c = document.querySelector('#rowask'); return !!c && !c.classList.contains('hidden') && /row out/i.test(c.textContent); });
+  check(asked, 'pushing into open water asks "Row out?"', 'no question at the water');
+  await p.click('#rowask .ra-yes');
   await wait(900);
-  const aboard = await p.evaluate(() => { const s = __game.scene.getScene('island'); return { afloat: s.boat.active, paused: s.paused, pet: s.pet ? s.pet.s.visible : null }; });
-  check(aboard.afloat && !aboard.paused, 'you hop into the boat', `not afloat ${JSON.stringify(aboard)}`);
+  const aboard = await p.evaluate(() => { const s = __game.scene.getScene('island'); return { afloat: !!s.row?.on, paused: s.paused }; });
+  check(aboard.afloat && !aboard.paused, 'you hop into the boat and can move', `not afloat ${JSON.stringify(aboard)}`);
   const from = await p.evaluate(() => { const s = __game.scene.getScene('island'); return [s.player.x, s.player.y]; });
   await walkTo(0, 1, 90);
-  const rowed = await p.evaluate(([x0, y0]) => { const s = __game.scene.getScene('island'); return { moved: Math.hypot(s.player.x - x0, s.player.y - y0), onWater: s.boatWater(s.player.x, s.player.y), fish: document.querySelector('#interact .label').textContent }; }, from);
+  const rowed = await p.evaluate(([x0, y0]) => { const s = __game.scene.getScene('island'); return { moved: Math.hypot(s.player.x - x0, s.player.y - y0), onWater: s.row.wet(s.player.x, s.player.y - 4) }; }, from);
   check(rowed.moved > 40 && rowed.onWater, `you row across the water (${Math.round(rowed.moved)} px)`, `rowing broke ${JSON.stringify(rowed)}`);
-  await walkTo(0, -1, 400); // back toward the shore until the boat stops
-  const near = await p.evaluate(() => { const s = __game.scene.getScene('island'); return { mode: s.waterMode, onWater: s.boatWater(s.player.x, s.player.y) }; });
-  check(near.onWater && near.mode === 'hop', 'the boat stops at the shore and offers Hop out', `at the shore: ${JSON.stringify(near)}`);
-  await p.click('#interact2');
-  await p.click('.ask-yes');
-  await wait(800);
-  const out = await p.evaluate(() => { const s = __game.scene.getScene('island'); s.facing = 'down'; s.player.setTexture('player_down'); const f = s.findFocus(); return { afloat: s.boat.active, moored: !!s.boat.skiff, walkable: s.free(s.player.x, s.player.y), focus: f ? Object.keys(f)[0] : 'none', label: s.focusLabel(f) }; });
-  check(!out.afloat && out.moored && out.walkable, 'hopping out leaves the boat moored and you on the shore', `hop out ${JSON.stringify(out)}`);
-  check(out.focus === 'skiff' && out.label === 'Hop in', 'facing the moored boat you can hop back in', `moored boat focus ${JSON.stringify(out)}`);
+  const fishFromBoat = await p.evaluate(() => { const s = __game.scene.getScene('island'); s.facing = 'down'; s.player.setTexture('player_down'); s.update(0, 16); const f = s.findFocus(); return { label: s.focusLabel(f), icon: f?.icon }; });
+  check(fishFromBoat.label === 'Fish', 'you can fish from the boat (facing the open water)', `from the boat: ${JSON.stringify(fishFromBoat)}`);
+  await walkTo(0, -1, 500); // back toward the shore: rowing into land climbs out
+  await wait(600);
+  const out = await p.evaluate(() => { const s = __game.scene.getScene('island'); return { afloat: !!s.row?.on, walkable: s.free(s.player.x, s.player.y) }; });
+  check(!out.afloat && out.walkable, 'rowing into the shore climbs out onto land', `after the shore ${JSON.stringify(out)}`);
 
   console.log('Little scenes');
   await open('?season=autumn&weather=clear&holiday=none');

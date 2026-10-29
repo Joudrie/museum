@@ -174,11 +174,6 @@ const SFX = {
   quest: (t) => [659, 880, 1319].forEach((f, i) => tone(f, t + i * 0.09, 0.28, { gain: 0.24 })),
   chirp: (t) => [0, 1, 2].forEach((i) => tone(2500 + i * 420 + Math.random() * 200, t + i * 0.06, 0.07, { wave: 'sine', gain: 0.05, to: 3300 })), // sparrows going up
   emote: (t) => tone(880, t, 0.09, { wave: 'sine', gain: 0.07, to: 1320 }), // an emote bubble
-  hop: (t) => {
-    tone(300, t, 0.14, { wave: 'sine', gain: 0.25, to: 150 });
-    tone(520, t + 0.05, 0.08, { wave: 'sine', gain: 0.18, to: 180 });
-  },
-  oar: (t) => tone(260, t, 0.2, { wave: 'sine', gain: 0.05, to: 150 }),
   scrape: (t) => tone(760, t, 0.13, { wave: 'sawtooth', gain: 0.022, to: 360 }), // a rake on the ground
   stepSnow: (t) => tone(1700 + Math.random() * 500, t, 0.06, { wave: 'sawtooth', gain: 0.02, to: 650 }),
   // progression layer: each step of a chain rings a little higher

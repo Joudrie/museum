@@ -44,7 +44,6 @@ import { popEmote, startChat, EMOTES, SEASON_EMOTE } from './emotes.js';
 import { makeEmotes } from './art.js';
 import { Prints } from './prints.js';
 import { islandLine } from './island_lines.js';
-import { Boat } from './boat.js';
 import { remember, rareFor } from './regulars.js';
 import { ask } from './ask.js';
 import { FocusMark } from './focusmark.js';
@@ -200,6 +199,12 @@ export class IslandScene extends Phaser.Scene {
     const start = this.map ? (this.door && this.spawnAt !== 'dock' ? { x: this.door.x, y: this.door.y + 22 } : this.landing()) : this.spawnAt === 'cottage' ? { x: COTTAGE.x, y: COTTAGE.y + 16 } : this.spawnAt === 'dock' ? { x: 12.5 * T, y: 38.6 * T } : { x: DOOR.x, y: DOOR.y + 22 };
     this.player = this.add.sprite(start.x, start.y, 'player_down').setOrigin(0.5, 1).setScale(PLAYER_SCALE);
     this.shadow = this.add.ellipse(0, 0, 18, 6, 0x000000, 0.25).setDepth(0.5);
+    this.row?.destroy();
+    this.row = null;
+    const visit = (this.visit = (this.visit || 0) + 1);
+    import('./rowing.js').then(({ Rowing }) => {
+      if (this.visit === visit) this.row = new Rowing(this, { W, H }); // walk into the water to row
+    });
     if (ch.pet && ch.pet !== 'none') this.pet = new Pet(this, ch.pet, ch.petColor, this.player);
     this.doorLock = this.spawnAt !== 'cottage' && this.spawnAt !== 'dock'; // don't walk straight back in
     this.cottageLock = this.spawnAt === 'cottage';
@@ -208,8 +213,6 @@ export class IslandScene extends Phaser.Scene {
     makeEmotes(this);
     this.prints = new Prints(this);
     this.prints.snowing = this.weatherKind === 'snow';
-    this.boat = new Boat(this);
-    this.makeWaterButton();
     this.mark = new FocusMark(this);
     this.shadowsP = new Shadows(this, 0.5); // soft shadows under the people and animals on screen
 
@@ -981,7 +984,15 @@ export class IslandScene extends Phaser.Scene {
     });
   }
 
-  // Can the player's feet stand here?
+  tileInfo(name) {
+    return TILES[name];
+  }
+
+  walkFree(x, y) {
+    return this.free(x, y);
+  }
+
+  // Can the player's feet stand here? (The rowboat asks src/rowing.js instead.)
   free(x, y) {
     const pts = [[x - 6, y - 2], [x + 6, y - 2], [x - 6, y - 7], [x + 6, y - 7]];
     if (this.posts.some((b) => x + 6 > b.x0 && x - 6 < b.x1 && y - 2 > b.y0 && y - 7 < b.y1)) return false;
@@ -1479,6 +1490,7 @@ export class IslandScene extends Phaser.Scene {
       },
       onEnd: finish,
       leave: () => this.walkedFrom(n),
+      onBye: (text) => showTalk(n.name, n.label || n.title || PERSONALITIES[n.kind]?.label || 'Islander', text, this.speakerAt(n.s), 2600, () => this.walkedFrom(n, 70)), // (the goodbye is said in a bubble)
     });
   }
 
@@ -1597,9 +1609,7 @@ export class IslandScene extends Phaser.Scene {
       const pz = this.puzzles.focusAt(x, y);
       if (pz) consider(34, Math.hypot(x - pz.puzzle.cx, y - pz.puzzle.cy), pz, ...(pz.kind === 'x' || pz.kind === 'buried' ? [] : [pz.puzzle.cx, pz.puzzle.cy]));
     }
-    if (this.pet && !this.boat.active) consider(30, Math.hypot(x - this.pet.s.x, y - this.pet.s.y) + 4, { pet: true, icon: 'talk' }, this.pet.s.x, this.pet.s.y - 4);
-    const sk = this.boat.skiff; // the little boat you left moored
-    if (sk && !this.boat.active) consider(48, Math.hypot(x - sk.x, y - sk.y), { skiff: true, icon: 'boat' }, sk.x, sk.y);
+    if (this.pet && !this.row?.on) consider(30, Math.hypot(x - this.pet.s.x, y - this.pet.s.y) + 4, { pet: true, icon: 'talk' }, this.pet.s.x, this.pet.s.y - 4);
     if (this.map) {
       // by a boat, or back where you stepped off
       // (a boat is long: face its nearest point, so standing alongside it counts)
@@ -1625,7 +1635,6 @@ export class IslandScene extends Phaser.Scene {
     const over = (s, n) => ({ x: s.x, y: headY(s) - (n?.emoteImg?.active ? 18 : 6) });
     if (f.npc || f.animal) return over((f.npc || f.animal).s, f.npc || f.animal);
     if (f.pet) return over(this.pet.s);
-    if (f.skiff) return { x: this.boat.skiff.x, y: this.boat.skiff.y - 26 };
     if (f.boat) {
       const { x, y } = this.player;
       const b = this.boats.reduce((m, o) => (!m || Math.hypot(x - o.x, y - o.y) < Math.hypot(x - m.x, y - m.y) ? o : m), null);
@@ -1643,7 +1652,6 @@ export class IslandScene extends Phaser.Scene {
     if (!f) return 'Interact';
     if (f.label) return f.label; // (something that names its own action, like a hunt or a trap)
     if (f.fish) return 'Fish';
-    if (f.skiff) return 'Hop in';
     if (f.exp) return f.exp.label;
     if (f.puzzle) return { lever: 'Pull', rock: 'Smash', riddler: 'Ask', boulder: 'Reset', x: 'Dig', buried: 'Dig' }[f.kind] || 'Look';
     if (f.thing) return f.thing.name === 'chest' ? 'Open' : 'Read';
@@ -1654,102 +1662,6 @@ export class IslandScene extends Phaser.Scene {
     if (f.door || f.cottage) return 'Enter';
     if (f.locked) return 'Try door';
     return 'Interact';
-  }
-
-  // ---------- The boat ----------
-  mapBounds() {
-    return { x0: 18, x1: W * T - 18, y0: 24, y1: H * T - 10 };
-  }
-
-  // Open water a boat can sit on: sea or pond, with nothing standing in it (and no frozen pond).
-  boatWater(x, y) {
-    if (this.ground_(x, y) !== 'water') return false;
-    const cx = Math.floor(x / T);
-    const cy = Math.floor(y / T);
-    const k = `${cx},${cy}`;
-    if (this.blockSet.has(k) || this.dockCells.has(k)) return false;
-    if (this.posts.some((b) => x > b.x0 && x < b.x1 && y > b.y0 && y < b.y1)) return false;
-    return !(this.season === 'winter' && this.key(cx, cy, (m) => m === 3) !== '0000');
-  }
-
-  // Where you'd step down into a boat: the first open water ahead.
-  boatSpot() {
-    const p = this.player;
-    const [dx, dy] = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] }[this.facing];
-    for (const d of [26, 34, 42, 50]) {
-      const x = p.x + dx * d;
-      const y = p.y + dy * d;
-      if (this.boat.fits(x, y, this.boat.orient(this.facing))) return { x, y };
-    }
-    return null;
-  }
-
-  // Where you'd step out of the boat: walkable ground ahead.
-  landAhead() {
-    const p = this.player;
-    const [dx, dy] = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] }[this.facing];
-    for (const d of [22, 30, 38, 46]) {
-      const x = p.x + dx * d;
-      const y = p.y + dy * d;
-      if (this.free(x, y) && !this.boat.fits(x, y, 'h')) return { x, y };
-    }
-    return null;
-  }
-
-  // The second button, above Interact: Boat at the water's edge, Hop out when afloat and the shore is ahead.
-  makeWaterButton() {
-    let b = document.getElementById('interact2');
-    if (!b) {
-      b = document.createElement('button');
-      b.id = 'interact2';
-      b.className = 'pixel-btn hidden';
-      b.innerHTML = '<span class="bang"></span><span class="label"></span>';
-      document.body.appendChild(b);
-    }
-    this.waterBtn = b;
-    this.waterMode = null;
-    b.classList.add('hidden');
-    b.onclick = () => this.useWaterButton();
-    this.events.once('shutdown', () => b.classList.add('hidden'));
-  }
-
-  updateWaterButton() {
-    const b = this.waterBtn;
-    let mode = null;
-    if (!this.paused && !this.leaving && !this.exp && !this.fishing.busy && !talking() && !chatOpen()) {
-      if (this.boat.active) mode = this.landAhead() ? 'hop' : null;
-      else if (this.waterAhead() && this.boatSpot()) mode = 'boat'; // (the same "at the water's edge" as Fish)
-    }
-    if (mode === this.waterMode) return;
-    this.waterMode = mode;
-    b.classList.toggle('hidden', !mode);
-    if (!mode) return;
-    b.querySelector('.label').textContent = mode === 'hop' ? 'Hop out' : 'Boat';
-    b.querySelector('.bang').innerHTML = iconSvg(mode === 'hop' ? 'door' : 'boat');
-  }
-
-  // Boat / Hop out ask first, like any other "do you want to?" in the game: a Yes / No box.
-  useWaterButton() {
-    if (this.paused || this.leaving || !this.waterMode) return;
-    const mode = this.waterMode;
-    this.waterMode = null;
-    this.waterBtn.classList.add('hidden');
-    this.paused = true; // (the walk stops while the question is up)
-    this.interactBtn.classList.add('hidden');
-    sfx('open');
-    const done = (yes) => {
-      this.paused = false;
-      if (!yes) return;
-      if (mode === 'hop') {
-        const land = this.landAhead();
-        if (land) this.boat.hopOut(land);
-      } else {
-        const spot = this.boatSpot();
-        if (spot) this.boat.board(spot, this.facing);
-      }
-    };
-    if (mode === 'hop') ask('Hop out?', 'Step out onto the shore?', 'Yes', done, 'Stay aboard');
-    else ask('Take the boat?', 'Want to take the boat?', 'Yes', done, 'No');
   }
 
   // Open water a short cast ahead of where you're facing: { x, y, water }.
@@ -1772,10 +1684,9 @@ export class IslandScene extends Phaser.Scene {
 
   interact() {
     const f = this.focus;
-    if (!f || this.leaving || this.paused) return; // (a panel or a hop into the boat is under way)
+    if (!f || this.leaving || this.paused) return; // (a panel or the hop into the rowboat is under way)
     if (chatOpen()) return; // a conversation is up (walk away or say bye to end it)
     if (this.fishing.busy) return this.fishing.tap();
-    if (f.skiff) return this.boat.boardSkiff();
     if (f.boat) return this.sail();
     if (f.door) return this.goInside();
     if (f.locked) return this.toast('The doors are locked. The museum is on Main Island now.');
@@ -1854,7 +1765,7 @@ export class IslandScene extends Phaser.Scene {
   // about for a while, a look round at the view. (Only the picture turns; which way you face doesn't.)
   idleLife(dt, moving) {
     const p = this.player;
-    if (moving || this.paused || this.fishing.busy || this.boat.active) {
+    if (moving || this.paused || this.fishing.busy || this.row?.on) {
       this.idleT = 0;
     } else this.idleT = (this.idleT || 0) + dt;
     if (this.season === 'winter' || this.weatherKind === 'snow') {
@@ -1943,10 +1854,6 @@ export class IslandScene extends Phaser.Scene {
     this.tells.update(dt, this.islanders, this.cameras.main.worldView);
     this.socializeIslanders(dt);
     if (this.paused) {
-      if (this.waterMode) {
-        this.waterMode = null; // (no Boat button hanging over a menu)
-        this.waterBtn.classList.add('hidden');
-      }
       // (a conversation or a panel took over mid-drag: let go of the stick so you don't walk off afterwards)
       if (this.dragging) {
         this.dragging = false;
@@ -1970,19 +1877,18 @@ export class IslandScene extends Phaser.Scene {
     }
     if (progression().has('exploring.light_foot')) pace *= 1.06; // Exploring 16
     if (this.season === 'winter' && progression().has('exploring.snow_speed')) pace *= 1.1; // Exploring 6: deep snow
+    if (this.row?.on) pace *= 0.85; // rowing is a little slower than walking
     if (this.puzzles.sliding) vx = vy = 0; // sliding on ice: no steering
     const len = Math.hypot(vx, vy);
     const p = this.player;
     this.running = len > 0 && pace === 1;
+    const was = { x: p.x, y: p.y };
+    const ok = this.row?.on ? (x, y) => this.row.free(x, y) : (x, y) => this.free(x, y); // afloat, the boat decides
     if (len) {
       // small sub-steps, so a slow frame still stops against a wall where a fast one would
       // (otherwise one big step skips over the strip in front of a door that triggers it)
-      const afloat = this.boat.active;
-      const dist = SPEED * pace * dt * (afloat ? 0.8 : 1);
+      const dist = SPEED * pace * dt;
       const steps = Math.max(1, Math.ceil(dist / 3));
-      const o = this.boat.orient(this.facing);
-      // (a boat already squeezed against the shore may always move away)
-      const ok = afloat ? (fx, fy) => this.boat.fits(fx, fy, o) || !this.boat.fits(p.x, p.y, o) : (fx, fy) => this.free(fx, fy);
       for (let i = 0; i < steps; i++) {
         const nx = p.x + ((vx / len) * dist) / steps;
         const ny = p.y + ((vy / len) * dist) / steps;
@@ -1997,10 +1903,13 @@ export class IslandScene extends Phaser.Scene {
         this.facing = vy < 0 ? 'up' : 'down';
       }
     }
-    if (this.puzzles.any) this.puzzles.update(dt, len ? vx / len : 0, len ? vy / len : 0);
-    if (this.boat.active) this.boat.update(dt, len > 0, this.facing, vx, vy);
-    else if (animateWalker(this, p, len > 0 || !!this.puzzles.sliding, dt, 0.8 + pace * 0.5)) this.onStep(p, pace, vx, vy);
-    this.pet?.update(dt);
+    const moved = Math.abs(p.x - was.x) + Math.abs(p.y - was.y) > 0.05;
+    this.row?.check(dt, vx, vy, len, moved); // into the water: "Row out?"; rowing into land: climb out
+    const rowing = !!this.row?.update(dt, len > 0 && moved);
+    if (this.puzzles.any && !rowing) this.puzzles.update(dt, len ? vx / len : 0, len ? vy / len : 0);
+    if (!rowing && animateWalker(this, p, len > 0 || !!this.puzzles.sliding, dt, 0.8 + pace * 0.5)) this.onStep(p, pace, vx, vy);
+    if (rowing) this.row.carryPet(this.pet);
+    else this.pet?.update(dt);
     this.exp?.update(dt);
     this.critters.update(dt, p);
     this.ambient.update(dt, p);
@@ -2010,7 +1919,6 @@ export class IslandScene extends Phaser.Scene {
     this.playerGlow?.setPosition(p.x, p.y - 12);
     p.setDepth(p.y);
     this.shadow.setPosition(p.x, p.y - 1);
-    this.updateWaterButton();
     // Walk up into the doors to go back inside (main island only).
     const D = this.door;
     const atDoor = !!D && Math.abs(p.x - D.x) < 20 && p.y < D.y + 10 && p.y > D.y - 12;

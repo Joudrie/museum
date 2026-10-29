@@ -16,7 +16,7 @@ const html = `
   <p style="font:600 var(--fs-lead)/1.2 var(--ui-font)">Lead 17: the main line of a row</p>
   <p style="font:400 var(--fs-body)/1.3 var(--ui-font)">Body 15: instructions and descriptions in the interface.</p>
   <p style="font:400 var(--fs-small)/1.3 var(--ui-font);color:var(--ui-muted)">Small 13: the smallest text anywhere.</p>
-  <p style="font:400 var(--fs-body)/1.3 var(--ui-font)">Font check: fish file fine finger first find · 3,500 gold · Level 5 of 5 · 0123456789</p>
+  <p style="font:400 var(--fs-body)/1.3 var(--ui-font)">Font check: fish file fine finger first find · Catch Collect Curator Coins · 3,500 gold · Level 5 of 5 · 0123456789</p>
   <p class="ui-prose">Prose (Georgia): museum text. Late summer: peasants cut wheat while others eat lunch under a pear tree.</p>
 </section>
 <section><h2 class="ui-label">Buttons</h2>

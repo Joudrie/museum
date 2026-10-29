@@ -1,0 +1,54 @@
+/* "Row out?" (src/rowing.js): a small card in the top third, like every non-urgent question. */
+#rowask {
+  position: fixed;
+  left: 50%;
+  top: calc(env(safe-area-inset-top, 0px) + 84px);
+  z-index: 30;
+  width: min(320px, calc(100vw - 32px));
+  transform: translateX(-50%);
+  padding: 10px 12px 12px;
+  color: var(--ui-ink, #f4ead6);
+  font-family: var(--ui-font, monospace);
+  background: var(--ui-panel, #2a211d);
+  border: 3px solid var(--ui-shadow, #120d0b);
+  box-shadow: inset 0 0 0 2px var(--ui-gold-lo, #5b4216), 0 4px 0 rgba(0, 0, 0, 0.35);
+}
+#rowask.hidden {
+  display: none;
+}
+#rowask p {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 10px;
+  font: 600 var(--fs-body, 15px) / 1.25 var(--ui-font, monospace);
+}
+#rowask .ra-ic {
+  display: inline-grid;
+  color: var(--ui-gold-hi, #f2d36b);
+}
+#rowask .ra-ic .ui-ic,
+#rowask .ra-ic svg {
+  width: 20px;
+  height: 20px;
+}
+#rowask .ra-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+#rowask button {
+  min-height: 44px;
+  font: 700 var(--fs-body, 15px) / 1 var(--ui-font, monospace);
+  color: var(--ui-ink, #f4ead6);
+  background: var(--ui-panel-2, #362a22);
+  border: 3px solid var(--ui-shadow, #120d0b);
+  box-shadow: inset 2px 2px 0 rgba(255, 240, 200, 0.16), inset -2px -2px 0 rgba(0, 0, 0, 0.4), 0 3px 0 var(--ui-shadow, #120d0b);
+}
+#rowask .ra-yes {
+  color: var(--ui-on-gold, #2a1a12);
+  background: var(--ui-gold-hi, #f2d36b);
+}
+body:has(#rowask:not(.hidden)) #prog-pill {
+  visibility: hidden;
+}

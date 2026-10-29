@@ -1443,6 +1443,7 @@ export class RoomScene extends Phaser.Scene {
         n.wait = 1500;
         n.faceUntil = this.time.now + 900;
       },
+      onBye: (text) => showTalk(n.name, PERSONALITIES[n.kind].label, text, this.speakerAt(n.s), 2600, this.walkedAway(n.s)), // (the goodbye is said in a bubble)
     });
   }
 

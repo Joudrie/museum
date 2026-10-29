@@ -238,30 +238,34 @@ const check = (cond, good, bad) => (cond ? ok(good) : fail(bad));
   const turned = await stand(door.x, door.y + 18, 'down');
   check(turned.label !== 'Enter', 'turn your back on them and it is not offered', `still ${turned.label} with the doors behind`);
 
-  console.log('The island: the boat, both ways, and fishing');
+  console.log('The island: the rowboat, both ways, and fishing');
   await island({ map: 'main', spawn: 'dock' });
-  await p.evaluate(() => {
-    const s = __game.scene.getScene('island');
-    s.dragging = true;
-    s.dragVec = { x: 0, y: 1 };
-    s.dragMag = 1;
-    for (let i = 0; i < 170; i++) s.update(0, 16);
-    s.dragging = false;
-    s.dragVec = null;
-    s.update(0, 16);
-  });
-  check(await p.evaluate(() => __game.scene.getScene('island').waterMode === 'boat'), 'at the shore the Boat button is offered', 'no Boat at the shore');
-  await p.click('#interact2');
-  await p.click('.ask-no');
+  const drag = (x, y, n) =>
+    p.evaluate(([vx, vy, frames]) => {
+      const s = __game.scene.getScene('island');
+      s.dragging = true;
+      s.dragVec = { x: vx, y: vy };
+      s.dragMag = 1;
+      for (let i = 0; i < frames; i++) s.update(0, 16);
+      s.dragging = false;
+      s.dragVec = null;
+      s.update(0, 16);
+    }, [x, y, n]);
+  await drag(0, 1, 200); // off the dock into the water
+  const rowAsk = () => p.evaluate(() => { const c = document.querySelector('#rowask'); return !!c && !c.classList.contains('hidden'); });
+  check(await rowAsk(), 'pushing into the water asks "Row out?"', 'no question at the water');
+  await p.click('#rowask .ra-no');
   await wait(300);
   let st = await stuck('island');
-  check(!st.paused && !(await p.evaluate(() => __game.scene.getScene('island').boat.active)), 'saying No leaves you on the shore and free', `after No ${JSON.stringify(st)}`);
-  await p.click('#interact2');
-  await p.click('.ask-yes');
+  check(!st.paused && !(await p.evaluate(() => __game.scene.getScene('island').row.on)), 'saying Not now leaves you on the shore and free', `after Not now ${JSON.stringify(st)}`);
+  await p.evaluate(() => { const s = __game.scene.getScene('island'); s.row.declinedAt = null; }); // (as if you had walked off and come back)
+  await drag(0, 1, 60);
+  check(await rowAsk(), 'it asks again when you come back to the water', 'no second question');
+  await p.click('#rowask .ra-yes');
   await wait(900);
-  check(await p.evaluate(() => __game.scene.getScene('island').boat.active), 'saying Yes puts you in the boat', 'no boat after Yes');
+  check(await p.evaluate(() => __game.scene.getScene('island').row.on), 'saying Row puts you in the boat', 'no boat after Row');
   // fish from the boat
-  await p.evaluate(() => { const s = __game.scene.getScene('island'); s.focus = s.findFocus(); });
+  await p.evaluate(() => { const s = __game.scene.getScene('island'); s.facing = 'down'; s.player.setTexture('player_down'); s.update(0, 16); s.focus = s.findFocus(); });
   const fb = await p.evaluate(() => ({ label: document.querySelector('#interact .label').textContent }));
   check(fb.label === 'Fish', 'afloat, facing open water: Fish', `afloat label ${fb.label}`);
   await p.evaluate(() => {
@@ -272,25 +276,10 @@ const check = (cond, good, bad) => (cond ? ok(good) : fail(bad));
   await wait(900);
   check(await p.evaluate(() => __game.scene.getScene('island').fishing.busy), 'a line goes out from the boat', 'no cast from the boat');
   await p.evaluate(() => __game.scene.getScene('island').fishing.end());
-  await p.evaluate(() => {
-    const s = __game.scene.getScene('island');
-    s.dragging = true;
-    s.dragVec = { x: 0, y: -1 };
-    s.dragMag = 1;
-    for (let i = 0; i < 300; i++) s.update(0, 16);
-    s.dragging = false;
-    s.dragVec = null;
-    s.update(0, 16);
-  });
-  await p.click('#interact2');
-  await p.click('.ask-no');
-  await wait(200);
-  check(await p.evaluate(() => __game.scene.getScene('island').boat.active), 'No to "hop out" keeps you aboard', 'left the boat after saying No');
-  await p.click('#interact2');
-  await p.click('.ask-yes');
-  await wait(900);
+  await drag(0, -1, 500); // back at the shore: rowing into land climbs out
+  await wait(700);
   st = await stuck('island');
-  check(!st.paused && !(await p.evaluate(() => __game.scene.getScene('island').boat.active)) && (await walkable('island')), 'Yes puts you ashore and you can walk', `after hopping out ${JSON.stringify(st)}`);
+  check(!st.paused && !(await p.evaluate(() => __game.scene.getScene('island').row.on)) && (await walkable('island')), 'rowing into the shore puts you on land and you can walk', `after the shore ${JSON.stringify(st)}`);
 
   console.log('The island: the sailing boat menu');
   const sail = await p.evaluate(() => {
