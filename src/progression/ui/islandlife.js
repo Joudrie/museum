@@ -74,16 +74,16 @@ export class IslandLife {
       return false;
     }
     const npc = NPCS.find((x) => x.id === n.npcId);
-    s.paused = true;
+    // (no pause: the box sits up top and walking away ends the talk)
     const portrait = s.textures.exists(`${n.prefix}_down`) ? s.textures.get(`${n.prefix}_down`).getSourceImage() : null;
     runDialogue(namedConverse(p, n.npcId, { emote: (id) => this.emote(n, id) }), {
       name: npc.name,
       label: npc.role,
       portrait,
       onEnd: () => {
-        s.paused = false;
         p.queue.poke();
       },
+      leave: () => !s.sys.isActive() || Math.hypot(s.player.x - n.s.x, s.player.y - n.s.y) > 64,
     });
     return true;
   }

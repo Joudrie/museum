@@ -1,8 +1,9 @@
 // Customize panel (home button). "This room" recolors only the room you're in;
 // "Character" changes the curator. Each color row is a swipeable strip of
 // swatches, ending in a + that opens a full color picker.
-import { HATS, FACIAL, GLASSES, HAIRSTYLES, OUTFITS, ACCESSORIES, PALETTES, FLOOR_PATTERNS, WOOD_FLOORS, TWO_COLOR_FLOORS, FLOOR_DEFAULTS, WALL_PATTERNS, WAINSCOT_STYLES, LIGHTS, PLANTS } from './art.js';
-import { BUILDS, LEGS, FEET } from './people/parts.js';
+import { HATS, FACIAL, GLASSES, HAIRSTYLES, OUTFITS, ACCESSORIES, PALETTES, FLOOR_PATTERNS, WOOD_FLOORS, TWO_COLOR_FLOORS, FLOOR_DEFAULTS, WALL_PATTERNS, WAINSCOT_STYLES, LIGHTS, PLANTS, personRows } from './art.js';
+import { BUILDS, LEGS, FEET, ACCENT_OUTFITS } from './people/parts.js';
+import { openColorWheel } from './colorwheel.js';
 import { TRACKS } from './music.js';
 import { PETS, PET_COLORS } from './pets.js';
 
@@ -24,36 +25,13 @@ export const CHARACTER_PALETTES = {
   p: { label: 'Pants', colors: ['#2f2b3d', '#3b3a48', '#5a4632', '#1e1e22', '#3c4a63', '#7a6a58', '#e8e2d4', '#6a8a4a'] },
   b: { label: 'Shoes', colors: ['#1a1418', '#4a2e20', '#e8e2d4', '#7a2232', '#3c4a63', '#c9a23f'] },
 };
-// What the main color is called for each outfit, and which colors an outfit shows.
+// What the main color is called for each outfit (the rows shown follow what the outfit draws).
 const MAIN_LABEL = { suit: 'Jacket', vest: 'Waistcoat', sweater: 'Sweater', tee: 'T-shirt', hoodie: 'Hoodie', coat: 'Coat', apron: 'Shirt', dress: 'Dress', gown: 'Gown', toga: 'Toga',
   coveralls: 'Coveralls', overalls: 'Overalls', hivis: 'Vest', oilskins: 'Oilskins', waders: 'Waders', wetsuit: 'Wetsuit', sailor: 'Top', captain: 'Coat', striped: 'Shirt', flannel: 'Shirt', fieldvest: 'Vest', trunks: 'Trunks', swimsuit: 'Swimsuit' };
-const W_LABEL = { striped: 'Stripes' };
+const W_LABEL = { striped: 'Stripes', sweater: 'Collar', hoodie: 'Strings', dress: 'Collar', gown: 'Trim', toga: 'Trim', coveralls: 'Patch', tracksuit: 'Stripes', clown: 'Spots', varsity: 'Sleeves', doublet: 'Sleeves', hivis: 'Shirt' };
+// the optional second color (outfits with no shirt or trim of their own; see ACCENT_OUTFITS)
+const SECOND_COLORS = ['#efe6d4', '#ffffff', '#2a2a2e', '#c9a23f', '#b0413e', '#3d6fb6', '#4f7a3a', '#6a4c93', '#e8c8d0', '#c27a2c', '#2e7d7a'];
 const G_LABEL = { toga: 'Sash', apron: 'Apron', wetsuit: 'Stripe', sailor: 'Collar' };
-const USES = {
-  suit: ['w', 'g', 'p'],
-  vest: ['w', 'g', 'p'],
-  sweater: ['p'],
-  tee: ['p'],
-  hoodie: ['p'],
-  coat: ['w', 'g', 'p'],
-  apron: ['g', 'p'],
-  dress: [],
-  gown: [],
-  toga: ['g'],
-  coveralls: [],
-  overalls: ['w'],
-  hivis: ['w', 'p'],
-  oilskins: [],
-  waders: ['w'],
-  wetsuit: ['g'],
-  sailor: ['g', 'p'],
-  captain: ['w', 'p'],
-  striped: ['w', 'p'],
-  flannel: ['p'],
-  fieldvest: ['w', 'p'],
-  trunks: [],
-  swimsuit: [],
-};
 const ACC_COLORS = ['#c0392b', '#2e7d7a', '#c9a23f', '#3d6fb6', '#e8e2d4', '#1e1e22', '#6a4c93'];
 export const DEFAULT_CHARACTER = { h: '#4a2e20', s: '#f2c6a0', c: '#7a2e3a', p: '#2f2b3d', b: '#1a1418', w: '#efe6d4', g: '#c9a23f', hair: 'short', outfit: 'suit' };
 
@@ -90,23 +68,39 @@ function group(id, title, summary, ...children) {
 }
 
 // A swipeable row of color swatches plus a custom color picker.
-export function strip(colors, value, onPick) {
+export function strip(colors, value, onPick, opts = {}) {
   const row = document.createElement('div');
   row.className = 'strip';
+  const v = String(value || '').toLowerCase();
+  if (opts.clear) {
+    // "none": this color is off (an outfit's optional second color)
+    const b = document.createElement('button');
+    b.className = 'dot none' + (v ? '' : ' on');
+    b.setAttribute('aria-label', 'None');
+    b.onclick = () => opts.clear();
+    row.appendChild(b);
+  }
   colors.forEach((c) => {
     const b = document.createElement('button');
-    b.className = 'dot' + (c.toLowerCase() === value.toLowerCase() ? ' on' : '');
+    b.className = 'dot' + (c.toLowerCase() === v ? ' on' : '');
     b.style.background = c;
     b.setAttribute('aria-label', c);
     b.onclick = () => onPick(c);
     row.appendChild(b);
   });
-  const custom = document.createElement('label');
-  const isCustom = !colors.some((c) => c.toLowerCase() === value.toLowerCase());
+  // pick your own: the in-game color wheel (src/colorwheel.js)
+  const custom = document.createElement('button');
+  const isCustom = !!v && !colors.some((c) => c.toLowerCase() === v);
   custom.className = 'dot custom' + (isCustom ? ' on' : '');
   if (isCustom) custom.style.background = value;
-  custom.innerHTML = `<span>+</span><input type="color" value="${value}" aria-label="Pick any color" />`;
-  custom.querySelector('input').addEventListener('input', (e) => onPick(e.target.value, true));
+  custom.innerHTML = '<span>+</span>';
+  custom.setAttribute('aria-label', 'Pick any color');
+  custom.onclick = () =>
+    openColorWheel(value || colors[0], {
+      onLive: (hex) => onPick(hex, true),
+      onDone: (hex) => onPick(hex),
+      onCancel: () => (value ? onPick(value) : opts.clear ? opts.clear() : onPick(colors[0])),
+    });
   row.appendChild(custom);
   return row;
 }
@@ -409,15 +403,23 @@ function renderCharacter() {
   });
   parts.push(section('Face', face));
   parts.push(section('Facial hair', choices(FACIAL, ch.facial || 'none', pick('facial'))));
+  // which colors this outfit (with these legs and feet) actually draws: only those get a row
+  const drawn = new Set();
+  ['down', 'up', 'side'].forEach((v) =>
+    personRows(v, { outfit: style, legs: ch.legs, feet: ch.feet, second: true }).forEach((r) => {
+      for (const c of r) drawn.add(c);
+    }),
+  );
   parts.push(section('Outfit', choices(OUTFITS, style, pick('outfit'))));
-  parts.push(colorRow('c', MAIN_LABEL[style]));
-  const uses = USES[style] || [];
-  if (uses.includes('w')) parts.push(colorRow('w', W_LABEL[style]));
-  if (uses.includes('g')) parts.push(colorRow('g', G_LABEL[style] || 'Tie & trim'));
-  if (uses.includes('p')) parts.push(colorRow('p'));
+  if (drawn.has('c')) parts.push(colorRow('c', MAIN_LABEL[style] || OUTFITS[style]));
+  if (drawn.has('w')) parts.push(colorRow('w', W_LABEL[style] || 'Shirt'));
+  if (drawn.has('g')) parts.push(colorRow('g', G_LABEL[style] || 'Tie & trim'));
+  // a second color for outfits that have no shirt or trim of their own (off until picked)
+  if (ACCENT_OUTFITS[style]) parts.push(section(ACCENT_OUTFITS[style], strip(SECOND_COLORS, ch.u || '', (u, live) => setChar({ u }, live), { clear: () => setChar({ u: null }) })));
   parts.push(section('Legs', choices(LEGS, ch.legs || 'trousers', pick('legs'))));
+  if (drawn.has('p')) parts.push(colorRow('p', ch.legs === 'shorts' ? 'Shorts color' : 'Pants color'));
   parts.push(section('Feet', choices(FEET, ch.feet || 'shoes', pick('feet'))));
-  parts.push(colorRow('b'));
+  if (drawn.has('b')) parts.push(colorRow('b'));
   parts.push(section('Build', choices(BUILDS, ch.build || 'standard', pick('build'))));
   parts.push(section('Hat', choices(HATS, ch.hat || 'none', pick('hat'))));
   if (ch.hat && ch.hat !== 'none' && ch.hat !== 'crown' && ch.hat !== 'laurel') {
