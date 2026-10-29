@@ -227,6 +227,12 @@ island scene streams ground chunks around the player.
 - `tests/saves.cjs` writes junk into every `curation.*` key found in `src/` (bad JSON, wrong type, nested junk) and checks the game still opens. `load()` in `src/storage.js` keeps an unreadable save once under `curation.bak.<key>`. Reset museum needs two taps and keeps the old save in `curation.bak.reset`. A new store should use `load(key, fallback)` with a fallback of the right shape.
 - `tests/bundle.cjs` checks gzip sizes in `dist/` (phaser 360, main 230, all JS 760 KB). Raise a number on purpose, with a reason.
 
+### UI system and navigation (Chat 16: `docs/UI.md`, `docs/UI-BRIEF.md`)
+- **Design system:** `src/ui/tokens.css`, `ui.css`, `icons.js`, live style guide at `/ui.html`. Pixelify Sans (OFL) is bundled. Use `ui-*` classes and tokens for any new menu (checklist in `docs/UI.md`).
+- **HUD:** labelled buttons (Journal, Build, Style) on the left, **Menu** on the right; the Menu hub (`src/ui/hud.js`) holds Today, Your museum (income), Share & visit and Settings, on islands too. The old ids (`#daily-btn`, `#settings-btn`) now live in the hub, so tests call `openHub(p)` from `tests/nav.cjs` first.
+- **Journal** opens on an **overview** (stats, next goals, a card per collection, Codex / Storage / Gallery Shop) instead of 17 tabs; each card has `data-jtab`, a page has a back button. Tests use `jtab(p, id)` from `tests/nav.cjs`. Overview code: `src/ui/journalhome.js`.
+- **Guard:** `node tests/ui-layout.cjs` (slow set) fails on sideways scroll or "undefined" text and ratchets tap targets and text size per screen (`tests/ui-budget.json`). Screenshots: `node tests/ui-shots.cjs docs/ui/after`.
+
 ### Gotchas we hit
 - **Phaser reuses the previous scene data** if you call `scene.start('island')` with no data.
   Always pass data explicitly, e.g. `{ map: 'main' }`. Leaving the museum once dropped you on

@@ -104,12 +104,17 @@ async function runScreens({ size = [390, 844], only = null, onShot, log = () => 
       await sleep(3000);
       if (name === '03-journal-tabs') {
         await click(p, '#journal-btn');
-        const n = await p.$$eval('.journal-tabs button', (b) => b.length);
-        for (let i = 0; i < n; i++) {
-          const label = (await p.$$eval('.journal-tabs button', (b, i) => b[i].textContent, i)).trim().toLowerCase().replace(/[^a-z]+/g, '-');
-          await p.$$eval('.journal-tabs button', (b, i) => b[i].click(), i);
+        await sleep(400);
+        await onShot('03-journal-00-overview', p, await measure(p));
+        await p.evaluate(() => { document.querySelector('#journal .sheet').scrollTop = 99999; });
+        await sleep(200);
+        await onShot('03-journal-00b-overview-end', p, null);
+        const ids = await p.$$eval('#journal [data-jtab]', (b) => b.map((x) => x.dataset.jtab));
+        for (let i = 0; i < ids.length; i++) {
+          if (await p.isVisible('.journal-back')) { await p.click('.journal-back'); await sleep(250); }
+          await p.$eval(`#journal [data-jtab="${ids[i]}"]`, (b) => b.click());
           await sleep(400);
-          await onShot(`03-journal-${String(i + 1).padStart(2, '0')}-${label}`, p, i === 0 || label === 'paintings' ? await measure(p) : null);
+          await onShot(`03-journal-${String(i + 1).padStart(2, '0')}-${ids[i]}`, p, ids[i] === 'goals' || ids[i] === 'paintings' ? await measure(p) : null);
         }
       } else {
         await open(p);
