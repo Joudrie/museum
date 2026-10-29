@@ -6,6 +6,8 @@
 //     seen:    { [entryId]: { n, first, best? } },  // ever collected
 //     owned:   { [entryId]: count },                // held now (collections with ownership 'earned')
 //     claimed: { [setId]: true },                   // set rewards already paid
+//     dirty:   { [entryId]: count },                // held but not yet restored (see restore.js)
+//     sold:    { [entryId]: { n, at } },            // sold to the shop: how many, and when the last one went (buy-back opens a week later)
 //   }
 //
 // A collection with ownership 'all' (paintings, for now) is held from the
@@ -19,15 +21,27 @@ const num = (v, min = 0) => (Number.isFinite(v) && v >= min ? v : undefined);
 
 /** Turns whatever was saved into a valid codex. Junk is dropped, real progress is kept. */
 export function normalize(raw) {
-  const out = { v: 1, seen: {}, owned: {}, claimed: {} };
+  const out = { v: 1, seen: {}, owned: {}, claimed: {}, dirty: {}, sold: {} };
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return out;
   Object.entries(raw.seen && typeof raw.seen === 'object' ? raw.seen : {}).forEach(([id, r]) => {
     if (!ID.test(id) || !r || typeof r !== 'object') return;
     const n = Math.floor(num(r.n, 1) ?? 1);
-    out.seen[id] = { n, first: num(r.first) ?? 0, ...(num(r.best, 0.0001) && { best: r.best }) };
+    out.seen[id] = { n, first: num(r.first) ?? 0, ...(num(r.best, 0.0001) && { best: r.best }), ...(num(r.restored, 1) && { restored: Math.floor(r.restored) }) };
+  });
+  Object.entries(raw.dirty && typeof raw.dirty === 'object' ? raw.dirty : {}).forEach(([id, n]) => {
+    if (ID.test(id) && num(n, 1)) out.dirty[id] = Math.floor(n);
   });
   Object.entries(raw.owned && typeof raw.owned === 'object' ? raw.owned : {}).forEach(([id, n]) => {
     if (ID.test(id) && num(n, 1)) out.owned[id] = Math.floor(n);
+  });
+  Object.entries(raw.sold && typeof raw.sold === 'object' && !Array.isArray(raw.sold) ? raw.sold : {}).forEach(([id, r]) => {
+    if (ID.test(id) && r && typeof r === 'object' && num(r.n, 1)) out.sold[id] = { n: Math.floor(r.n), at: num(r.at) ?? 0 };
+  });
+  Object.keys(out.dirty).forEach((id) => {
+    const e = get(id);
+    const held = e && collectionOf(e)?.ownership === 'all' ? 1 : out.owned[id] || 0; // paintings are always held
+    out.dirty[id] = Math.min(out.dirty[id], held); // you can't hold more unrestored than you own
+    if (!out.dirty[id]) delete out.dirty[id];
   });
   Object.entries(raw.claimed && typeof raw.claimed === 'object' ? raw.claimed : {}).forEach(([id, v]) => {
     if (v === true && typeof id === 'string') out.claimed[id] = true;
@@ -94,15 +108,17 @@ export function count(collectionId, c = snapshot()) {
  * Records getting something. `size` (optional) tracks a personal best.
  * Returns { fresh, n, best, improved } or null for junk that is never kept.
  */
-export function collect(id, { size, qty = 1, at = Date.now() } = {}) {
+export function collect(id, { size, qty = 1, at = Date.now(), dirty } = {}) {
   const e = get(id);
   if (e && e.collectable === false) return null;
   if (!ID.test(id)) return null;
   const c = snapshot();
   const prev = c.seen[id];
   const best = Math.max(prev?.best || 0, size || 0);
-  c.seen[id] = { n: (prev?.n || 0) + qty, first: prev?.first || at, ...(best && { best }) };
+  c.seen[id] = { ...prev, n: (prev?.n || 0) + qty, first: prev?.first || at, ...(best && { best }) };
   c.owned[id] = (c.owned[id] || 0) + qty;
+  // `dirty: true` (or an entry flagged `dirty: true`) arrives unrestored; `dirty: false` forces it clean
+  if (dirty ?? e?.dirty === true) c.dirty[id] = Math.min(c.owned[id], (c.dirty[id] || 0) + qty);
   put(c);
   return { fresh: !prev, n: c.seen[id].n, best: best || null, improved: !!(size && prev && size > (prev.best || 0)) };
 }
@@ -125,8 +141,73 @@ export function dispose(id, qty = 1) {
   if (!c.owned[id]) return false;
   c.owned[id] = Math.max(0, c.owned[id] - qty);
   if (!c.owned[id]) delete c.owned[id];
+  if (c.dirty[id]) c.dirty[id] = Math.min(c.dirty[id], c.owned[id] || 0);
+  if (!c.dirty[id]) delete c.dirty[id];
   put(c);
   return true;
+}
+
+/** Sells one to the shop: it leaves your hands (the stamp stays) and goes on the buy-back ledger. Returns false if you hold none. */
+export function sellOne(id, at = Date.now()) {
+  if (!dispose(id)) return false;
+  const c = snapshot();
+  c.sold[id] = { n: (c.sold[id]?.n || 0) + 1, at };
+  put(c);
+  return true;
+}
+
+/** Brings one back from the buy-back ledger, clean. Returns false if none was sold. */
+export function restockSold(id) {
+  const c = snapshot();
+  if (!c.sold[id]) return false;
+  c.sold[id].n -= 1;
+  if (c.sold[id].n <= 0) delete c.sold[id];
+  c.owned[id] = (c.owned[id] || 0) + 1;
+  put(c);
+  return true;
+}
+
+/** Puts a bought piece in your hands, clean (the stamp is set the first time). */
+export function acquire(id, at = Date.now()) {
+  if (!ID.test(id) || !get(id)) return false;
+  const c = snapshot();
+  c.seen[id] = c.seen[id] || { n: 1, first: at };
+  c.owned[id] = (c.owned[id] || 0) + 1;
+  put(c);
+  return true;
+}
+
+/** How many of this entry are held but not yet restored. */
+export const dirtyCount = (id, c = snapshot()) => c.dirty[id] || 0;
+
+/**
+ * How many can go on display: held minus the dirty ones. Chat 5 should ask this,
+ * never ownedCount, when placing something. Paintings (ownership 'all') count 1.
+ */
+export const displayCount = (id, c = snapshot()) => Math.max(0, ownedCount(id, c) - dirtyCount(id, c));
+
+/** Marks something you already hold (or a painting, which you always hold) as dirty, e.g. a painting that came back from an expedition. */
+export function makeDirty(id, qty = 1) {
+  const e = get(id);
+  if (!e || !ID.test(id)) return false;
+  const c = snapshot();
+  const held = collectionOf(e)?.ownership === 'all' ? 1 : c.owned[id] || 0;
+  if (!held) return false;
+  c.dirty[id] = Math.min(held, (c.dirty[id] || 0) + qty);
+  put(c);
+  return true;
+}
+
+/** One dirty copy is cleaned. Returns { fresh } (first restoration of this entry) or null if none was dirty. */
+export function restoreOne(id) {
+  const c = snapshot();
+  if (!c.dirty[id]) return null;
+  c.dirty[id] -= 1;
+  if (!c.dirty[id]) delete c.dirty[id];
+  const prev = c.seen[id] || { n: 1, first: Date.now() };
+  c.seen[id] = { ...prev, restored: (prev.restored || 0) + 1 };
+  put(c);
+  return { fresh: !prev.restored };
 }
 
 /** { have, total, done, claimed } for a set. */
@@ -147,14 +228,15 @@ export function claimSet(id) {
 }
 
 /** Sets that are finished but not yet paid. */
-export const unclaimedSets = (c = snapshot()) => sets().filter((s) => setProgress(s, c).done && !c.claimed[s.id]);
+export const unclaimedSets = (c = snapshot()) => sets(undefined, true).filter((s) => setProgress(s, c).done && !c.claimed[s.id]);
 
-/** Testing: one of everything that has to be earned. Returns how many were added. */
+/** Testing: one of everything that has to be earned (people are met, not collected). Returns how many were added. */
 export function collectEverything() {
   const c = snapshot();
   let added = 0;
   list().forEach((e) => {
-    if (collection(e.collection).ownership !== 'earned' || c.seen[e.id]) return;
+    const col = collection(e.collection);
+    if (col.ownership !== 'earned' || col.people || c.seen[e.id]) return;
     collect(e.id);
     added++;
   });

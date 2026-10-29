@@ -4,6 +4,7 @@
 import { collection, keyOf, list, metaLine, sets, tabs, RARITY } from './index.js';
 import { claimSet, setProgress, snapshot } from './codex.js';
 import { fillPicture } from './render.js';
+import { load, save } from '../storage.js';
 import { openViewer } from '../viewer.js';
 
 const EXTRAS = {};
@@ -21,6 +22,88 @@ const el = (tag, cls, text) => {
 
 const sizeText = (cm) => (cm >= 100 ? `${(cm / 100).toFixed(2)} m` : `${cm} cm`);
 
+
+// ---- journal polish: "new" markers, your stars and notes, search and filters ----
+const SEEN_KEY = 'curation.journalSeen'; // { [tabId]: time you last left that tab }
+const NOTES_KEY = 'curation.journal'; // the viewer's notes and stars, by entry key
+const lastSeen = (tabId) => load(SEEN_KEY, {})[tabId] || 0;
+const mine = (e) => load(NOTES_KEY, {})[keyOf(e)] || {};
+const isNew = (e, snap, tabId) => (snap.seen[e.id]?.first || 0) > lastSeen(tabId);
+
+/** How many entries in a tab were collected since you last looked at it. */
+export function newInTab(tabId) {
+  const tab = tabs().find((t) => t.id === tabId);
+  if (!tab) return 0;
+  const snap = snapshot();
+  return tab.collections.flatMap((id) => list({ collection: id })).filter((e) => isNew(e, snap, tabId)).length;
+}
+
+/** Call when you leave a tab (or close the journal): its "new" markers clear. */
+export function markTabViewed(tabId) {
+  if (!tabs().some((t) => t.id === tabId)) return;
+  save(SEEN_KEY, { ...load(SEEN_KEY, {}), [tabId]: Date.now() });
+}
+
+/** Little marks on a tile or card: NEW, your stars, a note. */
+function marks(e, snap, tabId) {
+  const m = mine(e);
+  const bits = [];
+  if (isNew(e, snap, tabId)) bits.push(el('span', 'mark-new', 'NEW'));
+  if (m.rating) bits.push(el('span', 'mark-stars', '★'.repeat(m.rating)));
+  if (m.note) bits.push(el('span', 'mark-note', '✎'));
+  if (!bits.length) return null;
+  const box = el('span', 'marks');
+  box.append(...bits);
+  return box;
+}
+
+const FILTERS = { all: 'All', have: 'Have', missing: 'Missing', rated: '★ Rated' };
+const filterState = {}; // per tab, kept while the page is open: { q, f, r }
+
+/** A search box and filter chips. Filtering hides cells in place (no redraw), so typing keeps its focus. */
+function filterBar(tabId, items) {
+  const st = (filterState[tabId] = filterState[tabId] || { q: '', f: 'all', r: 0 });
+  const bar = el('div', 'journal-filter');
+  const input = el('input', 'journal-search');
+  input.type = 'search';
+  input.placeholder = 'Search';
+  input.value = st.q;
+  input.setAttribute('aria-label', 'Search this tab');
+  const chips = el('div', 'journal-chips');
+  const apply = () => {
+    items.forEach(({ node, e, got }) => {
+      const hay = [e.title, e.by, e.blurb, e.year, ...(e.tags || [])].join(' ').toLowerCase();
+      const words = st.q.toLowerCase().split(/\s+/).filter(Boolean);
+      const show =
+        (!words.length || words.every((w) => (got ? hay : (e.provenance?.where || '').toLowerCase()).includes(w))) &&
+        (st.f === 'all' || (st.f === 'have' ? got : st.f === 'missing' ? !got : !!mine(e).rating)) &&
+        (!st.r || (e.rarity ?? 1) === st.r);
+      node.classList.toggle('filtered-out', !show);
+    });
+    chips.querySelectorAll('button').forEach((b) => b.classList.toggle('on', b.dataset.f === st.f || (b.dataset.r && Number(b.dataset.r) === st.r)));
+  };
+  input.oninput = () => {
+    st.q = input.value;
+    apply();
+  };
+  Object.entries(FILTERS).forEach(([k, label]) => {
+    const b = el('button', 'chip', label);
+    b.dataset.f = k;
+    b.onclick = () => ((st.f = k), apply());
+    chips.appendChild(b);
+  });
+  [...new Set(items.map(({ e }) => e.rarity ?? 1))].sort().forEach((r) => {
+    if (items.length < 8) return;
+    const b = el('button', 'chip', RARITY[r]);
+    b.dataset.r = String(r);
+    b.onclick = () => ((st.r = st.r === r ? 0 : r), apply());
+    chips.appendChild(b);
+  });
+  bar.append(input, chips);
+  apply();
+  return { bar, apply };
+}
+
 function fill(template, vars) {
   return template.replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? '');
 }
@@ -36,7 +119,7 @@ function intro(col, snap, ctx) {
 }
 
 function setRows(cols, snap, ctx, refresh) {
-  const mine = cols.flatMap((c) => sets(c.id));
+  const mine = cols.flatMap((c) => sets(c.id, true));
   if (!mine.length) return null;
   const wrap = el('div', 'set-list');
   mine.forEach((s) => {
@@ -69,7 +152,7 @@ function setRows(cols, snap, ctx, refresh) {
   return wrap;
 }
 
-function card(e, ctx) {
+function card(e, ctx, snap, tabId) {
   const where = ctx.hungIn?.().get(keyOf(e));
   const b = el('button', 'slot-painting' + (where === undefined ? ' elsewhere' : ''));
   b.innerHTML = `<span class="thumb"></span><span class="meta"><b></b><i></i><em></em><small class="blurb"></small></span>`;
@@ -79,11 +162,13 @@ function card(e, ctx) {
   b.querySelector('em').textContent =
     where === undefined ? 'In storage' : `On display: ${ctx.roomLabel ? ctx.roomLabel(where) : `room ${where + 1}`}`;
   b.querySelector('.blurb').textContent = e.blurb || '';
+  const mk = marks(e, snap, tabId);
+  if (mk) b.appendChild(mk);
   b.onclick = () => b.classList.toggle('open');
   return b;
 }
 
-function tile(e, snap, onOpen) {
+function tile(e, snap, onOpen, tabId) {
   const got = snap.seen[e.id];
   const cell = el('div', 'fish-cell' + (got ? '' : ' unknown'));
   cell.innerHTML = `<div class="fish-pic"></div><b></b><small></small>`;
@@ -93,6 +178,8 @@ function tile(e, snap, onOpen) {
   cell.querySelector('small').textContent = got
     ? `×${got.n}${got.best ? ` · best ${sizeText(got.best)}` : ''}`
     : `${e.provenance?.where || ''}${when ? ` · ${when}` : ''} · ${RARITY[e.rarity ?? 1]}`;
+  const mk = got && marks(e, snap, tabId);
+  if (mk) cell.appendChild(mk);
   if (got) {
     cell.classList.add('openable');
     cell.onclick = () => onOpen(e);
@@ -114,17 +201,27 @@ export function collectionTab(tabId, ctx, refresh) {
   if (sr) nodes.push(sr);
 
   const entries = cols.flatMap((c) => list({ collection: c.id }));
+  const items = [];
+  let grid;
   if (lead.journal.layout === 'cards') {
-    const grid = el('div', 'gallery-grid book');
-    entries.forEach((e) => grid.appendChild(card(e, ctx)));
-    nodes.push(grid);
+    grid = el('div', 'gallery-grid book');
+    entries.forEach((e) => {
+      const node = card(e, ctx, snap, tabId);
+      items.push({ node, e, got: !!snap.seen[e.id] || collection(e.collection).ownership === 'all' });
+      grid.appendChild(node);
+    });
   } else {
-    const grid = el('div', 'fish-grid');
+    grid = el('div', 'fish-grid');
     const known = entries.filter((e) => snap.seen[e.id]);
     const open = (e) => openViewer(known, known.indexOf(e), null, null, { over: true });
-    entries.forEach((e) => grid.appendChild(tile(e, snap, open)));
-    nodes.push(grid);
+    entries.forEach((e) => {
+      const node = tile(e, snap, open, tabId);
+      items.push({ node, e, got: !!snap.seen[e.id] });
+      grid.appendChild(node);
+    });
   }
+  if (entries.length >= 6) nodes.push(filterBar(tabId, items).bar);
+  nodes.push(grid);
   return nodes;
 }
 

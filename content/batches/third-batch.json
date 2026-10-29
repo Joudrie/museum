@@ -1,0 +1,161 @@
+{
+  "collection": "painting",
+  "name": "third-batch",
+  "about": "Women artists, about 20 works. Cleveland ids first (they publish a description to quote), then Met ids (no description: each needs a hook) and Commons searches (a file page has no museum sentence: each needs a hook). Mary Cassatt is not in the Met's open access set, and Cleveland holds only five women painters, so this batch is smaller in Cleveland than the others. Nothing reaches the game until a person approves a draft.",
+  "items": [
+    {
+      "region": "France (woman artist)",
+      "title": "Reading",
+      "id": "128072",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "France (woman artist)",
+      "title": "Portrait of Jean-Baptiste Lemoyne the Younger",
+      "id": "169684",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "France (woman artist)",
+      "title": "The Farm at the Entrance of the Wood",
+      "id": "149421",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "France (woman artist)",
+      "title": "The Circus",
+      "id": "135517",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "Japan (woman artist, Katsushika Ōi)",
+      "title": "Operating on Guan Yu's Arm",
+      "id": "160300",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "France (woman artist)",
+      "title": "Self-Portrait with Two Pupils",
+      "id": "436840",
+      "sources": [
+        "met"
+      ],
+      "note": "the Met has no description text: needs a real hook"
+    },
+    {
+      "region": "France (woman artist)",
+      "title": "Madame Philippe Panon Desbassayns de Richemont",
+      "id": "435650",
+      "sources": [
+        "met"
+      ],
+      "note": "the Met has no description text: needs a real hook. painted by a woman in 1802; say who and when as the record does"
+    },
+    {
+      "region": "France (woman artist)",
+      "title": "Julie Le Brun Looking in a Mirror",
+      "id": "438132",
+      "sources": [
+        "met"
+      ],
+      "note": "the Met has no description text: needs a real hook"
+    },
+    {
+      "region": "France (woman artist)",
+      "title": "Madame Grand",
+      "id": "437898",
+      "sources": [
+        "met"
+      ],
+      "note": "the Met has no description text: needs a real hook"
+    },
+    {
+      "region": "Switzerland/Italy (woman artist)",
+      "title": "The Sorrow of Telemachus",
+      "id": "436809",
+      "sources": [
+        "met"
+      ],
+      "note": "the Met has no description text: needs a real hook"
+    },
+    {
+      "region": "Flanders (woman artist)",
+      "title": "A Bouquet of Flowers",
+      "id": "827660",
+      "sources": [
+        "met"
+      ],
+      "note": "the Met has no description text: needs a real hook"
+    },
+    {
+      "region": "Italy (woman artist)",
+      "query": "Judith Slaying Holofernes Artemisia Gentileschi",
+      "title": "Judith Slaying Holofernes",
+      "maker": "Artemisia Gentileschi",
+      "sources": [
+        "commons"
+      ],
+      "note": "Commons has no museum sentence: needs a real hook. contested subject matter: describe plainly"
+    },
+    {
+      "region": "Italy (woman artist)",
+      "query": "Sofonisba Anguissola The Chess Game",
+      "title": "The Chess Game",
+      "maker": "Sofonisba Anguissola",
+      "sources": [
+        "commons"
+      ],
+      "note": "Commons has no museum sentence: needs a real hook"
+    },
+    {
+      "region": "Netherlands (woman artist)",
+      "query": "Judith Leyster self-portrait",
+      "title": "Self-portrait",
+      "maker": "Judith Leyster",
+      "sources": [
+        "commons"
+      ],
+      "note": "Commons has no museum sentence: needs a real hook"
+    },
+    {
+      "region": "Germany (woman artist)",
+      "query": "Paula Modersohn-Becker self-portrait sixth wedding anniversary",
+      "title": "Self-Portrait on My Sixth Wedding Anniversary",
+      "maker": "Paula Modersohn-Becker",
+      "sources": [
+        "commons"
+      ],
+      "note": "Commons has no museum sentence: needs a real hook"
+    },
+    {
+      "region": "Sweden (woman artist)",
+      "query": "Hilma af Klint The Ten Largest Childhood",
+      "title": "The Ten Largest, No. 7, Adulthood",
+      "maker": "Hilma af Klint",
+      "sources": [
+        "commons"
+      ],
+      "note": "Commons has no museum sentence: needs a real hook"
+    },
+    {
+      "region": "Denmark (woman artist)",
+      "query": "Anna Ancher The Maid in the Kitchen",
+      "title": "The Maid in the Kitchen",
+      "maker": "Anna Ancher",
+      "sources": [
+        "commons"
+      ],
+      "note": "Commons has no museum sentence: needs a real hook"
+    }
+  ]
+}

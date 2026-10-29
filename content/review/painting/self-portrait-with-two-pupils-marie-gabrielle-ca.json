@@ -1,0 +1,95 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "self-portrait-with-two-pupils-marie-gabrielle-ca",
+  "notes": "region: France (woman artist). the Met has no description text: needs a real hook",
+  "entry": {
+    "id": "painting:self-portrait-with-two-pupils-marie-gabrielle-ca",
+    "collection": "painting",
+    "title": "Self-Portrait with Two Pupils, Marie Gabrielle Capet (1761–1818) and Marie Marguerite Carraux de Rosemond (1765–1788)",
+    "by": "Adélaïde Labille-Guiard",
+    "year": "1785",
+    "era": "romantic",
+    "ratio": 0.7168,
+    "blurb": "By Adélaïde Labille-Guiard, 1785, Oil on canvas.",
+    "rarity": 1,
+    "tags": [
+      "oil",
+      "portrait"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://images.metmuseum.org/CRDImages/ep/original/DP320103.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Metropolitan Museum of Art, New York. Gift of Julia A. Berwind, 1953",
+      "url": "https://www.metmuseum.org/art/collection/search/436840"
+    },
+    "value": 5
+  },
+  "candidate": {
+    "source": "met",
+    "sourceId": "436840",
+    "title": "Self-Portrait with Two Pupils, Marie Gabrielle Capet (1761–1818) and Marie Marguerite Carraux de Rosemond (1765–1788)",
+    "maker": "Adélaïde Labille-Guiard",
+    "year": "1785",
+    "medium": "Oil on canvas",
+    "dimensions": "83 x 59 1/2 in. (210.8 x 151.1 cm)",
+    "widthCm": 151.1,
+    "heightCm": 210.8,
+    "ratio": 0.7168,
+    "imageUrl": "https://images.metmuseum.org/CRDImages/ep/original/DP320103.jpg",
+    "pageUrl": "https://www.metmuseum.org/art/collection/search/436840",
+    "license": "CC0",
+    "credit": "The Metropolitan Museum of Art, New York. Gift of Julia A. Berwind, 1953",
+    "description": "",
+    "culture": "",
+    "classification": "Paintings",
+    "tags": [
+      "Painting",
+      "Self-portraits",
+      "Women",
+      "Artists"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Self-Portrait with Two Pupils, Marie Gabrielle Capet (1761–1818) and Marie Marguerite Carraux de Rosemond (1765–1788)",
+      "maker": "Adélaïde Labille-Guiard",
+      "year": "1785",
+      "medium": "Oil on canvas",
+      "dimensions": "83 x 59 1/2 in. (210.8 x 151.1 cm)",
+      "culture": "",
+      "classification": "Paintings",
+      "credit": "The Metropolitan Museum of Art, New York. Gift of Julia A. Berwind, 1953",
+      "description": "",
+      "objectName": "Painting",
+      "department": "European Paintings",
+      "period": "",
+      "dynasty": "",
+      "artistBio": "French, Paris 1749–1803 Paris",
+      "region": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "By Adélaïde Labille-Guiard, 1785, Oil on canvas.",
+      "quote": "By Adélaïde Labille-Guiard, 1785, Oil on canvas",
+      "source": "record",
+      "placeholderFor": "needs a real hook"
+    }
+  ],
+  "problems": [
+    "claim 1: needs a real hook; it only restates the record's own details (maker, date, medium)",
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

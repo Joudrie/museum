@@ -7,6 +7,7 @@ import { baseDecor } from './art.js';
 import { layout, paintingsFor, roomAt } from './rooms.js';
 import { loadItems } from './items.js';
 import { dirtCount } from './staff.js';
+import { shownIn } from './display.js';
 
 const DECOR_KEY = 'curation.roomDecor';
 
@@ -15,12 +16,13 @@ export function roomRating(rooms, i) {
   const decor = { ...baseDecor(room, i), ...(load(DECOR_KEY, {})[i] || {}) };
   const spots = layout(room).slots.length;
   const hung = paintingsFor(rooms, i).length;
-  const items = loadItems(i).length;
+  const shown = shownIn(i).length;
+  const items = loadItems(i).length + shown; // each piece on display counts as decor too
   const dirt = dirtCount(rooms, i);
   const styled = [decor.carpet, decor.plant !== 'none', decor.paperStyle !== 'plain', decor.wainscotStyle !== 'none'].filter(Boolean).length;
   const parts = [
     { label: 'Paintings', got: Math.round((40 * hung) / Math.max(1, spots)), max: 40, tip: `${hung} of ${spots} wall spots have a painting` },
-    { label: 'Decor', got: Math.min(25, items * 5), max: 25, tip: items >= 5 ? 'Plenty of decor' : `${items} item${items === 1 ? '' : 's'}: add more from the toolkit` },
+    { label: 'Decor', got: Math.min(25, items * 5), max: 25, tip: items >= 5 ? 'Plenty of decor' : `${items} item${items === 1 ? '' : 's'}: add more from the toolkit, or put finds on display` },
     { label: 'Clean', got: Math.max(0, 20 - dirt * 7), max: 20, tip: dirt ? `${dirt} mess${dirt === 1 ? '' : 'es'} on the floor: mop or hire a janitor` : 'Spotless' },
     { label: 'Style', got: Math.min(15, styled * 4), max: 15, tip: 'Wallpaper pattern, wainscot, carpet and plants each help' },
   ];

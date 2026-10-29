@@ -124,6 +124,16 @@
       </div>
     </div>
 
+    <div id="displaymenu" class="overlay hidden" role="dialog" aria-label="Display">
+      <div class="decor-sheet sheet">
+        <div class="decor-head">
+          <h2 class="display-title">Display</h2>
+          <button class="display-close pixel-btn" aria-label="Close">✕</button>
+        </div>
+        <div class="display-body"></div>
+      </div>
+    </div>
+
     <div id="office" class="overlay hidden" role="dialog" aria-label="Curator's Office">
       <div class="decor-sheet sheet">
         <div class="decor-head">
@@ -143,7 +153,7 @@
           <h2>Staff board</h2>
           <button class="staff-close pixel-btn" aria-label="Close">✕</button>
         </div>
-        <p class="toolkit-note">Everyone you hire hangs out here between shifts. Upgrades are coming to this board later.</p>
+        <p class="toolkit-note">Everyone you hire hangs out here between shifts. Upgrade your team here.</p>
         <div class="staff-list"></div>
       </div>
     </div>
@@ -238,6 +248,6 @@
         document.body.appendChild(d);
       });
     </script>
-    <script type="module" src="./src/main.js"></script>
+    <script type="module" src="./src/boot.js"></script>
   </body>
 </html>

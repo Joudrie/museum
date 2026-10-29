@@ -1,4 +1,35 @@
 {
-  "note": "Pieces that are the same object seen from different sides. Each family is a list of piece refs in turning order. The builder shows one entry per family (the first) with a turn badge, and Turn steps through the rest. To add one: list the refs here. Drawn sprites named like chair_front / chair_right / chair_back / chair_left are meant to be listed the same way. Only list true facings of ONE object, not colour variants.",
-  "families": [["p:seating/649", "p:seating/650", "p:seating/651", "p:seating/652"]]
+ "note": "Pieces that are the same object seen from different sides. Each family is a list of piece refs in turning order. The builder shows one entry per family (the first) with a turn badge, and Turn steps through the rest. To add one: list the refs here. Drawn sprites named like chair_front / chair_right / chair_back / chair_left are meant to be listed the same way. Only list true facings of ONE object, not colour variants. Armchairs (gold, blue, red, purple) are listed as front, left side, back, right side; each checked by eye on a zoomed contact sheet (tools/rotation_sheet.py).",
+ "families": [
+  [
+   "p:seating/649",
+   "p:seating/650",
+   "p:seating/651",
+   "p:seating/652"
+  ],
+  [
+   "p:seating/37",
+   "p:seating/49",
+   "p:seating/63",
+   "p:seating/61"
+  ],
+  [
+   "p:seating/47",
+   "p:seating/50",
+   "p:seating/64",
+   "p:seating/62"
+  ],
+  [
+   "p:seating/172",
+   "p:seating/184",
+   "p:seating/198",
+   "p:seating/196"
+  ],
+  [
+   "p:seating/182",
+   "p:seating/185",
+   "p:seating/199",
+   "p:seating/197"
+  ]
+ ]
 }

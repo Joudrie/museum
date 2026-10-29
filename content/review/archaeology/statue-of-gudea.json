@@ -1,0 +1,111 @@
+{
+  "status": "draft",
+  "collection": "archaeology",
+  "slug": "statue-of-gudea",
+  "notes": "region: Mesopotamia. era removed: the paintings date buckets do not fit antiquity; Chat 8 defines this collection",
+  "entry": {
+    "id": "archaeology:statue-of-gudea",
+    "collection": "archaeology",
+    "title": "Statue of Gudea",
+    "year": "c. 2144–2124 BCE",
+    "ratio": 0.6545,
+    "blurb": "Between c. 2144–2124 BCE, Gudea ruled as ensi (governor) of the city-state of Lagash, located in modern-day Iraq.",
+    "rarity": 1,
+    "tags": [
+      "mesopotamia"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1963.154/1963.154_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Purchase from the J. H. Wade Fund",
+      "url": "https://clevelandart.org/art/1963.154"
+    },
+    "value": 5,
+    "facts": [
+      "Scholars have identified more than 2,400 inscriptions that describe his reign, which included patronage of the arts and an extensive building program.",
+      "Twice in the 20th century, this headless figure was wrongly \"completed\" with the head 1963.680, which comes from a similar sculpture.",
+      "This headless figure’s clasped hands create a distinctive gesture that recurs frequently on more than 30 recorded statues of the Mesopotamian ruler Gudea."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "138765",
+    "title": "Statue of Gudea",
+    "maker": "",
+    "year": "c. 2144–2124 BCE",
+    "medium": "dolerite",
+    "dimensions": "Overall: 126 x 55 x 36 cm (49 5/8 x 21 5/8 x 14 3/16 in.)",
+    "widthCm": 36,
+    "heightCm": 55,
+    "ratio": 0.6545,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1963.154/1963.154_web.jpg",
+    "imageWidth": 613,
+    "imageHeight": 893,
+    "pageUrl": "https://clevelandart.org/art/1963.154",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Purchase from the J. H. Wade Fund",
+    "description": "This headless figure’s clasped hands create a distinctive gesture that recurs frequently on more than 30 recorded statues of the Mesopotamian ruler Gudea. Between c. 2144–2124 BCE, Gudea ruled as ensi (governor) of the city-state of Lagash, located in modern-day Iraq. Scholars have identified more than 2,400 inscriptions that describe his reign, which included patronage of the arts and an extensive building program. Statues like this one would have been placed in temples as stand-ins for Gudea himself, demonstrating his devotion and piety. Twice in the 20th century, this headless figure was wrongly \"completed\" with the head 1963.680, which comes from a similar sculpture.",
+    "culture": "Mesopotamia, Neo-Sumerian, Iraq, Girsu",
+    "classification": "Sculpture",
+    "tags": [
+      "Egyptian and Ancient Near Eastern Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Statue of Gudea",
+      "maker": "",
+      "year": "c. 2144–2124 BCE",
+      "medium": "dolerite",
+      "dimensions": "Overall: 126 x 55 x 36 cm (49 5/8 x 21 5/8 x 14 3/16 in.)",
+      "culture": "Mesopotamia, Neo-Sumerian, Iraq, Girsu",
+      "classification": "Sculpture",
+      "credit": "The Cleveland Museum of Art. Purchase from the J. H. Wade Fund",
+      "description": "This headless figure’s clasped hands create a distinctive gesture that recurs frequently on more than 30 recorded statues of the Mesopotamian ruler Gudea. Between c. 2144–2124 BCE, Gudea ruled as ensi (governor) of the city-state of Lagash, located in modern-day Iraq. Scholars have identified more than 2,400 inscriptions that describe his reign, which included patronage of the arts and an extensive building program. Statues like this one would have been placed in temples as stand-ins for Gudea himself, demonstrating his devotion and piety. Twice in the 20th century, this headless figure was wrongly \"completed\" with the head 1963.680, which comes from a similar sculpture.",
+      "tombstone": "Statue of Gudea, c. 2144–2124 BCE. Mesopotamia, Neo-Sumerian, Iraq, Girsu. Dolerite; overall: 126 x 55 x 36 cm (49 5/8 x 21 5/8 x 14 3/16 in.). The Cleveland Museum of Art, Purchase from the J. H. Wade Fund, 1963.154",
+      "funFact": "",
+      "didYouKnow": "Twice in the 20th century, this headless figure was wrongly \"completed\" with the head 1963.680, which comes from a similar sculpture.",
+      "creators": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "Between c. 2144–2124 BCE, Gudea ruled as ensi (governor) of the city-state of Lagash, located in modern-day Iraq.",
+      "quote": "Between c. 2144–2124 BCE, Gudea ruled as ensi (governor) of the city-state of Lagash, located in modern-day Iraq.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Scholars have identified more than 2,400 inscriptions that describe his reign, which included patronage of the arts and an extensive building program.",
+      "quote": "Scholars have identified more than 2,400 inscriptions that describe his reign, which included patronage of the arts and an extensive building program.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Twice in the 20th century, this headless figure was wrongly \"completed\" with the head 1963.680, which comes from a similar sculpture.",
+      "quote": "Twice in the 20th century, this headless figure was wrongly \"completed\" with the head 1963.680, which comes from a similar sculpture.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "This headless figure’s clasped hands create a distinctive gesture that recurs frequently on more than 30 recorded statues of the Mesopotamian ruler Gudea.",
+      "quote": "This headless figure’s clasped hands create a distinctive gesture that recurs frequently on more than 30 recorded statues of the Mesopotamian ruler Gudea.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "unknown collection \"archaeology\"",
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

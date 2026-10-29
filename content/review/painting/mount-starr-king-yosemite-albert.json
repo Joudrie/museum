@@ -1,0 +1,113 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "mount-starr-king-yosemite-albert",
+  "notes": "region: United States, 1866",
+  "entry": {
+    "id": "painting:mount-starr-king-yosemite-albert",
+    "collection": "painting",
+    "title": "Mount Starr King, Yosemite",
+    "by": "Albert Bierstadt",
+    "year": "1866",
+    "era": "impressionist",
+    "ratio": 1.467,
+    "blurb": "During the summer of 1863, Bierstadt visited Yosemite Valley in California and made numerous sketches.",
+    "rarity": 1,
+    "tags": [
+      "united states",
+      "oil"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1922.684/1922.684_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Hinman B. Hurlbut Collection",
+      "url": "https://clevelandart.org/art/1922.684"
+    },
+    "value": 5,
+    "facts": [
+      "In 1864, President Lincoln signed a bill preserving Yosemite as public property; it became a national park in 1890.",
+      "Back in his New York studio, he used them to produce many majestic paintings, including this view of the distant granite peak Mount Starr King.",
+      "Such scenes thrilled East Coast audiences and helped encourage early movements to safeguard natural wonders."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "172815",
+    "title": "Mount Starr King, Yosemite",
+    "maker": "Albert Bierstadt",
+    "year": "1866",
+    "medium": "oil on canvas on panel-back stretcher",
+    "dimensions": "Framed: 135.3 x 181 x 15.6 cm (53 1/4 x 71 1/4 x 6 1/8 in.); Unframed: 97 x 142.3 cm (38 3/16 x 56 in.)",
+    "widthCm": 142.3,
+    "heightCm": 97,
+    "ratio": 1.467,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1922.684/1922.684_web.jpg",
+    "imageWidth": 1263,
+    "imageHeight": 855,
+    "pageUrl": "https://clevelandart.org/art/1922.684",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Hinman B. Hurlbut Collection",
+    "description": "During the summer of 1863, Bierstadt visited Yosemite Valley in California and made numerous sketches. Back in his New York studio, he used them to produce many majestic paintings, including this view of the distant granite peak Mount Starr King. Such scenes thrilled East Coast audiences and helped encourage early movements to safeguard natural wonders. In 1864, President Lincoln signed a bill preserving Yosemite as public property; it became a national park in 1890. Bierstadt included two Native Americans with a packhorse in his composition, and their presence references the fact that Indigenous peoples had inhabited or seasonally visited the region for millennia. Over time, various government and military agencies dispossessed them of these ancestral lands. Although no longer residents in the national park, descendants of the seven Indigenous nations with ties to Yosemite persevered to live in neighboring areas. Highly successful, Bierstadt built a mansion and named it Malkasten, a German word meaning “paintbox.”",
+    "culture": "United States",
+    "classification": "Painting",
+    "tags": [
+      "American Painting and Sculpture"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Mount Starr King, Yosemite",
+      "maker": "Albert Bierstadt",
+      "year": "1866",
+      "medium": "oil on canvas on panel-back stretcher",
+      "dimensions": "Framed: 135.3 x 181 x 15.6 cm (53 1/4 x 71 1/4 x 6 1/8 in.); Unframed: 97 x 142.3 cm (38 3/16 x 56 in.)",
+      "culture": "United States",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Hinman B. Hurlbut Collection",
+      "description": "During the summer of 1863, Bierstadt visited Yosemite Valley in California and made numerous sketches. Back in his New York studio, he used them to produce many majestic paintings, including this view of the distant granite peak Mount Starr King. Such scenes thrilled East Coast audiences and helped encourage early movements to safeguard natural wonders. In 1864, President Lincoln signed a bill preserving Yosemite as public property; it became a national park in 1890. Bierstadt included two Native Americans with a packhorse in his composition, and their presence references the fact that Indigenous peoples had inhabited or seasonally visited the region for millennia. Over time, various government and military agencies dispossessed them of these ancestral lands. Although no longer residents in the national park, descendants of the seven Indigenous nations with ties to Yosemite persevered to live in neighboring areas. Highly successful, Bierstadt built a mansion and named it Malkasten, a German word meaning “paintbox.”",
+      "tombstone": "Mount Starr King, Yosemite, 1866. Albert Bierstadt (American, born Prussia [now Germany], 1830–1902). Oil on canvas on panel-back stretcher; framed: 135.3 x 181 x 15.6 cm (53 1/4 x 71 1/4 x 6 1/8 in.); unframed: 97 x 142.3 cm (38 3/16 x 56 in.). The Cleveland Museum of Art, Hinman B. Hurlbut Collection, 1922.684",
+      "funFact": "",
+      "didYouKnow": "Highly successful, Bierstadt built a mansion and named it Malkasten, a German word meaning “paintbox.”",
+      "creators": "Albert Bierstadt (American, born Prussia [now Germany], 1830–1902)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "During the summer of 1863, Bierstadt visited Yosemite Valley in California and made numerous sketches.",
+      "quote": "During the summer of 1863, Bierstadt visited Yosemite Valley in California and made numerous sketches.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "In 1864, President Lincoln signed a bill preserving Yosemite as public property; it became a national park in 1890.",
+      "quote": "In 1864, President Lincoln signed a bill preserving Yosemite as public property; it became a national park in 1890.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Back in his New York studio, he used them to produce many majestic paintings, including this view of the distant granite peak Mount Starr King.",
+      "quote": "Back in his New York studio, he used them to produce many majestic paintings, including this view of the distant granite peak Mount Starr King.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Such scenes thrilled East Coast audiences and helped encourage early movements to safeguard natural wonders.",
+      "quote": "Such scenes thrilled East Coast audiences and helped encourage early movements to safeguard natural wonders.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

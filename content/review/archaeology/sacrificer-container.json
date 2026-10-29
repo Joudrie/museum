@@ -1,0 +1,111 @@
+{
+  "status": "draft",
+  "collection": "archaeology",
+  "slug": "sacrificer-container",
+  "notes": "region: Peru (Wari). religious object: say what it was for. era removed: the paintings date buckets do not fit antiquity; Chat 8 defines this collection",
+  "entry": {
+    "id": "archaeology:sacrificer-container",
+    "collection": "archaeology",
+    "title": "Sacrificer Container",
+    "year": "770–890 (radiocarbon date, 95% probability)",
+    "ratio": 1.0714,
+    "blurb": "Severed human heads hang from the feline's belt and dangle by the trachea at the back of its headdress.",
+    "rarity": 1,
+    "tags": [
+      "central andes"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/2007.193/2007.193_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. John L. Severance Fund",
+      "url": "https://clevelandart.org/art/2007.193"
+    },
+    "value": 5,
+    "facts": [
+      "Sacrifice had a place in Wari religious practice, probably as an unusual and exceptionally precious offering made to entice the benevolence of cosmic forces.",
+      "Indeed, colonial-period Andean people believed that death was a prerequisite for the renewal of the world.",
+      "Traces of cinnabar, a toxic mercuric sulfide, are visible on the container's surface."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "165256",
+    "title": "Sacrificer Container",
+    "maker": "",
+    "year": "770–890 (radiocarbon date, 95% probability)",
+    "medium": "wood and cinnabar",
+    "dimensions": "Overall: 10.8 x 7 x 7.5 cm (4 1/4 x 2 3/4 x 2 15/16 in.)",
+    "widthCm": 7.5,
+    "heightCm": 7,
+    "ratio": 1.0714,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/2007.193/2007.193_web.jpg",
+    "imageWidth": 838,
+    "imageHeight": 900,
+    "pageUrl": "https://clevelandart.org/art/2007.193",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. John L. Severance Fund",
+    "description": "This container assumes the shape of a magnificent, feline-headed, supernatural sacrificer who draws a knife across the throat of the human it holds in its lap. Severed human heads hang from the feline's belt and dangle by the trachea at the back of its headdress. Sacrifice had a place in Wari religious practice, probably as an unusual and exceptionally precious offering made to entice the benevolence of cosmic forces. Indeed, colonial-period Andean people believed that death was a prerequisite for the renewal of the world. Traces of cinnabar, a toxic mercuric sulfide, are visible on the container's surface.",
+    "culture": "Central Andes, Wari style (600-1000)",
+    "classification": "Wood",
+    "tags": [
+      "Art of the Americas"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Sacrificer Container",
+      "maker": "",
+      "year": "770–890 (radiocarbon date, 95% probability)",
+      "medium": "wood and cinnabar",
+      "dimensions": "Overall: 10.8 x 7 x 7.5 cm (4 1/4 x 2 3/4 x 2 15/16 in.)",
+      "culture": "Central Andes, Wari style (600-1000)",
+      "classification": "Wood",
+      "credit": "The Cleveland Museum of Art. John L. Severance Fund",
+      "description": "This container assumes the shape of a magnificent, feline-headed, supernatural sacrificer who draws a knife across the throat of the human it holds in its lap. Severed human heads hang from the feline's belt and dangle by the trachea at the back of its headdress. Sacrifice had a place in Wari religious practice, probably as an unusual and exceptionally precious offering made to entice the benevolence of cosmic forces. Indeed, colonial-period Andean people believed that death was a prerequisite for the renewal of the world. Traces of cinnabar, a toxic mercuric sulfide, are visible on the container's surface.",
+      "tombstone": "Sacrificer Container, 770–890 (radiocarbon date, 95% probability). Central Andes, Wari style (600-1000). Wood and cinnabar; overall: 10.8 x 7 x 7.5 cm (4 1/4 x 2 3/4 x 2 15/16 in.). The Cleveland Museum of Art, John L. Severance Fund, 2007.193",
+      "funFact": "",
+      "didYouKnow": "Traces of cinnabar, a toxic mercuric sulfide, are visible on the container's surface.",
+      "creators": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "Severed human heads hang from the feline's belt and dangle by the trachea at the back of its headdress.",
+      "quote": "Severed human heads hang from the feline's belt and dangle by the trachea at the back of its headdress.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Sacrifice had a place in Wari religious practice, probably as an unusual and exceptionally precious offering made to entice the benevolence of cosmic forces.",
+      "quote": "Sacrifice had a place in Wari religious practice, probably as an unusual and exceptionally precious offering made to entice the benevolence of cosmic forces.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Indeed, colonial-period Andean people believed that death was a prerequisite for the renewal of the world.",
+      "quote": "Indeed, colonial-period Andean people believed that death was a prerequisite for the renewal of the world.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Traces of cinnabar, a toxic mercuric sulfide, are visible on the container's surface.",
+      "quote": "Traces of cinnabar, a toxic mercuric sulfide, are visible on the container's surface.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "unknown collection \"archaeology\"",
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

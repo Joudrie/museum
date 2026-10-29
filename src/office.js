@@ -2,18 +2,12 @@
 // and exhibits. Run by the old caretaker from a desk in the first room.
 import { load, save } from './storage.js';
 import { ITEMS } from './items.js';
+import { OFFICE_LEVELS } from './economy.js';
 
 const OFFICE_KEY = 'curation.office';
 
-// Level 1 is where you start. cost = gold to reach that level.
-export const LEVELS = [
-  null,
-  { cost: 0, rooms: 4 },
-  { cost: 500, rooms: 6, unlocks: 'Relics, statues, suits of armor and the coffee counter' },
-  { cost: 2000, rooms: 9, unlocks: 'Big halls, science exhibits and fountains' },
-  { cost: 8000, rooms: 13, unlocks: 'The T-rex skeleton' },
-  { cost: 30000, rooms: Infinity, unlocks: 'Unlimited rooms' },
-];
+// Level 1 is where you start. cost = gold to reach that level (numbers live in economy.js).
+export const LEVELS = OFFICE_LEVELS;
 export const MAX_LEVEL = LEVELS.length - 1;
 export const BIG_HALL_LEVEL = 3;
 

@@ -1,0 +1,111 @@
+{
+  "status": "draft",
+  "collection": "archaeology",
+  "slug": "animal-headed-figure-pendant",
+  "notes": "region: Panama. era removed: the paintings date buckets do not fit antiquity; Chat 8 defines this collection",
+  "entry": {
+    "id": "archaeology:animal-headed-figure-pendant",
+    "collection": "archaeology",
+    "title": "Animal-Headed Figure Pendant",
+    "year": "c. 1000–1550",
+    "ratio": 0.2041,
+    "blurb": "Gold, obtained through panning and mining, was worked by hammering and lost-wax casting to produce intricate and showy personal ornaments.",
+    "rarity": 1,
+    "tags": [
+      "panama"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1998.1/1998.1_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. John L. Severance Fund",
+      "url": "https://clevelandart.org/art/1998.1"
+    },
+    "value": 5,
+    "facts": [
+      "Research to date indicates that the pre-Columbian peoples of the Intermediate Region were organized into small, competitive chiefdoms, rather than large-scale states or empires.",
+      "Despite political competition and warfare, trade in prestige goods such as jade and gold was common.",
+      "The pendant represents a supernatural being, perhaps a fantastic crocodilian."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "160142",
+    "title": "Animal-Headed Figure Pendant",
+    "maker": "",
+    "year": "c. 1000–1550",
+    "medium": "cast gold",
+    "dimensions": "Overall: 10.5 x 9.8 x 2 cm (4 1/8 x 3 7/8 x 13/16 in.)",
+    "widthCm": 2,
+    "heightCm": 9.8,
+    "ratio": 0.2041,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1998.1/1998.1_web.jpg",
+    "imageWidth": 719,
+    "imageHeight": 893,
+    "pageUrl": "https://clevelandart.org/art/1998.1",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. John L. Severance Fund",
+    "description": "The culture area that extends from southern Central America to northern South America is generally referred to as the Intermediate Region because of its location between the two high culture zones of Mesoamerica and the central Andes. Research to date indicates that the pre-Columbian peoples of the Intermediate Region were organized into small, competitive chiefdoms, rather than large-scale states or empires. Despite political competition and warfare, trade in prestige goods such as jade and gold was common. Gold, obtained through panning and mining, was worked by hammering and lost-wax casting to produce intricate and showy personal ornaments. The pendant represents a supernatural being, perhaps a fantastic crocodilian. It has projecting, tubelike eyes, a snout full of sharp teeth, and snake-headed streamers emanating from the nostrils. The simplified lower body consists of broad, flat legs, with large, curved talons at the ends of the feet. The elaborate headdress includes two central semidomes, flanked by fierce-looking profile crocodilians. The figure wears an elaborate headdress that is flanked by fierce-looking crocodilians in profile.",
+    "culture": "Panama, Veraguas or Parita style, c. 1000-1550",
+    "classification": "Metalwork",
+    "tags": [
+      "Art of the Americas"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Animal-Headed Figure Pendant",
+      "maker": "",
+      "year": "c. 1000–1550",
+      "medium": "cast gold",
+      "dimensions": "Overall: 10.5 x 9.8 x 2 cm (4 1/8 x 3 7/8 x 13/16 in.)",
+      "culture": "Panama, Veraguas or Parita style, c. 1000-1550",
+      "classification": "Metalwork",
+      "credit": "The Cleveland Museum of Art. John L. Severance Fund",
+      "description": "The culture area that extends from southern Central America to northern South America is generally referred to as the Intermediate Region because of its location between the two high culture zones of Mesoamerica and the central Andes. Research to date indicates that the pre-Columbian peoples of the Intermediate Region were organized into small, competitive chiefdoms, rather than large-scale states or empires. Despite political competition and warfare, trade in prestige goods such as jade and gold was common. Gold, obtained through panning and mining, was worked by hammering and lost-wax casting to produce intricate and showy personal ornaments. The pendant represents a supernatural being, perhaps a fantastic crocodilian. It has projecting, tubelike eyes, a snout full of sharp teeth, and snake-headed streamers emanating from the nostrils. The simplified lower body consists of broad, flat legs, with large, curved talons at the ends of the feet. The elaborate headdress includes two central semidomes, flanked by fierce-looking profile crocodilians. The figure wears an elaborate headdress that is flanked by fierce-looking crocodilians in profile.",
+      "tombstone": "Animal-Headed Figure Pendant, c. 1000–1550. Panama, Veraguas or Parita style, c. 1000-1550. Cast gold; overall: 10.5 x 9.8 x 2 cm (4 1/8 x 3 7/8 x 13/16 in.). The Cleveland Museum of Art, John L. Severance Fund, 1998.1",
+      "funFact": "",
+      "didYouKnow": "The figure wears an elaborate headdress that is flanked by fierce-looking crocodilians in profile.",
+      "creators": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "Gold, obtained through panning and mining, was worked by hammering and lost-wax casting to produce intricate and showy personal ornaments.",
+      "quote": "Gold, obtained through panning and mining, was worked by hammering and lost-wax casting to produce intricate and showy personal ornaments.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Research to date indicates that the pre-Columbian peoples of the Intermediate Region were organized into small, competitive chiefdoms, rather than large-scale states or empires.",
+      "quote": "Research to date indicates that the pre-Columbian peoples of the Intermediate Region were organized into small, competitive chiefdoms, rather than large-scale states or empires.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Despite political competition and warfare, trade in prestige goods such as jade and gold was common.",
+      "quote": "Despite political competition and warfare, trade in prestige goods such as jade and gold was common.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The pendant represents a supernatural being, perhaps a fantastic crocodilian.",
+      "quote": "The pendant represents a supernatural being, perhaps a fantastic crocodilian.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "unknown collection \"archaeology\"",
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

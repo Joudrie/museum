@@ -1,0 +1,111 @@
+{
+  "status": "draft",
+  "collection": "archaeology",
+  "slug": "paint-box-of-vizier-amenemope",
+  "notes": "region: Egypt. era removed: the paintings date buckets do not fit antiquity; Chat 8 defines this collection",
+  "entry": {
+    "id": "archaeology:paint-box-of-vizier-amenemope",
+    "collection": "archaeology",
+    "title": "Paint Box of Vizier Amenemope",
+    "year": "c. 1427–1401 BCE",
+    "ratio": 0.1714,
+    "blurb": "This paint box was made in Egypt more than 3,000 years ago.",
+    "rarity": 1,
+    "tags": [
+      "egypt"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1914.680/1914.680_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Gift of the John Huntington Art and Polytechnic Trust",
+      "url": "https://clevelandart.org/art/1914.680"
+    },
+    "value": 5,
+    "facts": [
+      "Conservators identified the pigments using X-ray diffraction, a process that helps them determine the minerals that make up each color.",
+      "The paint box belonged to a man named Amenemope (say: ah-men-em-oh-pee) who advised the pharaoh (king).",
+      "He probably used it for fun, and it may have been buried with him when he died."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "94136",
+    "title": "Paint Box of Vizier Amenemope",
+    "maker": "",
+    "year": "c. 1427–1401 BCE",
+    "medium": "boxwood with inscription inlaid in Egyptian blue",
+    "dimensions": "Overall: 2.2 x 21 x 3.6 cm (7/8 x 8 1/4 x 1 7/16 in.)",
+    "widthCm": 3.6,
+    "heightCm": 21,
+    "ratio": 0.1714,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1914.680/1914.680_web.jpg",
+    "imageWidth": 707,
+    "imageHeight": 900,
+    "pageUrl": "https://clevelandart.org/art/1914.680",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Gift of the John Huntington Art and Polytechnic Trust",
+    "description": "This paint box was made in Egypt more than 3,000 years ago. It includes five pots of color, each made of different minerals. Conservators identified the pigments using X-ray diffraction, a process that helps them determine the minerals that make up each color. The paint box belonged to a man named Amenemope (say: ah-men-em-oh-pee) who advised the pharaoh (king). He probably used it for fun, and it may have been buried with him when he died. The coffin panel on view nearby was made for a different man named Amenemope hundreds of years later. Imagine you are painting a picture for a king! Which colors would you use? What would you paint? Painting was a popular and time-honored pastime among the upper classes in Egypt.",
+    "culture": "Egypt, New Kingdom (1540–1069 BCE), Dynasty 18, reign of Amenhotep II (1425–1400 BCE)",
+    "classification": "Tools and Equipment",
+    "tags": [
+      "Egyptian and Ancient Near Eastern Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Paint Box of Vizier Amenemope",
+      "maker": "",
+      "year": "c. 1427–1401 BCE",
+      "medium": "boxwood with inscription inlaid in Egyptian blue",
+      "dimensions": "Overall: 2.2 x 21 x 3.6 cm (7/8 x 8 1/4 x 1 7/16 in.)",
+      "culture": "Egypt, New Kingdom (1540–1069 BCE), Dynasty 18, reign of Amenhotep II (1425–1400 BCE)",
+      "classification": "Tools and Equipment",
+      "credit": "The Cleveland Museum of Art. Gift of the John Huntington Art and Polytechnic Trust",
+      "description": "This paint box was made in Egypt more than 3,000 years ago. It includes five pots of color, each made of different minerals. Conservators identified the pigments using X-ray diffraction, a process that helps them determine the minerals that make up each color. The paint box belonged to a man named Amenemope (say: ah-men-em-oh-pee) who advised the pharaoh (king). He probably used it for fun, and it may have been buried with him when he died. The coffin panel on view nearby was made for a different man named Amenemope hundreds of years later. Imagine you are painting a picture for a king! Which colors would you use? What would you paint? Painting was a popular and time-honored pastime among the upper classes in Egypt.",
+      "tombstone": "Paint Box of Vizier Amenemope, c. 1427–1401 BCE. Egypt, New Kingdom (1540–1069 BCE), Dynasty 18, reign of Amenhotep II (1425–1400 BCE). Boxwood with inscription inlaid in Egyptian blue; overall: 2.2 x 21 x 3.6 cm (7/8 x 8 1/4 x 1 7/16 in.). The Cleveland Museum of Art, Gift of the John Huntington Art and Polytechnic Trust, 1914.680",
+      "funFact": "",
+      "didYouKnow": "Painting was a popular and time-honored pastime among the upper classes in Egypt.",
+      "creators": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "This paint box was made in Egypt more than 3,000 years ago.",
+      "quote": "This paint box was made in Egypt more than 3,000 years ago.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Conservators identified the pigments using X-ray diffraction, a process that helps them determine the minerals that make up each color.",
+      "quote": "Conservators identified the pigments using X-ray diffraction, a process that helps them determine the minerals that make up each color.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The paint box belonged to a man named Amenemope (say: ah-men-em-oh-pee) who advised the pharaoh (king).",
+      "quote": "The paint box belonged to a man named Amenemope (say: ah-men-em-oh-pee) who advised the pharaoh (king).",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "He probably used it for fun, and it may have been buried with him when he died.",
+      "quote": "He probably used it for fun, and it may have been buried with him when he died.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "unknown collection \"archaeology\"",
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

@@ -1,0 +1,112 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "royal-women-celebrating-diwali",
+  "notes": "region: North India",
+  "entry": {
+    "id": "painting:royal-women-celebrating-diwali",
+    "collection": "painting",
+    "title": "Royal Women Celebrating Diwali",
+    "year": "c. 1760",
+    "era": "romantic",
+    "ratio": 1.2049,
+    "blurb": "The style of this work is typical of Mughal painting from the mid-1700s, when scenes of domestic life among women of the court were a favorite subject for the imperial artists.",
+    "rarity": 1,
+    "tags": [
+      "northern india",
+      "tempera"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1971.82/1971.82_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Andrew R. and Martha Holden Jennings Fund",
+      "url": "https://clevelandart.org/art/1971.82"
+    },
+    "value": 5,
+    "facts": [
+      "Lined along the eaves, the top of the marble lattice railing, and the rims of the boats on the river are candles and butter lamps lit in celebration of a New Year festival.",
+      "A princess on a golden armchair lights sparklers with her friends.",
+      "\"Diwali\" comes from the Sanskrit words dīpa (lamp) and āvali (rows or series)."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "146192",
+    "title": "Royal Women Celebrating Diwali",
+    "maker": "",
+    "year": "c. 1760",
+    "medium": "gum tempera and gold on paper",
+    "dimensions": "Image: 20.5 x 24.7 cm (8 1/16 x 9 3/4 in.)",
+    "widthCm": 24.7,
+    "heightCm": 20.5,
+    "ratio": 1.2049,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1971.82/1971.82_web.jpg",
+    "imageWidth": 1055,
+    "imageHeight": 893,
+    "pageUrl": "https://clevelandart.org/art/1971.82",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Andrew R. and Martha Holden Jennings Fund",
+    "description": "Lined along the eaves, the top of the marble lattice railing, and the rims of the boats on the river are candles and butter lamps lit in celebration of a New Year festival. A princess on a golden armchair lights sparklers with her friends. In the boats and on the far shore men set off sparklers under the light of a magnificent firework display under the full moon. The style of this work is typical of Mughal painting from the mid-1700s, when scenes of domestic life among women of the court were a favorite subject for the imperial artists. \"Diwali\" comes from the Sanskrit words dīpa (lamp) and āvali (rows or series).",
+    "culture": "Northern India, Uttar Pradesh, Lucknow",
+    "classification": "Painting",
+    "tags": [
+      "Indian and Southeast Asian Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Royal Women Celebrating Diwali",
+      "maker": "",
+      "year": "c. 1760",
+      "medium": "gum tempera and gold on paper",
+      "dimensions": "Image: 20.5 x 24.7 cm (8 1/16 x 9 3/4 in.)",
+      "culture": "Northern India, Uttar Pradesh, Lucknow",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Andrew R. and Martha Holden Jennings Fund",
+      "description": "Lined along the eaves, the top of the marble lattice railing, and the rims of the boats on the river are candles and butter lamps lit in celebration of a New Year festival. A princess on a golden armchair lights sparklers with her friends. In the boats and on the far shore men set off sparklers under the light of a magnificent firework display under the full moon. The style of this work is typical of Mughal painting from the mid-1700s, when scenes of domestic life among women of the court were a favorite subject for the imperial artists. \"Diwali\" comes from the Sanskrit words dīpa (lamp) and āvali (rows or series).",
+      "tombstone": "Royal Women Celebrating Diwali, c. 1760. Northern India, Uttar Pradesh, Lucknow. Gum tempera and gold on paper; image: 20.5 x 24.7 cm (8 1/16 x 9 3/4 in.). The Cleveland Museum of Art, Andrew R. and Martha Holden Jennings Fund, 1971.82",
+      "funFact": "",
+      "didYouKnow": "\"Diwali\" comes from the Sanskrit words dīpa (lamp) and āvali (rows or series).",
+      "creators": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "The style of this work is typical of Mughal painting from the mid-1700s, when scenes of domestic life among women of the court were a favorite subject for the imperial artists.",
+      "quote": "The style of this work is typical of Mughal painting from the mid-1700s, when scenes of domestic life among women of the court were a favorite subject for the imperial artists.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Lined along the eaves, the top of the marble lattice railing, and the rims of the boats on the river are candles and butter lamps lit in celebration of a New Year festival.",
+      "quote": "Lined along the eaves, the top of the marble lattice railing, and the rims of the boats on the river are candles and butter lamps lit in celebration of a New Year festival.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "A princess on a golden armchair lights sparklers with her friends.",
+      "quote": "A princess on a golden armchair lights sparklers with her friends.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "\"Diwali\" comes from the Sanskrit words dīpa (lamp) and āvali (rows or series).",
+      "quote": "\"Diwali\" comes from the Sanskrit words dīpa (lamp) and āvali (rows or series).",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

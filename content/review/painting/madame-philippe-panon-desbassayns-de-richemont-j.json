@@ -1,0 +1,94 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "madame-philippe-panon-desbassayns-de-richemont-j",
+  "notes": "region: France (woman artist). the Met has no description text: needs a real hook. painted by a woman in 1802; say who and when as the record does",
+  "entry": {
+    "id": "painting:madame-philippe-panon-desbassayns-de-richemont-j",
+    "collection": "painting",
+    "title": "Madame Philippe Panon Desbassayns de Richemont (Jeanne Eglé Mourgue, 1778–1855) and Her Son, Eugène (1800–1859)",
+    "by": "Marie Guillemine Benoist",
+    "year": "1802",
+    "era": "romantic",
+    "ratio": 0.7663,
+    "blurb": "By Marie Guillemine Benoist, 1802, Oil on canvas.",
+    "rarity": 1,
+    "tags": [
+      "oil",
+      "portrait"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://images.metmuseum.org/CRDImages/ep/original/DP-13442-001.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Metropolitan Museum of Art, New York. Gift of Julia A. Berwind, 1953",
+      "url": "https://www.metmuseum.org/art/collection/search/435650"
+    },
+    "value": 5
+  },
+  "candidate": {
+    "source": "met",
+    "sourceId": "435650",
+    "title": "Madame Philippe Panon Desbassayns de Richemont (Jeanne Eglé Mourgue, 1778–1855) and Her Son, Eugène (1800–1859)",
+    "maker": "Marie Guillemine Benoist",
+    "year": "1802",
+    "medium": "Oil on canvas",
+    "dimensions": "46 x 35 1/4 in. (116.8 x 89.5 cm)",
+    "widthCm": 89.5,
+    "heightCm": 116.8,
+    "ratio": 0.7663,
+    "imageUrl": "https://images.metmuseum.org/CRDImages/ep/original/DP-13442-001.jpg",
+    "pageUrl": "https://www.metmuseum.org/art/collection/search/435650",
+    "license": "CC0",
+    "credit": "The Metropolitan Museum of Art, New York. Gift of Julia A. Berwind, 1953",
+    "description": "",
+    "culture": "",
+    "classification": "Paintings",
+    "tags": [
+      "Boys",
+      "Portraits",
+      "Women"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Madame Philippe Panon Desbassayns de Richemont (Jeanne Eglé Mourgue, 1778–1855) and Her Son, Eugène (1800–1859)",
+      "maker": "Marie Guillemine Benoist",
+      "year": "1802",
+      "medium": "Oil on canvas",
+      "dimensions": "46 x 35 1/4 in. (116.8 x 89.5 cm)",
+      "culture": "",
+      "classification": "Paintings",
+      "credit": "The Metropolitan Museum of Art, New York. Gift of Julia A. Berwind, 1953",
+      "description": "",
+      "objectName": "Painting",
+      "department": "European Paintings",
+      "period": "",
+      "dynasty": "",
+      "artistBio": "French, Paris 1768–1826 Paris",
+      "region": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "By Marie Guillemine Benoist, 1802, Oil on canvas.",
+      "quote": "By Marie Guillemine Benoist, 1802, Oil on canvas",
+      "source": "record",
+      "placeholderFor": "needs a real hook"
+    }
+  ],
+  "problems": [
+    "claim 1: needs a real hook; it only restates the record's own details (maker, date, medium)",
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

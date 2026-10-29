@@ -1,0 +1,114 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "quails-and-sparrows-in-an-autumn-scene-wang",
+  "notes": "region: China",
+  "entry": {
+    "id": "painting:quails-and-sparrows-in-an-autumn-scene-wang",
+    "collection": "painting",
+    "title": "Quails and Sparrows in an Autumn Scene",
+    "by": "Wang Yuan",
+    "year": "1347",
+    "era": "renaissance",
+    "ratio": 0.4899,
+    "blurb": "A child prodigy, he was instructed by the great Yuan master Zhao Mengfu at an early age.",
+    "rarity": 1,
+    "tags": [
+      "china",
+      "scroll",
+      "ink"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1997.91/1997.91_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Bequest of Mrs. A. Dean Perry",
+      "url": "https://clevelandart.org/art/1997.91"
+    },
+    "value": 5,
+    "facts": [
+      "The flower-and-bird subjects here are depicted in a meticulous manner, echoing the academic tradition but translating the customarily colored images to plain monochrome.",
+      "Fine ink lines combined with carefully graded washes define the contours and give subtle modeling to the natural forms.",
+      "Wang Yuan excelled in flower-and-bird subjects as well as landscape and figure paintings."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "160133",
+    "title": "Quails and Sparrows in an Autumn Scene",
+    "maker": "Wang Yuan",
+    "year": "1347",
+    "medium": "hanging scroll, ink on paper",
+    "dimensions": "Painting: 114.3 x 56 cm (45 x 22 1/16 in.); Overall with knobs: 267.5 x 85 cm (105 5/16 x 33 7/16 in.)",
+    "widthCm": 56,
+    "heightCm": 114.3,
+    "ratio": 0.4899,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1997.91/1997.91_web.jpg",
+    "imageWidth": 492,
+    "imageHeight": 900,
+    "pageUrl": "https://clevelandart.org/art/1997.91",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Bequest of Mrs. A. Dean Perry",
+    "description": "The flower-and-bird subjects here are depicted in a meticulous manner, echoing the academic tradition but translating the customarily colored images to plain monochrome. Fine ink lines combined with carefully graded washes define the contours and give subtle modeling to the natural forms. Wang Yuan excelled in flower-and-bird subjects as well as landscape and figure paintings. A child prodigy, he was instructed by the great Yuan master Zhao Mengfu at an early age. Wang Yuan was from Qiantang, today’s Hangzhou in eastern China.",
+    "culture": "China, Yuan dynasty (1271–1368)",
+    "classification": "Painting",
+    "tags": [
+      "Chinese Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Quails and Sparrows in an Autumn Scene",
+      "maker": "Wang Yuan",
+      "year": "1347",
+      "medium": "hanging scroll, ink on paper",
+      "dimensions": "Painting: 114.3 x 56 cm (45 x 22 1/16 in.); Overall with knobs: 267.5 x 85 cm (105 5/16 x 33 7/16 in.)",
+      "culture": "China, Yuan dynasty (1271–1368)",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Bequest of Mrs. A. Dean Perry",
+      "description": "The flower-and-bird subjects here are depicted in a meticulous manner, echoing the academic tradition but translating the customarily colored images to plain monochrome. Fine ink lines combined with carefully graded washes define the contours and give subtle modeling to the natural forms. Wang Yuan excelled in flower-and-bird subjects as well as landscape and figure paintings. A child prodigy, he was instructed by the great Yuan master Zhao Mengfu at an early age. Wang Yuan was from Qiantang, today’s Hangzhou in eastern China.",
+      "tombstone": "Quails and Sparrows in an Autumn Scene (秋景鶉雀圖), 1347. Wang Yuan (Chinese, c. 1299–after 1366). Hanging scroll, ink on paper; painting: 114.3 x 56 cm (45 x 22 1/16 in.); overall with knobs: 267.5 x 85 cm (105 5/16 x 33 7/16 in.). The Cleveland Museum of Art, Bequest of Mrs. A. Dean Perry, 1997.91",
+      "funFact": "",
+      "didYouKnow": "Wang Yuan was from Qiantang, today’s Hangzhou in eastern China.",
+      "creators": "Wang Yuan (Chinese, c. 1299–after 1366)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "A child prodigy, he was instructed by the great Yuan master Zhao Mengfu at an early age.",
+      "quote": "A child prodigy, he was instructed by the great Yuan master Zhao Mengfu at an early age.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The flower-and-bird subjects here are depicted in a meticulous manner, echoing the academic tradition but translating the customarily colored images to plain monochrome.",
+      "quote": "The flower-and-bird subjects here are depicted in a meticulous manner, echoing the academic tradition but translating the customarily colored images to plain monochrome.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Fine ink lines combined with carefully graded washes define the contours and give subtle modeling to the natural forms.",
+      "quote": "Fine ink lines combined with carefully graded washes define the contours and give subtle modeling to the natural forms.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Wang Yuan excelled in flower-and-bird subjects as well as landscape and figure paintings.",
+      "quote": "Wang Yuan excelled in flower-and-bird subjects as well as landscape and figure paintings.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

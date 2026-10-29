@@ -1,0 +1,113 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "diptych-with-twelve-apostles-st-paul-workshop",
+  "notes": "region: Ethiopia",
+  "entry": {
+    "id": "painting:diptych-with-twelve-apostles-st-paul-workshop",
+    "collection": "painting",
+    "title": "Diptych with Twelve Apostles & St. Paul",
+    "by": "Workshop or Circle of Wäldä Maryam",
+    "year": "c. 1700",
+    "era": "baroque",
+    "ratio": 1.3077,
+    "blurb": "Depicting 13 holy men, this diptych (two-panel painting) is sized for an Ethiopian Orthodox Christian church or elite home.",
+    "rarity": 1,
+    "tags": [
+      "africa",
+      "tempera"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/2023.4/2023.4_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Severance and Greta Millikin Purchase Fund",
+      "url": "https://clevelandart.org/art/2023.4"
+    },
+    "value": 5,
+    "facts": [
+      "It is painted in the bold, colorful style associated with royal court workshops from the early 1600s to the mid-1700s.",
+      "Captions in Ge’ez––an eastern African language dating to the 400s BCE––identify each by name.",
+      "This African language is nearly 2,500 years old!"
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "535124",
+    "title": "Diptych with Twelve Apostles & St. Paul",
+    "maker": "Workshop or Circle of Wäldä Maryam",
+    "year": "c. 1700",
+    "medium": "Tempera, wood, textile",
+    "dimensions": "39 x 51 cm (15 3/8 x 20 1/16 in.)",
+    "widthCm": 51,
+    "heightCm": 39,
+    "ratio": 1.3077,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/2023.4/2023.4_web.jpg",
+    "imageWidth": 900,
+    "imageHeight": 828,
+    "pageUrl": "https://clevelandart.org/art/2023.4",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Severance and Greta Millikin Purchase Fund",
+    "description": "Depicting 13 holy men, this diptych (two-panel painting) is sized for an Ethiopian Orthodox Christian church or elite home. It is painted in the bold, colorful style associated with royal court workshops from the early 1600s to the mid-1700s. Painter Wäldä Maryam (or someone he trained) set this scene of Christ’s apostles in the context of his homeland. Each saint wears fashionable clothing imported from India. While they are posed and dressed similarly to emphasize their group identity, the artist portrayed their faces and hairstyles individually. Captions in Ge’ez––an eastern African language dating to the 400s BCE––identify each by name. Captions written in the language Gəˁəz identify each holy man by name. This African language is nearly 2,500 years old!",
+    "culture": "Africa, East Africa, Ethiopia, presumably Gondär",
+    "classification": "Painting",
+    "tags": [
+      "African Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Diptych with Twelve Apostles & St. Paul",
+      "maker": "Workshop or Circle of Wäldä Maryam",
+      "year": "c. 1700",
+      "medium": "Tempera, wood, textile",
+      "dimensions": "39 x 51 cm (15 3/8 x 20 1/16 in.)",
+      "culture": "Africa, East Africa, Ethiopia, presumably Gondär",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Severance and Greta Millikin Purchase Fund",
+      "description": "Depicting 13 holy men, this diptych (two-panel painting) is sized for an Ethiopian Orthodox Christian church or elite home. It is painted in the bold, colorful style associated with royal court workshops from the early 1600s to the mid-1700s. Painter Wäldä Maryam (or someone he trained) set this scene of Christ’s apostles in the context of his homeland. Each saint wears fashionable clothing imported from India. While they are posed and dressed similarly to emphasize their group identity, the artist portrayed their faces and hairstyles individually. Captions in Ge’ez––an eastern African language dating to the 400s BCE––identify each by name. Captions written in the language Gəˁəz identify each holy man by name. This African language is nearly 2,500 years old!",
+      "tombstone": "Diptych with Twelve Apostles & St. Paul, c. 1700. Workshop or Circle of Wäldä Maryam (Ethiopia, active mid- to late 1600s-early 1700s). Tempera, wood, textile; 39 x 51 cm (15 3/8 x 20 1/16 in.). The Cleveland Museum of Art, Severance and Greta Millikin Purchase Fund, 2023.4",
+      "funFact": "",
+      "didYouKnow": "Captions written in the language Gəˁəz identify each holy man by name. This African language is nearly 2,500 years old!",
+      "creators": "Workshop or Circle of Wäldä Maryam (Ethiopia, active mid- to late 1600s-early 1700s)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "Depicting 13 holy men, this diptych (two-panel painting) is sized for an Ethiopian Orthodox Christian church or elite home.",
+      "quote": "Depicting 13 holy men, this diptych (two-panel painting) is sized for an Ethiopian Orthodox Christian church or elite home.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "It is painted in the bold, colorful style associated with royal court workshops from the early 1600s to the mid-1700s.",
+      "quote": "It is painted in the bold, colorful style associated with royal court workshops from the early 1600s to the mid-1700s.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Captions in Ge’ez––an eastern African language dating to the 400s BCE––identify each by name.",
+      "quote": "Captions in Ge’ez––an eastern African language dating to the 400s BCE––identify each by name.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "This African language is nearly 2,500 years old!",
+      "quote": "This African language is nearly 2,500 years old!",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}
