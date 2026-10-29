@@ -76,3 +76,7 @@ Open it: https://joudrie.github.io/museum/wakefield.html (its own page, `wakefie
 ## Next (not done)
 Landmarks and place names (schools, parks, lakes), a "you are on X Street" line, trees, a way to edit shapes by hand,
 a faster way to cross town, maybe its own repo and address.
+
+## Tidying (paint and stone)
+- `markings.tidy`: every long painted line is straightened (Douglas-Peucker, 14 px), a double yellow is rebuilt from one straightened centre, pieces of the same street are stitched, runs found twice are drawn once, and white never runs over yellow.
+- `vector.seal_stone`: gaps up to 5 m between streets, lots, sidewalks and road strokes are filled, holes under 60 m2 are filled, and stone reaches a building wall within 3 m. No specks of grass inside the stone.

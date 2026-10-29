@@ -214,6 +214,108 @@ def double(line, gap_world):
     return [[tuple(p) for p in (a + n)], [tuple(p) for p in (a - n)]]
 
 
+STRAIGHT = 14.0   # world px a long line may stray from its straight pieces
+KEEP_MIN = 32     # world px: a piece shorter than this, left over after overlaps are cut away, is dropped
+LONG = 60         # world px: a line this long is a run of paint; shorter ones are dashes and crosswalk bars, left alone
+
+
+def straighten(line, tol=STRAIGHT):
+    a = np.array(line, np.float32).reshape(-1, 1, 2)
+    return [tuple(map(float, q)) for q in cv2.approxPolyDP(a, tol, False).reshape(-1, 2)]
+
+
+def cut_overlaps(lines, clear, kept=()):
+    """Long lines, longest first; any part within `clear` px of a line already kept is cut away."""
+    from shapely.geometry import LineString as LS
+    from shapely.ops import unary_union
+    kept, out = list(kept), []
+    for ln in sorted(lines, key=path_length, reverse=True):
+        g = LS(ln)
+        if kept:
+            g = g.difference(unary_union(kept).buffer(clear, cap_style=2))
+        for part in (g.geoms if g.geom_type == 'MultiLineString' else [g]):
+            if part.geom_type == 'LineString' and part.length >= KEEP_MIN:
+                out.append([tuple(c) for c in part.coords])
+                kept.append(part)
+    return out
+
+
+def stitch(lines, reach=40):
+    """Join lines that end where the next begins (the same street read in pieces), so a run is one straight-as-it-is line."""
+    lines = [list(l) for l in lines]
+    joined = True
+    while joined:
+        joined = False
+        for i in range(len(lines)):
+            for j in range(len(lines)):
+                if i == j:
+                    continue
+                a, b = lines[i], lines[j]
+                for ra in (False, True):
+                    for rb in (False, True):
+                        aa, bb = a[::-1] if ra else a, b[::-1] if rb else b
+                        if math.dist(aa[-1], bb[0]) <= reach:
+                            lines[i] = straighten(aa + bb)
+                            del lines[j]
+                            joined = True
+                            break
+                    if joined:
+                        break
+                if joined:
+                    break
+            if joined:
+                break
+    return lines
+
+
+def tidy(found):
+    from shapely.geometry import LineString as LS
+    """Straight, single lines: double yellows are rebuilt from one straightened centre, runs drawn twice are drawn once,
+    white never runs over yellow, and short bits are dropped."""
+    ys, short_y, i = [], [], 0
+    yl = found['yellow']
+    while i < len(yl):
+        a = np.array(yl[i], float)
+        if len(a) >= 3 and path_length(a) >= LONG:
+            b = np.array(yl[i + 1], float) if i + 1 < len(yl) else None
+            if b is not None and len(b) == len(a) and abs(np.hypot(*(a - b).T).mean() - DOUBLE_GAP) < 1.5:
+                ys.append(('d', straighten(((a + b) / 2).tolist())))
+                i += 2
+                continue
+            ys.append(('s', straighten(yl[i])))
+        elif path_length(a) >= LONG:
+            ys.append(('s', straighten(yl[i])))
+        else:
+            short_y.append(yl[i])
+        i += 1
+    singles = [ln for k, ln in ys if k == 's']
+    centres = [ln for k, ln in ys if k == 'd']
+    # a double's centre keeps its place; singles beside it (the same line found from the next road) are cut away
+    centres = [c for c in cut_overlaps(centres, 22) if path_length(c) >= 64]
+    centres = stitch(centres)
+    singles = cut_overlaps(singles, 16, [LS(c) for c in centres])
+    yellow = []
+    for c in centres:
+        yellow += double(c, DOUBLE_GAP)
+    yellow += singles + short_y
+    ylong = [ln for ln in yellow if path_length(ln) >= LONG]
+    white_long = [straighten(w) for w in found['white'] if path_length(w) >= LONG]
+    white_short = [w for w in found['white'] if path_length(w) < LONG]
+    from shapely.geometry import LineString as LS
+    from shapely.ops import unary_union
+    ybuf = unary_union([LS(l) for l in ylong]).buffer(DOUBLE_GAP) if ylong else None
+    wl = []
+    for w in white_long:
+        g = LS(w)
+        if ybuf is not None:
+            g = g.difference(ybuf)
+        for part in (g.geoms if g.geom_type == 'MultiLineString' else [g]):
+            if part.geom_type == 'LineString' and part.length >= KEEP_MIN:
+                wl.append([tuple(c) for c in part.coords])
+    white = cut_overlaps(wl, 5) + white_short
+    return {'yellow': yellow, 'white': white}
+
+
 def crosswalk_bars(line_world):
     """White bars across the road at a mapped crossing: bars 3 m long, 0.5 m wide, a metre apart, along the way people walk."""
     a = np.array(line_world, float)
