@@ -33,8 +33,8 @@ Owns: `tools/`, `content/`, `docs/CONTENT*.md`, `public/paintings/`, `src/collec
 - [ ] Natural-history and archaeology imagery (public domain) for the other collections, with a quoted source for every fact.
 - [ ] Smithsonian and Rijksmuseum adapters once keys exist (Needs Sean). Art Institute of Chicago is behind a bot challenge: never work around it.
 - [ ] After the user approves drafts: `node tools/publish_content.mjs --collection painting`, tests, PR.
-- [ ] Rarity for paintings by fame (every painting is rarity 1 today): a data pass, proposed for approval.
-- [ ] Painting of the Day content: a rotating pick and a short true "why it matters" for each.
+- [x] (#137) Rarity for paintings by fame (every painting is rarity 1 today): a data pass, proposed for approval. **Proposal only:** `content/rarity-proposals.json`; the user sets `status` to `approved`, then `node tools/apply_rarity.mjs`.
+- [x] (#137) Painting of the Day content: a rotating pick and a short true "why it matters" for each. `tools/potd.mjs`, `content/potd/draft.json` (69 quoted lines, all draft; the 49 shipped paintings have no museum sentence on file yet, so they wait). Chat 13 surfaces it.
 
 ## CHAT 2: Builder and ground tools
 Owns: `src/builder/`, `builder.html`, `public/builder/`, `tools/build_palette.py`, `src/mapformat.js`. Claim: `claimed: 2026-10-29`
@@ -186,6 +186,7 @@ Mini-games (Mop Rush, No Flash!, Restoration-as-minigame, Crate Tetris, Hang it 
 - **Review tonight:** the 82 painting drafts (27 earlier + 55 from batches 3 to 5; rarity for each) and which of the 11 flagged images to replace (`content/image-proposals.md`).
 - **Hooks for 4 Met drafts** (Night-Shining White, Esther, Gulf Stream, Drawing Lesson), plus every other Met / Commons draft marked "needs a real hook": the Met page text is behind a bot challenge, so paste one sentence per work and I add it as a quoted claim.
 - Latin America, the Pacific, the Middle East beyond Iran and Indigenous North America have almost no public-domain paintings with museum text in the Met, Cleveland or Commons; the Smithsonian key is the way in.
+- **Approve the rarity proposal** (`content/rarity-proposals.json`) and the Painting of the Day lines (`content/potd/draft.json`).
 - Smithsonian (`SI_API_KEY`) and Rijksmuseum (`RIJKS_API_KEY`) keys.
 - Non-square rooms: what shapes, how they join, how they look (blocks Chat 9's first item).
 - West Wing outline; break-room upgrade ideas (defaults in `src/economy.js`: Better mops 90→120/160/220 min for 250/700/1800 gold, Guide training +10%→12/15/20% for 400/1100/2800, Carpenter's toolbox 10/20/30% off rooms for 350/900/2200; office levels 500/2000/8000/30000; collect-all fee 15%); goal pacing and daily goals.
