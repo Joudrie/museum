@@ -126,8 +126,8 @@ Owns: `src/rooms.js`, `src/shaped.js`, `src/walldraw.js`, `src/atrium.js`, `src/
 ## CHAT 10: Living museum, people and story
 Owns: `src/famous.js`, `src/lines.js`, `src/quests.js`, `src/talk.js`, `src/staff.js`. Claim: `claimed: 2026-10-29`
 - [ ] Visitors with memories, goals and relationships; regulars that grow into characters; personalities (nerd, casual, superfan, snob, kid, grump, tourist) with more lines.
-- [ ] Famous visitors with quest chains and period-accurate dialogue; they send you places (feeds Chat 7). Odds rise with their works in your codex; permanent boosts.
-- [ ] A **Gardner-style heist mystery** as the first full story arc.
+- [~] Famous visitors with quest chains and period-accurate dialogue; they send you places (feeds Chat 7). Odds rise with their works in your codex; permanent boosts. **Done: chains for Vermeer, Rembrandt, Hokusai (3 sourced steps each, last step offers a lead).** Left: the other 17 visitors, odds by codex.
+- [x] A **Gardner-style heist mystery** as the first full story arc. "The Empty Frames", told by Edmund in 5 chapters, every line quoted from the Gardner Museum's own theft page (this PR).
 - [ ] Semi-mythological famous visitors (the user said later).
 - [ ] The caretaker (name and look), the tutorial and first session; day 2 and day 3 beats; daily guests.
 - [ ] Daily and weekly quests, goal pacing (the 19 goals and rewards; daily goals?).
@@ -192,7 +192,7 @@ Mini-games (Mop Rush, No Flash!, Restoration-as-minigame, Crate Tetris, Hang it 
 - Open design questions: free-roam map or chain of rooms; should paintings come only from expeditions; can you fail an expedition; seasons automatic or chosen; split the shared core now?
 
 ## Cross-chat requests (add a line, carry on)
-- (none yet)
+- Chat 10 → Chat 7: story chapters offer leads by writing `{id, text, from, at}` to `curation.leads_offered` (see HANDOFF, "Story and leads"). Read it, show the lead, start the trip; ids so far: `heist-hideout`, `sphinx-letter`, `studio-chest`, `last-scrolls`.
 
 ## Order
 The chat numbers **are the priority order**: 1 is most important, 15 least. If you can't run all 15, run them in number order. Chat 14 (halls) needs 5, 8 and 9 first; chat 15 (asset hunt) is placeholder support and can wait.
