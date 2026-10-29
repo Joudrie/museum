@@ -68,6 +68,27 @@ const ok = (c, m) => {
   const nameAfter = await p.textContent('#chosen-name');
   ok(/49/.test(nameAfter), `turn steps front to left side (${nameAfter})`);
 
+  // area: copy a region and paste it elsewhere (pieces and tiles come along)
+  await p.click('[data-tool="area"]');
+  const r = await p.locator('#canvas').boundingBox();
+  const cx = r.x + r.width / 2;
+  const cy = r.y + r.height / 2;
+  await p.mouse.move(cx - 60, cy - 60);
+  await p.mouse.down();
+  await p.mouse.move(cx + 60, cy + 60, { steps: 6 });
+  await p.mouse.up();
+  ok(/\d+×\d+ tiles/.test(await p.textContent('#area-text')), `area measures itself (${await p.textContent('#area-text')})`);
+  const n0 = (await objs()).length;
+  await p.click('#area-copy');
+  await p.click('#area-paste');
+  await p.mouse.click(cx - 130, cy + 130);
+  await p.waitForTimeout(300);
+  const n1 = (await objs()).length;
+  ok(n1 > n0, `paste adds the copied pieces (${n0} → ${n1})`);
+  await p.click('#undo');
+  ok((await objs()).length === n0, 'undo takes the paste back');
+  await p.click('[data-tool="paint"]');
+
   // reload: the map comes back
   const before = await objs();
   await p.reload();
