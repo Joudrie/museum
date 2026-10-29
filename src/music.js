@@ -212,6 +212,25 @@ function noiseBuffer() {
   }
   return buf;
 }
+// Birdsong by day and crickets at night: short generated chirps at random.
+function startCalls(kinds) {
+  const birds = kinds.includes('birds');
+  const crickets = kinds.includes('crickets');
+  if (!birds && !crickets) return;
+  const chirp = (t) => {
+    const base = 2200 + Math.random() * 1800;
+    const n = 1 + Math.floor(Math.random() * 3);
+    for (let i = 0; i < n; i++) tone(base * (1 + i * 0.12), t + i * 0.11, 0.09, { wave: 'sine', gain: 0.06, to: base * 1.25 });
+  };
+  const cricket = (t) => [0, 1, 2].forEach((i) => tone(4300, t + i * 0.07, 0.04, { wave: 'sine', gain: 0.025 }));
+  ambience.timer = setInterval(() => {
+    if (!ctx || ctx.state !== 'running' || muted) return;
+    const t = ctx.currentTime + 0.05;
+    if (birds && Math.random() < 0.45) chirp(t);
+    if (crickets && Math.random() < 0.6) cricket(t);
+  }, 900);
+}
+
 function startAmbience() {
   ambience.nodes.forEach((n) => {
     try {
@@ -222,9 +241,11 @@ function startAmbience() {
     n.disconnect?.();
   });
   ambience.nodes = [];
+  clearInterval(ambience.timer);
   if (!ctx || ctx.state !== 'running') return;
+  startCalls(ambience.want);
   const buf = noiseBuffer();
-  ambience.want.forEach((kind) => {
+  ambience.want.filter((k) => k !== 'birds' && k !== 'crickets').forEach((kind) => {
     const src = ctx.createBufferSource();
     src.buffer = buf;
     src.loop = true;
