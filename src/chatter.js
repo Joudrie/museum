@@ -79,7 +79,6 @@ export const giftScale = (given) => (given < GIFT_FULL ? 1 : given < GIFT_FULL *
  */
 export function* converse(o) {
   const rnd = o.rnd || Math.random;
-  yield line(o.opener, null, o.openerMood || 'smile');
   const all = topics(o, rnd);
   const used = new Set();
   let pleased = false;
@@ -87,7 +86,9 @@ export function* converse(o) {
     const open = all.filter((t) => !used.has(t.id));
     const choice = yield {
       type: 'hub',
-      text: pick(used.size ? HUB_AGAIN : HUB_FIRST, rnd),
+      // the opener and the topics come up together, so the box opens ready to answer
+      text: used.size ? pick(HUB_AGAIN, rnd) : o.opener || pick(HUB_FIRST, rnd),
+      mood: used.size ? undefined : o.openerMood || 'smile', // (the opener's face over their head)
       choices: [...open.map((t) => ({ id: t.id, label: t.label })), { id: 'bye', label: 'Bye!' }],
     };
     if (choice === 'bye') break;

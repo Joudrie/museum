@@ -2,7 +2,7 @@
 // Phaser is its own cached chunk; the rest is the game. Raise a number here on purpose, never by accident.
 const fs = require('fs');
 const zlib = require('zlib');
-const BUDGET_KB = { phaser: 360, main: 250, total: 800 }; // total = all JS in dist/assets (every page); 760 → 800 for the people sprites (docs/PEOPLE-SPRITES.md tiers 4-5, about 25 KB); main 230 → 250 for the interaction polish (focus, bubbles, emotes, rowboat, tells, wind, little scenes: about 20 KB)
+const BUDGET_KB = { phaser: 360, main: 255, total: 800 }; // total = all JS in dist/assets (every page); 760 → 800 for the people sprites (docs/PEOPLE-SPRITES.md tiers 4-5, about 25 KB); main 230 → 240 for the color wheel, speech-bubble follow and rowing (29 Oct feedback); 240 → 255 for the interaction polish (focus, emotes, rowboat, tells, wind, little scenes: about 20 KB)
 const dir = 'dist/assets';
 if (!fs.existsSync(dir)) {
   console.log('  ✗ no dist/: run npm run build first');

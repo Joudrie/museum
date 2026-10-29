@@ -69,7 +69,7 @@ import { openDisplay } from './displaymenu.js';
 import { openDecor, closeDecor, load, save, DEFAULT_CHARACTER } from './decor.js';
 import { openBuild } from './build.js';
 import { showTalk, hideTalk, talking } from './talk.js';
-import { facingOf, resolver, headY } from './focus.js';
+import { facingOf, resolver, headY, bubbleSpot } from './focus.js';
 import { EMOTES, popEmote, startChat } from './emotes.js';
 import { FocusMark } from './focusmark.js';
 import { Tells } from './tells.js';
@@ -83,6 +83,7 @@ import { openJournal } from './journal.js';
 import { markSeen, collectEverything as collectOneOfEach } from './collections/codex.js';
 import { activeQuests, claim, bump, stat, resetQuests } from './quests.js';
 import { celebrate } from './ui.js';
+import { shortNum } from './ui/num.js';
 import { addLove, loveOf, resetLove } from './love.js';
 import { hasCameras as camerasOn } from './security.js';
 import { hourNow, settings } from './settings.js';
@@ -95,6 +96,7 @@ const NPC_SLOW = 0.35; // visitors slow down near the player so they're easy to 
 const BODY = { w: 7, h: 5 }; // half-size of a character's feet, for bumping
 const PLAYER_SCALE = 1.15;
 const REACH = 26; // how close you need to be to interact
+const TALK_LEAVE = 64; // walk this far from someone and the talk (bubble or conversation) ends
 const HD = 4; // resolution multiplier for paintings on the wall
 
 const DECOR_KEY = 'curation.roomDecor'; // { [roomIndex]: decor }
@@ -113,6 +115,7 @@ const lookOf = (ch) => ({
   build: ch.build,
   legs: ch.legs,
   feet: ch.feet,
+  second: !!ch.u, // the outfit's optional second color (outfitAccent in people/parts.js)
 });
 const TUTORIAL_KEY = 'curation.tutorial'; // how far the first-time walkthrough has got
 const BREAK_SEEDED_KEY = 'curation.breakSeeded';
@@ -1404,7 +1407,7 @@ export class RoomScene extends Phaser.Scene {
     const artists = [...new Set(PAINTINGS.map((p) => p.by))];
     const wantBy = artists[Math.floor(Math.random() * artists.length)];
     const finds = { mineral: listEntries({ collection: 'mineral' }).filter((e) => (e.rarity || 1) <= 2), fossil: listEntries({ collection: 'fossil' }).filter((e) => (e.rarity || 1) <= 2) };
-    this.pause(true);
+    hideTalk(); // (the game keeps running: walk away and update() ends the talk)
     n.talking = true;
     n.target = null;
     n.path = null;
@@ -1436,7 +1439,6 @@ export class RoomScene extends Phaser.Scene {
       onEnd: () => {
         this.chatHandle = null;
         if (this.talkingTo === n) this.talkingTo = null;
-        if (!this.chatExternal) this.pause(false); // (closed by pause(true): that panel is in charge of the pause)
         n.talking = false;
         n.wait = 1500;
         n.faceUntil = this.time.now + 900;
@@ -1532,7 +1534,7 @@ export class RoomScene extends Phaser.Scene {
   // A speech bubble's anchor: the top of someone's head, followed as they (or the camera) move.
   // Gone (null) once they're gone, so a bubble never hangs over a scene it doesn't belong to.
   speakerAt(sprite) {
-    return () => (sprite.active && this.sys.isActive() ? this.screenAt(sprite.x, headY(sprite)) : null);
+    return () => (sprite.active && this.sys.isActive() ? bubbleSpot((x, y) => this.screenAt(x, y), sprite, this.player) : null);
   }
 
   // True once the player has walked away from `sprite` (a speech bubble goes at that moment).
@@ -2352,8 +2354,8 @@ export class RoomScene extends Phaser.Scene {
   // Coins in the wallet, museum gold per hour and visitors per month.
   updateHud() {
     const income = museumIncome(this.rooms);
-    document.querySelector('.hud-coins').textContent = coins().toLocaleString();
-    document.querySelector('.hud-income').textContent = `+${income}`;
+    document.querySelector('.hud-coins').textContent = shortNum(coins());
+    document.querySelector('.hud-income').textContent = `+${shortNum(income)}`;
     const v = museumVisitors(this.rooms); // per month, shown short: 1.3k, 2.4M
     document.querySelector('.hud-visitors').textContent = v >= 1e6 ? `${(v / 1e6).toFixed(1)}M` : v >= 1e3 ? `${(v / 1e3).toFixed(1)}k` : `${v}`;
     const rating = (museumRating(this.rooms) / 20).toFixed(1);
@@ -2984,7 +2986,8 @@ export class RoomScene extends Phaser.Scene {
     this.checkArches();
     if (len > 0) this.checkCoins();
 
-    if (this.talkingTo && (!talking() || Math.hypot(this.player.x - this.talkingTo.s.x, this.player.y - this.talkingTo.s.y) > 60)) {
+    // walked away (or the bubble ran out): the talk ends. A conversation box keeps going until you leave.
+    if (this.talkingTo && ((!this.chatHandle && !talking()) || Math.hypot(this.player.x - this.talkingTo.s.x, this.player.y - this.talkingTo.s.y) > TALK_LEAVE)) {
       this.endTalk();
     }
 

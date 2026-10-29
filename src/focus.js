@@ -57,3 +57,19 @@ export function resolver(px, py, facing) {
 // Where the top of a character's head is (the picture has some empty space above it),
 // for speech bubbles and emotes to sit on.
 export const headY = (s) => s.y - s.displayHeight * 0.84;
+
+// Where a speech bubble goes for `sprite` (src/talk.js). `at(x, y)` turns a point in the world into a point on the page.
+// It sits on the speaker's head. If the player stands just above the speaker (up the screen, near enough that the
+// bubble would cover them) it goes under the two of them instead, so it never hides who you're talking to or you.
+export function bubbleSpot(at, sprite, player) {
+  const h = at(sprite.x, headY(sprite));
+  const spot = { x: h.x, y: h.y, top: h.y, bottom: at(sprite.x, sprite.y + 4).y };
+  if (player && player !== sprite) {
+    const ph = at(player.x, headY(player));
+    if (ph.y < h.y && Math.abs(ph.x - h.x) < 110) {
+      spot.under = true;
+      spot.bottom = Math.max(spot.bottom, at(player.x, player.y + 4).y);
+    }
+  }
+  return spot;
+}

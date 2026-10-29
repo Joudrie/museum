@@ -9,6 +9,7 @@ import { makeCharacter } from './art.js';
 import { load, save } from './storage.js';
 import { DEFAULT_CHARACTER } from './decor.js';
 import { showTalk, hideTalk, talking } from './talk.js';
+import { chatOpen } from './dialogue.js';
 import { iconSvg } from './icons.js';
 import { sfx, setTrack, setAmbience } from './music.js';
 import { Weather, weatherToday, season, holiday, stormRumble } from './weather.js';
@@ -38,7 +39,7 @@ import { visitorLook, KINDS } from './RoomScene.js';
 import { personOfTile, personFor } from './people/index.js';
 import { PERSONALITIES, QUIPS } from './lines.js';
 import { blendAt } from './groundblend.js';
-import { resolver, headY } from './focus.js';
+import { resolver, headY, bubbleSpot } from './focus.js';
 import { popEmote, startChat, EMOTES, SEASON_EMOTE } from './emotes.js';
 import { makeEmotes } from './art.js';
 import { Prints } from './prints.js';
@@ -88,6 +89,8 @@ const PLAYER_SCALE = 1.15;
 const STEP_MS = 260; // animation frame time
 const DOOR = { x: 12 * T, y: 8 * T }; // the museum's front doors (bottom middle of the building)
 const COTTAGE = { x: 4 * T + 48, y: 29 * T }; // the cottage door, which leads to the angled room
+const TALK_LEAVE = 64; // walk this far from someone and the talk (bubble or conversation) ends
+const WATER_ONLY = new Set(['bubbles', 'lily']); // overlays that are dropped anywhere but water
 
 // Tall things you can walk behind: only the trunk (or post) at the bottom is
 // solid, w × h px, centred; the leaves and lamp tops are above you.
@@ -647,9 +650,12 @@ export class IslandScene extends Phaser.Scene {
     if (this.map) {
       // the builder's tile layer: ground tiles painted over the terrain
       this.paint = [];
+      // bubbles and lily pads only ever sit on water (sea or pond under 3+ corners)
+      const wet = (x, y) => [...this.key(x, y, (m) => m === 0 || m === 3)].filter((b) => b === '1').length >= 3;
       Object.entries(this.map.tiles || {}).forEach(([k, ref]) => {
         const [x, y] = k.split(',').map(Number);
         const name = ref.slice(2);
+        if (WATER_ONLY.has(name) && !wet(x, y)) return;
         if (ref.startsWith('t:') && TILES[name] && y < H && x < W) ((this.paint[y] ||= [])[x] ||= []).push(name);
       });
       // grass grows over the edges of painted dirt and rock (src/groundblend.js)
@@ -1184,7 +1190,7 @@ export class IslandScene extends Phaser.Scene {
       const a = n.animal;
       if (n.pose && !n.target) {
         // at work, two frames on a loop; they look up at you while you chat
-        if (this.focus?.npc === n && talking()) {
+        if (this.focus?.npc === n && (talking() || chatOpen())) {
           const dx = this.player.x - s.x;
           const dy = this.player.y - s.y;
           if (Math.abs(dx) > Math.abs(dy)) s.setTexture(`${n.prefix}_side`).setFlipX(dx < 0);
@@ -1420,8 +1426,7 @@ export class IslandScene extends Phaser.Scene {
     if (this.chatHandle) return;
     if (n.lines && !n.animal && !n.npcId) return this.sayOwnLine(n);
     n.chat?.cancel();
-    this.paused = true;
-    this.interactBtn.classList.add('hidden');
+    // (the game keeps running: the box sits up top, and walking away ends the talk)
     n.talking = true;
     n.target = null;
     n.after = null;
@@ -1433,7 +1438,6 @@ export class IslandScene extends Phaser.Scene {
     const finish = () => {
       this.chatHandle = null;
       this.talkingTo = null;
-      this.paused = false;
       n.talking = false;
       n.wait = 1500;
       const f = n.prevFace;
@@ -1474,6 +1478,7 @@ export class IslandScene extends Phaser.Scene {
         popEmote(this, n, 'heart');
       },
       onEnd: finish,
+      leave: () => this.walkedFrom(n),
     });
   }
 
@@ -1711,7 +1716,7 @@ export class IslandScene extends Phaser.Scene {
   updateWaterButton() {
     const b = this.waterBtn;
     let mode = null;
-    if (!this.paused && !this.leaving && !this.exp && !this.fishing.busy && !talking()) {
+    if (!this.paused && !this.leaving && !this.exp && !this.fishing.busy && !talking() && !chatOpen()) {
       if (this.boat.active) mode = this.landAhead() ? 'hop' : null;
       else if (this.waterAhead() && this.boatSpot()) mode = 'boat'; // (the same "at the water's edge" as Fish)
     }
@@ -1767,7 +1772,8 @@ export class IslandScene extends Phaser.Scene {
 
   interact() {
     const f = this.focus;
-    if (!f || this.leaving || this.paused) return; // (a conversation, a panel or a hop into the boat is under way)
+    if (!f || this.leaving || this.paused) return; // (a panel or a hop into the boat is under way)
+    if (chatOpen()) return; // a conversation is up (walk away or say bye to end it)
     if (this.fishing.busy) return this.fishing.tap();
     if (f.skiff) return this.boat.boardSkiff();
     if (f.boat) return this.sail();
@@ -1795,7 +1801,12 @@ export class IslandScene extends Phaser.Scene {
   // A speech bubble's anchor: the top of someone's head, followed as they (or the camera) move.
   // Gone (null) once they're gone, so a bubble never hangs over a scene it doesn't belong to.
   speakerAt(sprite) {
-    return () => (sprite.active && this.sys.isActive() ? this.screenAt(sprite.x, headY(sprite)) : null);
+    return () => (sprite.active && this.sys.isActive() ? bubbleSpot((x, y) => this.screenAt(x, y), sprite, this.player) : null);
+  }
+
+  // True once the player has walked off from `n` (a conversation ends at that moment, or when this scene is left).
+  walkedFrom(n, r = TALK_LEAVE) {
+    return !this.sys.isActive() || !n.s.active || Math.hypot(this.player.x - n.s.x, this.player.y - n.s.y) > r;
   }
 
   // Where a point in the world is on the page.
@@ -2017,7 +2028,7 @@ export class IslandScene extends Phaser.Scene {
     if (talking() && this.focus?.thing && Math.hypot(p.x - this.focus.thing.x, p.y - this.focus.thing.y) > 60) hideTalk();
     const prev = this.focus?.icon;
     if (!this.fishing.busy) this.focus = this.findFocus();
-    this.interactBtn.classList.toggle('hidden', !this.focus || (this.fishing.busy && this.fishing.state === 'reel'));
+    this.interactBtn.classList.toggle('hidden', !this.focus || chatOpen() || (this.fishing.busy && this.fishing.state === 'reel'));
     if (this.focus && this.focus.icon !== prev) this.interactBtn.querySelector('.bang').innerHTML = iconSvg(this.focus.icon);
     if (!this.fishing.busy) {
       const lab = this.interactBtn.querySelector('.label');

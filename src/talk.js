@@ -1,14 +1,18 @@
 // Speech bubble for anyone who says something short. It sits right over the
 // speaker's head and follows them as they (or the camera) move, with a short
-// tail folded into the edge facing them. The text types out. It closes on a
-// tap, when its time is up, or the moment the speaker can't be found any more
-// (`at` returns null, e.g. the scene was left).
+// tail folded into the edge facing them. The text types out. It closes when its
+// time is up, when the player walks off, or the moment the speaker can't be
+// found any more (`at` returns null, e.g. the scene was left). It never takes
+// taps: the screen under it stays yours (src/speech.css).
 //
 //   showTalk(name, label, line, at, ms, away)
 //   at: { x, y } in screen pixels (the top of the speaker's head), or a
-//       function returning one (or null), called every frame.
+//       function returning one (or null), called every frame. It can also carry
+//       `top` (the highest head to clear, if the player stands above the speaker),
+//       `bottom` (the lowest feet) and `under: true` (put the bubble below both).
 //   away: optional function; when it returns true (the player has walked off) the bubble goes at once.
 import { sfx } from './music.js';
+import './speech.css';
 
 const el = document.getElementById('talk');
 const box = el.querySelector('.talk-box');
@@ -34,16 +38,19 @@ const readAt = () => {
 };
 
 // Where the box goes: above the head when there's room, else below the feet,
-// kept clear of the buttons at the top and bottom of the screen.
+// kept clear of the buttons at the top and bottom of the screen. If the player
+// stands where it would cover them, it goes under the two of them instead.
 function place(a) {
   const vw = window.innerWidth;
   const vh = window.innerHeight;
   const { w, h } = size;
   const left = Math.min(Math.max(a.x - w / 2, 10), vw - w - 10);
   const topLimit = 74; // below the HUD buttons
-  const above = a.y - GAP - TAIL - h;
-  const below = a.y + 46 + TAIL;
-  const useBelow = above < topLimit && below + h < vh - 86;
+  const headTop = a.top ?? a.y;
+  const feet = a.bottom ?? a.y + 46;
+  const above = headTop - GAP - TAIL - h;
+  const below = feet + TAIL;
+  const useBelow = (a.under || above < topLimit) && below + h < vh - 86;
   const top = useBelow ? below : Math.max(above, 8);
   box.style.left = `${left}px`;
   box.style.top = `${top}px`;
@@ -51,13 +58,14 @@ function place(a) {
   const r = left + w;
   const t = top;
   const b = top + h;
-  const tipY = useBelow ? a.y + 46 + 2 : a.y - GAP + 2;
+  const tipY = useBelow ? feet + 2 : headTop - GAP + 2;
   const tx = Math.min(Math.max(a.x, l + 22), r - 22);
   const d = useBelow
     ? `M${l},${t} L${tx - 9},${t} L${a.x},${tipY} L${tx + 9},${t} L${r},${t} L${r},${b} L${l},${b} Z`
     : `M${l},${t} L${r},${t} L${r},${b} L${tx + 9},${b} L${a.x},${tipY} L${tx - 9},${b} L${l},${b} Z`;
   body.setAttribute('d', d);
   shadow.setAttribute('d', d);
+  el.classList.toggle('below', useBelow);
   el.style.transformOrigin = `${a.x}px ${tipY}px`;
 }
 
@@ -117,19 +125,6 @@ function typeOut() {
   }, 1000 / TYPE_CPS);
 }
 
-// finish typing now (a tap on the bubble); a second tap closes it
-function finish() {
-  const s = typed;
-  if (s && s.n < s.line.length) {
-    clearInterval(s.iv);
-    s.n = s.line.length;
-    s.on.textContent = s.line;
-    s.off.textContent = '';
-    return true;
-  }
-  return false;
-}
-
 export function hideTalk() {
   clearTimeout(timer);
   if (typed) clearInterval(typed.iv);
@@ -142,7 +137,3 @@ export function hideTalk() {
 }
 
 export const talking = () => !el.classList.contains('hidden');
-
-el.addEventListener('click', () => {
-  if (!finish()) hideTalk();
-});
