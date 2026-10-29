@@ -148,7 +148,7 @@ Owns: `src/staffmenu.js`, `src/officemenu.js`, `src/office.js`, `src/incomemenu.
 - [x] Break-room upgrade menu (slower mess, guide training, carpenter toolbox); Curator's Office level costs and unlocks now in `src/economy.js` (#126).
 - [ ] Gift shop (merch of your best paintings), food court, kids' discovery room, lecture hall (a famous visitor gives a talk), library and archive where the stored collection lives, coffee shop depth.
 - [x] Income formula numbers in `src/economy.js`; 8-hour cap messaging (welcome-back toast, FULL flag, income-menu note); "Collect all" is now free of ads and keeps a 15% fee (#128).
-- [ ] Security: more camera types, the thief events.
+- [x] Security: four tiers (none, dummy cameras, cameras, alarm) in `src/economy.js`; stopped thieves at camera tiers are caught for a gold bounty (#129).
 - [ ] Late-game sink: frame your own artwork (very expensive).
 - [ ] ON HOLD (needs the user): gems as time (skip construction, "X days of income"), rewarded ads, cosmetics, a seasonal exhibition pass, crates with odds and pity. Rule: **no pay-to-win; never a gem or crate economy as the core.**
 
@@ -186,7 +186,7 @@ Mini-games (Mop Rush, No Flash!, Restoration-as-minigame, Crate Tetris, Hang it 
 - **Review tonight:** the 27 painting drafts (rarity for each, hooks for 4) and which flagged images to replace.
 - Smithsonian (`SI_API_KEY`) and Rijksmuseum (`RIJKS_API_KEY`) keys.
 - Non-square rooms: what shapes, how they join, how they look (blocks Chat 9's first item).
-- West Wing outline; break-room upgrade ideas (defaults in `src/economy.js`: Better mops 90→120/160/220 min for 250/700/1800 gold, Guide training +10%→12/15/20% for 400/1100/2800, Carpenter's toolbox 10/20/30% off rooms for 350/900/2200; office levels 500/2000/8000/30000; collect-all fee 15%); goal pacing and daily goals.
+- West Wing outline; break-room upgrade ideas (defaults in `src/economy.js`: Better mops 90→120/160/220 min for 250/700/1800 gold, Guide training +10%→12/15/20% for 400/1100/2800, Carpenter's toolbox 10/20/30% off rooms for 350/900/2200; office levels 500/2000/8000/30000; collect-all fee 15%; security 150/400/1500, bounty 120); goal pacing and daily goals.
 - Dig spots on Main Island: place them in the builder where you want them.
 - Mini-games and gems / ads: go or no-go?
 - Open design questions: free-roam map or chain of rooms; should paintings come only from expeditions; can you fail an expedition; seasons automatic or chosen; split the shared core now?

@@ -38,7 +38,7 @@ import { ITEMS, loadItems, saveItems, resetItems, footprint, countPlaced } from 
 import { roomDirt, removeDirt, resetDirt, dirtCount, covered, janitors, janitorCost, hireJanitor, resetJanitors, guides, guideBoost, maxGuides, guideCost, hireGuide, upgradeLevel, upgradeValue, upgradeCost, buyUpgrade, hasCarpenter, hireCarpenter, CARPENTER_COST, staffCount } from './staff.js';
 import { openStaffMenu } from './staffmenu.js';
 import { UPGRADES, OFFLINE_CAP_H, COLLECT_ALL_FEE } from './economy.js';
-import { hasCameras, buyCameras, resetSecurity, CAMERA_COST, trackSeen, maybeRob, awayFor } from './security.js';
+import { hasCameras, buyCameras, resetSecurity, CAMERA_COST, trackSeen, maybeRob, awayFor, nextSecurity, securityTier } from './security.js';
 import { officeLevel, setOfficeLevel, resetOffice, perks, itemLevel, LEVELS, MAX_LEVEL } from './office.js';
 import { openOffice } from './officemenu.js';
 import { ask } from './ask.js';
@@ -389,7 +389,13 @@ export class RoomScene extends Phaser.Scene {
       const stolen = maybeRob(this.rooms, /[?&]rob\b/.test(location.search));
       trackSeen();
       if (away > 20 * 60000 && !stolen) this.time.delayedCall(900, () => this.welcomeBack());
-      if (stolen) {
+      if (stolen?.caught) {
+        this.time.delayedCall(900, () => {
+          addCoins(stolen.bounty);
+          sfx('coin');
+          this.toast(`Your security caught a thief overnight! Reward: ${stolen.bounty} gold`);
+        });
+      } else if (stolen) {
         this.time.delayedCall(700, () => {
           this.pause(true);
           sfx('nope');
@@ -1259,7 +1265,7 @@ export class RoomScene extends Phaser.Scene {
       line = `There ${j === 1 ? 'is 1 of us' : `are ${j} of us`}. One janitor per room keeps the whole place spotless.`;
     }
     if (!n.staff && Math.random() < 0.3) line = this.contextLine() || line;
-    if (n.kind === 'guard' && !hasCameras()) return this.offerCameras(n, line);
+    if (n.kind === 'guard' && nextSecurity()) return this.offerCameras(n, line);
     n.talking = true;
     n.target = null;
     n.path = null;
@@ -1293,14 +1299,15 @@ export class RoomScene extends Phaser.Scene {
     this.faceSprite(n.s, n.prefix, this.player.x - n.s.x, this.player.y - n.s.y);
     sfx('talk');
     this.pause(true);
-    const price = FREE ? `Free while testing (${CAMERA_COST} gold).` : `${CAMERA_COST} gold.`;
-    ask(`${n.name} · Security`, `“${line} Want me to put up security cameras? Thieves hate cameras.” ${price}`, 'Install cameras', (yes) => {
+    const next = nextSecurity();
+    const price = FREE ? `Free while testing (${next.cost} gold).` : `${next.cost} gold.`;
+    ask(`${n.name} · Security`, `“${line} ${securityTier() ? 'Want to upgrade?' : 'Thieves are a real risk when you’re away.'} ${next.name}: ${next.blurb}” ${price}`, `Buy ${next.name.toLowerCase()}`, (yes) => {
       this.pause(false);
       if (!yes) return;
-      if (!spend(CAMERA_COST)) return this.toast(`Need ${CAMERA_COST} gold`);
+      if (!spend(next.cost)) return this.toast(`Need ${next.cost} gold`);
       buyCameras();
       sfx('build');
-      this.toast('Cameras installed: no more robberies');
+      this.toast(`${next.name} installed`);
       this.updateHud();
     });
   }
