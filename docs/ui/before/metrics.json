@@ -1,0 +1,403 @@
+{
+ "01-world": {
+  "smallTargets": 1,
+  "smallList": [
+   "#collect-all \"Collect all ▶\" 130x31"
+  ],
+  "minFont": 11,
+  "tinyFonts": [
+   "11px"
+  ],
+  "overflow": [],
+  "badText": false,
+  "docOverflow": false
+ },
+ "02-hud-income": {
+  "smallTargets": 2,
+  "smallList": [
+   "#collect-all \"Collect all ▶\" 130x31",
+   "income-close \"✕\" 40x40"
+  ],
+  "minFont": 11,
+  "tinyFonts": [
+   "11px"
+  ],
+  "overflow": [],
+  "badText": false,
+  "docOverflow": false
+ },
+ "03-journal-goals": {
+  "smallTargets": 4,
+  "smallList": [
+   "#collect-all \"Collect all ▶\" 130x31",
+   "journal-close \"✕\" 40x40",
+   "quest-reward \"50\" 46x27",
+   "quest-reward \"100\" 53x27"
+  ],
+  "minFont": 11,
+  "tinyFonts": [
+   "11px"
+  ],
+  "overflow": [],
+  "badText": false,
+  "docOverflow": false
+ },
+ "03-journal-paintings": {
+  "smallTargets": 2,
+  "smallList": [
+   "#collect-all \"Collect all ▶\" 130x31",
+   "journal-close \"✕\" 40x40"
+  ],
+  "minFont": 11,
+  "tinyFonts": [
+   "11px"
+  ],
+  "overflow": [],
+  "badText": false,
+  "docOverflow": false
+ },
+ "04-toolkit": {
+  "smallTargets": 12,
+  "smallList": [
+   "#collect-all \"Collect all ▶\" 130x31",
+   "toolkit-done \"Done\" 66x37",
+   "on \"Seating\" 112x40",
+   "button \"Plants\" 112x40",
+   "button \"Lights\" 112x40",
+   "button \"Sculpture\" 112x40",
+   "button \"Relics\" 112x40",
+   "button \"Science\" 112x40",
+   "button \"Display\" 112x40",
+   "button \"Features\" 112x40",
+   "button \"Services\" 112x40",
+   "button \"Seasonal\" 352x40"
+  ],
+  "minFont": 11,
+  "tinyFonts": [
+   "11px"
+  ],
+  "overflow": [],
+  "badText": false,
+  "docOverflow": false
+ },
+ "05-customize-room": {
+  "smallTargets": 4,
+  "smallList": [
+   "#collect-all \"Collect all ▶\" 130x31",
+   "decor-close \"✕\" 40x40",
+   "room-name \"\" 352x40",
+   "room-name \"\" 352x40"
+  ],
+  "minFont": 11,
+  "tinyFonts": [
+   "11px"
+  ],
+  "overflow": [],
+  "badText": false,
+  "docOverflow": false
+ },
+ "06-customize-rooms": {
+  "smallTargets": 2,
+  "smallList": [
+   "#collect-all \"Collect all ▶\" 130x31",
+   "decor-close \"✕\" 40x40"
+  ],
+  "minFont": 11,
+  "tinyFonts": [
+   "11px"
+  ],
+  "overflow": [],
+  "badText": false,
+  "docOverflow": false
+ },
+ "07-customize-character": {
+  "smallTargets": 2,
+  "smallList": [
+   "#collect-all \"Collect all ▶\" 130x31",
+   "decor-close \"✕\" 40x40"
+  ],
+  "minFont": 11,
+  "tinyFonts": [
+   "11px"
+  ],
+  "overflow": [
+   "strip 650>352"
+  ],
+  "badText": false,
+  "docOverflow": false
+ },
+ "08-settings": {
+  "smallTargets": 4,
+  "smallList": [
+   "#collect-all \"Collect all ▶\" 130x31",
+   "settings-close \"✕\" 40x40",
+   "input \"\" 290x28",
+   "input \"\" 290x28"
+  ],
+  "minFont": 11,
+  "tinyFonts": [
+   "11px"
+  ],
+  "overflow": [],
+  "badText": false,
+  "docOverflow": false
+ },
+ "09-build-room": {
+  "smallTargets": 1,
+  "smallList": [
+   "#collect-all \"Collect all ▶\" 130x31"
+  ],
+  "minFont": 11,
+  "tinyFonts": [
+   "11px"
+  ],
+  "overflow": [],
+  "badText": false,
+  "docOverflow": false
+ },
+ "10-wall-spot": {
+  "smallTargets": 10,
+  "smallList": [
+   "#collect-all \"Collect all ▶\" 130x31",
+   "slot-close \"✕\" 40x40",
+   "room-name \"\" 352x40",
+   "on \"All\" 82x36",
+   "button \"Not hung\" 82x36",
+   "button \"Renaissance\" 82x36",
+   "button \"Baroque\" 82x36",
+   "button \"1700s–1850s\" 112x36",
+   "button \"Impressionist\" 112x36",
+   "button \"Modern\" 112x36"
+  ],
+  "minFont": 11,
+  "tinyFonts": [
+   "11px"
+  ],
+  "overflow": [],
+  "badText": false,
+  "docOverflow": false
+ },
+ "11-viewer": {
+  "smallTargets": 7,
+  "smallList": [
+   "#collect-all \"Collect all ▶\" 130x31",
+   "viewer-close \"✕\" 40x40",
+   "button \"☆\" 33x28",
+   "button \"☆\" 33x28",
+   "button \"☆\" 33x28",
+   "button \"☆\" 33x28",
+   "button \"☆\" 33x28"
+  ],
+  "minFont": 11,
+  "tinyFonts": [
+   "11px"
+  ],
+  "overflow": [
+   "wall-track 780>390",
+   "slide 402>390"
+  ],
+  "badText": false,
+  "docOverflow": false
+ },
+ "12-staff-board": {
+  "smallTargets": 7,
+  "smallList": [
+   "#collect-all \"Collect all ▶\" 130x31",
+   "staff-close \"✕\" 40x40",
+   "pixel-btn \"Hire · Free (300 g\" 184x36",
+   "pixel-btn \"Hire · Free (300 g\" 184x36",
+   "pixel-btn \"Build a coffee cou\" 184x36",
+   "pixel-btn \"Upgrade · Free (25\" 206x36",
+   "pixel-btn \"Hire a guide\" 112x36"
+  ],
+  "minFont": 11,
+  "tinyFonts": [
+   "11px"
+  ],
+  "overflow": [],
+  "badText": false,
+  "docOverflow": false
+ },
+ "13-office": {
+  "smallTargets": 2,
+  "smallList": [
+   "#collect-all \"Collect all ▶\" 130x31",
+   "office-close \"✕\" 40x40"
+  ],
+  "minFont": 11,
+  "tinyFonts": [
+   "11px"
+  ],
+  "overflow": [],
+  "badText": false,
+  "docOverflow": false
+ },
+ "14-ask-unlock": {
+  "smallTargets": 1,
+  "smallList": [
+   "#collect-all \"Collect all ▶\" 130x31"
+  ],
+  "minFont": 11,
+  "tinyFonts": [
+   "11px"
+  ],
+  "overflow": [],
+  "badText": false,
+  "docOverflow": false
+ },
+ "15-daily": {
+  "smallTargets": 2,
+  "smallList": [
+   "#collect-all \"Collect all ▶\" 130x31",
+   "daily-close \"✕\" 26x24"
+  ],
+  "minFont": 11,
+  "tinyFonts": [
+   "11px"
+  ],
+  "overflow": [],
+  "badText": false,
+  "docOverflow": false
+ },
+ "16-share": {
+  "smallTargets": 3,
+  "smallList": [
+   "#collect-all \"Collect all ▶\" 130x31",
+   "share-close \"✕\" 26x24",
+   "room-name \"\" 324x40"
+  ],
+  "minFont": 11,
+  "tinyFonts": [
+   "11px"
+  ],
+  "overflow": [],
+  "badText": false,
+  "docOverflow": false
+ },
+ "17-conversation": {
+  "smallTargets": 1,
+  "smallList": [
+   "#collect-all \"Collect all ▶\" 130x31"
+  ],
+  "minFont": 11,
+  "tinyFonts": [
+   "11px"
+  ],
+  "overflow": [],
+  "badText": false,
+  "docOverflow": false
+ },
+ "18-staff-bubble": {
+  "smallTargets": 1,
+  "smallList": [
+   "#collect-all \"Collect all ▶\" 130x31"
+  ],
+  "minFont": 11,
+  "tinyFonts": [
+   "11px"
+  ],
+  "overflow": [],
+  "badText": false,
+  "docOverflow": false
+ },
+ "19-toast": {
+  "smallTargets": 1,
+  "smallList": [
+   "#collect-all \"Collect all ▶\" 130x31"
+  ],
+  "minFont": 11,
+  "tinyFonts": [
+   "11px"
+  ],
+  "overflow": [],
+  "badText": false,
+  "docOverflow": false
+ },
+ "20-island-world": {
+  "smallTargets": 0,
+  "smallList": [],
+  "minFont": 11,
+  "tinyFonts": [
+   "11px"
+  ],
+  "overflow": [],
+  "badText": false,
+  "docOverflow": false
+ },
+ "21-island-sail": {
+  "smallTargets": 5,
+  "smallList": [
+   "pixel-btn \"Main IslandHome: t\" 352x40",
+   "pixel-btn \"The far isleAn isl\" 352x40",
+   "pixel-btn \"Skull IsleExpediti\" 352x40",
+   "pixel-btn \"Letters & leads1 f\" 352x40",
+   "pixel-btn \"Stay here\" 352x23"
+  ],
+  "minFont": 11,
+  "tinyFonts": [
+   "11px"
+  ],
+  "overflow": [],
+  "badText": false,
+  "docOverflow": false
+ },
+ "22-dig": {
+  "smallTargets": 4,
+  "smallList": [
+   "on \"Brush\" 55x32",
+   "button \"Trowel\" 61x32",
+   "button \"Pick\" 47x32",
+   "dig-close \"Leave it\" 63x21"
+  ],
+  "minFont": 11,
+  "tinyFonts": [
+   "11px"
+  ],
+  "overflow": [],
+  "badText": false,
+  "docOverflow": false
+ },
+ "23-dig-fossil": {
+  "smallTargets": 4,
+  "smallList": [
+   "on \"Brush\" 55x32",
+   "button \"Trowel\" 61x32",
+   "button \"Pick\" 47x32",
+   "dig-close \"Leave it\" 63x21"
+  ],
+  "minFont": 11,
+  "tinyFonts": [
+   "11px"
+  ],
+  "overflow": [],
+  "badText": false,
+  "docOverflow": false
+ },
+ "30-builder": {
+  "smallTargets": 16,
+  "smallList": [
+   "#menu-btn \"☰\" 42x38",
+   "#undo \"↶\" 42x38",
+   "#redo \"↷\" 42x38",
+   "on \"Paint\" 50x38",
+   "button \"Erase\" 50x38",
+   "button \"Fill\" 50x38",
+   "button \"Move\" 50x38",
+   "button \"Pick\" 50x38",
+   "button \"Area\" 50x38",
+   "button \"Pan\" 50x38",
+   "#sheet-handle \"Show or hide the p\" 390x18",
+   "#chosen-fav \"☆\" 47x42"
+  ],
+  "minFont": 11,
+  "tinyFonts": [
+   "11px",
+   "11.6667px"
+  ],
+  "overflow": [
+   "small 251>156"
+  ],
+  "badText": false,
+  "docOverflow": false
+ }
+}
