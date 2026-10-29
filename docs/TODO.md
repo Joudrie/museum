@@ -49,7 +49,7 @@ Owns: `src/builder/`, `builder.html`, `public/builder/`, `tools/build_palette.py
 - [ ] Never lose work: keep the autosave and vault paths intact; test crash and reload.
 
 ## CHAT 3: Quality, performance and polish
-Owns: `tests/`, `.github/`, `vite.config.js`, `src/settings*.js`, `src/ui.js`. Claim: `open`
+Owns: `tests/`, `.github/`, `vite.config.js`, `src/settings*.js`, `src/ui.js`. Claim: `claimed: 2026-10-29`
 - [ ] **Stabilise the flaky tests** (playtest, smoke "cottage door"). Find the real race; don't just retry.
 - [ ] Phone performance: measure FPS on huge islands, many NPCs and lighting (today's numbers are the busiest room only). Set budgets and fix.
 - [ ] Tests for dig, fossils, turn families and the content pipeline; CI that runs content, collections and gaps on every PR.
@@ -80,7 +80,7 @@ Owns: `src/showcase.js`, `src/viewer.js`, `src/collections/render.js`, new `src/
 - [ ] Rope barriers, stanchions and signage as placeable decor.
 
 ## CHAT 6: Digging v2 and puzzle mechanics
-Owns: `src/dig.js`, `src/puzzles*.js`, `src/collections/data/{minerals,fossils}.js`. Claim: `open`
+Owns: `src/dig.js`, `src/puzzles*.js`, `src/collections/data/{minerals,fossils}.js`. Claim: `claimed: 2026-10-29`
 - [ ] More finds as data collections: pottery shards, coins, arrowheads, shells, meteorites, amber.
 - [ ] Dig tools (brush, trowel, pick) that change speed and what turns up; a bone that needs several spots to complete.
 - [ ] Bigger dig sites: a cliff face or trench worked across several tiles; a dig-site room sandbox.
@@ -90,7 +90,7 @@ Owns: `src/dig.js`, `src/puzzles*.js`, `src/collections/data/{minerals,fossils}.
 - [ ] Finds arrive dirty where Chat 4 expects them (`dirty: true` on a stack).
 
 ## CHAT 7: Expeditions, leads and expedition islands
-Owns: new `src/expedition*.js`, `src/leads.js`, `src/maps/` (new islands). Claim: `open`
+Owns: new `src/expedition*.js`, `src/leads.js`, `src/maps/` (new islands). Claim: `claimed: 2026-10-29`
 - [ ] **Leads:** a letter, a torn map, a pirate's note, a rumour from a famous visitor sends you to an island.
 - [ ] Boat flow to expedition islands (the boat menu lists every island); a short boat scene.
 - [ ] Levels as playable island maps: pirate island (jungle maze, traps, captain's map, chest), shipwreck dive (water-damaged crates), desert tomb (sliding stones), dinosaur badlands (fossil cliff), lost temple (plates, hidden rooms), heist hideout (stealth), frozen north (ice cave, mammoth).
