@@ -1606,7 +1606,7 @@ export class IslandScene extends Phaser.Scene {
 
   interact() {
     const f = this.focus;
-    if (!f || this.leaving) return;
+    if (!f || this.leaving || this.paused) return; // (a conversation, a panel or a hop into the boat is under way)
     if (this.fishing.busy) return this.fishing.tap();
     if (f.skiff) return this.boat.boardSkiff();
     if (f.boat) return this.sail();
