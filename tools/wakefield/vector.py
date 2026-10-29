@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Wakefield, Massachusetts as exact shapes, not tiles.
 
-  python3 tools/wakefield_vector.py --fetch DIR    download the OpenStreetMap data into DIR (once)
-  python3 tools/wakefield_vector.py DIR            build public/maps/wakefield.vec.json from DIR
+  python3 tools/wakefield/vector.py --fetch DIR    download the OpenStreetMap data into DIR (once)
+  python3 tools/wakefield/vector.py DIR            build public/wakefield/wakefield.vec.json from DIR
 
-The game draws this file (src/WakefieldScene.js): the town line, lakes and rivers, every road
+The game draws this file (src/wakefield/WakefieldScene.js): the town line, lakes and rivers, every road
 as a line of its own width, the railway, and every building as a polygon. Nothing snaps to a grid,
 so a road at 45 degrees is a straight 45 degree line. Scale: 8 px to the metre, so a 32 px tile is
 4 m and an ordinary street (7 m) is two tiles wide, like the character expects.
@@ -309,8 +309,8 @@ if __name__ == '__main__':
     if len(sys.argv) == 3 and sys.argv[1] == '--fetch':
         fetch(sys.argv[2])
     elif len(sys.argv) == 2:
-        os.makedirs('public/maps', exist_ok=True)
-        out = 'public/maps/wakefield.vec.json'
+        os.makedirs('public/wakefield', exist_ok=True)
+        out = 'public/wakefield/wakefield.vec.json'
         json.dump(build(sys.argv[1]), open(out, 'w'), separators=(',', ':'))
         print('wrote', out, os.path.getsize(out) // 1024, 'KB')
     else:

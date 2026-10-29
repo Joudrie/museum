@@ -16,7 +16,6 @@ const ctx = canvas.getContext('2d');
 const STORE = 'curation.mapbuilder.maps';
 const CURRENT = 'curation.mapbuilder.current';
 const VIEW = 'curation.mapbuilder.view';
-const OVERLAY = 'curation.mapbuilder.overlay';
 const MAX = 700; // maps can be big; the New map boxes stay at 300
 const C = 8; // cells per cached ground chunk
 const MATS = [
@@ -403,13 +402,6 @@ function render() {
     drawObj(ctx, o);
   });
   if (ghost) drawObj(ctx, ghost, 0.7);
-  if (overlay.on && overlay.img?.complete && overlay.img.naturalWidth) {
-    ctx.imageSmoothingEnabled = true;
-    ctx.globalAlpha = overlay.alpha;
-    ctx.drawImage(overlay.img, 0, 0, map.w * T, map.h * T);
-    ctx.globalAlpha = 1;
-    ctx.imageSmoothingEnabled = false;
-  }
   // grid
   if ($('grid-toggle').checked && view.z * T >= 14) {
     ctx.strokeStyle = 'rgba(255,255,255,0.12)';
@@ -605,7 +597,7 @@ function serialize() {
     Object.assign(tiles, map.keep?.tiles);
   }
   const objects = sorted().map((o) => ({ ref: o.ref, x: o.x, y: o.y, ...(o.flip ? { flip: true } : {}) }));
-  return { format: 'curation-map', version: 2, tile: T, name: map.name, kind: map.kind, w: map.w, h: map.h, corners: map.kind === 'island' ? rows : [], tiles, ...(tileRows ? { tileRows } : {}), objects: objects.concat(map.keep?.objects || []), ...(map.overlay ? { overlay: map.overlay } : {}) };
+  return { format: 'curation-map', version: 2, tile: T, name: map.name, kind: map.kind, w: map.w, h: map.h, corners: map.kind === 'island' ? rows : [], tiles, ...(tileRows ? { tileRows } : {}), objects: objects.concat(map.keep?.objects || []) };
 }
 function deserialize(d) {
   d = withTiles(d);
@@ -622,7 +614,6 @@ function deserialize(d) {
   const m = blankMap(d.kind === 'room' ? 'room' : 'island', d.w, d.h);
   m.tiles.fill(null);
   m.name = String(d.name || m.name).slice(0, 60);
-  if (d.overlay?.src) m.overlay = d.overlay;
   (d.corners || []).forEach((row, y) => [...String(row)].forEach((ch, x) => x <= m.w && y <= m.h && (m.corners[y * (m.w + 1) + x] = Number(ch) || 0)));
   // pieces that didn't load (a bad connection) are kept as they are, not dropped
   m.keep = { tiles: {}, objects: [] };
@@ -687,7 +678,7 @@ function loadMap(m, keepView) {
   $('map-name').textContent = map.name;
   rebuildAll();
   if (!keepView) fit();
-  syncOverlay();
+  draw();
 }
 function undo() {
   if (!undoStack.length) return;
@@ -1161,45 +1152,6 @@ function toast(text) {
   toastTimer = setTimeout(() => (el.hidden = true), 2600);
   return false;
 }
-
-// ---------- the real map under a map (Wakefield): a picture that lines up with the grid ----------
-const overlay = { on: false, alpha: 0.55, img: null, src: '' };
-try {
-  Object.assign(overlay, JSON.parse(localStorage.getItem(OVERLAY) || '{}'));
-} catch {
-  // fine
-}
-function syncOverlay() {
-  const has = !!map?.overlay?.src;
-  $('overlay-ctl').hidden = !has;
-  if (has && overlay.src !== map.overlay.src) {
-    overlay.src = map.overlay.src;
-    overlay.img = new Image();
-    overlay.img.onload = draw;
-    overlay.img.src = map.overlay.src;
-  }
-  $('overlay-btn').setAttribute('aria-pressed', String(overlay.on));
-  $('overlay-alpha').hidden = !overlay.on;
-  $('overlay-alpha').value = Math.round(overlay.alpha * 100);
-  draw();
-}
-function saveOverlay() {
-  try {
-    localStorage.setItem(OVERLAY, JSON.stringify({ on: overlay.on, alpha: overlay.alpha }));
-  } catch {
-    // fine
-  }
-}
-$('overlay-btn').onclick = () => {
-  overlay.on = !overlay.on;
-  saveOverlay();
-  syncOverlay();
-};
-$('overlay-alpha').oninput = (e) => {
-  overlay.alpha = Number(e.target.value) / 100;
-  saveOverlay();
-  draw();
-};
 
 async function boot() {
   await loadPieces();

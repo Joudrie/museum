@@ -120,40 +120,11 @@ Scenes (`src/main.js`):
   49 paintings** (no network here); `content/batches/first-batch.json` (12 works, 9+ regions) is waiting to be built.
 - Test: `node tests/content.cjs` (no browser, no network).
 
-### Wakefield, MA (the user's hometown, from real map data)
-- **The user's rules (CLAUDE.md has them):** the real town as exact shapes with **no grid**, roads **two tiles wide** at least
-  (the character sets the scale), every road in, dirt for roads, brick for buildings, diagonal roads must be straight lines. The
-  first two attempts (22 m then 12 m **tile** maps, with cut border tiles) were rejected and scrapped: tiles can't make straight
-  diagonals or true proportions.
-- `tools/wakefield_vector.py` turns OpenStreetMap data into `public/maps/wakefield.vec.json` (700 KB): town line, lakes, rivers,
-  rail, 1,460 roads (only driveways, parking aisles and tunnels left out), 11,218 buildings, whole pixels at **8 px to the metre**
-  (a 32 px tile is 4 m), delta-encoded. `--fetch DIR` downloads (the `overpass.openstreetmap.fr` mirror works from the sandbox).
-- `src/WakefieldScene.js` extends IslandScene and overrides only what the tile grid decided. Chunks of 16x16 tiles are painted
-  on demand near the player (like the islands): sea, a beach along the town line, grass, lakes and rivers, rail, roads as strokes
-  of their own width (dirt art as the fill), buildings as brick polygons. Fills are anchored to the town so chunks never show seams.
-  Walking uses the exact shapes: you can walk on roads, grass and buildings; the sea and water block you, except where a road
-  crosses (a bridge). Fishing, weather and the boat work as on islands.
-- **Street names:** `labels` in the data (2,628 names on 571 streets, placed along straight stretches about every 70 m, upright)
-  are painted into the ground chunks; the **Aa** button toggles them (on by default, remembered). Two tiny streets are too short for a name.
-- **Real-map overlay:** the **🗺** button cycles off / half / full. It loads OpenStreetMap's own zoom-19 pictures around you
-  (tile.openstreetmap.org, credit shown) and places each by its coordinates, over the ground and under the character.
-- **Accuracy (measured, not assumed):** my building shapes were laid over the real map's own pictures at the centre and all four
-  far edges of town: 85-91% overlap, best-fit offset at most 0.2 m (one real-map pixel) everywhere, so no drift or scale error.
-- **Speed:** `speedBoost` 3 on the Wakefield scene (`SPEED_UP` in `src/WakefieldScene.js`); the island scene reads `this.speedBoost`.
-- Start: `index.html?wakefield`, or sail there from any rowboat (the boat lists "Wakefield, MA"). You start on a road in the middle.
-- Next (not done): landmarks and place names (schools, parks, lakes), a way to edit shapes by hand, trees, a faster way
-  to cross 6 km (it is about 5 minutes end to end on foot), cutting the museum doors in.
-- Generic things built along the way and kept: the builder cap is 700 (New map boxes stay 300), big builder maps save their tiles
-  packed (`src/mapformat.js`), the island scene streams ground chunks around the player, and a map can carry an `overlay` picture
-  (builder 🗺 button, game 🗺 button). No map uses the overlay now.
-
-### Digging (`src/dig.js`): the first dig site
-- A **Dig spot** (builder → Props, `t:dig_spot`) is a dirt mound. Walk up, tap **Dig**, drag a finger to brush the dirt off; at 70% clear
-  the mineral underneath is revealed and goes into the codex (Journal → Minerals). Rarer minerals turn up less often.
-- A spot rests **10 minutes** after a dig (`curation.digs`, keyed by map and tile) and shows as a flattened patch (`dig_spot@dug`, hidden from the builder).
-- Island One has two spots by the cliff (`addDig` in `IslandScene`). Main Island is the user's own map, so none were added there: place spots in the builder.
-- Not built yet: bones and fossils (same overlay, a different entry list), dig tools, excavation levels. The overlay takes an `entry`, so another collection plugs in.
-- Test by hand: `__game.scene.start('island', { map: 'one' })`, stand by a spot, `__game.scene.getScene('island').interact()`.
+### Wakefield, MA is NOT part of the game
+A separate personal project (the user's hometown, for friends) that only shares the engine. Its page is `wakefield.html`, its code
+`src/wakefield/`, its notes `docs/WAKEFIELD.md`. Never add it to the game. Engine improvements made along the way and kept in the
+game: the builder cap is 700 (New map boxes stay 300), big builder maps save their tiles packed (`src/mapformat.js`), and the
+island scene streams ground chunks around the player.
 
 ### Gotchas we hit
 - **Phaser reuses the previous scene data** if you call `scene.start('island')` with no data.

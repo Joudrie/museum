@@ -29,7 +29,6 @@ import { PEOPLE, ANIMALS } from './landmarks.js';
 import { makePet } from './pets.js';
 import { critterTextures } from './critters.js';
 import { openSail, builderIslands } from './sailmenu.js';
-import { loadWakefield } from './wakefieldData.js';
 import { visitorLook, KINDS } from './RoomScene.js';
 import { PERSONALITIES, QUIPS } from './lines.js';
 
@@ -82,11 +81,10 @@ const vnoise = (x, y, size, seed) => {
 const snowNoise = (x, y) => 0.6 * vnoise(x, y, 40, 7) + 0.3 * vnoise(x, y, 12, 8) + 0.1 * hash(x, y, 9);
 
 let TILES = null; // built once, shared
-export const islandTiles = () => TILES; // (the Wakefield scene paints with the same art)
 
 export class IslandScene extends Phaser.Scene {
-  constructor(key = 'island') {
-    super(key);
+  constructor() {
+    super('island');
   }
 
   init(data) {
@@ -145,7 +143,6 @@ export class IslandScene extends Phaser.Scene {
     const start = this.map ? (this.door && this.spawnAt !== 'dock' ? { x: this.door.x, y: this.door.y + 22 } : this.landing()) : this.spawnAt === 'cottage' ? { x: COTTAGE.x, y: COTTAGE.y + 16 } : this.spawnAt === 'dock' ? { x: 12.5 * T, y: 38.6 * T } : { x: DOOR.x, y: DOOR.y + 22 };
     this.player = this.add.sprite(start.x, start.y, 'player_down').setOrigin(0.5, 1).setScale(PLAYER_SCALE);
     this.shadow = this.add.ellipse(0, 0, 18, 6, 0x000000, 0.25).setDepth(0.5);
-    this.setupOverlay();
     if (ch.pet && ch.pet !== 'none') this.pet = new Pet(this, ch.pet, ch.petColor, this.player);
     this.doorLock = this.spawnAt !== 'cottage' && this.spawnAt !== 'dock'; // don't walk straight back in
     this.cottageLock = this.spawnAt === 'cottage';
@@ -1073,48 +1070,10 @@ export class IslandScene extends Phaser.Scene {
 
   // the pond's extent (for ducks and dragonflies), or null
   pondRect() {
-    if (this.map?.overlay) return null; // a real place: its lakes are many and far apart
     if (!this.map) return { x: 5 * T, y: 16 * T, w: 5 * T, h: 5 * T };
     let x0 = 1e9, y0 = 1e9, x1 = -1, y1 = -1;
     this.corners.forEach((row, y) => row.forEach((m, x) => m === 3 && ((x0 = Math.min(x0, x)), (x1 = Math.max(x1, x)), (y0 = Math.min(y0, y)), (y1 = Math.max(y1, y)))));
     return x1 - x0 >= 3 && y1 - y0 >= 3 ? { x: x0 * T, y: y0 * T, w: (x1 - x0) * T, h: (y1 - y0) * T } : null;
-  }
-
-  // a real map that lines up with the tiles (Wakefield): one button cycles
-  // it off, faint, strong, so you can see where the streets really run
-  setupOverlay() {
-    this.overlayBtn?.remove();
-    this.overlayBtn = this.overlayImg = null;
-    const src = this.map?.overlay?.src;
-    if (!src) return;
-    const btn = document.createElement('button');
-    btn.id = 'map-overlay-btn';
-    btn.className = 'pixel-btn';
-    btn.textContent = '🗺';
-    btn.setAttribute('aria-label', 'Show the real map');
-    document.body.appendChild(btn);
-    this.overlayBtn = btn;
-    this.events.once('shutdown', () => {
-      btn.remove();
-      this.overlayBtn = this.overlayImg = null;
-    });
-    const img = new Image();
-    img.onload = () => {
-      if (!this.sys.isActive() || this.overlayBtn !== btn) return;
-      if (!this.textures.exists('map-overlay')) this.textures.addImage('map-overlay', img);
-      this.textures.get('map-overlay').setFilter(Phaser.Textures.FilterMode.LINEAR); // a picture, not pixel art
-      this.overlayImg = this.add.image(0, 0, 'map-overlay').setOrigin(0).setDisplaySize(W * T, H * T).setDepth(50000).setVisible(false);
-    };
-    img.src = src;
-    const levels = [0, 0.45, 0.85];
-    let level = 0;
-    btn.onclick = () => {
-      if (!this.overlayImg) return this.toast('The map is still loading…');
-      level = (level + 1) % levels.length;
-      this.overlayImg.setVisible(level > 0).setAlpha(levels[level] || 0);
-      btn.classList.toggle('on', level > 0);
-      this.toast(level ? `Real map · ${level === 1 ? 'faint' : 'strong'} · tap again to ${level === 1 ? 'strengthen' : 'hide'}` : 'Real map hidden');
-    };
   }
 
   // the boat: pick an island, then sail
@@ -1126,8 +1085,7 @@ export class IslandScene extends Phaser.Scene {
     if (this.map) options.push({ label: 'Island One', sub: 'The first island (museum shut)', go: { map: 'one', spawn: 'dock' } });
     Object.entries(MAPS).forEach(([id, m]) => id !== 'main' && id !== this.mapId && options.push({ label: m.name === 'Untitled island' ? 'The far isle' : m.name, sub: 'An island to explore', go: { map: id } }));
     const mine = builderIslands();
-    mine.forEach((m) => m.name !== here && options.push({ label: m.name, sub: m.overlay ? `A real place · ${m.w}×${m.h}` : `Your island · ${m.w}×${m.h}`, go: { mapData: m } }));
-    if (this.mapId !== 'wakefield') options.push({ label: 'Wakefield, MA', sub: 'The real town · every street', go: { vecUrl: './maps/wakefield.vec.json' } });
+    mine.forEach((m) => m.name !== here && options.push({ label: m.name, sub: `Your island · ${m.w}×${m.h}`, go: { mapData: m } }));
     this.paused = true;
     openSail(options, (pick) => {
       this.paused = false;
@@ -1142,16 +1100,7 @@ export class IslandScene extends Phaser.Scene {
     this.interactBtn.classList.add('hidden');
     sfx('door');
     this.cameras.main.fadeOut(400, 20, 40, 70);
-    this.cameras.main.once('camerafadeoutcomplete', () => {
-      if (!go.vecUrl) return this.scene.start('island', go);
-      loadWakefield(go.vecUrl)
-        .then((vec) => this.scene.start('wakefield', { vec }))
-        .catch(() => {
-          this.leaving = false;
-          this.cameras.main.fadeIn(300);
-          this.toast('Could not reach that place. Try again.');
-        });
-    });
+    this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start('island', go));
   }
 
   findFocus() {
@@ -1334,8 +1283,8 @@ export class IslandScene extends Phaser.Scene {
     const len = Math.hypot(vx, vy);
     const p = this.player;
     if (len) {
-      const nx = p.x + (vx / len) * SPEED * (this.speedBoost || 1) * pace * dt;
-      const ny = p.y + (vy / len) * SPEED * (this.speedBoost || 1) * pace * dt;
+      const nx = p.x + (vx / len) * SPEED * pace * dt;
+      const ny = p.y + (vy / len) * SPEED * pace * dt;
       if (this.free(nx, p.y)) p.x = nx;
       if (this.free(p.x, ny)) p.y = ny;
       if (Math.abs(vx) > Math.abs(vy)) {
@@ -1346,7 +1295,7 @@ export class IslandScene extends Phaser.Scene {
         this.facing = vy < 0 ? 'up' : 'down';
       }
     }
-    if (animateWalker(this, p, len > 0, dt, (0.8 + pace * 0.5) * (this.stride || 1))) this.onStep(p, pace);
+    if (animateWalker(this, p, len > 0, dt, 0.8 + pace * 0.5)) this.onStep(p, pace);
     this.pet?.update(dt);
     this.critters.update(dt, p);
     this.ambient.update(dt, p);
