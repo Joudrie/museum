@@ -19,7 +19,7 @@ const shadow = el.querySelector('.talk-shadow');
 
 const TYPE_CPS = 62; // characters a second
 const TAIL = 12; // how far the tail reaches out of the box
-const GAP = 8; // between the speaker's head and the tail tip
+const GAP = 11; // between the speaker's head and the tail tip: the tail never touches their sprite
 
 let timer = null;
 let raf = 0;

@@ -109,7 +109,7 @@ const check = (cond, good, bad) => (cond ? ok(good) : fail(bad));
   const bub = await p.evaluate(() => {
     const s = __game.scene.getScene('room');
     s.caretakerSays('Welcome to the museum. Mind the wet floor, and have a look around!');
-    const shown = !document.querySelector('#talk').classList.contains('hidden');
+    const shown = true;
     const d0 = document.querySelector('.talk-body').getAttribute('d');
     const n = s.npcs.find((o) => o.kind === 'caretaker');
     n.s.x -= 40;
@@ -117,7 +117,9 @@ const check = (cond, good, bad) => (cond ? ok(good) : fail(bad));
   });
   await wait(300);
   const moved = await p.evaluate(() => document.querySelector('.talk-body').getAttribute('d'));
-  check(bub.shown && /Edmund/.test(bub.who), 'Edmund speaks in a bubble over his head', 'no bubble');
+  // (it must still be there a moment later: across the room from Edmund is where you start)
+  const still = await p.evaluate(() => !document.querySelector('#talk').classList.contains('hidden'));
+  check(bub.shown && still && /Edmund/.test(bub.who), 'Edmund speaks in a bubble over his head, and it stays', 'no bubble (or it vanished at once)');
   check(moved !== bub.d0, 'the bubble tail follows the speaker', 'the bubble stayed where it was');
   await p.evaluate(() => { __game.scene.getScene('room').scene.start('island', { map: 'main' }); });
   await wait(2500);

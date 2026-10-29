@@ -1520,8 +1520,12 @@ export class RoomScene extends Phaser.Scene {
   }
 
   // True once the player has walked away from `sprite` (a speech bubble goes at that moment).
+  // (Edmund's welcome starts from across the room, so "away" is measured from how far you were
+  // when it began: another 50 px further off, or past `r` if you were close.)
   walkedAway(sprite, r = 70) {
-    return () => Math.hypot(this.player.x - sprite.x, this.player.y - sprite.y) > r;
+    const dist = () => Math.hypot(this.player.x - sprite.x, this.player.y - sprite.y);
+    const limit = Math.max(r, dist() + 50);
+    return () => dist() > limit;
   }
 
   // Where a point in the room is on the page (for speech bubbles).
