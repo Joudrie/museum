@@ -2423,3 +2423,10 @@ body.outside #hud {
   font-size: 13px;
   line-height: 1.35;
 }
+
+.income-note {
+  margin: 10px 4px 0;
+  font-size: 12px;
+  opacity: 0.75;
+  line-height: 1.35;
+}

@@ -48,11 +48,22 @@ export const UPGRADES = {
 
 // Income: gold piles up for at most this many hours before you collect.
 export const OFFLINE_CAP_H = 8;
+// Collect all (button in the HUD) is free to press, but it keeps this cut: walking to the
+// coin spots yourself pays in full. Earned, not bought.
+export const COLLECT_ALL_FEE = 0.15;
 export const PAINTING_INCOME = 5; // gold per hour per hung painting
 export const DIRT_PENALTY = 0.1; // each mess: -10% room income
 export const VISITORS = { base: 50, perPainting: 150, perDecor: 25, ratingLow: 0.6, ratingSpan: 0.8 };
 export const COFFEE_VISITORS_PER_GOLD = 100; // a counter earns 1 gold/hr per this many monthly visitors
 
-// Security.
-export const CAMERA_COST = 400;
+// Security: tiers the guard sells one after another. `stop` = chance a would-be robbery is
+// stopped; `caught` tiers also catch the thief for a bounty (gold).
+export const SECURITY = [
+  { id: 'none', name: 'No security', stop: 0 },
+  { id: 'dummy', name: 'Dummy cameras', cost: 150, stop: 0.5, blurb: 'Fake cameras scare off half the thieves.' },
+  { id: 'cameras', name: 'Security cameras', cost: 400, stop: 0.85, caught: true, blurb: 'Real cameras: most thieves are stopped and caught.' },
+  { id: 'alarm', name: 'Alarm system', cost: 1500, stop: 1, caught: true, blurb: 'Cameras plus alarms on every frame: no thief gets through.' },
+];
+export const BOUNTY = 120; // reward for a caught thief
+export const CAMERA_COST = SECURITY[2].cost;
 export const ROBBERY = { awayMs: 60 * 60 * 1000, chance: 0.04 };

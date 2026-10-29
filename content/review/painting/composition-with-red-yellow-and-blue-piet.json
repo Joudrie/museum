@@ -1,0 +1,99 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "composition-with-red-yellow-and-blue-piet",
+  "notes": "region: Netherlands, 1927. artist died 1944: check public-domain status by eye",
+  "entry": {
+    "id": "painting:composition-with-red-yellow-and-blue-piet",
+    "collection": "painting",
+    "title": "Composition with Red, Yellow, and Blue",
+    "by": "Piet Mondrian",
+    "year": "1927",
+    "era": "modern",
+    "ratio": 1,
+    "blurb": "During the 1910s, Piet Mondrian’s art progressed from Cubism to an increasingly abstract style based on the form of a grid.",
+    "rarity": 1,
+    "tags": [
+      "netherlands",
+      "oil"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1967.215/1967.215_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Contemporary Collection of The Cleveland Museum of Art",
+      "url": "https://clevelandart.org/art/1967.215"
+    },
+    "value": 5,
+    "facts": [
+      "The small strip of wood around the outside of the canvas, painted the same gray as the canvas surface, is Mondrian’s original frame for the painting."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "143278",
+    "title": "Composition with Red, Yellow, and Blue",
+    "maker": "Piet Mondrian",
+    "year": "1927",
+    "medium": "oil on canvas",
+    "dimensions": "Framed: 62.2 x 62.6 x 10.8 cm (24 1/2 x 24 5/8 x 4 1/4 in.); Unframed: 49.5 x 49.5 cm (19 1/2 x 19 1/2 in.)",
+    "widthCm": 49.5,
+    "heightCm": 49.5,
+    "ratio": 1,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1967.215/1967.215_web.jpg",
+    "imageWidth": 887,
+    "imageHeight": 900,
+    "pageUrl": "https://clevelandart.org/art/1967.215",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Contemporary Collection of The Cleveland Museum of Art",
+    "description": "During the 1910s, Piet Mondrian’s art progressed from Cubism to an increasingly abstract style based on the form of a grid. He completely abandoned the representation of natural appearances, limiting himself to horizontal and vertical rectangles and three primary colors (red, yellow, and blue) along with black and white. Intensely intellectual and deeply philosophical, Mondrian believed that following the devastation of World War I, such abstract compositions could contribute to a more harmonious society by communicating in a universal, visual language. The small strip of wood around the outside of the canvas, painted the same gray as the canvas surface, is Mondrian’s original frame for the painting.",
+    "culture": "Netherlands",
+    "classification": "Painting",
+    "tags": [
+      "Modern European Painting and Sculpture"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Composition with Red, Yellow, and Blue",
+      "maker": "Piet Mondrian",
+      "year": "1927",
+      "medium": "oil on canvas",
+      "dimensions": "Framed: 62.2 x 62.6 x 10.8 cm (24 1/2 x 24 5/8 x 4 1/4 in.); Unframed: 49.5 x 49.5 cm (19 1/2 x 19 1/2 in.)",
+      "culture": "Netherlands",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Contemporary Collection of The Cleveland Museum of Art",
+      "description": "During the 1910s, Piet Mondrian’s art progressed from Cubism to an increasingly abstract style based on the form of a grid. He completely abandoned the representation of natural appearances, limiting himself to horizontal and vertical rectangles and three primary colors (red, yellow, and blue) along with black and white. Intensely intellectual and deeply philosophical, Mondrian believed that following the devastation of World War I, such abstract compositions could contribute to a more harmonious society by communicating in a universal, visual language. The small strip of wood around the outside of the canvas, painted the same gray as the canvas surface, is Mondrian’s original frame for the painting.",
+      "tombstone": "Composition with Red, Yellow, and Blue, 1927. Piet Mondrian (Dutch, 1872–1944). Oil on canvas; framed: 62.2 x 62.6 x 10.8 cm (24 1/2 x 24 5/8 x 4 1/4 in.); unframed: 49.5 x 49.5 cm (19 1/2 x 19 1/2 in.). The Cleveland Museum of Art, Contemporary Collection of The Cleveland Museum of Art, 1967.215",
+      "funFact": "",
+      "didYouKnow": "The small strip of wood around the outside of the canvas, painted the same gray as the canvas surface, is Mondrian’s original frame for the painting.",
+      "creators": "Piet Mondrian (Dutch, 1872–1944)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "During the 1910s, Piet Mondrian’s art progressed from Cubism to an increasingly abstract style based on the form of a grid.",
+      "quote": "During the 1910s, Piet Mondrian’s art progressed from Cubism to an increasingly abstract style based on the form of a grid.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The small strip of wood around the outside of the canvas, painted the same gray as the canvas surface, is Mondrian’s original frame for the painting.",
+      "quote": "The small strip of wood around the outside of the canvas, painted the same gray as the canvas surface, is Mondrian’s original frame for the painting.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

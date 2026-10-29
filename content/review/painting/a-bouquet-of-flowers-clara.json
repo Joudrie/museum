@@ -1,0 +1,93 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "a-bouquet-of-flowers-clara",
+  "notes": "region: Flanders (woman artist). the Met has no description text: needs a real hook",
+  "entry": {
+    "id": "painting:a-bouquet-of-flowers-clara",
+    "collection": "painting",
+    "title": "A Bouquet of Flowers",
+    "by": "Clara Peeters",
+    "year": "ca. 1612",
+    "era": "baroque",
+    "ratio": 0.6957,
+    "blurb": "By Clara Peeters, ca. 1612, Oil on wood.",
+    "rarity": 1,
+    "tags": [
+      "oil",
+      "still life"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://images.metmuseum.org/CRDImages/ep/original/DP-19451-001.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Metropolitan Museum of Art, New York. Purchase, Lila Acheson Wallace, Howard S. and Nancy Marks, Friends of European Paintings, and Mr. and Mrs. J. Tomilson Hill Gifts, Gift of Humanities Fund Inc., by exchange, Henry and Lucy Moses Fund Inc. Gift, and funds from various donors, 2020",
+      "url": "https://www.metmuseum.org/art/collection/search/827660"
+    },
+    "value": 5
+  },
+  "candidate": {
+    "source": "met",
+    "sourceId": "827660",
+    "title": "A Bouquet of Flowers",
+    "maker": "Clara Peeters",
+    "year": "ca. 1612",
+    "medium": "Oil on wood",
+    "dimensions": "18 1/8 × 12 5/8 in. (46 × 32 cm)",
+    "widthCm": 32,
+    "heightCm": 46,
+    "ratio": 0.6957,
+    "imageUrl": "https://images.metmuseum.org/CRDImages/ep/original/DP-19451-001.jpg",
+    "pageUrl": "https://www.metmuseum.org/art/collection/search/827660",
+    "license": "CC0",
+    "credit": "The Metropolitan Museum of Art, New York. Purchase, Lila Acheson Wallace, Howard S. and Nancy Marks, Friends of European Paintings, and Mr. and Mrs. J. Tomilson Hill Gifts, Gift of Humanities Fund Inc., by exchange, Henry and Lucy Moses Fund Inc. Gift, and funds from various donors, 2020",
+    "description": "",
+    "culture": "",
+    "classification": "Paintings",
+    "tags": [
+      "Flowers",
+      "Still Life"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "A Bouquet of Flowers",
+      "maker": "Clara Peeters",
+      "year": "ca. 1612",
+      "medium": "Oil on wood",
+      "dimensions": "18 1/8 × 12 5/8 in. (46 × 32 cm)",
+      "culture": "",
+      "classification": "Paintings",
+      "credit": "The Metropolitan Museum of Art, New York. Purchase, Lila Acheson Wallace, Howard S. and Nancy Marks, Friends of European Paintings, and Mr. and Mrs. J. Tomilson Hill Gifts, Gift of Humanities Fund Inc., by exchange, Henry and Lucy Moses Fund Inc. Gift, and funds from various donors, 2020",
+      "description": "",
+      "objectName": "",
+      "department": "European Paintings",
+      "period": "",
+      "dynasty": "",
+      "artistBio": "Flemish, Mechelen ca. 1587–after 1636 Ghent",
+      "region": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "By Clara Peeters, ca. 1612, Oil on wood.",
+      "quote": "By Clara Peeters, ca. 1612, Oil on wood",
+      "source": "record",
+      "placeholderFor": "needs a real hook"
+    }
+  ],
+  "problems": [
+    "claim 1: needs a real hook; it only restates the record's own details (maker, date, medium)",
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

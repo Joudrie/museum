@@ -1,0 +1,21 @@
+/* Restoration Studio (src/restorestudio.js) */
+#studio .studio-body { padding: 0 16px 20px; display: flex; flex-direction: column; gap: 12px; }
+#studio .studio-list { display: flex; flex-direction: column; gap: 8px; }
+#studio .studio-row { display: flex; gap: 10px; align-items: center; text-align: left; padding: 8px; border: 2px solid #5a4630; background: #3b2d1f; color: #f4e6c8; border-radius: 6px; font: inherit; }
+#studio .studio-row .thumb { width: 56px; height: 56px; flex: none; display: grid; place-items: center; overflow: hidden; background: #2a2016; filter: sepia(0.7) brightness(0.7) contrast(0.85); }
+#studio .studio-row .thumb img, #studio .studio-row .thumb canvas { max-width: 100%; max-height: 100%; image-rendering: pixelated; }
+#studio .studio-row small { display: block; opacity: 0.75; }
+#studio .studio-bench { position: relative; align-self: center; touch-action: none; user-select: none; background: #2a2016; border: 3px solid #5a4630; border-radius: 4px; overflow: hidden; }
+#studio .studio-bench canvas { display: block; position: absolute; left: 0; top: 0; }
+#studio .studio-bar { height: 10px; border: 2px solid #5a4630; background: #2a2016; border-radius: 6px; overflow: hidden; }
+#studio .studio-bar i { display: block; height: 100%; width: 0; background: #7bc47f; transition: width 0.15s; }
+#studio .studio-hint { text-align: center; margin: 0; opacity: 0.85; }
+#studio .studio-tray { position: absolute; inset: 0; }
+#studio .piece { position: absolute; touch-action: none; cursor: grab; box-shadow: 0 2px 0 rgba(0,0,0,.5); }
+#studio .piece.placed { box-shadow: none; cursor: default; }
+#studio .slot { position: absolute; outline: 1px dashed rgba(244,230,200,.35); }
+#studio .studio-cmp { position: absolute; inset: 0; }
+#studio .studio-cmp .handle { position: absolute; top: 0; bottom: 0; width: 4px; margin-left: -2px; background: #fff; box-shadow: 0 0 6px #000; }
+#studio .studio-cmp .tag { position: absolute; top: 6px; padding: 2px 6px; background: rgba(0,0,0,.6); color: #fff; font-size: 12px; border-radius: 4px; }
+#studio .studio-done { text-align: center; }
+#studio .studio-done b, #studio .studio-done small { display: block; margin: 2px 0; }

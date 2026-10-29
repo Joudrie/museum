@@ -1,0 +1,113 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "mount-sainte-victoire-paul",
+  "notes": "region: France, c. 1904",
+  "entry": {
+    "id": "painting:mount-sainte-victoire-paul",
+    "collection": "painting",
+    "title": "Mount Sainte-Victoire",
+    "by": "Paul Cezanne",
+    "year": "c. 1904",
+    "era": "modern",
+    "ratio": 1.2798,
+    "blurb": "During the last 20 years of his life, Cezanne repeatedly painted Mount Sainte-Victoire near his home in Aix-en-Provence in southern France.",
+    "rarity": 1,
+    "tags": [
+      "france",
+      "oil"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1958.21/1958.21_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Bequest of Leonard C. Hanna Jr.",
+      "url": "https://clevelandart.org/art/1958.21"
+    },
+    "value": 5,
+    "facts": [
+      "Cezanne painted this view from life at one of his favorite sites, a small road that led from Aix eastward toward Mount Sainte-Victoire.",
+      "Cezanne created 36 paintings and 45 watercolors of Mount Sainte-Victoire.",
+      "He was preoccupied with this subject and painted this mountain repeatedly until his death."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "135185",
+    "title": "Mount Sainte-Victoire",
+    "maker": "Paul Cezanne",
+    "year": "c. 1904",
+    "medium": "oil on fabric",
+    "dimensions": "Framed: 87.5 x 106.5 x 7 cm (34 7/16 x 41 15/16 x 2 3/4 in.); Unframed: 72.2 x 92.4 cm (28 7/16 x 36 3/8 in.)",
+    "widthCm": 92.4,
+    "heightCm": 72.2,
+    "ratio": 1.2798,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1958.21/1958.21_web.jpg",
+    "imageWidth": 900,
+    "imageHeight": 714,
+    "pageUrl": "https://clevelandart.org/art/1958.21",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Bequest of Leonard C. Hanna Jr.",
+    "description": "During the last 20 years of his life, Cezanne repeatedly painted Mount Sainte-Victoire near his home in Aix-en-Provence in southern France. Cezanne painted this view from life at one of his favorite sites, a small road that led from Aix eastward toward Mount Sainte-Victoire. He set up his easel at the edge of the road where he could see two umbrella pines and the mountain towering over the scene. A branch of one of the pines extends from the left of the canvas across the sky, echoing the slope of the mountain, linking the near and the far. Cezanne created 36 paintings and 45 watercolors of Mount Sainte-Victoire. He was preoccupied with this subject and painted this mountain repeatedly until his death.",
+    "culture": "France, late 19th-early 20th Century",
+    "classification": "Painting",
+    "tags": [
+      "Modern European Painting and Sculpture"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Mount Sainte-Victoire",
+      "maker": "Paul Cezanne",
+      "year": "c. 1904",
+      "medium": "oil on fabric",
+      "dimensions": "Framed: 87.5 x 106.5 x 7 cm (34 7/16 x 41 15/16 x 2 3/4 in.); Unframed: 72.2 x 92.4 cm (28 7/16 x 36 3/8 in.)",
+      "culture": "France, late 19th-early 20th Century",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Bequest of Leonard C. Hanna Jr.",
+      "description": "During the last 20 years of his life, Cezanne repeatedly painted Mount Sainte-Victoire near his home in Aix-en-Provence in southern France. Cezanne painted this view from life at one of his favorite sites, a small road that led from Aix eastward toward Mount Sainte-Victoire. He set up his easel at the edge of the road where he could see two umbrella pines and the mountain towering over the scene. A branch of one of the pines extends from the left of the canvas across the sky, echoing the slope of the mountain, linking the near and the far. Cezanne created 36 paintings and 45 watercolors of Mount Sainte-Victoire. He was preoccupied with this subject and painted this mountain repeatedly until his death.",
+      "tombstone": "Mount Sainte-Victoire, c. 1904. Paul Cezanne (French, 1839–1906). Oil on fabric; framed: 87.5 x 106.5 x 7 cm (34 7/16 x 41 15/16 x 2 3/4 in.); unframed: 72.2 x 92.4 cm (28 7/16 x 36 3/8 in.). The Cleveland Museum of Art, Bequest of Leonard C. Hanna Jr., 1958.21",
+      "funFact": "",
+      "didYouKnow": "Cezanne created 36 paintings and 45 watercolors of Mount Sainte-Victoire. He was preoccupied with this subject and painted this mountain repeatedly until his death.",
+      "creators": "Paul Cezanne (French, 1839–1906)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "During the last 20 years of his life, Cezanne repeatedly painted Mount Sainte-Victoire near his home in Aix-en-Provence in southern France.",
+      "quote": "During the last 20 years of his life, Cezanne repeatedly painted Mount Sainte-Victoire near his home in Aix-en-Provence in southern France.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Cezanne painted this view from life at one of his favorite sites, a small road that led from Aix eastward toward Mount Sainte-Victoire.",
+      "quote": "Cezanne painted this view from life at one of his favorite sites, a small road that led from Aix eastward toward Mount Sainte-Victoire.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Cezanne created 36 paintings and 45 watercolors of Mount Sainte-Victoire.",
+      "quote": "Cezanne created 36 paintings and 45 watercolors of Mount Sainte-Victoire.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "He was preoccupied with this subject and painted this mountain repeatedly until his death.",
+      "quote": "He was preoccupied with this subject and painted this mountain repeatedly until his death.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}
