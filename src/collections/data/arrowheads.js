@@ -1,0 +1,95 @@
+// Arrowheads and stone tools: dug from ruin spots.
+
+const POINT = [
+  '.....##.....',
+  '....#bb#....',
+  '...#baab#...',
+  '...#baab#...',
+  '..#baccab#..',
+  '..#baccab#..',
+  '.#bacccab#..',
+  '.#baacaab#..',
+  '#bb#baab#bb#',
+  '#b..#bb#..b#',
+  '....#bb#....',
+  '.....##.....',
+];
+const LEAF = [
+  '.....##.....',
+  '....#bb#....',
+  '...#baab#...',
+  '..#bacab#...',
+  '..#bacab#...',
+  '.#bacccab#..',
+  '.#bacccab#..',
+  '..#baaab#...',
+  '...#bbb#....',
+  '....###.....',
+];
+const AXE = [
+  '....####....',
+  '...#bbbb#...',
+  '..#baaaab#..',
+  '.#bacccaab#.',
+  '.#bacccaab#.',
+  '.#baaaaaab#.',
+  '..#baaaab#..',
+  '...#bbbb#...',
+  '....####....',
+];
+const tool = (slug, title, rows, [a, b, c, o], rarity, age, blurb, facts) => ({
+  id: `arrowhead:${slug}`,
+  collection: 'arrowhead',
+  title,
+  blurb,
+  facts,
+  rarity,
+  set: 'flint-drawer',
+  tags: [age],
+  image: { kind: 'pixels', rows, palette: { '#': o, a, b, c } },
+  display: ['case', 'plinth'],
+  provenance: { how: 'dug', where: 'Ruin dig spots' },
+  source: { license: 'Original', credit: 'Curation' },
+  dirty: true,
+  value: 3 * rarity,
+});
+
+const entries = [
+  tool('flint-point', 'Flint arrowhead', POINT, ['#8a8478', '#b4ae9c', '#5c564a', '#24201a'], 1, 'flint',
+    'Flint breaks with a sharp curved edge, so toolmakers could chip it into points and blades.',
+    ['Making a point by chipping is called knapping.']),
+  tool('chert-point', 'Chert point', LEAF, ['#a86a4c', '#cc8e6c', '#704028', '#2c1608'], 1, 'chert',
+    'Chert is a hard, fine-grained stone that, like flint, can be flaked to a sharp edge.',
+    ['Chert comes in many colours, from grey to red to yellow.']),
+  tool('obsidian-point', 'Obsidian point', POINT, ['#2e2a34', '#6c6678', '#16141c', '#050408'], 3, 'obsidian',
+    'Obsidian is volcanic glass. A flaked edge can be sharper than a steel blade.',
+    ['People traded it over very long distances.']),
+  tool('stone-axe', 'Polished stone axe', AXE, ['#7a8a78', '#a4b4a0', '#4c5a4a', '#1c241c'], 2, 'axe',
+    'Early farmers ground and polished hard stone into axe heads to clear trees and shape wood.',
+    ['A polished axe head was lashed to a wooden handle.']),
+  tool('leaf-point', 'Leaf-shaped point', LEAF, ['#a8a090', '#d0c8b4', '#6c6454', '#2a261c'], 2, 'flint',
+    'Some points are shaped like a willow or laurel leaf. The best ones are thin and carefully flaked on both sides.',
+    ['Experts can tell the age of a point by its shape.']),
+  tool('spearhead', 'Spearhead', POINT, ['#988c78', '#c4b89c', '#645a46', '#28221a'], 3, 'flint',
+    'A large point mounted on a long shaft, used for hunting big animals.',
+    ['A thrown spear works much farther with a spear-thrower, which acts like an extra-long arm.']),
+];
+
+export default {
+  collection: {
+    id: 'arrowhead',
+    name: 'Stone tools',
+    noun: 'stone tools',
+    icon: '🏹',
+    kinds: ['stone tool'],
+    display: 'case',
+    ownership: 'earned',
+    meta: ['rarity', 'where'],
+    journal: { tab: 'tools', label: 'Stone tools', order: 8, layout: 'tiles', intro: '{have} of {total} stone tools found. Dig them out of ruin spots.' },
+    viewer: { look: 'case' },
+  },
+  sets: [
+    { id: 'flint-drawer', name: 'Flint drawer', collection: 'arrowhead', entries: entries.map((e) => e.id), reward: { gold: 600 }, plaque: 'Six tools made by hand long before metal.' },
+  ],
+  entries,
+};
