@@ -3,6 +3,7 @@
 // Usage: npm run build && npx vite preview --port 4173 --base / &
 //        PW=/path/to/playwright node tests/smoke.cjs
 const { chromium } = require(process.env.PW || 'playwright');
+const { jtab } = require('./nav.cjs');
 const URL = process.env.URL || 'http://localhost:4173/';
 
 const problems = [];
@@ -272,7 +273,7 @@ const ok = (msg) => console.log('  ✓ ' + msg);
       else fail('claiming a goal gave no gold');
     } else fail('no goal ready to claim after cleaning and opening the hall');
     for (const t of ['paintings', 'visitors']) {
-      await p.click(`[data-jtab="${t}"]`);
+      await jtab(p, t);
       await settle(200);
     }
     ok('journal tabs open');

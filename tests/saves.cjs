@@ -3,6 +3,7 @@
 // Also checks that an unreadable save is kept under curation.bak.<key>.
 // Usage: PW=/path/to/playwright node tests/saves.cjs   (preview on :4173)
 const { chromium } = require(process.env.PW || 'playwright');
+const { openHub } = require('./nav.cjs');
 const fs = require('fs');
 const path = require('path');
 const URL = process.env.URL || 'http://localhost:4173/';
@@ -85,6 +86,7 @@ const VARIANTS = {
   // Reset takes two taps and keeps the old save
   const r = await open();
   await r.p.evaluate(() => { localStorage.setItem('curation.coins', '777'); });
+  await openHub(r.p);
   await r.p.click('#settings-btn');
   await r.p.waitForTimeout(500);
   const resetBtn = r.p.locator('button.danger', { hasText: 'Reset museum' });

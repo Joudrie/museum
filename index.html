@@ -6,6 +6,10 @@
     <meta name="theme-color" content="#1d1714" />
     <title>Curation</title>
     <link rel="stylesheet" href="./src/style.css" />
+    <link rel="stylesheet" href="./src/ui/tokens.css" />
+    <link rel="stylesheet" href="./src/ui/ui.css" />
+    <link rel="stylesheet" href="./src/ui/hud.css" />
+    <link rel="stylesheet" href="./src/ui/journal.css" />
   </head>
   <body>
     <div id="game"></div>
@@ -14,6 +18,8 @@
       <span class="museum-name"><i class="hud-time" aria-hidden="true"></i><span class="hud-name">Your Museum</span></span>
       <span class="hud-stats"><span><i class="coin"></i><b class="hud-coins">0</b></span><span><b class="hud-income">+0</b>/hr</span><span><i class="ppl" aria-label="visitors a month"></i><b class="hud-visitors">0</b></span><span class="hud-rating">★ 0.0</span></span>
     </button>
+
+    <button id="menu-btn" class="pixel-btn hud-btn" aria-label="Menu: today, income, share, settings"><i class="badge hidden"></i></button>
 
     <button id="journal-btn" class="pixel-btn" aria-label="Journal: goals and collection">
       <svg viewBox="0 0 10 10" width="20" height="20" shape-rendering="crispEdges" aria-hidden="true"><g fill="currentColor"><rect x="1" y="1" width="8" height="8" /></g><rect x="2" y="2" width="1" height="6" fill="#e8c867" /><rect x="4" y="3" width="4" height="1" fill="#e8c867" /><rect x="4" y="5" width="3" height="1" fill="#e8c867" /></svg>
@@ -35,6 +41,13 @@
     <button id="build-btn" class="pixel-btn" aria-label="Toolkit">
       <svg viewBox="0 0 16 11" width="24" height="18" shape-rendering="crispEdges" aria-hidden="true"><g fill="currentColor"><rect x="6" y="0" width="5" height="1" /><rect x="5" y="1" width="7" height="1" /><rect x="5" y="2" width="7" height="1" /><rect x="6" y="3" width="5" height="1" /><rect x="8" y="4" width="2" height="7" /></g></svg>
     </button>
+
+    <div id="hub" class="overlay hidden" role="dialog" aria-label="Menu">
+      <div class="decor-sheet sheet">
+        <div class="ui-head"><h2 class="ui-title">Menu</h2><button class="hub-close ui-btn ui-close" aria-label="Close"></button></div>
+        <div class="hub-grid"></div>
+      </div>
+    </div>
 
     <div id="toolkit" class="hidden" role="dialog" aria-label="Toolkit">
       <div class="toolkit-sheet sheet">

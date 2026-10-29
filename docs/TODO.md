@@ -182,11 +182,11 @@ Owns: `assets/vendor/`, `docs/ASSETS.md`, `tools/extract_sprites.py`, `tools/` s
 
 ## CHAT 16: UI and menus (flow and look)
 Owns: new `src/ui/`, `ui.html`, `docs/UI*.md`, `docs/ui/`, `tests/ui-*.cjs`; restyles `src/*menu*.js`, `src/journal.js`, `src/ask.js`, `src/talk.js`, `src/dialogue.js`, `builder.html` / `src/builder/builder.css` and `src/style.css` through shared tokens and components only (never rewrites other chats' logic). Claim: `claimed: 2026-10-29`. Full plan: `docs/UI-BRIEF.md`. This supersedes "menu redesign waits for the user" (the user has asked for it).
-- [ ] Phase 0: audit of every screen with before-screenshots, `docs/UI-AUDIT.md`, `docs/UI-FLOWS.md` (entry-point map, screen inventory, depth map, journeys with tap budgets).
-- [ ] Navigation and flow decisions (menu hub, sheet / modal / full-screen weights, one-at-a-time rule, event queue); three-line summary for the user at the top of `docs/UI.md`.
-- [ ] Design system and the live style guide page `ui.html`.
-- [ ] Automated checks: `tests/ui-flows.cjs` (tap budgets) and `tests/ui-layout.cjs` (overflow, clipped text, target size, NaN text, aria) at 360x640, 390x844, 430x932.
-- [ ] Migrate every screen, most-used first: HUD and Interact, Journal, Toolkit, Customize, dialogs, viewer, Settings and Income, Build a room, wall spot and Display, Office and Staff, daily / share / sail / leads, discovery overlays, conversation and tutorial, title screen, Builder page.
+- [x] Phase 0 (PR #180): audit of every screen with before-screenshots, `docs/UI-AUDIT.md`, `docs/UI-FLOWS.md` (entry-point map, screen inventory, depth map, journeys with tap budgets).
+- [x] (PR #181, #this) Navigation and flow decisions (menu hub, sheet / modal / full-screen weights, one-at-a-time rule, event queue); three-line summary for the user at the top of `docs/UI.md`.
+- [x] (PR #181) Design system and the live style guide page `ui.html`.
+- [x] (PR #181) Automated checks (`ui-layout` done; `ui-flows` tap-budget test still to do): `tests/ui-flows.cjs` (tap budgets) and `tests/ui-layout.cjs` (overflow, clipped text, target size, NaN text, aria) at 360x640, 390x844, 430x932.
+- [~] Migrate every screen, most-used first. **Done: HUD and Menu hub, Journal overview.** Left: HUD and Interact, Journal, Toolkit, Customize, dialogs, viewer, Settings and Income, Build a room, wall spot and Display, Office and Staff, daily / share / sail / leads, discovery overlays, conversation and tutorial, title screen, Builder page.
 - [ ] Polish: sound, haptics, motion, empty and error states, copy sweep, large-text and left-handed modes, accessibility labels.
 
 ## Hold list (parked by the user; no chat builds these)
