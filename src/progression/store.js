@@ -66,7 +66,7 @@ export function defaults(now = 0) {
       traversal: {}, // ladder rung id -> true when earned
       regionsSeen: {},
     },
-    market: { stock: { day: 0, items: [] }, owned: {}, bought: {}, spent: 0, sellBonus: 0, simGold: 0, equipped: { hat: '', outfit: '', title: '', frame: '', rodSkin: '', boatPaint: '' } },
+    market: { stock: { day: 0, items: [] }, owned: {}, bought: {}, spent: 0, fund: 0, sellBonus: 0, simGold: 0, equipped: { hat: '', outfit: '', title: '', frame: '', rodSkin: '', boatPaint: '' } },
     house: { rooms: { porch: true }, mounts: [], tanks: 1, aquarium: [] },
     events: {}, // eventId -> { tokens, claimed:{ tier: true }, joined: ms }
     titles: {},

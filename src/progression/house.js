@@ -20,6 +20,8 @@ export function installHouse(p) {
       { id: 'lounge', name: 'Lounge', owned: owns('room:lounge') },
       { id: 'aquarium_room', name: 'Aquarium room', owned: owns('room:aquarium_room') },
       { id: 'workshop', name: 'Workshop', owned: owns('room:workshop') },
+      { id: 'gallery', name: 'Trophy gallery', owned: owns('room:gallery') },
+      { id: 'observatory', name: 'Observatory', owned: owns('room:observatory') },
     ],
     capacity: tankSize,
     aquarium: () => s().house.aquarium.filter((id) => speciesById(id)),
@@ -38,7 +40,7 @@ export function installHouse(p) {
       h.aquarium = h.aquarium.filter((x) => x !== id);
       p.store.commit();
     },
-    mountCapacity: () => 2 + (owns('room:lounge') ? 4 : 0),
+    mountCapacity: () => 2 + (owns('room:lounge') ? 4 : 0) + (owns('room:gallery') ? 6 : 0),
     mounted: () => s().house.mounts.map((i) => s().fish.trophies[i]).filter(Boolean),
     mount(i) {
       const h = s().house;
@@ -51,7 +53,7 @@ export function installHouse(p) {
       s().house.mounts = s().house.mounts.filter((x) => x !== i);
       p.store.commit();
     },
-    furniture: () => (owns('furn:set1') ? SHOP.furniture.set1 : []),
+    furniture: () => ['set1', 'set2', 'set3', 'set4'].flatMap((k) => (owns(`furn:${k}`) ? SHOP.furniture[k] : [])),
   };
   p.mods.house = mod;
   p.house = mod;

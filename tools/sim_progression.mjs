@@ -35,7 +35,7 @@ for (const n of Object.keys(TARGET)) {
 }
 for (const name of Object.keys(results)) {
   const r = results[name][0];
-  console.log(`\n${name}: ${r.activeMin} active min · rank ${r.summary.rank} · fishing L${r.summary.fishing} sailing L${r.summary.sailing} exploring L${r.summary.exploring} friendship L${r.summary.friendship} · ${r.summary.species}/${r.p.state ? 60 : 60} species (${r.summary.speciesPct}%) · ${r.summary.gold} gold now, ${r.summary.spent} spent · longest stretch without a progress tick: ${r.maxGapMin.toFixed(1)} min`);
+  console.log(`\n${name}: ${r.activeMin} active min · rank ${r.summary.rank} · fishing L${r.summary.fishing} sailing L${r.summary.sailing} exploring L${r.summary.exploring} friendship L${r.summary.friendship} · ${r.summary.species}/72 species (${r.summary.speciesPct}%) · ${r.summary.gold} gold now, ${r.summary.spent} spent · longest stretch without a progress tick: ${r.maxGapMin.toFixed(1)} min`);
   console.log('  journal %: ' + r.journal.map(([k, v]) => `${k} ${v}`).join(', '));
 }
 if (csv) {

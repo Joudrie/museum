@@ -10,6 +10,7 @@ import { EVENTS } from './bus.js';
 import RANKS from './data/ranks.json' with { type: 'json' };
 import RODS from './data/rods.json' with { type: 'json' };
 import SHOP from './data/shop.json' with { type: 'json' };
+import PROJECTS from './data/projects.json' with { type: 'json' };
 import { EVENTS as FESTIVALS, MONTHLY, trackRewards, speciesOf } from './events.js';
 import NPCS from './data/npcs.json' with { type: 'json' };
 import { problems as registryProblems } from '../collections/index.js';
@@ -135,9 +136,9 @@ export function validate({ extra = [], perkUses = [], mapIds = null, busWired = 
   });
 
   // ---- shop ladder: the next meaningful purchase is 20 to 40 minutes of play away ----
-  SHOP.ladder.forEach((l, i) => {
+  [...SHOP.ladder, ...PROJECTS].forEach((l, i) => {
     if (!(l.minutes >= 20 && l.minutes <= 40)) add(`ladder ${l.id}: ${l.minutes} minutes is outside 20 to 40`);
-    if (i && l.rank < SHOP.ladder[i - 1].rank) add(`ladder ${l.id} is out of rank order`);
+    (l.reward || []).forEach((x) => checkReward(x, `project ${l.id}`, add));
     if (l.kind === 'rod' && !RODS[l.id.slice(4)]) add(`ladder ${l.id} is not a rod`);
   });
   SHOP.staples.concat(SHOP.lures).forEach((id) => !BAITS[id] && !LURES[id] && add(`shop sells ${id}, which does not exist`));

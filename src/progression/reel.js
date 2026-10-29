@@ -70,6 +70,12 @@ export function makeReel({ rarity = 1, zone = 0.26, rng, legend = false, forgivi
       r.progress = Math.max(0, r.progress - r.drain * dt);
       r.outside += dt;
     }
+    if (r.t >= T.fishing.reel.maxSeconds && !r.over) {
+      // a long fight ends: a fish that is mostly reeled in tires out and comes in, otherwise it slips the hook
+      r.over = true;
+      r.won = r.progress >= 0.6;
+      return r;
+    }
     if (r.progress >= 1) {
       r.over = r.won = true;
       r.perfect = r.outside / Math.max(0.001, r.t) <= 0.3;

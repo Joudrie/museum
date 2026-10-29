@@ -8,7 +8,7 @@ export const TUNING = {
   clockSlackMs: 5 * 60 * 1000, // a clock this far behind the last one we saw is a rollback
 
   rank: {
-    A: 14, // xpToNext(n) = round(A * n^1.6 + B)
+    A: 38, // xpToNext(n) = round(A * n^1.6 + B), fitted to the section 3 time targets by tools/sim_progression.mjs
     B: 40,
     max: 50, // past this: Renown levels
     renownXp: null, // flat XP per Renown level; null = what rank 50 costs
@@ -33,6 +33,10 @@ export const TUNING = {
     weekly: 150,
     giftLiked: 4,
     firstCatchOfDayMult: 2,
+    // doing it well and doing it a lot pays more: a catch's XP grows with Fishing level and with the size of the fish; tasks and requests grow with rank
+    skillLevelBonus: 0.065,
+    sizeMult: { S: 0.85, M: 1, L: 1.15, XL: 1.4, Trophy: 2 },
+    rankScale: 0.06,
   },
 
   // skills (levels 1 to 20); xpToNext(n) = round(A * n^1.5 + B)
@@ -69,6 +73,7 @@ export const TUNING = {
     junkChance: 0.08,
     reel: { // the tension minigame (reel.js)
       baseSeconds: 4,
+      maxSeconds: 18, // a fight never drags on past this
       perRarityHardness: [0, 0.55, 0.7, 0.85, 1.0, 1.15],
     },
   },
@@ -100,9 +105,10 @@ export const TUNING = {
 
   // economy (section 9): targets the sim checks. gold earned per active hour at rank
   economy: {
-    goldPerHour: { 1: 180, 5: 320, 10: 520, 20: 900, 30: 1400, 40: 2000, 50: 2800 },
+    goldPerHour: { 1: 400, 5: 900, 10: 1000, 25: 950, 50: 1000 }, // the casual profile's measured earn rate per active hour (tools/sim_progression.mjs); the shop ladder is priced from it
     nextPurchaseMinutes: [20, 40],
     sellMult: 0.5,
+    skillValueBonus: 0.03, // fish are worth more as Fishing grows
     sizeValueMult: { S: 0.8, M: 1, L: 1.25, XL: 1.6, Trophy: 2.4 },
     variantValueMult: { golden: 5, albino: 8, ghost: 6 },
     rarityValue: [0, 8, 20, 55, 140, 500],

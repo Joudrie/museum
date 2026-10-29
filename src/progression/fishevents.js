@@ -43,7 +43,7 @@ export function installFish(p) {
 
     // the codex (the museum's ledger) and the sellable bag
     p.hooks.collect?.(sp.entryId, { size: ev.size, variant: ev.variant });
-    const value = fishValue(sp, ev.sizeClass, ev.variant, T);
+    const value = Math.round(fishValue(sp, ev.sizeClass, ev.variant, T) * (1 + T.economy.skillValueBonus * p.skill('fishing').level));
     for (let i = 0; i < (ev.doubled ? 2 : 1); i++) f.bag.push({ id: sp.id, size: ev.size, sizeClass: ev.sizeClass, variant: ev.variant || '', value, at: p.clock.now() });
     while (f.bag.length > BAG_CAP) {
       // overflow sells the cheapest fish straight away: nothing is ever lost
@@ -72,7 +72,7 @@ export function installFish(p) {
 
     // XP
     const xp = T.xp;
-    let base = sp.xp ?? xp.byRarity[sp.rarity];
+    let base = (sp.xp ?? xp.byRarity[sp.rarity]) * (1 + xp.skillLevelBonus * p.skill('fishing').level) * (xp.sizeMult[ev.sizeClass] || 1);
     if (fresh) base += xp.newSpecies;
     if (freshVariant) base += xp.newSpecies;
     if (improved) base += xp.personalBest;

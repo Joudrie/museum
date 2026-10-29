@@ -97,7 +97,7 @@ export function installRequests(p) {
       s.requests.doneToday += 1;
       s.requests.total += 1;
       s.stats.requests += 1;
-      const g = p.xp(rq.xp, 'request', { silent: true });
+      const g = p.xp(Math.round(rq.xp * (1 + T.xp.rankScale * p.level().level)), 'request', { silent: true });
       p.skillXp('friendship', T.skills.gain.request, { silent: true });
       p.gold.add(rq.gold);
       p.friendship.addPoints(rq.npc, T.friendship.requestPoints);

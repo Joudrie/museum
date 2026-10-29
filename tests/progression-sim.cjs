@@ -11,7 +11,7 @@ const check = (c, good, bad) => (c ? ok(good) : fail(bad));
   const { simulate, PROFILES } = await import(path.join(root, 'src/progression/sim.js'));
   const { validate } = await import(path.join(root, 'src/progression/validate.js'));
   const HOURS = Number(process.env.HOURS || 6);
-  const runs = ['casual', 'hardcore'].map((n) => [n, [1, 2, 3].map((seed) => simulate({ hours: HOURS, profile: PROFILES[n], seed }))]);
+  const runs = ['casual', 'hardcore'].map((n) => [n, [1, 2, 3, 4, 5].map((seed) => simulate({ hours: HOURS, profile: PROFILES[n], seed }))]);
   const med = (a) => a.filter((x) => x != null).sort((x, y) => x - y)[Math.floor(a.filter((x) => x != null).length / 2)];
   const reach = (n, r) => med(runs.find(([k]) => k === n)[1].map((s) => s.reach[r]));
 

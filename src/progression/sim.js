@@ -15,6 +15,7 @@ import { allSpecies, REGIONS } from './species.js';
 import NPCS from './data/npcs.json' with { type: 'json' };
 import { completion } from './journal.js';
 import { regionOpen as accessOpen } from './access.js';
+import { ladder } from './market.js';
 
 export const PROFILES = {
   casual: { name: 'casual', efficiency: 0.5, skill: 0.45, minutesPerSession: 22, sessionsPerWeek: 5, mix: { fish: 0.6, explore: 0.2, social: 0.15, shop: 0.05 } },
@@ -36,6 +37,8 @@ export function simulate({ hours = 12, profile = PROFILES.casual, seed = 1, T = 
   p.start();
 
   let active = 0; // active minutes played
+  let introDone = false;
+  const log = [];
   const rows = [];
   let lastRowAt = -1e9;
   let lastTick = 0;
@@ -46,7 +49,7 @@ export function simulate({ hours = 12, profile = PROFILES.casual, seed = 1, T = 
   const noteProgress = () => {
     while (seenQueue.n < q.log.length) {
       const it = q.log[seenQueue.n++];
-      if (it.kind === 'xp' || it.kind === 'skill' || it.kind === 'species' || it.kind === 'rank' || it.kind === 'task' || it.kind === 'heart' || it.kind === 'request' || it.kind === 'milestone') marks.push(active);
+      marks.push(active); // anything the queue shows is a visible tick (an XP pop, a skill bar, a stamp, gold from a sale…)
     }
   };
 
@@ -120,6 +123,18 @@ export function simulate({ hours = 12, profile = PROFILES.casual, seed = 1, T = 
     const endActive = active + minutes;
     p.start();
     clock.setLast(now);
+    if (!introDone) {
+      // the first two minutes: walk about, say hello, get the rod
+      introDone = true;
+      now += 60e3;
+      active += 1;
+      p.tick(60e3);
+      p.bus.emit('NPC_TALKED', { npcId: 'wen', kind: 'elder' }); // the first hello: a heart tick and an XP pop
+      noteProgress();
+      now += 60e3;
+      active += 1;
+      p.tick(60e3);
+    }
     while (active < endActive && active < targetActive) {
       if (now >= regionUntil) {
         region = regionNow();
@@ -128,11 +143,14 @@ export function simulate({ hours = 12, profile = PROFILES.casual, seed = 1, T = 
       }
       const r = rng();
       const m = profile.mix;
+      const kindNow = r < m.fish ? 'fish' : r < m.fish + m.explore ? 'explore' : r < m.fish + m.explore + m.social ? 'social' : 'shop';
+      const before = marks.length;
       const secs = r < m.fish ? doFish() : r < m.fish + m.explore ? doExplore() : r < m.fish + m.explore + m.social ? doSocial() : doShop();
       now += secs * 1000;
       active += secs / 60;
       p.tick(secs * 1000);
       noteProgress();
+      if (process.env.SIMDEBUG) log.push([Math.round(active * 10) / 10, kindNow, marks.length - before]);
       if (active - lastRowAt >= sampleMin) {
         lastRowAt = active;
         rows.push(row());
@@ -166,6 +184,7 @@ export function simulate({ hours = 12, profile = PROFILES.casual, seed = 1, T = 
   [2, 3, 5, 10, 15, 20, 30, 40, 50].forEach((n) => (reach[n] = rm[n] ?? null));
   // the longest stretch of active play with no visible progress tick
   marks.sort((a, b) => a - b);
+  if (process.env.SIMDEBUG) console.log('marks', marks.slice(0, 6), marks.length);
   let prev = 0;
   marks.forEach((m) => {
     maxGap = Math.max(maxGap, m - prev);
@@ -175,7 +194,14 @@ export function simulate({ hours = 12, profile = PROFILES.casual, seed = 1, T = 
     rank5: rm[5] ?? null,
     traversal: p.state.telemetry.first.traversal_unlock ? Math.round((p.state.telemetry.first.traversal_unlock - startMs) / 60000) : null,
   };
-  return { p, rows, reach, maxGapMin: maxGap, activeMin: Math.round(active), summary: row(), first, journal: ['fish', 'people', 'places', 'emotes', 'secrets'].map((id) => [id, Math.round(completion(p, id).pct)]) };
+  // ladder: how long after an item became available (its rank reached) was it bought, in minutes of play
+  const ladderGaps = ladder(T).map((l) => {
+    const avail = rm[l.rank] ?? 0;
+    const at = p.state.market.bought[l.id];
+    return { id: l.id, rank: l.rank, price: l.price, availableAt: avail, boughtAt: at ?? null, gap: at == null ? null : Math.round((at - avail) * 10) / 10 };
+  });
+  const earned = rows.length ? rows.map((r, i) => ({ activeMin: r.activeMin, rank: r.rank, goldPerHour: i ? Math.round(((r.gold + r.spent - rows[i - 1].gold - rows[i - 1].spent) / Math.max(1, r.activeMin - rows[i - 1].activeMin)) * 60) : 0 })) : [];
+  return { p, log, rows, ladderGaps, earned, reach, maxGapMin: maxGap, activeMin: Math.round(active), summary: row(), first, journal: ['fish', 'people', 'places', 'emotes', 'secrets'].map((id) => [id, Math.round(completion(p, id).pct)]) };
 }
 
 // ---- helpers (the market module owns the real versions; these keep the sim honest without it) ----

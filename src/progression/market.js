@@ -4,9 +4,10 @@
 // is always about 20 to 40 minutes of play away. Nothing here is bought with real money.
 import { TUNING } from './config.js';
 import SHOP from './data/shop.json' with { type: 'json' };
+import PROJECTS from './data/projects.json' with { type: 'json' };
 import { BAITS, LURES } from './fishroll.js';
 import { GIFTS } from './friendship.js';
-import { COSMETICS } from './grants.js';
+import { COSMETICS, grant } from './grants.js';
 import RODS from './data/rods.json' with { type: 'json' };
 import { speciesById } from './species.js';
 import { weekOf } from './clock.js';
@@ -29,11 +30,15 @@ const nice = (n) => (n < 100 ? Math.round(n / 5) * 5 : n < 1000 ? Math.round(n /
 
 /** The ladder with prices worked out: price = earn rate at that rank x the minutes of play it should cost. */
 export function ladder(T = TUNING) {
-  return SHOP.ladder.map((l) => ({ ...l, price: nice((goldPerHour(l.rank, T) * l.minutes) / 60) }));
+  // the big rungs (boats, rods, rooms, tanks) and a run of town projects, so there is always something worth saving for
+  return [...SHOP.ladder, ...PROJECTS].sort((a, b) => a.rank - b.rank || a.minutes - b.minutes).map((l) => ({ ...l, price: nice((goldPerHour(l.rank, T) * l.minutes) / 60) }));
 }
+/** The Town fund never runs out: each level costs about half an hour of income at your rank and pays a Renown token. */
+export const fundPrice = (rank, T = TUNING) => nice((goldPerHour(rank, T) * 30) / 60);
 export const priceOf = (id, T = TUNING) => {
   const l = ladder(T).find((x) => x.id === id);
   if (l) return l.price;
+  if (id === 'fund:next') return fundPrice(T.__rank || 5, T);
   if (id.startsWith('bait:')) return Math.max(1, Math.round(BAITS[id.slice(5)].price * SHOP.packSize * 0.9));
   if (id.startsWith('lure:')) return LURES[id.slice(5)].price;
   if (id.startsWith('gift:')) return GIFTS[id.slice(5)].price;
@@ -70,13 +75,15 @@ export function installMarket(p) {
     const out = [];
     st.items.forEach((id) => out.push({ id, section: id.startsWith('bait:') ? 'Bait' : id.startsWith('lure:') ? 'Lures' : 'Gifts', rare: id === st.rareToday }));
     if (st.featured) out.push({ id: st.featured, section: 'Featured this week', featured: true });
-    ladder(T).forEach((l) => out.push({ id: l.id, section: l.kind === 'boat' ? 'Boats' : l.kind === 'rod' ? 'Rods' : l.kind === 'tank' ? 'Aquarium' : l.kind === 'room' ? 'Lodge' : 'Furniture', ladder: l }));
+    ladder(T).forEach((l) => out.push({ id: l.id, section: l.kind === 'project' ? 'Town projects' : l.kind === 'boat' ? 'Boats' : l.kind === 'rod' ? 'Rods' : l.kind === 'tank' ? 'Aquarium' : l.kind === 'room' ? 'Lodge' : 'Furniture', ladder: l }));
+    out.push({ id: 'fund:next', section: 'Town fund' });
     // cosmetics sold all the time at their price (the weekly one is just on show)
     Object.entries(COSMETICS).filter(([, c]) => c.source === 'shop').forEach(([id]) => st.featured !== id && out.push({ id, section: 'Style' }));
     return out;
   };
 
   function nameOf(id) {
+    if (id === 'fund:next') return `Town fund, level ${(s().market.fund || 0) + 1}`;
     if (id.startsWith('bait:')) return `${BAITS[id.slice(5)].name} ×${SHOP.packSize}`;
     if (id.startsWith('lure:')) return LURES[id.slice(5)].name;
     if (id.startsWith('gift:')) return GIFTS[id.slice(5)].name;
@@ -95,11 +102,12 @@ export function installMarket(p) {
       if (l.kind === 'rod' && !st.unlocks[id]) return `Rank ${l.rank}`;
       return '';
     }
+    if (id === 'fund:next') return rank() < 5 ? 'Rank 5' : '';
     if (COSMETICS[id]) return st.market.owned[id] ? 'Owned' : '';
     if (id.startsWith('lure:') && !has('fishing.lure_slot')) return 'Fishing 8';
     return '';
   }
-  const price = (id) => Math.max(1, Math.round(priceOf(id, T) * discount()));
+  const price = (id) => (id === 'fund:next' ? fundPrice(rank(), T) : Math.max(1, Math.round(priceOf(id, T) * discount())));
 
   const mod = {
     name: 'market',
@@ -115,13 +123,19 @@ export function installMarket(p) {
       const cost = price(id);
       if (!p.gold.pay(cost)) return { ok: false, reason: 'gold' };
       const st = s();
-      if (id.startsWith('bait:')) st.fish.baits[id.slice(5)] = (st.fish.baits[id.slice(5)] || 0) + SHOP.packSize;
+      if (id === 'fund:next') {
+        st.market.fund = (st.market.fund || 0) + 1;
+        const lv = st.market.fund;
+        grant(p, [{ token: 1 }, ...(lv % 5 === 0 ? [{ bait: ['goldenfly', 2] }] : [])], T);
+      } else if (id.startsWith('bait:')) st.fish.baits[id.slice(5)] = (st.fish.baits[id.slice(5)] || 0) + SHOP.packSize;
       else if (id.startsWith('lure:')) st.fish.lures[id.slice(5)] = (st.fish.lures[id.slice(5)] || 0) + 1;
       else if (id.startsWith('gift:')) st.gifts.stock[id.slice(5)] = (st.gifts.stock[id.slice(5)] || 0) + 1;
       else st.market.owned[id] = true;
+      if (id.startsWith('proj:')) grant(p, PROJECTS.find((x) => x.id === id).reward, T);
       if (id.startsWith('tank:')) st.house.tanks = Math.max(st.house.tanks, 1);
       if (id.startsWith('room:')) st.house.rooms[id.slice(5)] = true;
       if (id.startsWith('rod:')) st.fish.rods[id.slice(4)] = true;
+      st.market.bought[id] = p.telemetry.playMinutes();
       bus.emit('PURCHASE', { itemId: id, price: cost, kind: id.split(':')[0] });
       p.queue.push({ kind: 'item', title: nameOf(id), sub: `Bought for ${cost} gold` });
       p.store.commit();
@@ -204,11 +218,12 @@ export function installMarket(p) {
       // sell the extras, then buy the next rung of the ladder when it is affordable; keep a few baits in the bag
       mod.sellDuplicates();
       for (const l of ladder(T)) {
-        if (s().market.owned[l.id] || mod.why(l.id) === `Rank ${l.rank}`) continue;
-        if (mod.why(l.id)) continue;
+        if (s().market.owned[l.id] || mod.why(l.id)) continue;
         if (p.gold.get() >= price(l.id)) mod.buy(l.id);
-        break; // the next rung only: saving for it is the point
+        else break; // saving for the next rung is the point
       }
+      // nothing else to save for right now: the Town fund takes the rest, a level at a time
+      for (let i = 0; i < 40 && !mod.why('fund:next') && p.gold.get() >= price('fund:next') + 300; i++) mod.buy('fund:next');
       const f = s().fish;
       const total = Object.values(f.baits).reduce((a, b) => a + b, 0);
       if (total < 10) ['worm', 'shrimp'].forEach((b) => p.gold.get() > 200 && mod.buy(`bait:${b}`));

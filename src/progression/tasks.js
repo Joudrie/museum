@@ -153,7 +153,7 @@ export function installTasks(p) {
   function completeTask(t) {
     const s = S();
     p.state.stats.tasksDone += 1;
-    const g = p.xp(t.xp, 'task', { silent: true });
+    const g = p.xp(Math.round(t.xp * (1 + T.xp.rankScale * level())), 'task', { silent: true });
     p.gold.add(t.gold);
     p.telemetry.track('task_complete', { id: t.id });
     p.queue.pushChain([{ kind: 'xp', amount: g.gained, bonus: g.bonus, label: 'Task', xpAfter: g.totalAfter }, { kind: 'task', title: t.text, rewards: [{ icon: 'gold', text: `${t.gold} gold` }] }]);

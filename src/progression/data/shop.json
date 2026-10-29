@@ -1,25 +1,222 @@
 {
-  "staples": ["worm", "bread", "cricket", "shrimp", "minnowbait", "squidstrip", "glowbug"],
-  "packSize": 5,
-  "lures": ["spinner", "heavyjig", "mirror"],
-  "gifts": ["tea", "book", "bread"],
-  "dailyRare": ["goldenfly"],
-  "weeklyCosmetics": ["rodskin:walnut", "rodskin:coral", "outfit:sweater", "outfit:tuxedo", "hat:beanie", "hat:bucket", "hat:lantern", "boatpaint:red", "boatpaint:cream", "frame:shell"],
-  "ladder": [
-    { "id": "boat:rowboat", "kind": "boat", "name": "Rowboat", "rank": 4, "minutes": 20, "text": "Row to the Far Isle and Skull Isle." },
-    { "id": "rod:cork", "kind": "rod", "name": "Cork rod", "rank": 5, "minutes": 25, "text": "Bites sooner, longer to react." },
-    { "id": "room:lounge", "kind": "room", "name": "Lodge lounge", "rank": 8, "minutes": 25, "text": "A place to sit. Unlocks furniture." },
-    { "id": "boat:sailboat", "kind": "boat", "name": "Sailboat", "rank": 10, "minutes": 30, "text": "Open sea: the reef, the rock, the tomb, the badlands, the temple." },
-    { "id": "room:aquarium_room", "kind": "room", "name": "Aquarium room", "rank": 15, "minutes": 30, "text": "Tanks for the fish you have caught." },
-    { "id": "tank:medium", "kind": "tank", "name": "Medium tank", "rank": 16, "minutes": 25, "text": "Eight fish swim here." },
-    { "id": "rod:feather", "kind": "rod", "name": "Feather rod", "rank": 20, "minutes": 35, "text": "Light as air." },
-    { "id": "furn:set1", "kind": "furniture", "name": "Cosy set", "rank": 22, "minutes": 25, "text": "Rug, lamp and a shelf for the lodge." },
-    { "id": "tank:large", "kind": "tank", "name": "Large tank", "rank": 25, "minutes": 30, "sub": true, "text": "Fourteen fish. (Subscriber)" },
-    { "id": "boat:icehull", "kind": "boat", "name": "Ice hull", "rank": 30, "minutes": 40, "text": "Break the ice to the Frozen North." },
-    { "id": "room:workshop", "kind": "room", "name": "Workshop", "rank": 35, "minutes": 35, "sub": true, "text": "Craft lures at a bench. (Subscriber)" },
-    { "id": "rod:golden", "kind": "rod", "name": "Golden rod", "rank": 40, "minutes": 40, "text": "The best bite and the longest window." },
-    { "id": "tank:huge", "kind": "tank", "name": "Huge tank", "rank": 45, "minutes": 40, "sub": true, "text": "Twenty-four fish. (Subscriber)" }
+ "staples": [
+  "worm",
+  "bread",
+  "cricket",
+  "shrimp",
+  "minnowbait",
+  "squidstrip",
+  "glowbug"
+ ],
+ "packSize": 5,
+ "lures": [
+  "spinner",
+  "heavyjig",
+  "mirror"
+ ],
+ "gifts": [
+  "tea",
+  "book",
+  "bread"
+ ],
+ "dailyRare": [
+  "goldenfly"
+ ],
+ "weeklyCosmetics": [
+  "rodskin:walnut",
+  "rodskin:coral",
+  "outfit:sweater",
+  "outfit:tuxedo",
+  "hat:beanie",
+  "hat:bucket",
+  "hat:lantern",
+  "boatpaint:red",
+  "boatpaint:cream",
+  "frame:shell"
+ ],
+ "ladder": [
+  {
+   "id": "boat:rowboat",
+   "kind": "boat",
+   "name": "Rowboat",
+   "rank": 4,
+   "minutes": 20,
+   "text": "Row to the Far Isle and Skull Isle."
+  },
+  {
+   "id": "rod:cork",
+   "kind": "rod",
+   "name": "Cork rod",
+   "rank": 5,
+   "minutes": 25,
+   "text": "Bites sooner, longer to react."
+  },
+  {
+   "id": "room:lounge",
+   "kind": "room",
+   "name": "Lodge lounge",
+   "rank": 8,
+   "minutes": 25,
+   "text": "A place to sit. Unlocks furniture."
+  },
+  {
+   "id": "boat:sailboat",
+   "kind": "boat",
+   "name": "Sailboat",
+   "rank": 10,
+   "minutes": 30,
+   "text": "Open sea: the reef, the rock, the tomb, the badlands, the temple."
+  },
+  {
+   "id": "room:aquarium_room",
+   "kind": "room",
+   "name": "Aquarium room",
+   "rank": 15,
+   "minutes": 30,
+   "text": "Tanks for the fish you have caught."
+  },
+  {
+   "id": "tank:medium",
+   "kind": "tank",
+   "name": "Medium tank",
+   "rank": 16,
+   "minutes": 25,
+   "text": "Eight fish swim here."
+  },
+  {
+   "id": "rod:feather",
+   "kind": "rod",
+   "name": "Feather rod",
+   "rank": 20,
+   "minutes": 35,
+   "text": "Light as air."
+  },
+  {
+   "id": "furn:set1",
+   "kind": "furniture",
+   "name": "Cosy set",
+   "rank": 22,
+   "minutes": 25,
+   "text": "Rug, lamp and a shelf for the lodge."
+  },
+  {
+   "id": "tank:large",
+   "kind": "tank",
+   "name": "Large tank",
+   "rank": 25,
+   "minutes": 30,
+   "sub": true,
+   "text": "Fourteen fish. (Subscriber)"
+  },
+  {
+   "id": "furn:set2",
+   "kind": "furniture",
+   "name": "Lantern set",
+   "rank": 28,
+   "minutes": 25,
+   "text": "Hanging lanterns and a reading chair."
+  },
+  {
+   "id": "boat:icehull",
+   "kind": "boat",
+   "name": "Ice hull",
+   "rank": 30,
+   "minutes": 40,
+   "text": "Break the ice to the Frozen North."
+  },
+  {
+   "id": "room:gallery",
+   "kind": "room",
+   "name": "Trophy gallery",
+   "rank": 32,
+   "minutes": 35,
+   "text": "Wall space for six more trophies."
+  },
+  {
+   "id": "room:workshop",
+   "kind": "room",
+   "name": "Workshop",
+   "rank": 35,
+   "minutes": 35,
+   "sub": true,
+   "text": "Craft lures at a bench. (Subscriber)"
+  },
+  {
+   "id": "furn:set3",
+   "kind": "furniture",
+   "name": "Harbour set",
+   "rank": 38,
+   "minutes": 30,
+   "text": "A ship in a bottle, charts, a brass compass."
+  },
+  {
+   "id": "rod:golden",
+   "kind": "rod",
+   "name": "Golden rod",
+   "rank": 40,
+   "minutes": 40,
+   "text": "The best bite and the longest window."
+  },
+  {
+   "id": "room:observatory",
+   "kind": "room",
+   "name": "Observatory",
+   "rank": 42,
+   "minutes": 35,
+   "text": "A telescope for the night sky."
+  },
+  {
+   "id": "tank:huge",
+   "kind": "tank",
+   "name": "Huge tank",
+   "rank": 45,
+   "minutes": 40,
+   "sub": true,
+   "text": "Twenty-four fish. (Subscriber)"
+  },
+  {
+   "id": "furn:set4",
+   "kind": "furniture",
+   "name": "Curator\u2019s set",
+   "rank": 47,
+   "minutes": 30,
+   "text": "Frames, a plinth and a small desk."
+  },
+  {
+   "id": "boat:gilded",
+   "kind": "boat",
+   "name": "Gilded hull",
+   "rank": 49,
+   "minutes": 40,
+   "text": "A boat that shines."
+  }
+ ],
+ "tanks": {
+  "small": 4,
+  "medium": 8,
+  "large": 14,
+  "huge": 24
+ },
+ "furniture": {
+  "set1": [
+   "Woven rug",
+   "Standing lamp",
+   "Little shelf"
   ],
-  "tanks": { "small": 4, "medium": 8, "large": 14, "huge": 24 },
-  "furniture": { "set1": ["Woven rug", "Standing lamp", "Little shelf"] }
+  "set2": [
+   "Hanging lanterns",
+   "Reading chair",
+   "Side table"
+  ],
+  "set3": [
+   "Ship in a bottle",
+   "Sea charts",
+   "Brass compass"
+  ],
+  "set4": [
+   "Gilt frames",
+   "A small plinth",
+   "Writing desk"
+  ]
+ }
 }
