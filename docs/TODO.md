@@ -25,7 +25,7 @@ builder ⟳ turn for multi-side pieces, one family linked (#82) · dig spots wit
 ---
 
 ## CHAT 1: Content and images (the pipeline)
-Owns: `tools/`, `content/`, `docs/CONTENT*.md`, `public/paintings/`, `src/collections/data/paintings.js`. Claim: `open`
+Owns: `tools/`, `content/`, `docs/CONTENT*.md`, `public/paintings/`, `src/collections/data/paintings.js`. Claim: `claimed: 2026-10-29`
 - [ ] **Host our own copies of the 49 paintings.** They hot-link Wikimedia (429 / 404). Download the *same* image, resize to 1280px long side, JPEG under about 500 KB, save to `public/paintings/<slug>.jpg`, point the data at it (same ids, saves keep working). Don't swap any image for a different work.
 - [ ] 3 broken links (horse-fair, temeraire, crossing-delaware) and 8 wrong shapes (school-athens, emmaus, water-lilies, cafe-terrace, creation-adam, anatomy-lesson, pearl-earring, wheatfield-crows): write proposals to `content/image-proposals.md` with source, size, shape. Don't apply them; the user approves.
 - [ ] Hooks for the 4 Met drafts (Night-Shining White, Esther, Gulf Stream, Drawing Lesson): a quotable museum or Commons sentence, as a claim with the exact quote.
