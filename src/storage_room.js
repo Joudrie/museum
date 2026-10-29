@@ -2,8 +2,7 @@
 // (the codex). Dirty pieces wait here for the Restoration Studio; restored
 // ones are ready for display. Shown as a journal tab (see journal.js).
 import { inventory, dirtyItems } from './restore.js';
-import { collect } from './collections/codex.js';
-import { list, RARITY } from './collections/index.js';
+import { RARITY } from './collections/index.js';
 import { fillPicture } from './collections/render.js';
 import { openStudio } from './restorestudio.js';
 
@@ -45,13 +44,5 @@ export function storageTab(ctx, refresh) {
   if (!inv.ever.length) ever.appendChild(mk('p', 'empty-note', 'The codex is empty.'));
   nodes.push(ever);
 
-  const test = mk('button', 'wide-btn', 'Testing: hand me something dirty');
-  test.onclick = () => {
-    const pool = list({ collection: 'fossil' }).concat(list({ collection: 'mineral' }));
-    const e = pool[Math.floor(Math.random() * pool.length)];
-    if (e) collect(e.id, { dirty: true });
-    refresh();
-  };
-  nodes.push(test);
-  return nodes;
+  return nodes; // (the testing button that hands you something dirty lives in Settings → Testing)
 }

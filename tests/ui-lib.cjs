@@ -70,6 +70,7 @@ const SCREENS = {
   '16-share': async (p) => { await click(p, '#menu-btn'); await click(p, '#hub-share'); },
   '16b-menu-hub': (p) => click(p, '#menu-btn'),
   '17-conversation': (p) => p.evaluate(() => { const s = __game.scene.getScene('room'); const n = s.npcs.find((n) => !n.staff && !n.famous); s.player.setPosition(n.s.x, n.s.y + 14); s.talkTo(n); }),
+  '17b-conversation-choices': async (p) => { await p.evaluate(() => { const s = __game.scene.getScene('room'); const n = s.npcs.find((n) => !n.staff && !n.famous); s.player.setPosition(n.s.x, n.s.y + 14); s.talkTo(n); }); await sleep(2500); await p.evaluate(() => { document.querySelector('#chat .chat-choices').innerHTML = '<button>Tell me about this painting</button><button>Here, take this</button><button>See you around</button>'; document.querySelector('#chat .chat-more').hidden = true; }); },
   '18-staff-bubble': (p) => p.evaluate(() => { const s = __game.scene.getScene('room'); const n = s.npcs.find((n) => n.kind === 'caretaker'); s.player.setPosition(n.s.x, n.s.y + 14); s.talkTo(n); }),
   '19-toast': (p) => p.evaluate(() => __game.scene.getScene('room').toast('Saved your note. +40 gold')),
   '20-island-world': async (p) => { await p.evaluate(() => __game.scene.start('island', { map: 'one' })); await sleep(2500); },

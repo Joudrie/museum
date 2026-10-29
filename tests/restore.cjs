@@ -20,9 +20,12 @@ const check = (ok, good, fail) => { console.log(ok ? `ok   ${good}` : `FAIL ${fa
 
   const codex = () => S(() => JSON.parse(localStorage.getItem('curation.codex')));
   // dirty contract through the testing button
+  await p.click('#menu-btn'); await wait(300);
+  await p.click('#settings-btn'); await wait(400);
+  await p.click('text=Hand me something dirty'); await wait(300);
+  await p.click('.settings-close'); await wait(300);
   await p.click('#journal-btn'); await wait(400);
   await p.click('[data-jtab="storage"]'); await wait(300);
-  await p.click('text=Testing: hand me something dirty'); await wait(300);
   let c = await codex();
   check(Object.keys(c.dirty || {}).length === 1, 'a dirty find is recorded in the codex', 'no dirty find: ' + JSON.stringify(c.dirty));
   await shot('storage');

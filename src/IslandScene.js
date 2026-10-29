@@ -506,7 +506,7 @@ export class IslandScene extends Phaser.Scene {
     this.place('dock_post', 11, 38);
     this.place('dock_post', 13, 38);
     this.place('rowboat', 13, 39, { solid: false });
-    this.thing('sign', 13, 35, 'Expeditions leave from this dock. Pirate islands, shipwrecks, lost temples… coming soon!');
+    this.thing('sign', 13, 35, 'Expeditions leave from this dock: pirate islands, shipwrecks, lost temples. Use the rowboat to sail.');
     this.thing('sign', 13, 9, 'Welcome to the island! The museum is right behind you. Walk up into the doors to go back in.');
   }
 

@@ -3,6 +3,8 @@ import { section, choices } from './decor.js';
 import { settings, setSetting, LIGHT_QUALITY } from './settings.js';
 import { isMuted, setMuted } from './music.js';
 import { openShare } from './share.js';
+import { collect } from './collections/codex.js';
+import { list } from './collections/index.js';
 
 const el = document.getElementById('settings');
 const body = el.querySelector('.settings-body');
@@ -110,6 +112,12 @@ function render() {
     group(
       'Testing (for now)',
       button('+1,000 gold', () => state.onAddCoins(1000)),
+      button('Hand me something dirty', (e) => {
+        const pool = list({ collection: 'fossil' }).concat(list({ collection: 'mineral' }));
+        const found = pool[Math.floor(Math.random() * pool.length)];
+        if (found) collect(found.id, { dirty: true });
+        e.target.textContent = 'Added one to Storage';
+      }),
       button('Collect one of everything', (e) => {
         const n = state.onCollectAll();
         e.target.textContent = n ? `Added ${n} to your collection` : 'You already have one of everything';
