@@ -2,6 +2,8 @@
 // The room is drawn with a fake-3D "looking down into a box" projection:
 // the back wall faces the camera, the side walls lean outward at 45°, and
 // everything on a wall (wallpaper, panels, paintings) follows its angle.
+import { paintColumn, columnCanvas } from './columns.js';
+
 export const T = 32;
 
 const hex = (h) => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
@@ -1334,8 +1336,17 @@ export function bakeHallStairs(scene, key, decor, run) {
   });
 }
 
-// A marble column, base and capital, h px tall.
-export function bakeColumn(scene, key, h) {
+// A column h px tall. With a style (see columns.js) it is that design, W px wide;
+// without one it is the small marble post used for newels.
+export function bakeColumn(scene, key, h, style, W0 = 34) {
+  if (style) {
+    if (scene.textures.exists(key)) return scene.textures.get(key);
+    const px = paintColumn(style, W0, h);
+    return bake(scene, key, W0, h, (x, y) => {
+      const i = (y * W0 + x) * 4;
+      return px[i + 3] ? [px[i], px[i + 1], px[i + 2]] : null;
+    });
+  }
   const W = 22;
   const m = hex('#e8e2d6');
   return bake(scene, key, W, h, (x, y) => {
@@ -2097,6 +2108,14 @@ export function bakeItem(scene, key, type, def, rot) {
   const BRASS = '#c9a23f';
   const BRASS_L = '#ecd078';
   const gy = H - 4; // ground line near the front of the footprint
+
+  // free-standing columns from columns.js, standing on the ground line
+  if (def.column) {
+    shadow(fw / 2, gy, fw / 2 - 2, 3);
+    ctx.drawImage(columnCanvas(def.column, fw, gy + 1), 0, 0);
+    tex.refresh();
+    return key;
+  }
 
   switch (type) {
     case 'stool':

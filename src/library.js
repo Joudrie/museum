@@ -3,6 +3,7 @@
 // whole art set can be reviewed at a glance. Island tiles are on tiles.html.
 import { makeCharacter, makeEmotes, bakeItem, bakePlant, HATS, FACIAL, GLASSES, HAIRSTYLES, OUTFITS, ACCESSORIES } from './art.js';
 import { ITEMS, CATEGORIES } from './items.js';
+import { COLUMNS, columnCanvas } from './columns.js';
 import { FAMOUS } from './famous.js';
 import { makePet, PETS, PET_COLORS } from './pets.js';
 import { critterTextures } from './critters.js';
@@ -107,6 +108,13 @@ const tabs = {
         return card(def.name, keys, type);
       }));
     });
+  },
+  // every column design at the sizes the game uses: main hall, atrium, toolkit
+  columns() {
+    section('Columns', Object.entries(COLUMNS).map(([id, c]) => {
+      [[34, 88], [34, 70], [32, 89]].forEach(([w, h], i) => (store[`col_${id}_${i}`] = columnCanvas(id, w, h)));
+      return card(`${c.name} · ${c.place}`, [0, 1, 2].map((i) => `col_${id}_${i}`), id);
+    }));
   },
   creatures() {
     makeEmotes(scene);

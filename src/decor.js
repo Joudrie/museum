@@ -6,6 +6,7 @@ import { TRACKS } from './music.js';
 import { PETS, PET_COLORS } from './pets.js';
 
 import { THEMES } from './themes.js';
+import { COLUMNS, DEFAULT_COLUMN, columnCanvas } from './columns.js';
 export { THEMES };
 import { SIZE_LABELS, ORIENT_LABELS, roomName, isFixed } from './rooms.js';
 import { roomRating, starText } from './rating.js';
@@ -106,6 +107,31 @@ export function choices(options, value, onPick, icon) {
     row.appendChild(b);
   });
   return row;
+}
+
+// Every column design as a tall card (picture, name, where it is from); the chosen one's fact underneath.
+const columnPics = {};
+function columnPicker(value, onPick) {
+  const box = document.createElement('div');
+  const grid = document.createElement('div');
+  grid.className = 'column-pick';
+  Object.entries(COLUMNS).forEach(([id, c]) => {
+    const b = document.createElement('button');
+    b.className = id === value ? 'on' : '';
+    b.dataset.column = id;
+    columnPics[id] ||= columnCanvas(id, 34, 88).toDataURL();
+    b.innerHTML = `<img alt="" src="${columnPics[id]}" /><b></b><i></i>`;
+    b.querySelector('b').textContent = c.name;
+    b.querySelector('i').textContent = c.place;
+    b.onclick = () => onPick(id);
+    grid.appendChild(b);
+  });
+  const fact = document.createElement('p');
+  fact.className = 'toolkit-note';
+  const c = COLUMNS[value];
+  fact.textContent = `${c.name} (${c.place}): ${c.note}`;
+  box.append(fact, grid);
+  return box;
 }
 
 // Room settings at the top of "This room": name, size, doorway style.
@@ -277,6 +303,10 @@ function renderRoom() {
   const parts = [section('Theme (one tap)', choices(themes, null, (id) => set(THEMES[id].decor)))];
   parts.push(group('floor', 'Floor', FLOOR_PATTERNS[d.pattern] || 'Planks', ...floorSections));
   parts.push(group('walls', 'Walls', `${WALL_PATTERNS[d.paperStyle || 'stripes'] || 'Stripes'} · ${WAINSCOT_STYLES[d.wainscotStyle || 'panels'] || 'Panels'}`, ...wallSections));
+  if (state.columns) {
+    const col = COLUMNS[d.column] ? d.column : DEFAULT_COLUMN;
+    parts.push(group('columns', 'Columns', COLUMNS[col].name, columnPicker(col, (column) => set({ column }))));
+  }
   parts.push(group('extras', 'Carpet & plants', `${d.carpet ? 'Runner' : 'No carpet'} · ${PLANTS[d.plant] || 'No plants'}`, ...extraSections));
   parts.push(group('mood', 'Light & sound', `${LIGHTS[d.light || 'warm']} · ${TRACKS[d.music || 'none']}`, ...moodSections));
   if (roomSections.length) {
@@ -410,7 +440,7 @@ export function closeDecor() {
 }
 
 // opts: { decor, character, room, index, rooms, onDecor, onCharacter, onRoom(patch), onMoveRoom(i, j),
-//         onGoRoom(i), onClose, plantIcon(id), characterPreview() }
+//         onGoRoom(i), onClose, plantIcon(id), characterPreview(), columns (the room has columns to restyle) }
 export function openDecor(opts) {
   state = { ...opts };
   render();
