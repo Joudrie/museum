@@ -1,0 +1,114 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "operating-on-guan-yus-arm-katsushika",
+  "notes": "region: Japan (woman artist, Katsushika Ōi)",
+  "entry": {
+    "id": "painting:operating-on-guan-yus-arm-katsushika",
+    "collection": "painting",
+    "title": "Operating on Guan Yu's Arm",
+    "by": "Katsushika Ōi",
+    "year": "1840s",
+    "era": "romantic",
+    "ratio": 0.3537,
+    "blurb": "As a woman, Ōi was an outlier in her era, but her talent was allowed to shine due to collaboration with her father, Katsushika Hokusai (1760–1849), the famed designer of the print known as The Great Wave .",
+    "rarity": 1,
+    "tags": [
+      "japan",
+      "scroll",
+      "ink"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1998.178/1998.178_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Kelvin Smith Fund",
+      "url": "https://clevelandart.org/art/1998.178"
+    },
+    "value": 5,
+    "facts": [
+      "In this sensationalist portrayal, Guan Yu’s attendants cower at the sight of his bloody arm while he remains unflinchingly focused on his game.",
+      "This is the largest surviving painting by the artist.",
+      "Ukiyo-e artists’ subject matter extended to popular literature."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "160300",
+    "title": "Operating on Guan Yu's Arm",
+    "maker": "Katsushika Ōi",
+    "year": "1840s",
+    "medium": "hanging scroll; ink, color, and gold on silk",
+    "dimensions": "Mounted: 206.7 x 73.1 cm (81 3/8 x 28 3/4 in.); Painting: 140.2 x 68.3 cm (55 3/16 x 26 7/8 in.)",
+    "widthCm": 73.1,
+    "heightCm": 206.7,
+    "ratio": 0.3537,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1998.178/1998.178_web.jpg",
+    "imageWidth": 439,
+    "imageHeight": 900,
+    "pageUrl": "https://clevelandart.org/art/1998.178",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Kelvin Smith Fund",
+    "description": "Ukiyo-e artists’ subject matter extended to popular literature. Katsushika Ōi used color to great effect in her gruesome version of an episode from a 14th-century Chinese novel, Romance of the Three Kingdoms. Ōi portrayed the passage in which legendary 3rd-century military leader Guan Yu undergoes a bone scraping to remove poisons received from an arrow wound. In this sensationalist portrayal, Guan Yu’s attendants cower at the sight of his bloody arm while he remains unflinchingly focused on his game. As a woman, Ōi was an outlier in her era, but her talent was allowed to shine due to collaboration with her father, Katsushika Hokusai (1760–1849), the famed designer of the print known as The Great Wave . This is the largest surviving painting by the artist.",
+    "culture": "Japan, Edo period (1615–1868)",
+    "classification": "Painting",
+    "tags": [
+      "Japanese Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Operating on Guan Yu's Arm",
+      "maker": "Katsushika Ōi",
+      "year": "1840s",
+      "medium": "hanging scroll; ink, color, and gold on silk",
+      "dimensions": "Mounted: 206.7 x 73.1 cm (81 3/8 x 28 3/4 in.); Painting: 140.2 x 68.3 cm (55 3/16 x 26 7/8 in.)",
+      "culture": "Japan, Edo period (1615–1868)",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Kelvin Smith Fund",
+      "description": "Ukiyo-e artists’ subject matter extended to popular literature. Katsushika Ōi used color to great effect in her gruesome version of an episode from a 14th-century Chinese novel, Romance of the Three Kingdoms. Ōi portrayed the passage in which legendary 3rd-century military leader Guan Yu undergoes a bone scraping to remove poisons received from an arrow wound. In this sensationalist portrayal, Guan Yu’s attendants cower at the sight of his bloody arm while he remains unflinchingly focused on his game. As a woman, Ōi was an outlier in her era, but her talent was allowed to shine due to collaboration with her father, Katsushika Hokusai (1760–1849), the famed designer of the print known as The Great Wave . This is the largest surviving painting by the artist.",
+      "tombstone": "Operating on Guan Yu's Arm (関羽割臂図), 1840s. Katsushika Ōi (Japanese, c. 1800-after 1857). Hanging scroll; ink, color, and gold on silk; mounted: 206.7 x 73.1 cm (81 3/8 x 28 3/4 in.); painting: 140.2 x 68.3 cm (55 3/16 x 26 7/8 in.). The Cleveland Museum of Art, Kelvin Smith Fund, 1998.178",
+      "funFact": "",
+      "didYouKnow": "This is the largest surviving painting by the artist.",
+      "creators": "Katsushika Ōi (Japanese, c. 1800-after 1857)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "As a woman, Ōi was an outlier in her era, but her talent was allowed to shine due to collaboration with her father, Katsushika Hokusai (1760–1849), the famed designer of the print known as The Great Wave .",
+      "quote": "As a woman, Ōi was an outlier in her era, but her talent was allowed to shine due to collaboration with her father, Katsushika Hokusai (1760–1849), the famed designer of the print known as The Great Wave .",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "In this sensationalist portrayal, Guan Yu’s attendants cower at the sight of his bloody arm while he remains unflinchingly focused on his game.",
+      "quote": "In this sensationalist portrayal, Guan Yu’s attendants cower at the sight of his bloody arm while he remains unflinchingly focused on his game.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "This is the largest surviving painting by the artist.",
+      "quote": "This is the largest surviving painting by the artist.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Ukiyo-e artists’ subject matter extended to popular literature.",
+      "quote": "Ukiyo-e artists’ subject matter extended to popular literature.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}
