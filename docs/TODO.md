@@ -71,12 +71,12 @@ Owns: new `src/restore.js`, `src/restorestudio.js`, `src/storage_room.js`. Claim
 ## CHAT 5: Display, exhibits and the aquarium
 Owns: `src/showcase.js`, `src/viewer.js`, `src/collections/render.js`, new `src/display*.js`. Claim: `claimed: 2026-10-29`
 - [x] Display cases, plinths, specimen shelves, easels and tanks that **place collection entries in rooms** (entries already say how they display: wall, case, plinth). (#127)
-- [x] **Aquarium** for caught fish: tanks in a room, fish swim, tap for the card; a giant tank wing. (tanks, giant tank, swimming fish: #127; tap-a-fish card still to do)
+- [x] **Aquarium** for caught fish: tanks in a room, fish swim, tap for the card; a giant tank wing. (tanks, giant tank, swimming fish: #127; tapping a fish or piece opens its card)
 - [x] Dinosaur skeleton assembled from dug bones; the big T. rex as a goal. (the T-rex skeleton item needs 6 dinosaur bones and a T. rex tooth in the codex; the toolkit shows what is missing)
-- [ ] Specimen shelves for everything with the HD viewer; rarity frames and special cases for rare items.
+- [x] Specimen shelves for everything with the HD viewer; rarity frames and special cases for rare items. (shelf + case + plinth; rare pieces glow blue, legendary breathe gold)
 - [x] Set completion plaques and rewards on display ("Fossil drawer", "Crystal cabinet"). (a set fully on display earns double; shown in the display panel)
 - [x] Every displayed piece earns and counts toward room rating. (#127)
-- [ ] Viewer polish: swipe along a wall of cases, notes, your rating and journal note.
+- [x] Viewer polish: swipe along a wall of cases, notes, your rating and journal note. (tap any displayed piece in a room, or in the panel, to open its card; swipe to the next; rating and note save to the journal)
 - [x] Rope barriers, stanchions and signage as placeable decor. (Display tab: rope, stanchion, exhibit sign)
 
 ## CHAT 6: Digging v2 and puzzle mechanics
