@@ -1,0 +1,114 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "nur-jahan-holding-a-portrait-of-emperor-jahangir",
+  "notes": "region: India",
+  "entry": {
+    "id": "painting:nur-jahan-holding-a-portrait-of-emperor-jahangir",
+    "collection": "painting",
+    "title": "Nur Jahan holding a portrait of Emperor Jahangir",
+    "by": "Bishandas",
+    "year": "c. 1627",
+    "era": "baroque",
+    "ratio": 0.4706,
+    "blurb": "A woman identified as the favorite wife of the Mughal emperor Jahangir (reigned 1605–27) holds a formal portrait of her husband.",
+    "rarity": 1,
+    "tags": [
+      "mughal india",
+      "tempera",
+      "portrait"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/2013.325/2013.325_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Gift in honor of Madeline Neves Clapp; Gift of Mrs. Henry White Cannon by exchange; Bequest of Louise T. Cooper; Leonard C. Hanna Jr. Fund; From the Catherine and Ralph Benkaim Collection",
+      "url": "https://clevelandart.org/art/2013.325"
+    },
+    "value": 5,
+    "facts": [
+      "She is depicted in her idealized youth, since she would have been 50 years old when Jahangir died.",
+      "Jahangir died at 58, outliving his younger brothers by about 25 years.",
+      "He appears aged with graying facial hair behind the jharokha carpet that marks imperial presence."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "170835",
+    "title": "Nur Jahan holding a portrait of Emperor Jahangir",
+    "maker": "Bishandas",
+    "year": "c. 1627",
+    "medium": "gum tempera and gold on paper",
+    "dimensions": "Painting only: 13.6 x 6.4 cm (5 3/8 x 2 1/2 in.); Page: 30 x 22.1 cm (11 13/16 x 8 11/16 in.)",
+    "widthCm": 6.4,
+    "heightCm": 13.6,
+    "ratio": 0.4706,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/2013.325/2013.325_web.jpg",
+    "imageWidth": 529,
+    "imageHeight": 900,
+    "pageUrl": "https://clevelandart.org/art/2013.325",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Gift in honor of Madeline Neves Clapp; Gift of Mrs. Henry White Cannon by exchange; Bequest of Louise T. Cooper; Leonard C. Hanna Jr. Fund; From the Catherine and Ralph Benkaim Collection",
+    "description": "A woman identified as the favorite wife of the Mughal emperor Jahangir (reigned 1605–27) holds a formal portrait of her husband. He appears aged with graying facial hair behind the jharokha carpet that marks imperial presence. This painting may be modeled on a work depicting Jahangir holding a portrait of his deceased father, showing himself to be the legitimate successor. Nur Jahan, who handled most of the affairs of state, hoped to remain in power after his death. She is depicted in her idealized youth, since she would have been 50 years old when Jahangir died. Jahangir died at 58, outliving his younger brothers by about 25 years.",
+    "culture": "Mughal India",
+    "classification": "Painting",
+    "tags": [
+      "Indian and Southeast Asian Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Nur Jahan holding a portrait of Emperor Jahangir",
+      "maker": "Bishandas",
+      "year": "c. 1627",
+      "medium": "gum tempera and gold on paper",
+      "dimensions": "Painting only: 13.6 x 6.4 cm (5 3/8 x 2 1/2 in.); Page: 30 x 22.1 cm (11 13/16 x 8 11/16 in.)",
+      "culture": "Mughal India",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Gift in honor of Madeline Neves Clapp; Gift of Mrs. Henry White Cannon by exchange; Bequest of Louise T. Cooper; Leonard C. Hanna Jr. Fund; From the Catherine and Ralph Benkaim Collection",
+      "description": "A woman identified as the favorite wife of the Mughal emperor Jahangir (reigned 1605–27) holds a formal portrait of her husband. He appears aged with graying facial hair behind the jharokha carpet that marks imperial presence. This painting may be modeled on a work depicting Jahangir holding a portrait of his deceased father, showing himself to be the legitimate successor. Nur Jahan, who handled most of the affairs of state, hoped to remain in power after his death. She is depicted in her idealized youth, since she would have been 50 years old when Jahangir died. Jahangir died at 58, outliving his younger brothers by about 25 years.",
+      "tombstone": "Nur Jahan holding a portrait of Emperor Jahangir, c. 1627. Mughal India. Gum tempera and gold on paper; painting only: 13.6 x 6.4 cm (5 3/8 x 2 1/2 in.); page: 30 x 22.1 cm (11 13/16 x 8 11/16 in.). The Cleveland Museum of Art, Gift in honor of Madeline Neves Clapp; Gift of Mrs. Henry White Cannon by exchange; Bequest of Louise T. Cooper; Leonard C. Hanna Jr. Fund; From the Catherine and Ralph Benkaim Collection, 2013.325",
+      "funFact": "",
+      "didYouKnow": "Jahangir died at 58, outliving his younger brothers by about 25 years.",
+      "creators": "Bishandas (Indian)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "A woman identified as the favorite wife of the Mughal emperor Jahangir (reigned 1605–27) holds a formal portrait of her husband.",
+      "quote": "A woman identified as the favorite wife of the Mughal emperor Jahangir (reigned 1605–27) holds a formal portrait of her husband.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "She is depicted in her idealized youth, since she would have been 50 years old when Jahangir died.",
+      "quote": "She is depicted in her idealized youth, since she would have been 50 years old when Jahangir died.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Jahangir died at 58, outliving his younger brothers by about 25 years.",
+      "quote": "Jahangir died at 58, outliving his younger brothers by about 25 years.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "He appears aged with graying facial hair behind the jharokha carpet that marks imperial presence.",
+      "quote": "He appears aged with graying facial hair behind the jharokha carpet that marks imperial presence.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

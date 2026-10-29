@@ -1,0 +1,113 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "the-biglin-brothers-turning-the-stake-thomas",
+  "notes": "region: United States",
+  "entry": {
+    "id": "painting:the-biglin-brothers-turning-the-stake-thomas",
+    "collection": "painting",
+    "title": "The Biglin Brothers Turning the Stake",
+    "by": "Thomas Eakins",
+    "year": "1873",
+    "era": "impressionist",
+    "ratio": 1.4946,
+    "blurb": "Rowing was among the most popular spectator sports in the U.S. during the 1870s.",
+    "rarity": 1,
+    "tags": [
+      "united states",
+      "oil"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1927.1984/1927.1984_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Hinman B. Hurlbut Collection",
+      "url": "https://clevelandart.org/art/1927.1984"
+    },
+    "value": 5,
+    "facts": [
+      "Throngs of spectators line the riverbank and watch as Barney and John Biglin negotiate the tricky turn around a stake marking the halfway point in the contest.",
+      "Trained in the United States and France, Eakins spent almost his entire artistic career in his hometown of Philadelphia.",
+      "Their competitors, seen in the middle distance at the right, lag behind."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "151904",
+    "title": "The Biglin Brothers Turning the Stake",
+    "maker": "Thomas Eakins",
+    "year": "1873",
+    "medium": "oil on canvas",
+    "dimensions": "Framed: 117 x 167 x 6.5 cm (46 1/16 x 65 3/4 x 2 9/16 in.); Unframed: 101.3 x 151.4 cm (39 7/8 x 59 5/8 in.)",
+    "widthCm": 151.4,
+    "heightCm": 101.3,
+    "ratio": 1.4946,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1927.1984/1927.1984_web.jpg",
+    "imageWidth": 1263,
+    "imageHeight": 835,
+    "pageUrl": "https://clevelandart.org/art/1927.1984",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Hinman B. Hurlbut Collection",
+    "description": "Eakins's painting celebrates athletic teamwork while commemorating an actual event, a famous rowing race that took place on the Schuylkill River in Philadelphia during May 1872. Throngs of spectators line the riverbank and watch as Barney and John Biglin negotiate the tricky turn around a stake marking the halfway point in the contest. Their competitors, seen in the middle distance at the right, lag behind. The Biglin brothers won the race, cementing their status as the most celebrated oarsmen of the era. Trained in the United States and France, Eakins spent almost his entire artistic career in his hometown of Philadelphia. He is renowned for the unsentimental realism in his paintings, whose compositions he developed through painstakingly prepared figure and perspective drawings. Rowing was among the most popular spectator sports in the U.S. during the 1870s.",
+    "culture": "United States",
+    "classification": "Painting",
+    "tags": [
+      "American Painting and Sculpture"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "The Biglin Brothers Turning the Stake",
+      "maker": "Thomas Eakins",
+      "year": "1873",
+      "medium": "oil on canvas",
+      "dimensions": "Framed: 117 x 167 x 6.5 cm (46 1/16 x 65 3/4 x 2 9/16 in.); Unframed: 101.3 x 151.4 cm (39 7/8 x 59 5/8 in.)",
+      "culture": "United States",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Hinman B. Hurlbut Collection",
+      "description": "Eakins's painting celebrates athletic teamwork while commemorating an actual event, a famous rowing race that took place on the Schuylkill River in Philadelphia during May 1872. Throngs of spectators line the riverbank and watch as Barney and John Biglin negotiate the tricky turn around a stake marking the halfway point in the contest. Their competitors, seen in the middle distance at the right, lag behind. The Biglin brothers won the race, cementing their status as the most celebrated oarsmen of the era. Trained in the United States and France, Eakins spent almost his entire artistic career in his hometown of Philadelphia. He is renowned for the unsentimental realism in his paintings, whose compositions he developed through painstakingly prepared figure and perspective drawings. Rowing was among the most popular spectator sports in the U.S. during the 1870s.",
+      "tombstone": "The Biglin Brothers Turning the Stake, 1873. Thomas Eakins (American, 1844–1916). Oil on canvas; framed: 117 x 167 x 6.5 cm (46 1/16 x 65 3/4 x 2 9/16 in.); unframed: 101.3 x 151.4 cm (39 7/8 x 59 5/8 in.). The Cleveland Museum of Art, Hinman B. Hurlbut Collection, 1927.1984",
+      "funFact": "",
+      "didYouKnow": "Rowing was among the most popular spectator sports in the U.S. during the 1870s.",
+      "creators": "Thomas Eakins (American, 1844–1916)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "Rowing was among the most popular spectator sports in the U.S. during the 1870s.",
+      "quote": "Rowing was among the most popular spectator sports in the U.S. during the 1870s.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Throngs of spectators line the riverbank and watch as Barney and John Biglin negotiate the tricky turn around a stake marking the halfway point in the contest.",
+      "quote": "Throngs of spectators line the riverbank and watch as Barney and John Biglin negotiate the tricky turn around a stake marking the halfway point in the contest.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Trained in the United States and France, Eakins spent almost his entire artistic career in his hometown of Philadelphia.",
+      "quote": "Trained in the United States and France, Eakins spent almost his entire artistic career in his hometown of Philadelphia.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Their competitors, seen in the middle distance at the right, lag behind.",
+      "quote": "Their competitors, seen in the middle distance at the right, lag behind.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

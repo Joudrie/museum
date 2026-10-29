@@ -1,0 +1,89 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "kangaroo",
+  "notes": "region: Indigenous Australia. a work from Indigenous Australian makers: use the community's own names where the record gives them; the museum text is short, so a hook may need a better source",
+  "entry": {
+    "id": "painting:kangaroo",
+    "collection": "painting",
+    "title": "Kangaroo",
+    "year": "1900s",
+    "era": "modern",
+    "ratio": 0.54,
+    "blurb": "Aboriginal artists made paintings on bark using symbols drawn from ceremonial body painting and rock paintings.",
+    "rarity": 1,
+    "tags": [
+      "australia",
+      "tempera"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1982.113/1982.113_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Gift of Annette Mathias and Children",
+      "url": "https://clevelandart.org/art/1982.113"
+    },
+    "value": 5
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "150680",
+    "title": "Kangaroo",
+    "maker": "",
+    "year": "1900s",
+    "medium": "tempera on bark",
+    "dimensions": "Overall: 100 x 54 cm (39 3/8 x 21 1/4 in.)",
+    "widthCm": 54,
+    "heightCm": 100,
+    "ratio": 0.54,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1982.113/1982.113_web.jpg",
+    "imageWidth": 503,
+    "imageHeight": 900,
+    "pageUrl": "https://clevelandart.org/art/1982.113",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Gift of Annette Mathias and Children",
+    "description": "Aboriginal artists made paintings on bark using symbols drawn from ceremonial body painting and rock paintings.",
+    "culture": "Australia, Western Arnhem Land, 20th century",
+    "classification": "Painting",
+    "tags": [
+      "Oceania"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Kangaroo",
+      "maker": "",
+      "year": "1900s",
+      "medium": "tempera on bark",
+      "dimensions": "Overall: 100 x 54 cm (39 3/8 x 21 1/4 in.)",
+      "culture": "Australia, Western Arnhem Land, 20th century",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Gift of Annette Mathias and Children",
+      "description": "Aboriginal artists made paintings on bark using symbols drawn from ceremonial body painting and rock paintings.",
+      "tombstone": "Kangaroo, 1900s. Australia, Western Arnhem Land, 20th century. Tempera on bark; overall: 100 x 54 cm (39 3/8 x 21 1/4 in.). The Cleveland Museum of Art, Gift of Annette Mathias and Children, 1982.113",
+      "funFact": "",
+      "didYouKnow": "Aboriginal artists made paintings on bark using symbols drawn from ceremonial body painting and rock paintings.",
+      "creators": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "Aboriginal artists made paintings on bark using symbols drawn from ceremonial body painting and rock paintings.",
+      "quote": "Aboriginal artists made paintings on bark using symbols drawn from ceremonial body painting and rock paintings.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

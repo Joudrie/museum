@@ -1,0 +1,113 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "the-parrot-addresses-khujasta-at-the-beginning-o",
+  "notes": "region: India",
+  "entry": {
+    "id": "painting:the-parrot-addresses-khujasta-at-the-beginning-o",
+    "collection": "painting",
+    "title": "The Parrot Addresses Khujasta at the Beginning of the Seventh Night, from a Tuti-nama (Tales of a Parrot)",
+    "year": "c. 1560",
+    "era": "renaissance",
+    "ratio": 0.6897,
+    "blurb": "Every night for 52 nights the sly domesticated parrot encourages his master’s wife Khujasta to meet her lover under cover of darkness.",
+    "rarity": 1,
+    "tags": [
+      "mughal india",
+      "tempera",
+      "ink"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1962.279.43.a/1962.279.43.a_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Gift of Mrs. A. Dean Perry",
+      "url": "https://clevelandart.org/art/1962.279.43.a"
+    },
+    "value": 5,
+    "facts": [
+      "The artist who painted this page was still firmly entrenched in the idioms of pre-Mughal painting.",
+      "Just before she leaves, the parrot mentions a topic from a tantalizing tale; she becomes so curious that she cannot go out before hearing the whole story.",
+      "By the time the story ends, dawn breaks, and it is too late for her to go out unnoticed."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "137890",
+    "title": "The Parrot Addresses Khujasta at the Beginning of the Seventh Night, from a Tuti-nama (Tales of a Parrot)",
+    "maker": "",
+    "year": "c. 1560",
+    "medium": "gum tempera, ink, and gold on paper",
+    "dimensions": "Overall: 20.3 x 14 cm (8 x 5 1/2 in.); Painting only: 9 x 10 cm (3 9/16 x 3 15/16 in.)",
+    "widthCm": 14,
+    "heightCm": 20.3,
+    "ratio": 0.6897,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1962.279.43.a/1962.279.43.a_web.jpg",
+    "imageWidth": 565,
+    "imageHeight": 900,
+    "pageUrl": "https://clevelandart.org/art/1962.279.43.a",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Gift of Mrs. A. Dean Perry",
+    "description": "Every night for 52 nights the sly domesticated parrot encourages his master’s wife Khujasta to meet her lover under cover of darkness. Just before she leaves, the parrot mentions a topic from a tantalizing tale; she becomes so curious that she cannot go out before hearing the whole story. By the time the story ends, dawn breaks, and it is too late for her to go out unnoticed. The artist who painted this page was still firmly entrenched in the idioms of pre-Mughal painting. This miniature displays an intermingling of various pre-Akbar idioms in the Mughal atelier.",
+    "culture": "Mughal India, court of Akbar (reigned 1556–1605)",
+    "classification": "Painting",
+    "tags": [
+      "Indian and Southeast Asian Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "The Parrot Addresses Khujasta at the Beginning of the Seventh Night, from a Tuti-nama (Tales of a Parrot)",
+      "maker": "",
+      "year": "c. 1560",
+      "medium": "gum tempera, ink, and gold on paper",
+      "dimensions": "Overall: 20.3 x 14 cm (8 x 5 1/2 in.); Painting only: 9 x 10 cm (3 9/16 x 3 15/16 in.)",
+      "culture": "Mughal India, court of Akbar (reigned 1556–1605)",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Gift of Mrs. A. Dean Perry",
+      "description": "Every night for 52 nights the sly domesticated parrot encourages his master’s wife Khujasta to meet her lover under cover of darkness. Just before she leaves, the parrot mentions a topic from a tantalizing tale; she becomes so curious that she cannot go out before hearing the whole story. By the time the story ends, dawn breaks, and it is too late for her to go out unnoticed. The artist who painted this page was still firmly entrenched in the idioms of pre-Mughal painting. This miniature displays an intermingling of various pre-Akbar idioms in the Mughal atelier.",
+      "tombstone": "The Parrot Addresses Khujasta at the Beginning of the Seventh Night, from a Tuti-nama (Tales of a Parrot), c. 1560. Mughal India, court of Akbar (reigned 1556–1605). Gum tempera, ink, and gold on paper; overall: 20.3 x 14 cm (8 x 5 1/2 in.); painting only: 9 x 10 cm (3 9/16 x 3 15/16 in.). The Cleveland Museum of Art, Gift of Mrs. A. Dean Perry, 1962.279.43.a",
+      "funFact": "",
+      "didYouKnow": "This miniature displays an intermingling of various pre-Akbar idioms in the Mughal atelier.",
+      "creators": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "Every night for 52 nights the sly domesticated parrot encourages his master’s wife Khujasta to meet her lover under cover of darkness.",
+      "quote": "Every night for 52 nights the sly domesticated parrot encourages his master’s wife Khujasta to meet her lover under cover of darkness.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The artist who painted this page was still firmly entrenched in the idioms of pre-Mughal painting.",
+      "quote": "The artist who painted this page was still firmly entrenched in the idioms of pre-Mughal painting.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Just before she leaves, the parrot mentions a topic from a tantalizing tale; she becomes so curious that she cannot go out before hearing the whole story.",
+      "quote": "Just before she leaves, the parrot mentions a topic from a tantalizing tale; she becomes so curious that she cannot go out before hearing the whole story.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "By the time the story ends, dawn breaks, and it is too late for her to go out unnoticed.",
+      "quote": "By the time the story ends, dawn breaks, and it is too late for her to go out unnoticed.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

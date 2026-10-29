@@ -1,0 +1,105 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "munja-chaekgeori-screen-character-books-screen",
+  "notes": "region: Korea",
+  "entry": {
+    "id": "painting:munja-chaekgeori-screen-character-books-screen",
+    "collection": "painting",
+    "title": "Munja-Chaekgeori Screen (Character-Books Screen)",
+    "year": "early 1900s",
+    "era": "modern",
+    "ratio": 2.194,
+    "blurb": "The lower section of each panel depicts the imagery of things, including books, decorative arts, and utilitarian objects.",
+    "rarity": 1,
+    "tags": [
+      "korea",
+      "ink"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/2017.6/2017.6_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Severance and Greta Millikin Purchase Fund",
+      "url": "https://clevelandart.org/art/2017.6"
+    },
+    "value": 5,
+    "facts": [
+      "The upper portion of each panel bears a classical Chinese character.",
+      "The eight Korean characters each mean filial piety, brotherly love, loyalty, trust, propriety, righteousness or justice, modesty or integrity, and humility or the feeling of shame."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "294203",
+    "title": "Munja-Chaekgeori Screen (Character-Books Screen)",
+    "maker": "",
+    "year": "early 1900s",
+    "medium": "Eight-panel folding screen, ink on paper",
+    "dimensions": "Overall: 150.5 x 330.2 cm (59 1/4 x 130 in.); Painting only: 85.1 x 27.3 cm (33 1/2 x 10 3/4 in.)",
+    "widthCm": 330.2,
+    "heightCm": 150.5,
+    "ratio": 2.194,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/2017.6/2017.6_web.jpg",
+    "imageWidth": 900,
+    "imageHeight": 422,
+    "pageUrl": "https://clevelandart.org/art/2017.6",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Severance and Greta Millikin Purchase Fund",
+    "description": "This folding screen is a whimsical harmony of two different subjects: chaekgeori , or books and things; and munja , or characters. The lower section of each panel depicts the imagery of things, including books, decorative arts, and utilitarian objects. The upper portion of each panel bears a classical Chinese character. Read from far right to left, the eight characters refer to the values of Confucian teachings of the Joseon dynasty: filial piety, brotherly love, loyalty, trust, propriety, righteousness, modesty, and humility. While these two pictorial genres are harmoniously conjoined on the same picture plane, two sharply contrasting world views—urban consumerism and traditional Confucian ethics that despise materialism—compete with one another. The eight Korean characters each mean filial piety, brotherly love, loyalty, trust, propriety, righteousness or justice, modesty or integrity, and humility or the feeling of shame.",
+    "culture": "Korea, Joseon dynasty (1392–1910)",
+    "classification": "Painting",
+    "tags": [
+      "Korean Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Munja-Chaekgeori Screen (Character-Books Screen)",
+      "maker": "",
+      "year": "early 1900s",
+      "medium": "Eight-panel folding screen, ink on paper",
+      "dimensions": "Overall: 150.5 x 330.2 cm (59 1/4 x 130 in.); Painting only: 85.1 x 27.3 cm (33 1/2 x 10 3/4 in.)",
+      "culture": "Korea, Joseon dynasty (1392–1910)",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Severance and Greta Millikin Purchase Fund",
+      "description": "This folding screen is a whimsical harmony of two different subjects: chaekgeori , or books and things; and munja , or characters. The lower section of each panel depicts the imagery of things, including books, decorative arts, and utilitarian objects. The upper portion of each panel bears a classical Chinese character. Read from far right to left, the eight characters refer to the values of Confucian teachings of the Joseon dynasty: filial piety, brotherly love, loyalty, trust, propriety, righteousness, modesty, and humility. While these two pictorial genres are harmoniously conjoined on the same picture plane, two sharply contrasting world views—urban consumerism and traditional Confucian ethics that despise materialism—compete with one another. The eight Korean characters each mean filial piety, brotherly love, loyalty, trust, propriety, righteousness or justice, modesty or integrity, and humility or the feeling of shame.",
+      "tombstone": "Munja-Chaekgeori Screen (Character-Books Screen) (문자책거리), early 1900s. Korea, Joseon dynasty (1392–1910). Eight-panel folding screen, ink on paper; overall: 150.5 x 330.2 cm (59 1/4 x 130 in.); painting only: 85.1 x 27.3 cm (33 1/2 x 10 3/4 in.). The Cleveland Museum of Art, Severance and Greta Millikin Purchase Fund, 2017.6",
+      "funFact": "",
+      "didYouKnow": "The eight Korean characters each mean filial piety, brotherly love, loyalty, trust, propriety, righteousness or justice, modesty or integrity, and humility or the feeling of shame.",
+      "creators": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "The lower section of each panel depicts the imagery of things, including books, decorative arts, and utilitarian objects.",
+      "quote": "The lower section of each panel depicts the imagery of things, including books, decorative arts, and utilitarian objects.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The upper portion of each panel bears a classical Chinese character.",
+      "quote": "The upper portion of each panel bears a classical Chinese character.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The eight Korean characters each mean filial piety, brotherly love, loyalty, trust, propriety, righteousness or justice, modesty or integrity, and humility or the feeling of shame.",
+      "quote": "The eight Korean characters each mean filial piety, brotherly love, loyalty, trust, propriety, righteousness or justice, modesty or integrity, and humility or the feeling of shame.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

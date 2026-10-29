@@ -6,21 +6,20 @@
   "entry": {
     "id": "painting:sudden-shower-over-shin-ohashi-bridge-and-atake-",
     "collection": "painting",
-    "title": "Sudden Shower over Shin-Ōhashi Bridge and Atake (Ōhashi Atake no yūdachi), from the series One Hundred Famous Views of Edo (Meisho Edo hyakkei)",
+    "title": "Sudden Shower over Shin-Ōhashi Bridge and Atake, from One Hundred Famous Views of Edo",
     "by": "Utagawa Hiroshige",
     "year": "1857",
     "era": "romantic",
-    "ratio": 0.7088,
-    "blurb": "By Utagawa Hiroshige, 1857, Woodblock print; ink and color on paper.",
+    "ratio": 0.6572,
+    "blurb": "Published two years after the great earthquake and fire of 1855, this print design illustrates the newly rebuilt Great Bridge over the Sumida River in Edo (now Tokyo).",
     "rarity": 1,
     "tags": [
       "japan",
-      "woodblock print",
-      "ink"
+      "woodblock print"
     ],
     "image": {
       "kind": "url",
-      "src": "https://images.metmuseum.org/CRDImages/as/original/DP130156.jpg",
+      "src": "https://openaccess-cdn.clevelandart.org/1921.318/1921.318_web.jpg",
       "placeholder": "#6a6458"
     },
     "display": [
@@ -31,65 +30,84 @@
     },
     "source": {
       "license": "CC0",
-      "credit": "The Metropolitan Museum of Art, New York. The Howard Mansfield Collection, Purchase, Rogers Fund, 1936",
-      "url": "https://www.metmuseum.org/art/collection/search/55433"
+      "credit": "The Cleveland Museum of Art. Gift from J. H. Wade",
+      "url": "https://clevelandart.org/art/1921.318"
     },
-    "value": 5
+    "value": 5,
+    "facts": [
+      "The Ohashi Bridge was one of 300 bridges that crossed the Sumida River.",
+      "The design shows Utagawa Hiroshige’s skill in capturing atmospheric conditions.",
+      "People try to protect themselves from sudden sheets of rain as they cross the bridge in opposite directions."
+    ]
   },
   "candidate": {
-    "source": "met",
-    "sourceId": "55433",
-    "title": "Sudden Shower over Shin-Ōhashi Bridge and Atake (Ōhashi Atake no yūdachi), from the series One Hundred Famous Views of Edo (Meisho Edo hyakkei)",
+    "source": "cleveland",
+    "sourceId": "103244",
+    "title": "Sudden Shower over Shin-Ōhashi Bridge and Atake, from One Hundred Famous Views of Edo",
     "maker": "Utagawa Hiroshige",
     "year": "1857",
-    "medium": "Woodblock print; ink and color on paper",
-    "dimensions": "Oban 13 3/8 x 9 1/2 in. (34 x 24.1 cm)",
-    "widthCm": 24.1,
-    "heightCm": 34,
-    "ratio": 0.7088,
-    "imageUrl": "https://images.metmuseum.org/CRDImages/as/original/DP130156.jpg",
-    "pageUrl": "https://www.metmuseum.org/art/collection/search/55433",
+    "medium": "color woodblock print",
+    "dimensions": "35.3 x 23.2 cm (13 7/8 x 9 1/8 in.)",
+    "widthCm": 23.2,
+    "heightCm": 35.3,
+    "ratio": 0.6572,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1921.318/1921.318_web.jpg",
+    "imageWidth": 605,
+    "imageHeight": 900,
+    "pageUrl": "https://clevelandart.org/art/1921.318",
     "license": "CC0",
-    "credit": "The Metropolitan Museum of Art, New York. The Howard Mansfield Collection, Purchase, Rogers Fund, 1936",
-    "description": "",
-    "culture": "Japan",
-    "classification": "Prints",
+    "credit": "The Cleveland Museum of Art. Gift from J. H. Wade",
+    "description": "Published two years after the great earthquake and fire of 1855, this print design illustrates the newly rebuilt Great Bridge over the Sumida River in Edo (now Tokyo). The design shows Utagawa Hiroshige’s skill in capturing atmospheric conditions. People try to protect themselves from sudden sheets of rain as they cross the bridge in opposite directions. The Atake neighborhood is seen in the distance. The Ohashi Bridge was one of 300 bridges that crossed the Sumida River.",
+    "culture": "Japan, Edo period (1615–1868)",
+    "classification": "Print",
     "tags": [
-      "Bridges",
-      "Rain",
-      "Umbrellas"
+      "Japanese Art"
     ],
     "publicDomain": true,
     "rejected": "",
     "texts": {
-      "title": "Sudden Shower over Shin-Ōhashi Bridge and Atake (Ōhashi Atake no yūdachi), from the series One Hundred Famous Views of Edo (Meisho Edo hyakkei)",
+      "title": "Sudden Shower over Shin-Ōhashi Bridge and Atake, from One Hundred Famous Views of Edo",
       "maker": "Utagawa Hiroshige",
       "year": "1857",
-      "medium": "Woodblock print; ink and color on paper",
-      "dimensions": "Oban 13 3/8 x 9 1/2 in. (34 x 24.1 cm)",
-      "culture": "Japan",
-      "classification": "Prints",
-      "credit": "The Metropolitan Museum of Art, New York. The Howard Mansfield Collection, Purchase, Rogers Fund, 1936",
-      "description": "",
-      "objectName": "Print",
-      "department": "Asian Art",
-      "period": "Edo period (1615–1868)",
-      "dynasty": "",
-      "artistBio": "Japanese, Tokyo (Edo) 1797–1858 Tokyo (Edo)",
-      "region": ""
+      "medium": "color woodblock print",
+      "dimensions": "35.3 x 23.2 cm (13 7/8 x 9 1/8 in.)",
+      "culture": "Japan, Edo period (1615–1868)",
+      "classification": "Print",
+      "credit": "The Cleveland Museum of Art. Gift from J. H. Wade",
+      "description": "Published two years after the great earthquake and fire of 1855, this print design illustrates the newly rebuilt Great Bridge over the Sumida River in Edo (now Tokyo). The design shows Utagawa Hiroshige’s skill in capturing atmospheric conditions. People try to protect themselves from sudden sheets of rain as they cross the bridge in opposite directions. The Atake neighborhood is seen in the distance. The Ohashi Bridge was one of 300 bridges that crossed the Sumida River.",
+      "tombstone": "Sudden Shower over Shin-Ōhashi Bridge and Atake, from One Hundred Famous Views of Edo, 1857. Utagawa Hiroshige (Japanese, 1797–1858). Color woodblock print; 35.3 x 23.2 cm (13 7/8 x 9 1/8 in.). The Cleveland Museum of Art, Gift from J. H. Wade, 1921.318",
+      "funFact": "",
+      "didYouKnow": "The Ohashi Bridge was one of 300 bridges that crossed the Sumida River.",
+      "creators": "Utagawa Hiroshige (Japanese, 1797–1858)"
     }
   },
   "claims": [
     {
       "kind": "blurb",
-      "text": "By Utagawa Hiroshige, 1857, Woodblock print; ink and color on paper.",
-      "quote": "By Utagawa Hiroshige, 1857, Woodblock print; ink and color on paper",
-      "source": "record",
-      "placeholderFor": "needs a real hook"
+      "text": "Published two years after the great earthquake and fire of 1855, this print design illustrates the newly rebuilt Great Bridge over the Sumida River in Edo (now Tokyo).",
+      "quote": "Published two years after the great earthquake and fire of 1855, this print design illustrates the newly rebuilt Great Bridge over the Sumida River in Edo (now Tokyo).",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The Ohashi Bridge was one of 300 bridges that crossed the Sumida River.",
+      "quote": "The Ohashi Bridge was one of 300 bridges that crossed the Sumida River.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The design shows Utagawa Hiroshige’s skill in capturing atmospheric conditions.",
+      "quote": "The design shows Utagawa Hiroshige’s skill in capturing atmospheric conditions.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "People try to protect themselves from sudden sheets of rain as they cross the bridge in opposite directions.",
+      "quote": "People try to protect themselves from sudden sheets of rain as they cross the bridge in opposite directions.",
+      "source": "description"
     }
   ],
   "problems": [
-    "claim 1: needs a real hook; it only restates the record's own details (maker, date, medium)",
     "rarity is the default (1): set it, or add \"rarity ok\" to notes"
   ]
 }
