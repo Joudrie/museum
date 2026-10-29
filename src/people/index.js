@@ -54,7 +54,7 @@ export function personFor(id, seed = Math.random) {
   ['pose', 'carry', 'ground', 'buddy'].forEach((k) => k in v && (look[k] = v[k]));
   // hair: from the class's list; now and then someone is bald or going grey
   const hair = pick(v.hair || cls.hair || ['short'], 2);
-  if (!kid && r(3) < 0.07 && !look.hat) look.bald = true;
+  if ((!kid && r(3) < 0.07 && !look.hat) || hair === 'bald' || look.bald) look.bald = true;
   else look.hair = v.look?.hair || hair;
   if (!colors.h) colors.h = !kid && r(4) < 0.15 ? pick(GREYS, 5) : pick(HAIR_COLORS, 5);
   // about half grow facial hair (if the class does); the others may wear earrings
