@@ -59,7 +59,7 @@ Owns: `tests/`, `.github/`, `vite.config.js`, `src/settings*.js`, `src/ui.js`. C
 - [ ] A bug sweep with a repeatable full-flow test after each big merge.
 
 ## CHAT 4: Restoration and provenance (loop step 4)
-Owns: new `src/restore.js`, `src/restorestudio.js`, `src/storage_room.js`. Claim: `open`
+Owns: new `src/restore.js`, `src/restorestudio.js`, `src/storage_room.js`. Claim: `claimed: 2026-10-29`
 - [ ] Finds and paintings arrive **dirty or damaged**; a Restoration Studio (a room or a desk like the Curator's Office) where you clean them.
 - [ ] Painting cleaning: rub grime off the **real HD image** with a before / after reveal (the real paintings stay perfect everywhere else).
 - [ ] Fossil prep (brush stone off bone), pottery reassembly (drag pieces), bone assembly.
