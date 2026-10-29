@@ -13,12 +13,12 @@ const URL = process.env.URL || 'http://localhost:4173/';
   await p.route('https://upload.wikimedia.org/**', (r) => r.fulfill({ contentType: 'image/svg+xml', headers: { 'access-control-allow-origin': '*' }, body: '<svg xmlns="http://www.w3.org/2000/svg" width="8" height="6"/>' }));
   await p.goto(URL);
   await p.waitForTimeout(2000);
-  const fixed = [{ orient: 'entry', size: 'fixed', exit: 'door-back' }, { orient: 'main', size: 'fixed', exit: 'door-back', arch: true }, { orient: 'atrium', size: 'fixed', exit: 'door-back', arch: true }, ...['terraces', 'cross', 'court', 'mezzanine', 'library'].map((plan) => ({ orient: 'shaped', size: 'fixed', plan, exit: 'door-back', arch: true }))];
+  const fixed = [{ orient: 'entry', size: 'fixed', exit: 'door-back' }, { orient: 'main', size: 'fixed', exit: 'door-back', arch: true }, { orient: 'atrium', size: 'fixed', exit: 'door-back', arch: true }, ...['terraces', 'cross', 'court', 'mezzanine', 'library', 'lhall', 'corner'].map((plan) => ({ orient: 'shaped', size: 'fixed', plan, exit: 'door-back', arch: true }))];
   const combos = [];
   for (const orient of ['vertical', 'horizontal', 'square'])
     for (const size of ['short', 'medium', 'long'])
       for (const exit of orient !== 'horizontal' ? ['door-back', 'door-left', 'door-right', 'stairs-up', 'stairs-down', 'none'] : ['door-back', 'door-end', 'stairs-up', 'stairs-down', 'none']) combos.push({ orient, size, exit });
-  const runs = [['entrance', 0, null], ['main hall', 1, null], ['atrium', 2, null], ...[3, 4, 5, 6, 7].map((i) => [`shaped ${i}`, i, null]), ['break room', 'break', null], ...combos.map((c) => [`${c.orient}/${c.size}/${c.exit}`, 8, c])];
+  const runs = [['entrance', 0, null], ['main hall', 1, null], ['atrium', 2, null], ...[3, 4, 5, 6, 7, 8, 9].map((i) => [`shaped ${i}`, i, null]), ['break room', 'break', null], ...combos.map((c) => [`${c.orient}/${c.size}/${c.exit}`, 10, c])];
   let bad = 0;
   for (const [label, room, c] of runs) {
     await p.evaluate(([room, c, fixed]) => {

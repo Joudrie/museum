@@ -61,6 +61,27 @@ export const PLANS = {
     windows: [{ wall: 'back', u: 2.2 }, { wall: 'back', u: 6.8 }, { wall: 'ol1', u: 2 }, { wall: 'or1', u: 2 }],
     columns: [[2.5, 7], [14.5, 7], [2.5, 10.5], [14.5, 10.5]],
   },
+  // An L: a gallery at the back on the left, and a wide arm that runs off to
+  // the right at the front. The way on is the arch in the left room's back wall.
+  lhall: {
+    name: 'L-shaped hall',
+    bands: [
+      { c0: 0, c1: 8, rows: 7 },
+      { c0: 0, c1: 17, rows: 6 },
+    ],
+    windows: [{ wall: 'back', u: 1.6 }, { wall: 'back', u: 6.4 }, { wall: 'or1', u: 11 }, { wall: 'or1', u: 15 }],
+    columns: [[8.5, 8]],
+  },
+  // A corner room: the mirror of the L, with the back gallery on the right.
+  corner: {
+    name: 'Corner hall',
+    bands: [
+      { c0: 9, c1: 17, rows: 7 },
+      { c0: 0, c1: 17, rows: 6 },
+    ],
+    windows: [{ wall: 'back', u: 1.6 }, { wall: 'back', u: 6.4 }, { wall: 'ol1', u: 2 }, { wall: 'ol1', u: 6 }],
+    columns: [[8.5, 8]],
+  },
   // A small, detailed library, furnished with free pixel art (see
   // docs/ASSETS.md): bookshelves and a grand fireplace along the back wall, a
   // grandfather clock, candelabras, a red rug with armchairs round a table,
@@ -100,7 +121,7 @@ export const PLANS = {
     ],
   },
 };
-export const PLAN_ORDER = ['terraces', 'cross', 'court', 'mezzanine', 'library'];
+export const PLAN_ORDER = ['terraces', 'cross', 'court', 'mezzanine', 'library', 'lhall', 'corner'];
 
 export function shapedLayout(planId) {
   const plan = PLANS[planId];

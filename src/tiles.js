@@ -787,7 +787,7 @@ function addProps(add, anim) {
       }
     });
   // dig spots: a mound that can be brushed open (src/dig.js); "@dug" is the same spot while it rests (hidden from the builder)
-  const mound = (dug, bone) =>
+  const mound = (dug, kind) =>
     draw(T, T, ({ R, E }) => {
       E(16, 24, 12, 5, 'rgba(0,0,0,0.2)');
       if (dug) {
@@ -799,17 +799,56 @@ function addProps(add, anim) {
       E(16, 18, 10, 7, '#946640');
       E(15, 16, 7, 4, '#ad7c50');
       [[11, 15], [18, 13], [21, 18], [14, 20], [9, 19]].forEach(([x, y]) => R(x, y, 2, 1, '#c49464'));
-      if (bone) {
+      if (kind === 'fossil') {
         R(19, 10, 1, 4, '#5a3a20'); // a bone tip poking out
         R(18, 9, 3, 2, '#e8dfc8');
+      } else if (kind === 'ruin') {
+        R(17, 11, 5, 4, '#b8603c'); // a clay sherd
+        R(18, 11, 3, 1, '#d88a5c');
+        R(10, 17, 3, 3, '#8a8478'); // flat stones around it
+      } else if (kind === 'shore') {
+        E(19, 14, 3, 2, '#f0c8a8'); // a shell in damp sand
+        R(18, 13, 1, 3, '#c88c68');
+        E(16, 22, 11, 4, 'rgba(60,40,20,0.35)');
+      } else if (kind === 'crater') {
+        E(16, 20, 8, 4, '#3a3028'); // a scorched dip with a dark stone
+        E(17, 19, 4, 3, '#6a6258');
+        R(16, 18, 2, 1, '#a89a84');
       } else {
         R(18, 12, 3, 3, '#9a5ac8'); // a glint of crystal
         R(19, 11, 1, 1, '#f0e0ff');
       }
     });
-  add('dig_spot', mound(false, false), { group: 'Props', label: 'Dig spot (minerals)', walk: 'walk' });
-  add('dig_fossil', mound(false, true), { group: 'Props', label: 'Dig spot (fossils)', walk: 'walk' });
-  add('dig_spot@dug', mound(true), { group: 'Props', label: 'Dug spot', walk: 'walk' });
+  // a worked-across face: a cliff of stone with a fossil showing, and a trench. Touching spots of one kind form a site (src/dig.js).
+  const face = (trench) =>
+    draw(T, T, ({ R, E }) => {
+      if (trench) {
+        R(2, 8, 28, 20, OUT);
+        R(3, 9, 26, 18, '#5a3a20');
+        R(3, 9, 26, 3, '#946640');
+        R(3, 24, 26, 3, '#3a2410');
+        [[7, 15], [15, 18], [22, 14]].forEach(([x, y]) => R(x, y, 3, 2, '#a89a84'));
+        R(20, 18, 4, 2, '#b8603c');
+      } else {
+        R(2, 3, 28, 25, OUT);
+        R(3, 4, 26, 23, css(STONE[2]));
+        R(3, 4, 26, 3, css(STONE[4]));
+        R(3, 22, 26, 5, css(STONE[1]));
+        R(7, 9, 1, 12, css(STONE[1]));
+        R(21, 8, 1, 10, css(STONE[1]));
+        R(12, 12, 8, 1, '#e8dfc8'); // a rib bone in the rock
+        R(13, 14, 7, 1, '#e8dfc8');
+        R(14, 16, 6, 1, '#e8dfc8');
+      }
+    });
+  add('dig_cliff', face(false), { group: 'Dig sites', label: 'Dig cliff (fossils)', walk: 'walk' });
+  add('dig_trench', face(true), { group: 'Dig sites', label: 'Dig trench (ruins)', walk: 'walk' });
+  add('dig_spot', mound(false), { group: 'Dig sites', label: 'Dig spot (minerals)', walk: 'walk' });
+  add('dig_fossil', mound(false, 'fossil'), { group: 'Dig sites', label: 'Dig spot (fossils)', walk: 'walk' });
+  add('dig_ruin', mound(false, 'ruin'), { group: 'Dig sites', label: 'Dig spot (ruins)', walk: 'walk' });
+  add('dig_shore', mound(false, 'shore'), { group: 'Dig sites', label: 'Dig spot (shore)', walk: 'walk' });
+  add('dig_crater', mound(false, 'crater'), { group: 'Dig sites', label: 'Dig spot (crater)', walk: 'walk' });
+  add('dig_spot@dug', mound(true), { group: 'Dig sites', label: 'Dug spot', walk: 'walk' });
   add('chest', chest(false), { group: 'Props', label: 'Treasure chest', walk: 'block' });
   add('chest_open', chest(true), { group: 'Props', label: 'Chest (open)', walk: 'block' });
   add('barrel', draw(T, T, ({ R, E }) => {
@@ -835,7 +874,7 @@ function addProps(add, anim) {
     const s = [[18, 9], [9, 12], [22, 14], [15, 7]][f];
     R(s[0], s[1] - 2, 1, 5, '#ffffff');
     R(s[0] - 2, s[1], 5, 1, '#ffffff');
-  })), { group: 'Props', label: 'Dig spot (sparkles)', walk: 'walk' });
+  })), { group: 'Dig sites', label: 'Dig spot (sparkles)', walk: 'walk' });
   add('x_mark', draw(T, T, ({ R }) => {
     for (let i = 0; i < 16; i++) {
       R(8 + i, 8 + i, 3, 2, '#b0413e');

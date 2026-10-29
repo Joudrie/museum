@@ -1,0 +1,112 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "horse-race-at-the-kamo-shrine",
+  "notes": "region: Japan",
+  "entry": {
+    "id": "painting:horse-race-at-the-kamo-shrine",
+    "collection": "painting",
+    "title": "Horse Race at the Kamo Shrine",
+    "year": "early to mid-1600s",
+    "era": "baroque",
+    "ratio": 2.2484,
+    "blurb": "Here nearly 600 figures, engaged in a bewildering array of activities, have gathered at the Kamo Shrine in Kyoto for the horse race held annually on May 5 since at least the 800s.",
+    "rarity": 1,
+    "tags": [
+      "japan",
+      "ink"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1976.95/1976.95_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Purchase from the J. H. Wade Fund",
+      "url": "https://clevelandart.org/art/1976.95"
+    },
+    "value": 5,
+    "facts": [
+      "The scale of the paintings and the quality of the materials indicate that they were commissioned by a sophisticated, wealthy patron.",
+      "The winner is decided by the distance between horses, not by which horse finished first.",
+      "The entire populace seems to have turned out, apparent in the diversions and revelries spread out across these resplendent byøbu."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "148857",
+    "title": "Horse Race at the Kamo Shrine",
+    "maker": "",
+    "year": "early to mid-1600s",
+    "medium": "Pair of six-panel folding screens; ink and color on gilded paper",
+    "dimensions": "Image: 161 x 362 cm (63 3/8 x 142 1/2 in.)",
+    "widthCm": 362,
+    "heightCm": 161,
+    "ratio": 2.2484,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1976.95/1976.95_web.jpg",
+    "imageWidth": 900,
+    "imageHeight": 853,
+    "pageUrl": "https://clevelandart.org/art/1976.95",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Purchase from the J. H. Wade Fund",
+    "description": "Here nearly 600 figures, engaged in a bewildering array of activities, have gathered at the Kamo Shrine in Kyoto for the horse race held annually on May 5 since at least the 800s. The entire populace seems to have turned out, apparent in the diversions and revelries spread out across these resplendent byøbu. The race begins on the right screen and continues far into the left along the lower half of the composition. Here the painter's genius for depicting engaging crowd scenes, a characteristic of Heian pictorial compositions, emerges in full force. The range of textile patterns alone is astonishing. The upper regions of the composition feature the shrine, its setting in northern Kyoto west of Lake Takaragaike, its architecture, and the visitors whose intentions range from casually mundane to spiritual. These paintings were originally part of a much larger pictorial narrative of linked murals in fusuma-e format. Four segments are known today from what must have been an extraordinary room of contiguous surfaces, executed by studio-trained but anonymous masters of yamato-e genre painting in Kyoto. The scale of the paintings and the quality of the materials indicate that they were commissioned by a sophisticated, wealthy patron. The winner is decided by the distance between horses, not by which horse finished first.",
+    "culture": "Japan, Edo period (1615–1868)",
+    "classification": "Painting",
+    "tags": [
+      "Japanese Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Horse Race at the Kamo Shrine",
+      "maker": "",
+      "year": "early to mid-1600s",
+      "medium": "Pair of six-panel folding screens; ink and color on gilded paper",
+      "dimensions": "Image: 161 x 362 cm (63 3/8 x 142 1/2 in.)",
+      "culture": "Japan, Edo period (1615–1868)",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Purchase from the J. H. Wade Fund",
+      "description": "Here nearly 600 figures, engaged in a bewildering array of activities, have gathered at the Kamo Shrine in Kyoto for the horse race held annually on May 5 since at least the 800s. The entire populace seems to have turned out, apparent in the diversions and revelries spread out across these resplendent byøbu. The race begins on the right screen and continues far into the left along the lower half of the composition. Here the painter's genius for depicting engaging crowd scenes, a characteristic of Heian pictorial compositions, emerges in full force. The range of textile patterns alone is astonishing. The upper regions of the composition feature the shrine, its setting in northern Kyoto west of Lake Takaragaike, its architecture, and the visitors whose intentions range from casually mundane to spiritual. These paintings were originally part of a much larger pictorial narrative of linked murals in fusuma-e format. Four segments are known today from what must have been an extraordinary room of contiguous surfaces, executed by studio-trained but anonymous masters of yamato-e genre painting in Kyoto. The scale of the paintings and the quality of the materials indicate that they were commissioned by a sophisticated, wealthy patron. The winner is decided by the distance between horses, not by which horse finished first.",
+      "tombstone": "Horse Race at the Kamo Shrine (賀茂神社競馬図屏風), early to mid-1600s. Japan, Edo period (1615–1868). Pair of six-panel folding screens; ink and color on gilded paper; image: 161 x 362 cm (63 3/8 x 142 1/2 in.). The Cleveland Museum of Art, Purchase from the J. H. Wade Fund, 1976.95",
+      "funFact": "",
+      "didYouKnow": "The winner is decided by the distance between horses, not by which horse finished first.",
+      "creators": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "Here nearly 600 figures, engaged in a bewildering array of activities, have gathered at the Kamo Shrine in Kyoto for the horse race held annually on May 5 since at least the 800s.",
+      "quote": "Here nearly 600 figures, engaged in a bewildering array of activities, have gathered at the Kamo Shrine in Kyoto for the horse race held annually on May 5 since at least the 800s.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The scale of the paintings and the quality of the materials indicate that they were commissioned by a sophisticated, wealthy patron.",
+      "quote": "The scale of the paintings and the quality of the materials indicate that they were commissioned by a sophisticated, wealthy patron.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The winner is decided by the distance between horses, not by which horse finished first.",
+      "quote": "The winner is decided by the distance between horses, not by which horse finished first.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The entire populace seems to have turned out, apparent in the diversions and revelries spread out across these resplendent byøbu.",
+      "quote": "The entire populace seems to have turned out, apparent in the diversions and revelries spread out across these resplendent byøbu.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

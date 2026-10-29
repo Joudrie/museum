@@ -732,6 +732,45 @@ body {
 .slot-kinds {
   margin: 14px 0 10px;
 }
+
+/* ---------- Display panel (cases, plinths, shelves, tanks) ---------- */
+#displaymenu {
+  position: fixed;
+  inset: 0;
+  z-index: 21;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(10, 6, 4, 0.45);
+  transition: opacity 0.2s;
+}
+#displaymenu.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+.display-sub {
+  margin: 14px 0 8px;
+  font-size: 14px;
+  color: var(--gold);
+}
+.display-card .thumb {
+  padding: 0;
+  background: #1e1a20;
+  display: grid;
+  place-items: center;
+  height: 64px;
+}
+.display-card .thumb .pix {
+  max-width: 100%;
+  max-height: 100%;
+  image-rendering: pixelated;
+}
+.display-act {
+  margin-left: auto;
+  flex: none;
+  padding: 8px 10px;
+  font-size: 12px;
+}
 .slot-paintings {
   display: grid;
   gap: 8px;
@@ -2273,9 +2312,11 @@ body.outside #hud {
 /* ---------- Collections ---------- */
 .journal-tabs {
   gap: 6px;
+  flex-wrap: wrap; /* a dozen tabs wrap onto a second row; this page never scrolls sideways */
 }
 .journal-tabs button {
-  min-width: 0;
+  flex: 1 0 auto;
+  min-width: 22%;
   padding-inline: 2px;
   font-size: 13px;
 }
@@ -2381,4 +2422,37 @@ body.outside #hud {
   margin: 0;
   font-size: 13px;
   line-height: 1.35;
+}
+
+.income-note {
+  margin: 10px 4px 0;
+  font-size: 12px;
+  opacity: 0.75;
+  line-height: 1.35;
+}
+
+.dig-tools {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin: 8px 0 2px;
+}
+.dig-tools[hidden] {
+  display: none;
+}
+.dig-tools button {
+  padding: 6px 10px;
+  border: 2px solid var(--gold-dark);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+}
+.dig-tools button.on {
+  border-color: var(--gold);
+  background: rgba(201, 162, 63, 0.18);
+}
+.dig-tools button:disabled {
+  opacity: 0.55;
 }

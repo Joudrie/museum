@@ -5,17 +5,12 @@ import { HATS, FACIAL, GLASSES, HAIRSTYLES, OUTFITS, ACCESSORIES, PALETTES, FLOO
 import { TRACKS } from './music.js';
 import { PETS, PET_COLORS } from './pets.js';
 
-// One-tap room styles. Each sets floor, walls, lighting and music.
-export const THEMES = {
-  classical: { name: 'Classical gallery', decor: { pattern: 'marble', floor: '#e9e6df', paperStyle: 'damask', paper: '#7a3a3e', wainscotStyle: 'panels', wainscot: '#3e2a20', carpet: true, carpetColor: '#7a2232', light: 'warm', music: 'gallery' } },
-  egyptian: { name: 'Egyptian', decor: { pattern: 'sand', floor: '#d9c7a8', paperStyle: 'hieroglyph', paper: '#d9b878', wainscotStyle: 'none', wainscot: '#a8862e', carpet: false, light: 'warm', music: 'egypt' } },
-  japanese: { name: 'Japanese', decor: { pattern: 'parquet', floor: '#cfae80', paperStyle: 'sakura', paper: '#f0ece2', wainscotStyle: 'panels', wainscot: '#5c3a26', carpet: false, light: 'day', music: 'japan' } },
-  science: { name: 'Natural history', decor: { pattern: 'stone', floor: '#9a968f', paperStyle: 'plain', paper: '#8a9a8a', wainscotStyle: 'panels', wainscot: '#3e2a20', carpet: false, light: 'cool', music: 'science' } },
-  modern: { name: 'Modern white', decor: { pattern: 'tile', floor: '#e9e6df', paperStyle: 'plain', paper: '#f0ece2', wainscotStyle: 'none', wainscot: '#cfcfcf', carpet: false, light: 'day', music: 'none' } },
-  moody: { name: 'Moody', decor: { pattern: 'herringbone', floor: '#5c3a26', paperStyle: 'stripes', paper: '#2f4a3a', wainscotStyle: 'panels', wainscot: '#1e1e22', carpet: true, carpetColor: '#c9a23f', light: 'moody', music: 'gallery' } },
-};
+import { THEMES } from './themes.js';
+export { THEMES };
 import { SIZE_LABELS, ORIENT_LABELS, roomName, isFixed } from './rooms.js';
 import { roomRating, starText } from './rating.js';
+import { roomTheme, THEME_BONUS } from './wallet.js';
+import { listPresets, savePreset, deletePreset, presetCost } from './presets.js';
 
 export const CHARACTER_PALETTES = {
   h: { label: 'Hair color', colors: ['#4a2e20', '#1e1410', '#d9b45a', '#a0522d', '#8a8a8a', '#e8e0d0', '#c0392b', '#2e5a8a', '#6a4c93', '#d06a9a', '#4a8ab0'] },
@@ -115,6 +110,43 @@ function renderRoomSettings() {
   return parts;
 }
 
+// Saved layouts ("Winter", "Halloween"): save this room's decor and items, load them back later.
+function renderPresets() {
+  const box = document.createElement('div');
+  box.className = 'presets';
+  const row = document.createElement('div');
+  row.className = 'choices';
+  const nm = document.createElement('input');
+  nm.className = 'room-name';
+  nm.placeholder = 'Name this layout (Winter...)';
+  nm.maxLength = 24;
+  const save = document.createElement('button');
+  save.textContent = 'Save layout';
+  save.onclick = () => {
+    savePreset(nm.value, state.index);
+    render();
+  };
+  box.append(nm, save);
+  listPresets().forEach((p) => {
+    const cost = presetCost(p.id, state.index);
+    const r = document.createElement('div');
+    r.className = 'choices';
+    const load = document.createElement('button');
+    load.textContent = `${p.name} · ${cost > 0 ? `${cost} gold` : cost < 0 ? `+${-cost} gold` : 'free'}`;
+    load.onclick = () => state.onPreset(p.id);
+    const del = document.createElement('button');
+    del.textContent = '✕';
+    del.setAttribute('aria-label', `Delete ${p.name}`);
+    del.onclick = () => {
+      deletePreset(p.id);
+      render();
+    };
+    r.append(load, del);
+    box.appendChild(r);
+  });
+  return section('Saved layouts', box);
+}
+
 // This room's rating, with what each part scored and how to raise it.
 function renderRating() {
   const r = roomRating(state.rooms, state.index);
@@ -128,6 +160,12 @@ function renderRating() {
     row.querySelector('small').textContent = p.tip;
     list.appendChild(row);
   });
+  const era = roomTheme(state.rooms, state.index);
+  if (era) {
+    const t = document.createElement('p');
+    t.textContent = `Themed room: every painting is ${era}. Paintings here earn ${THEME_BONUS}x.`;
+    list.appendChild(t);
+  }
   return section(`Rating ${starText(r.stars)} · ${r.score}/100`, list);
 }
 
@@ -196,6 +234,7 @@ function renderRoom() {
   const staffRoom = state.room.orient === 'break';
   const parts = [
     ...(staffRoom ? [] : [renderRating(), renderStaff(), ...renderRoomSettings()]),
+    ...(state.onPreset ? [renderPresets()] : []),
     section('Theme (one tap)', choices(themes, null, (id) => set(THEMES[id].decor))),
     section('Floor pattern', choices(FLOOR_PATTERNS, d.pattern, pickPattern)),
   ];

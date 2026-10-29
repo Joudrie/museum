@@ -1,0 +1,111 @@
+{
+  "status": "draft",
+  "collection": "archaeology",
+  "slug": "head-of-sekhmet",
+  "notes": "region: Egypt. era removed: the paintings date buckets do not fit antiquity; Chat 8 defines this collection",
+  "entry": {
+    "id": "archaeology:head-of-sekhmet",
+    "collection": "archaeology",
+    "title": "Head of Sekhmet",
+    "year": "c. 1391–1353 BCE",
+    "ratio": 1.0159,
+    "blurb": "Possibly appealing to her healing aspect, Pharaoh Amenhotep III, often described as “beloved of Sekhmet,” commissioned and dedicated hundreds of large granodiorite Sekhmet sculptures in his Theban mortuary temple.",
+    "rarity": 1,
+    "tags": [
+      "egypt"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1916.2011/1916.2011_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Gift of the John Huntington Art and Polytechnic Trust",
+      "url": "https://clevelandart.org/art/1916.2011"
+    },
+    "value": 5,
+    "facts": [
+      "Amenhotep III may have dedicated 730 statues of Sekhmet, two for each day of the year.",
+      "Thus, this head likely comes from Thebes, perhaps later moved across the Nile—like many such sculptures—to the temple of Mut, a related deity, at Karnak.",
+      "Behind her stylized ruff, Sekhmet wears a wig, once crowned with a sun disk and uraeus, the stylized cobra symbolizing royal or divine power."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "96303",
+    "title": "Head of Sekhmet",
+    "maker": "",
+    "year": "c. 1391–1353 BCE",
+    "medium": "granodiorite",
+    "dimensions": "Overall: 33.4 x 31.5 x 32 cm (13 1/8 x 12 3/8 x 12 5/8 in.)",
+    "widthCm": 32,
+    "heightCm": 31.5,
+    "ratio": 1.0159,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1916.2011/1916.2011_web.jpg",
+    "imageWidth": 1059,
+    "imageHeight": 893,
+    "pageUrl": "https://clevelandart.org/art/1916.2011",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Gift of the John Huntington Art and Polytechnic Trust",
+    "description": "This lioness head once belonged to a grand statue of the goddess Sekhmet, \"the powerful one,\" probably seated and wearing a tight dress. Possibly appealing to her healing aspect, Pharaoh Amenhotep III, often described as “beloved of Sekhmet,” commissioned and dedicated hundreds of large granodiorite Sekhmet sculptures in his Theban mortuary temple. Thus, this head likely comes from Thebes, perhaps later moved across the Nile—like many such sculptures—to the temple of Mut, a related deity, at Karnak. Behind her stylized ruff, Sekhmet wears a wig, once crowned with a sun disk and uraeus, the stylized cobra symbolizing royal or divine power. Amenhotep III may have dedicated 730 statues of Sekhmet, two for each day of the year.",
+    "culture": "Egypt, Thebes(?), New Kingdom (1540–1069 BCE), Dynasty 18, reign of Amenhotep III (1390–1352 BCE)",
+    "classification": "Sculpture",
+    "tags": [
+      "Egyptian and Ancient Near Eastern Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Head of Sekhmet",
+      "maker": "",
+      "year": "c. 1391–1353 BCE",
+      "medium": "granodiorite",
+      "dimensions": "Overall: 33.4 x 31.5 x 32 cm (13 1/8 x 12 3/8 x 12 5/8 in.)",
+      "culture": "Egypt, Thebes(?), New Kingdom (1540–1069 BCE), Dynasty 18, reign of Amenhotep III (1390–1352 BCE)",
+      "classification": "Sculpture",
+      "credit": "The Cleveland Museum of Art. Gift of the John Huntington Art and Polytechnic Trust",
+      "description": "This lioness head once belonged to a grand statue of the goddess Sekhmet, \"the powerful one,\" probably seated and wearing a tight dress. Possibly appealing to her healing aspect, Pharaoh Amenhotep III, often described as “beloved of Sekhmet,” commissioned and dedicated hundreds of large granodiorite Sekhmet sculptures in his Theban mortuary temple. Thus, this head likely comes from Thebes, perhaps later moved across the Nile—like many such sculptures—to the temple of Mut, a related deity, at Karnak. Behind her stylized ruff, Sekhmet wears a wig, once crowned with a sun disk and uraeus, the stylized cobra symbolizing royal or divine power. Amenhotep III may have dedicated 730 statues of Sekhmet, two for each day of the year.",
+      "tombstone": "Head of Sekhmet, c. 1391–1353 BCE. Egypt, Thebes(?), New Kingdom (1540–1069 BCE), Dynasty 18, reign of Amenhotep III (1390–1352 BCE). Granodiorite; overall: 33.4 x 31.5 x 32 cm (13 1/8 x 12 3/8 x 12 5/8 in.). The Cleveland Museum of Art, Gift of the John Huntington Art and Polytechnic Trust, 1916.2011",
+      "funFact": "",
+      "didYouKnow": "Amenhotep III may have dedicated 730 statues of Sekhmet, two for each day of the year.",
+      "creators": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "Possibly appealing to her healing aspect, Pharaoh Amenhotep III, often described as “beloved of Sekhmet,” commissioned and dedicated hundreds of large granodiorite Sekhmet sculptures in his Theban mortuary temple.",
+      "quote": "Possibly appealing to her healing aspect, Pharaoh Amenhotep III, often described as “beloved of Sekhmet,” commissioned and dedicated hundreds of large granodiorite Sekhmet sculptures in his Theban mortuary temple.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Amenhotep III may have dedicated 730 statues of Sekhmet, two for each day of the year.",
+      "quote": "Amenhotep III may have dedicated 730 statues of Sekhmet, two for each day of the year.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Thus, this head likely comes from Thebes, perhaps later moved across the Nile—like many such sculptures—to the temple of Mut, a related deity, at Karnak.",
+      "quote": "Thus, this head likely comes from Thebes, perhaps later moved across the Nile—like many such sculptures—to the temple of Mut, a related deity, at Karnak.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Behind her stylized ruff, Sekhmet wears a wig, once crowned with a sun disk and uraeus, the stylized cobra symbolizing royal or divine power.",
+      "quote": "Behind her stylized ruff, Sekhmet wears a wig, once crowned with a sun disk and uraeus, the stylized cobra symbolizing royal or divine power.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "unknown collection \"archaeology\"",
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

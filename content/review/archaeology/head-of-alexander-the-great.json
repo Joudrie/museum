@@ -1,0 +1,104 @@
+{
+  "status": "draft",
+  "collection": "archaeology",
+  "slug": "head-of-alexander-the-great",
+  "notes": "region: Greece (Hellenistic). era removed: the paintings date buckets do not fit antiquity; Chat 8 defines this collection",
+  "entry": {
+    "id": "archaeology:head-of-alexander-the-great",
+    "collection": "archaeology",
+    "title": "Head of Alexander the Great",
+    "year": "c. 300–200 BCE",
+    "ratio": 0.9517,
+    "blurb": "After his death, Alexander was worshiped as a god; posthumous portraits like this one, likely carved in Ptolemaic Egypt, portray him with long hair and youthful, idealized features.",
+    "rarity": 1,
+    "tags": [
+      "greece"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1927.209/1927.209_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Gift of Mrs. Ralph King",
+      "url": "https://clevelandart.org/art/1927.209"
+    },
+    "value": 5,
+    "facts": [
+      "Slightly smaller than life-size, this head of Alexander the Great features a slight turn, tilt, and upward gaze said to have characterized the young conqueror's posture in life.",
+      "Portraits of Alexander the Great share his characteristic anastole hairstyle, parted off-center and swept back from the forehead."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "109043",
+    "title": "Head of Alexander the Great",
+    "maker": "",
+    "year": "c. 300–200 BCE",
+    "medium": "marble",
+    "dimensions": "Overall: 26.5 x 14.5 x 13.8 cm (10 7/16 x 5 11/16 x 5 7/16 in.)",
+    "widthCm": 13.8,
+    "heightCm": 14.5,
+    "ratio": 0.9517,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1927.209/1927.209_web.jpg",
+    "imageWidth": 694,
+    "imageHeight": 900,
+    "pageUrl": "https://clevelandart.org/art/1927.209",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Gift of Mrs. Ralph King",
+    "description": "Slightly smaller than life-size, this head of Alexander the Great features a slight turn, tilt, and upward gaze said to have characterized the young conqueror's posture in life. After his death, Alexander was worshiped as a god; posthumous portraits like this one, likely carved in Ptolemaic Egypt, portray him with long hair and youthful, idealized features. Portraits of Alexander the Great share his characteristic anastole hairstyle, parted off-center and swept back from the forehead.",
+    "culture": "Greece, Alexandria, Hellenistic",
+    "classification": "Sculpture",
+    "tags": [
+      "Greek and Roman Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Head of Alexander the Great",
+      "maker": "",
+      "year": "c. 300–200 BCE",
+      "medium": "marble",
+      "dimensions": "Overall: 26.5 x 14.5 x 13.8 cm (10 7/16 x 5 11/16 x 5 7/16 in.)",
+      "culture": "Greece, Alexandria, Hellenistic",
+      "classification": "Sculpture",
+      "credit": "The Cleveland Museum of Art. Gift of Mrs. Ralph King",
+      "description": "Slightly smaller than life-size, this head of Alexander the Great features a slight turn, tilt, and upward gaze said to have characterized the young conqueror's posture in life. After his death, Alexander was worshiped as a god; posthumous portraits like this one, likely carved in Ptolemaic Egypt, portray him with long hair and youthful, idealized features. Portraits of Alexander the Great share his characteristic anastole hairstyle, parted off-center and swept back from the forehead.",
+      "tombstone": "Head of Alexander the Great, c. 300–200 BCE. Greece, Alexandria, Hellenistic. Marble; overall: 26.5 x 14.5 x 13.8 cm (10 7/16 x 5 11/16 x 5 7/16 in.). The Cleveland Museum of Art, Gift of Mrs. Ralph King, 1927.209",
+      "funFact": "",
+      "didYouKnow": "Portraits of Alexander the Great share his characteristic anastole hairstyle, parted off-center and swept back from the forehead.",
+      "creators": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "After his death, Alexander was worshiped as a god; posthumous portraits like this one, likely carved in Ptolemaic Egypt, portray him with long hair and youthful, idealized features.",
+      "quote": "After his death, Alexander was worshiped as a god; posthumous portraits like this one, likely carved in Ptolemaic Egypt, portray him with long hair and youthful, idealized features.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Slightly smaller than life-size, this head of Alexander the Great features a slight turn, tilt, and upward gaze said to have characterized the young conqueror's posture in life.",
+      "quote": "Slightly smaller than life-size, this head of Alexander the Great features a slight turn, tilt, and upward gaze said to have characterized the young conqueror's posture in life.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Portraits of Alexander the Great share his characteristic anastole hairstyle, parted off-center and swept back from the forehead.",
+      "quote": "Portraits of Alexander the Great share his characteristic anastole hairstyle, parted off-center and swept back from the forehead.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "unknown collection \"archaeology\"",
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

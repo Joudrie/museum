@@ -1,0 +1,113 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "stag-at-sharkeys-george",
+  "notes": "region: United States, 1909",
+  "entry": {
+    "id": "painting:stag-at-sharkeys-george",
+    "collection": "painting",
+    "title": "Stag at Sharkey's",
+    "by": "George Bellows",
+    "year": "1909",
+    "era": "modern",
+    "ratio": 1.3326,
+    "blurb": "Because public boxing was illegal in New York at the time, a private event had to be arranged in order for a bout to take place.",
+    "rarity": 1,
+    "tags": [
+      "united states",
+      "oil"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1922.1133/1922.1133_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Hinman B. Hurlbut Collection",
+      "url": "https://clevelandart.org/art/1922.1133"
+    },
+    "value": 5,
+    "facts": [
+      "Around the time Bellows painted Stag at Sharkey’s, boxing was moving from a predominantly working-class enterprise to one with greater genteel appeal.",
+      "For some contemporaries, boxing was a powerful analogy for the notion that only the strongest and fittest would flourish in modern society.",
+      "Bellows was no stranger to Sharkey’s Athletic Club, a raucous saloon with a backroom boxing ring, located near his studio."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "92937",
+    "title": "Stag at Sharkey's",
+    "maker": "George Bellows",
+    "year": "1909",
+    "medium": "oil on canvas",
+    "dimensions": "Framed: 110 x 140.5 x 8.5 cm (43 5/16 x 55 5/16 x 3 3/8 in.); Unframed: 92 x 122.6 cm (36 1/4 x 48 1/4 in.)",
+    "widthCm": 122.6,
+    "heightCm": 92,
+    "ratio": 1.3326,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1922.1133/1922.1133_web.jpg",
+    "imageWidth": 1194,
+    "imageHeight": 893,
+    "pageUrl": "https://clevelandart.org/art/1922.1133",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Hinman B. Hurlbut Collection",
+    "description": "Bellows was no stranger to Sharkey’s Athletic Club, a raucous saloon with a backroom boxing ring, located near his studio. Founded by Tom “Sailor” Sharkey, an ex-fighter who had also served in the US Navy, the club attracted men seeking to watch or participate in matches. Because public boxing was illegal in New York at the time, a private event had to be arranged in order for a bout to take place. Participation was usually limited to members of a particular club, but whenever an outsider competed, he was given temporary membership and known as a “stag.” Although boxing had its share of detractors who considered it uncouth at best or barbaric at worst, its proponents—among them President Theodore Roosevelt—regarded it a healthy manifestation of manliness. Around the time Bellows painted Stag at Sharkey’s, boxing was moving from a predominantly working-class enterprise to one with greater genteel appeal. For some contemporaries, boxing was a powerful analogy for the notion that only the strongest and fittest would flourish in modern society. George Bellows was raised in Columbus, Ohio, and attended Ohio State University where he played baseball and basketball.",
+    "culture": "United States",
+    "classification": "Painting",
+    "tags": [
+      "American Painting and Sculpture"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Stag at Sharkey's",
+      "maker": "George Bellows",
+      "year": "1909",
+      "medium": "oil on canvas",
+      "dimensions": "Framed: 110 x 140.5 x 8.5 cm (43 5/16 x 55 5/16 x 3 3/8 in.); Unframed: 92 x 122.6 cm (36 1/4 x 48 1/4 in.)",
+      "culture": "United States",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Hinman B. Hurlbut Collection",
+      "description": "Bellows was no stranger to Sharkey’s Athletic Club, a raucous saloon with a backroom boxing ring, located near his studio. Founded by Tom “Sailor” Sharkey, an ex-fighter who had also served in the US Navy, the club attracted men seeking to watch or participate in matches. Because public boxing was illegal in New York at the time, a private event had to be arranged in order for a bout to take place. Participation was usually limited to members of a particular club, but whenever an outsider competed, he was given temporary membership and known as a “stag.” Although boxing had its share of detractors who considered it uncouth at best or barbaric at worst, its proponents—among them President Theodore Roosevelt—regarded it a healthy manifestation of manliness. Around the time Bellows painted Stag at Sharkey’s, boxing was moving from a predominantly working-class enterprise to one with greater genteel appeal. For some contemporaries, boxing was a powerful analogy for the notion that only the strongest and fittest would flourish in modern society. George Bellows was raised in Columbus, Ohio, and attended Ohio State University where he played baseball and basketball.",
+      "tombstone": "Stag at Sharkey's, 1909. George Bellows (American, 1882–1925). Oil on canvas; framed: 110 x 140.5 x 8.5 cm (43 5/16 x 55 5/16 x 3 3/8 in.); unframed: 92 x 122.6 cm (36 1/4 x 48 1/4 in.). The Cleveland Museum of Art, Hinman B. Hurlbut Collection, 1922.1133",
+      "funFact": "",
+      "didYouKnow": "George Bellows was raised in Columbus, Ohio, and attended Ohio State University where he played baseball and basketball.",
+      "creators": "George Bellows (American, 1882–1925)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "Because public boxing was illegal in New York at the time, a private event had to be arranged in order for a bout to take place.",
+      "quote": "Because public boxing was illegal in New York at the time, a private event had to be arranged in order for a bout to take place.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Around the time Bellows painted Stag at Sharkey’s, boxing was moving from a predominantly working-class enterprise to one with greater genteel appeal.",
+      "quote": "Around the time Bellows painted Stag at Sharkey’s, boxing was moving from a predominantly working-class enterprise to one with greater genteel appeal.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "For some contemporaries, boxing was a powerful analogy for the notion that only the strongest and fittest would flourish in modern society.",
+      "quote": "For some contemporaries, boxing was a powerful analogy for the notion that only the strongest and fittest would flourish in modern society.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Bellows was no stranger to Sharkey’s Athletic Club, a raucous saloon with a backroom boxing ring, located near his studio.",
+      "quote": "Bellows was no stranger to Sharkey’s Athletic Club, a raucous saloon with a backroom boxing ring, located near his studio.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

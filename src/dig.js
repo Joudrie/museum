@@ -3,25 +3,69 @@
 // it goes into the journal. A spot rests for a while after it has been dug.
 import { load, save } from './storage.js';
 import { list, RARITY } from './collections/index.js';
-import { collect } from './collections/codex.js';
+import { collect, count } from './collections/codex.js';
 import { drawEntry } from './collections/render.js';
 import { sfx } from './music.js';
 import { haptic } from './ui.js';
 
 const KEY = 'curation.digs'; // { spotKey: readyAt (ms) }
+const PARTS = 'curation.digparts'; // { entryId: parts found so far } for big finds that take several spots
 const REST = 10 * 60 * 1000;
 const SIZE = 240; // css px of the digging patch
-const BRUSH = 22;
+
+// Tools: what you dig with changes how fast the dirt clears and what turns up. They are earned:
+// each unlocks after you have found enough different things (no shop, nothing to buy).
+//   reach: brush width in css px; flat: how much rarity counts against a find (lower = rare finds turn up more)
+export const TOOLS = {
+  brush: { name: 'Brush', reach: 22, flat: 0.6, need: 0, note: 'Slow and gentle. Rare finds turn up more often.' },
+  trowel: { name: 'Trowel', reach: 34, flat: 1, need: 6, note: 'Clears dirt faster. Plain odds.' },
+  pick: { name: 'Pick', reach: 52, flat: 1.2, need: 16, note: 'Very fast, but it favours the common finds.' },
+};
+const DIG_COLLECTIONS = () => ['mineral', 'fossil', 'pottery', 'coin', 'arrowhead', 'shell', 'meteorite'];
+/** How many different dug things you have found so far (decides which tools you have). */
+export const foundCount = () => DIG_COLLECTIONS().reduce((n, c) => n + count(c), 0);
+export const toolUnlocked = (t, found = foundCount()) => found >= (TOOLS[t]?.need ?? Infinity);
+
+export const partsOf = (id) => load(PARTS, {})[id] || 0;
 
 export const readyIn = (key, now = Date.now()) => Math.max(0, (load(KEY, {})[key] || 0) - now);
 
+// A dig spot's kind decides which collections it gives up. Builder tiles map to kinds in DIG_TILES.
+export const DIG_KINDS = {
+  mineral: { collections: ['mineral'] },
+  fossil: { collections: ['fossil'] },
+  ruin: { collections: ['pottery', 'coin', 'arrowhead'] },
+  shore: { collections: ['shell'] },
+  crater: { collections: ['meteorite'] },
+};
+export const DIG_TILES = { dig_spot: 'mineral', dig_fossil: 'fossil', dig_ruin: 'ruin', dig_shore: 'shore', dig_crater: 'crater', dig_cliff: 'fossil', dig_trench: 'ruin' };
+export const entriesFor = (kind) => (DIG_KINDS[kind]?.collections || [kind]).flatMap((c) => list({ collection: c }));
+
 // Rarer finds turn up less often.
-export function pick(entries = list({ collection: 'mineral' }), rnd = Math.random) {
-  const w = entries.map((e) => 5 - (e.rarity || 1));
+export function pick(entries = entriesFor('mineral'), rnd = Math.random, tool = 'plain') {
+  const flat = TOOLS[tool]?.flat ?? 1;
+  const w = entries.map((e) => Math.max(0.05, 5 - (e.rarity || 1) * flat));
   let r = rnd() * w.reduce((a, b) => a + b, 0);
   for (let i = 0; i < entries.length; i++) if ((r -= w[i]) <= 0) return entries[i];
   return entries[0];
 }
+
+// A site: dig spots of one kind that touch (sides or corners), like a trench or a cliff face worked across
+// several tiles. Dig every tile of a site of 3 or more within one rest period and the site gives a bonus find.
+export function siteOf(spot, spots) {
+  const group = [spot];
+  for (let i = 0; i < group.length; i++) {
+    spots.forEach((o) => {
+      if (o.kind === spot.kind && !group.includes(o) && Math.abs(o.gx - group[i].gx) <= 1 && Math.abs(o.gy - group[i].gy) <= 1) group.push(o);
+    });
+  }
+  return group;
+}
+export const SITE_MIN = 3;
+export const siteKey = (site) => 'site:' + site.map((s) => s.key).sort()[0];
+/** The bonus is ready when the site is big enough, every tile is resting, and the bonus itself has not been taken this round. */
+export const siteBonusReady = (site, now = Date.now()) => site.length >= SITE_MIN && site.every((s) => readyIn(s.key, now) > 0) && readyIn(siteKey(site), now) === 0;
+export const bonusEntry = (kind, rnd = Math.random) => pick(entriesFor(kind).filter((e) => (e.rarity || 1) >= 3 || e.parts), rnd, 'brush');
 
 let el = null;
 function build() {
@@ -29,13 +73,48 @@ function build() {
   el.id = 'dig';
   el.className = 'hidden';
   el.setAttribute('role', 'dialog');
-  el.innerHTML = '<div class="dig-card"><b class="dig-title">Brush the dirt away</b><canvas class="dig-canvas"></canvas><span class="dig-meta"></span><p class="dig-note"></p><button class="dig-close main">Leave it</button></div>';
+  el.innerHTML = '<div class="dig-card"><b class="dig-title">Brush the dirt away</b><canvas class="dig-canvas"></canvas><div class="dig-tools"></div><span class="dig-meta"></span><p class="dig-note"></p><button class="dig-close main">Leave it</button></div>';
   document.body.appendChild(el);
 }
 
-/** Opens the digging patch. onClose({ found }) fires when it closes. */
-export function startDig(key, { onClose, collection = 'mineral', entry = pick(list({ collection })) } = {}) {
+/**
+ * Opens the digging patch. onClose({ found }) fires when it closes.
+ * Pass `entry` to fix what is underneath; otherwise the tool you pick helps decide (until your first stroke).
+ */
+export function startDig(key, { onClose, collection = 'mineral', entry } = {}) {
   if (!el) build();
+  let tool = 'brush';
+  let handle;
+  const fixed = !!entry;
+  const roll = () => entry || pick(entriesFor(collection), Math.random, tool);
+  const tools = el.querySelector('.dig-tools');
+  const found = foundCount();
+  const draw = () => {
+    tools.replaceChildren(
+      ...Object.entries(TOOLS).map(([id, t]) => {
+        const b = document.createElement('button');
+        const open = toolUnlocked(id, found);
+        b.textContent = open ? t.name : `${t.name} 🔒`;
+        b.title = open ? t.note : `Find ${t.need} different things to unlock`;
+        b.className = id === tool ? 'on' : '';
+        b.disabled = !open;
+        b.onclick = () => {
+          if (handle.started() || tool === id) return;
+          tool = id;
+          handle = setup(key, { onClose, entry: roll(), tool });
+          draw();
+        };
+        return b;
+      }),
+    );
+    tools.hidden = fixed || found < TOOLS.trowel.need; // nothing to choose until a second tool is earned
+  };
+  handle = setup(key, { onClose, entry: roll(), tool });
+  draw();
+  return handle;
+}
+
+function setup(key, { onClose, entry, tool }) {
   const q = (s) => el.querySelector(s);
   const cv = q('.dig-canvas');
   const dpr = Math.min(2, window.devicePixelRatio || 1);
@@ -87,12 +166,27 @@ export function startDig(key, { onClose, collection = 'mineral', entry = pick(li
   const finish = () => {
     done = true;
     render();
-    const got = collect(entry.id);
+    let got = null;
+    let part = 0;
+    if (entry.parts) {
+      const p = load(PARTS, {});
+      part = Math.min(entry.parts, (p[entry.id] || 0) + 1);
+      p[entry.id] = part;
+      if (part >= entry.parts) {
+        delete p[entry.id];
+        got = collect(entry.id);
+      }
+      save(PARTS, p);
+    } else got = collect(entry.id);
+    const whole = !entry.parts || part >= entry.parts;
     sfx('unlock');
     haptic?.();
-    q('.dig-title').textContent = `You found ${/^[aeiou]/i.test(entry.title) ? 'an' : 'a'} ${entry.title}!`;
-    q('.dig-meta').innerHTML = `<span class="r${entry.rarity}">${RARITY[entry.rarity]}</span>${!got || got.fresh ? ' · <b class="catch-new">New!</b>' : ''}`;
-    q('.dig-note').textContent = entry.blurb || '';
+    const a = /^[aeiou]/i.test(entry.title) ? 'an' : 'a';
+    q('.dig-title').textContent = whole ? `You found ${a} ${entry.title}!` : `Part of ${a} ${entry.title}!`;
+    q('.dig-meta').innerHTML = `<span class="r${entry.rarity}">${RARITY[entry.rarity]}</span>${whole ? (!got || got.fresh ? ' · <b class="catch-new">New!</b>' : '') : ` · piece ${part} of ${entry.parts}`}`;
+    q('.dig-note').textContent = whole
+      ? (entry.blurb || '') + (entry.dirty ? ' It is filthy: it will need cleaning before it can go on display.' : '')
+      : `${entry.parts - part} more to find. Keep digging at fossil spots: the rest is out there.`;
     q('.dig-close').textContent = 'Nice';
     const t = load(KEY, {});
     t[key] = Date.now() + REST;
@@ -108,7 +202,7 @@ export function startDig(key, { onClose, collection = 'mineral', entry = pick(li
   const brush = ([x, y]) => {
     d.globalCompositeOperation = 'destination-out';
     d.lineCap = d.lineJoin = 'round';
-    d.lineWidth = BRUSH;
+    d.lineWidth = TOOLS[tool].reach;
     d.beginPath();
     d.moveTo(...(last || [x, y]));
     d.lineTo(x, y);
@@ -140,7 +234,7 @@ export function startDig(key, { onClose, collection = 'mineral', entry = pick(li
     el.classList.add('hidden');
     onClose?.({ found: done ? entry : null });
   };
-  return { entry, cleared, finish, canvas: cv, dirt };
+  return { entry, cleared, finish, canvas: cv, dirt, started: () => moves > 0 };
 }
 
 export const digOpen = () => !!el && !el.classList.contains('hidden');

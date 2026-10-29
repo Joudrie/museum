@@ -1,0 +1,112 @@
+{
+  "status": "draft",
+  "collection": "archaeology",
+  "slug": "talatat-portrait-of-nefertiti",
+  "notes": "region: Egypt. era removed: the paintings date buckets do not fit antiquity; Chat 8 defines this collection",
+  "entry": {
+    "id": "archaeology:talatat-portrait-of-nefertiti",
+    "collection": "archaeology",
+    "title": "Talatat: Portrait of Nefertiti",
+    "year": "c. 1353–1347 BCE",
+    "ratio": 1.1302,
+    "blurb": "The son of Amenhotep III, Akhenaten, brought about the short-lived \"monotheistic\" revolution in Egyptian religion near the end of Dynasty 18.",
+    "rarity": 1,
+    "tags": [
+      "egypt",
+      "portrait"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1976.4/1976.4_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Purchase from the J. H. Wade Fund",
+      "url": "https://clevelandart.org/art/1976.4"
+    },
+    "value": 5,
+    "facts": [
+      "Even though all we see is a fragment of the head we know it is Nefertiti by the double uraeus or serpent symbol on the headband, which was only worn by the queen.",
+      "The young king constructed a temple complex to the Aten, the Sun Disk, at Karnak—from which this relief comes—before he moved his capital to El Armana.",
+      "For reasons yet unknown, the figure of the Queen Nefertiti appears in these reliefs far more often than that of the king."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "148794",
+    "title": "Talatat: Portrait of Nefertiti",
+    "maker": "",
+    "year": "c. 1353–1347 BCE",
+    "medium": "painted sandstone",
+    "dimensions": "Overall: 21.5 x 24.3 cm (8 7/16 x 9 9/16 in.)",
+    "widthCm": 24.3,
+    "heightCm": 21.5,
+    "ratio": 1.1302,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1976.4/1976.4_web.jpg",
+    "imageWidth": 1042,
+    "imageHeight": 893,
+    "pageUrl": "https://clevelandart.org/art/1976.4",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Purchase from the J. H. Wade Fund",
+    "description": "The son of Amenhotep III, Akhenaten, brought about the short-lived \"monotheistic\" revolution in Egyptian religion near the end of Dynasty 18. The young king constructed a temple complex to the Aten, the Sun Disk, at Karnak—from which this relief comes—before he moved his capital to El Armana. For reasons yet unknown, the figure of the Queen Nefertiti appears in these reliefs far more often than that of the king. Ironically, the Aten temples were dismantled anciently to be used as foundations and fill for additions to the Great Temple of Amun, whom the Aten had briefly displaced. Even though all we see is a fragment of the head we know it is Nefertiti by the double uraeus or serpent symbol on the headband, which was only worn by the queen.",
+    "culture": "Egypt, Karnak, New Kingdom (1540–1069 BCE), Dynasty 18, reign of Akhenaten (1351–1334 BCE)",
+    "classification": "Sculpture",
+    "tags": [
+      "Egyptian and Ancient Near Eastern Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Talatat: Portrait of Nefertiti",
+      "maker": "",
+      "year": "c. 1353–1347 BCE",
+      "medium": "painted sandstone",
+      "dimensions": "Overall: 21.5 x 24.3 cm (8 7/16 x 9 9/16 in.)",
+      "culture": "Egypt, Karnak, New Kingdom (1540–1069 BCE), Dynasty 18, reign of Akhenaten (1351–1334 BCE)",
+      "classification": "Sculpture",
+      "credit": "The Cleveland Museum of Art. Purchase from the J. H. Wade Fund",
+      "description": "The son of Amenhotep III, Akhenaten, brought about the short-lived \"monotheistic\" revolution in Egyptian religion near the end of Dynasty 18. The young king constructed a temple complex to the Aten, the Sun Disk, at Karnak—from which this relief comes—before he moved his capital to El Armana. For reasons yet unknown, the figure of the Queen Nefertiti appears in these reliefs far more often than that of the king. Ironically, the Aten temples were dismantled anciently to be used as foundations and fill for additions to the Great Temple of Amun, whom the Aten had briefly displaced. Even though all we see is a fragment of the head we know it is Nefertiti by the double uraeus or serpent symbol on the headband, which was only worn by the queen.",
+      "tombstone": "Talatat: Portrait of Nefertiti, c. 1353–1347 BCE. Egypt, Karnak, New Kingdom (1540–1069 BCE), Dynasty 18, reign of Akhenaten (1351–1334 BCE). Painted sandstone; overall: 21.5 x 24.3 cm (8 7/16 x 9 9/16 in.). The Cleveland Museum of Art, Purchase from the J. H. Wade Fund, 1976.4",
+      "funFact": "",
+      "didYouKnow": "Even though all we see is a fragment of the head we know it is Nefertiti by the double uraeus or serpent symbol on the headband, which was only worn by the queen.",
+      "creators": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "The son of Amenhotep III, Akhenaten, brought about the short-lived \"monotheistic\" revolution in Egyptian religion near the end of Dynasty 18.",
+      "quote": "The son of Amenhotep III, Akhenaten, brought about the short-lived \"monotheistic\" revolution in Egyptian religion near the end of Dynasty 18.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Even though all we see is a fragment of the head we know it is Nefertiti by the double uraeus or serpent symbol on the headband, which was only worn by the queen.",
+      "quote": "Even though all we see is a fragment of the head we know it is Nefertiti by the double uraeus or serpent symbol on the headband, which was only worn by the queen.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The young king constructed a temple complex to the Aten, the Sun Disk, at Karnak—from which this relief comes—before he moved his capital to El Armana.",
+      "quote": "The young king constructed a temple complex to the Aten, the Sun Disk, at Karnak—from which this relief comes—before he moved his capital to El Armana.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "For reasons yet unknown, the figure of the Queen Nefertiti appears in these reliefs far more often than that of the king.",
+      "quote": "For reasons yet unknown, the figure of the Queen Nefertiti appears in these reliefs far more often than that of the king.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "unknown collection \"archaeology\"",
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}
