@@ -9,7 +9,20 @@ The prompt to paste into a new chat is in section 7.
 - Tier 2 classes are in: E dig, field & expedition (21 classes), G museum jobs (23). 98 classes, 227 variants in all.
 - Tier 3 classes are in: J visitors & townsfolk (26 classes), H food & market (13). 137 classes, 312 variants in all.
 - Tier 4 classes are in: I arts & performance (19 classes), F science & medicine (16), C artisans & makers (15). 187 classes, 402 variants in all.
-- Next: Tier 5 (K history; L fantasy and seasonal; M crews).
+- Tier 5 is in: K through history (11 classes), L fantasy & seasonal (11), and the 10 crews of M (`src/people/crews.js`, builder pieces `t:crew_<id>`). 209 classes, 471 variants in all.
+- Parked for the user's OK (TODO → Needs Sean): East Asia, South Asia and Mesoamerica in K, and the genie in L.
+- Period dress references (one museum object per outfit, also in comments in `src/people/classes.js`):
+  - Egypt: the Met, Nikare with his Wife and Daughter (52.19, kilt), Broad collar of Senebtisi (08.200.30), Sphinx of Hatshepsut (31.3.166, nemes headcloth).
+  - Greece: the Met, Marble statue of a kore (07.306, chiton), Bronze helmet of Corinthian type (1992.180.2), Panathenaic prize amphora (14.130.12).
+  - Rome: the Met, Marble statue of a togatus (04.15), Fragmentary marble head of a helmeted soldier (25.78.62), Terracotta statuette of a gladiator (10.210.78).
+  - Medieval: the Met, Armet, Milan, ca. 1475 (29.158.51); Memling, Maria Portinari (14.40.626–27, hennin); Mourner, ca. 1453 (17.190.389, monk's habit); Meissen, The Court Jester Joseph Fröhlich (1982.60.305); Lute, 1596 (89.2.157).
+  - Renaissance: the Met, Bronzino, Portrait of a Young Man (29.100.16, doublet); Frans Hals, Portrait of a Bearded Man with a Ruff (49.7.34).
+  - Dutch Golden Age: the Met, Frans Hals, Petrus Scriverius (29.100.8); Vermeer, Young Woman with a Water Pitcher (89.15.21); the Rijksmuseum, Vermeer, The Milkmaid (SK-A-2344).
+  - Colonial: the Met, Self-Portrait in a Cocked Hat, ca. 1790 (1975.1.976, tricorn); Bonnet, ca. 1850 (2009.300.2037a, b).
+  - Victorian: the Met, Walking dress, ca. 1883 (1977.304.2a, b, bustle); Top hat, ca. 1875 (2009.300.1525a, b); Chimney Sweep, 1737 (53.600.588(17)); Lewis Hine, Newsies, 1910 (1970.727.1); a policeman photograph, ca. 1875 (2016.22).
+  - 1920s: the Met, Cloche, 1923–25 (2009.300.1600); Evening dress, ca. 1925 (2009.300.1316).
+  - Decades: the Met, Yves Saint Laurent for Dior, "Chicago" leather jacket, 1960–61 (2014.601); Halston, Jumpsuit, ca. 1975 (2005.412.16); Marc Jacobs for Perry Ellis, 1993 (2014.534.3); the V&A, Gordon Deighton, tie-dyed trousers, 1968 (O56033).
+  - Norse: the Met, Oval brooch, Viking, 900–1000 (1982.323.1); Oslo's Museum of Cultural History, the Gjermundbu helmet (no horns: Viking helmets had none).
 
 Today: 1 body, 8 skin tones, 11 hair colours, 13 hairstyles, 11 hats, 7 facial-hair options, 3 glasses,
 10 outfits, 7 accessories, 14 visitor kinds, 6 staff kinds, 19 famous visitors. All drawn in code in

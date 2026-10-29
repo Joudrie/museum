@@ -3,7 +3,7 @@
 // whole art set can be reviewed at a glance. Island tiles are on tiles.html.
 import { makeCharacter, makeEmotes, bakeItem, bakePlant, HATS, FACIAL, GLASSES, HAIRSTYLES, OUTFITS, ACCESSORIES } from './art.js';
 import { BUILDS, LEGS, FEET, CARRY, GROUND, BUDDIES, POSES } from './people/parts.js';
-import { CLASSES, GROUPS, PEOPLE_LIST, personFor } from './people/index.js';
+import { CLASSES, GROUPS, PEOPLE_LIST, CREWS, personFor } from './people/index.js';
 import { ITEMS, CATEGORIES } from './items.js';
 import { COLUMNS, columnCanvas } from './columns.js';
 import { FAMOUS } from './famous.js';
@@ -103,6 +103,16 @@ const tabs = {
         return card(p.label, keys, `t:${p.tile}`);
       }));
     });
+    // crews: everyone in the group, at work
+    section(`Crews · ${Object.keys(CREWS).length}`, Object.entries(CREWS).map(([id, crew]) => {
+      const keys = crew.members.map(([pid], n) => {
+        const one = personFor(pid, (k) => ((Math.sin((n + 1) * 91.7 + k * 12.9898) * 43758.5453) % 1 + 1) % 1);
+        const key = `pc_${id}_${n}`;
+        makeCharacter(scene, key, one.colors, one.look);
+        return `${key}_${one.pose ? 'pose_0' : 'down'}`;
+      });
+      return card(crew.label, keys, `t:crew_${id}`);
+    }));
   },
   famous() {
     section('Famous visitors', Object.entries(FAMOUS).map(([id, f]) => {

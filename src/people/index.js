@@ -2,10 +2,11 @@
 // `t:npc_<class>_<variant>`), and the look of each person placed, rolled from a seed so
 // every janitor is a little different. Classes are data in classes.js; parts in parts.js.
 import { CLASSES, GROUPS } from './classes.js';
+import { CREWS, crewWidth } from './crews.js';
 import { POSE_RATE } from './parts.js';
 import { personRows, poseRows, personPalette, drawRows } from '../art.js';
 
-export { CLASSES, GROUPS };
+export { CLASSES, GROUPS, CREWS };
 
 export const SKINS = ['#f2c6a0', '#e0ac80', '#c68a5e', '#9a6440', '#6e4428', '#ffe0c8', '#b57850', '#583420', '#f8d8c0', '#d49a6a', '#8a5636', '#4a2c1a'];
 export const HAIR_COLORS = ['#4a2e20', '#1e1410', '#d9b45a', '#a0522d', '#2b1a10', '#c0703f', '#e8d8a8', '#8a3a2a', '#3a2a22', '#6b4430'];
@@ -21,6 +22,9 @@ const BY_TILE = Object.fromEntries(PEOPLE_LIST.map((p) => [p.tile, p]));
 const BY_ID = Object.fromEntries(PEOPLE_LIST.map((p) => [p.id, p]));
 // the person a builder tile stands for, or null
 export const personOfTile = (name) => BY_TILE[name] || null;
+// a crew placed as one piece (`t:crew_<id>`): its members, or null
+const CREW_PREFIX = 'crew_';
+export const crewOfTile = (name) => (name.startsWith(CREW_PREFIX) && CREWS[name.slice(CREW_PREFIX.length)]) || null;
 
 // Stirs a seeded random into independent rolls, so nearby seeds don't give alike people.
 function mixer(r) {
@@ -84,32 +88,46 @@ export function personFor(id, seed = Math.random) {
 }
 
 // The builder's picture of a person (one frame, at work if they have a job to do):
-// drawn the first time a list asks for it.
-function preview(p) {
-  const one = personFor(p.id, (k) => [0.1, 0.35, 0.6, 0.85][k % 4]);
+// drawn the first time a list asks for it. A crew draws each member where they stand.
+function drawPerson(g, id, x, bottom, seed, flip) {
+  const one = personFor(id, seed);
   const rows = one.pose ? poseRows(one.look)[0] : personRows('down', one.look);
+  g.fillStyle = 'rgba(0,0,0,0.25)';
+  g.beginPath();
+  g.ellipse(x + 16, bottom + 1, 8, 2, 0, 0, Math.PI * 2);
+  g.fill();
+  drawRows(g, rows, personPalette(one.colors), bottom, x, !!(flip && one.pose));
+}
+const SEED = (k) => [0.1, 0.35, 0.6, 0.85][k % 4];
+function preview(p) {
   const c = document.createElement('canvas');
   c.width = 32;
   c.height = 48;
+  drawPerson(c.getContext('2d'), p.id, 0, 44, SEED);
+  return c;
+}
+function crewPreview(crew) {
+  const c = document.createElement('canvas');
+  c.width = crewWidth(crew) * 32;
+  c.height = 48;
   const g = c.getContext('2d');
-  g.fillStyle = 'rgba(0,0,0,0.25)';
-  g.beginPath();
-  g.ellipse(16, 45, 8, 2, 0, 0, Math.PI * 2);
-  g.fill();
-  drawRows(g, rows, personPalette(one.colors), 44);
+  [...crew.members].sort((a, b) => a[2] - b[2]).forEach(([id, dx, dy, flip], k) => drawPerson(g, id, Math.round(dx * 32), 44 + Math.round(dy * 32), (n) => SEED(n + k), flip));
   return c;
 }
 
-// one builder piece per class variant, grouped under People
-export function addPeople(add) {
-  PEOPLE_LIST.forEach((p) => {
-    const t = add(p.tile, [], { group: `People: ${p.group}`, label: p.label, h: 48, walk: 'person' });
-    let frames = null;
-    Object.defineProperty(t, 'frames', {
-      enumerable: true,
-      configurable: true,
-      get: () => (frames ||= [preview(p)]),
-      set: (f) => (frames = f),
-    });
+// one builder piece per class variant, grouped under People, and one per crew
+function lazyFrames(t, draw) {
+  let frames = null;
+  Object.defineProperty(t, 'frames', {
+    enumerable: true,
+    configurable: true,
+    get: () => (frames ||= [draw()]),
+    set: (f) => (frames = f),
   });
+}
+export function addPeople(add) {
+  PEOPLE_LIST.forEach((p) => lazyFrames(add(p.tile, [], { group: `People: ${p.group}`, label: p.label, h: 48, walk: 'person' }), () => preview(p)));
+  Object.entries(CREWS).forEach(([id, crew]) =>
+    lazyFrames(add(`${CREW_PREFIX}${id}`, [], { group: 'People: Crews', label: `${crew.label} (${crew.members.length} people)`, w: crewWidth(crew) * 32, h: 48, walk: 'person' }), () => crewPreview(crew)),
+  );
 }

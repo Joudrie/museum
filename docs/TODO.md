@@ -206,7 +206,7 @@ Owns: new `src/people/`, the character section of `src/art.js` (looks, `makeChar
 - [x] (this PR) Tier 2: dig, field and expedition; museum professions (sections E, G): 44 more classes, 98 in all, 227 variants.
 - [x] (this PR) Tier 3: visitors and townspeople; food and market (sections J, H): 39 more classes, 137 in all, 312 variants.
 - [x] (this PR) Tier 4: arts and performance; science and medicine; artisans (sections I, F, C): 50 more classes, 187 in all, 402 variants. Raised arms now keep the outfit's sleeve (bare arms stay bare); a test catches a class name used twice (the artist had replaced the house painter).
-- [ ] Tier 5: history; fantasy and seasonal; crews (sections K, L, M).
+- [x] (this PR) Tier 5: history; fantasy and seasonal (sections K, L): 22 more classes, 209 in all, 471 variants, each period outfit with a museum reference; and 10 crews (section M): one builder piece (`t:crew_<id>`) places a whole group. Parked for your OK: East Asia, South Asia and Mesoamerica history, and the genie (see Needs Sean).
 
 ## CHAT 18: Progression evidence (measure first, then design)
 Owns: new `docs/progression/` (write-ups, CSV, Python models and analysis), new `src/progression/` (flags, event log, telemetry adapter), new `tests/progression.cjs`. Small additive edits only in shared files to emit events and read the flag. Builds no progression features; it measures what exists and sets the tests a progression design must pass. Claim: `claimed: 2026-10-29`
@@ -242,6 +242,7 @@ Mini-games (Mop Rush, No Flash!, Restoration-as-minigame, Crate Tetris, Hang it 
 
 - **Chat 13 defaults (change in `src/daily.js`):** welcome gift 40 gold + 10 per streak day (max 7) + 100 on every 7th day; wheel slices 25/40/60/40/100/25/75/250; the streak forgives a gap of up to 3 days and otherwise restarts quietly with no message.
 - **Chat 13:** a moving tour clip (video/GIF) and walking round a friend's actual rooms need real work in RoomScene (a read-only room loader); should they happen? Today a visit is a look-around card of paintings and decor.
+- **Chat 17 (people):** four groups wait for your OK before I draw them, because they are cultural or religious dress and 32-pixel art can slide into costume: **East Asia** (scholar-official, painter-monk, court lady, Edo-era townsperson), **South Asia** (merchant, court figure), **Mesoamerica** (astronomer-priest, ballplayer), and the **genie** (the jinn are part of Islamic belief; the blue genie is a film look). Say go and I'll draw each from a museum object (for example the Met's Chinese and Japanese portraits, Mughal paintings and Maya figurines), or say drop.
 
 ## Cross-chat requests (add a line, carry on)
 - **Chat 16 to everyone:** UI overhaul in progress. New menus and panels should use the `ui-*` components in `docs/UI.md` once it lands (until then keep your menu markup simple and class-based); please don't restyle menus yourselves. Chat 16 restyles through shared tokens and won't rewrite your logic or change element ids tests use.
