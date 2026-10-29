@@ -15,6 +15,13 @@
   cursor: pointer;
 }
 body:not(.outside) #prog-pill { top: calc(var(--hud-top, 10px) + 112px); }
+/* the goal pill steps aside whenever a menu, sheet or card is open (it sat over the character creator) */
+body:has(.overlay:not(.hidden)) #prog-pill,
+body:has(#toolkit:not(.hidden)) #prog-pill,
+body:has(#viewer:not(.hidden)) #prog-pill,
+body:has(#catch:not(.hidden)) #prog-pill,
+body:has(#colorwheel:not(.hidden)) #prog-pill,
+body.pill-away #prog-pill { visibility: hidden; pointer-events: none; }
 #prog-pill .pp-rank { grid-row: span 2; width: 38px; height: 38px; display: grid; place-items: center; background: var(--ui-gold-lo); border: 2px solid var(--ui-gold); color: var(--ui-gold-hi); font: 700 18px/1 var(--ui-font); }
 #prog-pill .pp-rank small { display: block; font: 600 9px/1 var(--ui-font); letter-spacing: 0.08em; color: var(--ui-muted); margin-bottom: -2px; }
 #prog-pill .pp-bar { position: relative; height: 9px; background: rgba(255, 255, 255, 0.08); border: 1px solid var(--ui-shadow); overflow: hidden; }

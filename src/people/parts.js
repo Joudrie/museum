@@ -462,6 +462,47 @@ export function moreOutfit(out, view, look) {
   if (look.feet === 'bare') swap([25], ['b'], 's');
 }
 
+// ---------- A second outfit color (the curator's "Trim" pick, palette letter u) ----------
+// Only outfits that draw no shirt (w) or trim (g) of their own get one. It is drawn only
+// when look.second is set, so everyone else (and every old look) stays pixel-identical.
+export const ACCENT_OUTFITS = {
+  tee: 'Collar & hem', turtleneck: 'Neck & hem', oilskins: 'Collar & hem', scrubs: 'Pocket & hem', chefwhites: 'Buttons & collar',
+  leotard: 'Belt', swimsuit: 'Band', trunks: 'Waistband', flannel: 'Check', parka: 'Trim', robe: 'Sash', uniform: 'Belt',
+  trench: 'Belt', tutu: 'Skirt', mummy: 'Wraps', cardigan: 'Buttons', doublet: 'Buttons', captain: 'Buttons', overalls: 'Buttons',
+};
+export function outfitAccent(out, view, look) {
+  if (!look.second || !ACCENT_OUTFITS[look.outfit]) return;
+  const { set, swap } = rel(out);
+  const torso = [12, 13, 14, 15, 16, 17, 18, 19, 20];
+  const band = (r) => out[r]?.forEach((c, i) => c !== 'o' && c !== '.' && !isSkin(c) && (out[r][i] = 'u'));
+  const s = look.outfit;
+  if (['tee', 'turtleneck', 'oilskins'].includes(s)) {
+    band(11);
+    band(20);
+  }
+  if (s === 'scrubs') {
+    band(20);
+    if (view === 'down') [3, 4].forEach((i) => set(15, i, 'u'));
+  }
+  if (s === 'chefwhites') {
+    swap(torso, ['k'], 'u');
+    band(11);
+  }
+  if (s === 'leotard' || s === 'swimsuit') band(20);
+  if (s === 'trunks') band(21);
+  if (s === 'flannel') swap(torso, ['d'], 'u');
+  if (s === 'parka') {
+    swap([11], ['r'], 'u');
+    swap([14, 17], ['d'], 'u');
+  }
+  if (s === 'robe') swap([18], ['r'], 'u');
+  if (s === 'uniform') swap([20], ['N'], 'u');
+  if (s === 'trench') swap([18], ['N'], 'u');
+  if (s === 'tutu') swap([20, 21], ['Q'], 'u');
+  if (s === 'mummy') swap(out.map((_, r) => r), ['a'], 'u');
+  if (['cardigan', 'doublet', 'captain', 'overalls'].includes(s)) swap(torso, ['Y'], 'u');
+}
+
 // ---------- More accessories (after the first ones) ----------
 export function moreAccessories(out, view, look) {
   const { set, len } = rel(out);

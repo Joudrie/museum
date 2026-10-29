@@ -1,0 +1,83 @@
+/* Speech bubbles and the conversation box, sized to stay out of the way.
+   The bubble (src/talk.js) is placed in page px over the speaker's head every frame;
+   the conversation box (src/dialogue.js) sits in the top third and lets you walk away. */
+#talk {
+  z-index: 15;
+  pointer-events: none;
+}
+#talk .talk-box,
+#talk.below .talk-box {
+  top: 0;
+  bottom: auto;
+  left: 0;
+  transform: none;
+  width: max-content;
+  max-width: min(236px, 70vw);
+  padding: 7px 10px 8px;
+  pointer-events: none;
+}
+#talk .talk-who {
+  font-size: 10px;
+  line-height: 1.1;
+}
+#talk .talk-who span {
+  margin-left: 4px;
+}
+body #talk .talk-text {
+  margin: 3px 0 0;
+  font-size: 14px;
+  line-height: 1.3;
+}
+#talk .talk-body {
+  stroke-width: 2.5;
+}
+#talk .talk-shadow {
+  transform: translateY(3px);
+}
+
+/* the conversation box: top third, no dimmed screen, nothing under it is blocked */
+html body #chat {
+  align-items: flex-start;
+  padding: calc(8px + env(safe-area-inset-top, 0px)) 8px 0;
+  background: none;
+  pointer-events: none;
+}
+html body #chat .chat-box {
+  pointer-events: auto;
+  min-height: 0;
+  max-width: 400px;
+  padding: 8px 10px 12px;
+}
+html body #chat .chat-head {
+  margin-bottom: 4px;
+  gap: 8px;
+}
+html body #chat .chat-face {
+  width: 36px;
+  height: 36px;
+}
+html body #chat .chat-text {
+  min-height: 0;
+  font-size: 14px;
+}
+html body #chat .chat-choices {
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+html body #chat .chat-choices button {
+  min-height: 44px;
+  padding: 6px 8px;
+  font-size: 13px;
+  line-height: 1.15;
+}
+html body #chat .chat-choices button:only-child,
+html body #chat .chat-choices button:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+html body:has(#chat:not(.hidden)) #prog-pill {
+  visibility: hidden;
+}
+/* the bubble closes when you walk away (or after a few seconds), not on a tap */
+#talk .talk-box::after {
+  content: none;
+}
