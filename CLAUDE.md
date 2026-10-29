@@ -49,15 +49,8 @@ Read docs/VISION.md first: every feature should serve it. Then docs/HANDOFF.md f
 - Horizontal rooms: enter through a door on the left end wall; the end piece is
   the right end. Vertical rooms: enter at the bottom; the end piece is the top.
 
-## Wakefield, MA (the user's hometown map)
-- Wakefield is a **separate project that shares the tech**. The museum's grid rules do **not** apply to it.
-- It is drawn from **exact real shapes, never tiles** (tools/wakefield_vector.py -> public/maps/wakefield.vec.json, drawn by
-  src/WakefieldScene.js). **No grid anywhere**: a 45° road is a straight 45° line, never a staircase. No tile may ever sit
-  on both a road and grass, or on both grass and a building. It must be a precise overlay of the real map.
-- **Scale:** the character sets it. A tile is about 4 m, so an ordinary street is **two tiles wide** and no road is narrower.
-  Wakefield is about 1,350 x 1,650 tiles. A huge map is fine.
-- **Every road goes in**, even the smallest streets. Roads are plain **dirt path** for now (no cobblestone), buildings are brick.
-  No trees or elevation yet.
-- Two buttons in the game: **Aa** toggles street names (all of them, along the roads) and **🗺** lays the real OpenStreetMap
-  picture over the town (off, half, full) so the user can judge accuracy, like a GPS. Walking is 3x the island pace.
-- Open it with index.html?wakefield or sail there from a rowboat.
+## Wakefield, MA is a separate personal project, NOT part of Curation
+- The user is making their hometown for their friends. It only shares the engine. **Never add Wakefield to the game** (boat
+  menu, HUD, journal, viewer, collections) and never apply the museum's rules to it. Its code is `src/wakefield/`, its page is
+  `wakefield.html`, and **all its rules and notes are in docs/WAKEFIELD.md. Read that before touching it.**
+- When the work is Wakefield, send its link, not the game and builder links: https://joudrie.github.io/museum/wakefield.html

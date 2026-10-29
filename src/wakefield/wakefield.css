@@ -1,0 +1,119 @@
+/* Wakefield, MA: a personal project, separate from the museum game. */
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: #2b5f93;
+  overflow: hidden;
+  overscroll-behavior: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  font-family: system-ui, sans-serif;
+}
+#game {
+  position: fixed;
+  inset: 0;
+  touch-action: none;
+}
+#game canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+#loading {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  color: #fff;
+  text-align: center;
+  font-size: 16px;
+}
+#stick {
+  position: fixed;
+  width: 88px;
+  height: 88px;
+  margin: -44px 0 0 -44px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  background: rgba(0, 0, 0, 0.18);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.12s;
+}
+#stick.active {
+  opacity: 1;
+}
+#stick .knob {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 36px;
+  height: 36px;
+  margin: -18px 0 0 -18px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.7);
+}
+.wk-btn {
+  position: fixed;
+  left: max(10px, env(safe-area-inset-left));
+  z-index: 5;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #2a1a12;
+  background: #e8c867;
+  border: 3px solid #1d1714;
+  box-shadow: inset -3px -3px 0 #a87f2c, inset 3px 3px 0 #fff0b0, 0 3px 0 #1d1714;
+  cursor: pointer;
+}
+.wk-btn:active {
+  transform: translateY(2px);
+}
+.wk-btn.on {
+  outline: 3px solid #fff;
+}
+#names-btn {
+  top: max(12px, env(safe-area-inset-top));
+  font-size: 18px;
+}
+#map-btn {
+  top: calc(max(12px, env(safe-area-inset-top)) + 58px);
+}
+#osm-credit {
+  position: fixed;
+  left: 8px;
+  bottom: max(6px, env(safe-area-inset-bottom));
+  z-index: 5;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.8);
+  color: #333;
+  font-size: 11px;
+  pointer-events: none;
+}
+#toast {
+  position: fixed;
+  top: max(14px, env(safe-area-inset-top));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 6;
+  padding: 7px 16px;
+  border-radius: 999px;
+  background: rgba(20, 20, 20, 0.8);
+  color: #fff;
+  font-size: 14px;
+  pointer-events: none;
+  transition: opacity 0.4s;
+  white-space: nowrap;
+}
+#toast.hidden {
+  opacity: 0;
+}
