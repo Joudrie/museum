@@ -7,6 +7,7 @@
 //     owned:   { [entryId]: count },                // held now (collections with ownership 'earned')
 //     claimed: { [setId]: true },                   // set rewards already paid
 //     dirty:   { [entryId]: count },                // held but not yet restored (see restore.js)
+//     sold:    { [entryId]: { n, at } },            // sold to the shop: how many, and when the last one went (buy-back opens a week later)
 //   }
 //
 // A collection with ownership 'all' (paintings, for now) is held from the
@@ -20,7 +21,7 @@ const num = (v, min = 0) => (Number.isFinite(v) && v >= min ? v : undefined);
 
 /** Turns whatever was saved into a valid codex. Junk is dropped, real progress is kept. */
 export function normalize(raw) {
-  const out = { v: 1, seen: {}, owned: {}, claimed: {}, dirty: {} };
+  const out = { v: 1, seen: {}, owned: {}, claimed: {}, dirty: {}, sold: {} };
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return out;
   Object.entries(raw.seen && typeof raw.seen === 'object' ? raw.seen : {}).forEach(([id, r]) => {
     if (!ID.test(id) || !r || typeof r !== 'object') return;
@@ -32,6 +33,13 @@ export function normalize(raw) {
   });
   Object.entries(raw.owned && typeof raw.owned === 'object' ? raw.owned : {}).forEach(([id, n]) => {
     if (ID.test(id) && num(n, 1)) out.owned[id] = Math.floor(n);
+  });
+  Object.entries(raw.sold && typeof raw.sold === 'object' && !Array.isArray(raw.sold) ? raw.sold : {}).forEach(([id, r]) => {
+    if (ID.test(id) && r && typeof r === 'object' && num(r.n, 1)) out.sold[id] = { n: Math.floor(r.n), at: num(r.at) ?? 0 };
+  });
+  Object.keys(out.dirty).forEach((id) => {
+    out.dirty[id] = Math.min(out.dirty[id], out.owned[id] || 0); // you can't hold more unrestored than you own
+    if (!out.dirty[id]) delete out.dirty[id];
   });
   Object.entries(raw.claimed && typeof raw.claimed === 'object' ? raw.claimed : {}).forEach(([id, v]) => {
     if (v === true && typeof id === 'string') out.claimed[id] = true;
@@ -137,6 +145,36 @@ export function dispose(id, qty = 1) {
   return true;
 }
 
+/** Sells one to the shop: it leaves your hands (the stamp stays) and goes on the buy-back ledger. Returns false if you hold none. */
+export function sellOne(id, at = Date.now()) {
+  if (!dispose(id)) return false;
+  const c = snapshot();
+  c.sold[id] = { n: (c.sold[id]?.n || 0) + 1, at };
+  put(c);
+  return true;
+}
+
+/** Brings one back from the buy-back ledger, clean. Returns false if none was sold. */
+export function restockSold(id) {
+  const c = snapshot();
+  if (!c.sold[id]) return false;
+  c.sold[id].n -= 1;
+  if (c.sold[id].n <= 0) delete c.sold[id];
+  c.owned[id] = (c.owned[id] || 0) + 1;
+  put(c);
+  return true;
+}
+
+/** Puts a bought piece in your hands, clean (the stamp is set the first time). */
+export function acquire(id, at = Date.now()) {
+  if (!ID.test(id) || !get(id)) return false;
+  const c = snapshot();
+  c.seen[id] = c.seen[id] || { n: 1, first: at };
+  c.owned[id] = (c.owned[id] || 0) + 1;
+  put(c);
+  return true;
+}
+
 /** How many of this entry are held but not yet restored. */
 export const dirtyCount = (id, c = snapshot()) => c.dirty[id] || 0;
 
@@ -188,14 +226,15 @@ export function claimSet(id) {
 }
 
 /** Sets that are finished but not yet paid. */
-export const unclaimedSets = (c = snapshot()) => sets().filter((s) => setProgress(s, c).done && !c.claimed[s.id]);
+export const unclaimedSets = (c = snapshot()) => sets(undefined, true).filter((s) => setProgress(s, c).done && !c.claimed[s.id]);
 
-/** Testing: one of everything that has to be earned. Returns how many were added. */
+/** Testing: one of everything that has to be earned (people are met, not collected). Returns how many were added. */
 export function collectEverything() {
   const c = snapshot();
   let added = 0;
   list().forEach((e) => {
-    if (collection(e.collection).ownership !== 'earned' || c.seen[e.id]) return;
+    const col = collection(e.collection);
+    if (col.ownership !== 'earned' || col.people || c.seen[e.id]) return;
     collect(e.id);
     added++;
   });

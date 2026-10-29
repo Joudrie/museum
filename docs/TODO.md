@@ -102,13 +102,13 @@ Owns: new `src/expedition*.js`, `src/leads.js`, `src/maps/` (new islands). Claim
 
 ## CHAT 8: Collections, codex, journal and the shop
 Owns: `src/collections/` (except render.js), `src/journal.js`, `tools/import_collection.mjs`. Claim: `claimed: 2026-10-29`
-- [ ] New collections as data (or CSV): coins, butterflies and insects, shells, stamps, ship models, glass flowers, pottery, armour, clocks, inventions.
-- [ ] Famous visitors as a collection (the codex already stamps `visitor:<id>`; their tab is hand-built).
-- [ ] Codex milestones at 10 / 25 / 50 / 75 / 100% with rewards; sets and artist sets (0/12 van Gogh); inventory vs codex.
-- [ ] Selling and buying through the codex: sell for 50%, **buy-back after a 1-week cooldown at a premium**, a **Gallery Shop** with 3 to 5 rotating paintings refreshed daily. (Crates: ON HOLD.)
-- [ ] `value` as income (recorded now, income still uses old rules); "your museum earns while you're away (up to 8 hours)" message.
-- [ ] Journal polish: filters, search, "new" markers, rate and note per item.
-- [ ] One of a kind: you own *the* Starry Night; sold ones go back in the pool.
+- [x] New collections as data (or CSV): coins, butterflies and insects, shells, stamps, ship models, glass flowers, pottery, armour, clocks, inventions. (#129; the digging chat's own coins, pottery and shells won where we overlapped. Tabs: Treasures, Makers, Insects.)
+- [x] Famous visitors as a collection (the codex already stamps `visitor:<id>`; their tab is hand-built). Now `data/visitors.js`, two sets, drawn by the `visitor` renderer in `journal.js`.
+- [x] Codex milestones at 10 / 25 / 50 / 75 / 100% with rewards; sets and artist sets (0/12 van Gogh); inventory vs codex. (Codex tab, `milestones.js`, `artistsets.js`; held-now vs ever-collected also shows in Storage.)
+- [x] Selling and buying through the codex: sell for 50%, **buy-back after a 1-week cooldown at a premium**, a **Gallery Shop** with 3 to 5 rotating paintings refreshed daily. (Crates: ON HOLD.) (`shop.js`, Shop tab. Paintings join the shelf and the sell list once their collection is switched to `ownership: 'earned'`: see Needs Sean.)
+- [x] `value` as income (recorded now, income still uses old rules); "your museum earns while you're away (up to 8 hours)" message. (Display pieces earn their `value` through `display.js` (#127) and the 8-hour cap message shipped with Chat 12 (#128). Paintings still earn by the old rule.)
+- [x] Journal polish: filters, search, "new" markers, rate and note per item.
+- [x] One of a kind: you own *the* Starry Night; sold ones go back in the pool. (The Gallery Shop only offers pieces you don't hold, and a sold piece is back in the pool.)
 
 ## CHAT 9: Rooms and the museum building
 Owns: `src/rooms.js`, `src/shaped.js`, `src/walldraw.js`, `src/atrium.js`, `src/RoomScene.js` (shared, take care). Claim: `claimed: 2026-10-29`
@@ -196,6 +196,7 @@ Mini-games (Mop Rush, No Flash!, Restoration-as-minigame, Crate Tetris, Hang it 
 - Asset hunt: download by hand from itch.io (PixelFishes CC0; Idylwild's Armory, check its licence first); links in docs/ASSETS.md round 3. Also: do you want a later dig of CraftPix, GameDev Market and GitHub CC0 tilesets?
 - Dig spots on Main Island: place them in the builder where you want them.
 - Mini-games and gems / ads: go or no-go?
+- **Chat 8: paintings are all yours from the start** (`ownership: 'all'`), so the Gallery Shop and selling have nothing to do with them yet. Switch the painting collection to `'earned'` (start with only the entrance paintings) and they flow through `shop.js` with no code change. Do you want that? Defaults in `src/collections/shop.js`: sell 50%, buy-back after 7 days at 75% of price, shop price 150%, 3 to 5 pieces a day; base price by rarity 40 / 120 / 400 / 1500 (an entry's own `price` wins). Milestone gold 500 / 1,500 / 5,000 / 12,000 / 50,000; artist sets pay 100 per painting.
 - Open design questions: free-roam map or chain of rooms; should paintings come only from expeditions; can you fail an expedition; seasons automatic or chosen; split the shared core now?
 
 - **Chat 13 defaults (change in `src/daily.js`):** welcome gift 40 gold + 10 per streak day (max 7) + 100 on every 7th day; wheel slices 25/40/60/40/100/25/75/250; the streak forgives a gap of up to 3 days and otherwise restarts quietly with no message.

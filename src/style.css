@@ -2619,6 +2619,109 @@ body.outside #hud {
   line-height: 1.35;
 }
 
+/* ---------- Journal polish: search, filters, NEW marks, stars, shop ---------- */
+.filtered-out {
+  display: none !important;
+}
+.journal-filter {
+  display: grid;
+  gap: 6px;
+  margin: 8px 0;
+}
+.journal-search {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 10px;
+  font: inherit;
+  font-size: 16px; /* 16px so iOS never zooms the page */
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.06);
+  border: 2px solid var(--gold-dark);
+  border-radius: 6px;
+}
+.journal-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.journal-chips .chip {
+  padding: 4px 9px;
+  font: inherit;
+  font-size: 12px;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.04);
+  border: 2px solid var(--gold-dark);
+  border-radius: 999px;
+}
+.journal-chips .chip.on {
+  border-color: var(--gold);
+  background: rgba(201, 162, 63, 0.22);
+}
+.fish-cell,
+.slot-painting {
+  position: relative;
+}
+.marks {
+  position: absolute;
+  top: 3px;
+  right: 4px;
+  display: flex;
+  gap: 4px;
+  font-size: 10px;
+  line-height: 1;
+  pointer-events: none;
+}
+.marks .mark-new {
+  padding: 2px 4px;
+  border-radius: 4px;
+  background: #d8502a;
+  color: #fff;
+  font-weight: 700;
+}
+.marks .mark-stars {
+  color: #ffd35a;
+}
+.marks .mark-note {
+  color: var(--ink);
+}
+.journal-tabs button.has-new::after {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-left: 4px;
+  border-radius: 50%;
+  background: #d8502a;
+  vertical-align: middle;
+}
+.gallery-grid.shop-list {
+  grid-template-columns: 1fr;
+}
+.shop-list .shop-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+}
+.shop-list .shop-row .thumb {
+  flex: none;
+  width: 64px;
+  height: 64px;
+}
+.shop-list .shop-row .meta {
+  flex: 1;
+  min-width: 0;
+}
+.journal-tabs button {
+  flex-basis: 17%;
+  padding-block: 6px;
+  font-size: 12px;
+}
+.shop-row .quest-claim {
+  flex: none;
+  margin-left: auto;
+  white-space: nowrap;
 .dig-tools {
   display: flex;
   gap: 6px;
