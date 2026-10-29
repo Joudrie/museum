@@ -65,6 +65,10 @@ function blankMap(kind, w, h) {
 }
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const corner = (x, y) => (x < 0 || y < 0 || x > map.w || y > map.h ? 0 : map.corners[y * (map.w + 1) + x]);
+// bubbles and lily pads only go on water: sea or pond under at least 3 of the cell's corners
+const WATER_ONLY = new Set(['t:bubbles', 't:lily']);
+const wetCell = (x, y) => [corner(x, y), corner(x + 1, y), corner(x, y + 1), corner(x + 1, y + 1)].filter((m) => m === 0 || m === 3).length >= 3;
+const notOnLand = (ref, x, y) => !(map.kind === 'island' && WATER_ONLY.has(ref) && !wetCell(x, y));
 // grass never meets the sea directly: there's always a little beach
 function eff(x, y) {
   const m = corner(x, y);
@@ -559,6 +563,7 @@ const brushSize = () => (tool === 'paint' && chosen && PIECES[chosen]?.layer ===
 let brushAt = null;
 const cellAt = (wx, wy) => ({ x: Math.floor(wx / T), y: Math.floor(wy / T) });
 
+let dryWarned = false; // the "only on water" note shows once per stroke
 function paintCells(wx, wy) {
   const n = brushSize();
   const c = cellAt(wx, wy);
@@ -566,6 +571,7 @@ function paintCells(wx, wy) {
   const y0 = c.y - Math.floor((n - 1) / 2);
   brushAt = { x: x0, y: y0 };
   let changed = false;
+  let dryMiss = false;
   if (chosen.startsWith('m:')) {
     if (map.kind !== 'island') return toast('Terrain is for islands. Start a new island from the menu.');
     const m = Number(chosen.slice(2));
@@ -583,11 +589,19 @@ function paintCells(wx, wy) {
       for (let x = x0; x < x0 + n; x++) {
         if (x < 0 || y < 0 || x >= map.w || y >= map.h) continue;
         const i = y * map.w + x;
+        if (!notOnLand(chosen, x, y)) {
+          dryMiss = true;
+          continue;
+        }
         if (map.tiles[i] !== chosen) {
           map.tiles[i] = chosen;
           changed = true;
         }
       }
+  }
+  if (dryMiss && !changed && !dryWarned) {
+    dryWarned = true;
+    toast('Bubbles and lily pads only go on water.');
   }
   if (changed) dirty(x0, y0, x0 + n, y0 + n);
   return changed;
@@ -660,6 +674,7 @@ function fillAt(wx, wy) {
   while (q.length && n < MAX * MAX) {
     const [x, y] = q.pop();
     if (x < 0 || y < 0 || x >= map.w || y >= map.h || map.tiles[y * map.w + x] !== from) continue;
+    if (!notOnLand(chosen, x, y)) continue; // the fill stops at the shore
     map.tiles[y * map.w + x] = chosen;
     n++;
     q.push([x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]);
@@ -945,6 +960,7 @@ function startStroke(sx, sy, now) {
       ghost = { ref: chosen, ...placeFor(chosen, wx, wy), flip };
     } else {
       record();
+      dryWarned = false;
       gesture.did = paintCells(wx, wy);
     }
   } else if (tool === 'erase') {
