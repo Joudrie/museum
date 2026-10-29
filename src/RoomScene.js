@@ -1732,9 +1732,10 @@ export class RoomScene extends Phaser.Scene {
           celebrate(`+${gold.toLocaleString()} gold`, set.name);
         },
         met: () => metList(),
-        portrait: (id) => {
+        portraitCanvas: (id) => {
+          if (!FAMOUS[id]) return null;
           if (!this.textures.exists(`famous_${id}_down`)) makeCharacter(this, `famous_${id}`, FAMOUS[id].colors, FAMOUS[id].look);
-          return this.textures.get(`famous_${id}_down`).getSourceImage().toDataURL();
+          return this.textures.get(`famous_${id}_down`).getSourceImage();
         },
         onClose: () => this.pause(false),
       },

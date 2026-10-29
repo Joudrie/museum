@@ -149,8 +149,14 @@ These all sit on this format and need their own work:
   For now **Settings → Testing → Collect one of everything** drops one of each earned entry into
   the codex.
 - Display cases, plinths and tanks in the museum (`display` says what fits where; nothing places them yet).
-- Famous visitors as a collection. The codex already stamps them as `visitor:<id>`, but their tab is
-  still hand-built.
-- Selling and buying through the codex (`dispose` exists; the shop doesn't).
 - Rarity for paintings (every painting is rarity 1 until crates and fame exist).
-- `value` as income (it's recorded, but income still comes from the old rules).
+- `value` as income for paintings (display pieces already earn it).
+
+## Sets, milestones and the shop (Chat 8)
+
+- **Artist sets** are derived from the paintings (`src/collections/artistsets.js`): any artist with two or more
+  paintings. `sets(collection, true)` includes them; plain `sets()` does not (they are goals, not display bonuses).
+- **Milestones** (`milestones.js`): 10 / 25 / 50 / 75 / 100% of every collectable entry ever stamped in the codex.
+- **Shop** (`shop.js`): `sellPrice`, `buybackPrice`, `shopPrice`, `shelf(now)`, `sell`, `buyBack`, `buy`. An entry may set
+  its own `price`; otherwise it comes from rarity. A collection with `people: true` (famous visitors) is never sold.
+- The codex also keeps `sold: { id: { n, at } }`, the buy-back ledger.
