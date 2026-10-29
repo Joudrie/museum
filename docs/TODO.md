@@ -103,12 +103,12 @@ Owns: new `src/expedition*.js`, `src/leads.js`, `src/maps/` (new islands). Claim
 ## CHAT 8: Collections, codex, journal and the shop
 Owns: `src/collections/` (except render.js), `src/journal.js`, `tools/import_collection.mjs`. Claim: `claimed: 2026-10-29`
 - [x] New collections as data (or CSV): coins, butterflies and insects, shells, stamps, ship models, glass flowers, pottery, armour, clocks, inventions. (#129; the digging chat's own coins, pottery and shells won where we overlapped. Tabs: Treasures, Makers, Insects.)
-- [x] Famous visitors as a collection (the codex already stamps `visitor:<id>`; their tab is hand-built). Now `data/visitors.js`, two sets, drawn by the `visitor` renderer in `journal.js`.
-- [x] Codex milestones at 10 / 25 / 50 / 75 / 100% with rewards; sets and artist sets (0/12 van Gogh); inventory vs codex. (Codex tab, `milestones.js`, `artistsets.js`; held-now vs ever-collected also shows in Storage.)
-- [x] Selling and buying through the codex: sell for 50%, **buy-back after a 1-week cooldown at a premium**, a **Gallery Shop** with 3 to 5 rotating paintings refreshed daily. (Crates: ON HOLD.) (`shop.js`, Shop tab. Paintings join the shelf and the sell list once their collection is switched to `ownership: 'earned'`: see Needs Sean.)
+- [x] Famous visitors as a collection (the codex already stamps `visitor:<id>`; their tab is hand-built). (#155) Now `data/visitors.js`, two sets, drawn by the `visitor` renderer in `journal.js`.
+- [x] Codex milestones at 10 / 25 / 50 / 75 / 100% with rewards; sets and artist sets (0/12 van Gogh); inventory vs codex. (#155: Codex tab, `milestones.js`, `artistsets.js`; held-now vs ever-collected also shows in Storage.)
+- [x] Selling and buying through the codex: sell for 50%, **buy-back after a 1-week cooldown at a premium**, a **Gallery Shop** with 3 to 5 rotating paintings refreshed daily. (Crates: ON HOLD.) (#155: `shop.js`, Shop tab. Paintings join the shelf and the sell list once their collection is switched to `ownership: 'earned'`: see Needs Sean.)
 - [x] `value` as income (recorded now, income still uses old rules); "your museum earns while you're away (up to 8 hours)" message. (Display pieces earn their `value` through `display.js` (#127) and the 8-hour cap message shipped with Chat 12 (#128). Paintings still earn by the old rule.)
-- [x] Journal polish: filters, search, "new" markers, rate and note per item.
-- [x] One of a kind: you own *the* Starry Night; sold ones go back in the pool. (The Gallery Shop only offers pieces you don't hold, and a sold piece is back in the pool.)
+- [x] Journal polish: filters, search, "new" markers, rate and note per item. (#155; the viewer already had stars and notes, the journal now shows them.)
+- [x] One of a kind: you own *the* Starry Night; sold ones go back in the pool. ((#155) The Gallery Shop only offers pieces you don't hold, and a sold piece is back in the pool.)
 
 ## CHAT 9: Rooms and the museum building
 Owns: `src/rooms.js`, `src/shaped.js`, `src/walldraw.js`, `src/atrium.js`, `src/RoomScene.js` (shared, take care). Claim: `claimed: 2026-10-29`
