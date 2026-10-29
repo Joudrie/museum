@@ -205,7 +205,7 @@ Owns: new `src/people/`, the character section of `src/art.js` (looks, `makeChar
 - [x] (this PR) Classes placeable in the builder's People lists and living on islands (work poses, chat with their job title); a People tab in `art.html`. Not yet: spawning them in museum rooms or on the expedition maps.
 - [x] (this PR) Tier 2: dig, field and expedition; museum professions (sections E, G): 44 more classes, 98 in all, 227 variants.
 - [x] (this PR) Tier 3: visitors and townspeople; food and market (sections J, H): 39 more classes, 137 in all, 312 variants.
-- [ ] Tier 4: arts and performance; science and medicine; artisans (sections I, F, C).
+- [x] (this PR) Tier 4: arts and performance; science and medicine; artisans (sections I, F, C): 50 more classes, 187 in all, 402 variants. Raised arms now keep the outfit's sleeve (bare arms stay bare); a test catches a class name used twice (the artist had replaced the house painter).
 - [ ] Tier 5: history; fantasy and seasonal; crews (sections K, L, M).
 
 ## CHAT 18: Progression evidence (measure first, then design)
@@ -244,6 +244,7 @@ Mini-games (Mop Rush, No Flash!, Restoration-as-minigame, Crate Tetris, Hang it 
 
 ## Cross-chat requests (add a line, carry on)
 - **Chat 16 to everyone:** UI overhaul in progress. New menus and panels should use the `ui-*` components in `docs/UI.md` once it lands (until then keep your menu markup simple and class-based); please don't restyle menus yourselves. Chat 16 restyles through shared tokens and won't rewrite your logic or change element ids tests use.
+- **Chat 16 → Chat 18 (and everyone):** `node tests/ui-layout.cjs` now fails on any screen with a visible control under 44 px or text under 13 px (it caught the goal pill's 28×14 fold button and 9 px "RANK" label; I fixed them in `src/ui/skin.css`, one block at the end). A panel that is open hides `#prog-pill` (it sat on top of sheet handles). Please keep new text at `var(--fs-small)` (13 px) or larger and new buttons at `var(--ui-hit)` (44 px); sheets close by tapping the dimmed world or swiping the handle (`src/ui/chrome.js`, nothing to wire).
 - **Chat 13 to Chat 10:** "daily guests" belong with the famous visitors. `src/daily.js` has `dayNum()`; if you want a "today's guest" pick, key it on that and I'll show it on the Today panel.
 
 - Chat 14 → Chat 9/12: `applyHall(roomIndex, hall)` (`src/halls/apply.js`) restyles a built room for free and returns `before` for `undoHall`. A menu button and any price are yours to decide; it refuses fixed rooms.

@@ -65,6 +65,32 @@ const fail = (m) => (problems.push(m), console.log('  ✗ ' + m));
   await journey('Change a room\'s floor', 3, [() => tap('#home-btn'), () => tap('details[data-group="floor"] > summary'), () => tap('details[data-group="floor"] .choices button:nth-child(2)')], async () => true);
   await journey('Pick a decor item to place', 2, [() => tap('#build-btn'), () => tap('#toolkit .tool-item:not(.locked)')], async () => p.isVisible('#placebar:not(.hidden)'));
   await journey('Open Share & visit', 3, [() => tap('#menu-btn'), () => tap('#hub-share')], async () => p.isVisible('#share:not(.hidden)'));
+  const tapAt = async (x, y) => {
+    taps++;
+    await p.mouse.click(x, y);
+    await p.waitForTimeout(350);
+  };
+  const swipeDown = (sel) => async () => {
+    taps++;
+    const r = await (await p.$(sel)).boundingBox();
+    await p.mouse.move(r.x + r.width / 2, r.y + 8);
+    await p.mouse.down();
+    await p.mouse.move(r.x + r.width / 2, r.y + 80, { steps: 4 });
+    await p.mouse.move(r.x + r.width / 2, r.y + 200, { steps: 4 });
+    await p.mouse.up();
+    await p.waitForTimeout(450);
+  };
+  await journey('Tap the dimmed world to close the Journal', 2, [() => tap('#journal-btn'), () => tapAt(195, 60)], async () => !(await p.isVisible('#journal:not(.hidden)')));
+  await journey('Swipe the Settings sheet down to close it', 3, [() => tap('#menu-btn'), () => tap('#settings-btn'), swipeDown('#settings .sheet')], async () => !(await p.isVisible('#settings:not(.hidden)')));
+  await journey('A short pull on the sheet springs back', 3, [() => tap('#menu-btn'), () => tap('#settings-btn'), async () => {
+    taps++;
+    const r = await (await p.$('#settings .sheet')).boundingBox();
+    await p.mouse.move(r.x + r.width / 2, r.y + 8);
+    await p.mouse.down();
+    await p.mouse.move(r.x + r.width / 2, r.y + 40, { steps: 4 });
+    await p.mouse.up();
+    await p.waitForTimeout(450);
+  }], async () => p.isVisible('#settings:not(.hidden)'));
   await journey('Tap the Menu, then close it', 2, [() => tap('#menu-btn'), () => tap('.hub-close')], async () => !(await p.isVisible('#hub:not(.hidden)')));
 
   if (errs.length) fail('page errors: ' + errs.slice(0, 2).join(' | '));
