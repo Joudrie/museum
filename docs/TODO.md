@@ -27,7 +27,7 @@ builder ⟳ turn for multi-side pieces, one family linked (#82) · dig spots wit
 ## CHAT 1: Content and images (the pipeline)
 Owns: `tools/`, `content/`, `docs/CONTENT*.md`, `public/paintings/`, `src/collections/data/paintings.js`. Claim: `claimed: 2026-10-29`
 - [x] (#113; 46 of 49, the other 3 are broken links) **Host our own copies of the 49 paintings.** They hot-link Wikimedia (429 / 404). Download the *same* image, resize to 1280px long side, JPEG under about 500 KB, save to `public/paintings/<slug>.jpg`, point the data at it (same ids, saves keep working). Don't swap any image for a different work.
-- [x] (#118) 3 broken links (horse-fair, temeraire, crossing-delaware) and 8 wrong shapes (school-athens, emmaus, water-lilies, cafe-terrace, creation-adam, anatomy-lesson, pearl-earring, wheatfield-crows): write proposals to `content/image-proposals.md` with source, size, shape. Don't apply them; the user approves.
+- [x] (#119) 3 broken links (horse-fair, temeraire, crossing-delaware) and 8 wrong shapes (school-athens, emmaus, water-lilies, cafe-terrace, creation-adam, anatomy-lesson, pearl-earring, wheatfield-crows): write proposals to `content/image-proposals.md` with source, size, shape. Don't apply them; the user approves.
 - [ ] Hooks for the 4 Met drafts (Night-Shining White, Esther, Gulf Stream, Drawing Lesson): a quotable museum or Commons sentence, as a claim with the exact quote.
 - [ ] Third, fourth and fifth batches (about 20 each): women artists, 18th to 20th century, Africa, Pacific, Middle East, Latin America, Indigenous work, more non-European. Pin by id. Mechanical fixes only; rarity and wording are the user's.
 - [ ] Natural-history and archaeology imagery (public domain) for the other collections, with a quoted source for every fact.
@@ -42,11 +42,11 @@ Owns: `src/builder/`, `builder.html`, `public/builder/`, `tools/build_palette.py
 - [x] Search box for pieces; recently used at the top; favourites. (#117)
 - [ ] **Grass that blends** into paths, dirt, sand and stone (autotile edges); jagged rocks instead of round ones.
 - [ ] Every ground type, path block and furniture piece is its own named, placeable item (so the user can redraw them one by one).
-- [ ] Builder palette organisation (clear groups, e.g. Dig sites, Paths, Buildings); a "what's new" row.
+- [x] Builder palette organisation (duplicate lists merged, "What's new" row from `public/builder/whatsnew.json`; a Dig sites list waits for Chat 6's tiles) (#120).
 - [ ] Copy / paste regions, rotate-selection, multi-select move, layers view, grid toggle, measure tool.
-- [x] Map import / export (already in ☰: Save map file, Copy map code, Open file…; #118) (share a map as a file or link; the format is already shareable).
-- [x] Builder Playwright tests (place, turn, undo, save, vault restore): `tests/builder.cjs` (#118).
-- [x] Never lose work: autosave and vault paths intact; reload and wiped-storage restore are tested in `tests/builder.cjs` (#118). (Keep it passing on every builder change.)
+- [x] Map import / export (already in ☰: Save map file, Copy map code, Open file…; #119) (share a map as a file or link; the format is already shareable).
+- [x] Builder Playwright tests (place, turn, undo, save, vault restore): `tests/builder.cjs` (#119).
+- [x] Never lose work: autosave and vault paths intact; reload and wiped-storage restore are tested in `tests/builder.cjs` (#119). (Keep it passing on every builder change.)
 
 ## CHAT 3: Quality, performance and polish
 Owns: `tests/`, `.github/`, `vite.config.js`, `src/settings*.js`, `src/ui.js`. Claim: `claimed: 2026-10-29`
