@@ -4,6 +4,7 @@
 // with stairs, tall grass, palms and a dock where expeditions will leave from.
 import Phaser from 'phaser';
 import { buildTiles, T } from './tiles.js';
+import { patchSheet } from './swap.js';
 import { makeCharacter } from './art.js';
 import { load } from './storage.js';
 import { DEFAULT_CHARACTER } from './decor.js';
@@ -955,6 +956,17 @@ export class IslandScene extends Phaser.Scene {
       sheets.forEach((sh) => !this.textures.exists(`bp_${sh}`) && this.load.image(`bp_${sh}`, `./${sh}`));
       const put = () => {
         if (!this.sys.isActive()) return;
+        sheets.forEach((sh) => {
+          // art dropped in public/swap/pieces is painted over its cells in the sheet
+          const key = `bp_${sh}`;
+          if (!this.textures.exists(key) || this.textures.get(key).swapped) return;
+          const src = this.textures.get(key).getSourceImage();
+          const patched = patchSheet(src, ROOM.groups.find((g) => g.sheet === sh));
+          if (patched !== src) {
+            this.textures.remove(key);
+            this.textures.addCanvas(key, patched).swapped = true;
+          }
+        });
         wanted.forEach((o) => {
           const p = byId[o.ref.slice(2)];
           if (!p || !this.textures.exists(`bp_${p.sheet}`)) return;
