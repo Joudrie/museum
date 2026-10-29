@@ -124,7 +124,7 @@ Owns: `src/rooms.js`, `src/shaped.js`, `src/walldraw.js`, `src/atrium.js`, `src/
 - [ ] Always re-run `tests/gaps.cjs`: no black gaps between walls, ever.
 
 ## CHAT 10: Living museum, people and story
-Owns: `src/famous.js`, `src/lines.js`, `src/quests.js`, `src/talk.js`, `src/staff.js`. Claim: `open`
+Owns: `src/famous.js`, `src/lines.js`, `src/quests.js`, `src/talk.js`, `src/staff.js`. Claim: `claimed: 2026-10-29`
 - [ ] Visitors with memories, goals and relationships; regulars that grow into characters; personalities (nerd, casual, superfan, snob, kid, grump, tourist) with more lines.
 - [ ] Famous visitors with quest chains and period-accurate dialogue; they send you places (feeds Chat 7). Odds rise with their works in your codex; permanent boosts.
 - [ ] A **Gardner-style heist mystery** as the first full story arc.
