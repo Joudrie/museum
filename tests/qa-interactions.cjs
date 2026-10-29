@@ -21,8 +21,9 @@ const check = (cond, good, bad) => (cond ? ok(good) : fail(bad));
   p.on('pageerror', (e) => errs.push(e.stack || e.message));
   await p.route('https://upload.wikimedia.org/**', (r) => r.fulfill({ contentType: 'image/svg+xml', headers: { 'access-control-allow-origin': '*' }, body: '<svg xmlns="http://www.w3.org/2000/svg" width="80" height="60"><rect width="80" height="60" fill="#6b8e3a"/></svg>' }));
   const wait = (ms) => p.waitForTimeout(ms);
+  await p.addInitScript(() => localStorage.setItem('curation.tutorial', '9')); // (no welcome bubble to tap away)
   const open = async (q = '') => {
-    await p.goto(URL + q);
+    await p.goto(URL + q + (q ? '&' : '?') + 'hour=12'); // (noon: some things, like the little scenes, only happen by day)
     await p.waitForFunction(() => window.__game && __game.scene.getScenes(true).length > 0, null, { timeout: 30000 });
     await wait(1200);
   };
@@ -106,7 +107,7 @@ const check = (cond, good, bad) => (cond ? ok(good) : fail(bad));
       await p.evaluate(() => { const no = document.querySelector('#ask .ask-no'); (no && !no.hidden ? no : document.querySelector('#ask .ask-yes')).click(); });
       await wait(200);
     }
-    const chat = await p.evaluate(() => !document.querySelector('#chat').classList.contains('hidden'));
+    const chat = await p.evaluate(() => (!!document.querySelector('#chat') && !document.querySelector('#chat').classList.contains('hidden')));
     const bub = await bubbleVsHead('room');
     if (chat) {
       await p.evaluate(() => __game.scene.getScene('room').endTalk());
@@ -196,7 +197,7 @@ const check = (cond, good, bad) => (cond ? ok(good) : fail(bad));
     check(f.label === 'Talk' && f.shown, 'a person in front: Talk', `person focus ${JSON.stringify(f)}`);
     await p.click('#interact');
     await wait(900);
-    const chat = await p.evaluate(() => ({ open: !document.querySelector('#chat').classList.contains('hidden'), hidden: document.querySelector('#interact').classList.contains('hidden') }));
+    const chat = await p.evaluate(() => ({ open: (!!document.querySelector('#chat') && !document.querySelector('#chat').classList.contains('hidden')), hidden: document.querySelector('#interact').classList.contains('hidden') }));
     check(chat.open && chat.hidden, 'the conversation opens and the button gets out of the way', `island chat ${JSON.stringify(chat)}`);
     // finish by choosing Bye if the hub is up, else just close
     await p.evaluate(() => __game.scene.getScene('island').endTalk());

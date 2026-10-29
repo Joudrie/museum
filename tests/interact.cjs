@@ -21,7 +21,7 @@ const check = (cond, good, bad) => (cond ? ok(good) : fail(bad));
   await p.route('https://upload.wikimedia.org/**', (r) => r.fulfill({ contentType: 'image/svg+xml', headers: { 'access-control-allow-origin': '*' }, body: '<svg xmlns="http://www.w3.org/2000/svg" width="80" height="60"><rect width="80" height="60" fill="#6b8e3a"/></svg>' }));
   const wait = (ms) => p.waitForTimeout(ms);
   const open = async (q = '') => {
-    await p.goto(URL + q);
+    await p.goto(URL + q + (q ? '&' : '?') + 'hour=12'); // (noon: some things, like the little scenes, only happen by day)
     await p.waitForFunction(() => window.__game && __game.scene.getScenes(true).length > 0, null, { timeout: 30000 });
     await wait(1200);
   };
@@ -73,10 +73,10 @@ const check = (cond, good, bad) => (cond ? ok(good) : fail(bad));
     s.talkTo(n);
   });
   await wait(900);
-  const chat = await p.evaluate(() => ({ open: !document.querySelector('#chat').classList.contains('hidden'), text: document.querySelector('.chat-text').textContent.length > 0, paused: __game.scene.getScene('island').paused }));
+  const chat = await p.evaluate(() => ({ open: (!!document.querySelector('#chat') && !document.querySelector('#chat').classList.contains('hidden')), text: document.querySelector('.chat-text').textContent.length > 0, paused: __game.scene.getScene('island').paused }));
   check(chat.open && chat.text && chat.paused, 'talking to an islander opens the conversation box', `chat ${JSON.stringify(chat)}`);
   await p.evaluate(() => __game.scene.getScene('island').endTalk());
-  const after = await p.evaluate(() => ({ open: !document.querySelector('#chat').classList.contains('hidden'), paused: __game.scene.getScene('island').paused }));
+  const after = await p.evaluate(() => ({ open: (!!document.querySelector('#chat') && !document.querySelector('#chat').classList.contains('hidden')), paused: __game.scene.getScene('island').paused }));
   check(!after.open && !after.paused, 'ending the talk lets you walk again', `still open/paused: ${JSON.stringify(after)}`);
 
   console.log('People chat with each other');
@@ -99,8 +99,11 @@ const check = (cond, good, bad) => (cond ? ok(good) : fail(bad));
     emoting = await p.evaluate(() => __game.scene.getScene('island').islanders.filter((o) => !o.animal && !o.script).slice(0, 2).some((o) => o.emoteImg?.active));
   }
   check(emoting, 'they trade pictures over their heads', 'no emote appeared during the chat');
-  await wait(7500);
-  const over = await p.evaluate(() => __game.scene.getScene('island').islanders.filter((o) => o.chatting).length);
+  let over = 2;
+  for (let i = 0; i < 40 && over > 0; i++) {
+    await wait(300);
+    over = await p.evaluate(() => __game.scene.getScene('island').islanders.filter((o) => o.chatting).length);
+  }
   check(over === 0, 'the chat ends and they get on with their day', `${over} people are still chatting`);
 
   console.log('Speech bubbles follow, and go with the speaker');
@@ -241,6 +244,7 @@ const check = (cond, good, bad) => (cond ? ok(good) : fail(bad));
     s.landingSpot = null;
     n.target = null;
     n.wait = 99999;
+    n.lookT = 1e9; // (no idle glances: we are watching where they face)
     const kind = () => Object.keys(s.findFocus() || {}).find((k) => k !== 'icon') || 'none';
     const out = {};
     // someone right beside you (not in front) is not who you mean
@@ -255,10 +259,10 @@ const check = (cond, good, bad) => (cond ? ok(good) : fail(bad));
     s.player.setPosition(n.s.x - 200, n.s.y - 200);
     s.facing = 'up';
     out.nothing = kind();
-    const before = document.querySelector('#chat').classList.contains('hidden');
+    const chatHidden = () => !document.querySelector('#chat') || document.querySelector('#chat').classList.contains('hidden'); // (it is made the first time anyone talks)
     s.focus = s.findFocus();
     s.interact();
-    out.noop = before && document.querySelector('#chat').classList.contains('hidden') && !s.paused;
+    out.noop = chatHidden() && !s.paused;
     // a talk: the person turns to you, then back
     s.player.setPosition(n.s.x, n.s.y + 22);
     s.facing = 'up';
@@ -282,8 +286,11 @@ const check = (cond, good, bad) => (cond ? ok(good) : fail(bad));
   check(t2.nothing === 'none' && t2.noop, 'facing nothing, Interact does nothing', `nothing: ${JSON.stringify(t2)}`);
   check(t2.turned, 'the person turns to face you when you talk', 'they did not turn');
   check(t2.dragCleared, 'a drag in progress is let go when a talk opens', 'the stick stayed down (you would walk off afterwards)');
-  await wait(1500);
-  const back = await p.evaluate(() => { const s = __game.scene.getScene('island'); const n = s.islanders.find((o) => !o.animal && !o.script); return n.s.texture.key.endsWith('_side') && n.s.flipX; });
+  let back = false;
+  for (let i = 0; i < 20 && !back; i++) {
+    await wait(300);
+    back = await p.evaluate(() => { const s = __game.scene.getScene('island'); const n = s.islanders.find((o) => !o.animal && !o.script); return n.s.texture.key.endsWith('_side') && n.s.flipX; });
+  }
   check(back, 'afterwards they turn back to what they were looking at', 'they stayed facing you');
   // a speech bubble goes the moment you walk off
   const gone = await p.evaluate(async () => {
