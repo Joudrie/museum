@@ -4,7 +4,7 @@ import { load, save } from './storage.js';
 import { paintingsFor } from './rooms.js';
 import { ITEMS, loadItems } from './items.js';
 import { dirtCount, DIRT_PENALTY, guides, guideBoost, hasCarpenter, upgradeValue } from './staff.js';
-import { OFFLINE_CAP_H as CAP, PAINTING_INCOME as PAINT, VISITORS, COFFEE_VISITORS_PER_GOLD } from './economy.js';
+import { OFFLINE_CAP_H as CAP, PAINTING_INCOME as PAINT, VISITORS, COFFEE_VISITORS_PER_GOLD, COLLECT_ALL_FEE } from './economy.js';
 import { museumRating } from './rating.js';
 import { displayIncome } from './display.js';
 import { famousBoost } from './famous.js';
@@ -167,7 +167,13 @@ export function collectDecor(rooms, i) {
   return n;
 }
 
-// Every spot in every open room (after watching an ad).
+// Is a room's gold at the cap (so new earnings are being wasted)?
+export function pileFull(rooms, i, now = Date.now()) {
+  const rate = decorRate(rooms, i) + paintingsFor(rooms, i).length * artRate(rooms, i);
+  return rate > 0 && pile(rooms, i, now) >= Math.floor(OFFLINE_CAP_H * rate) - 1;
+}
+
+// Every spot in every open room, minus the remote-collection fee. Returns { gross, net }.
 export function collectAll(rooms) {
   let n = 0;
   rooms.forEach((rm, i) => {
@@ -175,7 +181,9 @@ export function collectAll(rooms) {
     n += collectDecor(rooms, i);
     paintingsFor(rooms, i).forEach((p) => (n += collectArt(rooms, i, p)));
   });
-  return n;
+  const net = Math.floor(n * (1 - COLLECT_ALL_FEE));
+  addCoins(-(n - net));
+  return { gross: n, net };
 }
 
 // New rooms cost more each time; bigger rooms cost more.

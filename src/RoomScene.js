@@ -37,15 +37,14 @@ import { openSlotMenu } from './slotmenu.js';
 import { ITEMS, loadItems, saveItems, resetItems, footprint, countPlaced } from './items.js';
 import { roomDirt, removeDirt, resetDirt, dirtCount, covered, janitors, janitorCost, hireJanitor, resetJanitors, guides, guideBoost, maxGuides, guideCost, hireGuide, upgradeLevel, upgradeValue, upgradeCost, buyUpgrade, hasCarpenter, hireCarpenter, CARPENTER_COST, staffCount } from './staff.js';
 import { openStaffMenu } from './staffmenu.js';
-import { UPGRADES } from './economy.js';
-import { hasCameras, buyCameras, resetSecurity, CAMERA_COST, trackSeen, maybeRob } from './security.js';
+import { UPGRADES, OFFLINE_CAP_H, COLLECT_ALL_FEE } from './economy.js';
+import { hasCameras, buyCameras, resetSecurity, CAMERA_COST, trackSeen, maybeRob, awayFor } from './security.js';
 import { officeLevel, setOfficeLevel, resetOffice, perks, itemLevel, LEVELS, MAX_LEVEL } from './office.js';
 import { openOffice } from './officemenu.js';
 import { ask } from './ask.js';
-import { showAd } from './ad.js';
 import { roomRating, museumRating, starText } from './rating.js';
 import { FAMOUS, meet, resetMet, metList, famousBoost } from './famous.js';
-import { FREE, coins, canAfford, addCoins, spend, resetWallet, museumIncome, museumVisitors, coffeeIncome, roomIncome, settle, sellPrice, artPile, decorPile, collectArt, collectDecor, collectAll, pile } from './wallet.js';
+import { FREE, coins, canAfford, addCoins, spend, resetWallet, museumIncome, museumVisitors, coffeeIncome, roomIncome, settle, sellPrice, artPile, decorPile, collectArt, collectDecor, collectAll, pile, pileFull } from './wallet.js';
 import { openToolkit, hideToolkit, showBar, hideBar } from './toolkit.js';
 import { artBounds, paintArt, wallRef } from './walldraw.js';
 import { PERSONALITIES, lineFor, QUIPS, CONTEXT } from './lines.js';
@@ -386,8 +385,10 @@ export class RoomScene extends Phaser.Scene {
     this.tutorial();
     if (!RoomScene.opened) {
       RoomScene.opened = true;
+      const away = awayFor();
       const stolen = maybeRob(this.rooms, /[?&]rob\b/.test(location.search));
       trackSeen();
+      if (away > 20 * 60000 && !stolen) this.time.delayedCall(900, () => this.welcomeBack());
       if (stolen) {
         this.time.delayedCall(700, () => {
           this.pause(true);
@@ -1599,6 +1600,7 @@ export class RoomScene extends Phaser.Scene {
       visitors: museumVisitors(this.rooms),
       rating: museumRating(this.rooms) / 20,
       boosts,
+      note: `Gold stops piling up after ${OFFLINE_CAP_H} hours in each spot, so collect it now and then. “Collect all” works from anywhere but keeps a ${Math.round(COLLECT_ALL_FEE * 100)}% fee; walking to the coins pays in full.`,
       rooms: this.rooms.map((room, i) => ({
         index: i,
         name: roomName(room, i),
@@ -1608,6 +1610,7 @@ export class RoomScene extends Phaser.Scene {
         income: roomIncome(this.rooms, i),
         paintings: paintingsFor(this.rooms, i).length,
         waiting: room.locked ? 0 : pile(this.rooms, i),
+        full: !room.locked && pileFull(this.rooms, i),
       })),
     };
   }
@@ -2258,18 +2261,23 @@ export class RoomScene extends Phaser.Scene {
     if (this.pileSprite.visible && on(this.pileSprite.x, this.pileSprite.y - 8)) this.coinBurst(this.pileSprite.x, this.pileSprite.y, collectDecor(this.rooms, this.roomIndex));
   }
 
-  // "Collect all" every room's coins, after a short ad.
+  // When the game opens after a while: how much is waiting, and a nudge if the piles are full.
+  welcomeBack() {
+    const open = this.rooms.map((r, i) => i).filter((i) => !this.rooms[i].locked);
+    const waiting = open.reduce((n, i) => n + pile(this.rooms, i), 0);
+    if (waiting <= 0) return;
+    const full = open.some((i) => pileFull(this.rooms, i));
+    this.toast(`Welcome back! ${waiting.toLocaleString()} gold waiting${full ? `. Some piles are full (${OFFLINE_CAP_H} hours): collect so nothing is wasted` : ''}`);
+  }
+
+  // "Collect all" every room's coins from anywhere, keeping a small fee.
   collectEverything() {
     if (!this.input.enabled || this.mode) return;
-    this.pause(true);
-    showAd(() => {
-      this.pause(false);
-      const n = collectAll(this.rooms);
-      if (n > 0) bump('collected', n);
-      sfx('coin');
-      this.toast(n > 0 ? `Collected ${n.toLocaleString()} gold from every room` : 'Nothing to collect yet');
-      this.updatePile();
-    });
+    const { gross, net } = collectAll(this.rooms);
+    if (net > 0) bump('collected', net);
+    sfx('coin');
+    this.toast(gross > 0 ? `Collected ${net.toLocaleString()} gold (${Math.round(COLLECT_ALL_FEE * 100)}% fee: walk to the coins to keep it all)` : 'Nothing to collect yet');
+    this.updatePile();
   }
 
   // Coins fly up from the spot to the coin counter, with a sparkle.

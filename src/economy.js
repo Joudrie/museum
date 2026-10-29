@@ -48,6 +48,9 @@ export const UPGRADES = {
 
 // Income: gold piles up for at most this many hours before you collect.
 export const OFFLINE_CAP_H = 8;
+// Collect all (button in the HUD) is free to press, but it keeps this cut: walking to the
+// coin spots yourself pays in full. Earned, not bought.
+export const COLLECT_ALL_FEE = 0.15;
 export const PAINTING_INCOME = 5; // gold per hour per hung painting
 export const DIRT_PENALTY = 0.1; // each mess: -10% room income
 export const VISITORS = { base: 50, perPainting: 150, perDecor: 25, ratingLow: 0.6, ratingSpan: 0.8 };

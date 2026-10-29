@@ -153,6 +153,8 @@ island scene streams ground chunks around the player.
 - **Every economy number lives in `src/economy.js`** (office level costs, janitor/guide prices, upgrades, offline cap, visitor formula, camera price, robbery odds). Change a default there only.
 - Break-room staff board has three upgrades (`UPGRADES`): Better mops (slower mess), Guide training (more % per guide), Carpenter's toolbox (cheaper rooms). Levels saved in `curation.upgrades`; read with `upgradeValue(id)` in `src/staff.js`.
 
+- Gold piles cap at 8 h per spot: welcome-back toast after 20+ min away, a FULL flag per room in the income menu. "Collect all" no longer shows an ad (ads are on hold); it keeps `COLLECT_ALL_FEE` (15%).
+
 ### Gotchas we hit
 - **Phaser reuses the previous scene data** if you call `scene.start('island')` with no data.
   Always pass data explicitly, e.g. `{ map: 'main' }`. Leaving the museum once dropped you on

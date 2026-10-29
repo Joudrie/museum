@@ -22,6 +22,12 @@ export function trackSeen() {
   document.addEventListener('visibilitychange', mark);
 }
 
+// How long the player was away (ms), 0 if first visit. Read before trackSeen().
+export const awayFor = () => {
+  const last = load(SEEN_KEY, null);
+  return last ? Math.max(0, Date.now() - last) : 0;
+};
+
 // Called once when the game opens. Returns the stolen painting, or null.
 // `force` makes it happen (for testing: add ?rob to the address).
 export function maybeRob(rooms, force = false) {
