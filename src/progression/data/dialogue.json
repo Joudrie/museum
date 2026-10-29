@@ -1,0 +1,54 @@
+{
+  "tiers": { "low": [0, 2], "mid": [3, 5], "high": [6, 9], "max": [10, 10] },
+  "kinds": {
+    "caretaker": {
+      "low": ["Mind the step by the door. It has opinions.", "Every painting here was hung by somebody who cared.", "Morning. The museum is awake, even if it grumbles."],
+      "mid": ["You are getting a feel for the place. I can tell.", "Forty years of dust and I still like the smell of it.", "I saved you the good chair. Sit when you like."],
+      "high": ["I have watched many people walk these halls. You look at things properly.", "If I had a ticket for every kind word about this place, I would be rich.", "You make the place feel looked after. That is rare."],
+      "max": ["I hung the first painting in here before you were born. You hung the best one."]
+    },
+    "elder": {
+      "low": ["Slow down. The water is not going anywhere.", "I remember when this was all reeds.", "Hello, hello. Sit if your feet are tired."],
+      "mid": ["You listen. Most people only wait to talk.", "A good day is one where nothing goes wrong and something goes right.", "Come back at dusk. The light is a different painting."],
+      "high": ["I tell my stories to few. You have earned a few.", "The old ones said patience is a kind of fishing. They were right.", "You walk like someone who has learned to wait."],
+      "max": ["Thank you for keeping me company. It was never small to me."]
+    },
+    "casual": {
+      "low": ["Hey! Nice day for it.", "Oh, hi. Do not mind me, just looking at the water.", "Caught anything yet?"],
+      "mid": ["You are around a lot. I like that.", "Tell me what you saw today. I like hearing it.", "Same time tomorrow? I will bring snacks."],
+      "high": ["Honestly, you are the best part of my week.", "I told my friends about you. All good things, I promise.", "I would walk the whole shore with you."],
+      "max": ["I had a good life before. It just got better."]
+    },
+    "tourist": {
+      "low": ["Excuse me, is this the right way? Everything looks the same.", "I took a hundred photos. Maybe two are good.", "Is it always this pretty?"],
+      "mid": ["I changed my ticket so I could stay longer.", "You know this place so well. How?", "Everyone here has a story. I am collecting them."],
+      "high": ["I think I live here now. Do not tell anyone.", "I wrote a postcard about you. It did not fit, but I tried.", "Show me your favourite spot? I will keep it secret."],
+      "max": ["Some places you visit. Some places you belong to. This is the second kind."]
+    },
+    "grump": {
+      "low": ["Hmph.", "You are standing in my light.", "I did not ask. But fine. Hello."],
+      "mid": ["You are less annoying than most.", "Do not tell anyone I said that.", "The fish only bite when it is quiet. Remember that."],
+      "high": ["Fine. You are all right. There. I said it.", "Sit. Do not talk. Just sit. It is nice.", "I saved you a spot. Do not make it a thing."],
+      "max": ["You are the only person I would share my good spot with. Do not tell the others."]
+    },
+    "nerd": {
+      "low": ["Did you know that is not strictly a fish? Never mind.", "I keep a notebook of everything. Everything.", "Sorry, I was counting the ripples."],
+      "mid": ["I wrote down that you came by. Day eleven. Third time.", "Want to hear a fact? You do. I can tell.", "I made a chart of tides. It is beautiful."],
+      "high": ["You are my favourite research partner. You do not even know it.", "I named a ripple after you. Unofficially.", "I think the best data is the kind you share."],
+      "max": ["The chart is finished. You are in the legend. In the very first line."]
+    },
+    "superfan": {
+      "low": ["Oh! You are the one from the museum! Hi!", "I have been waiting all day to say hello!", "Can I tell you my favourite painting? Please?"],
+      "mid": ["I told everyone I know about this place.", "You are my favourite thing about the island. Besides the sea.", "I drew you. It is not good. Look anyway!"],
+      "high": ["I would carry your rod all day if you let me.", "I framed the drawing. You are on my wall.", "Every day with you is a good day. I counted."],
+      "max": ["Of everything on this island, you are the part I never want to leave."]
+    }
+  },
+  "reactions": {
+    "love": ["Oh! I adore this. Thank you!", "How did you know? This is perfect.", "I will keep this forever."],
+    "like": ["That is kind of you. Thank you.", "Oh, nice. I like it.", "Good choice. Thanks."],
+    "neutral": ["Oh. Thank you.", "Hm. That is something.", "I will find a use for it."],
+    "hate": ["Oh. Um. Thanks, I think.", "Not my thing, but the thought counts.", "Please do not take this the wrong way."]
+  },
+  "rumorLines": ["I heard something near {where}: {hint}", "Careful, but I think {name} likes {where}. {hint}", "A tip, just for you: {hint}"]
+}

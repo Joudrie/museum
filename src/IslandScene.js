@@ -110,6 +110,9 @@ export class IslandScene extends Phaser.Scene {
       W = SX + SW + 1;
       H = Math.max(MH, this.plan.y0 + this.plan.height + 2);
     }
+    this.tilesW = W; // (the progression layer reads these to find water near the shore)
+    this.tilesH = H;
+    this.regionKey = this.mapId === null ? 'one' : this.mapId; // which fishing region this island belongs to (src/progression/data/regions.json)
     document.body.classList.add('outside');
     this.events.once('shutdown', () => document.body.classList.remove('outside'));
     setTrack('none');
@@ -1312,7 +1315,6 @@ export class IslandScene extends Phaser.Scene {
     if (f.animal) return this.petAnimal(f.animal);
     if (f.cottage) return this.enterCottage();
     if (f.fish) {
-      if (this.season === 'winter' && f.fish.water === 'pond') return this.toast('The pond is frozen solid. Try the sea.');
       this.fishing.facing = this.facing;
       this.fishing.cast(f.fish, f.fish.water, this.weatherKind);
       this.interactBtn.querySelector('.label').textContent = 'Hook';
@@ -1404,7 +1406,7 @@ export class IslandScene extends Phaser.Scene {
     let pace = 1;
     if (this.fishing.busy) {
       // walking off reels the line in
-      if ((vx || vy) && this.fishing.state !== 'reel') this.fishing.end();
+      if ((vx || vy) && this.fishing.state !== 'reel' && this.fishing.state !== 'reelin') this.fishing.end();
       else vx = vy = 0;
     }
     if (!vx && !vy && this.dragging && this.dragVec) {

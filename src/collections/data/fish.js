@@ -2,6 +2,8 @@
 // the 'fish' renderer (src/collections/fishart.js); finds are pixel art kept
 // right here as data. 'acquire' holds the rules fishing.js reads. Junk is
 // never collected.
+import { MORE_FISH, MORE_SETS } from './fish_more.js';
+
 export default [
   {
     collection: {
@@ -47,6 +49,7 @@ export default [
         'fish:swordfish',
         'fish:moonfish',
       ], reward: { gold: 800 }, plaque: 'The whole catch from the open sea, day and night.' },
+      ...MORE_SETS,
     ],
     entries: [
       {
@@ -67,7 +70,7 @@ export default [
         provenance: { how: 'caught', where: 'Pond' },
         source: { license: 'Original', credit: 'Curation' },
         value: 1,
-        acquire: { water: 'pond', size: [4, 9] },
+        acquire: { water: 'pond', waters: ['pond'], regions: ['temperate','isle'], size: [4,10], sizeDist: [6,1.2], baits: ['bread','worm'] },
       },
       {
         id: 'fish:bluegill',
@@ -87,7 +90,7 @@ export default [
         provenance: { how: 'caught', where: 'Pond' },
         source: { license: 'Original', credit: 'Curation' },
         value: 1,
-        acquire: { water: 'pond', size: [10, 22] },
+        acquire: { water: 'pond', waters: ['pond'], regions: ['temperate','isle'], size: [10,25], sizeDist: [16,3], times: ['dawn','day','dusk'], seasons: ['spring','summer','autumn'], baits: ['worm','cricket'] },
       },
       {
         id: 'fish:perch',
@@ -108,7 +111,7 @@ export default [
         provenance: { how: 'caught', where: 'Pond' },
         source: { license: 'Original', credit: 'Curation' },
         value: 1,
-        acquire: { water: 'pond', size: [12, 28] },
+        acquire: { water: 'pond', waters: ['pond','ice'], regions: ['temperate','isle'], size: [12,32], sizeDist: [20,4], baits: ['worm','minnowbait'] },
       },
       {
         id: 'fish:carp',
@@ -128,7 +131,7 @@ export default [
         provenance: { how: 'caught', where: 'Pond' },
         source: { license: 'Original', credit: 'Curation' },
         value: 1,
-        acquire: { water: 'pond', size: [30, 70] },
+        acquire: { water: 'pond', waters: ['pond'], regions: ['temperate','isle'], size: [30,80], sizeDist: [50,10], baits: ['bread','berrypaste'] },
       },
       {
         id: 'fish:catfish',
@@ -148,7 +151,7 @@ export default [
         provenance: { how: 'caught', where: 'Pond' },
         source: { license: 'Original', credit: 'Curation' },
         value: 1,
-        acquire: { water: 'pond', time: 'night', size: [30, 90] },
+        acquire: { water: 'pond', waters: ['pond'], regions: ['temperate','isle'], size: [32,102], sizeDist: [60,14], times: ['dusk','night'], baits: ['worm','glowbug'] },
       },
       {
         id: 'fish:trout',
@@ -169,7 +172,7 @@ export default [
         provenance: { how: 'caught', where: 'Pond' },
         source: { license: 'Original', credit: 'Curation' },
         value: 1,
-        acquire: { water: 'pond', time: 'day', size: [25, 60] },
+        acquire: { water: 'pond', waters: ['pond','ice'], regions: ['temperate'], size: [26,66], sizeDist: [42,8], times: ['dawn','day','dusk'], seasons: ['spring','summer','autumn'], baits: ['cricket','worm'] },
       },
       {
         id: 'fish:koi',
@@ -190,14 +193,14 @@ export default [
         provenance: { how: 'caught', where: 'Pond' },
         source: { license: 'Original', credit: 'Curation' },
         value: 1,
-        acquire: { water: 'pond', size: [30, 70] },
+        acquire: { water: 'pond', waters: ['pond'], regions: ['main','one'], size: [32,77], sizeDist: [50,9], times: ['dawn','day','dusk'], weathers: ['clear'], baits: ['bread','berrypaste'] },
       },
       {
         id: 'fish:goldkoi',
         collection: 'fish',
         title: 'Golden koi',
         blurb: 'The ogon is a koi of one solid, metallic colour, and it flashes like a coin when it turns.',
-        rarity: 4,
+        rarity: 5,
         set: 'pond-fish',
         tags: ['pond', 'rain'],
         image: {
@@ -211,7 +214,7 @@ export default [
         provenance: { how: 'caught', where: 'Pond' },
         source: { license: 'Original', credit: 'Curation' },
         value: 1,
-        acquire: { water: 'pond', weather: 'rain', size: [40, 80] },
+        acquire: { water: 'pond', waters: ['pond'], regions: ['main'], size: [44,84], sizeDist: [60,8], times: ['dawn','day'], weathers: ['rain'], baits: ['bread'] },
       },
       {
         id: 'fish:sardine',
@@ -231,7 +234,7 @@ export default [
         provenance: { how: 'caught', where: 'Sea' },
         source: { license: 'Original', credit: 'Curation' },
         value: 1,
-        acquire: { water: 'sea', size: [10, 20] },
+        acquire: { water: 'sea', waters: ['sea'], regions: ['temperate','tropical'], size: [10,23], sizeDist: [15,2.5], seasons: ['summer','autumn'], baits: ['shrimp'] },
       },
       {
         id: 'fish:mackerel',
@@ -252,7 +255,7 @@ export default [
         provenance: { how: 'caught', where: 'Sea' },
         source: { license: 'Original', credit: 'Curation' },
         value: 1,
-        acquire: { water: 'sea', size: [25, 45] },
+        acquire: { water: 'sea', waters: ['sea'], regions: ['temperate','tropical'], size: [25,50], sizeDist: [35,5], seasons: ['spring','summer','autumn'], baits: ['shrimp','squidstrip'] },
       },
       {
         id: 'fish:seabass',
@@ -272,7 +275,7 @@ export default [
         provenance: { how: 'caught', where: 'Sea' },
         source: { license: 'Original', credit: 'Curation' },
         value: 1,
-        acquire: { water: 'sea', size: [30, 70] },
+        acquire: { water: 'sea', waters: ['sea'], regions: ['temperate'], size: [34,74], sizeDist: [50,8], baits: ['shrimp','minnowbait'] },
       },
       {
         id: 'fish:clownfish',
@@ -293,7 +296,7 @@ export default [
         provenance: { how: 'caught', where: 'Sea' },
         source: { license: 'Original', credit: 'Curation' },
         value: 1,
-        acquire: { water: 'sea', time: 'day', size: [7, 11] },
+        acquire: { water: 'sea', waters: ['sea'], regions: ['tropical'], size: [7,13], sizeDist: [9,1.2], times: ['day'], weathers: ['clear'], baits: ['shrimp'] },
       },
       {
         id: 'fish:puffer',
@@ -314,7 +317,7 @@ export default [
         provenance: { how: 'caught', where: 'Sea' },
         source: { license: 'Original', credit: 'Curation' },
         value: 1,
-        acquire: { water: 'sea', size: [10, 30] },
+        acquire: { water: 'sea', waters: ['sea'], regions: ['temperate','tropical'], size: [11,34], sizeDist: [20,4.5], baits: ['shrimp'] },
       },
       {
         id: 'fish:squid',
@@ -334,14 +337,14 @@ export default [
         provenance: { how: 'caught', where: 'Sea' },
         source: { license: 'Original', credit: 'Curation' },
         value: 1,
-        acquire: { water: 'sea', time: 'night', size: [20, 50] },
+        acquire: { water: 'sea', waters: ['sea'], regions: ['temperate','tropical'], size: [21,56], sizeDist: [35,7], times: ['dusk','night'], baits: ['glowbug','squidstrip'] },
       },
       {
         id: 'fish:tuna',
         collection: 'fish',
         title: 'Bluefin tuna',
         blurb: 'Bluefin can cross whole oceans and keep their bodies warmer than the water around them.',
-        rarity: 3,
+        rarity: 4,
         set: 'sea-fish',
         tags: ['sea'],
         image: {
@@ -354,7 +357,7 @@ export default [
         provenance: { how: 'caught', where: 'Sea' },
         source: { license: 'Original', credit: 'Curation' },
         value: 1,
-        acquire: { water: 'sea', size: [100, 250] },
+        acquire: { water: 'sea', waters: ['sea'], regions: ['temperate','tropical'], size: [110,285], sizeDist: [180,35], times: ['dawn','day','dusk'], seasons: ['summer','autumn'], baits: ['squidstrip','minnowbait'] },
       },
       {
         id: 'fish:octopus',
@@ -374,14 +377,14 @@ export default [
         provenance: { how: 'caught', where: 'Sea' },
         source: { license: 'Original', credit: 'Curation' },
         value: 1,
-        acquire: { water: 'sea', size: [30, 90] },
+        acquire: { water: 'sea', waters: ['sea'], regions: ['temperate','tropical'], size: [36,96], sizeDist: [60,12], times: ['dusk','night'], baits: ['shrimp','squidstrip'] },
       },
       {
         id: 'fish:swordfish',
         collection: 'fish',
         title: 'Swordfish',
         blurb: 'The long bill is for slashing through schools of fish, not for spearing.',
-        rarity: 3,
+        rarity: 4,
         set: 'sea-fish',
         tags: ['sea', 'day'],
         image: {
@@ -394,14 +397,14 @@ export default [
         provenance: { how: 'caught', where: 'Sea' },
         source: { license: 'Original', credit: 'Curation' },
         value: 1,
-        acquire: { water: 'sea', time: 'day', size: [150, 300] },
+        acquire: { water: 'sea', waters: ['sea'], regions: ['temperate','tropical'], size: [150,350], sizeDist: [230,40], times: ['day'], weathers: ['clear'], seasons: ['summer'], baits: ['squidstrip'] },
       },
       {
         id: 'fish:moonfish',
         collection: 'fish',
         title: 'Moonfish',
         blurb: 'The opah, or moonfish, was the first fish found to warm its whole body.',
-        rarity: 4,
+        rarity: 5,
         set: 'sea-fish',
         tags: ['sea', 'night'],
         image: {
@@ -415,8 +418,9 @@ export default [
         provenance: { how: 'caught', where: 'Sea' },
         source: { license: 'Original', credit: 'Curation' },
         value: 1,
-        acquire: { water: 'sea', time: 'night', size: [80, 180] },
+        acquire: { water: 'sea', waters: ['sea'], regions: ['one'], size: [90,190], sizeDist: [130,20], times: ['night'], weathers: ['clear'], baits: ['glowbug'] },
       },
+      ...MORE_FISH,
     ],
   },
   {

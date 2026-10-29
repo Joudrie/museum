@@ -4,7 +4,7 @@
 // (src/collections/data/<name>.js) plus one line in index.js, no new code.
 // See docs/COLLECTIONS.md.
 
-export const RARITY = ['', 'Common', 'Uncommon', 'Rare', 'Legendary'];
+export const RARITY = ['', 'Common', 'Uncommon', 'Rare', 'Epic', 'Legendary'];
 export const DISPLAYS = ['wall', 'case', 'plinth', 'tank', 'floor'];
 export const HOWS = ['bought', 'caught', 'dug', 'donated', 'gift'];
 export const IMAGE_KINDS = ['url', 'sprite', 'pixels', 'procedural'];
@@ -42,7 +42,7 @@ export const META_FIELDS = ['by', 'year', 'rarity', 'where'];
  * @property {string} [era]        key into the collection's `eras`, for filtering
  * @property {string} [blurb]      short, true, curious
  * @property {string[]} [facts]    extra "rabbit hole" lines
- * @property {number} [rarity]     1 common … 4 legendary (default 1)
+ * @property {number} [rarity]     1 common … 5 legendary (default 1)
  * @property {string} [set]        id of a Set this entry belongs to
  * @property {string[]} [tags]
  * @property {Image} image
@@ -93,7 +93,7 @@ export function validateEntry(e, collection) {
   if (!isStr(e.collection)) say('missing collection');
   if (collection && e.collection !== collection.id) say(`belongs to "${e.collection}", not "${collection.id}"`);
   if (!isStr(e.title)) say('missing title');
-  if (e.rarity !== undefined && !(Number.isInteger(e.rarity) && e.rarity >= 1 && e.rarity <= 4)) say('rarity must be 1 to 4');
+  if (e.rarity !== undefined && !(Number.isInteger(e.rarity) && e.rarity >= 1 && e.rarity <= 5)) say('rarity must be 1 to 5');
   if (e.ratio !== undefined && !(typeof e.ratio === 'number' && e.ratio > 0 && Number.isFinite(e.ratio))) say('ratio must be a positive number');
   if (e.facts !== undefined && !(Array.isArray(e.facts) && e.facts.every(isStr))) say('facts must be a list of strings');
   if (e.tags !== undefined && !(Array.isArray(e.tags) && e.tags.every(isStr))) say('tags must be a list of strings');

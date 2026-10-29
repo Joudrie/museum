@@ -55,3 +55,8 @@ window.addEventListener('resize', () => {
   game.scale.refresh();
 });
 import './ui/hud.js'; // the labelled HUD and the Menu hub (after daily.js, whose button it adopts)
+import { progression } from './progression/index.js';
+progression(); // rank, skills, journal and goals: the progression layer (docs/PROGRESSION.md)
+import './progression/ui/fieldoverlay.js';
+import { installFishHints } from './progression/ui/fieldjournal.js';
+installFishHints();

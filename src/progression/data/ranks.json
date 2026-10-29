@@ -1,0 +1,509 @@
+[
+ {
+  "rank": 1,
+  "rewards": [
+   {
+    "bait": [
+     "worm",
+     5
+    ]
+   }
+  ]
+ },
+ {
+  "rank": 2,
+  "rewards": [
+   {
+    "cosmetic": "hat:straw"
+   }
+  ]
+ },
+ {
+  "rank": 3,
+  "rewards": [
+   {
+    "bait": [
+     "worm",
+     10
+    ]
+   }
+  ]
+ },
+ {
+  "rank": 4,
+  "major": true,
+  "rewards": [
+   {
+    "unlock": "boat:rowboat"
+   },
+   {
+    "gold": 60
+   }
+  ]
+ },
+ {
+  "rank": 5,
+  "major": true,
+  "rewards": [
+   {
+    "unlock": "rod:cork"
+   },
+   {
+    "gold": 150
+   }
+  ]
+ },
+ {
+  "rank": 6,
+  "rewards": [
+   {
+    "gold": 76
+   }
+  ]
+ },
+ {
+  "rank": 7,
+  "rewards": [
+   {
+    "cosmetic": "outfit:oilskin"
+   }
+  ]
+ },
+ {
+  "rank": 8,
+  "rewards": [
+   {
+    "bait": [
+     "bread",
+     8
+    ]
+   }
+  ]
+ },
+ {
+  "rank": 9,
+  "rewards": [
+   {
+    "perk": "sell+1"
+   },
+   {
+    "gold": 66
+   }
+  ]
+ },
+ {
+  "rank": 10,
+  "major": true,
+  "rewards": [
+   {
+    "unlock": "boat:sailboat"
+   },
+   {
+    "gold": 300
+   }
+  ]
+ },
+ {
+  "rank": 11,
+  "rewards": [
+   {
+    "gold": 106
+   }
+  ]
+ },
+ {
+  "rank": 12,
+  "rewards": [
+   {
+    "cosmetic": "rodskin:bamboo"
+   }
+  ]
+ },
+ {
+  "rank": 13,
+  "rewards": [
+   {
+    "bait": [
+     "shrimp",
+     8
+    ]
+   }
+  ]
+ },
+ {
+  "rank": 14,
+  "rewards": [
+   {
+    "perk": "sell+1"
+   },
+   {
+    "gold": 86
+   }
+  ]
+ },
+ {
+  "rank": 15,
+  "major": true,
+  "rewards": [
+   {
+    "unlock": "house:aquarium_room"
+   },
+   {
+    "gold": 400
+   }
+  ]
+ },
+ {
+  "rank": 16,
+  "rewards": [
+   {
+    "gold": 136
+   }
+  ]
+ },
+ {
+  "rank": 17,
+  "rewards": [
+   {
+    "cosmetic": "frame:plain"
+   }
+  ]
+ },
+ {
+  "rank": 18,
+  "rewards": [
+   {
+    "bait": [
+     "glowbug",
+     6
+    ]
+   }
+  ]
+ },
+ {
+  "rank": 19,
+  "rewards": [
+   {
+    "perk": "sell+1"
+   },
+   {
+    "gold": 106
+   }
+  ]
+ },
+ {
+  "rank": 20,
+  "major": true,
+  "rewards": [
+   {
+    "unlock": "rod:feather"
+   },
+   {
+    "cosmetic": "hat:captain"
+   }
+  ]
+ },
+ {
+  "rank": 21,
+  "rewards": [
+   {
+    "gold": 166
+   }
+  ]
+ },
+ {
+  "rank": 22,
+  "rewards": [
+   {
+    "cosmetic": "hat:flower"
+   }
+  ]
+ },
+ {
+  "rank": 23,
+  "rewards": [
+   {
+    "bait": [
+     "worm",
+     10
+    ]
+   }
+  ]
+ },
+ {
+  "rank": 24,
+  "rewards": [
+   {
+    "perk": "sell+1"
+   },
+   {
+    "gold": 126
+   }
+  ]
+ },
+ {
+  "rank": 25,
+  "major": true,
+  "rewards": [
+   {
+    "unlock": "area:frozen_north"
+   },
+   {
+    "gold": 600
+   }
+  ]
+ },
+ {
+  "rank": 26,
+  "rewards": [
+   {
+    "gold": 196
+   }
+  ]
+ },
+ {
+  "rank": 27,
+  "rewards": [
+   {
+    "cosmetic": "boatpaint:teal"
+   }
+  ]
+ },
+ {
+  "rank": 28,
+  "rewards": [
+   {
+    "bait": [
+     "bread",
+     8
+    ]
+   }
+  ]
+ },
+ {
+  "rank": 29,
+  "rewards": [
+   {
+    "perk": "sell+2"
+   },
+   {
+    "gold": 146
+   }
+  ]
+ },
+ {
+  "rank": 30,
+  "major": true,
+  "rewards": [
+   {
+    "unlock": "boat:icehull"
+   },
+   {
+    "gold": 800
+   }
+  ]
+ },
+ {
+  "rank": 31,
+  "rewards": [
+   {
+    "gold": 226
+   }
+  ]
+ },
+ {
+  "rank": 32,
+  "rewards": [
+   {
+    "cosmetic": "outfit:explorer"
+   }
+  ]
+ },
+ {
+  "rank": 33,
+  "rewards": [
+   {
+    "bait": [
+     "shrimp",
+     8
+    ]
+   }
+  ]
+ },
+ {
+  "rank": 34,
+  "rewards": [
+   {
+    "perk": "sell+2"
+   },
+   {
+    "gold": 166
+   }
+  ]
+ },
+ {
+  "rank": 35,
+  "major": true,
+  "rewards": [
+   {
+    "unlock": "house:workshop"
+   },
+   {
+    "gold": 800
+   }
+  ]
+ },
+ {
+  "rank": 36,
+  "rewards": [
+   {
+    "gold": 256
+   }
+  ]
+ },
+ {
+  "rank": 37,
+  "rewards": [
+   {
+    "cosmetic": "frame:rope"
+   }
+  ]
+ },
+ {
+  "rank": 38,
+  "rewards": [
+   {
+    "bait": [
+     "glowbug",
+     6
+    ]
+   }
+  ]
+ },
+ {
+  "rank": 39,
+  "rewards": [
+   {
+    "perk": "sell+2"
+   },
+   {
+    "gold": 186
+   }
+  ]
+ },
+ {
+  "rank": 40,
+  "major": true,
+  "rewards": [
+   {
+    "unlock": "rod:golden"
+   },
+   {
+    "cosmetic": "hat:crown"
+   }
+  ]
+ },
+ {
+  "rank": 41,
+  "rewards": [
+   {
+    "gold": 286
+   }
+  ]
+ },
+ {
+  "rank": 42,
+  "rewards": [
+   {
+    "gold": 90
+   }
+  ]
+ },
+ {
+  "rank": 43,
+  "rewards": [
+   {
+    "bait": [
+     "worm",
+     10
+    ]
+   }
+  ]
+ },
+ {
+  "rank": 44,
+  "rewards": [
+   {
+    "perk": "sell+2"
+   },
+   {
+    "gold": 206
+   }
+  ]
+ },
+ {
+  "rank": 45,
+  "major": true,
+  "rewards": [
+   {
+    "unlock": "slot:daily_extra"
+   },
+   {
+    "gold": 1200
+   }
+  ]
+ },
+ {
+  "rank": 46,
+  "rewards": [
+   {
+    "gold": 316
+   }
+  ]
+ },
+ {
+  "rank": 47,
+  "rewards": [
+   {
+    "cosmetic": "outfit:parka"
+   }
+  ]
+ },
+ {
+  "rank": 48,
+  "rewards": [
+   {
+    "bait": [
+     "bread",
+     8
+    ]
+   }
+  ]
+ },
+ {
+  "rank": 49,
+  "rewards": [
+   {
+    "perk": "sell+2"
+   },
+   {
+    "gold": 226
+   }
+  ]
+ },
+ {
+  "rank": 50,
+  "major": true,
+  "rewards": [
+   {
+    "title": "grand_curator"
+   },
+   {
+    "cosmetic": "frame:gold"
+   },
+   {
+    "gold": 2000
+   }
+  ]
+ }
+]

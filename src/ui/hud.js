@@ -52,7 +52,11 @@ function init() {
   income.id = 'hub-income';
   const share = document.createElement('button');
   share.id = 'hub-share';
+  const field = document.createElement('button');
+  field.id = 'hub-field';
+  field.onclick = () => window.dispatchEvent(new CustomEvent('open-field', { detail: 'goals' }));
   const tiles = [
+    tile(field, 'map', 'Field journal', 'Goals, fish, people, places'),
     today && tile(today, 'gift', 'Today', 'Gift, wheel, painting of the day'),
     tile(income, 'coin', 'Your museum', 'Income and rooms'),
     tile(share, 'share', 'Share & visit', 'Send a link, visit a friend'),

@@ -1,0 +1,12 @@
+{
+  "main": { "name": "Main Island", "maps": ["main"], "zone": "temperate", "waters": ["pond", "sea"], "freezes": true, "tier": "free", "req": null, "legend": "goldkoi", "blurb": "Home. The museum is here, and so is the best pond." },
+  "one": { "name": "Island One", "maps": ["one"], "zone": "temperate", "waters": ["pond", "sea"], "freezes": true, "tier": "free", "req": null, "legend": "moonfish", "blurb": "The first island. Its museum is shut, but the harbour still bites." },
+  "isle": { "name": "The Far Isle", "maps": ["isle-1"], "zone": "tropical", "waters": ["pond", "sea"], "freezes": false, "tier": "free", "req": "boat:rowboat", "legend": "marlin", "blurb": "Warm water, bright fish. You can see it from the dock." },
+  "pirate": { "name": "Skull Isle", "maps": ["exp-pirate"], "zone": "tropical", "waters": ["sea"], "freezes": false, "tier": "free", "req": "boat:rowboat", "legend": "hammerhead", "blurb": "A jungle maze and a captain’s chest." },
+  "wreck": { "name": "The Drowned Reef", "maps": ["exp-wreck"], "zone": "tropical", "waters": ["sea"], "freezes": false, "tier": "sub", "req": "boat:sailboat", "legend": "wrasse", "blurb": "Sunken crates and a deep blue edge." },
+  "heist": { "name": "Thieves’ Rock", "maps": ["exp-heist"], "zone": "temperate", "waters": ["sea"], "freezes": false, "tier": "sub", "req": "boat:sailboat", "legend": "mola", "blurb": "A bare rock in the fog." },
+  "tomb": { "name": "Sandstone Tomb", "maps": ["exp-tomb"], "zone": "tropical", "waters": ["sea"], "freezes": false, "tier": "sub", "req": "boat:sailboat", "legend": "oarfish", "blurb": "Dry stone, warm sea." },
+  "badlands": { "name": "Red Badlands", "maps": ["exp-badlands"], "zone": "tropical", "waters": ["sea"], "freezes": false, "tier": "sub", "req": "boat:sailboat", "legend": "sailfish", "blurb": "Red cliffs over green water." },
+  "temple": { "name": "The Lost Temple", "maps": ["exp-temple"], "zone": "tropical", "waters": ["sea"], "freezes": false, "tier": "sub", "req": "boat:sailboat", "legend": "tarpon", "blurb": "Always raining, always green." },
+  "north": { "name": "The Frozen North", "maps": ["exp-north"], "zone": "arctic", "waters": ["ice", "sea"], "freezes": true, "iceAlways": true, "tier": "sub", "req": "boat:icehull", "legend": "greenland", "blurb": "Ice as far as you can see, and holes in it." }
+}
