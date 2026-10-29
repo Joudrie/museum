@@ -23,11 +23,19 @@ export function openSail(options, cb) {
   list.replaceChildren();
   options.forEach((o) => {
     const b = document.createElement('button');
-    b.className = 'pixel-btn sail-dest';
+    b.className = 'pixel-btn sail-dest' + (o.locked ? ' locked' : '');
     b.innerHTML = `<b></b><small></small>`;
-    b.querySelector('b').textContent = o.label;
+    b.querySelector('b').textContent = (o.locked ? '🔒 ' : '') + o.label;
     b.querySelector('small').textContent = o.sub || '';
-    b.onclick = () => close(o);
+    if (o.preview) {
+      // what is out there (silhouettes), so a locked dock shows concrete value
+      const pv = document.createElement('small');
+      pv.className = 'sail-preview';
+      pv.textContent = o.preview;
+      b.appendChild(pv);
+    }
+    b.setAttribute('aria-disabled', o.locked ? 'true' : 'false');
+    b.onclick = () => (o.locked ? o.onLocked?.() : close(o));
     list.appendChild(b);
   });
   done = cb;
