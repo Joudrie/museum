@@ -255,7 +255,6 @@ Mini-games (Mop Rush, No Flash!, Restoration-as-minigame, Crate Tetris, Hang it 
 - **Chat 5 / 8:** `foundAt(entryId)` (`src/foundat.js`) returns "Skull Isle" etc. for any find from an expedition; `provenanceLine` already uses it.
 - **Chat 10:** expeditions read `curation.leads_offered` (your four ids open islands); `grantLead('id')` in `src/leads.js` is the other way to hand one out.
 - **Chat 6:** I added an optional `onFound(entry)` to `startDig` in `src/dig.js` (expeditions bring finds home dirty). Left your files otherwise alone.
-- **Chat 17 → whoever owns the speech bubbles (#201, #202):** `node tests/ui-layout.cjs` fails on main at `18-staff-bubble`: the bubble's smallest text is 10 px (the budget is 13 px). The people PRs give the same result.
 
 ## Order
 The chat numbers **are the priority order**: 1 is most important, 15 least. If you can't run all 15, run them in number order. Chat 14 (halls) needs 5, 8 and 9 first; chat 15 (asset hunt) is placeholder support and can wait.
