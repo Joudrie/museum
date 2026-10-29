@@ -7,11 +7,16 @@ import paintings from './data/paintings.js';
 import fish from './data/fish.js';
 import minerals from './data/minerals.js';
 import fossils from './data/fossils.js';
+import pottery from './data/pottery.js';
+import coins from './data/coins.js';
+import arrowheads from './data/arrowheads.js';
+import shells from './data/shells.js';
+import meteorites from './data/meteorites.js';
 
 export { RARITY } from './schema.js';
 
 // A data file exports one pack ({ collection, sets, entries }) or a list of them.
-const PACKS = [paintings, fish, minerals, fossils];
+const PACKS = [paintings, fish, minerals, fossils, pottery, coins, arrowheads, shells, meteorites];
 
 const COLLECTIONS = new Map();
 const ENTRIES = new Map();
