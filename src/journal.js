@@ -50,10 +50,10 @@ function questCard(q) {
     </div>`;
   card.querySelector('b').textContent = q.title;
   card.querySelector('span').textContent = q.text;
-  const btn = document.createElement('button');
+  // not done yet: the reward is just a label; done: a button to claim it
+  const btn = document.createElement(q.done ? 'button' : 'span');
   btn.className = q.done ? 'pixel-btn quest-claim' : 'quest-reward';
   btn.innerHTML = `<i class="coin"></i> ${q.reward}`;
-  btn.disabled = !q.done;
   if (q.done) {
     btn.innerHTML = `Claim <i class="coin"></i> ${q.reward}`;
     btn.onclick = () => {

@@ -786,7 +786,7 @@ body {
   margin-left: auto;
   flex: none;
   padding: 8px 10px;
-  font-size: 12px;
+  font-size: 13px;
 }
 .slot-paintings {
   display: grid;
@@ -834,7 +834,7 @@ body {
 }
 .slot-painting .meta em {
   font-style: normal;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--gold);
 }
 .viewer-change {
@@ -858,7 +858,7 @@ body {
 .hud-stats {
   white-space: nowrap;
   font-family: ui-monospace, 'Courier New', monospace;
-  font-size: 11px;
+  font-size: 13px;
   letter-spacing: 0;
   color: var(--muted);
 }
@@ -927,7 +927,7 @@ body {
 }
 .toolkit-cats button {
   flex: 1 1 calc(33% - 8px);
-  font-size: 12px;
+  font-size: 13px;
   padding: 7px 4px;
 }
 .toolkit-grid {
@@ -946,7 +946,7 @@ body {
   background: rgba(255, 255, 255, 0.04);
   color: var(--ink);
   font: inherit;
-  font-size: 12px;
+  font-size: 13px;
   text-align: center;
 }
 .ti-icon {
@@ -963,11 +963,11 @@ body {
   gap: 3px;
   white-space: nowrap;
   font-family: ui-monospace, monospace;
-  font-size: 11px;
+  font-size: 13px;
   color: var(--muted);
 }
 .ti-size {
-  font-size: 10px;
+  font-size: 13px;
   color: var(--muted);
 }
 
@@ -996,7 +996,7 @@ body {
 }
 .placebar-info span {
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
 }
 .placebar-buttons {
   display: flex;
@@ -1058,7 +1058,7 @@ body {
 }
 .rr-name i {
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
 }
 .room-row button {
   min-width: 36px;
@@ -1192,13 +1192,13 @@ body {
 .rating-row small {
   grid-column: 1 / -1;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 13px;
 }
 .rating-row b {
   text-align: right;
   font-weight: normal;
   font-family: ui-monospace, monospace;
-  font-size: 12px;
+  font-size: 13px;
 }
 .rating-bar {
   height: 8px;
@@ -1229,7 +1229,7 @@ body {
   left: 50%;
   transform: translateX(-50%);
   padding: 5px 12px;
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.04em;
 }
 #ad {
@@ -1252,7 +1252,7 @@ body {
   color: var(--muted);
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  font-size: 12px;
+  font-size: 13px;
 }
 .ad-body {
   margin: 0;
@@ -1292,12 +1292,12 @@ body {
 .staff-row small {
   display: block;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
 }
 .staff-row button {
   flex: none;
   padding: 8px 10px;
-  font-size: 12px;
+  font-size: 13px;
 }
 .staff-row button:disabled {
   opacity: 0.55;
@@ -1647,7 +1647,7 @@ body {
   white-space: nowrap;
 }
 .income-top small {
-  font-size: 11px;
+  font-size: 13px;
   color: var(--muted);
 }
 .income-boosts {
@@ -1688,7 +1688,7 @@ body {
 .ir-name i {
   font-style: normal;
   color: var(--gold);
-  font-size: 12px;
+  font-size: 13px;
 }
 .ir-gold {
   display: grid;
@@ -1698,7 +1698,7 @@ body {
 }
 .ir-gold small {
   color: var(--muted);
-  font-size: 11px;
+  font-size: 13px;
 }
 
 /* Speech bubble: a hint that a tap closes it */
@@ -1771,7 +1771,7 @@ body {
 .gallery-eras button {
   flex: 1 1 calc(25% - 8px);
   min-height: 36px;
-  font-size: 12px;
+  font-size: 13px;
   padding: 6px 4px;
 }
 .gallery-grid {
@@ -1801,7 +1801,7 @@ body {
   line-height: 1.25;
 }
 .gallery-grid .slot-painting .meta i {
-  font-size: 12px;
+  font-size: 13px;
 }
 .empty-note {
   grid-column: 1 / -1;
@@ -1910,7 +1910,7 @@ body {
 }
 .quest-text small {
   font-family: ui-monospace, monospace;
-  font-size: 11px;
+  font-size: 13px;
   color: var(--muted);
 }
 .quest-bar {
@@ -1951,7 +1951,7 @@ body {
 .book .slot-painting .blurb {
   display: none;
   margin-top: 4px;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.4;
   color: var(--ink);
 }
@@ -1993,7 +1993,7 @@ body {
   line-height: 1.2;
 }
 .famous-card small {
-  font-size: 10px;
+  font-size: 13px;
   line-height: 1.3;
   color: var(--muted);
   display: -webkit-box;
@@ -2170,7 +2170,7 @@ body.outside #hud {
 }
 .catch-hint {
   margin-top: 4px;
-  font-size: 11px;
+  font-size: 13px;
   color: var(--muted);
 }
 .r1 { color: #c8c0b0; }
@@ -2224,12 +2224,12 @@ body.outside #hud {
   min-width: 0;
 }
 .bobber small {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--muted);
 }
 .bobber em {
   font-style: normal;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--muted);
 }
 .bobber.on em {
@@ -2260,10 +2260,10 @@ body.outside #hud {
   border-radius: 8px;
 }
 .fish-cell b {
-  font-size: 12px;
+  font-size: 13px;
 }
 .fish-cell small {
-  font-size: 10px;
+  font-size: 13px;
   color: var(--muted);
   line-height: 1.3;
 }
@@ -2320,7 +2320,7 @@ body.outside #hud {
 .sail-dest small {
   color: #5a4630;
   font-family: system-ui, sans-serif;
-  font-size: 12px;
+  font-size: 13px;
 }
 .sail-stay {
   width: 100%;
@@ -2367,7 +2367,7 @@ body.outside #hud {
   gap: 3px;
 }
 .set-text small {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--ink);
   opacity: 0.8;
 }
@@ -2510,11 +2510,11 @@ body.outside #hud {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: #8a5a2a;
-  font-size: 11px;
+  font-size: 13px;
 }
 .lead-from {
   color: #6a5238;
-  font-size: 12px;
+  font-size: 13px;
 }
 .lead-text {
   margin: 4px 0;
@@ -2656,7 +2656,7 @@ body.outside #hud {
 }
 .income-note {
   margin: 10px 4px 0;
-  font-size: 12px;
+  font-size: 13px;
   opacity: 0.75;
   line-height: 1.35;
 }
@@ -2689,7 +2689,7 @@ body.outside #hud {
 .journal-chips .chip {
   padding: 4px 9px;
   font: inherit;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--ink);
   background: rgba(255, 255, 255, 0.04);
   border: 2px solid var(--gold-dark);
@@ -2709,7 +2709,7 @@ body.outside #hud {
   right: 4px;
   display: flex;
   gap: 4px;
-  font-size: 10px;
+  font-size: 13px;
   line-height: 1;
   pointer-events: none;
 }
@@ -2758,7 +2758,7 @@ body.outside #hud {
 .journal-tabs button {
   flex-basis: 17%;
   padding-block: 6px;
-  font-size: 12px;
+  font-size: 13px;
 }
 .shop-row .quest-claim {
   flex: none;
@@ -2838,7 +2838,7 @@ body.outside #hud {
 }
 .chat-label {
   opacity: 0.7;
-  font-size: 12px;
+  font-size: 13px;
 }
 .chat-text {
   margin: 0;

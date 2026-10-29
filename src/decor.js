@@ -56,6 +56,21 @@ export const section = (label, ...children) => {
   return s;
 };
 
+// A collapsible group with a one-line summary of what is chosen (Customize's "This room"). Stays open across redraws.
+const openGroups = new Set();
+function group(id, title, summary, ...children) {
+  const det = document.createElement('details');
+  det.className = 'ui-group';
+  det.dataset.group = id;
+  det.open = openGroups.has(id);
+  det.innerHTML = '<summary><b></b><span></span></summary><div class="ui-group-body"></div>';
+  det.querySelector('b').textContent = title;
+  det.querySelector('span').textContent = summary;
+  det.querySelector('.ui-group-body').append(...children);
+  det.addEventListener('toggle', () => (det.open ? openGroups.add(id) : openGroups.delete(id)));
+  return det;
+}
+
 // A swipeable row of color swatches plus a custom color picker.
 export function strip(colors, value, onPick) {
   const row = document.createElement('div');
@@ -182,7 +197,7 @@ function renderStaff() {
     b.textContent = 'Janitor hired: this room stays spotless';
     b.disabled = true;
   } else {
-    b.textContent = j.free ? `Hire a janitor · free while testing (${j.cost} gold)` : `Hire a janitor · ${j.cost} gold`;
+    b.textContent = j.free ? `Hire a janitor · Free (${j.cost} gold)` : `Hire a janitor · ${j.cost} gold`;
     b.onclick = () => {
       state.onHireJanitor();
       state.janitor = { ...j, hired: true };
@@ -236,28 +251,38 @@ function renderRoom() {
   };
   const themes = Object.fromEntries(Object.entries(THEMES).map(([id, t]) => [id, t.name]));
   const staffRoom = state.room.orient === 'break';
-  const parts = [
-    ...(staffRoom ? [] : [renderRating(), renderStaff(), ...renderRoomSettings()]),
-    ...(state.onPreset ? [renderPresets()] : []),
-    section('Theme (one tap)', choices(themes, null, (id) => set(THEMES[id].decor))),
-    section('Floor pattern', choices(FLOOR_PATTERNS, d.pattern, pickPattern)),
-  ];
+  const floorSections = [section('Floor pattern', choices(FLOOR_PATTERNS, d.pattern, pickPattern))];
   if (TWO_COLOR_FLOORS.includes(d.pattern)) {
-    parts.push(section('Floor color 1', strip(PALETTES.stone, d.checkA, (checkA, live) => set({ checkA }, live))));
-    parts.push(section('Floor color 2', strip(PALETTES.stone, d.checkB, (checkB, live) => set({ checkB }, live))));
+    floorSections.push(section('Floor color 1', strip(PALETTES.stone, d.checkA, (checkA, live) => set({ checkA }, live))));
+    floorSections.push(section('Floor color 2', strip(PALETTES.stone, d.checkB, (checkB, live) => set({ checkB }, live))));
   } else {
     const pal = WOOD_FLOORS.includes(d.pattern) ? PALETTES.wood : PALETTES.stone;
-    parts.push(section('Floor color', strip(pal, d.floor, (floor, live) => set({ floor }, live))));
+    floorSections.push(section('Floor color', strip(pal, d.floor, (floor, live) => set({ floor }, live))));
   }
-  parts.push(section('Wall pattern', choices(WALL_PATTERNS, d.paperStyle || 'stripes', (paperStyle) => set({ paperStyle }))));
-  parts.push(section('Wall color', strip(PALETTES.paper, d.paper, (paper, live) => set({ paper }, live))));
-  parts.push(section('Wainscot', choices(WAINSCOT_STYLES, d.wainscotStyle || 'panels', (wainscotStyle) => set({ wainscotStyle }))));
-  parts.push(section('Trim & wainscot color', strip(PALETTES.wainscot, d.wainscot, (wainscot, live) => set({ wainscot }, live))));
-  parts.push(section('Carpet', choices({ off: 'None', on: 'Runner' }, d.carpet ? 'on' : 'off', (v) => set({ carpet: v === 'on' }))));
-  if (d.carpet) parts.push(section('Carpet color', strip(PALETTES.carpet, d.carpetColor, (carpetColor, live) => set({ carpetColor }, live))));
-  parts.push(section('Plants (between paintings)', choices(PLANTS, d.plant, (plant) => set({ plant }), state.plantIcon)));
-  parts.push(section('Lighting', choices(LIGHTS, d.light || 'warm', (light) => set({ light }))));
-  parts.push(section('Music in this room', choices(TRACKS, d.music || 'none', (music) => set({ music }))));
+  const wallSections = [
+    section('Wall pattern', choices(WALL_PATTERNS, d.paperStyle || 'stripes', (paperStyle) => set({ paperStyle }))),
+    section('Wall color', strip(PALETTES.paper, d.paper, (paper, live) => set({ paper }, live))),
+    section('Wainscot', choices(WAINSCOT_STYLES, d.wainscotStyle || 'panels', (wainscotStyle) => set({ wainscotStyle }))),
+    section('Trim & wainscot color', strip(PALETTES.wainscot, d.wainscot, (wainscot, live) => set({ wainscot }, live))),
+  ];
+  const extraSections = [section('Carpet', choices({ off: 'None', on: 'Runner' }, d.carpet ? 'on' : 'off', (v) => set({ carpet: v === 'on' })))];
+  if (d.carpet) extraSections.push(section('Carpet color', strip(PALETTES.carpet, d.carpetColor, (carpetColor, live) => set({ carpetColor }, live))));
+  extraSections.push(section('Plants (between paintings)', choices(PLANTS, d.plant, (plant) => set({ plant }), state.plantIcon)));
+  const moodSections = [
+    section('Lighting', choices(LIGHTS, d.light || 'warm', (light) => set({ light }))),
+    section('Music in this room', choices(TRACKS, d.music || 'none', (music) => set({ music }))),
+  ];
+  // "This room": rating, janitor, name, size, doorway and saved layouts (the things you change less often)
+  const roomSections = [...(staffRoom ? [] : [renderRating(), renderStaff(), ...renderRoomSettings()]), ...(state.onPreset ? [renderPresets()] : [])];
+  const parts = [section('Theme (one tap)', choices(themes, null, (id) => set(THEMES[id].decor)))];
+  parts.push(group('floor', 'Floor', FLOOR_PATTERNS[d.pattern] || 'Planks', ...floorSections));
+  parts.push(group('walls', 'Walls', `${WALL_PATTERNS[d.paperStyle || 'stripes'] || 'Stripes'} · ${WAINSCOT_STYLES[d.wainscotStyle || 'panels'] || 'Panels'}`, ...wallSections));
+  parts.push(group('extras', 'Carpet & plants', `${d.carpet ? 'Runner' : 'No carpet'} · ${PLANTS[d.plant] || 'No plants'}`, ...extraSections));
+  parts.push(group('mood', 'Light & sound', `${LIGHTS[d.light || 'warm']} · ${TRACKS[d.music || 'none']}`, ...moodSections));
+  if (roomSections.length) {
+    const r = staffRoom ? null : roomRating(state.rooms, state.index);
+    parts.push(group('room', 'This room', r ? `${starText(r.stars)} ${r.score}/100` : 'Saved layouts', ...roomSections));
+  }
   return parts;
 }
 

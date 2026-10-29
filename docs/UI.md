@@ -3,7 +3,7 @@
 **Read this before you add or change any menu.** Plan: `docs/UI-BRIEF.md`. Evidence: `docs/UI-AUDIT.md`, `docs/UI-FLOWS.md`. Live style guide: `ui.html` (open `/ui.html`).
 
 ## The three decisions (for the user to react to)
-1. **Navigation:** a slim top status strip (tap = income) with a short column of labelled-by-icon buttons: **Journal**, **Build** (Toolkit, with a "Style this room" switch inside), and **Menu** (a hub with big labelled tiles: Today, Staff and Office, Income, Share and visit, Settings). The Journal opens on an **overview of collections as cards**, not a 17-tab grid. Every screen reachable in 2 taps or fewer, the same on islands.
+1. **Navigation:** a slim top status strip (tap = income), three labelled buttons on the left (**Journal**, **Build** = Toolkit, **Style** = Customize) and one **Menu** on the right. The Menu is a hub of big labelled tiles: Today, Your museum (income), Share and visit, Settings; it works on islands too, and a dot on Menu shows a waiting gift. The Journal opens on an **overview of collections as cards**, not a 17-tab grid. Every screen is reachable in 2 taps or fewer (`tests/ui-flows.cjs` guards it). Left-handed layout mirrors it.
 2. **Palette and type:** keep the warm dark-brown and gold identity; unify it into tokens. **Pixelify Sans** (OFL, bundled) for all interface text and numbers, **Georgia** only for museum prose. Smallest text 13 px, tap targets 44 px.
 3. **Frames and buttons:** one bevelled pixel button language (dark outline, light top edge, dark bottom edge, press = 2 px down) in four weights: primary (gold), secondary (brown), danger, quiet. One header with one close button. Sheets for lists and pickers, small cards for confirmations, full screen only for the viewer, journal and builder.
 
@@ -44,6 +44,18 @@ Fill the close button with `uiIcon('close')`. Buttons say what they do, in sente
 - **Empty:** say what to do next, with a button if there is one.
 - **No testing language** in player text ("Free while testing" belongs under Settings → Testing only).
 - **Rarity** is a pip plus a label, never colour alone.
+
+## What exists beyond the components (the older menus, now on the system)
+- **`src/ui/skin.css`** puts the older menus on the same look without rewriting them: one bevel button language (`.pixel-btn` is the gold primary; `.wide-btn`, `.decor-tabs button`, `.choices button`, `.build-row button` are secondary, `.on` = gold), one card border, Pixelify Sans for chrome and Georgia for museum prose, inputs and stars at 44 px. Prefer `ui-*` classes in new code; this file is for what was already built.
+- **`src/ui/chrome.js`** upgrades every close / cancel button (any button with a `*-close` class or `aria-label` Close / Cancel and no words on it) to the standard `ui-close` with the pixel X, including menus built later. A button with words (e.g. "Leave it") is left alone.
+- **`src/ui/hud.js` + `hud.css`**: the HUD and the Menu hub (see below). **`journalhome.js` + `journal.css`**: the Journal overview.
+- **Toasts** go through `say(text, ms)` in `src/ui/toast.js` (the scenes' `toast()` already call it): one at a time, the same message twice in a row shows once, at most three wait, a toast is readable for at least 0.9 s before the next replaces it.
+- **Groups:** Customize → This room uses collapsible `details.ui-group` sections (Floor, Walls, Carpet & plants, Light & sound, This room), each with a one-line summary of what is chosen; Theme stays on top. Open groups stay open while Customize is open.
+- **Settings** are grouped (Sound, Look, Play, Friends & data, Testing) and use switches (`ui-toggle`).
+- **Look settings** (`src/ui/prefs.js`): *Text size* (`html[data-text="large"]` raises every text token), *Reduce motion* (`html[data-motion="reduce"]` zeroes UI motion), *Left-handed layout* (`html[data-hand="left"]` mirrors the HUD and the Interact button).
+- **Tips:** `hint(id, text, anchor)` from `src/ui/hint.js` shows a one-time bubble pointing at a button (remembered in `curation.hints`, only when the screen is calm, Settings → Play → Tips turns them off). Used for the Menu's daily gift and a goal ready in the Journal.
+- **Prices** never say "testing" in the UI: a free price reads "Free (500 gold)" or "Free for now (500 gold)".
+- **Tests:** `tests/nav.cjs` has `openHub`, `jtab` and `openGroup`; `tests/ui-flows.cjs` holds tap budgets for the key journeys; `tests/ui-layout.cjs` guards layout; `tests/ui-shots.cjs` takes the screenshots.
 
 ## Voice
 Warm, specific, short. Verbs on buttons. Say what will happen and what it costs. Errors say what to do next ("Couldn't load that picture. Tap to try again.").

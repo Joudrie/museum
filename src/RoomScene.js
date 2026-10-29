@@ -45,6 +45,7 @@ import { openOffice } from './officemenu.js';
 import { ask } from './ask.js';
 import { remember, rareFor } from './regulars.js';
 import { converse, giftStatus, recordGift } from './chatter.js';
+import { say } from './ui/toast.js';
 import { runDialogue } from './dialogue.js';
 import { list as listEntries } from './collections/index.js';
 import { collect as collectEntry } from './collections/codex.js';
@@ -1477,7 +1478,7 @@ export class RoomScene extends Phaser.Scene {
     sfx('talk');
     this.pause(true);
     const next = nextSecurity();
-    const price = FREE ? `Free while testing (${next.cost} gold).` : `${next.cost} gold.`;
+    const price = FREE ? `Free for now (${next.cost} gold).` : `${next.cost} gold.`;
     ask(`${n.name} · Security`, `“${line} ${securityTier() ? 'Want to upgrade?' : 'Thieves are a real risk when you’re away.'} ${next.name}: ${next.blurb}” ${price}`, `Buy ${next.name.toLowerCase()}`, (yes) => {
       this.pause(false);
       if (!yes) return;
@@ -2128,7 +2129,7 @@ export class RoomScene extends Phaser.Scene {
     const name = atrium ? 'atrium' : 'main hall';
     const blurb = atrium ? 'A grand atrium with a waterfall, statues and archways to new wings.' : 'A grand open hall with a balcony and room for big exhibits.';
     this.pause(true);
-    const price = FREE ? `free while testing (${cost} gold)` : `${cost} gold`;
+    const price = FREE ? `free for now (${cost} gold)` : `${cost} gold`;
     ask(`Open the ${name}?`, `${blurb} ${price}.`, 'Open it', (yes) => {
       this.pause(false);
       if (!yes) return;
@@ -2182,11 +2183,7 @@ export class RoomScene extends Phaser.Scene {
 
   toast(text) {
     if (/^(Need|Only|Unlocks|Upgrade|Not enough)/.test(text)) sfx('nope');
-    const el = document.getElementById('toast');
-    el.textContent = text;
-    el.classList.remove('hidden');
-    clearTimeout(this.toastTimer);
-    this.toastTimer = setTimeout(() => el.classList.add('hidden'), 1600);
+    say(text, 1600); // (src/ui/toast.js: one at a time, never a pile)
   }
 
   // Load saved items, nudging ones that no longer fit (after a resize) back inside.

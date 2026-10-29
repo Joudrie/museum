@@ -21,6 +21,7 @@ import { settings, hourNow } from './settings.js';
 import { animateWalker, footstep, dust } from './motion.js';
 import { Pet } from './pets.js';
 import { Fishing, catchOpen } from './fishing.js';
+import { say } from './ui/toast.js';
 import { startDig, readyIn, DIG_TILES, siteOf, siteKey, siteBonusReady, bonusEntry } from './dig.js';
 import { Puzzles } from './puzzles.js';
 import { openJournal } from './journal.js';
@@ -1814,11 +1815,7 @@ export class IslandScene extends Phaser.Scene {
   }
 
   toast(text) {
-    const el = document.getElementById('toast');
-    el.textContent = text;
-    el.classList.remove('hidden');
-    clearTimeout(this.toastTimer);
-    this.toastTimer = setTimeout(() => el.classList.add('hidden'), 2600);
+    say(text, 2600);
   }
 
   update(_, dtMs) {

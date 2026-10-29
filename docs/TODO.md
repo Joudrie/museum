@@ -187,8 +187,26 @@ Owns: new `src/ui/`, `ui.html`, `docs/UI*.md`, `docs/ui/`, `tests/ui-*.cjs`; res
 - [x] (PR #181, #this) Navigation and flow decisions (menu hub, sheet / modal / full-screen weights, one-at-a-time rule, event queue); three-line summary for the user at the top of `docs/UI.md`.
 - [x] (PR #181) Design system and the live style guide page `ui.html`.
 - [x] (PR #181) Automated checks (`ui-layout` done; `ui-flows` tap-budget test still to do): `tests/ui-flows.cjs` (tap budgets) and `tests/ui-layout.cjs` (overflow, clipped text, target size, NaN text, aria) at 360x640, 390x844, 430x932.
-- [~] Migrate every screen, most-used first. **Done: HUD and Menu hub, Journal overview.** Left: HUD and Interact, Journal, Toolkit, Customize, dialogs, viewer, Settings and Income, Build a room, wall spot and Display, Office and Staff, daily / share / sail / leads, discovery overlays, conversation and tutorial, title screen, Builder page.
+- [~] Migrate every screen, most-used first. **Done: HUD and Menu hub, Journal overview, and the skin that puts every older menu on the system (Toolkit, Customize with groups, Settings regrouped, Build, wall spot, Display, Office, Staff, Income, daily, share, sail, ask, dig, viewer chrome, toasts queue, tips, builder page chrome).** Left: dialogs and cards (catch, celebrate, talk bubble), viewer polish, conversation box and tutorial, title screen, builder menu and sheet flow, event queue for reward cards.
 - [ ] Polish: sound, haptics, motion, empty and error states, copy sweep, large-text and left-handed modes, accessibility labels.
+
+## CHAT 17: People sprites (classes the Pokémon way)
+Owns: new `src/people/`, the character section of `src/art.js` (looks, `makeCharacter`), `src/library.js` and `art.html` (people gallery), `docs/PEOPLE-SPRITES.md`, new `tests/people-sprites.cjs`. Small additive edits only in `src/IslandScene.js`, `src/RoomScene.js` and the builder palette. Claim: `claimed: 2026-10-29`
+- [ ] Tier 0: parts (builds, hats, hair, facial hair, glasses, outfits, accessories, held props, poses), all recoloured through the palette letters.
+- [ ] Tier 1: janitors and grounds, construction and trades, fishermen, sailors and shore (sections A, B, D of `docs/PEOPLE-SPRITES.md`).
+- [ ] Classes placeable in the builder's People list and spawned on islands; a people gallery in `art.html`.
+- [ ] Tier 2: dig, field and expedition; museum professions (sections E, G).
+- [ ] Tier 3: visitors and townspeople; food and market (sections J, H).
+- [ ] Tier 4: arts and performance; science and medicine; artisans (sections I, F, C).
+- [ ] Tier 5: history; fantasy and seasonal; crews (sections K, L, M).
+
+## CHAT 18: Progression evidence (measure first, then design)
+Owns: new `docs/progression/` (write-ups, CSV, Python models and analysis), new `src/progression/` (flags, event log, telemetry adapter), new `tests/progression.cjs`. Small additive edits only in shared files to emit events and read the flag. Builds no progression features; it measures what exists and sets the tests a progression design must pass. Claim: `claimed: 2026-10-29`
+- [ ] Ground truth: content inventory from code, production cost from git history, first-hour event log, comparison kit.
+- [ ] Diagnosis: `?progression=off` strip test, core loop audit, player definition.
+- [ ] Models from the real numbers in code: content velocity, economy, Monte Carlo of every random roll, pacing at four horizons.
+- [ ] Pre-registered hypotheses with thresholds; every reward labelled; event bus and flags only.
+- [ ] Telemetry schema (opt-in, off by default), analysis scripts, playtest and diary-study protocol, experiment plan with sample sizes.
 
 ## Hold list (parked by the user; no chat builds these)
 Mini-games (Mop Rush, No Flash!, Restoration-as-minigame, Crate Tetris, Hang it Straight, Tour Guide, Night Watch, Catch the Thief, Paparazzi) · gems, ads, cosmetics, exhibition pass, crates · multiplayer / auctions · a sequel where the museum is part of a city · menu redesign · art direction and hiring.
