@@ -44,9 +44,9 @@ Owns: `src/builder/`, `builder.html`, `public/builder/`, `tools/build_palette.py
 - [ ] Every ground type, path block and furniture piece is its own named, placeable item (so the user can redraw them one by one).
 - [ ] Builder palette organisation (clear groups, e.g. Dig sites, Paths, Buildings); a "what's new" row.
 - [ ] Copy / paste regions, rotate-selection, multi-select move, layers view, grid toggle, measure tool.
-- [ ] Map import / export (share a map as a file or link; the format is already shareable).
-- [ ] Builder Playwright tests (place, turn, undo, save, vault restore).
-- [ ] Never lose work: keep the autosave and vault paths intact; test crash and reload.
+- [x] Map import / export (already in ☰: Save map file, Copy map code, Open file…; #118) (share a map as a file or link; the format is already shareable).
+- [x] Builder Playwright tests (place, turn, undo, save, vault restore): `tests/builder.cjs` (#118).
+- [x] Never lose work: autosave and vault paths intact; reload and wiped-storage restore are tested in `tests/builder.cjs` (#118). (Keep it passing on every builder change.)
 
 ## CHAT 3: Quality, performance and polish
 Owns: `tests/`, `.github/`, `vite.config.js`, `src/settings*.js`, `src/ui.js`. Claim: `claimed: 2026-10-29`

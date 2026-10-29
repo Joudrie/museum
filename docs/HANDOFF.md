@@ -77,6 +77,8 @@ Scenes (`src/main.js`):
 - **Turn families:** `tools/rotation_sheet.py <sheet> <from> <to>` draws a labelled contact sheet to check sets by eye. Done so far:
   the four armchair colours (front, left, back, right). Colour blocks repeat at fixed offsets but never auto-group; look first.
 
+- **Builder test:** `PW=<playwright> URL=http://localhost:4173/builder.html node tests/builder.cjs` (place, undo/redo, turn, reload, vault restore after wiping localStorage).
+
 ### Islands (`src/IslandScene.js`)
 - **Main Island** = `src/maps/main-island.json`, the user's own map. It is **home**:
   - The museum's front doors lead out onto it and back in. It is the only museum you can enter.
