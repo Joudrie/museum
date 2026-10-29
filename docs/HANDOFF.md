@@ -80,6 +80,7 @@ Scenes (`src/main.js`):
 - **"What's new" row:** `public/builder/whatsnew.json` lists refs shown first in the palette; add new pieces there. Duplicate lists (Plants / Flowers & plants, Garden & park) are merged by `MERGE` in `src/builder/main.js`.
 - **Area tool (#121):** drag a rectangle (shows W×H), then Copy / Cut / Clear / Mirror / Paste (tap to paste, repeat). Takes ground tiles, terrain corners and
   pieces whose feet are inside. ☰ → Options has Ground / Pieces layer toggles. Whole-area rotation is not built.
+- **Vault restore** now also writes the restored map back to localStorage (before, it only lived in memory until the next edit). **Jagged rocks** (`rock_jagged`, `_big`, `rock_spire`) are new pieces in `addJaggedRocks` (tiles.js); the round rocks stay. **Grass blending** is `src/groundblend.js`.
 - **Builder test:** `PW=<playwright> URL=http://localhost:4173/builder.html node tests/builder.cjs` (place, undo/redo, turn, reload, vault restore after wiping localStorage).
 
 ### Islands (`src/IslandScene.js`)

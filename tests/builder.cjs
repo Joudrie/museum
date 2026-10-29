@@ -22,7 +22,7 @@ const ok = (c, m) => {
       return m ? m.objects.map((o) => o.ref) : null;
     });
   const dismissResume = async () => {
-    if (await p.locator('#resume-go').isVisible().catch(() => false)) await p.click('#resume-go');
+    if (await p.locator('#resume-go').waitFor({ state: 'visible', timeout: 6000 }).then(() => true, () => false)) await p.click('#resume-go');
   };
   const pick = async (q, nth = 0) => {
     await p.fill('#search', q);
@@ -91,6 +91,7 @@ const ok = (c, m) => {
 
   // reload: the map comes back
   const before = await objs();
+  await p.waitForTimeout(1500); // the vault copy is written in the background
   await p.reload();
   await p.waitForTimeout(2000);
   const after = await objs();
@@ -100,11 +101,11 @@ const ok = (c, m) => {
   await p.evaluate(() => localStorage.clear());
   await p.reload();
   await p.waitForTimeout(2500);
-  const resumeShown = await p.locator('#resume-go').isVisible().catch(() => false);
+  const resumeShown = await p.locator('#resume-go').waitFor({ state: 'visible', timeout: 6000 }).then(() => true, () => false);
   if (resumeShown) await p.click('#resume-go');
   await p.waitForTimeout(800);
   const restored = await objs();
-  ok(restored && restored.length >= 1 && restored.includes('t:palm'), 'vault restores the map after storage is wiped');
+  ok(restored && restored.length >= 1 && restored.includes('t:palm'), `vault restores the map after storage is wiped (${restored ? restored.length : restored} pieces, card ${resumeShown})`);
 
   ok(!errs.length, `no page errors ${errs.join('; ')}`);
   await b.close();
