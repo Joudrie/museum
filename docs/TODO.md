@@ -69,7 +69,7 @@ Owns: new `src/restore.js`, `src/restorestudio.js`, `src/storage_room.js`. Claim
 - [ ] Hand-offs: Chat 6 and 7 deliver dirty finds; Chat 5 displays restored ones.
 
 ## CHAT 5: Display, exhibits and the aquarium
-Owns: `src/showcase.js`, `src/viewer.js`, `src/collections/render.js`, new `src/display*.js`. Claim: `open`
+Owns: `src/showcase.js`, `src/viewer.js`, `src/collections/render.js`, new `src/display*.js`. Claim: `claimed: 2026-10-29`
 - [ ] Display cases, plinths, specimen shelves, easels and tanks that **place collection entries in rooms** (entries already say how they display: wall, case, plinth).
 - [ ] **Aquarium** for caught fish: tanks in a room, fish swim, tap for the card; a giant tank wing.
 - [ ] Dinosaur skeleton assembled from dug bones; the big T. rex as a goal.
