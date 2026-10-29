@@ -8,6 +8,8 @@
 }
 
 :root {
+  font-variant-ligatures: none; /* belt and braces: the bundled font has none, and "fi" must never turn into a glyph */
+
   /* surfaces */
   --ui-bg: #1d1714;
   --ui-panel: #2a211d;

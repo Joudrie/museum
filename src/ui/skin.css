@@ -483,3 +483,21 @@ body .ask-buttons .ask-no {
   background: var(--ui-panel-2);
   box-shadow: inset 2px 2px 0 rgba(255, 240, 200, 0.16), inset -2px -2px 0 rgba(0, 0, 0, 0.4), 0 3px 0 var(--ui-shadow);
 }
+
+/* ---- conversation box: choices are the secondary bevel buttons, the "more" chevron is a pixel icon ---- */
+body #chat .chat-choices button {
+  color: var(--ui-ink);
+  text-align: left;
+  font-size: var(--fs-body);
+  background: var(--ui-panel-2);
+  border: 3px solid var(--ui-shadow);
+  border-radius: 0;
+  box-shadow: inset 2px 2px 0 rgba(255, 240, 200, 0.16), inset -2px -2px 0 rgba(0, 0, 0, 0.4), 0 3px 0 var(--ui-shadow);
+}
+body #chat .chat-choices button:active { transform: translateY(2px); }
+body #chat .chat-box {
+  border-radius: var(--ui-r);
+  box-shadow: inset 0 0 0 2px var(--ui-gold-lo), 0 4px 0 rgba(0, 0, 0, 0.35);
+}
+body #chat .chat-more { color: var(--ui-gold-hi); line-height: 0; }
+body #chat .chat-more .ui-ic { width: 14px; height: 14px; }
