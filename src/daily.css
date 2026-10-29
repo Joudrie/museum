@@ -26,14 +26,14 @@
 .daily-card h3 {
   margin: 0;
   color: var(--gold);
-  font-size: 15px;
+  font-size: var(--fs-body);
 }
 .daily-card .wide-btn {
   width: 100%;
 }
 .daily-note {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--fs-small);
   opacity: 0.85;
 }
 .daily-wheel-wrap {
@@ -56,7 +56,7 @@
   margin: -8px 0 0 -14px;
   width: 28px;
   text-align: center;
-  font-size: 13px;
+  font-size: var(--fs-small);
 }
 .daily-pointer {
   position: absolute;
@@ -84,7 +84,7 @@
 }
 .daily-poty i {
   opacity: 0.8;
-  font-size: 13px;
+  font-size: var(--fs-small);
 }
 #daily {
   z-index: 23;
@@ -101,7 +101,7 @@ button.daily-art {
   right: 6px;
   bottom: 6px;
   padding: 2px 6px;
-  font-size: 11px;
+  font-size: var(--fs-small);
   background: rgba(22, 16, 13, 0.8);
   border-radius: 4px;
 }

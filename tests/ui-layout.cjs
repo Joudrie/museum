@@ -17,7 +17,7 @@ const fail = (m) => (problems.push(m), console.log('  ✗ ' + m));
 (async () => {
   const runs = [
     { size: [390, 844], only: null },
-    ...(quick ? [] : [{ size: [360, 640], only: ['01-', '03-journal-tabs', '04-', '05-', '08-', '11-'] }, { size: [430, 932], only: ['01-', '04-', '08-'] }]),
+    ...(quick ? [] : [{ size: [360, 640], only: null }, { size: [430, 932], only: ['01-', '04-', '08-', '16b-', '28-', '43-'] }]),
   ];
   for (const run of runs) {
     console.log(`${run.size.join('x')}`);
@@ -44,6 +44,8 @@ const fail = (m) => (problems.push(m), console.log('  ✗ ' + m));
             b.minFont = Math.max(b.minFont, m.minFont);
           }
         } else if (run.size[0] === 390 && update) budget.screens[key] = { smallTargets: m.smallTargets, minFont: m.minFont };
+        // the other phone sizes have no budget: every screen is at the floor, so any slip is a failure
+        if (run.size[0] !== 390 && (m.smallTargets > 0 || m.minFont < 13)) return fail(`${name} at ${run.size.join('x')}: ${m.smallTargets} small targets (${(m.smallList || []).slice(0, 3).join('; ')}), smallest text ${m.minFont}px`);
         ok(`${name} (${m.smallTargets} small targets, smallest text ${m.minFont}px)`);
       },
     });

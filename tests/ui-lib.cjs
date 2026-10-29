@@ -49,6 +49,9 @@ const measure = (p) =>
     return { unlabelled: [...new Set(unlabelled)].slice(0, 8), smallTargets: small.length, smallList: small.slice(0, 12), minFont, tinyFonts: [...tiny], overflow: [...new Set(overflow)].slice(0, 6), badText: /undefined|NaN|\[object/.test(text), docOverflow: document.documentElement.scrollWidth > innerWidth + 1 };
   });
 
+// Settings → Look → Text size: Large (the same thing the settings switch does)
+const large = (p) => p.evaluate(() => { const s = JSON.parse(localStorage.getItem('curation.settings') || '{}'); s.text = 'large'; localStorage.setItem('curation.settings', JSON.stringify(s)); window.dispatchEvent(new CustomEvent('settings', { detail: { key: 'x', value: 1 } })); }).then(() => sleep(300));
+
 const SCREENS = {
   '01-world': async () => {},
   '02-hud-income': (p) => click(p, '#hud'),
@@ -87,6 +90,12 @@ const SCREENS = {
   // the look settings: large text and the left-handed layout
   '40-large-text-hud': async (p) => { await p.evaluate(() => { const s = JSON.parse(localStorage.getItem('curation.settings') || '{}'); s.text = 'large'; localStorage.setItem('curation.settings', JSON.stringify(s)); window.dispatchEvent(new CustomEvent('settings', { detail: { key: 'x', value: 1 } })); }); await sleep(300); await click(p, '#menu-btn'); },
   '41-large-text-settings': async (p) => { await p.evaluate(() => { const s = JSON.parse(localStorage.getItem('curation.settings') || '{}'); s.text = 'large'; localStorage.setItem('curation.settings', JSON.stringify(s)); window.dispatchEvent(new CustomEvent('settings', { detail: { key: 'x', value: 1 } })); }); await sleep(300); await click(p, '#menu-btn'); await click(p, '#settings-btn'); },
+  '44-large-journal': async (p) => { await large(p); await click(p, '#journal-btn'); },
+  '45-large-toolkit': async (p) => { await large(p); await click(p, '#build-btn'); },
+  '46-large-customize': async (p) => { await large(p); await click(p, '#home-btn'); },
+  '47-large-staff': async (p) => { await large(p); await p.evaluate(() => __game.scene.getScene('room').openStaff()); },
+  '48-large-field': async (p) => { await large(p); await p.evaluate(() => window.dispatchEvent(new CustomEvent('open-goals'))); },
+  '49-large-conversation': async (p) => { await large(p); await p.evaluate(() => { const s = __game.scene.getScene('room'); const n = s.npcs.find((n) => !n.staff && !n.famous); s.player.setPosition(n.s.x, n.s.y + 14); s.talkTo(n); }); await sleep(2200); await p.evaluate(() => { document.querySelector('#chat .chat-choices').innerHTML = '<button>Tell me about this painting</button><button>Here, take this</button><button>See you around</button>'; document.querySelector('#chat .chat-more').hidden = true; }); },
   '42-left-handed': async (p) => { await p.evaluate(() => { const s = JSON.parse(localStorage.getItem('curation.settings') || '{}'); s.leftHanded = true; localStorage.setItem('curation.settings', JSON.stringify(s)); window.dispatchEvent(new CustomEvent('settings', { detail: { key: 'x', value: 1 } })); }); await sleep(300); },
   // the richest museum: twelve-digit gold must not push the status strip off the screen
   '43-huge-numbers': async (p) => { await p.evaluate(() => localStorage.setItem('curation.coins', '123456789012')); await p.reload({ waitUntil: 'domcontentloaded' }); await sleep(3000); await click(p, '#hud'); },
