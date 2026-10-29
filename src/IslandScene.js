@@ -20,7 +20,7 @@ import { settings, hourNow } from './settings.js';
 import { animateWalker, footstep, dust } from './motion.js';
 import { Pet } from './pets.js';
 import { Fishing, catchOpen } from './fishing.js';
-import { startDig, readyIn } from './dig.js';
+import { startDig, readyIn, DIG_TILES } from './dig.js';
 import { openJournal } from './journal.js';
 import isle1 from './maps/isle-1.json';
 import mainIsland from './maps/main-island.json';
@@ -740,7 +740,7 @@ export class IslandScene extends Phaser.Scene {
   addDig(x, y, kind = 'mineral') {
     const key = `${this.mapId || 'one'}:${x},${y}`;
     const d = { key, kind, x: (x + 0.5) * T, y: (y + 0.5) * T, gx: x, gy: y };
-    d.img = this.place(readyIn(key) > 0 ? 'dig_spot@dug' : kind === 'fossil' ? 'dig_fossil' : 'dig_spot', x, y, { flat: true });
+    d.img = this.place(readyIn(key) > 0 ? 'dig_spot@dug' : kind === 'mineral' ? 'dig_spot' : `dig_${kind === 'fossil' ? 'fossil' : kind}`, x, y, { flat: true });
     this.digs.push(d);
   }
 
@@ -888,7 +888,7 @@ export class IslandScene extends Phaser.Scene {
       if (name.startsWith('animal_') && ANIMALS[name.slice(7)]) return this.islanders.push(this.animal(name.slice(7), o.x + T / 2, o.y + t.h - 3, this.islanders.length));
       if (PEOPLE[name] !== undefined) return this.islanders.push(this.islander(o.x + T / 2, o.y + t.h - 4, PEOPLE[name], this.islanders.length));
       if (name === 'museum') return this.mapMuseum(x, y, t);
-      if (name === 'dig_spot' || name === 'dig_fossil') return this.addDig(x, y, name === 'dig_fossil' ? 'fossil' : 'mineral');
+      if (DIG_TILES[name]) return this.addDig(x, y, DIG_TILES[name]);
       if (name === 'tall_grass' || name === 'tall_grass_front') {
         if (!this.grassCells.has(`${x},${y}`)) this.tallGrass(x, y);
         return;

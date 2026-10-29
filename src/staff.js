@@ -3,17 +3,17 @@
 // hire, each one costing more than the last) who keeps it spotless; without
 // one you mop up yourself.
 import { load, save } from './storage.js';
+import { JANITOR, GUIDE, CARPENTER_COST as CARP, UPGRADES, DIRT_PENALTY as PENALTY } from './economy.js';
 
 const DIRT_KEY = 'curation.dirt'; // { [roomIndex]: { t: last spawn (ms), spots: [{ id, c, r, kind }] } }
 const JANITOR_KEY = 'curation.janitor'; // { [roomIndex]: true } rooms with a janitor
-const EVERY = 90 * 60 * 1000; // a new spot every 90 minutes
 export const MAX_DIRT = 3;
-export const DIRT_PENALTY = 0.1; // each spot: -10% room income
+export const DIRT_PENALTY = PENALTY; // each spot: -10% room income
 
 export const janitors = () => Object.values(load(JANITOR_KEY, {})).filter(Boolean).length;
 export const covered = (rooms, i) => !!load(JANITOR_KEY, {})[i];
 // The next janitor's price: 100, 160, 260, 410, ...
-export const janitorCost = () => Math.round((100 * 1.6 ** janitors()) / 10) * 10;
+export const janitorCost = () => Math.round((JANITOR.base * JANITOR.growth ** janitors()) / 10) * 10;
 
 export function hireJanitor(i) {
   save(JANITOR_KEY, { ...load(JANITOR_KEY, {}), [i]: true });
@@ -22,6 +22,7 @@ export function hireJanitor(i) {
 export function resetJanitors() {
   save(JANITOR_KEY, {});
   save(STAFF_KEY, {});
+  save(UPGRADE_KEY, {});
 }
 
 // Other staff, hired from the staff board in the break room.
@@ -29,10 +30,11 @@ const STAFF_KEY = 'curation.staff'; // { guides: n, carpenter: bool }
 const staff = () => load(STAFF_KEY, {});
 export const guides = () => staff().guides || 0;
 export const maxGuides = (roomCount) => Math.floor(roomCount / 3); // one per 3 rooms
-export const guideCost = () => Math.round((300 * 1.7 ** guides()) / 10) * 10;
-export const GUIDE_BOOST = 0.1; // each tour guide: +10% income
+export const guideCost = () => Math.round((GUIDE.base * GUIDE.growth ** guides()) / 10) * 10;
+export const GUIDE_BOOST = GUIDE.boost; // base boost; guideBoost() adds training
+export const guideBoost = () => upgradeValue('training');
 export const hasCarpenter = () => !!staff().carpenter;
-export const CARPENTER_COST = 300;
+export const CARPENTER_COST = CARP;
 export function hireGuide() {
   save(STAFF_KEY, { ...staff(), guides: guides() + 1 });
 }
@@ -41,6 +43,20 @@ export function hireCarpenter() {
 }
 // Everyone on the payroll (they hang out in the break room).
 export const staffCount = () => janitors() + guides() + (hasCarpenter() ? 1 : 0);
+
+// Break-room upgrades (data in economy.js): level 0 uses `base`, level n uses effect[n-1].
+const UPGRADE_KEY = 'curation.upgrades'; // { [id]: level }
+export const upgradeLevel = (id) => load(UPGRADE_KEY, {})[id] || 0;
+export const upgradeValue = (id) => {
+  const u = UPGRADES[id];
+  const lvl = upgradeLevel(id);
+  return lvl ? u.effect[lvl - 1] : u.base;
+};
+export const upgradeCost = (id) => UPGRADES[id].cost[upgradeLevel(id)] ?? null; // null = maxed
+export function buyUpgrade(id) {
+  save(UPGRADE_KEY, { ...load(UPGRADE_KEY, {}), [id]: upgradeLevel(id) + 1 });
+}
+const every = () => upgradeValue('mops') * 60 * 1000; // ms between new messes
 
 function state(i) {
   return load(DIRT_KEY, {})[i] || { t: Date.now(), spots: [] };
@@ -55,7 +71,7 @@ export function dirtCount(rooms, i, now = Date.now()) {
   if (covered(rooms, i)) return 0;
   const st = load(DIRT_KEY, {})[i];
   if (!st) return 0;
-  return Math.min(MAX_DIRT, st.spots.length + Math.floor((now - st.t) / EVERY));
+  return Math.min(MAX_DIRT, st.spots.length + Math.floor((now - st.t) / every()));
 }
 
 // Place any new spots on free floor tiles and return the room's dirt.
@@ -67,8 +83,8 @@ export function roomDirt(rooms, i, fw, fd, free) {
     setState(i, { t: now, spots: [] });
     return [];
   }
-  let due = Math.floor((now - st.t) / EVERY);
-  st.t += due * EVERY;
+  let due = Math.floor((now - st.t) / every());
+  st.t += due * every();
   for (let tries = 0; due > 0 && st.spots.length < MAX_DIRT && tries < 40; tries++) {
     const c = Math.floor(Math.random() * fw);
     const r = 1 + Math.floor(Math.random() * Math.max(1, fd - 2));

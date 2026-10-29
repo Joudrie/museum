@@ -1358,7 +1358,7 @@ export function seasonFrames(name, tile, season) {
     return f.map(snowify);
   }
   if (season === 'autumn') {
-    if (DECIDUOUS.includes(name) && name !== 'maple_tree') return f.map((c, i) => recolor(c, green, AUTUMN, 900 + i));
+    if (DECIDUOUS.includes(name) && name !== 'maple_tree' && name !== 'cherry_tree') return f.map((c, i) => recolor(c, green, AUTUMN, 900 + i)); // (cherry trees stay pink)
     if (SHRUBS.includes(name)) return f.map((c) => recolor(c, green, AUTUMN.slice(1), 901));
     return null;
   }
@@ -1375,7 +1375,6 @@ const SEASON_TILES = {
   winter: { pine: 'pine_snow' },
   spring: { maple_tree: 'tree' },
   summer: { maple_tree: 'tree', cherry_tree: 'tree' },
-  autumn: { cherry_tree: 'maple_tree' },
 };
 export const seasonTile = (name, season) => SEASON_TILES[season]?.[name] || null;
 

@@ -24,8 +24,17 @@
       <button data-tool="fill">Fill</button>
       <button data-tool="move">Move</button>
       <button data-tool="pick">Pick</button>
+      <button data-tool="area">Area</button>
       <button data-tool="hand">Pan</button>
     </nav>
+    <div id="areabar" hidden>
+      <span id="area-text">Drag to choose an area</span>
+      <button id="area-copy">Copy</button>
+      <button id="area-cut">Cut</button>
+      <button id="area-del">Clear</button>
+      <button id="area-mirror">Mirror</button>
+      <button id="area-paste">Paste</button>
+    </div>
     <div id="selbar" hidden>
       <span id="sel-text">Selected</span>
       <button id="sel-turn" hidden>⟳ Turn</button>
@@ -39,6 +48,7 @@
       <div id="chosen">
         <canvas id="chosen-pic" width="48" height="48"></canvas>
         <div><b id="chosen-name">Pick something to paint</b><small id="chosen-meta">Open a list below</small></div>
+        <button id="chosen-fav" hidden aria-label="Favourite this piece">☆</button>
         <button id="chosen-turn" hidden aria-label="Turn this piece">⟳</button>
         <label class="brush">Brush <select id="brush"><option>1</option><option>2</option><option>3</option><option>5</option></select></label>
       </div>
@@ -67,6 +77,8 @@
         <div class="row">
           <label class="field small">Snap pieces <select id="snap"><option value="32">Tile</option><option value="16">Half tile</option><option value="1">Free</option></select></label>
           <label class="check"><input type="checkbox" id="grid-toggle" checked /> Grid</label>
+          <label class="check"><input type="checkbox" id="show-tiles" checked /> Ground</label>
+          <label class="check"><input type="checkbox" id="show-objs" checked /> Pieces</label>
         </div>
         <p class="hint">Two fingers pinch to zoom and drag to move around. Paint with one finger. Long maps are fine: up to 300 × 300 tiles.</p>
         <div class="row"><button id="credits-btn" class="link">Art credits</button><button id="back-game" class="link">Back to the game</button></div>
