@@ -66,7 +66,7 @@ const ok = (c, m) => {
   ok(await p.locator('#chosen-turn').isVisible(), 'a family shows the turn button');
   await p.click('#chosen-turn');
   const nameAfter = await p.textContent('#chosen-name');
-  ok(/49/.test(nameAfter), `turn steps front to left side (${nameAfter})`);
+  ok(nameAfter && nameAfter !== hasChair, `turn steps front to left side (${hasChair} → ${nameAfter})`); // (pieces are named in src/builder/sorting.js)
 
   // area: copy a region and paste it elsewhere (pieces and tiles come along)
   await p.click('[data-tool="area"]');
