@@ -3,12 +3,14 @@
 // `rise` is how many px the sprite sticks up above its footprint; `lvl` is the
 // Curator's Office level that unlocks it (default 1).
 import { load, save } from './storage.js';
+import { COLUMNS } from './columns.js';
 
 export const CATEGORIES = {
   seating: 'Seating',
   plants: 'Plants',
   lights: 'Lights',
   sculpture: 'Sculpture',
+  columns: 'Columns',
   relics: 'Relics',
   science: 'Science',
   display: 'Display',
@@ -16,6 +18,16 @@ export const CATEGORIES = {
   services: 'Services',
   seasonal: 'Seasonal',
 };
+
+// Free-standing columns, one for each design in columns.js (price and income by how grand it is).
+const COLUMN_PRICES = { doric: 150, ionic: 180, tuscan: 120, corinthian: 240, composite: 260, gilded: 600, malachite: 650, solomonic: 520, caryatid: 450, atlantean: 420, hathor: 380, persian: 400 };
+const COLUMN_ITEMS = Object.fromEntries(
+  Object.entries(COLUMNS).map(([id, c]) => {
+    const price = COLUMN_PRICES[id] || 220;
+    const income = Math.round(price / 12);
+    return [`column_${id}`, { name: c.name, cat: 'columns', w: 1, h: 1, rise: 60, price, income, lvl: price >= 400 ? 2 : 1, column: id, note: `${c.place} · +${income}/hr` }];
+  }),
+);
 
 export const ITEMS = {
   stool: { name: 'Stool', cat: 'seating', w: 1, h: 1, rise: 8, price: 5, income: 1 },
@@ -86,6 +98,7 @@ export const ITEMS = {
   xmas_tree: { name: 'Holiday tree', cat: 'seasonal', w: 1, h: 1, rise: 40, price: 120, income: 10, season: 'winter' },
   gifts: { name: 'Pile of gifts', cat: 'seasonal', w: 1, h: 1, rise: 18, price: 40, income: 4, season: 'winter' },
   flower_basket: { name: 'Flower basket', cat: 'seasonal', w: 1, h: 1, rise: 14, price: 35, income: 4, season: 'spring' },
+  ...COLUMN_ITEMS,
 };
 
 const ITEMS_KEY = 'curation.items'; // { [roomIndex]: [{ type, c, r, rot }] }
