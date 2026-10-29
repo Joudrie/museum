@@ -1,0 +1,112 @@
+{
+  "status": "draft",
+  "collection": "archaeology",
+  "slug": "funerary-portrait-of-a-young-girl",
+  "notes": "region: Roman Egypt. a portrait made for a burial: describe plainly. era removed: the paintings date buckets do not fit antiquity; Chat 8 defines this collection",
+  "entry": {
+    "id": "archaeology:funerary-portrait-of-a-young-girl",
+    "collection": "archaeology",
+    "title": "Funerary Portrait of a Young Girl",
+    "year": "c. 25–37 CE",
+    "ratio": 0.4416,
+    "blurb": "Egyptian-style burial customs and arts persisted throughout Greek, Roman, and Byzantine rule over Egypt (305 BCE–641 CE).",
+    "rarity": 1,
+    "tags": [
+      "egypt",
+      "portrait"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1971.137/1971.137_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. John L. Severance Fund",
+      "url": "https://clevelandart.org/art/1971.137"
+    },
+    "value": 5,
+    "facts": [
+      "This painting can be dated based on the hairstyle popular at the end of the reign of Emperor Tiberius (reigned 14–37 CE).",
+      "Transforming the spirit—not beautifying the mortal body—may have been the purpose of adding golden lips and jewelry to this painting.",
+      "The woman depicted in this panel lived between cultures."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "145925",
+    "title": "Funerary Portrait of a Young Girl",
+    "maker": "",
+    "year": "c. 25–37 CE",
+    "medium": "encaustic on linden wood",
+    "dimensions": "Overall: 39.4 x 17.4 cm (15 1/2 x 6 7/8 in.)",
+    "widthCm": 17.4,
+    "heightCm": 39.4,
+    "ratio": 0.4416,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1971.137/1971.137_web.jpg",
+    "imageWidth": 469,
+    "imageHeight": 900,
+    "pageUrl": "https://clevelandart.org/art/1971.137",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. John L. Severance Fund",
+    "description": "Transforming the spirit—not beautifying the mortal body—may have been the purpose of adding golden lips and jewelry to this painting. Egyptian-style burial customs and arts persisted throughout Greek, Roman, and Byzantine rule over Egypt (305 BCE–641 CE). The woman depicted in this panel lived between cultures. Her or her family’s choice of mummification reflected historical Egyptian practices of creating a physical “duplicate” for the deceased’s soul to rest in, and their decision to color her lips gold here may symbolize how death transformed her into an akh (effective spirit). In contrast, the choice of her clothing and hairstyle showed her embrace of contemporary ideals of Hellenic (Greco-Roman) Egyptian identity. This painting can be dated based on the hairstyle popular at the end of the reign of Emperor Tiberius (reigned 14–37 CE).",
+    "culture": "Egypt, Roman Empire, late Tiberian",
+    "classification": "Painting",
+    "tags": [
+      "Egyptian and Ancient Near Eastern Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Funerary Portrait of a Young Girl",
+      "maker": "",
+      "year": "c. 25–37 CE",
+      "medium": "encaustic on linden wood",
+      "dimensions": "Overall: 39.4 x 17.4 cm (15 1/2 x 6 7/8 in.)",
+      "culture": "Egypt, Roman Empire, late Tiberian",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. John L. Severance Fund",
+      "description": "Transforming the spirit—not beautifying the mortal body—may have been the purpose of adding golden lips and jewelry to this painting. Egyptian-style burial customs and arts persisted throughout Greek, Roman, and Byzantine rule over Egypt (305 BCE–641 CE). The woman depicted in this panel lived between cultures. Her or her family’s choice of mummification reflected historical Egyptian practices of creating a physical “duplicate” for the deceased’s soul to rest in, and their decision to color her lips gold here may symbolize how death transformed her into an akh (effective spirit). In contrast, the choice of her clothing and hairstyle showed her embrace of contemporary ideals of Hellenic (Greco-Roman) Egyptian identity. This painting can be dated based on the hairstyle popular at the end of the reign of Emperor Tiberius (reigned 14–37 CE).",
+      "tombstone": "Funerary Portrait of a Young Girl, c. 25–37 CE. Egypt, Roman Empire, late Tiberian. Encaustic on linden wood; overall: 39.4 x 17.4 cm (15 1/2 x 6 7/8 in.). The Cleveland Museum of Art, John L. Severance Fund, 1971.137",
+      "funFact": "",
+      "didYouKnow": "This painting can be dated based on the hairstyle popular at the end of the reign of Emperor Tiberius (reigned 14–37 CE).",
+      "creators": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "Egyptian-style burial customs and arts persisted throughout Greek, Roman, and Byzantine rule over Egypt (305 BCE–641 CE).",
+      "quote": "Egyptian-style burial customs and arts persisted throughout Greek, Roman, and Byzantine rule over Egypt (305 BCE–641 CE).",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "This painting can be dated based on the hairstyle popular at the end of the reign of Emperor Tiberius (reigned 14–37 CE).",
+      "quote": "This painting can be dated based on the hairstyle popular at the end of the reign of Emperor Tiberius (reigned 14–37 CE).",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Transforming the spirit—not beautifying the mortal body—may have been the purpose of adding golden lips and jewelry to this painting.",
+      "quote": "Transforming the spirit—not beautifying the mortal body—may have been the purpose of adding golden lips and jewelry to this painting.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The woman depicted in this panel lived between cultures.",
+      "quote": "The woman depicted in this panel lived between cultures.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "unknown collection \"archaeology\"",
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

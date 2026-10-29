@@ -1,0 +1,111 @@
+{
+  "status": "draft",
+  "collection": "archaeology",
+  "slug": "front-face-of-a-stela-free-standing-stone-with-r",
+  "notes": "region: Maya (Guatemala). era removed: the paintings date buckets do not fit antiquity; Chat 8 defines this collection",
+  "entry": {
+    "id": "archaeology:front-face-of-a-stela-free-standing-stone-with-r",
+    "collection": "archaeology",
+    "title": "Front Face of a Stela (Free-standing Stone with Relief)",
+    "year": "692",
+    "ratio": 0.6644,
+    "blurb": "She originally stood in a plaza next to a portrait of her spouse (see photo), with whom she ruled El Perú-Waka’, a provincial Maya town.",
+    "rarity": 1,
+    "tags": [
+      "mesoamerica"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1967.29/1967.29_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Purchase from the J. H. Wade Fund",
+      "url": "https://clevelandart.org/art/1967.29"
+    },
+    "value": 5,
+    "facts": [
+      "A member of the powerful dynasty of a nearby Maya center, she seems to have held higher authority than her husband, serving as a military governor.",
+      "Her costume reflects her status: the headdress has a fan of green quetzal feathers and her jewelry probably refers to jade-both among the most prized of ancient materials.",
+      "Jade beads also may form the net over her garment, belted with the head of a fish-like creature."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "143381",
+    "title": "Front Face of a Stela (Free-standing Stone with Relief)",
+    "maker": "",
+    "year": "692",
+    "medium": "limestone",
+    "dimensions": "Overall: 274.4 x 182.3 cm (108 1/16 x 71 3/4 in.)",
+    "widthCm": 182.3,
+    "heightCm": 274.4,
+    "ratio": 0.6644,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1967.29/1967.29_web.jpg",
+    "imageWidth": 616,
+    "imageHeight": 900,
+    "pageUrl": "https://clevelandart.org/art/1967.29",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Purchase from the J. H. Wade Fund",
+    "description": "In stone sculpture, Maya rulers celebrated the milestones of their reigns with flamboyant portraits like this image of a royal woman, created to mark the passage of a twenty-year period known as the k’atun. She originally stood in a plaza next to a portrait of her spouse (see photo), with whom she ruled El Perú-Waka’, a provincial Maya town. A member of the powerful dynasty of a nearby Maya center, she seems to have held higher authority than her husband, serving as a military governor. Her costume reflects her status: the headdress has a fan of green quetzal feathers and her jewelry probably refers to jade-both among the most prized of ancient materials. Jade beads also may form the net over her garment, belted with the head of a fish-like creature. Completing the costume are the scepter and shield she grasps in her hands. The dwarf at her side may be a court attendant. The hieroglyphic text refers to important dynastic dates. The powerful Maya queen shown on this stela is known as Lady K’abel.",
+    "culture": "Mesoamerica, Guatemala, Department of the Petén, El Perú (also known as Waka'), Maya (250-900), Classic period (200-1000)",
+    "classification": "Sculpture",
+    "tags": [
+      "Art of the Americas"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Front Face of a Stela (Free-standing Stone with Relief)",
+      "maker": "",
+      "year": "692",
+      "medium": "limestone",
+      "dimensions": "Overall: 274.4 x 182.3 cm (108 1/16 x 71 3/4 in.)",
+      "culture": "Mesoamerica, Guatemala, Department of the Petén, El Perú (also known as Waka'), Maya (250-900), Classic period (200-1000)",
+      "classification": "Sculpture",
+      "credit": "The Cleveland Museum of Art. Purchase from the J. H. Wade Fund",
+      "description": "In stone sculpture, Maya rulers celebrated the milestones of their reigns with flamboyant portraits like this image of a royal woman, created to mark the passage of a twenty-year period known as the k’atun. She originally stood in a plaza next to a portrait of her spouse (see photo), with whom she ruled El Perú-Waka’, a provincial Maya town. A member of the powerful dynasty of a nearby Maya center, she seems to have held higher authority than her husband, serving as a military governor. Her costume reflects her status: the headdress has a fan of green quetzal feathers and her jewelry probably refers to jade-both among the most prized of ancient materials. Jade beads also may form the net over her garment, belted with the head of a fish-like creature. Completing the costume are the scepter and shield she grasps in her hands. The dwarf at her side may be a court attendant. The hieroglyphic text refers to important dynastic dates. The powerful Maya queen shown on this stela is known as Lady K’abel.",
+      "tombstone": "Front Face of a Stela (Free-standing Stone with Relief), 692. Mesoamerica, Guatemala, Department of the Petén, El Perú (also known as Waka'), Maya (250-900), Classic period (200-1000). Limestone; overall: 274.4 x 182.3 cm (108 1/16 x 71 3/4 in.). The Cleveland Museum of Art, Purchase from the J. H. Wade Fund, 1967.29",
+      "funFact": "",
+      "didYouKnow": "The powerful Maya queen shown on this stela is known as Lady K’abel.",
+      "creators": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "She originally stood in a plaza next to a portrait of her spouse (see photo), with whom she ruled El Perú-Waka’, a provincial Maya town.",
+      "quote": "She originally stood in a plaza next to a portrait of her spouse (see photo), with whom she ruled El Perú-Waka’, a provincial Maya town.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "A member of the powerful dynasty of a nearby Maya center, she seems to have held higher authority than her husband, serving as a military governor.",
+      "quote": "A member of the powerful dynasty of a nearby Maya center, she seems to have held higher authority than her husband, serving as a military governor.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Her costume reflects her status: the headdress has a fan of green quetzal feathers and her jewelry probably refers to jade-both among the most prized of ancient materials.",
+      "quote": "Her costume reflects her status: the headdress has a fan of green quetzal feathers and her jewelry probably refers to jade-both among the most prized of ancient materials.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Jade beads also may form the net over her garment, belted with the head of a fish-like creature.",
+      "quote": "Jade beads also may form the net over her garment, belted with the head of a fish-like creature.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "unknown collection \"archaeology\"",
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

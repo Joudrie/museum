@@ -146,6 +146,8 @@ Scenes (`src/main.js`):
   quotable description; Met and Commons ones are flagged "needs a real hook". Live APIs: the Met rate-limits (HTML block page) and Cleveland's `fields=` param 500s.
 - **Rarity and Painting of the Day (Chat 1, #137):** `content/rarity-proposals.json` (49 paintings, status `proposed`; `tools/apply_rarity.mjs` applies it only once approved) and
   `tools/potd.mjs` (`build` drafts quoted lines into `content/potd/draft.json`, `publish` writes `src/collections/data/potd.json` from approved ones, `pickFor(date, list)` rotates). Chat 13 shows it.
+- **Archaeology drafts (Chat 1):** `content/batches/archaeology-batch.json` built 25 Cleveland objects (Egypt, Near East, Greece and Rome, ancient Americas) in
+  `content/review/archaeology/`, all draft, `era` left blank, waiting for Chat 8 to define the collection. Natural history has no quotable open source yet.
 - `check_images.mjs` flags broken, tiny, heavy and wrong-shaped images for every painting. **Not run yet on the
   49 paintings** (no network here); `content/batches/first-batch.json` (12 works, 9+ regions) is waiting to be built.
 - Test: `node tests/content.cjs` (no browser, no network).
