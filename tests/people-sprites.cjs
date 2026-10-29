@@ -55,6 +55,10 @@ const seeded = (n) => (k) => {
     }),
   );
   check(!bad.length, `${drawn} people (${people.PEOPLE_LIST.length} variants x 3) draw in every view and frame`, `drawing problems: ${bad.slice(0, 8).join('; ')}`);
+  // a class written twice silently replaces the first one
+  const keys = [...fs.readFileSync(path.join(__dirname, '..', 'src', 'people', 'classes.js'), 'utf8').matchAll(/^  ([a-z0-9]+): \{$/gm)].map((k) => k[1]);
+  const twice = keys.filter((k, i) => keys.indexOf(k) !== i);
+  check(!twice.length, 'every class has its own name', `classes written twice: ${twice.join(', ')}`);
   const classes = Object.keys(people.CLASSES).length;
   check(classes >= 54 && people.PEOPLE_LIST.length >= 130, `${classes} classes, ${people.PEOPLE_LIST.length} variants`, `only ${classes} classes / ${people.PEOPLE_LIST.length} variants`);
   // every part offered in a menu draws something different from no part at all

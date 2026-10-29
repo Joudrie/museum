@@ -206,7 +206,7 @@ Owns: new `src/people/`, the character section of `src/art.js` (looks, `makeChar
 - [x] (this PR) Classes placeable in the builder's People lists and living on islands (work poses, chat with their job title); a People tab in `art.html`. Not yet: spawning them in museum rooms or on the expedition maps.
 - [x] (this PR) Tier 2: dig, field and expedition; museum professions (sections E, G): 44 more classes, 98 in all, 227 variants.
 - [x] (this PR) Tier 3: visitors and townspeople; food and market (sections J, H): 39 more classes, 137 in all, 312 variants.
-- [ ] Tier 4: arts and performance; science and medicine; artisans (sections I, F, C).
+- [x] (this PR) Tier 4: arts and performance; science and medicine; artisans (sections I, F, C): 50 more classes, 187 in all, 402 variants. Raised arms now keep the outfit's sleeve (bare arms stay bare); a test catches a class name used twice (the artist had replaced the house painter).
 - [ ] Tier 5: history; fantasy and seasonal; crews (sections K, L, M).
 
 ## CHAT 18: Progression evidence (measure first, then design)
