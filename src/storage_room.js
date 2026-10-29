@@ -1,11 +1,14 @@
 // Storage: what you hold right now against everything you have ever collected
 // (the codex). Dirty pieces wait here for the Restoration Studio; restored
 // ones are ready for display. Shown as a journal tab (see journal.js).
-import { inventory } from './restore.js';
+import { inventory, dirtyItems } from './restore.js';
 import { collect } from './collections/codex.js';
 import { list, RARITY } from './collections/index.js';
 import { fillPicture } from './collections/render.js';
 import { openStudio } from './restorestudio.js';
+
+/** How many pieces are waiting in the studio (shown on the journal tab). */
+export const dirtyTotal = () => dirtyItems().reduce((n, x) => n + x.n, 0);
 
 const mk = (tag, cls, text) => Object.assign(document.createElement(tag), { className: cls || '', textContent: text ?? '' });
 

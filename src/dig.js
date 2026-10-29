@@ -3,10 +3,11 @@
 // it goes into the journal. A spot rests for a while after it has been dug.
 import { load, save } from './storage.js';
 import { list, RARITY } from './collections/index.js';
-import { collect, count } from './collections/codex.js';
+import { collect, count, ownedCount } from './collections/codex.js';
 import { drawEntry } from './collections/render.js';
 import { sfx } from './music.js';
 import { haptic } from './ui.js';
+import { addCoins } from './wallet.js';
 
 const KEY = 'curation.digs'; // { spotKey: readyAt (ms) }
 const PARTS = 'curation.digparts'; // { entryId: parts found so far } for big finds that take several spots
@@ -21,10 +22,29 @@ export const TOOLS = {
   trowel: { name: 'Trowel', reach: 34, flat: 1, need: 6, note: 'Clears dirt faster. Plain odds.' },
   pick: { name: 'Pick', reach: 52, flat: 1.2, need: 16, note: 'Very fast, but it favours the common finds.' },
 };
-const DIG_COLLECTIONS = () => ['mineral', 'fossil', 'pottery', 'coin', 'arrowhead', 'shell', 'meteorite'];
+const DIG_COLLECTIONS = () => ['mineral', 'fossil', 'pottery', 'coin', 'arrowhead', 'shell', 'meteorite', 'map'];
 /** How many different dug things you have found so far (decides which tools you have). */
 export const foundCount = () => DIG_COLLECTIONS().reduce((n, c) => n + count(c), 0);
 export const toolUnlocked = (t, found = foundCount()) => found >= (TOOLS[t]?.need ?? Infinity);
+
+// Today's dig goal: gentle, a few coins for a few digs, no streak and nothing lost if you skip a day.
+const DAILY = 'curation.digdaily'; // { day, n, paid }
+export const DAILY_GOAL = 3;
+export const DAILY_GOLD = 120;
+const dayNow = () => Math.floor(Date.now() / 864e5);
+export function dailyDigs() {
+  const d = load(DAILY, {});
+  return d.day === dayNow() ? { n: d.n || 0, paid: !!d.paid } : { n: 0, paid: false };
+}
+/** Counts a finished dig toward today's goal. Returns { n, goal, reached } (reached: this dig paid out). */
+export function recordDig() {
+  const { n, paid } = dailyDigs();
+  const next = n + 1;
+  const reached = !paid && next >= DAILY_GOAL;
+  save(DAILY, { day: dayNow(), n: next, paid: paid || reached });
+  if (reached) addCoins(DAILY_GOLD);
+  return { n: next, goal: DAILY_GOAL, reached };
+}
 
 export const partsOf = (id) => load(PARTS, {})[id] || 0;
 
@@ -34,7 +54,7 @@ export const readyIn = (key, now = Date.now()) => Math.max(0, (load(KEY, {})[key
 export const DIG_KINDS = {
   mineral: { collections: ['mineral'] },
   fossil: { collections: ['fossil'] },
-  ruin: { collections: ['pottery', 'coin', 'arrowhead'] },
+  ruin: { collections: ['pottery', 'coin', 'arrowhead', 'map'] },
   shore: { collections: ['shell'] },
   crater: { collections: ['meteorite'] },
 };
@@ -191,6 +211,12 @@ function setup(key, { onClose, onFound, entry, tool }) {
     const t = load(KEY, {});
     t[key] = Date.now() + REST;
     save(KEY, t);
+    if (entry.collection === 'map') {
+      const have = entriesFor('map').filter((e) => ownedCount(e.id) > 0).length;
+      q('.dig-note').textContent += have >= 4 ? ' All four pieces! Look for the X on an island.' : ` Map pieces: ${have} of 4.`;
+    }
+    const day = recordDig();
+    q('.dig-note').textContent += day.reached ? ` Daily dig goal done: +${DAILY_GOLD} gold!` : day.n < day.goal ? ` Today's digs: ${day.n} of ${day.goal}.` : '';
   };
 
   let last = null;

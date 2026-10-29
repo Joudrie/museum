@@ -2857,3 +2857,28 @@ body.outside #hud {
     transform: translateY(3px);
   }
 }
+
+#detector {
+  position: fixed;
+  right: 12px;
+  top: 124px;
+  z-index: 12;
+  padding: 6px 10px;
+  font: inherit;
+  font-size: 13px;
+}
+#detector.mini {
+  padding: 6px 8px;
+}
+#detector[data-heat='1'] {
+  color: #9ad0ff;
+}
+#detector[data-heat='2'] {
+  color: #ffe9a8;
+}
+#detector[data-heat='3'] {
+  color: #ffb060;
+}
+#detector[data-heat='4'] {
+  color: #ff7a5a;
+}

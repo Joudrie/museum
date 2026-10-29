@@ -13,6 +13,7 @@ import coins from './data/coins.js';
 import arrowheads from './data/arrowheads.js';
 import shells from './data/shells.js';
 import meteorites from './data/meteorites.js';
+import mapfragments from './data/mapfragments.js';
 import insects from './data/insects.js';
 import stamps from './data/stamps.js';
 import ships from './data/ships.js';
@@ -25,7 +26,7 @@ import visitors from './data/visitors.js';
 export { RARITY } from './schema.js';
 
 // A data file exports one pack ({ collection, sets, entries }) or a list of them.
-const PACKS = [paintings, fish, minerals, fossils, pottery, coins, arrowheads, shells, meteorites, insects, stamps, ships, glassflowers, armour, clocks, inventions, visitors];
+const PACKS = [paintings, fish, minerals, fossils, pottery, coins, arrowheads, shells, meteorites, mapfragments, insects, stamps, ships, glassflowers, armour, clocks, inventions, visitors];
 
 const COLLECTIONS = new Map();
 const ENTRIES = new Map();

@@ -3,7 +3,7 @@
 // famous visitors are a collection too.
 import { QUESTS, activeQuests, claimedCount } from './quests.js';
 import { collectionTab, collectionTabs, markTabViewed, newInTab } from './collections/tab.js';
-import { storageTab } from './storage_room.js';
+import { storageTab, dirtyTotal } from './storage_room.js';
 import { shopTab } from './collections/shoptab.js';
 import { codexTab } from './collections/codextab.js';
 import { registerRenderer } from './collections/render.js';
@@ -32,7 +32,7 @@ registerRenderer('visitor', (image, scale) => {
 
 // Goals first, then each collection by its order (visitors are a collection too).
 function tabList() {
-  const all = [{ id: 'goals', label: 'Goals', order: 0 }, { id: 'codex', label: 'Codex', order: 0.5 }, { id: 'storage', label: 'Storage', order: 90 }, { id: 'shop', label: 'Shop', order: 91 }, ...collectionTabs()];
+  const all = [{ id: 'goals', label: 'Goals', order: 0 }, { id: 'codex', label: 'Codex', order: 0.5 }, { id: 'storage', label: dirtyTotal() ? `Storage (${dirtyTotal()})` : 'Storage', order: 90 }, { id: 'shop', label: 'Shop', order: 91 }, ...collectionTabs()];
   return all.sort((a, b) => a.order - b.order);
 }
 

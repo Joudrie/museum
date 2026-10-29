@@ -38,9 +38,9 @@ Owns: `tools/`, `content/`, `docs/CONTENT*.md`, `public/paintings/`, `src/collec
 
 ## CHAT 2: Builder and ground tools
 Owns: `src/builder/`, `builder.html`, `public/builder/`, `tools/build_palette.py`, `src/mapformat.js`. Claim: `claimed: 2026-10-29`
-- [ ] **Turn families (started, #117: 4 armchair colours verified; more sets to check with `tools/rotation_sheet.py`):** `public/builder/rotations.json` links the sides of one object (one chair so far). Find the true sets in the free packs (verify each by eye, never auto-group), add them. Keep the file format so the user's new sprites drop in.
+- [ ] **Turn families (checked seating, decor, tables, shelves: the armchairs are the only complete 4-side sets; sofas and chairs have no back or no matching front, the rest are composites or colour variants. Revisit when the user's new sprites land) (started, #117: 4 armchair colours verified; more sets to check with `tools/rotation_sheet.py`):** `public/builder/rotations.json` links the sides of one object (one chair so far). Find the true sets in the free packs (verify each by eye, never auto-group), add them. Keep the file format so the user's new sprites drop in.
 - [x] Search box for pieces; recently used at the top; favourites. (#150)
-- [ ] **Grass that blends** into painted dirt and rock is in (`src/groundblend.js`, used by builder and game; #132). Still open: other ground types have no edge tiles yet; jagged rocks instead of round ones.
+- [ ] **Grass that blends** into painted dirt and rock is in (`src/groundblend.js`, used by builder and game; #132). Jagged rocks added as new pieces (Jagged rock, 2×2, Rock spire; the round ones stay because maps use them) (#166). Still open: other ground types have no edge tiles yet.
 - [ ] Every ground type, path block and furniture piece is its own named, placeable item (so the user can redraw them one by one).
 - [x] Builder palette organisation (duplicate lists merged, "What's new" row from `public/builder/whatsnew.json`; a Dig sites list waits for Chat 6's tiles) (#120).
 - [x] Copy / paste regions, multi-select move (cut + paste), layers view (menu → Options: Ground / Pieces), grid toggle, measure (the Area tool shows W×H). Mirror the copied area is in; rotating a whole area is not (sprites don't turn without a family) (#121).
@@ -50,7 +50,7 @@ Owns: `src/builder/`, `builder.html`, `public/builder/`, `tools/build_palette.py
 
 ## CHAT 3: Quality, performance and polish
 Owns: `tests/`, `.github/`, `vite.config.js`, `src/settings*.js`, `src/ui.js`. Claim: `claimed: 2026-10-29`
-- [ ] **Stabilise the flaky tests** (playtest, smoke "cottage door"). Find the real race; don't just retry.
+- [x] **Stabilise the flaky tests** (playtest, smoke "cottage door"). Real causes: walking took one big step per slow frame and jumped over the strip in front of the door (now sub-steps of 3 px), and the ambient life probed `isPond` past the island edge and crashed (now bounds-checked). (#170)
 - [ ] Phone performance: measure FPS on huge islands, many NPCs and lighting (today's numbers are the busiest room only). Set budgets and fix.
 - [ ] Tests for dig, fossils, turn families and the content pipeline; CI that runs content, collections and gaps on every PR.
 - [ ] Save safety: versioned saves and corrupt-save recovery for every store (`curation.digs`, codex, builder).
@@ -82,12 +82,12 @@ Owns: `src/showcase.js`, `src/viewer.js`, `src/collections/render.js`, new `src/
 ## CHAT 6: Digging v2 and puzzle mechanics
 Owns: `src/dig.js`, `src/puzzles*.js`, `src/collections/data/{minerals,fossils}.js`. Claim: `claimed: 2026-10-29`
 - [x] More finds as data collections: pottery shards, coins, arrowheads, shells, meteorites (amber was already a fossil) (PR 122). Dig kinds: mineral, fossil, ruin, shore, crater.
-- [x] Dig tools (brush, trowel, pick) that change speed and what turns up; a bone that needs several spots to complete (PR 123).
-- [x] Bigger dig sites: a cliff face or trench worked across several tiles (touching spots of one kind form a site; dig them all in one rest period for a bonus rare find) (PR 123). A dig-site sandbox map is still to do (see Needs Sean).
-- [ ] Metal-detector hunt (warmer / colder); map fragments (collect 4 and the X appears).
-- [x] Puzzle pieces as builder tiles and runtime: push blocks, boulders to smash, pressure plates and levers, iron gates, ice sliding, fog that clears as you walk, riddles from NPCs, mazes (hedges; build them in the builder) (PR 150). `src/puzzles.js`; the test bed is `content/maps/puzzle-yard.json`.
+- [x] Dig tools (brush, trowel, pick) that change speed and what turns up; a bone that needs several spots to complete (PR 145).
+- [x] Bigger dig sites: a cliff face or trench worked across several tiles (touching spots of one kind form a site; dig them all in one rest period for a bonus rare find) (PR 145). A dig-site sandbox map is still to do (see Needs Sean).
+- [x] Metal-detector hunt (warmer / colder); map fragments (collect 4 and the X appears) (PR 169).
+- [x] Puzzle pieces as builder tiles and runtime: push blocks, boulders to smash, pressure plates and levers, iron gates, ice sliding, fog that clears as you walk, riddles from NPCs, mazes (hedges; build them in the builder) (PR 157). `src/puzzles.js`; the test bed is `content/maps/puzzle-yard.json`.
 - [ ] Dig spots in the builder palette under "Dig sites" (done, PR 106); spots show their rest time; daily dig goals.
-- [ ] Finds arrive dirty where Chat 4 expects them (`dirty: true` on a stack).
+- [x] Finds arrive dirty where Chat 4 expects them (`dirty: true` on the entry; pottery, coins, stone tools, meteorites, skeletons) (PR 122).
 
 ## CHAT 7: Expeditions, leads and expedition islands
 Owns: new `src/expedition*.js`, `src/leads.js`, `src/maps/` (new islands). Claim: `claimed: 2026-10-29`
@@ -139,7 +139,7 @@ Owns: `src/famous.js`, `src/lines.js`, `src/quests.js`, `src/talk.js`, `src/staf
 Owns: `src/weather.js`, `src/lighting.js`, `src/ambient.js`, `src/music.js`, `src/foliage.js`, `src/critters.js`. Claim: `claimed: 2026-10-29`
 - [ ] Seasons on the real calendar (snow on the lawn, fall leaves, holiday decor, seasonal visitors like trick-or-treaters). Snow, fall leaves and recoloured trees already exist; **cherry trees stay pink in autumn (done, this PR)**. **Halloween (Oct 24-31): jack-o'-lanterns at the museum doors and costumed trick-or-treat kids; winter (Dec 18-26): woolly hats (done, this PR; `holiday()` in weather.js, `?holiday=halloween|winter`).** Still to do: winter lights, other holidays.
 - [ ] Daily rhythm (Animal Crossing / Stardew feel); weather effects inside and outside; day / night polish. **Rain / snow now shade the light inside and out, and stormy rainy days have distant thunder with a faint flash (done, this PR).** **Daily rhythm: fewer visitors early and late, busiest 12-17, a few more on rainy days (done, this PR; `crowdShift`).**
-- [ ] Per-room music and ambience; sound effects pass; a mute and volume mix.
+- [x] Per-room music and ambience; sound effects pass; a mute and volume mix. Done: music per room and the mute + music/sfx sliders already existed; added generated birdsong by day and crickets at night outside (this PR); thunder earlier. All audio stays generated, no files.
 - [x] Lighting performance on phones (High / Low / Off already exist). Done, this PR: High drops to Low for the visit if the game stays under ~22 fps for 5 s (`watchSpeed` in lighting.js). Measured in headless 390x844 at 21:00 (avg frame ms, high / low / off): 40 / 41 / 33, so Low saves little there; Off is the real saver.
 - [ ] Critters, birds, fish and bugs that live on the islands and in the garden.
 - [ ] Waterfalls, fountains, swans, fireflies and other life. Swan on the pond done (this PR); fireflies and fountain lights already existed. Still to do: waterfalls.
@@ -149,7 +149,7 @@ Owns: `src/staffmenu.js`, `src/officemenu.js`, `src/office.js`, `src/incomemenu.
 - [x] Break-room upgrade menu (slower mess, guide training, carpenter toolbox); Curator's Office level costs and unlocks now in `src/economy.js` (#126).
 - [x] Gift shop, food court stall, kids' discovery table and lecture stage as Services items (max 1 each, rules in `SERVICES` in `src/economy.js`); coffee depth via the Better beans upgrade (#144). Not done: library and archive (the Library room exists; where the stored collection lives belongs with Chats 5 and 8); the lecture stage pays per famous visitor met but has no live talk event yet.
 - [x] Income formula numbers in `src/economy.js`; 8-hour cap messaging (welcome-back toast, FULL flag, income-menu note); "Collect all" is now free of ads and keeps a 15% fee (#128).
-- [x] Security: four tiers (none, dummy cameras, cameras, alarm) in `src/economy.js`; stopped thieves at camera tiers are caught for a gold bounty (#135).
+- [x] Security: four tiers (none, dummy cameras, cameras, alarm) in `src/economy.js`; stopped thieves at camera tiers are caught for a gold bounty (#166).
 - [ ] Late-game sink: frame your own artwork (very expensive). Parked: the game has no way to make your own artwork yet, so it is a question under Needs Sean.
 - [ ] ON HOLD (needs the user): gems as time (skip construction, "X days of income"), rewarded ads, cosmetics, a seasonal exhibition pass, crates with odds and pity. Rule: **no pay-to-win; never a gem or crate economy as the core.**
 
@@ -184,6 +184,9 @@ Owns: `assets/vendor/`, `docs/ASSETS.md`, `tools/extract_sprites.py`, `tools/` s
 Mini-games (Mop Rush, No Flash!, Restoration-as-minigame, Crate Tetris, Hang it Straight, Tour Guide, Night Watch, Catch the Thief, Paparazzi) · gems, ads, cosmetics, exhibition pass, crates · multiplayer / auctions · a sequel where the museum is part of a city · menu redesign · art direction and hiring.
 
 ## Needs Sean (parked questions; chats keep working)
+- **Chat 6:** defaults I picked, all in `src/dig.js` / `src/puzzles-hunt.js` for easy change: trowel unlocks at 6 different dug finds, pick at 16, metal detector at 10; digs rest 10 min; daily dig goal is 3 digs for 120 gold; 3 things buried per island per day; a site bonus needs 3+ touching dig tiles.
+- **Chat 6:** the one `x_mark` tile on Main Island (and one on Island One) is now the map-fragment treasure and stays hidden until you hold four map pieces. Do you want it to stay, move, or should I use a different tile?
+- **Chat 6:** the Puzzle yard test island (`content/maps/puzzle-yard.json`) is not in the boat yet; it needs the builder's import (Chat 2) or a boat entry (Chat 7). Dig-site sandbox: same file.
 - **Chat 12:** what is "your own artwork" for the late-game frame sink: a drawing the player makes in the game, a photo they upload, or a painting they restore? Until you say, it is not built.
 - **Chat 12:** the Library/archive (where the stored collection lives) and a live lecture-hall talk event are not built; the stage only pays per famous visitor met.
 - **Review tonight:** the 82 painting drafts (27 earlier + 55 from batches 3 to 5; rarity for each) and which of the 11 flagged images to replace (`content/image-proposals.md`).

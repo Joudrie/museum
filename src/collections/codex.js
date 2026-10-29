@@ -38,7 +38,9 @@ export function normalize(raw) {
     if (ID.test(id) && r && typeof r === 'object' && num(r.n, 1)) out.sold[id] = { n: Math.floor(r.n), at: num(r.at) ?? 0 };
   });
   Object.keys(out.dirty).forEach((id) => {
-    out.dirty[id] = Math.min(out.dirty[id], out.owned[id] || 0); // you can't hold more unrestored than you own
+    const e = get(id);
+    const held = e && collectionOf(e)?.ownership === 'all' ? 1 : out.owned[id] || 0; // paintings are always held
+    out.dirty[id] = Math.min(out.dirty[id], held); // you can't hold more unrestored than you own
     if (!out.dirty[id]) delete out.dirty[id];
   });
   Object.entries(raw.claimed && typeof raw.claimed === 'object' ? raw.claimed : {}).forEach(([id, v]) => {

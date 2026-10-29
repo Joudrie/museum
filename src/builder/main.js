@@ -1443,7 +1443,8 @@ async function boot() {
   let data = all[cur];
   // this phone's storage was cleared: bring back the newest copy from the vault
   const vault = await latestBackup();
-  if (vault && vault.saved > (data?.saved || 0)) data = vault;
+  const fromVault = !!vault && vault.saved > (data?.saved || 0);
+  if (fromVault) data = vault;
   resize();
   try {
     loadMap(data ? deserialize(data) : blankMap('island', 80, 80));
@@ -1451,6 +1452,7 @@ async function boot() {
     loadMap(blankMap('island', 80, 80));
   }
   savedAt = data?.saved > 1 ? data.saved : 0;
+  if (fromVault && map) saveLocal(); // put the restored copy back in the usual storage too
   try {
     const v = JSON.parse(localStorage.getItem(VIEW) || 'null');
     if (v && v.name === map.name) Object.assign(view, { x: v.x, y: v.y, z: v.z });

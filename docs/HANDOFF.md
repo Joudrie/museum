@@ -80,6 +80,7 @@ Scenes (`src/main.js`):
 - **"What's new" row:** `public/builder/whatsnew.json` lists refs shown first in the palette; add new pieces there. Duplicate lists (Plants / Flowers & plants, Garden & park) are merged by `MERGE` in `src/builder/main.js`.
 - **Area tool (#121):** drag a rectangle (shows W×H), then Copy / Cut / Clear / Mirror / Paste (tap to paste, repeat). Takes ground tiles, terrain corners and
   pieces whose feet are inside. ☰ → Options has Ground / Pieces layer toggles. Whole-area rotation is not built.
+- **Vault restore** now also writes the restored map back to localStorage (before, it only lived in memory until the next edit). **Jagged rocks** (`rock_jagged`, `_big`, `rock_spire`) are new pieces in `addJaggedRocks` (tiles.js); the round rocks stay. **Grass blending** is `src/groundblend.js`.
 - **Builder test:** `PW=<playwright> URL=http://localhost:4173/builder.html node tests/builder.cjs` (place, undo/redo, turn, reload, vault restore after wiping localStorage).
 
 ### Islands (`src/IslandScene.js`)
@@ -192,6 +193,9 @@ A separate personal project (the user's hometown, for friends) that only shares 
 game: the builder cap is 700 (New map boxes stay 300), big builder maps save their tiles packed (`src/mapformat.js`), and the
 island scene streams ground chunks around the player.
 
+### Why the tests used to be flaky (fixed, #170)
+- Island walking moved one step of `SPEED*dt` per frame (dt capped at 50 ms). On a slow or loaded machine (21 fps in CI) the step is ~8 px and hopped over the 6 px strip in front of a door, so the "cottage door" check failed; steps are now at most 3 px, so slow phones behave like fast ones.
+- `Ambient` probes `isPond` up to 40 px away, past the island edge, and `key()` read a missing corner row and threw; `isPond` is now bounds-checked. If a smoke run fails, first check that no other test is running at the same time (CPU load changes frame rate).
 ### Economy and staff (Chat 12)
 - **Every economy number lives in `src/economy.js`** (office level costs, janitor/guide prices, upgrades, offline cap, visitor formula, camera price, robbery odds). Change a default there only.
 - Break-room staff board has three upgrades (`UPGRADES`): Better mops (slower mess), Guide training (more % per guide), Carpenter's toolbox (cheaper rooms). Levels saved in `curation.upgrades`; read with `upgradeValue(id)` in `src/staff.js`.
@@ -296,3 +300,5 @@ See `docs/ASSET-HUNT.md` (the "super dig" prompt plus the to-do list) and `docs/
 - Daily rhythm: `crowdShift(hour, weather)` in weather.js sets how many visitors a room starts with (only when day/night is on). A swan glides on the pond (`updateSwan` in critters.js). `Lighting.watchSpeed` auto-drops High to Low for the visit on slow phones; the saved setting is untouched.
 - **Puzzles** (`src/puzzles.js`, data in `src/puzzles-data.js`): `IslandScene.placeMapPieces` hands each tile to `puzzles.piece()`. Boulder (push) slides when you walk into it (Interact beside it puts it back); plate, lever, gate (a gate belongs to every plate, lever and riddler within 8 tiles of it, chained; it opens for good once all are done); `rock_crack` needs the pick (16 finds); `ice` ground tiles slide you; `fog` clears for good (`curation.fog`); `riddler` asks a riddle picked by its position, a right answer opens a dig patch (ruin finds), a wrong one costs nothing. Everything resets on reload except fog. Mazes are just hedges: build them.
 - **Puzzle yard**: `node tools/puzzle_yard.mjs` writes `content/maps/puzzle-yard.json` (one of every puzzle piece and dig site). `tests/puzzles.cjs` runs it via `scene.start('island', { mapData })`; it is not in the boat. Import it in the builder to play with it.
+- Outdoor ambience now also has `'birds'` (day, fair weather) and `'crickets'` (night) in `setAmbience` (music.js): random generated chirps on a timer, no audio files.
+- **Hunts** (`src/puzzles-hunt.js`, run by Puzzles): metal detector earned at 10 different dug finds (a badge: Cold, Cool, Warm, Hot, Right here; three things buried per island per day, seeded by date; press Dig on the spot); torn map pieces (`map:*`, from ruin spots, no journal tab) make every `x_mark` tile appear, dig it for a rare find and the pieces are used up. **Main Island and Island One each already hold one `x_mark` tile; it is now hidden until the map is whole** (the map files are untouched). Dug spots show minutes left when you are near. Daily dig goal: 3 digs a day pays 120 gold once (`curation.digdaily`; `DAILY_GOAL`, `DAILY_GOLD` in `src/dig.js`); nothing is lost by skipping.
