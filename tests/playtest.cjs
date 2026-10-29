@@ -350,7 +350,8 @@ const fail = (s, n) => log(s, '❌', n);
   await wait(800);
   (await S(() => __game.scene.isActive('island'))) ? pass('13.2 cottage door', 'only the cottage door itself opens it') : fail('13.2 cottage door', 'walking up far above the cottage opened it');
 
-  // sail to the builder island and back
+  // sail to the builder island and back (boats are bought now: the rowboat and the sailboat are the player's)
+  await S(() => { ['boat:rowboat', 'boat:sailboat'].forEach((k) => { __prog.state.unlocks[k] = true; __prog.state.market.owned[k] = true; }); });
   // (you act on what you face: turn toward the boat first)
   const faceBoat = () => S(() => { const s = __game.scene.getScene('island'); const b = s.boats[0] || s.landingSpot || { x: 14 * 32, y: 39.4 * 32 }; const dx = b.x - s.player.x; const dy = b.y - s.player.y; s.facing = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 'left' : 'right') : dy < 0 ? 'up' : 'down'; });
   await S(() => { const s = __game.scene.getScene('island'); s.player.setPosition(12.5 * 32, 38.6 * 32); });
@@ -403,12 +404,16 @@ const fail = (s, n) => log(s, '❌', n);
     await p.click('#interact');
     await wait(900);
     await shot('fishing-cast');
-    await S(() => { const f = __game.scene.getScene('island').fishing; f.biteAt = f.t + 0.2; });
+    await S(() => { __prog.T.fishing.junkChance = 0; const f = __game.scene.getScene('island').fishing; f.biteAt = f.t + 0.2; });
     await wait(450);
     await shot('fishing-bite');
     await p.mouse.click(195, 300);
-    await wait(900);
-    (await shown('#catch')) ? pass('14 fishing', 'cast, bite, tap, catch card') : fail('14 fishing', 'no catch card');
+    await wait(500);
+    await shot('fishing-reel');
+    // the reel minigame (src/progression/reel.js): win it
+    await S(() => { const r = __game.scene.getScene('island').fishing.reel; if (r) { r.zone = r.fish; r.progress = 1; r.step(0.01, true); } }); // (the zone on the fish, so it counts)
+    await wait(1500);
+    (await shown('#catch')) ? pass('14 fishing', 'cast, bite, tap, reel, catch card') : fail('14 fishing', 'no catch card');
     await shot('fishing-catch');
     await p.click('#catch');
     await wait(400);
