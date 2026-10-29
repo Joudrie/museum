@@ -2722,7 +2722,7 @@ export function bakeItem(scene, key, type, def, rot) {
       // a tall cabinet of two open shelves for small finds
       shadow(32, gy, 28, 4);
       box(4, gy - 46, 56, 45, WOOD_D, OUT);
-      R(6, gy - 44, 52, 41, '#2f2018');
+      R(6, gy - 44, 52, 41, '#8a6a4c');
       R(5, gy - 26, 54, 3, WOOD_L);
       R(5, gy - 6, 54, 3, WOOD_L);
       R(3, gy - 48, 58, 3, WOOD);
