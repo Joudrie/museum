@@ -253,10 +253,14 @@ See `docs/ASSET-HUNT.md` (the "super dig" prompt plus the to-do list) and `docs/
 ### Chat 9: rooms
 - Two new shaped plans in `src/shaped.js`: `lhall` (L-shaped hall) and `corner` (its mirror). They join the end of the shaped row, so old saves get them via `withShaped` and built rooms move back two places. `tests/gaps.cjs` and `tests/smoke.cjs` now count 7 shaped rooms (3 to 9) and built rooms start at index 10.
 
-## Digging v2 (Chat 6)
-- **Dig kinds** live in `src/dig.js` (`DIG_KINDS`, `DIG_TILES`): a builder tile maps to a kind, a kind maps to collections. mineral, fossil, ruin (pottery, coins, stone tools), shore (shells), crater (meteorites). To add a kind: a data collection, one line in `DIG_KINDS`, one tile in `src/tiles.js` (group "Dig sites"), one line in `DIG_TILES`.
-- **`dirty: true` on an entry** means finds of it arrive dirty (pottery, coins, stone tools, meteorites). `collect(id, { dirty })` records `codex.dirty[id]` (a count, never more than you own). Chat 4 owns what cleaning does; it should lower that count. Until then dirty finds display as normal.
-- Journal tabs now wrap to two rows (12 tabs). `tests/dig.cjs` needs the dev server (`npx vite --port 5173`, `URL=http://localhost:5173/`).
 - `holiday()` in `src/weather.js` (real calendar; `?holiday=halloween|winter|none` pins it). Halloween: pumpkins by the museum doors (`holidayDecor` in IslandScene), kids and some students in witch / ghost / pumpkin costumes (`visitorLook`). Winter: woolly hats.
 - Room presets (`src/presets.js`, `tests/presets.cjs`): Customize > This room > Saved layouts saves a room's decor and items under a name and loads them into any room. Loading sells what is there and buys the preset's items at normal prices, so layouts are not free items.
 - Themed rooms (`roomTheme` in `src/wallet.js`): 3+ paintings all from one era earn 1.5x; Customize > Rating says so. "Section" is read as the painting's `era`.
+
+## Digging v2 (Chat 6)
+- **Dig kinds** live in `src/dig.js` (`DIG_KINDS`, `DIG_TILES`): a builder tile maps to a kind, a kind maps to collections. mineral, fossil, ruin (pottery, coins, stone tools), shore (shells), crater (meteorites). To add a kind: a data collection, one line in `DIG_KINDS`, one tile in `src/tiles.js` (group "Dig sites"), one line in `DIG_TILES`.
+- **Dirty finds:** entries flagged `dirty: true` (pottery, coins, stone tools, meteorites, skeletons) arrive dirty through Chat 4's contract (`collect` handles the flag); nothing extra is needed in `src/dig.js`.
+- Journal tabs now wrap to two rows (12 tabs). `tests/dig.cjs` needs the dev server (`npx vite --port 5173`, `URL=http://localhost:5173/`).
+- **Dig tools** (`TOOLS` in `src/dig.js`): brush (gentle, rare finds more likely), trowel (wider), pick (widest, favours common). Earned: trowel after 6 different dug finds, pick after 16 (counted from the codex, no new save). The row stays hidden until the trowel is earned.
+- **Big finds** use `parts: n` on an entry (T. rex 6, Triceratops 4): each fossil-spot dig that rolls one adds a piece (`curation.digparts`); the entry reaches the codex, dirty, on the last piece. They are `display: ['floor','plinth']` and in no set, for Chat 5 to assemble.
+- **Sites:** touching dig tiles of one kind (`dig_cliff` fossils, `dig_trench` ruins, or any mix of spots) form a site (`siteOf` in `src/dig.js`). With 3 or more tiles, digging every one inside a rest period triggers `IslandScene.bonusDig`: a rare find (rarity 3+ or a skeleton piece). The bonus has its own `site:<key>` rest timer.
