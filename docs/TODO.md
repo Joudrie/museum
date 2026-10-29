@@ -113,11 +113,11 @@ Owns: `src/collections/` (except render.js), `src/journal.js`, `tools/import_col
 ## CHAT 9: Rooms and the museum building
 Owns: `src/rooms.js`, `src/shaped.js`, `src/walldraw.js`, `src/atrium.js`, `src/RoomScene.js` (shared, take care). Claim: `claimed: 2026-10-29`
 - [ ] **Non-square rooms** (glass walls, curved, domed, sharp angles, open plan, small quiet rooms). **Blocked: needs a design pass with the user. Do the other items first.**
-- [ ] Corner and L-shaped rooms (done, PR pending: `lhall`, `corner`); truly seamless archways that show both rooms at once.
+- [ ] Corner and L-shaped rooms (L-shaped `lhall` and `corner` done, #124); truly seamless archways that show both rooms at once.
 - [ ] Elevator in the lobby and the first new floor (each floor a self-contained pack).
 - [ ] Front lawn you walk out onto (steps, banners, fountain, sign); museum exterior and facade styles that change the building (look comes from the user).
 - [ ] Rooftop terrace with a telescope at night.
-- [ ] Room presets: save a room's layout ("Winter", "Halloween") and load it again.
+- [x] Room presets (PR pending): save a room's layout ("Winter", "Halloween") and load it again.
 - [ ] Construction takes real time (small quick, big about a day, 2 builders); everything else instant.
 - [ ] Themed room bonus (1.5x income for a one-section room); unlimited rooms and a performance test at 100+ rooms.
 - [ ] Re-shuffle and repurpose rooms; the West Wing (waits for the user's outline).

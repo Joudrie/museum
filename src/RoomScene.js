@@ -34,6 +34,7 @@ import { setTrack, sfx, setAmbience } from './music.js';
 import { weatherToday, season } from './weather.js';
 import { ORIENT_LABELS, SIZE_LABELS, BREAK, roomAt, MAIN_HALL_PRICE, ATRIUM_PRICE, isFixed, seedEntry, loadRooms, addRoom, resetRooms, updateRoom, swapRooms, roomName, layout, paintingsFor, slotStates, setSlot, hungAnywhere, placeArt, wallItems, plantSpots, carpetRect } from './rooms.js';
 import { openSlotMenu } from './slotmenu.js';
+import { applyPreset, presetCost } from './presets.js';
 import { ITEMS, loadItems, saveItems, resetItems, footprint, countPlaced } from './items.js';
 import { roomDirt, removeDirt, resetDirt, dirtCount, covered, janitors, janitorCost, hireJanitor, resetJanitors, guides, maxGuides, guideCost, hireGuide, hasCarpenter, hireCarpenter, CARPENTER_COST, staffCount } from './staff.js';
 import { openStaffMenu } from './staffmenu.js';
@@ -1535,6 +1536,16 @@ export class RoomScene extends Phaser.Scene {
           this.travel(i, 'entrance');
         },
         onDecor: (decor) => this.applyDecor(decor),
+        onPreset: (id) => {
+          const cost = presetCost(id, this.roomIndex);
+          if (cost > 0 && !canAfford(cost)) return this.toast(`Need ${cost} gold`);
+          this.settleAll();
+          if (cost > 0) spend(cost);
+          else if (cost < 0) addCoins(-cost);
+          applyPreset(id, this.roomIndex);
+          closeDecor();
+          this.rebuild();
+        },
         onCharacter: (character) => this.applyCharacter(character),
         plantIcon: (id) => (id === 'none' ? null : this.textures.get(`plant_${id}`).getSourceImage().toDataURL()),
         characterPreview: () => this.characterPreview(),
