@@ -19,7 +19,7 @@ const LONGSHIP = draw(18, 12, (x, y) => {
 });
 
 export default pack({
-  id: 'ship', name: 'Ship models', noun: 'ship models', icon: '⛵', tab: 'makers', tabLabel: 'Makers', order: 8,
+  id: 'ship', name: 'Ship models', noun: 'ship models', icon: '⛵', tab: 'makers', tabLabel: 'Makers', order: 13,
   intro: '{have} of {total} maker pieces found. Models, glass, clocks and inventions.',
   display: 'plinth', where: 'The workshop', how: 'bought', set: 'harbour-shelf', reward: 600,
   plaque: 'Four ships that carried people across oceans.',

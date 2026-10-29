@@ -15,7 +15,7 @@ const BEE = draw(14, 12, (x, y) => {
 });
 
 export default pack({
-  id: 'insect', name: 'Insects', noun: 'insects', icon: '🦋', tab: 'insects', tabLabel: 'Insects', order: 11,
+  id: 'insect', name: 'Insects', noun: 'insects', icon: '🦋', tab: 'insects', tabLabel: 'Insects', order: 14,
   intro: '{have} of {total} insects found. Look for them in the meadows.',
   display: 'case', where: 'The meadows', how: 'caught', set: 'wing-case', reward: 450,
   plaque: 'Three wings and a bee: a tidy case of small wonders.',

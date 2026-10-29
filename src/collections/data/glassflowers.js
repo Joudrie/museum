@@ -20,7 +20,7 @@ const POPPY = flower((t) => 5.2 + Math.sin(t * 2) * 0.4);
 const SUNFLOWER = flower((t) => 5.6 + Math.abs(Math.sin(t * 8)) * 1.6);
 
 export default pack({
-  id: 'glassflower', name: 'Glass flowers', noun: 'glass flowers', icon: '🌸', tab: 'makers', tabLabel: 'Makers', order: 8,
+  id: 'glassflower', name: 'Glass flowers', noun: 'glass flowers', icon: '🌸', tab: 'makers', tabLabel: 'Makers', order: 13,
   intro: '{have} of {total} maker pieces found. Models, glass, clocks and inventions.',
   where: 'The glassworks', how: 'gift', set: 'glass-garden', reward: 600,
   plaque: 'A little garden that will never wilt.',

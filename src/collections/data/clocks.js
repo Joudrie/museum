@@ -17,7 +17,7 @@ const PENDULUM = draw(14, 18, (x, y) => {
 });
 
 export default pack({
-  id: 'clock', name: 'Timekeepers', noun: 'timekeepers', icon: '⏳', tab: 'makers', tabLabel: 'Makers', order: 8,
+  id: 'clock', name: 'Timekeepers', noun: 'timekeepers', icon: '⏳', tab: 'makers', tabLabel: 'Makers', order: 13,
   intro: '{have} of {total} maker pieces found. Models, glass, clocks and inventions.',
   display: 'plinth', where: 'The clockmaker', how: 'bought', set: 'clock-wall', reward: 600,
   plaque: 'Four ways people have counted the hours.',

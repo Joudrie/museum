@@ -14,7 +14,7 @@ const TRESKILLING = stamp((x, y) => (Math.abs(x - 4.5) < 2.4 && Math.abs(y - 5.5
 const MAURITIUS = stamp((x, y) => (y < 2 || y > 8 ? 'c' : Math.hypot(x - 4.5, y - 5.5) < 2.6 ? 'd' : null));
 
 export default pack({
-  id: 'stamp', name: 'Stamps', noun: 'stamps', icon: '✉️', tab: 'treasures', tabLabel: 'Treasures', order: 6,
+  id: 'stamp', name: 'Stamps', noun: 'stamps', icon: '✉️', tab: 'treasures', tabLabel: 'Treasures', order: 12,
   intro: '{have} of {total} treasures found. Dig sites and expeditions turn them up.',
   where: 'Old letters', how: 'gift', set: 'stamp-album', reward: 500,
   plaque: 'Four famous stamps: a first, a mistake and a rarity.',

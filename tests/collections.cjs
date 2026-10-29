@@ -186,7 +186,7 @@ async function dataChecks() {
   await boot({});
   await openJournal();
   const tabs = await S(() => [...document.querySelectorAll('.journal-tabs button')].map((b) => b.textContent));
-  check(tabs.join() === 'Goals,Paintings,Visitors,Fish,Minerals,Fossils,Pottery,Coins,Stone tools,Shells,Meteorites,Treasures,Insects,Makers', `tabs: ${tabs.join(', ')}`, `unexpected tabs: ${tabs.join(', ')}`);
+  check(tabs.join() === 'Goals,Paintings,Visitors,Fish,Minerals,Fossils,Pottery,Coins,Stone tools,Shells,Meteorites,Treasures,Makers,Insects', `tabs: ${tabs.join(', ')}`, `unexpected tabs: ${tabs.join(', ')}`);
   const tabFits = await S(() => [...document.querySelectorAll('.journal-tabs button')].every((b) => b.scrollWidth <= b.clientWidth + 1));
   check(tabFits, 'tab labels fit on one line', 'a tab label is clipped');
   await shot('journal-goals');
