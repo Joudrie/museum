@@ -119,6 +119,17 @@ Scenes (`src/main.js`):
 - `tools/import_collection.mjs` turns a CSV into a data file and refuses rows with no license/credit.
 - Test: `PW=/opt/node-tools/node_modules/playwright OUT=<dir> node tests/collections.cjs`.
 
+### Restoration and provenance (Chat 4: `src/restore.js`, `src/restorestudio.js`, `src/storage_room.js`)
+- **The `dirty` contract** (for chats 6 and 7 to hand over, chat 5 to display): `collect(id, { dirty: true })` hands over a dirty find
+  (or put `dirty: true` on an entry; `dirty: false` forces a clean one); `makeDirty(id)` grimes something already held (even a painting);
+  **before displaying anything ask `displayCount(id) > 0`, never `ownedCount`**. All in `collections/codex.js`, re-exported by `restore.js`;
+  the codex keeps `dirty: { id: n }` and a `restored` count on `seen`. Optional `entry.restore: 'clean' | 'prep' | 'assemble'`
+  (default: pictures clean, `fossil` prep, tags pottery/bone/vase assemble).
+- **Restoration Studio** (`openStudio()`; opened from Journal → Storage): rub grime off the real HD image with a before/after slider;
+  brush stone off a fossil; drag 9 pieces back together. Leaving costs nothing. Real paintings are never altered, only a grime layer over them.
+- **Storage tab** in the Journal: held now (ready vs needs restoring) against the codex (ever collected). Viewer shows "Recovered from <place>".
+- Test: `PW=/opt/node-tools/node_modules/playwright OUT=<dir> node tests/restore.cjs`. A physical studio desk in a room is not built (the entry is the Journal tab).
+
 ### Content pipeline (`docs/CONTENT.md`, `docs/CONTENT-STYLE.md`): real art in, with a person approving
 - `tools/sources/` has one adapter per museum (Met, AIC, Cleveland, Smithsonian, Rijksmuseum, Commons):
   public-domain / CC0 only, cached, rate-limited. **They have never run against a live API**: the build

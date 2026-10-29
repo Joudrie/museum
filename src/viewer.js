@@ -4,6 +4,7 @@
 // its entry): pictures from files hang on the wall, pixel art sits in a case.
 import { keyOf, metaLine } from './collections/index.js';
 import { drawEntry } from './collections/render.js';
+import { provenanceLine } from './restore.js';
 
 const STORE_KEY = 'curation.journal';
 
@@ -13,6 +14,9 @@ const dots = el.querySelector('.viewer-dots');
 const title = el.querySelector('.info-title');
 const meta = el.querySelector('.info-meta');
 const blurb = el.querySelector('.info-blurb');
+const prov = Object.assign(document.createElement('p'), { className: 'info-prov' });
+prov.style.cssText = 'margin:2px 0 6px;font-style:italic;opacity:.8';
+meta.after(prov);
 const rating = el.querySelector('.info-rating');
 const note = el.querySelector('.info-note');
 const change = el.querySelector('.viewer-change');
@@ -83,6 +87,7 @@ function show(i) {
   const e = entryOf(list[i]);
   title.textContent = e.title;
   meta.textContent = metaLine(e);
+  prov.textContent = e.provenance?.how === 'gift' ? '' : provenanceLine(e);
   blurb.textContent = [e.blurb, ...(e.facts || [])].filter(Boolean).join(' ');
   const saved = loadJournal()[keyOf(e)] || {};
   note.value = saved.note || '';
