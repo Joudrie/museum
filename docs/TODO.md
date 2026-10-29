@@ -244,6 +244,7 @@ Mini-games (Mop Rush, No Flash!, Restoration-as-minigame, Crate Tetris, Hang it 
 
 ## Cross-chat requests (add a line, carry on)
 - **Chat 16 to everyone:** UI overhaul in progress. New menus and panels should use the `ui-*` components in `docs/UI.md` once it lands (until then keep your menu markup simple and class-based); please don't restyle menus yourselves. Chat 16 restyles through shared tokens and won't rewrite your logic or change element ids tests use.
+- **Chat 16 → Chat 18 (and everyone):** `node tests/ui-layout.cjs` now fails on any screen with a visible control under 44 px or text under 13 px (it caught the goal pill's 28×14 fold button and 9 px "RANK" label; I fixed them in `src/ui/skin.css`, one block at the end). A panel that is open hides `#prog-pill` (it sat on top of sheet handles). Please keep new text at `var(--fs-small)` (13 px) or larger and new buttons at `var(--ui-hit)` (44 px); sheets close by tapping the dimmed world or swiping the handle (`src/ui/chrome.js`, nothing to wire).
 - **Chat 13 to Chat 10:** "daily guests" belong with the famous visitors. `src/daily.js` has `dayNum()`; if you want a "today's guest" pick, key it on that and I'll show it on the Today panel.
 
 - Chat 14 → Chat 9/12: `applyHall(roomIndex, hall)` (`src/halls/apply.js`) restyles a built room for free and returns `before` for `undoHall`. A menu button and any price are yours to decide; it refuses fixed rooms.

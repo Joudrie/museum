@@ -78,6 +78,7 @@ import { openJournal } from './journal.js';
 import { markSeen, collectEverything as collectOneOfEach } from './collections/codex.js';
 import { activeQuests, claim, bump, stat, resetQuests } from './quests.js';
 import { celebrate } from './ui.js';
+import { shortNum } from './ui/num.js';
 import { addLove, loveOf, resetLove } from './love.js';
 import { hasCameras as camerasOn } from './security.js';
 import { hourNow, settings } from './settings.js';
@@ -2241,8 +2242,8 @@ export class RoomScene extends Phaser.Scene {
   // Coins in the wallet, museum gold per hour and visitors per month.
   updateHud() {
     const income = museumIncome(this.rooms);
-    document.querySelector('.hud-coins').textContent = coins().toLocaleString();
-    document.querySelector('.hud-income').textContent = `+${income}`;
+    document.querySelector('.hud-coins').textContent = shortNum(coins());
+    document.querySelector('.hud-income').textContent = `+${shortNum(income)}`;
     const v = museumVisitors(this.rooms); // per month, shown short: 1.3k, 2.4M
     document.querySelector('.hud-visitors').textContent = v >= 1e6 ? `${(v / 1e6).toFixed(1)}M` : v >= 1e3 ? `${(v / 1e3).toFixed(1)}k` : `${v}`;
     const rating = (museumRating(this.rooms) / 20).toFixed(1);

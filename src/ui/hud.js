@@ -123,6 +123,13 @@ function init() {
     new MutationObserver(watch).observe(jdot, { attributes: true, attributeFilter: ['class'] });
     watch();
   }
+  // Collect all sits under the status strip, which grows a line when the numbers get long
+  const strip = $('hud');
+  if (strip && window.ResizeObserver) {
+    const place = () => document.documentElement.style.setProperty('--hud-bottom', `${Math.round(strip.getBoundingClientRect().bottom)}px`);
+    new ResizeObserver(place).observe(strip);
+    place();
+  }
 }
 
 if (typeof document !== 'undefined') {
