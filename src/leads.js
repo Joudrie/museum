@@ -88,6 +88,16 @@ export const LEADS = [
   },
 ];
 
+// Leads the story chats offer (src/story.js writes them to curation.leads_offered as
+// { id, text, from, at }). Each one points at an island; its words come from the story.
+const OFFERED_KEY = 'curation.leads_offered';
+const OFFERED = {
+  'heist-hideout': { island: 'heist', kind: 'rumour', title: 'A hunch about a hideout' },
+  'sphinx-letter': { island: 'tomb', kind: 'letter', title: 'The Sphinx’s letter' },
+  'studio-chest': { island: 'wreck', kind: 'rumour', title: 'An old studio chest' },
+  'last-scrolls': { island: 'temple', kind: 'rumour', title: 'The last scrolls' },
+};
+
 const byId = Object.fromEntries(LEADS.map((l) => [l.id, l]));
 export const lead = (id) => byId[id] || null;
 
@@ -99,13 +109,18 @@ const read = () => {
   return clean;
 };
 
-export const hasLead = (id) => !!read()[id];
+const offered = () => {
+  const list = load(OFFERED_KEY, []);
+  return (Array.isArray(list) ? list : [])
+    .filter((o) => o && OFFERED[o.id] && typeof o.text === 'string')
+    .map((o) => ({ id: o.id, ...OFFERED[o.id], from: typeof o.from === 'string' ? o.from : 'A friend', text: o.text, then: [], at: Number.isFinite(o.at) ? o.at : 0 }));
+};
 
-/** Leads in the order they were found. */
+export const hasLead = (id) => !!read()[id] || offered().some((o) => o.id === id);
+
+/** Leads in the order they were found (your own, and the ones the story offered). */
 export const foundLeads = () =>
-  Object.entries(read())
-    .sort((a, b) => a[1] - b[1])
-    .map(([id]) => byId[id]);
+  [...Object.entries(read()).map(([id, at]) => ({ ...byId[id], at })), ...offered()].sort((a, b) => a.at - b.at);
 
 /** Does any lead you hold point at this expedition? */
 export const islandUnlocked = (island) => foundLeads().some((l) => l.island === island);

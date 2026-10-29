@@ -12,10 +12,10 @@
 // Failing is gentle: being caught or washed out only puts you back at the boat; your
 // finds and flags stay. Nothing here is bought: finds come from digging and opening.
 //
-// Finds come home dirty. They wait in the crate (curation.expedition) until the
-// Restoration Studio (chat 4) cleans them. Until that exists they are cleaned and
-// logged as soon as you reach a home island, so nobody is left holding a muddy box.
-import { load, save } from './storage.js';
+// Finds come home dirty (collect(id, { dirty: true }), chat 4's contract): they are in
+// your bag, and the Restoration Studio (Journal, Storage) cleans them before they can
+// go on display. foundAt(id) remembers the island for the plaque.
+import { expeditionStore, saveExpeditionStore, foundAt, rememberFound } from './foundat.js';
 import { list } from './collections/index.js';
 import { collect, seen } from './collections/codex.js';
 import { drawEntry } from './collections/render.js';
@@ -27,7 +27,6 @@ import { T } from './tiles.js';
 import { sfx } from './music.js';
 
 const maps = import.meta.glob('./maps/exp-*.json', { eager: true, import: 'default' });
-const RESTORE = Object.keys(import.meta.glob('./restore.js')).length > 0; // chat 4's studio, once it lands
 
 /** Map id ("exp-pirate") to map, and expedition id ("pirate") to its info. */
 export const EXPEDITION_MAPS = {};
@@ -40,51 +39,14 @@ Object.entries(maps).forEach(([path, map]) => {
 });
 export const expeditionOf = (mapId) => Object.values(EXPEDITIONS).find((e) => e.mapId === mapId) || null;
 
-// ---------- the save: trips done, the crate of dirty finds, where things were found ----------
-const KEY = 'curation.expedition';
-function store() {
-  const raw = load(KEY, null);
-  const o = raw && typeof raw === 'object' && !Array.isArray(raw) ? raw : {};
-  const obj = (v) => (v && typeof v === 'object' && !Array.isArray(v) ? v : {});
-  return {
-    v: 1,
-    done: obj(o.done),
-    crate: (Array.isArray(o.crate) ? o.crate : []).filter((c) => c && typeof c.id === 'string' && typeof c.from === 'string'),
-    where: obj(o.where),
-  };
-}
+// ---------- the save: trips done, and where each find came from (src/foundat.js) ----------
+export const tripsDone = (id) => expeditionStore().done[id] || 0;
+export { foundAt };
 
-/** What is waiting to be cleaned: [{ id, from, at }]. Chat 4's studio reads this. */
-export const crate = () => store().crate;
-export const tripsDone = (id) => store().done[id] || 0;
-/** Where an entry was found ("Pirate Island"), or null. For plaques and the journal. */
-export const foundAt = (entryId) => store().where[entryId] || null;
-
-/** A find comes home dirty. */
-export function bringHome(entryId, from, at = Date.now()) {
-  const s = store();
-  s.crate.push({ id: entryId, from, at, dirty: true });
-  s.where[entryId] = s.where[entryId] || from;
-  save(KEY, s);
-}
-
-/** Chat 4 calls this when a find has been cleaned: it enters the codex and leaves the crate. */
-export function cleaned(entryId) {
-  const s = store();
-  const i = s.crate.findIndex((c) => c.id === entryId);
-  if (i < 0) return null;
-  const [item] = s.crate.splice(i, 1);
-  save(KEY, s);
-  return { ...item, got: collect(entryId) };
-}
-
-/** Back home: with no studio yet, wash everything and log it. Returns a toast line or ''. */
-export function unpackCrate() {
-  const items = crate();
-  if (!items.length) return '';
-  if (RESTORE) return `${items.length} dirty find${items.length > 1 ? 's' : ''} from your trip need cleaning`;
-  items.forEach((c) => cleaned(c.id));
-  return `Cleaned ${items.length} find${items.length > 1 ? 's' : ''} from ${[...new Set(items.map((c) => c.from))].join(' and ')}. They are in your journal.`;
+/** A find comes home dirty: it is in your bag and the Restoration Studio (Journal, Storage) cleans it. */
+export function bringHome(entryId, from) {
+  rememberFound(entryId, from);
+  return collect(entryId, { dirty: true });
 }
 
 /** Boat-menu entries for every expedition a lead has unlocked. */
@@ -330,8 +292,9 @@ export class Expedition {
   }
 
   take(entry) {
-    bringHome(entry.id, this.def.title);
+    const got = bringHome(entry.id, this.def.title);
     this.trip.push(entry);
+    return got;
   }
 
   dig(it) {
@@ -341,11 +304,7 @@ export class Expedition {
     startDig(`${this.def.mapId}:${sp.x},${sp.y}`, {
       collection: sp.collection || 'mineral',
       entry: this.find(sp),
-      onFound: (entry) => {
-        const fresh = !seen(entry.id);
-        this.take(entry);
-        return { fresh, note: `It is caked in mud. Bring it home from ${this.def.title} to be cleaned.` };
-      },
+      onFound: (entry) => ({ ...this.take(entry), note: `It is caked in mud. Clean it in the Restoration Studio (Journal, Storage).` }),
       onClose: ({ found }) => {
         s.paused = false;
         if (!found) return;
@@ -366,7 +325,7 @@ export class Expedition {
     got.forEach((e) => this.take(e));
     s.paused = true;
     card(
-      { title: sp.k === 'chest' ? 'The chest is open!' : sp.old ? 'You pry the barrel open' : 'You pry the crate open', sub: this.def.title, text: sp.says || 'Everything is filthy. Bring it home to be cleaned.', entries: got, button: 'Take it' },
+      { title: sp.k === 'chest' ? 'The chest is open!' : sp.old ? 'You pry the barrel open' : 'You pry the crate open', sub: this.def.title, text: sp.says || 'Everything is filthy. It needs cleaning in the Restoration Studio.', entries: got, button: 'Take it' },
       () => {
         s.paused = false;
         this.setFlag(sp.sets);
@@ -502,9 +461,9 @@ export class Expedition {
     if (this.over) return;
     this.over = true;
     const { s, def } = this;
-    const st = store();
+    const st = expeditionStore();
     st.done[def.id] = (st.done[def.id] || 0) + 1;
-    save(KEY, st);
+    saveExpeditionStore(st);
     const fresh = [];
     foundLeads()
       .filter((l) => l.island === def.id)
@@ -516,7 +475,7 @@ export class Expedition {
     card(
       {
         title: `${def.title}: done!`,
-        sub: this.trip.length ? `${this.trip.length} find${this.trip.length > 1 ? 's' : ''} in the crate` : 'Nothing dug up this time',
+        sub: this.trip.length ? `${this.trip.length} find${this.trip.length > 1 ? 's' : ''} to clean` : 'Nothing dug up this time',
         text: `${def.outro || 'A good trip.'}${names.length ? ` You found a new lead: ${names.join(', ')}. Check Letters at the boat.` : ''}`,
         entries: this.trip,
         button: 'Back to the boat',

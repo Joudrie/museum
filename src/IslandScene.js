@@ -10,7 +10,7 @@ import { DEFAULT_CHARACTER } from './decor.js';
 import { showTalk, hideTalk, talking } from './talk.js';
 import { iconSvg } from './icons.js';
 import { sfx, setTrack, setAmbience } from './music.js';
-import { Weather, weatherToday, season } from './weather.js';
+import { Weather, weatherToday, season, holiday } from './weather.js';
 import { ambientAt, makeTextures as lightTextures } from './lighting.js';
 import { Critters } from './critters.js';
 import { Ambient } from './ambient.js';
@@ -20,7 +20,7 @@ import { settings, hourNow } from './settings.js';
 import { animateWalker, footstep, dust } from './motion.js';
 import { Pet } from './pets.js';
 import { Fishing, catchOpen } from './fishing.js';
-import { startDig, readyIn } from './dig.js';
+import { startDig, readyIn, DIG_TILES } from './dig.js';
 import { openJournal } from './journal.js';
 import isle1 from './maps/isle-1.json';
 import mainIsland from './maps/main-island.json';
@@ -28,11 +28,12 @@ import { withTiles } from './mapformat.js';
 import { PEOPLE, ANIMALS } from './landmarks.js';
 import { makePet } from './pets.js';
 import { critterTextures } from './critters.js';
-import { openSail, builderIslands } from './sailmenu.js';
-import { EXPEDITION_MAPS, expeditionFor, expeditionOptions, expeditionTitles, EXPEDITIONS, boatScene, unpackCrate } from './expedition.js';
+import { openSail, builderIslands, friendIslands } from './sailmenu.js';
+import { EXPEDITION_MAPS, expeditionFor, expeditionOptions, expeditionTitles, EXPEDITIONS, boatScene } from './expedition.js';
 import { openLeads, grantStartLeads, foundLeads } from './leads.js';
 import { visitorLook, KINDS } from './RoomScene.js';
 import { PERSONALITIES, QUIPS } from './lines.js';
+import { blendAt } from './groundblend.js';
 
 // Islands drawn in the map builder (builder.html), reached by boat from the
 // main island's dock. Each is a 'curation-map' file (see src/builder/main.js).
@@ -178,6 +179,7 @@ export class IslandScene extends Phaser.Scene {
       { night: this.dark > 0.45, dusk: this.dark <= 0.45 && (hour > 17.5 && hour < 21), weather: this.weatherKind, season: this.season },
     );
 
+    this.holidayDecor();
     this.seasonal();
     this.setupCamera();
     this.weather = new Weather(this, this.weatherKind);
@@ -188,10 +190,6 @@ export class IslandScene extends Phaser.Scene {
     if (this.map && this.door && this.spawnAt !== 'dock') this.toast(`${this.mapName()} · walk back into the doors to go inside`);
     else if (this.map) this.toast(`${this.mapName()} · sail on from the rowboat`);
     else if (this.spawnAt !== 'cottage') this.toast('Island One · the museum here is shut; sail home from the dock');
-    if (!this.exp) {
-      const home = unpackCrate();
-      if (home) setTimeout(() => this.toast(home), 2800);
-    }
   }
 
   // ---------- The map ----------
@@ -560,6 +558,23 @@ export class IslandScene extends Phaser.Scene {
         const name = ref.slice(2);
         if (ref.startsWith('t:') && TILES[name] && y < H && x < W) ((this.paint[y] ||= [])[x] ||= []).push(name);
       });
+      // grass grows over the edges of painted dirt and rock (src/groundblend.js)
+      const tiles = this.map.tiles || {};
+      const refAt = (x, y) => tiles[`${x},${y}`] || null;
+      const grassAt = (x, y) => x >= 0 && y >= 0 && x < W && y < H && this.key(x, y, (m) => m === 2) === '1111';
+      const seen = new Set();
+      Object.keys(tiles).forEach((k) => {
+        const [px, py] = k.split(',').map(Number);
+        for (let dy = -1; dy <= 1; dy++)
+          for (let dx = -1; dx <= 1; dx++) {
+            const x = px + dx;
+            const y = py + dy;
+            if (seen.has(`${x},${y}`)) continue;
+            seen.add(`${x},${y}`);
+            const edge = blendAt(x, y, refAt, grassAt);
+            if (edge && TILES[edge] && x >= 0 && y >= 0 && x < W && y < H) ((this.paint[y] ||= [])[x] ||= []).push(edge);
+          }
+      });
       return;
     }
     const P = this.plan;
@@ -661,6 +676,14 @@ export class IslandScene extends Phaser.Scene {
     if (this.dark > 0.2) this.playerGlow = this.add.image(0, 0, 'lt_glow').setDisplaySize(90, 70).setBlendMode(Phaser.BlendModes.ADD).setTint(0xffd8a8).setAlpha(0.12 * this.dark).setDepth(5001);
   }
 
+  // Holiday decor by the museum's front doors (never on the doorway itself).
+  holidayDecor() {
+    if (holiday() !== 'halloween' || !this.door) return;
+    const dx = Math.round(this.door.x / T);
+    const dy = Math.round(this.door.y / T);
+    [-3, -2, 2, 3].forEach((o) => this.place('pumpkins', dx + o, dy, { solid: false, depth: (dy + 1) * T - 2 }));
+  }
+
   // The season shows on the land: snow on the grass in winter, orange trees
   // in autumn, blossom pink in spring.
   seasonal() {
@@ -749,7 +772,7 @@ export class IslandScene extends Phaser.Scene {
   addDig(x, y, kind = 'mineral') {
     const key = `${this.mapId || 'one'}:${x},${y}`;
     const d = { key, kind, x: (x + 0.5) * T, y: (y + 0.5) * T, gx: x, gy: y };
-    d.img = this.place(readyIn(key) > 0 ? 'dig_spot@dug' : kind === 'fossil' ? 'dig_fossil' : 'dig_spot', x, y, { flat: true });
+    d.img = this.place(readyIn(key) > 0 ? 'dig_spot@dug' : kind === 'mineral' ? 'dig_spot' : `dig_${kind === 'fossil' ? 'fossil' : kind}`, x, y, { flat: true });
     this.digs.push(d);
   }
 
@@ -897,7 +920,7 @@ export class IslandScene extends Phaser.Scene {
       if (name.startsWith('animal_') && ANIMALS[name.slice(7)]) return this.islanders.push(this.animal(name.slice(7), o.x + T / 2, o.y + t.h - 3, this.islanders.length));
       if (PEOPLE[name] !== undefined) return this.islanders.push(this.islander(o.x + T / 2, o.y + t.h - 4, PEOPLE[name], this.islanders.length));
       if (name === 'museum') return this.mapMuseum(x, y, t);
-      if (name === 'dig_spot' || name === 'dig_fossil') return this.addDig(x, y, name === 'dig_fossil' ? 'fossil' : 'mineral');
+      if (DIG_TILES[name]) return this.addDig(x, y, DIG_TILES[name]);
       if (name === 'tall_grass' || name === 'tall_grass_front') {
         if (!this.grassCells.has(`${x},${y}`)) this.tallGrass(x, y);
         return;
@@ -1098,6 +1121,7 @@ export class IslandScene extends Phaser.Scene {
     Object.entries(MAPS).forEach(([id, m]) => id !== 'main' && !id.startsWith('exp-') && id !== this.mapId && options.push({ label: m.name === 'Untitled island' ? 'The far isle' : m.name, sub: 'An island to explore', go: { map: id } }));
     const mine = builderIslands();
     mine.forEach((m) => m.name !== here && options.push({ label: m.name, sub: `Your island · ${m.w}×${m.h}`, go: { mapData: m } }));
+    friendIslands().forEach((m) => m.name !== here && options.push({ label: m.name, sub: `A friend’s island · ${m.w}×${m.h}`, go: { mapData: m } }));
     const first = grantStartLeads()[0];
     if (first) this.toast(`${first.title}: read it under Letters`);
     expeditionOptions().forEach((o) => o.go.expedition !== this.exp?.def.id && options.push(o));

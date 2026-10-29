@@ -1,6 +1,6 @@
 // Expedition test: leads unlock islands in the boat menu, the boat scene, a whole trip
 // on Skull Isle (chart, X, key, chest), being caught is gentle, and the finds come home
-// dirty into the crate and then the journal, with the island named as where they were found.
+// dirty into your bag (Restoration Studio contract), with the island named as where they were found.
 // Usage: npm run build && npx vite preview --port 4173 --base / &
 //        PW=/path/to/playwright OUT=some/dir node tests/expedition.cjs
 const { chromium } = require(process.env.PW || 'playwright');
@@ -18,7 +18,7 @@ const fail = (msg) => {
 const ok = (msg) => console.log('  ✓ ' + msg);
 const check = (cond, good, bad) => (cond ? ok(good) : fail(bad));
 
-function dataChecks() {
+async function dataChecks() {
   console.log('Data');
   const dir = path.join(__dirname, '..', 'src', 'maps');
   const files = fs.readdirSync(dir).filter((f) => /^exp-.+\.json$/.test(f));
@@ -42,13 +42,22 @@ function dataChecks() {
       if (!land(s.x, s.y)) fail(`${id}: ${s.k} at ${s.x},${s.y} is in the sea`);
     });
   });
+  // the plaque: a find from an expedition says where it was dug up
+  const mem = {};
+  global.localStorage = { getItem: (k) => (k in mem ? mem[k] : null), setItem: (k, v) => (mem[k] = String(v)), removeItem: (k) => delete mem[k] };
+  const src = path.join(__dirname, '..', 'src');
+  const { rememberFound } = await import(path.join(src, 'foundat.js'));
+  const { provenanceLine } = await import(path.join(src, 'restore.js'));
+  rememberFound('mineral:fluorite', 'Skull Isle');
+  check(provenanceLine({ id: 'mineral:fluorite' }) === 'Recovered from Skull Isle', 'the plaque says "Recovered from Skull Isle"', `plaque says "${provenanceLine({ id: 'mineral:fluorite' })}"`);
+  delete global.localStorage;
   [...leadsSrc.matchAll(/then: \[([^\]]*)\]/g)].forEach((m) =>
     [...m[1].matchAll(/'([a-z-]+)'/g)].forEach(([, id]) => check(leadIds.has(id), `lead "${id}" exists`, `a lead points at "${id}" which does not exist`)),
   );
 }
 
 (async () => {
-  dataChecks();
+  await dataChecks();
   const b = await chromium.launch();
   const p = await b.newPage({ viewport: { width: 390, height: 844 } });
   const errs = [];
@@ -131,9 +140,10 @@ function dataChecks() {
   await run(() => document.querySelector('.dig-close').click());
   await settle(300);
   check(await run(() => __game.scene.getScene('island').exp.flags.has('key')), 'the X gives the key', 'no key flag');
-  const crate1 = await run(() => JSON.parse(localStorage.getItem('curation.expedition')).crate);
-  check(crate1.length === 1 && crate1[0].from === 'Skull Isle' && crate1[0].dirty, 'the find is in the crate, dirty, from Skull Isle', `crate is ${JSON.stringify(crate1)}`);
-  check(!(await run((id) => (JSON.parse(localStorage.getItem('curation.codex') || '{"seen":{}}').seen || {})[id], crate1[0].id)), 'a dirty find is not in the journal yet', 'a dirty find went straight into the codex');
+  const dirtyN = () => run(() => Object.values(JSON.parse(localStorage.getItem('curation.codex') || '{}').dirty || {}).reduce((a, b) => a + b, 0));
+  const where1 = await run(() => JSON.parse(localStorage.getItem('curation.expedition')).where);
+  check((await dirtyN()) === 1, 'the find is in your bag, dirty (Restoration Studio contract)', `dirty count is ${await dirtyN()}`);
+  check(Object.values(where1).length === 1 && Object.values(where1)[0] === 'Skull Isle', 'it remembers it came from Skull Isle', `where: ${JSON.stringify(where1)}`);
 
   // being caught is gentle
   await run(() => { const s = __game.scene.getScene('island'); const g = s.exp.patrols[0]; s.player.setPosition(g.sprite.x, g.sprite.y); g.state = 'chase'; });
@@ -173,21 +183,21 @@ function dataChecks() {
   await run(() => document.querySelector('.exp-ok').click());
   await settle(300);
   const st = await run(() => JSON.parse(localStorage.getItem('curation.expedition')));
-  check(st.done.pirate === 1 && st.crate.length === 4, 'the trip is recorded and four finds wait in the crate', `expedition save: ${JSON.stringify(st).slice(0, 200)}`);
+  check(st.done.pirate === 1 && (await dirtyN()) === 4, 'the trip is recorded and four dirty finds are in your bag', `expedition save: ${JSON.stringify(st).slice(0, 200)}, dirty ${await dirtyN()}`);
   const leads = await run(() => Object.keys(JSON.parse(localStorage.getItem('curation.leads')).found));
   check(leads.includes('clerk-letter') && leads.includes('anning-rumour'), 'finishing hands out the next leads', `leads: ${leads}`);
 
   console.log('Home again');
   await go({ map: 'main', spawn: 'dock' });
-  const cx = await run(() => JSON.parse(localStorage.getItem('curation.codex') || '{"seen":{}}').seen);
-  check(Object.keys(cx).length >= 1, 'back home the finds are cleaned and in the journal', 'finds did not reach the codex');
-  check((await run(() => JSON.parse(localStorage.getItem('curation.expedition')).crate.length)) === 0, 'the crate is empty', 'crate not emptied');
   const where = await run(() => JSON.parse(localStorage.getItem('curation.expedition')).where);
-  check(Object.values(where).every((w) => w === 'Skull Isle') && Object.keys(where).length >= 1, 'the plaque knows they came from Skull Isle', `where: ${JSON.stringify(where)}`);
+  check(Object.keys(where).length >= 1 && Object.values(where).every((w) => w === 'Skull Isle'), 'the plaque knows they came from Skull Isle', `where: ${JSON.stringify(where)}`);
+  // a story chapter (chat 10) offers a lead: that island opens up too
+  await run(() => localStorage.setItem('curation.leads_offered', JSON.stringify([{ id: 'heist-hideout', text: 'Edmund has a hunch about a hideout on a far island.', from: 'Edmund', at: Date.now() }])));
   await run(() => { __game.scene.getScene('island').sail(); });
   await settle(400);
   l = await labels();
   check(l.includes('Skull Isle'), 'Skull Isle can be revisited', `boat menu is ${JSON.stringify(l)}`);
+  check(l.includes('Thieves’ Rock'), 'a lead offered by a story chapter opens Thieves’ Rock', `boat menu is ${JSON.stringify(l)}`);
   await shot('9-boat-menu-2');
 
   console.log('Every island is reachable');

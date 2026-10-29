@@ -1,0 +1,113 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "reading-berthe",
+  "notes": "region: France (woman artist)",
+  "entry": {
+    "id": "painting:reading-berthe",
+    "collection": "painting",
+    "title": "Reading",
+    "by": "Berthe Morisot",
+    "year": "1873",
+    "era": "impressionist",
+    "ratio": 1.5609,
+    "blurb": "The Impressionists were mostly men with a few notable exceptions, including Berthe Morisot.",
+    "rarity": 1,
+    "tags": [
+      "france",
+      "oil"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1950.89/1950.89_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Gift of the Hanna Fund",
+      "url": "https://clevelandart.org/art/1950.89"
+    },
+    "value": 5,
+    "facts": [
+      "Morisot’s sister, Edma, posed for this painting of a woman seated on her shawl in a field, her eyes on the pages of a book, with a parasol and fan discarded on the grass.",
+      "Her white dress reflects the light and shadows of the outdoor setting; its delicate floral pattern echoes the meadow’s wildflowers.",
+      "X-ray examination reveals that Morisot revised Edma’s eyes, which previously looked directly at the beholder, in a manner more typical of Manet’s figures (see The Railway on view in this gallery)."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "128072",
+    "title": "Reading",
+    "maker": "Berthe Morisot",
+    "year": "1873",
+    "medium": "oil on canvas",
+    "dimensions": "Framed: 74.3 x 100.3 x 12.1 cm (29 1/4 x 39 1/2 x 4 3/4 in.); Unframed: 46 x 71.8 cm (18 1/8 x 28 1/4 in.)",
+    "widthCm": 71.8,
+    "heightCm": 46,
+    "ratio": 1.5609,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1950.89/1950.89_web.jpg",
+    "imageWidth": 900,
+    "imageHeight": 575,
+    "pageUrl": "https://clevelandart.org/art/1950.89",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Gift of the Hanna Fund",
+    "description": "Morisot’s sister, Edma, posed for this painting of a woman seated on her shawl in a field, her eyes on the pages of a book, with a parasol and fan discarded on the grass. Her white dress reflects the light and shadows of the outdoor setting; its delicate floral pattern echoes the meadow’s wildflowers. X-ray examination reveals that Morisot revised Edma’s eyes, which previously looked directly at the beholder, in a manner more typical of Manet’s figures (see The Railway on view in this gallery). Whereas women in Manet’s paintings often return the viewer’s look, Morisot’s figures are usually absorbed in tasks or private reflection. The Impressionists were mostly men with a few notable exceptions, including Berthe Morisot. While Morisot's work includes many of the hallmarks of Impressionism, such as her loose brushwork, the subject matter of her paintings often reflects the social constraints of her gender. Her paintings often depicted domestic tableaux or images of her friends and family, such as this painting of her sister.",
+    "culture": "France, 19th century",
+    "classification": "Painting",
+    "tags": [
+      "Modern European Painting and Sculpture"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Reading",
+      "maker": "Berthe Morisot",
+      "year": "1873",
+      "medium": "oil on canvas",
+      "dimensions": "Framed: 74.3 x 100.3 x 12.1 cm (29 1/4 x 39 1/2 x 4 3/4 in.); Unframed: 46 x 71.8 cm (18 1/8 x 28 1/4 in.)",
+      "culture": "France, 19th century",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Gift of the Hanna Fund",
+      "description": "Morisot’s sister, Edma, posed for this painting of a woman seated on her shawl in a field, her eyes on the pages of a book, with a parasol and fan discarded on the grass. Her white dress reflects the light and shadows of the outdoor setting; its delicate floral pattern echoes the meadow’s wildflowers. X-ray examination reveals that Morisot revised Edma’s eyes, which previously looked directly at the beholder, in a manner more typical of Manet’s figures (see The Railway on view in this gallery). Whereas women in Manet’s paintings often return the viewer’s look, Morisot’s figures are usually absorbed in tasks or private reflection. The Impressionists were mostly men with a few notable exceptions, including Berthe Morisot. While Morisot's work includes many of the hallmarks of Impressionism, such as her loose brushwork, the subject matter of her paintings often reflects the social constraints of her gender. Her paintings often depicted domestic tableaux or images of her friends and family, such as this painting of her sister.",
+      "tombstone": "Reading, 1873. Berthe Morisot (French, 1841–1895). Oil on canvas; framed: 74.3 x 100.3 x 12.1 cm (29 1/4 x 39 1/2 x 4 3/4 in.); unframed: 46 x 71.8 cm (18 1/8 x 28 1/4 in.). The Cleveland Museum of Art, Gift of the Hanna Fund, 1950.89",
+      "funFact": "",
+      "didYouKnow": "The Impressionists were mostly men with a few notable exceptions, including Berthe Morisot. While Morisot's work includes many of the hallmarks of Impressionism, such as her loose brushwork, the subject matter of her paintings often reflects the social constraints of her gender. Her paintings often depicted domestic tableaux or images of her friends and family, such as this painting of her sister.",
+      "creators": "Berthe Morisot (French, 1841–1895)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "The Impressionists were mostly men with a few notable exceptions, including Berthe Morisot.",
+      "quote": "The Impressionists were mostly men with a few notable exceptions, including Berthe Morisot.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Morisot’s sister, Edma, posed for this painting of a woman seated on her shawl in a field, her eyes on the pages of a book, with a parasol and fan discarded on the grass.",
+      "quote": "Morisot’s sister, Edma, posed for this painting of a woman seated on her shawl in a field, her eyes on the pages of a book, with a parasol and fan discarded on the grass.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Her white dress reflects the light and shadows of the outdoor setting; its delicate floral pattern echoes the meadow’s wildflowers.",
+      "quote": "Her white dress reflects the light and shadows of the outdoor setting; its delicate floral pattern echoes the meadow’s wildflowers.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "X-ray examination reveals that Morisot revised Edma’s eyes, which previously looked directly at the beholder, in a manner more typical of Manet’s figures (see The Railway on view in this gallery).",
+      "quote": "X-ray examination reveals that Morisot revised Edma’s eyes, which previously looked directly at the beholder, in a manner more typical of Manet’s figures (see The Railway on view in this gallery).",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

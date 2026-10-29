@@ -1,0 +1,111 @@
+{
+  "status": "draft",
+  "collection": "archaeology",
+  "slug": "coffin-of-bakenmut",
+  "notes": "region: Egypt. a coffin made for a person who died: state the purpose and stop. era removed: the paintings date buckets do not fit antiquity; Chat 8 defines this collection",
+  "entry": {
+    "id": "archaeology:coffin-of-bakenmut",
+    "collection": "archaeology",
+    "title": "Coffin of Bakenmut",
+    "year": "c. 1000–900 BCE",
+    "ratio": 0.3269,
+    "blurb": "The coffin of Bakenmut is one of the finest examples of painted wooden coffins made for the priests of Amen and their families at Thebes during Dynasty 21 and early Dynasty 22.",
+    "rarity": 1,
+    "tags": [
+      "egypt"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1914.561/1914.561_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Gift of the John Huntington Art and Polytechnic Trust",
+      "url": "https://clevelandart.org/art/1914.561"
+    },
+    "value": 5,
+    "facts": [
+      "All the care and detail that in more prosperous times were devoted to the decoration of the tomb chapel were now lavished on the elaborately painted coffins.",
+      "An elaborate floral collar entirely covers the upper body, exposing only the separately attached hands (now lost).",
+      "The decoration on the interior features two deified dead kings of Dynasty 18."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "93984",
+    "title": "Coffin of Bakenmut",
+    "maker": "",
+    "year": "c. 1000–900 BCE",
+    "medium": "gessoed and painted sycamore fig",
+    "dimensions": "Overall: 208 x 68 cm (81 7/8 x 26 3/4 in.)",
+    "widthCm": 68,
+    "heightCm": 208,
+    "ratio": 0.3269,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1914.561/1914.561_web.jpg",
+    "imageWidth": 738,
+    "imageHeight": 893,
+    "pageUrl": "https://clevelandart.org/art/1914.561",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Gift of the John Huntington Art and Polytechnic Trust",
+    "description": "The coffin of Bakenmut is one of the finest examples of painted wooden coffins made for the priests of Amen and their families at Thebes during Dynasty 21 and early Dynasty 22. The pharaohs of this time were no longer buried in the Valley of the Kings, but instead built tombs in the Delta, far to the north, where they resided. Security was lax in the Theban necropolis. The coffins and funerary goods of the wealthy citizens of Thebes were placed in unmarked and undecorated family tombs cut into the cliffs on the west bank of the Nile. All the care and detail that in more prosperous times were devoted to the decoration of the tomb chapel were now lavished on the elaborately painted coffins. Every available surface is crowded with religious scenes, images of funerary gods and goddesses, protective spells, and magical symbols. The deceased appears mummiform. An elaborate floral collar entirely covers the upper body, exposing only the separately attached hands (now lost). A pair of red \"mummy braces\" are crossed over the chest, their point of intersection marked by a winged sun disk. The lower body is covered with tiny figures modeled in gesso against a yellow background, which gives the effect of gold inlaid with glass or semiprecious stone. The decoration on the interior features two deified dead kings of Dynasty 18. Although these rulers had lived centuries before, memory of their greatness was still very much alive. The main scene near the top depicts Tuthmosis III, the great military pharaoh, who lived 500 years before Bakenmut. Posed as a mummy, the ruler wears a brilliant feathered garment enfolding him with falcon’s wings. The scene below features back-to-back seated images of Amenhotep I, regarded as the patron of the Theban cemetery and worshiped as a local god there. Originally another smaller coffin was placed inside this outer coffin and in that the deceased with a mummy board would have rested.",
+    "culture": "Egypt, Thebes, Third Intermediate (1069–715 BCE), Dynasties 21–22",
+    "classification": "Funerary Equipment",
+    "tags": [
+      "Egyptian and Ancient Near Eastern Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Coffin of Bakenmut",
+      "maker": "",
+      "year": "c. 1000–900 BCE",
+      "medium": "gessoed and painted sycamore fig",
+      "dimensions": "Overall: 208 x 68 cm (81 7/8 x 26 3/4 in.)",
+      "culture": "Egypt, Thebes, Third Intermediate (1069–715 BCE), Dynasties 21–22",
+      "classification": "Funerary Equipment",
+      "credit": "The Cleveland Museum of Art. Gift of the John Huntington Art and Polytechnic Trust",
+      "description": "The coffin of Bakenmut is one of the finest examples of painted wooden coffins made for the priests of Amen and their families at Thebes during Dynasty 21 and early Dynasty 22. The pharaohs of this time were no longer buried in the Valley of the Kings, but instead built tombs in the Delta, far to the north, where they resided. Security was lax in the Theban necropolis. The coffins and funerary goods of the wealthy citizens of Thebes were placed in unmarked and undecorated family tombs cut into the cliffs on the west bank of the Nile. All the care and detail that in more prosperous times were devoted to the decoration of the tomb chapel were now lavished on the elaborately painted coffins. Every available surface is crowded with religious scenes, images of funerary gods and goddesses, protective spells, and magical symbols. The deceased appears mummiform. An elaborate floral collar entirely covers the upper body, exposing only the separately attached hands (now lost). A pair of red \"mummy braces\" are crossed over the chest, their point of intersection marked by a winged sun disk. The lower body is covered with tiny figures modeled in gesso against a yellow background, which gives the effect of gold inlaid with glass or semiprecious stone. The decoration on the interior features two deified dead kings of Dynasty 18. Although these rulers had lived centuries before, memory of their greatness was still very much alive. The main scene near the top depicts Tuthmosis III, the great military pharaoh, who lived 500 years before Bakenmut. Posed as a mummy, the ruler wears a brilliant feathered garment enfolding him with falcon’s wings. The scene below features back-to-back seated images of Amenhotep I, regarded as the patron of the Theban cemetery and worshiped as a local god there. Originally another smaller coffin was placed inside this outer coffin and in that the deceased with a mummy board would have rested.",
+      "tombstone": "Coffin of Bakenmut, c. 1000–900 BCE. Egypt, Thebes, Third Intermediate (1069–715 BCE), Dynasties 21–22. Gessoed and painted sycamore fig; overall: 208 x 68 cm (81 7/8 x 26 3/4 in.). The Cleveland Museum of Art, Gift of the John Huntington Art and Polytechnic Trust, 1914.561",
+      "funFact": "",
+      "didYouKnow": "Originally another smaller coffin was placed inside this outer coffin and in that the deceased with a mummy board would have rested.",
+      "creators": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "The coffin of Bakenmut is one of the finest examples of painted wooden coffins made for the priests of Amen and their families at Thebes during Dynasty 21 and early Dynasty 22.",
+      "quote": "The coffin of Bakenmut is one of the finest examples of painted wooden coffins made for the priests of Amen and their families at Thebes during Dynasty 21 and early Dynasty 22.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "All the care and detail that in more prosperous times were devoted to the decoration of the tomb chapel were now lavished on the elaborately painted coffins.",
+      "quote": "All the care and detail that in more prosperous times were devoted to the decoration of the tomb chapel were now lavished on the elaborately painted coffins.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "An elaborate floral collar entirely covers the upper body, exposing only the separately attached hands (now lost).",
+      "quote": "An elaborate floral collar entirely covers the upper body, exposing only the separately attached hands (now lost).",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The decoration on the interior features two deified dead kings of Dynasty 18.",
+      "quote": "The decoration on the interior features two deified dead kings of Dynasty 18.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "unknown collection \"archaeology\"",
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

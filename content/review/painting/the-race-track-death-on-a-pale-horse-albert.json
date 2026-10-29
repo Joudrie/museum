@@ -1,0 +1,113 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "the-race-track-death-on-a-pale-horse-albert",
+  "notes": "region: United States, 1896-1908",
+  "entry": {
+    "id": "painting:the-race-track-death-on-a-pale-horse-albert",
+    "collection": "painting",
+    "title": "The Race Track (Death on a Pale Horse)",
+    "by": "Albert Pinkham Ryder",
+    "year": "c. 1896–1908",
+    "era": "impressionist",
+    "ratio": 1.2766,
+    "blurb": "One of the artist’s friends wagered $500 on the race and then died by suicide after the horse lost.",
+    "rarity": 1,
+    "tags": [
+      "united states",
+      "oil"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1928.8/1928.8_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Purchase from the J. H. Wade Fund",
+      "url": "https://clevelandart.org/art/1928.8"
+    },
+    "value": 5,
+    "facts": [
+      "Ryder’s subject was inspired by a horse race that took place in New York during 1888.",
+      "Counterclockwise horse racing in the United States was not standardized until the 1920s.",
+      "An intense man, Ryder worked on the painting for several years and was deeply reluctant to part with it."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "110180",
+    "title": "The Race Track (Death on a Pale Horse)",
+    "maker": "Albert Pinkham Ryder",
+    "year": "c. 1896–1908",
+    "medium": "oil on canvas",
+    "dimensions": "Framed: 84.5 x 102 x 6.5 cm (33 1/4 x 40 3/16 x 2 9/16 in.); Unframed: 70.5 x 90 cm (27 3/4 x 35 7/16 in.)",
+    "widthCm": 90,
+    "heightCm": 70.5,
+    "ratio": 1.2766,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1928.8/1928.8_web.jpg",
+    "imageWidth": 900,
+    "imageHeight": 711,
+    "pageUrl": "https://clevelandart.org/art/1928.8",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Purchase from the J. H. Wade Fund",
+    "description": "Ryder’s subject was inspired by a horse race that took place in New York during 1888. One of the artist’s friends wagered $500 on the race and then died by suicide after the horse lost. Medieval symbolism infuses the composition: death appears as a skeleton on horseback holding a scythe with which it cuts down the living, while a snake—a sign of temptation and evil—slithers in the foreground. An intense man, Ryder worked on the painting for several years and was deeply reluctant to part with it. Counterclockwise horse racing in the United States was not standardized until the 1920s.",
+    "culture": "United States",
+    "classification": "Painting",
+    "tags": [
+      "American Painting and Sculpture"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "The Race Track (Death on a Pale Horse)",
+      "maker": "Albert Pinkham Ryder",
+      "year": "c. 1896–1908",
+      "medium": "oil on canvas",
+      "dimensions": "Framed: 84.5 x 102 x 6.5 cm (33 1/4 x 40 3/16 x 2 9/16 in.); Unframed: 70.5 x 90 cm (27 3/4 x 35 7/16 in.)",
+      "culture": "United States",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Purchase from the J. H. Wade Fund",
+      "description": "Ryder’s subject was inspired by a horse race that took place in New York during 1888. One of the artist’s friends wagered $500 on the race and then died by suicide after the horse lost. Medieval symbolism infuses the composition: death appears as a skeleton on horseback holding a scythe with which it cuts down the living, while a snake—a sign of temptation and evil—slithers in the foreground. An intense man, Ryder worked on the painting for several years and was deeply reluctant to part with it. Counterclockwise horse racing in the United States was not standardized until the 1920s.",
+      "tombstone": "The Race Track (Death on a Pale Horse), c. 1896–1908. Albert Pinkham Ryder (American, 1847–1917). Oil on canvas; framed: 84.5 x 102 x 6.5 cm (33 1/4 x 40 3/16 x 2 9/16 in.); unframed: 70.5 x 90 cm (27 3/4 x 35 7/16 in.). The Cleveland Museum of Art, Purchase from the J. H. Wade Fund, 1928.8",
+      "funFact": "",
+      "didYouKnow": "Counterclockwise horse racing in the United States was not standardized until the 1920s.",
+      "creators": "Albert Pinkham Ryder (American, 1847–1917)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "One of the artist’s friends wagered $500 on the race and then died by suicide after the horse lost.",
+      "quote": "One of the artist’s friends wagered $500 on the race and then died by suicide after the horse lost.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Ryder’s subject was inspired by a horse race that took place in New York during 1888.",
+      "quote": "Ryder’s subject was inspired by a horse race that took place in New York during 1888.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Counterclockwise horse racing in the United States was not standardized until the 1920s.",
+      "quote": "Counterclockwise horse racing in the United States was not standardized until the 1920s.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "An intense man, Ryder worked on the painting for several years and was deeply reluctant to part with it.",
+      "quote": "An intense man, Ryder worked on the painting for several years and was deeply reluctant to part with it.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

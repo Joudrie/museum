@@ -45,3 +45,13 @@ export function builderIslands() {
     return [];
   }
 }
+
+// islands friends shared with you (kept by src/share.js)
+export function friendIslands() {
+  try {
+    const f = JSON.parse(localStorage.getItem('curation.friends') || '{}');
+    return Array.isArray(f.islands) ? f.islands.filter((m) => m?.kind === 'island') : [];
+  } catch {
+    return [];
+  }
+}
