@@ -4,7 +4,7 @@ Many chats work on Curation at the same time. This board is how they stay aware 
 It lists **every feature we have considered**, split into **15 chats** numbered by priority (1 is most important). Each chat has its own area and files.
 Read `CLAUDE.md`, `docs/VISION.md` and `docs/HANDOFF.md` first, then this file.
 
-**Your prompt is just:** *"Read CLAUDE.md, docs/VISION.md, docs/HANDOFF.md and docs/TODO.md. You are CHAT N. Claim it and work through it."*
+**Ready-made prompts for all 15 chats are in `docs/CHAT-PROMPTS.md`. The short version of the prompt is:** *"Read CLAUDE.md, docs/VISION.md, docs/HANDOFF.md and docs/TODO.md. You are CHAT N. Claim it and work through it."*
 
 ## Rules for all chats
 1. **Claim first.** Edit your chat's `Claim:` line to `claimed: <date>` and push that one line through a tiny PR (merge it yourself). Never work on another chat's items. If you need something from another chat, add a line under **Cross-chat requests** at the bottom and carry on.
@@ -37,7 +37,7 @@ Owns: `tools/`, `content/`, `docs/CONTENT*.md`, `public/paintings/`, `src/collec
 - [ ] Painting of the Day content: a rotating pick and a short true "why it matters" for each.
 
 ## CHAT 2: Builder and ground tools
-Owns: `src/builder/`, `builder.html`, `public/builder/`, `tools/build_palette.py`, `src/mapformat.js`. Claim: `open`
+Owns: `src/builder/`, `builder.html`, `public/builder/`, `tools/build_palette.py`, `src/mapformat.js`. Claim: `claimed: 2026-10-29`
 - [ ] **Turn families:** `public/builder/rotations.json` links the sides of one object (one chair so far). Find the true sets in the free packs (verify each by eye, never auto-group), add them. Keep the file format so the user's new sprites drop in.
 - [ ] Search box for pieces; recently used at the top; favourites.
 - [ ] **Grass that blends** into paths, dirt, sand and stone (autotile edges); jagged rocks instead of round ones.
@@ -49,7 +49,7 @@ Owns: `src/builder/`, `builder.html`, `public/builder/`, `tools/build_palette.py
 - [ ] Never lose work: keep the autosave and vault paths intact; test crash and reload.
 
 ## CHAT 3: Quality, performance and polish
-Owns: `tests/`, `.github/`, `vite.config.js`, `src/settings*.js`, `src/ui.js`. Claim: `open`
+Owns: `tests/`, `.github/`, `vite.config.js`, `src/settings*.js`, `src/ui.js`. Claim: `claimed: 2026-10-29`
 - [ ] **Stabilise the flaky tests** (playtest, smoke "cottage door"). Find the real race; don't just retry.
 - [ ] Phone performance: measure FPS on huge islands, many NPCs and lighting (today's numbers are the busiest room only). Set budgets and fix.
 - [ ] Tests for dig, fossils, turn families and the content pipeline; CI that runs content, collections and gaps on every PR.
@@ -59,7 +59,7 @@ Owns: `tests/`, `.github/`, `vite.config.js`, `src/settings*.js`, `src/ui.js`. C
 - [ ] A bug sweep with a repeatable full-flow test after each big merge.
 
 ## CHAT 4: Restoration and provenance (loop step 4)
-Owns: new `src/restore.js`, `src/restorestudio.js`, `src/storage_room.js`. Claim: `open`
+Owns: new `src/restore.js`, `src/restorestudio.js`, `src/storage_room.js`. Claim: `claimed: 2026-10-29`
 - [ ] Finds and paintings arrive **dirty or damaged**; a Restoration Studio (a room or a desk like the Curator's Office) where you clean them.
 - [ ] Painting cleaning: rub grime off the **real HD image** with a before / after reveal (the real paintings stay perfect everywhere else).
 - [ ] Fossil prep (brush stone off bone), pottery reassembly (drag pieces), bone assembly.
@@ -69,7 +69,7 @@ Owns: new `src/restore.js`, `src/restorestudio.js`, `src/storage_room.js`. Claim
 - [ ] Hand-offs: Chat 6 and 7 deliver dirty finds; Chat 5 displays restored ones.
 
 ## CHAT 5: Display, exhibits and the aquarium
-Owns: `src/showcase.js`, `src/viewer.js`, `src/collections/render.js`, new `src/display*.js`. Claim: `open`
+Owns: `src/showcase.js`, `src/viewer.js`, `src/collections/render.js`, new `src/display*.js`. Claim: `claimed: 2026-10-29`
 - [ ] Display cases, plinths, specimen shelves, easels and tanks that **place collection entries in rooms** (entries already say how they display: wall, case, plinth).
 - [ ] **Aquarium** for caught fish: tanks in a room, fish swim, tap for the card; a giant tank wing.
 - [ ] Dinosaur skeleton assembled from dug bones; the big T. rex as a goal.
@@ -80,7 +80,7 @@ Owns: `src/showcase.js`, `src/viewer.js`, `src/collections/render.js`, new `src/
 - [ ] Rope barriers, stanchions and signage as placeable decor.
 
 ## CHAT 6: Digging v2 and puzzle mechanics
-Owns: `src/dig.js`, `src/puzzles*.js`, `src/collections/data/{minerals,fossils}.js`. Claim: `open`
+Owns: `src/dig.js`, `src/puzzles*.js`, `src/collections/data/{minerals,fossils}.js`. Claim: `claimed: 2026-10-29`
 - [ ] More finds as data collections: pottery shards, coins, arrowheads, shells, meteorites, amber.
 - [ ] Dig tools (brush, trowel, pick) that change speed and what turns up; a bone that needs several spots to complete.
 - [ ] Bigger dig sites: a cliff face or trench worked across several tiles; a dig-site room sandbox.
@@ -90,7 +90,7 @@ Owns: `src/dig.js`, `src/puzzles*.js`, `src/collections/data/{minerals,fossils}.
 - [ ] Finds arrive dirty where Chat 4 expects them (`dirty: true` on a stack).
 
 ## CHAT 7: Expeditions, leads and expedition islands
-Owns: new `src/expedition*.js`, `src/leads.js`, `src/maps/` (new islands). Claim: `open`
+Owns: new `src/expedition*.js`, `src/leads.js`, `src/maps/` (new islands). Claim: `claimed: 2026-10-29`
 - [ ] **Leads:** a letter, a torn map, a pirate's note, a rumour from a famous visitor sends you to an island.
 - [ ] Boat flow to expedition islands (the boat menu lists every island); a short boat scene.
 - [ ] Levels as playable island maps: pirate island (jungle maze, traps, captain's map, chest), shipwreck dive (water-damaged crates), desert tomb (sliding stones), dinosaur badlands (fossil cliff), lost temple (plates, hidden rooms), heist hideout (stealth), frozen north (ice cave, mammoth).
@@ -101,7 +101,7 @@ Owns: new `src/expedition*.js`, `src/leads.js`, `src/maps/` (new islands). Claim
 - [ ] Rule: **earned, not bought, no throwaway mini-games.**
 
 ## CHAT 8: Collections, codex, journal and the shop
-Owns: `src/collections/` (except render.js), `src/journal.js`, `tools/import_collection.mjs`. Claim: `open`
+Owns: `src/collections/` (except render.js), `src/journal.js`, `tools/import_collection.mjs`. Claim: `claimed: 2026-10-29`
 - [ ] New collections as data (or CSV): coins, butterflies and insects, shells, stamps, ship models, glass flowers, pottery, armour, clocks, inventions.
 - [ ] Famous visitors as a collection (the codex already stamps `visitor:<id>`; their tab is hand-built).
 - [ ] Codex milestones at 10 / 25 / 50 / 75 / 100% with rewards; sets and artist sets (0/12 van Gogh); inventory vs codex.
@@ -111,7 +111,7 @@ Owns: `src/collections/` (except render.js), `src/journal.js`, `tools/import_col
 - [ ] One of a kind: you own *the* Starry Night; sold ones go back in the pool.
 
 ## CHAT 9: Rooms and the museum building
-Owns: `src/rooms.js`, `src/shaped.js`, `src/walldraw.js`, `src/atrium.js`, `src/RoomScene.js` (shared, take care). Claim: `open`
+Owns: `src/rooms.js`, `src/shaped.js`, `src/walldraw.js`, `src/atrium.js`, `src/RoomScene.js` (shared, take care). Claim: `claimed: 2026-10-29`
 - [ ] **Non-square rooms** (glass walls, curved, domed, sharp angles, open plan, small quiet rooms). **Blocked: needs a design pass with the user. Do the other items first.**
 - [ ] Corner and L-shaped rooms; truly seamless archways that show both rooms at once.
 - [ ] Elevator in the lobby and the first new floor (each floor a self-contained pack).
@@ -124,7 +124,7 @@ Owns: `src/rooms.js`, `src/shaped.js`, `src/walldraw.js`, `src/atrium.js`, `src/
 - [ ] Always re-run `tests/gaps.cjs`: no black gaps between walls, ever.
 
 ## CHAT 10: Living museum, people and story
-Owns: `src/famous.js`, `src/lines.js`, `src/quests.js`, `src/talk.js`, `src/staff.js`. Claim: `open`
+Owns: `src/famous.js`, `src/lines.js`, `src/quests.js`, `src/talk.js`, `src/staff.js`. Claim: `claimed: 2026-10-29`
 - [ ] Visitors with memories, goals and relationships; regulars that grow into characters; personalities (nerd, casual, superfan, snob, kid, grump, tourist) with more lines.
 - [ ] Famous visitors with quest chains and period-accurate dialogue; they send you places (feeds Chat 7). Odds rise with their works in your codex; permanent boosts.
 - [ ] A **Gardner-style heist mystery** as the first full story arc.
@@ -144,7 +144,7 @@ Owns: `src/weather.js`, `src/lighting.js`, `src/ambient.js`, `src/music.js`, `sr
 - [ ] Waterfalls, fountains, swans, fireflies and other life.
 
 ## CHAT 12: Economy, staff and services
-Owns: `src/staffmenu.js`, `src/officemenu.js`, `src/office.js`, `src/incomemenu.js`, `src/wallet.js`, `src/rating.js`. Claim: `open`
+Owns: `src/staffmenu.js`, `src/officemenu.js`, `src/office.js`, `src/incomemenu.js`, `src/wallet.js`, `src/rating.js`. Claim: `claimed: 2026-10-29`
 - [ ] Break-room upgrade menu (faster janitors, guide bonus, carpenter speed); Curator's Office level costs and unlocks.
 - [ ] Gift shop (merch of your best paintings), food court, kids' discovery room, lecture hall (a famous visitor gives a talk), library and archive where the stored collection lives, coffee shop depth.
 - [ ] Income formula: popularity x decor x visitors; the 8-hour offline cap messaging; coin pads and "collect all" cost.
