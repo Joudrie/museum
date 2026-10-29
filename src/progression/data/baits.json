@@ -1,0 +1,12 @@
+{
+  "worm": { "name": "Worm", "price": 4, "desc": "The classic. Pond fish like it.", "tags": ["pond"], "rareMult": 1 },
+  "bread": { "name": "Bread crumbs", "price": 3, "desc": "Surface feeders can’t resist.", "tags": ["pond"], "rareMult": 1 },
+  "cricket": { "name": "Cricket", "price": 6, "desc": "Trout and grayling go for it.", "tags": ["pond"], "rareMult": 1 },
+  "minnowbait": { "name": "Live minnow", "price": 10, "desc": "Predators come for a small fish.", "tags": ["predator"], "rareMult": 1.2 },
+  "shrimp": { "name": "Shrimp", "price": 8, "desc": "The sea’s favourite snack.", "tags": ["sea"], "rareMult": 1 },
+  "squidstrip": { "name": "Squid strip", "price": 16, "desc": "Big sea fish follow the scent.", "tags": ["sea"], "rareMult": 1.3 },
+  "glowbug": { "name": "Glowbug", "price": 14, "desc": "Glows in the dark. Rare fish like it at night.", "tags": ["night"], "rareMult": 1.5, "nightOnly": true },
+  "berrypaste": { "name": "Berry paste", "price": 0, "desc": "Crafted from berries. A sweet smell for pond fish.", "tags": ["pond"], "rareMult": 1.4, "craft": { "forage": { "berry": 3 } } },
+  "snowchum": { "name": "Snow chum", "price": 0, "desc": "Crafted from snow crystals. Ice-hole fish swarm to it.", "tags": ["ice"], "rareMult": 1.3, "craft": { "forage": { "snowcrystal": 2, "shell": 1 } } },
+  "goldenfly": { "name": "Golden fly", "price": 90, "desc": "Epic and legendary fish notice this.", "tags": ["rare"], "rareMult": 1, "epicMult": 2.2, "stock": "rare" }
+}

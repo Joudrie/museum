@@ -1,0 +1,6 @@
+{
+  "harvest": { "name": "Harvest Festival", "start": [10, 1], "end": [11, 7], "also": ["halloween"], "currency": "Pumpkin tokens", "season": "autumn", "cosmetics": ["hat:witch", "outfit:ghost", "title:harvest"], "blurb": "Lanterns in the trees, costumed neighbours, and a ghost variant that can turn up on any catch.", "returns": "next autumn" },
+  "winter": { "name": "Winter Festival", "start": [12, 10], "end": [1, 5], "also": [], "currency": "Snowflake tokens", "season": "winter", "cosmetics": ["hat:antlers", "rodskin:aurora", "title:frostbite", "frame:aurora"], "blurb": "Lights over the ice, and an ice-fishing derby.", "returns": "next winter" },
+  "bloom": { "name": "Spring Bloom", "start": [3, 20], "end": [4, 30], "also": [], "currency": "Petal tokens", "season": "spring", "cosmetics": ["outfit:kimono", "title:sprout", "hat:flower"], "blurb": "Blossom on the water and rivers full of fish heading home.", "returns": "next spring" },
+  "regatta": { "name": "Summer Regatta", "start": [6, 15], "end": [8, 15], "also": [], "currency": "Pennant tokens", "season": "summer", "cosmetics": ["outfit:regatta", "boatpaint:stripe", "title:regatta"], "blurb": "Boat time trials and the fastest fish in the sea.", "returns": "next summer" }
+}

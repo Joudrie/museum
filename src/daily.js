@@ -15,7 +15,11 @@ const WEIGHTS = [14, 14, 12, 14, 8, 14, 10, 2];
 export const FORGIVE_DAYS = 3; // a gap of up to this many days keeps the streak
 
 // Whole days since 1970 in the player's own calendar.
-export const dayNum = (d = new Date()) => Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 864e5);
+// (the day turns over at 4:00 local, like the progression layer's daily reset)
+export const dayNum = (d = new Date()) => {
+  const s = new Date(d.getTime() - 4 * 3600e3);
+  return Math.floor(Date.UTC(s.getFullYear(), s.getMonth(), s.getDate()) / 864e5);
+};
 
 export const giftFor = (streak) => 40 + 10 * Math.min(streak, 7);
 export const isMilestone = (streak) => streak > 0 && streak % 7 === 0;
@@ -37,6 +41,8 @@ export function visitToday(today = dayNum()) {
 
 export function dailyState(today = dayNum()) {
   const s = visitToday(today);
+  const prog = typeof window !== 'undefined' ? window.__prog?.state?.streak?.count : 0;
+  if (prog && prog > s.streak) s.streak = prog; // the progression streak (shields, milestones) counts when it is longer
   return { ...s, giftReady: s.gift !== today, wheelReady: s.wheel !== today, giftAmount: giftFor(s.streak) + (isMilestone(s.streak) ? 100 : 0) };
 }
 

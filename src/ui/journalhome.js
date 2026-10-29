@@ -83,6 +83,11 @@ export function overview({ goalCards, goalsLeft }) {
   grid.append(...collectionCards(snap));
   nodes.push(grid);
 
+  const field = el('button', 'jcard hot');
+  field.append(Object.assign(el('span', 'jcover'), { innerHTML: uiIcon('map', 'l') }), el('b', '', 'Field journal'), el('small', '', 'Goals, fish hints, people, places, secrets, titles, records'));
+  field.onclick = () => window.dispatchEvent(new CustomEvent('open-field', { detail: 'goals' }));
+  nodes.push(el('h3', 'ui-label', 'Out in the world'), field);
+
   nodes.push(el('h3', 'ui-label', 'Keep'));
   const keep = el('div', 'ui-grid jgrid');
   const dirty = dirtyTotal();

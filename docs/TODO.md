@@ -189,6 +189,15 @@ Owns: new `src/ui/`, `ui.html`, `docs/UI*.md`, `docs/ui/`, `tests/ui-*.cjs`; res
 - [~] Migrate every screen, most-used first. **Done: HUD and Menu hub, Journal overview, and the skin that puts every older menu on the system (Toolkit, Customize with groups, Settings regrouped, Build, wall spot, Display, Office, Staff, Income, daily, share, sail, ask, dig, viewer chrome, toasts queue, tips, builder page chrome).** Left: dialogs and cards (catch, celebrate, talk bubble), viewer polish, conversation box and tutorial, title screen, builder menu and sheet flow, event queue for reward cards.
 - [ ] Polish: sound, haptics, motion, empty and error states, copy sweep, large-text and left-handed modes, accessibility labels.
 
+## PROGRESSION AND RETENTION (the layer in `docs/PROGRESSION.md`)
+Owns: `src/progression/`, `tools/{validate,sim}_progression.mjs`, `tests/progression*.cjs`. Claim: `claimed: 2026-10-29`
+- [x] Phase 1: event bus, RewardQueue, Rank, fishing rarity/size/variants/pity, journal hints, rarity colours, reveal choreography.
+- [x] Phase 2: skills and perks, friendship with gifts, request board, daily tasks, goals tab, stuck detector.
+- [x] Phase 3: economy ladder, shop rotation, baits and crafting, lodge and aquarium, cosmetics.
+- [x] Phase 4: traversal ladder, fog chunks, viewpoints, secrets, rumours, legendary trails, locked docks.
+- [x] Phase 5: weekly rhythm, login calendar, streak shields, rested XP, return and leaving cards, seasons, events.
+- [x] Phase 6: subscription gating (flag, not enforced), telemetry and report, sim, validator, tuning.
+- [ ] Open: the race with the kids, notifications that fire while the game is closed (needs a push backend), a real payment path, player-facing art for hats and outfits (placeholder colours now), the lantern radius perk, art for the ghost variant.
 ## CHAT 17: People sprites (classes the Pokémon way)
 Owns: new `src/people/`, the character section of `src/art.js` (looks, `makeCharacter`), `src/library.js` and `art.html` (people gallery), `docs/PEOPLE-SPRITES.md`, new `tests/people-sprites.cjs`. Small additive edits only in `src/IslandScene.js`, `src/RoomScene.js` and the builder palette. Claim: `claimed: 2026-10-29`
 - [x] (this PR) Tier 0: parts (builds, hats, hair, facial hair, glasses, outfits, accessories, held props, poses), all recoloured through the palette letters.

@@ -8,7 +8,7 @@ import { drawEntry } from './collections/render.js';
 
 const T = 32;
 const hexNum = (hex) => parseInt(hex.slice(1), 16);
-const GLOW = ['', '', '', '#7fd0ff', '#f2d36b']; // rare and legendary pieces get a glow
+const GLOW = ['', '', '', '#7fd0ff', '#c88af0', '#f2d36b']; // rare, epic and legendary pieces get a glow
 
 // A texture for an entry, made once. Drawn art is a canvas; paintings load their
 // picture in the background and show their placeholder colour until it arrives.
@@ -96,7 +96,7 @@ export function showDisplays(scene, items, g) {
       if (glow) {
         const halo = scene.add.ellipse(x, y - slot.h / 2, slot.w + 4, slot.h + 4, hexNum(glow), 0.35).setDepth(depth);
         // legendary pieces breathe
-        if (e.rarity === 4) scene.tweens.add({ targets: halo, alpha: 0.12, duration: 1100, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+        if (e.rarity === 5) scene.tweens.add({ targets: halo, alpha: 0.12, duration: 1100, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
         out.push(halo);
       }
       const key = textureOf(scene, e, slot);

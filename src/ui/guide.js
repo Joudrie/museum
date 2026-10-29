@@ -56,7 +56,7 @@ const html = `
 <section><h2 class="ui-label">Toggle, rarity, hint, empty</h2>
   <div class="stack">
     <div class="ui-toggle"><span>Vibration</span><button role="switch" aria-checked="true" aria-label="Vibration"></button></div>
-    <div class="rowflex"><span class="ui-rarity" data-r="1">Common</span><span class="ui-rarity" data-r="2">Uncommon</span><span class="ui-rarity" data-r="3">Rare</span><span class="ui-rarity" data-r="4">Legendary</span></div>
+    <div class="rowflex"><span class="ui-rarity" data-r="1">Common</span><span class="ui-rarity" data-r="2">Uncommon</span><span class="ui-rarity" data-r="3">Rare</span><span class="ui-rarity" data-r="4">Epic</span><span class="ui-rarity" data-r="5">Legendary</span></div>
     <div class="ui-hint">Tip: tap a visitor to chat. Some have a gift.</div>
     <div class="ui-empty"><b>No fossils yet</b><span>Brush the dirt mounds on the islands to find some.</span><button class="ui-btn">Show me where</button></div>
   </div>

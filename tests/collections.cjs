@@ -60,7 +60,7 @@ async function dataChecks() {
   check(ms.completion({ seen: {} }).pct === 0 && ms.completion({ seen: {} }).total === reg.list().length, 'completion counts every collectable entry', 'completion wrong');
   const vg = reg.getSet('artist-vangogh');
   check(vg && vg.entries.length === reg.list({ q: 'van gogh', collection: 'painting' }).length && vg.reward.gold === 100 * vg.entries.length && !reg.sets('painting').length && reg.sets('painting', true).length >= 5, 'artist sets are made from the paintings and are journal goals only', 'artist sets wrong');
-  check(reg.list({ tag: 'pond' }).length === 8, 'tag filter works', 'tag filter broken');
+  check(reg.list({ tag: 'pond' }).length === 18, 'tag filter works', 'tag filter broken: ' + reg.list({ tag: 'pond' }).length);
   // Dig finds: each new dig collection has dirty-or-clean entries and a full set, and the codex keeps a sane `dirty` count.
   ['pottery', 'coin', 'arrowhead', 'shell', 'meteorite'].forEach((id) => check(reg.list({ collection: id }).length >= 5, `${id}: at least 5 entries`, `${id} is missing entries`));
   check(reg.get('pottery:red-sherd').dirty === true && reg.get('shell:conch').dirty === undefined, 'dirty is set on the entries that arrive dirty', 'dirty flag wrong');
@@ -243,7 +243,7 @@ async function shopChecks() {
   await boot({});
   await openJournal();
   const tabs = await S(() => [...document.querySelectorAll('#journal .jcard > b')].map((b) => b.textContent));
-  check(tabs.join() === 'Paintings,Visitors,Fish,Minerals,Fossils,Pottery,Coins,Stone tools,Shells,Meteorites,Treasures,Makers,Insects,Codex,Storage,Gallery Shop', `cards: ${tabs.join(', ')}`, `unexpected cards: ${tabs.join(', ')}`);
+  check(tabs.join() === 'Paintings,Visitors,Fish,Minerals,Fossils,Pottery,Coins,Stone tools,Shells,Meteorites,Treasures,Makers,Insects,Field journal,Codex,Storage,Gallery Shop', `cards: ${tabs.join(', ')}`, `unexpected cards: ${tabs.join(', ')}`);
   const tabFits = await S(() => [...document.querySelectorAll('#journal .jcard > b, #journal .jcard > small')].every((b) => b.scrollWidth <= b.clientWidth + 1));
   check(tabFits, 'card labels fit', 'a card label is clipped');
   await shot('journal-goals');
@@ -271,9 +271,9 @@ async function shopChecks() {
   await jtab(p, 'fish');
   await wait(400);
   check((await S(() => document.querySelectorAll('.bobber').length)) === 5, 'fish tab keeps its bobbers', 'bobbers missing');
-  check((await S(() => document.querySelectorAll('.fish-cell').length)) === 21, '18 fish and 3 finds in the log', 'fish log size wrong');
-  check((await S(() => document.querySelectorAll('.fish-cell.unknown').length)) === 21, 'all are silhouettes on a fresh save', 'fresh save shows catches');
-  check((await S(() => document.querySelectorAll('.set-row').length)) === 2, 'pond and sea sets show', 'fish sets missing');
+  check((await S(() => document.querySelectorAll('.fish-cell').length)) === 75, '72 fish and 3 finds in the log', 'fish log size wrong');
+  check((await S(() => document.querySelectorAll('.fish-cell.unknown').length)) === 74, 'all are silhouettes on a fresh save but the minnow Edmund gives you', 'fresh save shows catches');
+  check((await S(() => document.querySelectorAll('.set-row').length)) === 10, 'pond, sea and the eight new fish sets show', 'fish sets missing');
   await shot('journal-fish');
   await noSideScroll('fish');
 
@@ -291,7 +291,7 @@ async function shopChecks() {
   await p.click('text=Collect one of everything');
   await wait(300);
   const msg = await S(() => [...document.querySelectorAll('#settings button')].find((b) => /^Added/.test(b.textContent))?.textContent);
-  check(/Added 100/.test(msg || ''), `testing button: ${msg}`, `testing button said: ${msg}`); // 18 fish + 3 finds + 8 minerals + 8 fossils + 6 pottery + 6 coins + 6 stone tools + 6 shells + 5 meteorites + 28 more (stamps, armour, insects, ships, glass, clocks, inventions) + 2 skeletons + 4 map pieces
+  check(/Added 153/.test(msg || ''), `testing button: ${msg}`, `testing button said: ${msg}`); // 18 fish + 3 finds + 8 minerals + 8 fossils + 6 pottery + 6 coins + 6 stone tools + 6 shells + 5 meteorites + 28 more (stamps, armour, insects, ships, glass, clocks, inventions) + 2 skeletons + 4 map pieces
   await p.click('.settings-close');
   await wait(300);
   await openJournal('minerals');
@@ -413,25 +413,26 @@ async function shopChecks() {
   if (spot && (await shown('#interact'))) {
     await p.click('#interact');
     await wait(900);
+    await S(() => { __prog.T.fishing.junkChance = 0; }); // no junk, so the catch is kept
     await S(() => { const f = __game.scene.getScene('island').fishing; f.biteAt = f.t + 0.2; });
     await wait(450);
-    await S(() => { window.__rand = Math.random; Math.random = () => 0.5; }); // no junk, so the catch is kept
-    await p.mouse.click(195, 300);
-    await wait(900);
-    await S(() => { Math.random = window.__rand; });
+    await S(() => { __game.scene.getScene('island').fishing.tap(); }); // hook it, then win the reel
+    await wait(300);
+    await S(() => { const r = __game.scene.getScene('island').fishing.reel; r.progress = 1; r.step(0.01, true); });
+    await wait(1400);
     check(await shown('#catch'), 'catch card shows', 'no catch card');
     await shot('catch-card');
     const c3 = await codexNow();
-    const got = Object.keys(c3?.seen || {}).filter((k) => /^(fish|find):/.test(k));
+    const got = Object.keys(c3?.seen || {}).filter((k) => /^(fish|find):/.test(k) && k !== 'fish:minnow'); // (Edmund's minnow is already in the codex)
     const caught = await S(() => JSON.parse(localStorage.getItem('curation.fishing') || '{}'));
-    check(got.length === 1 && c3.owned[got[0]] === 1 && caught.total >= 0, `catch recorded in the codex (${got[0]})`, 'catch not in the codex: ' + JSON.stringify(c3));
+    check(got.length === 1 && c3.owned[got[0]] === 1, `catch recorded in the codex (${got[0]})`, 'catch not in the codex: ' + JSON.stringify(c3));
     await p.click('#catch');
     await wait(500);
     // the island's journal shows only the fish tab, with the catch in it
     await S(() => document.getElementById('journal-btn')?.click());
     await wait(500);
     const islandTabs = await S(() => ({ hidden: getComputedStyle(document.querySelector('.journal-tabs')).display, known: document.querySelectorAll('.fish-cell:not(.unknown)').length }));
-    if (await shown('#journal')) check(islandTabs.known === 1, 'island journal shows the catch', 'island journal missing the catch: ' + JSON.stringify(islandTabs));
+    if (await shown('#journal')) check(islandTabs.known === 2, 'island journal shows the catch (and Edmund\'s minnow)', 'island journal missing the catch: ' + JSON.stringify(islandTabs));
     else ok('(no journal button outdoors; skipped)');
   } else fail('could not find a pond spot to fish from');
 
