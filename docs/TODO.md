@@ -4,7 +4,7 @@ Many chats work on Curation at the same time. This board is how they stay aware 
 It lists **every feature we have considered**, split into **15 chats** numbered by priority (1 is most important). Each chat has its own area and files.
 Read `CLAUDE.md`, `docs/VISION.md` and `docs/HANDOFF.md` first, then this file.
 
-**Your prompt is just:** *"Read CLAUDE.md, docs/VISION.md, docs/HANDOFF.md and docs/TODO.md. You are CHAT N. Claim it and work through it."*
+**Ready-made prompts for all 15 chats are in `docs/CHAT-PROMPTS.md`. The short version of the prompt is:** *"Read CLAUDE.md, docs/VISION.md, docs/HANDOFF.md and docs/TODO.md. You are CHAT N. Claim it and work through it."*
 
 ## Rules for all chats
 1. **Claim first.** Edit your chat's `Claim:` line to `claimed: <date>` and push that one line through a tiny PR (merge it yourself). Never work on another chat's items. If you need something from another chat, add a line under **Cross-chat requests** at the bottom and carry on.
