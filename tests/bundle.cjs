@@ -2,7 +2,7 @@
 // Phaser is its own cached chunk; the rest is the game. Raise a number here on purpose, never by accident.
 const fs = require('fs');
 const zlib = require('zlib');
-const BUDGET_KB = { phaser: 360, main: 230, total: 760 }; // total = all JS in dist/assets (every page)
+const BUDGET_KB = { phaser: 360, main: 230, total: 800 }; // total = all JS in dist/assets (every page); 760 → 800 for the people sprites (docs/PEOPLE-SPRITES.md tiers 4-5, about 25 KB)
 const dir = 'dist/assets';
 if (!fs.existsSync(dir)) {
   console.log('  ✗ no dist/: run npm run build first');
