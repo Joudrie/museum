@@ -229,11 +229,10 @@ export class WakefieldScene extends Phaser.Scene {
       grass: make(256, (g) => {
         for (let y = 0; y < 8; y++) for (let x = 0; x < 8; x++) g.drawImage(TILES[['grass_1', 'grass_2', 'grass_1', 'grass_3'][Math.floor(hash(x, y) * 4)]].frames[0], x * T, y * T);
       }),
-      dirt: make(64, (g) => {
-        for (let y = 0; y < 2; y++) for (let x = 0; x < 2; x++) g.drawImage(TILES[(x + y) % 2 ? 'dirt_2' : 'dirt_1'].frames[0], x * T, y * T);
-      }),
+      road: TILES.rock_1.frames[0], // the greyest stone there is: roads and parking lots
+      walk: TILES.path_flagstone.frames[0], // lighter, for sidewalks
       brick: TILES.brick.frames[0],
-      rock: TILES.rock_1.frames[0],
+      rail: TILES.dirt_2.frames[0], // gravel for the railway
       water: TILES.water.frames,
     };
   }
@@ -287,7 +286,7 @@ export class WakefieldScene extends Phaser.Scene {
       ctx.lineWidth = r.w;
       ctx.stroke();
     });
-    ctx.strokeStyle = pat(src.rock);
+    ctx.strokeStyle = pat(src.rail);
     b.rail.forEach((r) => {
       ctx.beginPath();
       line(r);
@@ -295,7 +294,7 @@ export class WakefieldScene extends Phaser.Scene {
       ctx.stroke();
     });
     // roads, narrow to wide (the bucket keeps that order), one stroke per width
-    ctx.strokeStyle = pat(src.dirt);
+    ctx.strokeStyle = pat(src.road);
     let i = 0;
     while (i < b.roads.length) {
       const w = b.roads[i].w;
@@ -304,6 +303,17 @@ export class WakefieldScene extends Phaser.Scene {
       ctx.lineWidth = w;
       ctx.stroke();
     }
+    // streets, parking lots and sidewalks measured from the satellite photos (Main Street and the roads off it)
+    ctx.lineJoin = 'round';
+    b.pave.forEach((g) => {
+      ctx.beginPath();
+      g.rings.forEach((r) => {
+        r.forEach((v, i) => (i % 2 ? null : i ? ctx.lineTo(v, r[i + 1]) : ctx.moveTo(v, r[i + 1])));
+        ctx.closePath();
+      });
+      ctx.fillStyle = pat(g.kind === 'walks' ? src.walk : src.road);
+      ctx.fill('evenodd');
+    });
     ctx.beginPath();
     b.buildings.forEach((p) => {
       ctx.moveTo(p[0], p[1]);

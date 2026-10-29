@@ -58,6 +58,8 @@ class World {
     this.buildings = vec.buildings.map(unpack);
     this.labels = vec.labels || [];
     this.pois = vec.pois || []; // named places: [text, x, y, tier, kind, width]
+    // measured from the satellite photos: street surfaces, parking lots, sidewalks (polygons with holes)
+    this.pave = ['lots', 'walks', 'streets'].flatMap((kind) => (vec.pave?.[kind] || []).map((g) => ({ kind, rings: [g.o, ...g.i].map(unpack) })));
     this.geo = vec.geo;
     this.ppm = vec.ppm;
     this.buckets = new Map();
@@ -103,6 +105,7 @@ class World {
     this.rivers.forEach((r) => along(r.p, r.w / 2 + 12, (b) => b.rivers.push(r)));
     this.lakes.forEach((l) => l.outer.forEach((p) => box(p, 12, (b) => b.lakes.push(l))));
     this.buildings.forEach((p) => box(p, 2, (b) => b.buildings.push(p)));
+    this.pave.forEach((g) => box(g.rings[0], 6, (b) => b.pave.push(g)));
     this.pois.forEach((l) => {
       const r = l[5] / 2 + 8;
       box([l[1] - r, l[2] - r, l[1] + r, l[2] + r], 0, (b) => b.pois.push(l));
@@ -126,7 +129,7 @@ class World {
   bucket(cx, cy) {
     const k = `${cx},${cy}`;
     let b = this.buckets.get(k);
-    if (!b) this.buckets.set(k, (b = { roads: [], rail: [], rivers: [], lakes: [], buildings: [], labels: [], pois: [] }));
+    if (!b) this.buckets.set(k, (b = { roads: [], rail: [], rivers: [], lakes: [], buildings: [], labels: [], pois: [], pave: [] }));
     return b;
   }
 
