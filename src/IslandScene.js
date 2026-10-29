@@ -6,7 +6,7 @@ import Phaser from 'phaser';
 import { buildTiles, T } from './tiles.js';
 import { patchSheet } from './swap.js';
 import { makeCharacter } from './art.js';
-import { load } from './storage.js';
+import { load, save } from './storage.js';
 import { DEFAULT_CHARACTER } from './decor.js';
 import { showTalk, hideTalk, talking } from './talk.js';
 import { iconSvg } from './icons.js';
@@ -36,6 +36,19 @@ import { openLeads, grantStartLeads, foundLeads } from './leads.js';
 import { visitorLook, KINDS } from './RoomScene.js';
 import { PERSONALITIES, QUIPS } from './lines.js';
 import { blendAt } from './groundblend.js';
+import { reachCost, headY } from './focus.js';
+import { popEmote, startChat, EMOTES, SEASON_EMOTE } from './emotes.js';
+import { makeEmotes } from './art.js';
+import { Prints } from './prints.js';
+import { islandLine } from './island_lines.js';
+import { Boat } from './boat.js';
+import { FocusMark } from './focusmark.js';
+import { buildVignettes } from './vignettes.js';
+import { converse, giftStatus, recordGift } from './chatter.js';
+import { runDialogue } from './dialogue.js';
+import { list as listEntries } from './collections/index.js';
+import { collect as collectEntry } from './collections/codex.js';
+import { addCoins } from './wallet.js';
 
 // Islands drawn in the map builder (builder.html), reached by boat from the
 // main island's dock. Each is a 'curation-map' file (see src/builder/main.js).
@@ -122,6 +135,8 @@ export class IslandScene extends Phaser.Scene {
     this.events.once('shutdown', () => setAmbience([]));
     this.frame = 0;
     this.solid = Array.from({ length: H }, () => Array(W).fill(false));
+    this.blockSet = new Set(); // cells something stands in (a boat can't go there)
+    this.dockCells = new Set();
     this.animated = []; // images whose texture changes every frame
     this.things = []; // signs and chests you can interact with
     this.digs = []; // dig spots (src/dig.js)
@@ -139,6 +154,8 @@ export class IslandScene extends Phaser.Scene {
     this.leaving = false;
 
     this.boats = [];
+    this.talkingTo = null;
+    this.chatHandle = null;
     this.islanders = []; // people and animals living on a builder island
     this.door = this.map ? null : DOOR; // a museum's front doors
     this.makeMap();
@@ -159,8 +176,18 @@ export class IslandScene extends Phaser.Scene {
     this.cottageLock = this.spawnAt === 'cottage';
     this.facing = 'down';
     this.fishing = new Fishing(this, this.player);
+    makeEmotes(this);
+    this.prints = new Prints(this);
+    this.boat = new Boat(this);
+    this.makeWaterButton();
+    this.mark = new FocusMark(this);
+    this.shadowsG = this.add.graphics().setDepth(0.5); // soft shadows under the people and animals on screen
 
     this.lightUp();
+    if (this.mapId === 'main' || !this.map) {
+      // the home islands have a few people doing their one thing (src/vignettes.js)
+      buildVignettes(this, { season: this.season, weather: this.weatherKind, night: this.dark > 0.45, day: Math.floor(Date.now() / 86400000) });
+    }
     this.critters = new Critters(
       this,
       { w: W * T, h: H * T, isSand: (x, y) => this.ground_(x, y) === 'sand', isWater: (x, y) => this.ground_(x, y) === 'water', flowers: this.flowerSpots, pond: this.pondRect() },
@@ -412,7 +439,10 @@ export class IslandScene extends Phaser.Scene {
   }
 
   block(x, y) {
-    if (y >= 0 && y < H && x >= 0 && x < W) this.solid[y][x] = true;
+    if (y >= 0 && y < H && x >= 0 && x < W) {
+      this.solid[y][x] = true;
+      this.blockSet.add(`${x},${y}`);
+    }
   }
 
   // The museum's front: stone, columns, a pediment and double doors.
@@ -972,7 +1002,12 @@ export class IslandScene extends Phaser.Scene {
       const flat = dock || ['walk', 'grass', 'over'].includes(t.walk);
       const img = this.place(name, x, y, { flat, solid: name === 'rowboat' ? false : undefined });
       if (o.flip) img.setFlipX(true);
-      if (dock) for (let i = 0; i < Math.round(t.w / T); i++) if (this.solid[y]?.[x + i] !== undefined) this.solid[y][x + i] = false;
+      if (dock)
+        for (let i = 0; i < Math.round(t.w / T); i++)
+          if (this.solid[y]?.[x + i] !== undefined) {
+            this.solid[y][x + i] = false;
+            this.dockCells.add(`${x + i},${y}`);
+          }
       if (/tree|palm|pine|bush|willow|sapling/.test(name)) this.trees.push(img);
       if (name === 'rowboat') this.boats.push({ x: img.x + img.displayWidth / 2, y: img.y - 10 });
     });
@@ -1050,11 +1085,7 @@ export class IslandScene extends Phaser.Scene {
     sfx(kind === 'dog' ? 'woof' : kind === 'cat' ? 'meow' : kind === 'parrot' ? 'squawk' : 'tap');
     n.target = null;
     n.wait = 2000;
-    if (this.textures.exists('emote_heart')) {
-      const heart = this.add.image(n.s.x, n.s.y - 22, 'emote_heart').setOrigin(0.5, 1).setDepth(5000).setScale(0);
-      this.tweens.add({ targets: heart, scale: 1, y: heart.y - 6, duration: 220, ease: 'Back.easeOut' });
-      this.tweens.add({ targets: heart, alpha: 0, delay: 1100, duration: 300, onComplete: () => heart.destroy() });
-    }
+    popEmote(this, n, 'heart', { hold: 1100, lift: 2 });
     this.tweens.add({ targets: n.s, y: n.s.y - 4, duration: 120, yoyo: true });
   }
 
@@ -1092,7 +1123,13 @@ export class IslandScene extends Phaser.Scene {
       const { s } = n;
       // (people well off screen stand still: nobody sees them, and hundreds of them cost frames)
       if (!n.target && (s.x < v.x - 160 || s.x > v.right + 160 || s.y < v.y - 160 || s.y > v.bottom + 160)) return;
-      if (this.focus?.npc === n && talking()) n.target = null; // stops to chat
+      if (n.talking || n.chatting) {
+        n.target = null; // stops to chat
+        n.after = null;
+        if (!n.animal) animateWalker(this, s, false, dt);
+        return;
+      }
+      if (n.script) return n.script.update(dt); // a one-trick character (src/vignettes.js)
       const a = n.animal;
       if (!n.target) {
         if (a) s.setTexture(a.pet ? (s.texture.key.includes('_side') ? `${n.prefix}_side` : `${n.prefix}_down`) : `${n.prefix}_${a.critter === 'duck' ? this.frame % 2 : 0}`);
@@ -1104,7 +1141,9 @@ export class IslandScene extends Phaser.Scene {
         const steps = 1 + Math.floor(Math.random() * 2);
         const tx = s.x + dx * steps * T;
         const ty = s.y + dy * steps * T;
-        if (Math.hypot(tx - n.home.x, ty - n.home.y) > n.range) return;
+        // (someone who strolled over to a friend drifts back: a step toward home is always fine)
+        const nd = Math.hypot(tx - n.home.x, ty - n.home.y);
+        if (nd > n.range && nd >= Math.hypot(s.x - n.home.x, s.y - n.home.y)) return;
         for (let k = 1; k <= steps; k++) {
           const wet = this.ground_(s.x + dx * k * T, s.y + dy * k * T) === 'water';
           if (a?.water ? !wet : wet || !this.free(s.x + dx * k * T, s.y + dy * k * T)) return;
@@ -1119,7 +1158,13 @@ export class IslandScene extends Phaser.Scene {
       const d = Math.hypot(ddx, ddy);
       if (d <= sp) {
         s.setPosition(g.x, g.y);
-        n.target = null;
+        n.target = n.after || null; // (a second leg of a walk to a friend)
+        n.after = null;
+        if (!n.target && n.arrive) {
+          const go = n.arrive;
+          n.arrive = null;
+          go();
+        }
       } else s.setPosition(s.x + (ddx / d) * sp, s.y + (ddy / d) * sp);
       n.walkT = (n.walkT || 0) + dt;
       const step = Math.floor(n.walkT * 8) % 2;
@@ -1130,20 +1175,173 @@ export class IslandScene extends Phaser.Scene {
       } else {
         if (g.dy) s.setTexture(g.dy < 0 ? `${n.prefix}_up` : `${n.prefix}_down`).setFlipX(false);
         else s.setTexture(`${n.prefix}_side`).setFlipX(g.dx < 0);
-        animateWalker(this, s, true, dt);
+        if (animateWalker(this, s, true, dt) && this.snowAt(s.x, s.y - 2)) this.prints.step(s.x, s.y - 2, g.dx, g.dy, (n.leftFoot = !n.leftFoot), 'snow');
       }
       s.setDepth(s.y);
     });
+    // (one drawing for every shadow on screen)
+    const sg = this.shadowsG.clear();
+    sg.fillStyle(0x000000, 0.22);
+    this.islanders.forEach((n) => {
+      const s = n.s;
+      if (n.animal?.pet === 'parrot' || s.x < v.x - 16 || s.x > v.right + 16 || s.y < v.y - 16 || s.y > v.bottom + 40) return;
+      const w = n.animal ? (n.animal.critter === 'crab' ? 9 : 13) : 16 * (s.scaleX / PLAYER_SCALE);
+      sg.fillEllipse(s.x, s.y - 1, w, w * 0.34);
+    });
   }
 
+  // ---------- People meeting people ----------
+  // Neighbours stop and chat, wordlessly, in pictures; someone idle strolls over to a friend nearby;
+  // and people notice you walking by and look round. All of it only where you can see it.
+  canChat(n) {
+    return !n.animal && !n.script && n.s.active && !n.talking && !n.chatting && !n.target && !n.after && (!n.chatAt || this.time.now - n.chatAt > 20000);
+  }
+
+  chatBetween(a, b) {
+    a.chatAt = b.chatAt = this.time.now;
+    const near = Math.hypot(this.player.x - a.s.x, this.player.y - a.s.y) < 150;
+    return startChat(this, a, b, {
+      face: (n, to) => this.faceNpc(n, to.s.x, to.s.y),
+      sound: () => near && sfx('pop'),
+      season: this.season,
+      onEnd: (x, y) => {
+        x.wait = 800 + Math.random() * 1500;
+        y.wait = 800 + Math.random() * 1500;
+      },
+    });
+  }
+
+  // Free to walk in a straight line? (no water, no walls)
+  lineFree(x0, y0, x1, y1) {
+    const n = Math.ceil(Math.hypot(x1 - x0, y1 - y0) / 8);
+    for (let i = 1; i <= n; i++) {
+      const x = x0 + ((x1 - x0) * i) / n;
+      const y = y0 + ((y1 - y0) * i) / n;
+      if (!this.free(x, y) || this.ground_(x, y) === 'water') return false;
+    }
+    return true;
+  }
+
+  socializeIslanders(dt) {
+    this.socialT = (this.socialT ?? 2) - dt;
+    if (this.socialT > 0 || !this.islanders.length) return;
+    this.socialT = 1.1 + Math.random() * 1.2;
+    const v = this.cameras.main.worldView;
+    const seen = (n) => n.s.x > v.x - 24 && n.s.x < v.right + 24 && n.s.y > v.y - 24 && n.s.y < v.bottom + 24;
+    const free = this.islanders.filter((n) => this.canChat(n) && seen(n));
+    if (!free.length) return;
+    const p = this.player;
+    const now = this.time.now;
+    // someone you walk past turns and greets you
+    free.forEach((n) => {
+      const d = Math.hypot(p.x - n.s.x, p.y - n.s.y);
+      if (d < 72 && d > 20 && (!n.greetAt || now - n.greetAt > 45000)) {
+        n.greetAt = now;
+        n.wait = Math.max(n.wait, 1800);
+        this.faceNpc(n, p.x, p.y);
+        popEmote(this, n, ['smile', 'heart', 'note', 'sparkle', SEASON_EMOTE[this.season] || 'star'][Math.floor(Math.random() * 5)]);
+      }
+    });
+    // the ones busy at their one thing glance up and smile as you pass, without stopping
+    this.islanders.forEach((n) => {
+      if (!n.script || n.talking || !seen(n)) return;
+      const d = Math.hypot(p.x - n.s.x, p.y - n.s.y);
+      if (d < 64 && (!n.greetAt || now - n.greetAt > 40000)) {
+        n.greetAt = now;
+        popEmote(this, n, ['smile', 'heart', 'note', 'sparkle'][Math.floor(Math.random() * 4)]);
+      }
+    });
+    // neighbours chat where they stand
+    for (let i = 0; i < free.length; i++)
+      for (let j = i + 1; j < free.length; j++)
+        if (Math.hypot(free[i].s.x - free[j].s.x, free[i].s.y - free[j].s.y) < 52 && Math.random() < 0.6) return this.chatBetween(free[i], free[j]);
+    // someone strolls over to a friend close by
+    for (const a of free) {
+      if (!a.range || Math.random() > 0.2) continue;
+      const near = free.filter((b) => b !== a && Math.hypot(b.s.x - a.s.x, b.s.y - a.s.y) < a.range + 3 * T && Math.hypot(b.s.x - a.s.x, b.s.y - a.s.y) >= 52);
+      if (!near.length) continue;
+      const b = near[Math.floor(Math.random() * near.length)];
+      const side = a.s.x < b.s.x ? -1 : 1;
+      const tx = b.s.x + side * 26;
+      if (!this.lineFree(a.s.x, a.s.y, tx, a.s.y) || !this.lineFree(tx, a.s.y, tx, b.s.y)) continue;
+      const hop = Math.sign(tx - a.s.x);
+      a.target = { x: tx, y: a.s.y, dx: hop, dy: 0 };
+      a.after = Math.abs(b.s.y - a.s.y) > 1 ? { x: tx, y: b.s.y, dx: 0, dy: Math.sign(b.s.y - a.s.y) } : null;
+      a.arrive = () => this.canChat(b) && this.canChat(a) && Math.hypot(b.s.x - a.s.x, b.s.y - a.s.y) < 60 && this.chatBetween(a, b);
+      return;
+    }
+    // now and then someone just feels something
+    const n = free[Math.floor(Math.random() * free.length)];
+    if (Math.random() < 0.3) popEmote(this, n, this.ownEmote(n));
+  }
+
+  ownEmote(n) {
+    const pool = [...(EMOTES[n.kind] || ['heart', 'note'])];
+    if (this.weatherKind === 'rain') pool.push('sweat', 'sweat');
+    if (this.season === 'winter') pool.push('snow', 'sweat');
+    else if (this.season === 'autumn') pool.push('leaf');
+    else if (this.season === 'summer') pool.push('sun');
+    if (this.dark > 0.45) pool.push('zzz');
+    return pool[Math.floor(Math.random() * pool.length)];
+  }
+
+  // Turn an islander to look at a point.
+  faceNpc(n, tx, ty) {
+    if (n.animal) return;
+    const dx = tx - n.s.x;
+    const dy = ty - n.s.y;
+    if (Math.abs(dx) > Math.abs(dy)) n.s.setTexture(`${n.prefix}_side`).setFlipX(dx < 0);
+    else n.s.setTexture(dy < 0 ? `${n.prefix}_up` : `${n.prefix}_down`).setFlipX(false);
+  }
+
+  // A real conversation, like the museum's visitors have (src/chatter.js): their first line
+  // is about today, then topics, jokes, tips and now and then a gift.
   talkTo(n) {
+    if (this.chatHandle) return;
+    n.chat?.cancel();
+    const store = { get: load, set: save };
+    const { giftOK, given } = giftStatus(n.name, n.kind, store);
+    const finds = { mineral: listEntries({ collection: 'mineral' }).filter((e) => (e.rarity || 1) <= 2), fossil: listEntries({ collection: 'fossil' }).filter((e) => (e.rarity || 1) <= 2) };
+    const opener = n.opener?.() || islandLine({ season: this.season, weather: this.weatherKind, night: this.dark > 0.45, holiday: holiday() });
+    this.paused = true;
+    this.interactBtn.classList.add('hidden');
+    n.talking = true;
+    n.target = null;
+    n.after = null;
+    this.talkingTo = n;
+    this.faceNpc(n, this.player.x, this.player.y);
     sfx('talk');
-    const lines = QUIPS?.island || ['Lovely day for it.', 'Have you been to the museum yet?', 'I come out here to think.', 'The fish are biting by the dock, they say.', 'Every rock on this island has a story.'];
-    const line = lines[Math.floor(Math.random() * lines.length)];
-    const r = this.game.canvas.getBoundingClientRect();
-    const cam = this.cameras.main;
-    const k = r.width / this.scale.gameSize.width;
-    showTalk(n.name, 'Islander', line, { x: r.left + (n.s.x - cam.worldView.x) * cam.zoom * k, y: r.top + (n.s.y - 40 - cam.worldView.y) * cam.zoom * k });
+    const gen = converse({ kind: n.kind, name: n.name, opener, giftOK, given, finds });
+    const tex = this.textures.get(`${n.prefix}_down`)?.getSourceImage?.();
+    this.chatHandle = runDialogue(gen, {
+      name: n.name,
+      label: n.label || PERSONALITIES[n.kind]?.label || 'Islander',
+      portrait: tex,
+      onMood: (m) => popEmote(this, n, m),
+      onGift: (gift) => {
+        recordGift(n.name, n.kind, store);
+        sfx('unlock');
+        if (gift.type === 'gold') {
+          addCoins(gift.n);
+          this.toast(`${n.name} gave you ${gift.n} gold`);
+        } else {
+          collectEntry(gift.id);
+          this.toast(`${n.name} gave you: ${gift.title}`);
+        }
+        popEmote(this, n, 'heart');
+      },
+      onEnd: () => {
+        this.chatHandle = null;
+        this.talkingTo = null;
+        this.paused = false;
+        n.talking = false;
+        n.wait = 1500;
+      },
+    });
+  }
+
+  endTalk() {
+    this.chatHandle?.close();
   }
 
   // where you step off the boat: the nearest walkable spot to the first boat
@@ -1220,65 +1418,172 @@ export class IslandScene extends Phaser.Scene {
     this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start('island', go));
   }
 
+  // What you're facing and within reach (see src/focus.js): a person standing behind you
+  // while you face the museum doors is not who you mean. Things underfoot (dig spots) need no facing.
   findFocus() {
     const { x, y } = this.player;
+    const facing = this.facing;
     let best = null;
-    let bestD = 26;
-    this.things.forEach((t) => {
-      const d = Math.hypot(x - t.x, y - t.y);
-      if (d < bestD) {
-        best = { thing: t, icon: 'look' };
-        bestD = d;
+    let bestC = Infinity;
+    // reach: how close it has to be; d: how close it is; (tx, ty): where it is, for the facing test
+    const consider = (reach, d, focus, tx, ty) => {
+      if (d >= reach) return;
+      const c = tx === undefined ? d : reachCost(x, y, facing, tx, ty, d);
+      if (c < bestC) {
+        best = focus;
+        bestC = c;
       }
-    });
-    this.digs.forEach((d) => {
-      const dd = Math.hypot(x - d.x, y - d.y);
-      if (dd < 30 && dd < bestD + 4) {
-        best = { dig: d, icon: 'look' };
-        bestD = dd;
-      }
-    });
-    const ex = this.exp?.focus(x, y, bestD);
-    if (ex) {
-      best = ex;
-      bestD = ex.d;
-    }
+    };
+    this.things.forEach((t) => consider(26, Math.hypot(x - t.x, y - t.y), { thing: t, icon: 'look' }, t.x, t.y));
+    this.digs.forEach((d) => consider(30, Math.hypot(x - d.x, y - d.y), { dig: d, icon: 'look' }));
+    // (digging is done standing on the spot: no facing needed)
+    const ex = this.exp?.focus(x, y, 32);
+    if (ex) consider(32, ex.d, ex, ...(ex.exp.sp.k === 'dig' ? [] : [ex.exp.px, ex.exp.py]));
     if (this.puzzles.any) {
       const pz = this.puzzles.focusAt(x, y);
-      if (pz && Math.hypot(x - pz.puzzle.cx, y - pz.puzzle.cy) < bestD + 4) {
-        best = pz;
-        bestD = Math.hypot(x - pz.puzzle.cx, y - pz.puzzle.cy);
-      }
+      if (pz) consider(34, Math.hypot(x - pz.puzzle.cx, y - pz.puzzle.cy), pz, ...(pz.kind === 'x' || pz.kind === 'buried' ? [] : [pz.puzzle.cx, pz.puzzle.cy]));
     }
-    if (this.pet) {
-      const dp = Math.hypot(x - this.pet.s.x, y - this.pet.s.y) + 4;
-      if (dp < bestD) {
-        best = { pet: true, icon: 'talk' };
-        bestD = dp;
-      }
-    }
+    if (this.pet && !this.boat.active) consider(30, Math.hypot(x - this.pet.s.x, y - this.pet.s.y) + 4, { pet: true, icon: 'talk' }, this.pet.s.x, this.pet.s.y - 4);
+    const sk = this.boat.skiff; // the little boat you left moored
+    if (sk && !this.boat.active) consider(48, Math.hypot(x - sk.x, y - sk.y), { skiff: true, icon: 'boat' }, sk.x, sk.y);
     if (this.map) {
       // by a boat, or back where you stepped off
-      if (this.boats.some((b) => Math.hypot(x - b.x, y - b.y) < 64) || (this.landingSpot && Math.hypot(x - this.landingSpot.x, y - this.landingSpot.y) < 36)) best = { boat: true, icon: 'door' };
-      if (this.door && Math.hypot(x - this.door.x, y - (this.door.y + 4)) < 30) best = { door: true, icon: 'door' };
-      this.islanders.forEach((n) => {
-        const d = Math.hypot(x - n.s.x, y - n.s.y);
-        if (d < 26 && d < bestD) {
-          best = n.animal ? { animal: n, icon: 'talk' } : { npc: n, icon: 'talk' };
-          bestD = d;
-        }
-      });
+      // (a boat is long: face its nearest point, so standing alongside it counts)
+      this.boats.forEach((b) => consider(64, Math.hypot(x - b.x, y - b.y), { boat: true, icon: 'door' }, Math.min(Math.max(x, b.x - 20), b.x + 20), b.y));
+      if (this.landingSpot) consider(36, Math.hypot(x - this.landingSpot.x, y - this.landingSpot.y), { boat: true, icon: 'door' }, this.landingSpot.x, this.landingSpot.y);
+      if (this.door) consider(30, Math.hypot(x - this.door.x, y - (this.door.y + 4)), { door: true, icon: 'door' }, this.door.x, this.door.y);
+      this.islanders.forEach((n) => consider(26, Math.hypot(x - n.s.x, y - n.s.y), n.animal ? { animal: n, icon: 'talk' } : { npc: n, icon: 'talk' }, n.s.x, n.s.y - 8));
     } else {
-      const dd = Math.hypot(x - DOOR.x, y - (DOOR.y + 4));
-      if (dd < 30 && dd < bestD) best = { locked: true, icon: 'door' };
-      if (Math.hypot(x - COTTAGE.x, y - (COTTAGE.y + 8)) < 22) best = { cottage: true, icon: 'door' };
-      if (Math.hypot(x - 14 * T, y - 39.4 * T) < 56) best = { boat: true, icon: 'door' }; // the rowboat at the dock
+      consider(30, Math.hypot(x - DOOR.x, y - (DOOR.y + 4)), { locked: true, icon: 'door' }, DOOR.x, DOOR.y);
+      consider(22, Math.hypot(x - COTTAGE.x, y - (COTTAGE.y + 8)), { cottage: true, icon: 'door' }, COTTAGE.x, COTTAGE.y);
+      consider(56, Math.hypot(x - 14 * T, y - 39.4 * T), { boat: true, icon: 'door' }, 14 * T, 39.4 * T); // the rowboat at the dock
     }
     if (!best) {
       const spot = this.waterAhead();
       if (spot) best = { fish: spot, icon: 'fish' };
     }
     return best;
+  }
+
+  // Where the arrow goes: over the head of what Interact will act on.
+  focusPoint(f) {
+    if (!f) return null;
+    const over = (s, n) => ({ x: s.x, y: headY(s) - (n?.emoteImg?.active ? 18 : 6) });
+    if (f.npc || f.animal) return over((f.npc || f.animal).s, f.npc || f.animal);
+    if (f.pet) return over(this.pet.s);
+    if (f.skiff) return { x: this.boat.skiff.x, y: this.boat.skiff.y - 26 };
+    if (f.boat) {
+      const { x, y } = this.player;
+      const b = this.boats.reduce((m, o) => (!m || Math.hypot(x - o.x, y - o.y) < Math.hypot(x - m.x, y - m.y) ? o : m), null);
+      return b && !b.virtual ? { x: b.x, y: b.y - 24 } : null;
+    }
+    if (f.door) return { x: this.door.x, y: this.door.y - 28 };
+    if (f.locked) return { x: DOOR.x, y: DOOR.y - 28 };
+    if (f.cottage) return { x: COTTAGE.x, y: COTTAGE.y - 30 };
+    if (f.thing) return { x: f.thing.x, y: f.thing.y - 34 };
+    return null;
+  }
+
+  // What the Interact button says for what you're facing.
+  focusLabel(f) {
+    if (!f) return 'Interact';
+    if (f.fish) return 'Fish';
+    if (f.skiff) return 'Hop in';
+    if (f.exp) return f.exp.label;
+    if (f.puzzle) return { lever: 'Pull', rock: 'Smash', riddler: 'Ask', boulder: 'Reset', x: 'Dig', buried: 'Dig' }[f.kind] || 'Look';
+    if (f.thing) return f.thing.name === 'chest' ? 'Open' : 'Read';
+    if (f.dig) return 'Dig';
+    if (f.npc) return this.talkingTo === f.npc ? 'Bye' : 'Talk';
+    if (f.animal || f.pet) return 'Pet';
+    if (f.boat) return 'Sail';
+    if (f.door || f.cottage) return 'Enter';
+    if (f.locked) return 'Try door';
+    return 'Interact';
+  }
+
+  // ---------- The boat ----------
+  mapBounds() {
+    return { x0: 18, x1: W * T - 18, y0: 24, y1: H * T - 10 };
+  }
+
+  // Open water a boat can sit on: sea or pond, with nothing standing in it (and no frozen pond).
+  boatWater(x, y) {
+    if (this.ground_(x, y) !== 'water') return false;
+    const cx = Math.floor(x / T);
+    const cy = Math.floor(y / T);
+    const k = `${cx},${cy}`;
+    if (this.blockSet.has(k) || this.dockCells.has(k)) return false;
+    if (this.posts.some((b) => x > b.x0 && x < b.x1 && y > b.y0 && y < b.y1)) return false;
+    return !(this.season === 'winter' && this.key(cx, cy, (m) => m === 3) !== '0000');
+  }
+
+  // Where you'd step down into a boat: the first open water ahead.
+  boatSpot() {
+    const p = this.player;
+    const [dx, dy] = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] }[this.facing];
+    for (const d of [26, 34, 42, 50]) {
+      const x = p.x + dx * d;
+      const y = p.y + dy * d;
+      if (this.boat.fits(x, y, this.boat.orient(this.facing))) return { x, y };
+    }
+    return null;
+  }
+
+  // Where you'd step out of the boat: walkable ground ahead.
+  landAhead() {
+    const p = this.player;
+    const [dx, dy] = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] }[this.facing];
+    for (const d of [22, 30, 38, 46]) {
+      const x = p.x + dx * d;
+      const y = p.y + dy * d;
+      if (this.free(x, y) && !this.boat.fits(x, y, 'h')) return { x, y };
+    }
+    return null;
+  }
+
+  // The second button, above Interact: Boat at the water's edge, Hop out when afloat and the shore is ahead.
+  makeWaterButton() {
+    let b = document.getElementById('interact2');
+    if (!b) {
+      b = document.createElement('button');
+      b.id = 'interact2';
+      b.className = 'pixel-btn hidden';
+      b.innerHTML = '<span class="bang"></span><span class="label"></span>';
+      document.body.appendChild(b);
+    }
+    this.waterBtn = b;
+    this.waterMode = null;
+    b.classList.add('hidden');
+    b.onclick = () => this.useWaterButton();
+    this.events.once('shutdown', () => b.classList.add('hidden'));
+  }
+
+  updateWaterButton() {
+    const b = this.waterBtn;
+    let mode = null;
+    if (!this.paused && !this.leaving && !this.exp && !this.fishing.busy && !talking()) {
+      if (this.boat.active) mode = this.landAhead() ? 'hop' : null;
+      else if (this.waterAhead() && this.boatSpot()) mode = 'boat'; // (the same "at the water's edge" as Fish)
+    }
+    if (mode === this.waterMode) return;
+    this.waterMode = mode;
+    b.classList.toggle('hidden', !mode);
+    if (!mode) return;
+    b.querySelector('.label').textContent = mode === 'hop' ? 'Hop out' : 'Boat';
+    b.querySelector('.bang').innerHTML = iconSvg(mode === 'hop' ? 'door' : 'boat');
+  }
+
+  useWaterButton() {
+    if (this.paused || this.leaving) return;
+    if (this.waterMode === 'hop') {
+      const land = this.landAhead();
+      if (land) this.boat.hopOut(land);
+    } else if (this.waterMode === 'boat') {
+      const spot = this.boatSpot();
+      if (spot) this.boat.board(spot, this.facing);
+    }
+    this.waterMode = null;
+    this.waterBtn.classList.add('hidden');
   }
 
   // Open water a short cast ahead of where you're facing: { x, y, water }.
@@ -1303,6 +1608,7 @@ export class IslandScene extends Phaser.Scene {
     const f = this.focus;
     if (!f || this.leaving) return;
     if (this.fishing.busy) return this.fishing.tap();
+    if (f.skiff) return this.boat.boardSkiff();
     if (f.boat) return this.sail();
     if (f.door) return this.goInside();
     if (f.locked) return this.toast('The doors are locked. The museum is on Main Island now.');
@@ -1319,13 +1625,25 @@ export class IslandScene extends Phaser.Scene {
       return;
     }
     if (f.pet) return this.pet.pet();
+    if (f.npc) return this.talkingTo === f.npc ? this.endTalk() : this.talkTo(f.npc);
     if (talking()) return hideTalk();
-    if (f.npc) return this.talkTo(f.npc);
     sfx('talk');
+    const t = f.thing;
+    showTalk(t.name === 'chest' ? 'Treasure chest' : 'Sign', 'The island', t.text, () => (this.sys.isActive() ? this.screenAt(t.x, t.y - 30) : null));
+  }
+
+  // A speech bubble's anchor: the top of someone's head, followed as they (or the camera) move.
+  // Gone (null) once they're gone, so a bubble never hangs over a scene it doesn't belong to.
+  speakerAt(sprite) {
+    return () => (sprite.active && this.sys.isActive() ? this.screenAt(sprite.x, headY(sprite)) : null);
+  }
+
+  // Where a point in the world is on the page.
+  screenAt(x, y) {
     const r = this.game.canvas.getBoundingClientRect();
     const cam = this.cameras.main;
     const k = r.width / this.scale.gameSize.width;
-    showTalk(f.thing.name === 'chest' ? 'Treasure chest' : 'Sign', 'The island', f.thing.text, { x: r.left + (f.thing.x - cam.worldView.x) * cam.zoom * k, y: r.top + (f.thing.y - 30 - cam.worldView.y) * cam.zoom * k });
+    return { x: r.left + (x - cam.worldView.x) * cam.zoom * k, y: r.top + (y - cam.worldView.y) * cam.zoom * k };
   }
 
   enterCottage() {
@@ -1361,23 +1679,61 @@ export class IslandScene extends Phaser.Scene {
     return this.key(cx, cy, (m) => m >= 2) === '1111' ? 'grass' : 'sand';
   }
 
-  onStep(p, pace) {
+  // Little things the player does on their own: a visible breath in the cold, and after standing
+  // about for a while, a look round at the view. (Only the picture turns; which way you face doesn't.)
+  idleLife(dt, moving) {
+    const p = this.player;
+    if (moving || this.paused || this.fishing.busy || this.boat.active) {
+      this.idleT = 0;
+    } else this.idleT = (this.idleT || 0) + dt;
+    if (this.season === 'winter' || this.weatherKind === 'snow') {
+      this.breathT = (this.breathT || 0) - dt;
+      if (this.breathT <= 0 && !this.paused) {
+        this.breathT = moving ? 1.3 : 2.6;
+        const side = this.facing === 'left' ? -1 : this.facing === 'right' ? 1 : 0;
+        const puff = this.add.circle(p.x + side * 6, p.y - 21, 1.6, 0xffffff, 0.8).setDepth(p.y + 2);
+        this.tweens.add({ targets: puff, x: puff.x + side * 5 + 2, y: puff.y - 6, scale: 2.4, alpha: 0, duration: 800, onComplete: () => puff.destroy() });
+      }
+    }
+    if (this.idleT > 8 && !this.idleLooking) {
+      this.idleLooking = true;
+      const key = p.texture.key;
+      const flip = p.flipX;
+      const look = (left) => p.setTexture('player_side').setFlipX(left);
+      look(true);
+      this.time.delayedCall(1100, () => this.idleLooking && look(false));
+      this.time.delayedCall(2200, () => {
+        if (this.idleLooking && this.idleT > 0) p.setTexture(key).setFlipX(flip);
+        this.idleLooking = false;
+        this.idleT = 3; // a while before the next look
+      });
+    } else if (this.idleLooking && this.idleT === 0) this.idleLooking = false;
+  }
+
+  // Is the ground here under snow? (the same drifts snowChunk paints)
+  snowAt(x, y, ground = this.surfaceAt(x, y)) {
+    if (this.season !== 'winter' || (ground !== 'grass' && ground !== 'path')) return false;
+    return snowNoise(x, y) >= (ground === 'path' ? 0.5 : 0.36);
+  }
+
+  // The player's foot lands: a sound, a footprint (soft sand and snow keep one), puffs, a splash.
+  onStep(p, pace, vx, vy) {
     const ground = this.surfaceAt(p.x, p.y - 2);
-    footstep(ground === 'sand' || ground === 'shore' ? 'sand' : ground === 'grass' || ground === 'tall' ? 'grass' : 'floor');
-    if (ground === 'sand') {
-      // a footprint that fades away
-      this.stepSide = !this.stepSide;
-      const side = p.texture.key.includes('side');
-      const fx = p.x + (side ? 0 : this.stepSide ? -3 : 3);
-      const fy = p.y - 2 + (side ? (this.stepSide ? -1 : 1) : 0);
-      const print = this.add.rectangle(fx, fy, side ? 4 : 3, side ? 2 : 3, 0x8a6a3c, 0.45).setDepth(0.6);
-      this.tweens.add({ targets: print, alpha: 0, delay: 2500, duration: 2500, onComplete: () => print.destroy() });
-    } else if (ground === 'tall') {
+    const snowy = this.snowAt(p.x, p.y - 2, ground);
+    footstep(snowy ? 'snow' : ground === 'sand' || ground === 'shore' ? 'sand' : ground === 'grass' || ground === 'tall' ? 'grass' : 'floor');
+    this.stepSide = !this.stepSide;
+    if (snowy) {
+      this.prints.step(p.x, p.y - 2, vx, vy, this.stepSide, 'snow');
+      if (pace === 1) dust(this, p.x, p.y, 0xf4f8ff);
+      return;
+    }
+    if (ground === 'sand') this.prints.step(p.x, p.y - 2, vx, vy, this.stepSide, 'sand');
+    else if (ground === 'tall') {
       for (let i = 0; i < 3; i++) {
         const leaf = this.add.rectangle(p.x + (Math.random() - 0.5) * 14, p.y - 6, 2, 2, Math.random() < 0.5 ? 0x94d672 : 0x58ad52).setDepth(p.y + 3);
         this.tweens.add({ targets: leaf, x: leaf.x + (Math.random() - 0.5) * 16, y: leaf.y - 6 - Math.random() * 6, alpha: 0, duration: 500, onComplete: () => leaf.destroy() });
       }
-    } else if (ground === 'shore') {
+    } else if (ground === 'shore' || (this.weatherKind === 'rain' && ground !== 'path')) {
       const ring = this.add.ellipse(p.x, p.y - 1, 10, 4).setStrokeStyle(1, 0xf2fbff, 0.8).setDepth(0.7);
       this.tweens.add({ targets: ring, scaleX: 2, scaleY: 2, alpha: 0, duration: 600, onComplete: () => ring.destroy() });
     }
@@ -1396,7 +1752,9 @@ export class IslandScene extends Phaser.Scene {
     if (this.leaving) return;
     const dt = Math.min(dtMs, 50) / 1000;
     this.fishing.update(dt);
+    this.prints.update();
     this.moveIslanders(dt);
+    this.socializeIslanders(dt);
     if (this.paused) return;
     const k = this.keys;
     let vx = (k.D.isDown || k.RIGHT.isDown ? 1 : 0) - (k.A.isDown || k.LEFT.isDown ? 1 : 0);
@@ -1417,13 +1775,17 @@ export class IslandScene extends Phaser.Scene {
     if (len) {
       // small sub-steps, so a slow frame still stops against a wall where a fast one would
       // (otherwise one big step skips over the strip in front of a door that triggers it)
-      const dist = SPEED * pace * dt;
+      const afloat = this.boat.active;
+      const dist = SPEED * pace * dt * (afloat ? 0.8 : 1);
       const steps = Math.max(1, Math.ceil(dist / 3));
+      const o = this.boat.orient(this.facing);
+      // (a boat already squeezed against the shore may always move away)
+      const ok = afloat ? (fx, fy) => this.boat.fits(fx, fy, o) || !this.boat.fits(p.x, p.y, o) : (fx, fy) => this.free(fx, fy);
       for (let i = 0; i < steps; i++) {
         const nx = p.x + ((vx / len) * dist) / steps;
         const ny = p.y + ((vy / len) * dist) / steps;
-        if (this.free(nx, p.y)) p.x = nx;
-        if (this.free(p.x, ny)) p.y = ny;
+        if (ok(nx, p.y)) p.x = nx;
+        if (ok(p.x, ny)) p.y = ny;
       }
       if (Math.abs(vx) > Math.abs(vy)) {
         p.setTexture('player_side').setFlipX(vx < 0);
@@ -1434,7 +1796,8 @@ export class IslandScene extends Phaser.Scene {
       }
     }
     if (this.puzzles.any) this.puzzles.update(dt, len ? vx / len : 0, len ? vy / len : 0);
-    if (animateWalker(this, p, len > 0 || !!this.puzzles.sliding, dt, 0.8 + pace * 0.5)) this.onStep(p, pace);
+    if (this.boat.active) this.boat.update(dt, len > 0, this.facing, vx, vy);
+    else if (animateWalker(this, p, len > 0 || !!this.puzzles.sliding, dt, 0.8 + pace * 0.5)) this.onStep(p, pace, vx, vy);
     this.pet?.update(dt);
     this.exp?.update(dt);
     this.critters.update(dt, p);
@@ -1444,6 +1807,7 @@ export class IslandScene extends Phaser.Scene {
     this.playerGlow?.setPosition(p.x, p.y - 12);
     p.setDepth(p.y);
     this.shadow.setPosition(p.x, p.y - 1);
+    this.updateWaterButton();
     // Walk up into the doors to go back inside (main island only).
     const D = this.door;
     const atDoor = !!D && Math.abs(p.x - D.x) < 20 && p.y < D.y + 10 && p.y > D.y - 12;
@@ -1463,7 +1827,13 @@ export class IslandScene extends Phaser.Scene {
     if (!this.fishing.busy) this.focus = this.findFocus();
     this.interactBtn.classList.toggle('hidden', !this.focus || (this.fishing.busy && this.fishing.state === 'reel'));
     if (this.focus && this.focus.icon !== prev) this.interactBtn.querySelector('.bang').innerHTML = iconSvg(this.focus.icon);
-    if (!this.fishing.busy) this.interactBtn.querySelector('.label').textContent = this.focus?.fish ? 'Fish' : this.focus?.dig ? 'Dig' : this.focus?.exp ? this.focus.exp.label : this.focus?.boat ? 'Sail' : 'Interact';
+    if (!this.fishing.busy) {
+      const lab = this.interactBtn.querySelector('.label');
+      const label = this.focusLabel(this.focus);
+      if (lab.textContent !== label) lab.textContent = label;
+    }
+    this.mark.update(dt, this.fishing.busy ? null : this.focusPoint(this.focus));
+    this.idleLife(dt, len > 0);
     if (this.focus && (Phaser.Input.Keyboard.JustDown(k.SPACE) || Phaser.Input.Keyboard.JustDown(k.ENTER))) this.interact();
   }
 }

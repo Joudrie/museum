@@ -13,6 +13,7 @@ import { list, slugOf, RARITY as RARITY_NAMES } from './collections/index.js';
 import { snapshot, collect } from './collections/codex.js';
 import { drawEntry, drawShadow as shadowOf } from './collections/render.js';
 import { registerTabExtra } from './collections/tab.js';
+import { popEmote } from './emotes.js';
 
 const KEY = 'curation.fishing'; // { total, night, bobber } (what you've caught lives in the codex; older saves kept it here as caught)
 
@@ -224,6 +225,7 @@ export class Fishing {
     this.player = player;
     this.state = 'idle';
     this.g = scene.add.graphics().setDepth(4000);
+    this.me = { s: player }; // (for the faces you pull)
   }
 
   get busy() {
@@ -252,7 +254,7 @@ export class Fishing {
       ease: 'Sine.easeOut',
       onUpdate: (tw) => {
         const k = tw.getValue();
-        const a = this.tip();
+        const a = this.rodTip();
         this.bob.setPosition(a.x + (target.x - a.x) * k, a.y + (target.y + 3 - a.y) * k - Math.sin(k * Math.PI) * 30);
       },
       onComplete: () => {
@@ -274,6 +276,21 @@ export class Fishing {
     const dx = f === 'left' ? -14 : f === 'right' ? 14 : f === 'up' ? 5 : -5;
     const dy = f === 'up' ? -30 : f === 'down' ? -12 : -24;
     return { x: p.x + dx, y: p.y + dy };
+  }
+
+  // The rod swings back and forward as you cast, sways while you wait and bends when something bites.
+  rodTip() {
+    const tip = this.tip();
+    const p = this.player;
+    if (this.state === 'cast') {
+      const k = Math.min(1, this.t / 0.22);
+      const e = 1 - Math.pow(1 - k, 3);
+      const back = { x: p.x - (tip.x - p.x) * 0.6, y: p.y - 36 };
+      return { x: back.x + (tip.x - back.x) * e, y: back.y + (tip.y - back.y) * e };
+    }
+    if (this.state === 'bite') return { x: tip.x, y: tip.y + 3 + Math.sin(this.t * 40) * 1.2 };
+    if (this.state === 'wait') return { x: tip.x, y: tip.y + Math.sin(this.t * 2) * 0.5 };
+    return tip;
   }
 
   splash(x, y, big) {
@@ -314,7 +331,7 @@ export class Fishing {
     }
     if (!this.bob) return; // it got away (or was hooked) this frame
     // the rod and the line (sagging a little while it waits)
-    const a = this.tip();
+    const a = this.rodTip();
     const p = this.player;
     g.lineStyle(1.5, 0x5a3a24, 1);
     g.lineBetween(p.x + (a.x - p.x) * 0.25, p.y - 14, a.x, a.y);
@@ -342,6 +359,7 @@ export class Fishing {
     if (this.state === 'bite') return this.hook();
     if (this.state === 'wait') {
       this.end();
+      popEmote(this.scene, this.me, 'sweat');
       this.scene.toast('Too soon! Wait for the bobber to go under, then tap.');
     }
   }
@@ -376,6 +394,7 @@ export class Fishing {
         showCatch(item, info, () => {
           fish.destroy();
           this.state = 'idle';
+          popEmote(s, this.me, item.junk ? 'confused' : item.rarity >= 3 ? 'sparkle' : 'smile', { hold: 1800 });
         });
       },
     });
@@ -383,6 +402,7 @@ export class Fishing {
 
   miss() {
     this.scene.toast('It got away…');
+    popEmote(this.scene, this.me, 'frown');
     sfx('nope');
     this.end();
   }

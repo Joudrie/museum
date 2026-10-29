@@ -1992,7 +1992,9 @@ const BUBBLE = [
   'owwwwwwwwwo', 'owwwwoowwwo', 'owwwwwwwwwo', '.owwwwwwwo.', '..oooooo...', '...ooo.....', '...oo......',
 ].map((r) => r.slice(0, 11).padEnd(11, '.'));
 
-// Little emote bubbles over people's heads: heart, !, ?, zzz, music, star.
+// Little emote bubbles over people's heads: heart, !, ?, zzz, music, star, and the
+// feelings and seasons that make a street feel alive (a clover traded in a chat,
+// a sweat drop, a leaf, a snowflake...). Each icon is 7×7 inside the bubble.
 const EMOTE_BOX = ['.ooooooooo.', 'owwwwwwwwwo', 'owwwwwwwwwo', 'owwwwwwwwwo', 'owwwwwwwwwo', 'owwwwwwwwwo', 'owwwwwwwwwo', 'owwwwwwwwwo', 'owwwwwwwwwo', '.oooo.oooo.', '....owo....', '.....o.....'];
 const EMOTE_ICONS = {
   heart: ['.RR.RR.', 'RRRRRRR', 'RRRRRRR', '.RRRRR.', '..RRR..', '...R...', '.......'],
@@ -2001,9 +2003,21 @@ const EMOTE_ICONS = {
   zzz: ['kkkk...', '..k....', '.k.....', 'kkkkkk.', '....k..', '...k...', '..kkkk.'],
   note: ['...kkk.', '...k.k.', '...k.k.', '...k.k.', '.kkk.k.', 'kkkk.k.', '.kk..k.'],
   star: ['...Y...', '..YYY..', 'YYYYYYY', '.YYYYY.', '.YY.YY.', 'Y.....Y', '.......'],
+  clover: ['.gg.gg.', 'gGGgGGg', 'gGGGGGg', '.gGGGg.', 'gGGGGGg', 'gGGgGGg', '.gg.gg.'],
+  sweat: ['...b...', '..bBb..', '..bBb..', '.bBBBb.', '.bBBBb.', '..bBb..', '.......'],
+  sparkle: ['...Y...', '...Y...', '..YYY..', 'YYYYYYY', '..YYY..', '...Y...', '...Y...'],
+  anger: ['.R...R.', 'RRRRRRR', '.R...R.', '.R...R.', 'RRRRRRR', '.R...R.', '.......'],
+  dots: ['.......', '.......', '.k.k.k.', '.k.k.k.', '.......', '.......', '.......'],
+  leaf: ['...O...', '.O.O.O.', '.OOOOO.', 'OOOOOOO', '.OOOOO.', '...N...', '...N...'],
+  snow: ['B..B..B', '.B.B.B.', '..BBB..', 'BBBBBBB', '..BBB..', '.B.B.B.', 'B..B..B'],
+  sun: ['Y..Y..Y', '.YYYYY.', '.YYYYY.', 'YYYYYYY', '.YYYYY.', '.YYYYY.', 'Y..Y..Y'],
+  smile: ['.YYYYY.', 'YYYYYYY', 'YYkYkYY', 'YYYYYYY', 'YkYYYkY', '.YkkkY.', '.......'],
+  frown: ['.YYYYY.', 'YYYYYYY', 'YYkYkYY', 'YYYYYYY', 'YYkkkYY', 'YkYYYkY', '.......'],
+  confused: ['.YYYYY.', 'YYYYYYY', 'YYkYkYY', 'YYYYYYY', 'YkYkYkY', '.YYYYY.', '.......'],
 };
+export const EMOTE_IDS = Object.keys(EMOTE_ICONS);
 export function makeEmotes(scene) {
-  const col = { o: '#1d1714', w: '#fff8e6', k: '#2a1a14', R: '#e0405a', Y: '#e8b02a' };
+  const col = { o: '#1d1714', w: '#fff8e6', k: '#2a1a14', R: '#e0405a', Y: '#e8b02a', G: '#2f8a3f', g: '#7ccf5c', B: '#3f86c0', b: '#a9dcf4', O: '#e8702a', N: '#8a5a3b' };
   Object.entries(EMOTE_ICONS).forEach(([id, icon]) => {
     if (scene.textures.exists(`emote_${id}`)) return;
     bake(scene, `emote_${id}`, 11, EMOTE_BOX.length, (x, y) => {

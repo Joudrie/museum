@@ -47,6 +47,18 @@ if (new URLSearchParams(location.search).has('play')) {
   }
 }
 
+// The splash (in index.html) goes once the first scene has been drawn.
+{
+  const splash = document.getElementById('splash');
+  const done = () => {
+    if (!splash?.isConnected) return;
+    splash.classList.add('gone');
+    setTimeout(() => splash.remove(), 450);
+  };
+  game.events.once('ready', () => requestAnimationFrame(() => requestAnimationFrame(done)));
+  setTimeout(done, 12000); // (never hide the game behind it)
+}
+
 window.__game = game; // handy for debugging in the console
 window.__makeCharacter = makeCharacter; // (and for sprite contact sheets in tests)
 

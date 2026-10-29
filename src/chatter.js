@@ -11,7 +11,8 @@ import { JOKES, TIPS, ASKS, PLEASED, NOT_YET, GIFTS, FAREWELL, HUB_FIRST, HUB_AG
 export const GIFT_FULL = 4; // gifts a day at full size; then half, then a quarter
 export const GIFT_CHANCE = 0.55;
 const pick = (list, rnd) => list[Math.floor(rnd() * list.length) % list.length];
-const line = (text, button) => ({ type: 'line', text, ...(button && { button }) });
+// `mood` is a little picture over the speaker's head as the line starts (an emote id: src/emotes.js)
+const line = (text, button, mood) => ({ type: 'line', text, ...(button && { button }), ...(mood && { mood }) });
 
 export const sentences = (s) => String(s || '').split(/(?<=[.!?])\s+(?=[A-Z“"])/).map((x) => x.trim()).filter(Boolean);
 
@@ -24,7 +25,7 @@ function topics(o, rnd) {
       label: 'About this painting',
       *run() {
         const s = sentences(p.blurb);
-        yield line(`${p.title}${p.by ? `, by ${p.by}` : ''}${p.year ? `, ${p.year}` : ''}.`, s.length ? 'Tell me more' : null);
+        yield line(`${p.title}${p.by ? `, by ${p.by}` : ''}${p.year ? `, ${p.year}` : ''}.`, s.length ? 'Tell me more' : null, 'sparkle');
         for (let i = 0; i < s.length; i++) yield line(s[i], i < s.length - 1 ? 'And?' : null);
       },
     });
@@ -35,22 +36,22 @@ function topics(o, rnd) {
     *run() {
       const j = pick(JOKES[o.kind] || JOKES.casual, rnd);
       yield line(j.say, j.button);
-      yield line(j.punch);
+      yield line(j.punch, null, 'smile');
     },
   });
-  t.push({ id: 'tip', label: 'Heard anything?', *run() { yield line(pick(TIPS, rnd)); } });
+  t.push({ id: 'tip', label: 'Heard anything?', *run() { yield line(pick(TIPS, rnd), null, 'bang'); } });
   if (o.wantBy && ASKS[o.kind]) {
     t.push({
       id: 'ask',
       label: 'What are you looking for?',
       *run() {
         const has = (o.hungBy || []).includes(o.wantBy);
-        yield line(ASKS[o.kind].replace('{by}', o.wantBy), has ? 'Look around' : 'Not yet');
+        yield line(ASKS[o.kind].replace('{by}', o.wantBy), has ? 'Look around' : 'Not yet', 'q');
         if (has) {
-          yield line(pick(PLEASED, rnd));
+          yield line(pick(PLEASED, rnd), null, 'heart');
           return { pleased: true };
         }
-        yield line(pick(NOT_YET, rnd));
+        yield line(pick(NOT_YET, rnd), null, 'dots');
       },
     });
   }
@@ -78,7 +79,7 @@ export const giftScale = (given) => (given < GIFT_FULL ? 1 : given < GIFT_FULL *
  */
 export function* converse(o) {
   const rnd = o.rnd || Math.random;
-  yield line(o.opener);
+  yield line(o.opener, null, 'smile');
   const all = topics(o, rnd);
   const used = new Set();
   let pleased = false;
@@ -98,9 +99,9 @@ export function* converse(o) {
   }
   if (o.giftOK && used.size && (pleased || rnd() < GIFT_CHANCE)) {
     const gift = giftFor({ kind: o.kind, rnd, scale: giftScale(o.given || 0), bonus: pleased ? 2 : 1, finds: o.finds });
-    yield { type: 'gift', text: gift.say, gift };
+    yield { type: 'gift', text: gift.say, gift, mood: 'star' };
   }
-  yield line(pick(FAREWELL[o.kind] || FAREWELL.default, rnd));
+  yield line(pick(FAREWELL[o.kind] || FAREWELL.default, rnd), null, 'note');
 }
 
 // ---------- the day's gifts (saved) ----------

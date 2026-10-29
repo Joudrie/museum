@@ -1,7 +1,7 @@
 // Dev page: every sprite in the game drawn on one page (characters and their
 // looks, famous visitors, pets, decor items, creatures and emotes), so the
 // whole art set can be reviewed at a glance. Island tiles are on tiles.html.
-import { makeCharacter, makeEmotes, bakeItem, bakePlant, HATS, FACIAL, GLASSES, HAIRSTYLES, OUTFITS, ACCESSORIES } from './art.js';
+import { makeCharacter, makeEmotes, EMOTE_IDS, bakeItem, bakePlant, HATS, FACIAL, GLASSES, HAIRSTYLES, OUTFITS, ACCESSORIES } from './art.js';
 import { ITEMS, CATEGORIES } from './items.js';
 import { FAMOUS } from './famous.js';
 import { makePet, PETS, PET_COLORS } from './pets.js';
@@ -110,7 +110,7 @@ const tabs = {
   },
   creatures() {
     makeEmotes(scene);
-    section('Emotes', ['heart', 'bang', 'q', 'zzz', 'note', 'star'].map((e) => card(e, [`emote_${e}`])));
+    section('Emotes', EMOTE_IDS.map((e) => card(e, [`emote_${e}`])));
     critterTextures(scene);
     section('Island creatures', [
       card('Gull', ['gull_0', 'gull_1']),

@@ -350,7 +350,10 @@ const fail = (s, n) => log(s, '❌', n);
   (await S(() => __game.scene.isActive('island'))) ? pass('13.2 cottage door', 'only the cottage door itself opens it') : fail('13.2 cottage door', 'walking up far above the cottage opened it');
 
   // sail to the builder island and back
+  // (you act on what you face: turn toward the boat first)
+  const faceBoat = () => S(() => { const s = __game.scene.getScene('island'); const b = s.boats[0] || s.landingSpot || { x: 14 * 32, y: 39.4 * 32 }; const dx = b.x - s.player.x; const dy = b.y - s.player.y; s.facing = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 'left' : 'right') : dy < 0 ? 'up' : 'down'; });
   await S(() => { const s = __game.scene.getScene('island'); s.player.setPosition(12.5 * 32, 38.6 * 32); });
+  await faceBoat();
   await wait(400);
   if ((await S(() => document.querySelector('#interact .label').textContent)) === 'Sail') {
     await p.click('#interact');
@@ -360,7 +363,8 @@ const fail = (s, n) => log(s, '❌', n);
     const isle = await S(() => { const s = __game.scene.getScene('island'); return s.mapId && s.free(s.player.x, s.player.y); });
     await shot('builder-island');
     isle ? pass('13.7 sail', 'sailed to the builder island and landed on solid ground') : fail('13.7 sail', 'no landing on the builder island');
-    await S(() => { const s = __game.scene.getScene('island'); s.player.setPosition(s.landingSpot.x, s.landingSpot.y); });
+    await S(() => { const s = __game.scene.getScene('island'); s.player.setPosition(s.landingSpot.x, s.landingSpot.y + 10); });
+    await faceBoat();
     await wait(400);
     await p.click('#interact');
     await wait(300);

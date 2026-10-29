@@ -300,7 +300,8 @@ body {
   padding: 0;
 }
 
-#interact {
+#interact,
+#interact2 {
   position: fixed;
   bottom: max(20px, calc(env(safe-area-inset-bottom) + 12px));
   right: max(16px, calc((100vw - min(100vw, 100dvh * 9 / 16)) / 2 + 16px));
@@ -313,12 +314,17 @@ body {
   text-transform: uppercase;
   transition: opacity 0.12s, transform 0.12s;
 }
-#interact.hidden {
+#interact2 {
+  bottom: calc(max(20px, calc(env(safe-area-inset-bottom) + 12px)) + 62px);
+}
+#interact.hidden,
+#interact2.hidden {
   opacity: 0;
   transform: scale(0.85);
   pointer-events: none;
 }
-#interact .bang {
+#interact .bang,
+#interact2 .bang {
   display: grid;
   place-items: center;
   width: 22px;
@@ -540,17 +546,29 @@ body {
 }
 .talk-box {
   position: absolute;
-  left: 50%;
-  top: max(70px, calc(env(safe-area-inset-top) + 64px));
-  transform: translateX(-50%);
-  width: min(86vw, 360px);
-  padding: 12px 16px 14px;
+  left: 0;
+  top: 0;
+  width: min(86vw, 320px);
+  padding: 10px 14px 16px;
   color: #2a1a12;
   pointer-events: auto;
 }
-#talk.below .talk-box {
-  top: auto;
-  bottom: max(96px, calc(env(safe-area-inset-bottom) + 90px));
+.talk-off {
+  color: transparent;
+}
+#talk.pop {
+  animation: talk-pop 0.16s cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+@keyframes talk-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.88);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #talk.pop {
+    animation: none;
+  }
 }
 .talk-who {
   font-family: ui-monospace, 'Courier New', monospace;

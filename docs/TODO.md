@@ -21,6 +21,7 @@ Read `CLAUDE.md`, `docs/VISION.md` and `docs/HANDOFF.md` first, then this file.
 ## Done so far
 Collection format and registry (#77) · content pipeline built (#78), run live (#79) · 27 painting drafts, none approved (#90) ·
 builder ⟳ turn for multi-side pieces, one family linked (#82) · dig spots with brushing (#87) · fossils and fossil dig spots (#94) · this board (#97, #98).
+Interaction polish by the main chat: facing-aware Interact, bubbles that follow and close, island conversations, emotes and people chatting, snow footprints, a hop-in boat, little scenes on the home island (see HANDOFF, "Interaction polish, emotes, boats and little scenes").
 
 ---
 
