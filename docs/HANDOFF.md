@@ -219,6 +219,10 @@ island scene streams ground chunks around the player.
 - `endTalk()` closes an open conversation; `pause(true)` closes it too and leaves the pause to the panel that asked.
 - Not done: island people (IslandScene still uses the old bubble), famous visitors' dialogue (Chat 10's chains), portraits beyond the walking sprite.
 
+### One command for all tests, and CI (Chat 3, #PRNUM)
+- `npm test` builds, starts the preview server (and a dev server for `dig`, which imports `/src/...` straight from the page), runs content, gaps, collections, smoke, builder, dig, puzzles, restore, display, expedition, halls, people, presets, share and chatter, and prints one line each. `ONLY=gaps,content`, `SKIP_BUILD=1`, `ALL=1` (adds playtest and perf), `RETRY=1`.
+- `.github/workflows/tests.yml` runs that on every pull request (Playwright 1.63 installed in CI only). A new test file goes in `FAST` in `tests/run-all.mjs`. Don't run two test runs at once: CPU load changes frame rate and has caused false failures.
+
 ### Gotchas we hit
 - **Phaser reuses the previous scene data** if you call `scene.start('island')` with no data.
   Always pass data explicitly, e.g. `{ map: 'main' }`. Leaving the museum once dropped you on

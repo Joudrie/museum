@@ -1,0 +1,38 @@
+name: Tests
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      # Playwright is only for the tests, so it is not a dependency of the game
+      - run: npm install --no-save playwright@1.63.0
+      - run: npx playwright install --with-deps chromium
+      # builds, starts the preview server, runs content, gaps, collections, smoke and the rest
+      - run: npm test
+        env:
+          RETRY: '1'
+          OUT: test-shots
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: test-shots
+          path: test-shots
+          if-no-files-found: ignore
