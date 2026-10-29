@@ -31,7 +31,7 @@ import {
   LIGHT_TINTS,
 } from './art.js';
 import { setTrack, sfx, setAmbience } from './music.js';
-import { weatherToday, season, holiday } from './weather.js';
+import { weatherToday, season, holiday, stormRumble } from './weather.js';
 import { ORIENT_LABELS, SIZE_LABELS, BREAK, roomAt, MAIN_HALL_PRICE, ATRIUM_PRICE, isFixed, seedEntry, loadRooms, addRoom, resetRooms, updateRoom, swapRooms, roomName, layout, paintingsFor, slotStates, setSlot, hungAnywhere, placeArt, wallItems, plantSpots, carpetRect } from './rooms.js';
 import { openSlotMenu } from './slotmenu.js';
 import { applyPreset, presetCost } from './presets.js';
@@ -43,11 +43,12 @@ import { hasCameras, buyCameras, resetSecurity, CAMERA_COST, trackSeen, maybeRob
 import { officeLevel, setOfficeLevel, resetOffice, perks, itemLevel, LEVELS, MAX_LEVEL } from './office.js';
 import { openOffice } from './officemenu.js';
 import { ask } from './ask.js';
+import { remember } from './regulars.js';
 import { heistBeat, chainStep, chainAsk, complete as completeBeat } from './story.js';
 import { PAINTINGS } from './paintings.js';
 import { roomRating, museumRating, starText } from './rating.js';
 import { FAMOUS, meet, resetMet, metList, famousBoost } from './famous.js';
-import { FREE, coins, canAfford, addCoins, spend, resetWallet, museumIncome, museumVisitors, coffeeIncome, roomIncome, settle, sellPrice, artPile, decorPile, collectArt, collectDecor, collectAll, pile, pileFull } from './wallet.js';
+import { FREE, coins, canAfford, addCoins, spend, resetWallet, museumIncome, museumVisitors, coffeeIncome, serviceGold, roomIncome, settle, sellPrice, artPile, decorPile, collectArt, collectDecor, collectAll, pile, pileFull } from './wallet.js';
 import { openToolkit, hideToolkit, showBar, hideBar } from './toolkit.js';
 import { artBounds, paintArt, wallRef } from './walldraw.js';
 import { PERSONALITIES, lineFor, QUIPS, CONTEXT } from './lines.js';
@@ -72,6 +73,7 @@ import { celebrate } from './ui.js';
 import { addLove, loveOf, resetLove } from './love.js';
 import { hasCameras as camerasOn } from './security.js';
 import { hourNow } from './settings.js';
+import { spriteUrl } from './swap.js';
 
 const VIEW_TILES = 9; // the camera always shows 9 tiles across
 const SPEED = 176; // px per second
@@ -287,7 +289,7 @@ export class RoomScene extends Phaser.Scene {
     // furniture sprites from the free art packs (see docs/ASSETS.md)
     const sprites = new Set((this.L.props || []).map((q) => q.s));
     if ((this.L.props || []).some((q) => q.flames)) [0, 1, 2, 3].forEach((f) => sprites.add(`flame_${f}`));
-    sprites.forEach((s) => this.textures.exists(`lpc_${s}`) || this.load.image(`lpc_${s}`, `sprites/lpc/${s}.png`));
+    sprites.forEach((s) => this.textures.exists(`lpc_${s}`) || this.load.image(`lpc_${s}`, spriteUrl(s, `sprites/lpc/${s}.png`)));
     this.load.setCORS('anonymous');
     this.hung.forEach((p) => {
       if (!this.textures.exists(`art_${p.id}`)) this.load.image(`art_${p.id}`, p.src);
@@ -390,6 +392,7 @@ export class RoomScene extends Phaser.Scene {
     this.bubble = this.add.image(0, 0, 'bubble').setOrigin(0.5, 1).setDepth(5000).setVisible(false);
     this.lighting = new Lighting(this);
     setAmbience(weatherToday() === 'rain' && !this.isBreak ? ['rainSoft'] : []); // rain on the roof
+    if (!this.isBreak) stormRumble(this, weatherToday());
     this.time.addEvent({ delay: 60000, loop: true, callback: () => this.lighting.build() }); // the sun moves
 
     this.setupCamera();
@@ -1281,6 +1284,7 @@ export class RoomScene extends Phaser.Scene {
       line = `There ${j === 1 ? 'is 1 of us' : `are ${j} of us`}. One janitor per room keeps the whole place spotless.`;
     }
     if (!n.staff && Math.random() < 0.3) line = this.contextLine() || line;
+    if (!n.staff) line = remember(n.name, n.kind) || line;
     if (n.kind === 'guard' && nextSecurity()) return this.offerCameras(n, line);
     if (n.kind === 'caretaker' && this.tellStory(n, heistBeat(this.storyContext()), 'The Empty Frames')) return;
     n.talking = true;
@@ -1517,6 +1521,7 @@ export class RoomScene extends Phaser.Scene {
     });
     this.input.on('pointerup', (p) => {
       if (this.mode && this.mode !== 'place' && this.press && !this.dragging) this.tapItem(p.worldX, p.worldY);
+      else if (!this.mode && this.press && !this.dragging && this.input.enabled) this.tapDisplayed(p.worldX, p.worldY);
       this.ghostDrag = null;
       this.press = null;
       this.dragging = false;
@@ -1658,6 +1663,9 @@ export class RoomScene extends Phaser.Scene {
     const dirty = this.rooms.filter((_, i) => dirtCount(this.rooms, i) > 0).length;
     if (dirty) boosts.push(`${dirty} room${dirty > 1 ? 's' : ''} need${dirty > 1 ? '' : 's'} mopping (−10% per spot): hire janitors`);
     if (this.items.some((it) => it.type === 'counter') || this.rooms.some((_, i) => loadItems(i).some((it) => it.type === 'counter'))) boosts.push(`Coffee: +${coffeeIncome(this.rooms)} gold/hr from cups`);
+    ['giftshop', 'foodcourt', 'discovery', 'lectern'].forEach((type) => {
+      if (this.rooms.some((_, i) => loadItems(i).some((it) => it.type === type))) boosts.push(`${ITEMS[type].name}: +${serviceGold(this.rooms, type)} gold/hr`);
+    });
     return {
       income: museumIncome(this.rooms),
       visitors: museumVisitors(this.rooms),
@@ -1907,6 +1915,20 @@ export class RoomScene extends Phaser.Scene {
       else this.openBuildMenu();
     }
     this.focus = null;
+  }
+
+  // Tap a piece on display (a fish in a tank, a fossil in a case) to read its card;
+  // swipe along to the others in this room.
+  tapDisplayed(wx, wy) {
+    const shown = this.displayObjs.filter((o) => o.getData?.('entry'));
+    const hit = shown.find((o) => {
+      const b = o.getBounds();
+      return wx > b.x - 3 && wx < b.right + 3 && wy > b.y - 3 && wy < b.bottom + 3;
+    });
+    if (!hit) return;
+    const entries = shown.map((o) => o.getData('entry'));
+    this.pause(true);
+    openViewer(entries, shown.indexOf(hit), () => this.pause(false), null);
   }
 
   // Open the display panel for a case, plinth, shelf, easel or tank.

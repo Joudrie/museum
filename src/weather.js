@@ -1,3 +1,4 @@
+import { sfx } from './music.js';
 // Seasons and weather outside. The season follows the real calendar; the
 // weather is picked per day (the same all day). ?weather=rain|snow|leaves|petals|clear
 // pins it for testing (and ?season=winter|spring|summer|autumn the season).
@@ -35,6 +36,23 @@ export function weatherToday(date = new Date()) {
   if (s === 'winter') return r < 0.55 ? 'snow' : 'clear';
   if (r < 0.22) return 'rain';
   return s === 'autumn' ? 'leaves' : s === 'spring' ? 'petals' : 'clear';
+}
+
+// Now and then a distant rumble on rainy days, with a faint flash. Call once
+// from a scene's create(); it stops itself when the scene shuts down.
+export function stormRumble(scene, kind) {
+  if (kind !== 'rain') return;
+  const day = Math.floor(Date.now() / 86400000);
+  if (Math.abs(Math.sin(day * 78.233) * 4375.5) % 1 > 0.4 && !/[?&]weather=rain/.test(location.search)) return; // not every wet day is stormy
+  const next = () => {
+    const ev = scene.time.delayedCall(18000 + Math.random() * 40000, () => {
+      scene.cameras.main.flash(160, 235, 240, 255, true);
+      scene.time.delayedCall(700 + Math.random() * 900, () => sfx('thunder'));
+      next();
+    });
+    return ev;
+  };
+  next();
 }
 
 const PARTS = {

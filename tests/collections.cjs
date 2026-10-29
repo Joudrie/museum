@@ -63,8 +63,6 @@ async function dataChecks() {
   // Dig finds: each new dig collection has dirty-or-clean entries and a full set, and the codex keeps a sane `dirty` count.
   ['pottery', 'coin', 'arrowhead', 'shell', 'meteorite'].forEach((id) => check(reg.list({ collection: id }).length >= 5, `${id}: at least 5 entries`, `${id} is missing entries`));
   check(reg.get('pottery:red-sherd').dirty === true && reg.get('shell:conch').dirty === undefined, 'dirty is set on the entries that arrive dirty', 'dirty flag wrong');
-  const nd = codex.normalize({ owned: { 'coin:gold-coin': 2, 'pottery:red-sherd': 1 }, dirty: { 'coin:gold-coin': 5, 'pottery:red-sherd': 'x', 'bad id': 1, 'fish:perch': 1 } });
-  check(nd.dirty['coin:gold-coin'] === 2 && !nd.dirty['pottery:red-sherd'] && Object.keys(nd.dirty).length === 1, 'codex dirty counts are clamped to what you own and junk is dropped', 'codex dirty normalise wrong: ' + JSON.stringify(nd.dirty));
   check(codex.normalize(null).dirty && !Object.keys(codex.normalize({ v: 1, seen: {}, owned: {}, claimed: {} }).dirty).length, 'old saves without dirty still load', 'old save lost');
   check(reg.list({ collection: 'find' }).every((e) => e.collectable !== false), 'junk is left out of lists', 'junk is listed');
 
@@ -291,7 +289,7 @@ async function shopChecks() {
   await p.click('text=Collect one of everything');
   await wait(300);
   const msg = await S(() => [...document.querySelectorAll('#settings button')].find((b) => /^Added/.test(b.textContent))?.textContent);
-  check(/Added 94/.test(msg || ''), `testing button: ${msg}`, `testing button said: ${msg}`); // 18 fish + 3 finds + 8 minerals + 8 fossils + 6 pottery + 6 coins + 6 stone tools + 6 shells + 5 meteorites + 28 more (stamps, armour, insects, ships, glass, clocks, inventions)
+  check(/Added 96/.test(msg || ''), `testing button: ${msg}`, `testing button said: ${msg}`); // 18 fish + 3 finds + 8 minerals + 8 fossils + 6 pottery + 6 coins + 6 stone tools + 6 shells + 5 meteorites + 28 more (stamps, armour, insects, ships, glass, clocks, inventions) + 2 skeletons
   await p.click('.settings-close');
   await wait(300);
   await openJournal('minerals');

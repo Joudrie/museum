@@ -12,6 +12,7 @@
 // All three live in collections/codex.js; the codex keeps the counts in `dirty`.
 import { get, list, collectionOf } from './collections/index.js';
 import { snapshot, dirtyCount, displayCount, restoreOne } from './collections/codex.js';
+import { foundAt } from './foundat.js';
 
 export { collect, makeDirty, dirtyCount, displayCount } from './collections/codex.js';
 
@@ -39,6 +40,8 @@ export const finishRestore = (id) => restoreOne(id);
 
 /** The plaque line: where it came from. "" when nothing is known. */
 export function provenanceLine(e) {
+  const found = e && foundAt(e.id); // dug up on an expedition island
+  if (found) return `Recovered from ${found}`;
   const p = e?.provenance;
   if (!p) return '';
   const where = p.where;

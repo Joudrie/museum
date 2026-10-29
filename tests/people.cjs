@@ -75,6 +75,17 @@ const FILLER = /masterpiece|iconic|famous|renowned|stunning|breathtaking|beautif
   global.localStorage._d['curation.story'] = '{broken';
   check(S.storyDone() === 0, 'corrupt story save falls back to empty', 'corrupt save crashed');
 
+  console.log('Regulars');
+  const R = await load('src/regulars.js');
+  global.localStorage._d = {};
+  check(R.remember('Dennis', 'nerd') === null && R.remember('Dennis', 'nerd') === null, 'first two chats are plain', 'regular too early');
+  const hi = R.remember('Dennis', 'nerd');
+  check(typeof hi === 'string' && R.isRegular('Dennis', 'nerd'), 'third chat: they know you', 'no recognition on the third chat');
+  check(!R.isRegular('Dennis', 'kid') && R.talks('Dennis', 'kid') === 0, 'same name, other type is a different person', 'people mixed up');
+  check(typeof R.remember('Dennis', 'nerd', 0.9) === 'string' && R.regularCount() === 1, 'regulars keep talking and are counted', 'regular lost');
+  global.localStorage._d['curation.regulars'] = '[1,2';
+  check(R.remember('Max', 'kid') === null, 'corrupt save falls back', 'corrupt regulars save crashed');
+
   if (process.argv.includes('--live')) {
     console.log('Live quote check');
     const cache = {};
