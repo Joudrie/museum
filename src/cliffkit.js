@@ -230,8 +230,7 @@ export function addCliffKits(add, { pixels, tnoise, hash, hex, T }) {
         const fa = ((facet + 0.5) / facets) * 2 * Math.PI;
         const lit = -(Math.cos(fa) + Math.sin(fa)) * 0.7 * Math.min(1, Math.hypot(nx, ny) * 1.6); // light from the upper left
         let t = 3 + Math.round(lit * 1.6) - (ny > 0.45 ? 1 : 0);
-        const tx = tone[(y % T) * T + (x % T)];
-        if (tx === 0 && Math.hypot(nx, ny) < 0.8) t -= 2; // a crack of the cliff's rock runs through it
+        if (hash(x, y, s + 70) < 0.06) t -= 1; // grit
         return P[Math.max(1, Math.min(5, t))];
       });
     };
