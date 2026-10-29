@@ -85,6 +85,11 @@
 - 14 drafts waiting in `content/review/painting/` (rarity, hooks, a few wrong matches). None approved.
 - Still to do: Smithsonian and Rijksmuseum keys; AIC is behind a Cloudflare challenge.
 
+## Digging ✅ (first spot)
+- Brush a mineral out of a dig spot (`docs/HANDOFF.md`). Next: fossils and bones for the dinosaur hall, dig tools, bigger dig sites on expedition islands.
+- Seen in the browser: the painting images (hot-linked from Wikimedia) sometimes answer 429 (their robot policy) and some links 404 (`content/image-fixes.json`). Hosting our own resized copies would fix both.
+- The playtest and the smoke cottage check are flaky on a plain `main` build (same failures without the dig change).
+
 ## Needs Sean
 - **West Wing**: waiting for your outline.
 - **Semi-mythological famous visitors** (you said maybe later).
