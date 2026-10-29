@@ -1,0 +1,97 @@
+{
+  "status": "draft",
+  "collection": "archaeology",
+  "slug": "ballgame-hip-protector-yoke",
+  "notes": "region: Mexico (Gulf Coast). era removed: the paintings date buckets do not fit antiquity; Chat 8 defines this collection",
+  "entry": {
+    "id": "archaeology:ballgame-hip-protector-yoke",
+    "collection": "archaeology",
+    "title": "Ballgame Hip Protector (Yoke)",
+    "year": "600–900",
+    "ratio": 0.2933,
+    "blurb": "The imagery, however, is menacing: a monstrous head snarls from the curve, and human skulls appear on the sides.",
+    "rarity": 1,
+    "tags": [
+      "mexico"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1973.213/1973.213_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Leonard C. Hanna Jr. Fund",
+      "url": "https://clevelandart.org/art/1973.213"
+    },
+    "value": 5,
+    "facts": [
+      "The ballgame was a team sport played on specially constructed rectangular courts and involved striking a large solid rubber ball without using your hands."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "147480",
+    "title": "Ballgame Hip Protector (Yoke)",
+    "maker": "",
+    "year": "600–900",
+    "medium": "greenstone, pigment",
+    "dimensions": "Overall: 41.5 x 37.5 x 11 cm (16 5/16 x 14 3/4 x 4 5/16 in.)",
+    "widthCm": 11,
+    "heightCm": 37.5,
+    "ratio": 0.2933,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1973.213/1973.213_web.jpg",
+    "imageWidth": 1263,
+    "imageHeight": 741,
+    "pageUrl": "https://clevelandart.org/art/1973.213",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Leonard C. Hanna Jr. Fund",
+    "description": "U-shaped ballgame sculptures imitate the shape of belt-like protectors, perhaps made of wood and padding, worn to shield ballplayers from injury when they returned the solid rubber ball from their hips. This fine example embodies a major theme of the ballgame: the connection between fertility and death. It is made of greenstone, a precious material that through its color symbolizes the lush burgeoning of nature after the rainy season. The imagery, however, is menacing: a monstrous head snarls from the curve, and human skulls appear on the sides. The ballgame was a team sport played on specially constructed rectangular courts and involved striking a large solid rubber ball without using your hands.",
+    "culture": "Mexico, Gulf Coast, Classic Veracruz style (600-1100)",
+    "classification": "Sculpture",
+    "tags": [
+      "Art of the Americas"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Ballgame Hip Protector (Yoke)",
+      "maker": "",
+      "year": "600–900",
+      "medium": "greenstone, pigment",
+      "dimensions": "Overall: 41.5 x 37.5 x 11 cm (16 5/16 x 14 3/4 x 4 5/16 in.)",
+      "culture": "Mexico, Gulf Coast, Classic Veracruz style (600-1100)",
+      "classification": "Sculpture",
+      "credit": "The Cleveland Museum of Art. Leonard C. Hanna Jr. Fund",
+      "description": "U-shaped ballgame sculptures imitate the shape of belt-like protectors, perhaps made of wood and padding, worn to shield ballplayers from injury when they returned the solid rubber ball from their hips. This fine example embodies a major theme of the ballgame: the connection between fertility and death. It is made of greenstone, a precious material that through its color symbolizes the lush burgeoning of nature after the rainy season. The imagery, however, is menacing: a monstrous head snarls from the curve, and human skulls appear on the sides. The ballgame was a team sport played on specially constructed rectangular courts and involved striking a large solid rubber ball without using your hands.",
+      "tombstone": "Ballgame Hip Protector (Yoke), 600–900. Mexico, Gulf Coast, Classic Veracruz style (600-1100). Greenstone, pigment; overall: 41.5 x 37.5 x 11 cm (16 5/16 x 14 3/4 x 4 5/16 in.). The Cleveland Museum of Art, Leonard C. Hanna Jr. Fund, 1973.213",
+      "funFact": "",
+      "didYouKnow": "The ballgame was a team sport played on specially constructed rectangular courts and involved striking a large solid rubber ball without using your hands.",
+      "creators": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "The imagery, however, is menacing: a monstrous head snarls from the curve, and human skulls appear on the sides.",
+      "quote": "The imagery, however, is menacing: a monstrous head snarls from the curve, and human skulls appear on the sides.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The ballgame was a team sport played on specially constructed rectangular courts and involved striking a large solid rubber ball without using your hands.",
+      "quote": "The ballgame was a team sport played on specially constructed rectangular courts and involved striking a large solid rubber ball without using your hands.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "unknown collection \"archaeology\"",
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

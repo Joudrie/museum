@@ -146,6 +146,8 @@ Scenes (`src/main.js`):
   quotable description; Met and Commons ones are flagged "needs a real hook". Live APIs: the Met rate-limits (HTML block page) and Cleveland's `fields=` param 500s.
 - **Rarity and Painting of the Day (Chat 1, #137):** `content/rarity-proposals.json` (49 paintings, status `proposed`; `tools/apply_rarity.mjs` applies it only once approved) and
   `tools/potd.mjs` (`build` drafts quoted lines into `content/potd/draft.json`, `publish` writes `src/collections/data/potd.json` from approved ones, `pickFor(date, list)` rotates). Chat 13 shows it.
+- **Archaeology drafts (Chat 1):** `content/batches/archaeology-batch.json` built 25 Cleveland objects (Egypt, Near East, Greece and Rome, ancient Americas) in
+  `content/review/archaeology/`, all draft, `era` left blank, waiting for Chat 8 to define the collection. Natural history has no quotable open source yet.
 - `check_images.mjs` flags broken, tiny, heavy and wrong-shaped images for every painting. **Not run yet on the
   49 paintings** (no network here); `content/batches/first-batch.json` (12 works, 9+ regions) is waiting to be built.
 - Test: `node tests/content.cjs` (no browser, no network).
@@ -164,6 +166,7 @@ Scenes (`src/main.js`):
 - **The Empty Frames** (heist arc): Edmund tells 5 chapters of the real 1990 Gardner theft. Every line has the museum's quoted sentence; `node tests/people.cjs --live` checks each quote is still on its source page.
 - **Chains** for Vermeer, Rembrandt, Hokusai: talk to them again after each ask is met (hang their painting, meet more visitors). Add a visitor = add an entry in `chains.js`.
 - **Hook for expeditions (Chat 7):** finished beats with a `lead` append `{id, text, from, at}` to `curation.leads_offered` (`leadsOffered()` in `story.js`). Chat 7 reads that list and starts the trip. Ids so far: `heist-hideout`, `sphinx-letter`, `studio-chest`, `last-scrolls`.
+- **Regulars:** `src/regulars.js` counts talks per visitor (name + type, `curation.regulars`); the 3rd talk they recognise you, later talks use regular lines. `regularCount()` is there for goals/Journal later.
 
 ### Display: fixtures that hold collection entries (Chat 5)
 - A fixture is a decor item with a `fixture` block in `src/items.js` (kind, `accepts` display tags, `slots`). Today: easel, plinth, glass case,
@@ -189,6 +192,8 @@ island scene streams ground chunks around the player.
 - Gold piles cap at 8 h per spot: welcome-back toast after 20+ min away, a FULL flag per room in the income menu. "Collect all" no longer shows an ad (ads are on hold); it keeps `COLLECT_ALL_FEE` (15%).
 
 - Security is a tier (`curation.cameras`, old `true` = tier 2). The guard sells the next tier; each tier has a `stop` chance for the rare robbery, and camera tiers turn a stopped robbery into a "thief caught" bounty.
+
+- Services items (toolkit → Services, max 1 each): gift shop (gold per hung painting, doubled per rarity step), food court and discovery table (scale with visitors), lecture stage (per famous visitor met). Earnings logic: `serviceGold()` in `src/wallet.js`, numbers in `SERVICES`. Their art is placeholder, in `bakeItem` in `src/art.js`.
 
 ### Gotchas we hit
 - **Phaser reuses the previous scene data** if you call `scene.start('island')` with no data.
@@ -254,3 +259,4 @@ See `docs/ASSET-HUNT.md` (the "super dig" prompt plus the to-do list) and `docs/
 - Journal tabs now wrap to two rows (12 tabs). `tests/dig.cjs` needs the dev server (`npx vite --port 5173`, `URL=http://localhost:5173/`).
 - `holiday()` in `src/weather.js` (real calendar; `?holiday=halloween|winter|none` pins it). Halloween: pumpkins by the museum doors (`holidayDecor` in IslandScene), kids and some students in witch / ghost / pumpkin costumes (`visitorLook`). Winter: woolly hats.
 - Room presets (`src/presets.js`, `tests/presets.cjs`): Customize > This room > Saved layouts saves a room's decor and items under a name and loads them into any room. Loading sells what is there and buys the preset's items at normal prices, so layouts are not free items.
+- Themed rooms (`roomTheme` in `src/wallet.js`): 3+ paintings all from one era earn 1.5x; Customize > Rating says so. "Section" is read as the painting's `era`.

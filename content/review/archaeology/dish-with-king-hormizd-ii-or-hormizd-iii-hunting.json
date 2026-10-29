@@ -1,0 +1,111 @@
+{
+  "status": "draft",
+  "collection": "archaeology",
+  "slug": "dish-with-king-hormizd-ii-or-hormizd-iii-hunting",
+  "notes": "region: Iran (Sasanian). era removed: the paintings date buckets do not fit antiquity; Chat 8 defines this collection",
+  "entry": {
+    "id": "archaeology:dish-with-king-hormizd-ii-or-hormizd-iii-hunting",
+    "collection": "archaeology",
+    "title": "Dish with King Hormizd II or Hormizd III Hunting Lions",
+    "year": "400–600 CE",
+    "ratio": 4.5217,
+    "blurb": "Lion hunting was a traditional royal sport in ancient Near Eastern cultures and was frequently incorporated into artwork, such as Assyrian (about 912–612 BCE) palace reliefs.",
+    "rarity": 1,
+    "tags": [
+      "iran"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1962.150/1962.150_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. John L. Severance Fund",
+      "url": "https://clevelandart.org/art/1962.150"
+    },
+    "value": 5,
+    "facts": [
+      "The style of the king’s and horse’s equipment suggest that this dish was made long after he died, perhaps as a commemorative work by a much later successor, Hormizd III (reigned 457–459 CE).",
+      "This dish features the Sasanian ruler Hormizd II (reigned 303–309 CE), identifiable by his distinctive crown.",
+      "Thematically, depictions of the hunt in royal artwork bridge the pre- and post-Islamic worlds."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "137194",
+    "title": "Dish with King Hormizd II or Hormizd III Hunting Lions",
+    "maker": "",
+    "year": "400–600 CE",
+    "medium": "silver gilt",
+    "dimensions": "Overall: 4.6 x 20.8 cm (1 13/16 x 8 3/16 in.)",
+    "widthCm": 20.8,
+    "heightCm": 4.6,
+    "ratio": 4.5217,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1962.150/1962.150_web.jpg",
+    "imageWidth": 900,
+    "imageHeight": 751,
+    "pageUrl": "https://clevelandart.org/art/1962.150",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. John L. Severance Fund",
+    "description": "Lion hunting was a traditional royal sport in ancient Near Eastern cultures and was frequently incorporated into artwork, such as Assyrian (about 912–612 BCE) palace reliefs. Thematically, depictions of the hunt in royal artwork bridge the pre- and post-Islamic worlds. This dish features the Sasanian ruler Hormizd II (reigned 303–309 CE), identifiable by his distinctive crown. The style of the king’s and horse’s equipment suggest that this dish was made long after he died, perhaps as a commemorative work by a much later successor, Hormizd III (reigned 457–459 CE). Hormizd II's crown is distinct with its eagle form and topped with the traditional korymbos , a fine, bejeweled fabric that encases the top hair in a globelike fashion.",
+    "culture": "Iran, Sasanian Empire (224–651 CE)",
+    "classification": "Metalwork",
+    "tags": [
+      "Egyptian and Ancient Near Eastern Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Dish with King Hormizd II or Hormizd III Hunting Lions",
+      "maker": "",
+      "year": "400–600 CE",
+      "medium": "silver gilt",
+      "dimensions": "Overall: 4.6 x 20.8 cm (1 13/16 x 8 3/16 in.)",
+      "culture": "Iran, Sasanian Empire (224–651 CE)",
+      "classification": "Metalwork",
+      "credit": "The Cleveland Museum of Art. John L. Severance Fund",
+      "description": "Lion hunting was a traditional royal sport in ancient Near Eastern cultures and was frequently incorporated into artwork, such as Assyrian (about 912–612 BCE) palace reliefs. Thematically, depictions of the hunt in royal artwork bridge the pre- and post-Islamic worlds. This dish features the Sasanian ruler Hormizd II (reigned 303–309 CE), identifiable by his distinctive crown. The style of the king’s and horse’s equipment suggest that this dish was made long after he died, perhaps as a commemorative work by a much later successor, Hormizd III (reigned 457–459 CE). Hormizd II's crown is distinct with its eagle form and topped with the traditional korymbos , a fine, bejeweled fabric that encases the top hair in a globelike fashion.",
+      "tombstone": "Dish with King Hormizd II or Hormizd III Hunting Lions, 400–600 CE. Iran, Sasanian Empire (224–651 CE). Silver gilt; overall: 4.6 x 20.8 cm (1 13/16 x 8 3/16 in.). The Cleveland Museum of Art, John L. Severance Fund, 1962.150",
+      "funFact": "",
+      "didYouKnow": "Hormizd II's crown is distinct with its eagle form and topped with the traditional korymbos , a fine, bejeweled fabric that encases the top hair in a globelike fashion.",
+      "creators": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "Lion hunting was a traditional royal sport in ancient Near Eastern cultures and was frequently incorporated into artwork, such as Assyrian (about 912–612 BCE) palace reliefs.",
+      "quote": "Lion hunting was a traditional royal sport in ancient Near Eastern cultures and was frequently incorporated into artwork, such as Assyrian (about 912–612 BCE) palace reliefs.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The style of the king’s and horse’s equipment suggest that this dish was made long after he died, perhaps as a commemorative work by a much later successor, Hormizd III (reigned 457–459 CE).",
+      "quote": "The style of the king’s and horse’s equipment suggest that this dish was made long after he died, perhaps as a commemorative work by a much later successor, Hormizd III (reigned 457–459 CE).",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "This dish features the Sasanian ruler Hormizd II (reigned 303–309 CE), identifiable by his distinctive crown.",
+      "quote": "This dish features the Sasanian ruler Hormizd II (reigned 303–309 CE), identifiable by his distinctive crown.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Thematically, depictions of the hunt in royal artwork bridge the pre- and post-Islamic worlds.",
+      "quote": "Thematically, depictions of the hunt in royal artwork bridge the pre- and post-Islamic worlds.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "unknown collection \"archaeology\"",
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

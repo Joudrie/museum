@@ -43,11 +43,12 @@ import { hasCameras, buyCameras, resetSecurity, CAMERA_COST, trackSeen, maybeRob
 import { officeLevel, setOfficeLevel, resetOffice, perks, itemLevel, LEVELS, MAX_LEVEL } from './office.js';
 import { openOffice } from './officemenu.js';
 import { ask } from './ask.js';
+import { remember } from './regulars.js';
 import { heistBeat, chainStep, chainAsk, complete as completeBeat } from './story.js';
 import { PAINTINGS } from './paintings.js';
 import { roomRating, museumRating, starText } from './rating.js';
 import { FAMOUS, meet, resetMet, metList, famousBoost } from './famous.js';
-import { FREE, coins, canAfford, addCoins, spend, resetWallet, museumIncome, museumVisitors, coffeeIncome, roomIncome, settle, sellPrice, artPile, decorPile, collectArt, collectDecor, collectAll, pile, pileFull } from './wallet.js';
+import { FREE, coins, canAfford, addCoins, spend, resetWallet, museumIncome, museumVisitors, coffeeIncome, serviceGold, roomIncome, settle, sellPrice, artPile, decorPile, collectArt, collectDecor, collectAll, pile, pileFull } from './wallet.js';
 import { openToolkit, hideToolkit, showBar, hideBar } from './toolkit.js';
 import { artBounds, paintArt, wallRef } from './walldraw.js';
 import { PERSONALITIES, lineFor, QUIPS, CONTEXT } from './lines.js';
@@ -1281,6 +1282,7 @@ export class RoomScene extends Phaser.Scene {
       line = `There ${j === 1 ? 'is 1 of us' : `are ${j} of us`}. One janitor per room keeps the whole place spotless.`;
     }
     if (!n.staff && Math.random() < 0.3) line = this.contextLine() || line;
+    if (!n.staff) line = remember(n.name, n.kind) || line;
     if (n.kind === 'guard' && nextSecurity()) return this.offerCameras(n, line);
     if (n.kind === 'caretaker' && this.tellStory(n, heistBeat(this.storyContext()), 'The Empty Frames')) return;
     n.talking = true;
@@ -1659,6 +1661,9 @@ export class RoomScene extends Phaser.Scene {
     const dirty = this.rooms.filter((_, i) => dirtCount(this.rooms, i) > 0).length;
     if (dirty) boosts.push(`${dirty} room${dirty > 1 ? 's' : ''} need${dirty > 1 ? '' : 's'} mopping (−10% per spot): hire janitors`);
     if (this.items.some((it) => it.type === 'counter') || this.rooms.some((_, i) => loadItems(i).some((it) => it.type === 'counter'))) boosts.push(`Coffee: +${coffeeIncome(this.rooms)} gold/hr from cups`);
+    ['giftshop', 'foodcourt', 'discovery', 'lectern'].forEach((type) => {
+      if (this.rooms.some((_, i) => loadItems(i).some((it) => it.type === type))) boosts.push(`${ITEMS[type].name}: +${serviceGold(this.rooms, type)} gold/hr`);
+    });
     return {
       income: museumIncome(this.rooms),
       visitors: museumVisitors(this.rooms),

@@ -30,9 +30,9 @@ Owns: `tools/`, `content/`, `docs/CONTENT*.md`, `public/paintings/`, `src/collec
 - [x] (#118) 3 broken links (horse-fair, temeraire, crossing-delaware) and 8 wrong shapes (school-athens, emmaus, water-lilies, cafe-terrace, creation-adam, anatomy-lesson, pearl-earring, wheatfield-crows): write proposals to `content/image-proposals.md` with source, size, shape. Don't apply them; the user approves.
 - [ ] Hooks for the 4 Met drafts (Night-Shining White, Esther, Gulf Stream, Drawing Lesson): a quotable museum or Commons sentence, as a claim with the exact quote. **Tried, no sentence found:** the Met API has no description, metmuseum.org is behind a bot challenge (left alone), and the Commons file pages only say the title. Needs Sean (paste one sentence from each Met page).
 - [x] (#130; 14 + 20 + 21 drafts) Third, fourth and fifth batches (about 20 each): women artists, 18th to 20th century, Africa, Pacific, Middle East, Latin America, Indigenous work, more non-European. Pin by id. Mechanical fixes only; rarity and wording are the user's.
-- [ ] Natural-history and archaeology imagery (public domain) for the other collections, with a quoted source for every fact.
-- [ ] Smithsonian and Rijksmuseum adapters once keys exist (Needs Sean). Art Institute of Chicago is behind a bot challenge: never work around it.
-- [ ] After the user approves drafts: `node tools/publish_content.mjs --collection painting`, tests, PR.
+- [~] (#142) Natural-history and archaeology imagery (public domain) for the other collections, with a quoted source for every fact. **Archaeology done as drafts** (`content/batches/archaeology-batch.json`, 25 Cleveland objects, quoted descriptions, all draft). **Natural history waits:** no open source here has quotable text for specimens (Commons file pages have none; the Smithsonian needs its key).
+- [ ] (waiting on keys, see Needs Sean; nothing to run without them) Smithsonian and Rijksmuseum adapters once keys exist (Needs Sean). Art Institute of Chicago is behind a bot challenge: never work around it.
+- [ ] (waiting: no draft is approved) After the user approves drafts: `node tools/publish_content.mjs --collection painting`, tests, PR.
 - [x] (#137) Rarity for paintings by fame (every painting is rarity 1 today): a data pass, proposed for approval. **Proposal only:** `content/rarity-proposals.json`; the user sets `status` to `approved`, then `node tools/apply_rarity.mjs`.
 - [x] (#137) Painting of the Day content: a rotating pick and a short true "why it matters" for each. `tools/potd.mjs`, `content/potd/draft.json` (69 quoted lines, all draft; the 49 shipped paintings have no museum sentence on file yet, so they wait). Chat 13 surfaces it.
 
@@ -117,15 +117,15 @@ Owns: `src/rooms.js`, `src/shaped.js`, `src/walldraw.js`, `src/atrium.js`, `src/
 - [ ] Elevator in the lobby and the first new floor (each floor a self-contained pack).
 - [ ] Front lawn you walk out onto (steps, banners, fountain, sign); museum exterior and facade styles that change the building (look comes from the user).
 - [ ] Rooftop terrace with a telescope at night.
-- [x] Room presets (PR pending): save a room's layout ("Winter", "Halloween") and load it again.
+- [x] Room presets (#133): save a room's layout ("Winter", "Halloween") and load it again.
 - [ ] Construction takes real time (small quick, big about a day, 2 builders); everything else instant.
-- [ ] Themed room bonus (1.5x income for a one-section room); unlimited rooms and a performance test at 100+ rooms.
+- [ ] Themed room bonus: done (#146); unlimited rooms and a performance test at 100+ rooms: open.
 - [ ] Re-shuffle and repurpose rooms; the West Wing (waits for the user's outline).
 - [ ] Always re-run `tests/gaps.cjs`: no black gaps between walls, ever.
 
 ## CHAT 10: Living museum, people and story
 Owns: `src/famous.js`, `src/lines.js`, `src/quests.js`, `src/talk.js`, `src/staff.js`. Claim: `claimed: 2026-10-29`
-- [ ] Visitors with memories, goals and relationships; regulars that grow into characters; personalities (nerd, casual, superfan, snob, kid, grump, tourist) with more lines.
+- [~] **Memories done (#this PR: `src/regulars.js`, visitors you chat with 3 times become regulars with their own lines).** Left: goals, relationships, more lines per personality. Visitors with memories, goals and relationships; regulars that grow into characters; personalities (nerd, casual, superfan, snob, kid, grump, tourist) with more lines.
 - [~] Famous visitors with quest chains and period-accurate dialogue; they send you places (feeds Chat 7). Odds rise with their works in your codex; permanent boosts. **Done: chains for Vermeer, Rembrandt, Hokusai (3 sourced steps each, last step offers a lead).** Left: the other 17 visitors, odds by codex.
 - [x] A **Gardner-style heist mystery** as the first full story arc. "The Empty Frames", told by Edmund in 5 chapters, every line quoted from the Gardner Museum's own theft page (this PR).
 - [ ] Semi-mythological famous visitors (the user said later).
@@ -146,10 +146,10 @@ Owns: `src/weather.js`, `src/lighting.js`, `src/ambient.js`, `src/music.js`, `sr
 ## CHAT 12: Economy, staff and services
 Owns: `src/staffmenu.js`, `src/officemenu.js`, `src/office.js`, `src/incomemenu.js`, `src/wallet.js`, `src/rating.js`. Claim: `claimed: 2026-10-29`
 - [x] Break-room upgrade menu (slower mess, guide training, carpenter toolbox); Curator's Office level costs and unlocks now in `src/economy.js` (#126).
-- [ ] Gift shop (merch of your best paintings), food court, kids' discovery room, lecture hall (a famous visitor gives a talk), library and archive where the stored collection lives, coffee shop depth.
+- [x] Gift shop, food court stall, kids' discovery table and lecture stage as Services items (max 1 each, rules in `SERVICES` in `src/economy.js`); coffee depth via the Better beans upgrade (#144). Not done: library and archive (the Library room exists; where the stored collection lives belongs with Chats 5 and 8); the lecture stage pays per famous visitor met but has no live talk event yet.
 - [x] Income formula numbers in `src/economy.js`; 8-hour cap messaging (welcome-back toast, FULL flag, income-menu note); "Collect all" is now free of ads and keeps a 15% fee (#128).
 - [x] Security: four tiers (none, dummy cameras, cameras, alarm) in `src/economy.js`; stopped thieves at camera tiers are caught for a gold bounty (#135).
-- [ ] Late-game sink: frame your own artwork (very expensive).
+- [ ] Late-game sink: frame your own artwork (very expensive). Parked: the game has no way to make your own artwork yet, so it is a question under Needs Sean.
 - [ ] ON HOLD (needs the user): gems as time (skip construction, "X days of income"), rewarded ads, cosmetics, a seasonal exhibition pass, crates with odds and pity. Rule: **no pay-to-win; never a gem or crate economy as the core.**
 
 ## CHAT 13: Share, visit and retention
@@ -183,13 +183,16 @@ Owns: `assets/vendor/`, `docs/ASSETS.md`, `tools/extract_sprites.py`, `tools/` s
 Mini-games (Mop Rush, No Flash!, Restoration-as-minigame, Crate Tetris, Hang it Straight, Tour Guide, Night Watch, Catch the Thief, Paparazzi) · gems, ads, cosmetics, exhibition pass, crates · multiplayer / auctions · a sequel where the museum is part of a city · menu redesign · art direction and hiring.
 
 ## Needs Sean (parked questions; chats keep working)
+- **Chat 12:** what is "your own artwork" for the late-game frame sink: a drawing the player makes in the game, a photo they upload, or a painting they restore? Until you say, it is not built.
+- **Chat 12:** the Library/archive (where the stored collection lives) and a live lecture-hall talk event are not built; the stage only pays per famous visitor met.
 - **Review tonight:** the 82 painting drafts (27 earlier + 55 from batches 3 to 5; rarity for each) and which of the 11 flagged images to replace (`content/image-proposals.md`).
 - **Hooks for 4 Met drafts** (Night-Shining White, Esther, Gulf Stream, Drawing Lesson), plus every other Met / Commons draft marked "needs a real hook": the Met page text is behind a bot challenge, so paste one sentence per work and I add it as a quoted claim.
 - Latin America, the Pacific, the Middle East beyond Iran and Indigenous North America have almost no public-domain paintings with museum text in the Met, Cleveland or Commons; the Smithsonian key is the way in.
 - **Approve the rarity proposal** (`content/rarity-proposals.json`) and the Painting of the Day lines (`content/potd/draft.json`).
 - Smithsonian (`SI_API_KEY`) and Rijksmuseum (`RIJKS_API_KEY`) keys.
+- Chat 9: front lawn and facade (what does the outside look like?); rooftop terrace and telescope (where does it sit, which room reaches it?); elevator (what does each new floor hold?); construction times (is a day of waiting OK with "no wasted time"?); seamless archways showing two rooms at once (how much of the next room should show?).
 - Non-square rooms: what shapes, how they join, how they look (blocks Chat 9's first item).
-- West Wing outline; break-room upgrade ideas (defaults in `src/economy.js`: Better mops 90→120/160/220 min for 250/700/1800 gold, Guide training +10%→12/15/20% for 400/1100/2800, Carpenter's toolbox 10/20/30% off rooms for 350/900/2200; office levels 500/2000/8000/30000; collect-all fee 15%; security 150/400/1500, bounty 120); goal pacing and daily goals.
+- West Wing outline; break-room upgrade ideas (defaults in `src/economy.js`: Better mops 90→120/160/220 min for 250/700/1800 gold, Guide training +10%→12/15/20% for 400/1100/2800, Carpenter's toolbox 10/20/30% off rooms for 350/900/2200; office levels 500/2000/8000/30000; collect-all fee 15%; security 150/400/1500, bounty 120; Better beans x1.25/1.5/2 for 300/800/2000; services: gift shop 600 gold, food court 1200, discovery table 700, lecture stage 1500, earnings in `SERVICES`); goal pacing and daily goals.
 - Dig spots on Main Island: place them in the builder where you want them.
 - Mini-games and gems / ads: go or no-go?
 - Open design questions: free-roam map or chain of rooms; should paintings come only from expeditions; can you fail an expedition; seasons automatic or chosen; split the shared core now?
