@@ -35,22 +35,25 @@ import { weatherToday, season } from './weather.js';
 import { ORIENT_LABELS, SIZE_LABELS, BREAK, roomAt, MAIN_HALL_PRICE, ATRIUM_PRICE, isFixed, seedEntry, loadRooms, addRoom, resetRooms, updateRoom, swapRooms, roomName, layout, paintingsFor, slotStates, setSlot, hungAnywhere, placeArt, wallItems, plantSpots, carpetRect } from './rooms.js';
 import { openSlotMenu } from './slotmenu.js';
 import { ITEMS, loadItems, saveItems, resetItems, footprint, countPlaced } from './items.js';
-import { roomDirt, removeDirt, resetDirt, dirtCount, covered, janitors, janitorCost, hireJanitor, resetJanitors, guides, maxGuides, guideCost, hireGuide, hasCarpenter, hireCarpenter, CARPENTER_COST, staffCount } from './staff.js';
+import { roomDirt, removeDirt, resetDirt, dirtCount, covered, janitors, janitorCost, hireJanitor, resetJanitors, guides, guideBoost, maxGuides, guideCost, hireGuide, upgradeLevel, upgradeValue, upgradeCost, buyUpgrade, hasCarpenter, hireCarpenter, CARPENTER_COST, staffCount } from './staff.js';
 import { openStaffMenu } from './staffmenu.js';
-import { hasCameras, buyCameras, resetSecurity, CAMERA_COST, trackSeen, maybeRob } from './security.js';
+import { UPGRADES, OFFLINE_CAP_H, COLLECT_ALL_FEE } from './economy.js';
+import { hasCameras, buyCameras, resetSecurity, CAMERA_COST, trackSeen, maybeRob, awayFor } from './security.js';
 import { officeLevel, setOfficeLevel, resetOffice, perks, itemLevel, LEVELS, MAX_LEVEL } from './office.js';
 import { openOffice } from './officemenu.js';
 import { ask } from './ask.js';
-import { showAd } from './ad.js';
 import { roomRating, museumRating, starText } from './rating.js';
 import { FAMOUS, meet, resetMet, metList, famousBoost } from './famous.js';
-import { FREE, coins, canAfford, addCoins, spend, resetWallet, museumIncome, museumVisitors, coffeeIncome, roomIncome, settle, sellPrice, artPile, decorPile, collectArt, collectDecor, collectAll, pile } from './wallet.js';
+import { FREE, coins, canAfford, addCoins, spend, resetWallet, museumIncome, museumVisitors, coffeeIncome, roomIncome, settle, sellPrice, artPile, decorPile, collectArt, collectDecor, collectAll, pile, pileFull } from './wallet.js';
 import { openToolkit, hideToolkit, showBar, hideBar } from './toolkit.js';
 import { artBounds, paintArt, wallRef } from './walldraw.js';
 import { PERSONALITIES, lineFor, QUIPS, CONTEXT } from './lines.js';
 import { iconSvg } from './icons.js';
 import { bakeFountain, bakeSideStairs, FOUNTAIN } from './atrium.js';
 import { openViewer } from './viewer.js';
+import { isFixture, newId, clear as clearDisplay } from './display.js';
+import { showDisplays } from './displayart.js';
+import { openDisplay } from './displaymenu.js';
 import { openDecor, closeDecor, load, save, DEFAULT_CHARACTER } from './decor.js';
 import { openBuild } from './build.js';
 import { showTalk, hideTalk, talking } from './talk.js';
@@ -350,6 +353,7 @@ export class RoomScene extends Phaser.Scene {
     this.items = [];
     this.fitItems();
     this.itemSprites = [];
+    this.displayObjs = [];
     this.placeItems();
     this.overlay = this.add.graphics().setDepth(6000);
     this.mode = null; // toolkit: null | 'browse' | 'place' | 'edit'
@@ -381,8 +385,10 @@ export class RoomScene extends Phaser.Scene {
     this.tutorial();
     if (!RoomScene.opened) {
       RoomScene.opened = true;
+      const away = awayFor();
       const stolen = maybeRob(this.rooms, /[?&]rob\b/.test(location.search));
       trackSeen();
+      if (away > 20 * 60000 && !stolen) this.time.delayedCall(900, () => this.welcomeBack());
       if (stolen) {
         this.time.delayedCall(700, () => {
           this.pause(true);
@@ -1581,7 +1587,7 @@ export class RoomScene extends Phaser.Scene {
     const boosts = [];
     if (met) boosts.push(`Famous visitors met: ${met} of ${Object.keys(FAMOUS).length} · +${Math.round((famousBoost() - 1) * 100)}% income`);
     else boosts.push('Meet famous visitors in the main hall: +5% income each');
-    if (guides()) boosts.push(`Tour guides: ${guides()} · +${guides() * 10}% income`);
+    if (guides()) boosts.push(`Tour guides: ${guides()} · +${Math.round(guides() * guideBoost() * 100)}% income`);
     this.rooms.forEach((room, i) => {
       const love = loveOf(i);
       if (love >= 2) boosts.push(`Visitors love ${roomName(room, i)}: +${(Math.min(20, love) * 0.5).toFixed(1)}%`);
@@ -1594,6 +1600,7 @@ export class RoomScene extends Phaser.Scene {
       visitors: museumVisitors(this.rooms),
       rating: museumRating(this.rooms) / 20,
       boosts,
+      note: `Gold stops piling up after ${OFFLINE_CAP_H} hours in each spot, so collect it now and then. “Collect all” works from anywhere but keeps a ${Math.round(COLLECT_ALL_FEE * 100)}% fee; walking to the coins pays in full.`,
       rooms: this.rooms.map((room, i) => ({
         index: i,
         name: roomName(room, i),
@@ -1603,6 +1610,7 @@ export class RoomScene extends Phaser.Scene {
         income: roomIncome(this.rooms, i),
         paintings: paintingsFor(this.rooms, i).length,
         waiting: room.locked ? 0 : pile(this.rooms, i),
+        full: !room.locked && pileFull(this.rooms, i),
       })),
     };
   }
@@ -1790,6 +1798,13 @@ export class RoomScene extends Phaser.Scene {
     if (this.boardFront) consider(Math.hypot(x - this.boardFront.x, y - this.boardFront.y) - 6, { board: true, icon: 'look' });
     if (this.isBreak) consider(Math.hypot(x - this.L.entrance.ax, y - this.L.entrance.ay), { entrance: true, icon: 'back' });
     if (this.deskFront) consider(Math.hypot(x - this.deskFront.x, y - this.deskFront.y) - 6, { office: true, icon: 'office' });
+    this.items.forEach((it) => {
+      if (!isFixture(it)) return;
+      const { w, h } = footprint(it);
+      const fx = this.g.xL + (it.c + w / 2) * T;
+      const fy = this.g.y0 + (it.r + h) * T + 8; // just in front
+      consider(Math.hypot(x - fx, y - fy) - (w * T) / 3, { fixture: it, icon: 'look' });
+    });
     for (const n of this.npcs) consider(Math.hypot(x - n.s.x, y - n.s.y) - 2, { npc: n, icon: 'talk' });
     if (this.pet) consider(Math.hypot(x - this.pet.s.x, y - this.pet.s.y) + 4, { pet: true, icon: 'talk' });
     const { exit, entrance } = this.L;
@@ -1807,6 +1822,7 @@ export class RoomScene extends Phaser.Scene {
     if (!f || !this.input.enabled) return;
     if (f.painting) this.view(f.painting);
     else if (f.slot) this.editSlot(f.slot);
+    else if (f.fixture) this.openFixture(f.fixture);
     else if (f.mess) this.clean(f.mess);
     else if (f.office) this.openOfficePanel();
     else if (f.board) this.openStaff();
@@ -1827,6 +1843,22 @@ export class RoomScene extends Phaser.Scene {
       else this.openBuildMenu();
     }
     this.focus = null;
+  }
+
+  // Open the display panel for a case, plinth, shelf, easel or tank.
+  openFixture(item) {
+    this.pause(true);
+    openDisplay({
+      item,
+      def: ITEMS[item.type],
+      toast: (t) => this.toast(t),
+      before: () => this.settleAll(),
+      onChange: () => {
+        this.placeDisplays();
+        this.updateHud();
+      },
+      onClose: () => this.pause(false),
+    });
   }
 
   // The main hall starts locked behind the entrance's double doors, and the
@@ -1904,6 +1936,10 @@ export class RoomScene extends Phaser.Scene {
     const saved = loadItems(this.roomIndex);
     let changed = false;
     saved.forEach((it) => {
+      if (isFixture(it) && !it.d) {
+        it.d = newId(); // (a fixture placed before displays existed)
+        changed = true;
+      }
       if (this.canPlace(it)) return this.items.push(it);
       // Find the nearest free spot; only drop the item if the room has none.
       const { w, h } = footprint(it);
@@ -2107,16 +2143,42 @@ export class RoomScene extends Phaser.Scene {
     save(BREAK_SEEDED_KEY, true);
   }
 
+  // Break-room upgrades for the staff board (data in economy.js).
+  upgradeRows() {
+    return Object.entries(UPGRADES).map(([id, u]) => {
+      const lvl = upgradeLevel(id);
+      return {
+        id,
+        name: u.name,
+        blurb: u.blurb,
+        level: lvl,
+        cost: upgradeCost(id),
+        now: u.show(upgradeValue(id)),
+        next: lvl < u.cost.length ? u.show(u.effect[lvl]) : null,
+        locked: id === 'toolbox' && !hasCarpenter() ? 'Hire the carpenter' : id === 'training' && !guides() ? 'Hire a guide' : null,
+      };
+    });
+  }
+
   openStaff() {
     this.pause(true);
     openStaffMenu({
-      info: () => ({ free: FREE, janitors: janitors(), guides: guides(), maxGuides: maxGuides(this.rooms.length), guideCost: guideCost(), carpenter: hasCarpenter(), carpenterCost: CARPENTER_COST }),
+      info: () => ({ free: FREE, janitors: janitors(), guides: guides(), maxGuides: maxGuides(this.rooms.length), guideCost: guideCost(), carpenter: hasCarpenter(), carpenterCost: CARPENTER_COST, guideBoost: guideBoost(), upgrades: this.upgradeRows() }),
+      onUpgrade: (id) => {
+        const cost = upgradeCost(id);
+        if (cost === null || !spend(cost)) return this.toast(`Need ${cost} gold`);
+        this.settleAll();
+        buyUpgrade(id);
+        sfx('build');
+        this.toast(`${UPGRADES[id].name} upgraded`);
+        this.updateHud();
+      },
       onHireGuide: () => {
         if (!spend(guideCost())) return this.toast(`Need ${guideCost()} gold`);
         this.settleAll();
         hireGuide();
         sfx('build');
-        this.toast('Tour guide hired: +10% income');
+        this.toast(`Tour guide hired: +${Math.round(guideBoost() * 100)}% income`);
         this.refreshStaff();
         this.updateHud();
       },
@@ -2199,18 +2261,23 @@ export class RoomScene extends Phaser.Scene {
     if (this.pileSprite.visible && on(this.pileSprite.x, this.pileSprite.y - 8)) this.coinBurst(this.pileSprite.x, this.pileSprite.y, collectDecor(this.rooms, this.roomIndex));
   }
 
-  // "Collect all" every room's coins, after a short ad.
+  // When the game opens after a while: how much is waiting, and a nudge if the piles are full.
+  welcomeBack() {
+    const open = this.rooms.map((r, i) => i).filter((i) => !this.rooms[i].locked);
+    const waiting = open.reduce((n, i) => n + pile(this.rooms, i), 0);
+    if (waiting <= 0) return;
+    const full = open.some((i) => pileFull(this.rooms, i));
+    this.toast(`Welcome back! ${waiting.toLocaleString()} gold waiting${full ? `. Some piles are full (${OFFLINE_CAP_H} hours): collect so nothing is wasted` : ''}`);
+  }
+
+  // "Collect all" every room's coins from anywhere, keeping a small fee.
   collectEverything() {
     if (!this.input.enabled || this.mode) return;
-    this.pause(true);
-    showAd(() => {
-      this.pause(false);
-      const n = collectAll(this.rooms);
-      if (n > 0) bump('collected', n);
-      sfx('coin');
-      this.toast(n > 0 ? `Collected ${n.toLocaleString()} gold from every room` : 'Nothing to collect yet');
-      this.updatePile();
-    });
+    const { gross, net } = collectAll(this.rooms);
+    if (net > 0) bump('collected', net);
+    sfx('coin');
+    this.toast(gross > 0 ? `Collected ${net.toLocaleString()} gold (${Math.round(COLLECT_ALL_FEE * 100)}% fee: walk to the coins to keep it all)` : 'Nothing to collect yet');
+    this.updatePile();
   }
 
   // Coins fly up from the spot to the coin counter, with a sparkle.
@@ -2318,7 +2385,17 @@ export class RoomScene extends Phaser.Scene {
       const sp = this.add.image(x + (w * T) / 2, y, key).setOrigin(0.5, 1).setDepth(flat ? 0.55 : y - 1);
       return sp;
     });
+    this.placeDisplays();
     this.lighting?.build();
+  }
+
+  // What is on each case, plinth, shelf, easel and tank, drawn over its sprite.
+  placeDisplays() {
+    this.displayObjs?.forEach((o) => {
+      this.tweens.killTweensOf(o);
+      o.destroy();
+    });
+    this.displayObjs = showDisplays(this, this.items, this.g);
   }
 
   enterBuild() {
@@ -2437,7 +2514,7 @@ export class RoomScene extends Phaser.Scene {
       this.settleAll();
       bump('placed');
     }
-    this.items.push({ type, c, r, rot });
+    this.items.push({ type, c, r, rot, ...(isFixture({ type }) && { d: orig?.d || newId() }) });
     sfx('place');
     saveItems(this.roomIndex, this.items);
     this.placeItems();
@@ -2474,6 +2551,7 @@ export class RoomScene extends Phaser.Scene {
         label: `Sell +${sellPrice(hit.type)}`,
         onClick: () => {
           this.settleAll();
+          if (hit.d) clearDisplay(hit.d);
           addCoins(sellPrice(hit.type));
           sfx('sell');
           this.toast(`Sold for ${sellPrice(hit.type)} gold`);

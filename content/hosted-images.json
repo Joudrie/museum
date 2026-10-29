@@ -1,0 +1,370 @@
+{
+  "painting:harvesters": {
+    "file": "paintings/harvesters.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Pieter_Bruegel_the_Elder-_The_Harvesters_-_Google_Art_Project.jpg/1280px-Pieter_Bruegel_the_Elder-_The_Harvesters_-_Google_Art_Project.jpg",
+    "fetched": "2026-10-29",
+    "size": "1280x932",
+    "bytes": 398907,
+    "quality": 88
+  },
+  "painting:mona-lisa": {
+    "file": "paintings/mona-lisa.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/1280px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg",
+    "fetched": "2026-10-29",
+    "size": "859x1280",
+    "bytes": 376120,
+    "quality": 88
+  },
+  "painting:starry-night": {
+    "file": "paintings/starry-night.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/1280px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg",
+    "fetched": "2026-10-29",
+    "size": "1280x1013",
+    "bytes": 475276,
+    "quality": 80
+  },
+  "painting:great-wave": {
+    "file": "paintings/great-wave.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Tsunami_by_hokusai_19th_century.jpg/1280px-Tsunami_by_hokusai_19th_century.jpg",
+    "fetched": "2026-10-29",
+    "size": "1280x860",
+    "bytes": 424943,
+    "quality": 88
+  },
+  "painting:pearl-earring": {
+    "file": "paintings/pearl-earring.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/1665_Girl_with_a_Pearl_Earring.jpg/1280px-1665_Girl_with_a_Pearl_Earring.jpg",
+    "fetched": "2026-10-29",
+    "size": "1081x1280",
+    "bytes": 404439,
+    "quality": 88
+  },
+  "painting:venus": {
+    "file": "paintings/venus.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_Project_-_edited.jpg/1280px-Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_Project_-_edited.jpg",
+    "fetched": "2026-10-29",
+    "size": "1280x804",
+    "bytes": 377221,
+    "quality": 88
+  },
+  "painting:impression-sunrise": {
+    "file": "paintings/impression-sunrise.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Monet_-_Impression%2C_Sunrise.jpg/1280px-Monet_-_Impression%2C_Sunrise.jpg",
+    "fetched": "2026-10-29",
+    "size": "1280x993",
+    "bytes": 297511,
+    "quality": 88
+  },
+  "painting:scream": {
+    "file": "paintings/scream.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Edvard_Munch%2C_1893%2C_The_Scream%2C_oil%2C_tempera_and_pastel_on_cardboard%2C_91_x_73_cm%2C_National_Gallery_of_Norway.jpg/1280px-Edvard_Munch%2C_1893%2C_The_Scream%2C_oil%2C_tempera_and_pastel_on_cardboard%2C_91_x_73_cm%2C_National_Gallery_of_Norway.jpg",
+    "fetched": "2026-10-29",
+    "size": "1031x1280",
+    "bytes": 376989,
+    "quality": 88
+  },
+  "painting:wanderer": {
+    "file": "paintings/wanderer.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Caspar_David_Friedrich_-_Wanderer_above_the_sea_of_fog.jpg/1280px-Caspar_David_Friedrich_-_Wanderer_above_the_sea_of_fog.jpg",
+    "fetched": "2026-10-29",
+    "size": "1000x1280",
+    "bytes": 283535,
+    "quality": 88
+  },
+  "painting:kiss": {
+    "file": "paintings/kiss.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/The_Kiss_-_Gustav_Klimt_-_Google_Cultural_Institute.jpg/1280px-The_Kiss_-_Gustav_Klimt_-_Google_Cultural_Institute.jpg",
+    "fetched": "2026-10-29",
+    "size": "1276x1280",
+    "bytes": 499230,
+    "quality": 80
+  },
+  "painting:grande-jatte": {
+    "file": "paintings/grande-jatte.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/A_Sunday_on_La_Grande_Jatte%2C_Georges_Seurat%2C_1884.jpg/1280px-A_Sunday_on_La_Grande_Jatte%2C_Georges_Seurat%2C_1884.jpg",
+    "fetched": "2026-10-29",
+    "size": "1280x852",
+    "bytes": 501836,
+    "quality": 88
+  },
+  "painting:night-watch": {
+    "file": "paintings/night-watch.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/The_Night_Watch_-_HD.jpg/1280px-The_Night_Watch_-_HD.jpg",
+    "fetched": "2026-10-29",
+    "size": "1280x1072",
+    "bytes": 244312,
+    "quality": 88
+  },
+  "painting:milkmaid": {
+    "file": "paintings/milkmaid.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Johannes_Vermeer_-_Het_melkmeisje_-_Google_Art_Project.jpg/1280px-Johannes_Vermeer_-_Het_melkmeisje_-_Google_Art_Project.jpg",
+    "fetched": "2026-10-29",
+    "size": "1142x1280",
+    "bytes": 461142,
+    "quality": 88
+  },
+  "painting:cafe-terrace": {
+    "file": "paintings/cafe-terrace.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Van_Gogh_-_Terrasse_des_Caf%C3%A9s_an_der_Place_du_Forum_in_Arles_am_Abend1.jpeg/1280px-Van_Gogh_-_Terrasse_des_Caf%C3%A9s_an_der_Place_du_Forum_in_Arles_am_Abend1.jpeg",
+    "fetched": "2026-10-29",
+    "size": "975x1280",
+    "bytes": 454378,
+    "quality": 84
+  },
+  "painting:red-fuji": {
+    "file": "paintings/red-fuji.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Red_Fuji_southern_wind_clear_morning.jpg/1280px-Red_Fuji_southern_wind_clear_morning.jpg",
+    "fetched": "2026-10-29",
+    "size": "1280x854",
+    "bytes": 417779,
+    "quality": 88
+  },
+  "painting:arnolfini": {
+    "file": "paintings/arnolfini.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Van_Eyck_-_Arnolfini_Portrait.jpg/1280px-Van_Eyck_-_Arnolfini_Portrait.jpg",
+    "fetched": "2026-10-29",
+    "size": "936x1280",
+    "bytes": 232960,
+    "quality": 88
+  },
+  "painting:las-meninas": {
+    "file": "paintings/las-meninas.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Las_Meninas,_by_Diego_Vel%C3%A1zquez,_from_Prado_in_Google_Earth.jpg/1280px-Las_Meninas,_by_Diego_Vel%C3%A1zquez,_from_Prado_in_Google_Earth.jpg",
+    "fetched": "2026-10-29",
+    "size": "1112x1280",
+    "bytes": 274874,
+    "quality": 88
+  },
+  "painting:earthly-delights": {
+    "file": "paintings/earthly-delights.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/The_Garden_of_earthly_delights.jpg/1280px-The_Garden_of_earthly_delights.jpg",
+    "fetched": "2026-10-29",
+    "size": "1280x729",
+    "bytes": 386905,
+    "quality": 88
+  },
+  "painting:hunters-snow": {
+    "file": "paintings/hunters-snow.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Pieter_Bruegel_the_Elder_-_Hunters_in_the_Snow_(Winter)_-_Google_Art_Project.jpg/1280px-Pieter_Bruegel_the_Elder_-_Hunters_in_the_Snow_(Winter)_-_Google_Art_Project.jpg",
+    "fetched": "2026-10-29",
+    "size": "1280x911",
+    "bytes": 424960,
+    "quality": 88
+  },
+  "painting:tower-babel": {
+    "file": "paintings/tower-babel.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Pieter_Bruegel_the_Elder_-_The_Tower_of_Babel_(Vienna)_-_Google_Art_Project_-_edited.jpg/1280px-Pieter_Bruegel_the_Elder_-_The_Tower_of_Babel_(Vienna)_-_Google_Art_Project_-_edited.jpg",
+    "fetched": "2026-10-29",
+    "size": "1280x937",
+    "bytes": 430944,
+    "quality": 88
+  },
+  "painting:water-lilies": {
+    "file": "paintings/water-lilies.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Claude_Monet_-_Water_Lilies_-_1906,_Ryerson.jpg/1280px-Claude_Monet_-_Water_Lilies_-_1906,_Ryerson.jpg",
+    "fetched": "2026-10-29",
+    "size": "1280x1230",
+    "bytes": 410102,
+    "quality": 72
+  },
+  "painting:woman-parasol": {
+    "file": "paintings/woman-parasol.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Claude_Monet_-_Woman_with_a_Parasol_-_Madame_Monet_and_Her_Son_-_Google_Art_Project.jpg/1280px-Claude_Monet_-_Woman_with_a_Parasol_-_Madame_Monet_and_Her_Son_-_Google_Art_Project.jpg",
+    "fetched": "2026-10-29",
+    "size": "1030x1280",
+    "bytes": 441905,
+    "quality": 88
+  },
+  "painting:sunflowers": {
+    "file": "paintings/sunflowers.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Vincent_Willem_van_Gogh_127.jpg/1280px-Vincent_Willem_van_Gogh_127.jpg",
+    "fetched": "2026-10-29",
+    "size": "1014x1280",
+    "bytes": 428995,
+    "quality": 88
+  },
+  "painting:wheatfield-crows": {
+    "file": "paintings/wheatfield-crows.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Vincent_van_Gogh_-_Wheatfield_with_crows_-_Google_Art_Project.jpg/1280px-Vincent_van_Gogh_-_Wheatfield_with_crows_-_Google_Art_Project.jpg",
+    "fetched": "2026-10-29",
+    "size": "1280x609",
+    "bytes": 328630,
+    "quality": 88
+  },
+  "painting:bedroom": {
+    "file": "paintings/bedroom.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Vincent_van_Gogh_-_De_slaapkamer_-_Google_Art_Project.jpg/1280px-Vincent_van_Gogh_-_De_slaapkamer_-_Google_Art_Project.jpg",
+    "fetched": "2026-10-29",
+    "size": "1280x1016",
+    "bytes": 467470,
+    "quality": 88
+  },
+  "painting:vangogh-self": {
+    "file": "paintings/vangogh-self.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Vincent_van_Gogh_-_Self-Portrait_-_Google_Art_Project_(454045).jpg/1280px-Vincent_van_Gogh_-_Self-Portrait_-_Google_Art_Project_(454045).jpg",
+    "fetched": "2026-10-29",
+    "size": "1013x1280",
+    "bytes": 491922,
+    "quality": 88
+  },
+  "painting:anatomy-lesson": {
+    "file": "paintings/anatomy-lesson.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Rembrandt_-_The_Anatomy_Lesson_of_Dr_Nicolaes_Tulp.jpg/1280px-Rembrandt_-_The_Anatomy_Lesson_of_Dr_Nicolaes_Tulp.jpg",
+    "fetched": "2026-10-29",
+    "size": "1280x964",
+    "bytes": 227514,
+    "quality": 88
+  },
+  "painting:emmaus": {
+    "file": "paintings/emmaus.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Caravaggio_-_Cena_in_Emmaus.jpg/1280px-Caravaggio_-_Cena_in_Emmaus.jpg",
+    "fetched": "2026-10-29",
+    "size": "1280x1067",
+    "bytes": 315940,
+    "quality": 88
+  },
+  "painting:creation-adam": {
+    "file": "paintings/creation-adam.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Michelangelo_-_Creation_of_Adam_(cropped).jpg/1280px-Michelangelo_-_Creation_of_Adam_(cropped).jpg",
+    "fetched": "2026-10-29",
+    "size": "1280x581",
+    "bytes": 220692,
+    "quality": 88
+  },
+  "painting:school-athens": {
+    "file": "paintings/school-athens.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/%22The_School_of_Athens%22_by_Raffaello_Sanzio_da_Urbino.jpg/1280px-%22The_School_of_Athens%22_by_Raffaello_Sanzio_da_Urbino.jpg",
+    "fetched": "2026-10-29",
+    "size": "1280x993",
+    "bytes": 481271,
+    "quality": 88
+  },
+  "painting:lady-ermine": {
+    "file": "paintings/lady-ermine.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Lady_with_an_Ermine_-_Leonardo_da_Vinci_-_Google_Art_Project.jpg/1280px-Lady_with_an_Ermine_-_Leonardo_da_Vinci_-_Google_Art_Project.jpg",
+    "fetched": "2026-10-29",
+    "size": "952x1280",
+    "bytes": 170631,
+    "quality": 88
+  },
+  "painting:liberty": {
+    "file": "paintings/liberty.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Eug%C3%A8ne_Delacroix_-_Le_28_Juillet._La_Libert%C3%A9_guidant_le_peuple.jpg/1280px-Eug%C3%A8ne_Delacroix_-_Le_28_Juillet._La_Libert%C3%A9_guidant_le_peuple.jpg",
+    "fetched": "2026-10-29",
+    "size": "1280x1027",
+    "bytes": 380473,
+    "quality": 88
+  },
+  "painting:third-may": {
+    "file": "paintings/third-may.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/El_Tres_de_Mayo,_by_Francisco_de_Goya,_from_Prado_thin_black_margin.jpg/1280px-El_Tres_de_Mayo,_by_Francisco_de_Goya,_from_Prado_thin_black_margin.jpg",
+    "fetched": "2026-10-29",
+    "size": "1280x989",
+    "bytes": 231952,
+    "quality": 88
+  },
+  "painting:shalott": {
+    "file": "paintings/shalott.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/John_William_Waterhouse_-_The_Lady_of_Shalott_-_Google_Art_Project_edit.jpg/1280px-John_William_Waterhouse_-_The_Lady_of_Shalott_-_Google_Art_Project_edit.jpg",
+    "fetched": "2026-10-29",
+    "size": "1280x982",
+    "bytes": 426928,
+    "quality": 88
+  },
+  "painting:dejeuner": {
+    "file": "paintings/dejeuner.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/%C3%89douard_Manet_-_Le_D%C3%A9jeuner_sur_l%27herbe.jpg/1280px-%C3%89douard_Manet_-_Le_D%C3%A9jeuner_sur_l%27herbe.jpg",
+    "fetched": "2026-10-29",
+    "size": "1280x1009",
+    "bytes": 495916,
+    "quality": 88
+  },
+  "painting:moulin-galette": {
+    "file": "paintings/moulin-galette.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Pierre-Auguste_Renoir,_Le_Moulin_de_la_Galette.jpg/1280px-Pierre-Auguste_Renoir,_Le_Moulin_de_la_Galette.jpg",
+    "fetched": "2026-10-29",
+    "size": "1280x954",
+    "bytes": 454117,
+    "quality": 88
+  },
+  "painting:ballet-class": {
+    "file": "paintings/ballet-class.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Edgar_Degas_-_The_Ballet_Class_-_Google_Art_Project.jpg/1280px-Edgar_Degas_-_The_Ballet_Class_-_Google_Art_Project.jpg",
+    "fetched": "2026-10-29",
+    "size": "1115x1280",
+    "bytes": 440755,
+    "quality": 88
+  },
+  "painting:rainy-day": {
+    "file": "paintings/rainy-day.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Gustave_Caillebotte_-_Paris_Street%3B_Rainy_Day_-_Google_Art_Project.jpg/1280px-Gustave_Caillebotte_-_Paris_Street%3B_Rainy_Day_-_Google_Art_Project.jpg",
+    "fetched": "2026-10-29",
+    "size": "1280x970",
+    "bytes": 268604,
+    "quality": 88
+  },
+  "painting:childs-bath": {
+    "file": "paintings/childs-bath.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Mary_Cassatt_-_The_Child%27s_Bath_-_Google_Art_Project.jpg/1280px-Mary_Cassatt_-_The_Child%27s_Bath_-_Google_Art_Project.jpg",
+    "fetched": "2026-10-29",
+    "size": "839x1280",
+    "bytes": 271929,
+    "quality": 88
+  },
+  "painting:hay-wain": {
+    "file": "paintings/hay-wain.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/John_Constable_-_The_Hay_Wain_(1821).jpg/1280px-John_Constable_-_The_Hay_Wain_(1821).jpg",
+    "fetched": "2026-10-29",
+    "size": "1280x883",
+    "bytes": 386100,
+    "quality": 88
+  },
+  "painting:marat": {
+    "file": "paintings/marat.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Death_of_Marat_by_David.jpg/1280px-Death_of_Marat_by_David.jpg",
+    "fetched": "2026-10-29",
+    "size": "995x1280",
+    "bytes": 249252,
+    "quality": 88
+  },
+  "painting:gleaners": {
+    "file": "paintings/gleaners.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Jean-Fran%C3%A7ois_Millet_-_Gleaners_-_Google_Art_Project_2.jpg/1280px-Jean-Fran%C3%A7ois_Millet_-_Gleaners_-_Google_Art_Project_2.jpg",
+    "fetched": "2026-10-29",
+    "size": "1280x958",
+    "bytes": 345546,
+    "quality": 88
+  },
+  "painting:whistlers-mother": {
+    "file": "paintings/whistlers-mother.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Whistlers_Mother_high_res.jpg/1280px-Whistlers_Mother_high_res.jpg",
+    "fetched": "2026-10-29",
+    "size": "1280x1139",
+    "bytes": 316203,
+    "quality": 88
+  },
+  "painting:ambassadors": {
+    "file": "paintings/ambassadors.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Hans_Holbein_the_Younger_-_The_Ambassadors_-_Google_Art_Project.jpg/1280px-Hans_Holbein_the_Younger_-_The_Ambassadors_-_Google_Art_Project.jpg",
+    "fetched": "2026-10-29",
+    "size": "1280x1261",
+    "bytes": 431392,
+    "quality": 88
+  },
+  "painting:durer-self": {
+    "file": "paintings/durer-self.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Albrecht_D%C3%BCrer_-_1500_self-portrait_(High_resolution_and_detail).jpg/1280px-Albrecht_D%C3%BCrer_-_1500_self-portrait_(High_resolution_and_detail).jpg",
+    "fetched": "2026-10-29",
+    "size": "926x1280",
+    "bytes": 253537,
+    "quality": 88
+  },
+  "painting:swing": {
+    "file": "paintings/swing.jpg",
+    "from": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Fragonard,_The_Swing.jpg/1280px-Fragonard,_The_Swing.jpg",
+    "fetched": "2026-10-29",
+    "size": "1020x1280",
+    "bytes": 427645,
+    "quality": 88
+  }
+}

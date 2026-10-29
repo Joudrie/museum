@@ -1,39 +1,105 @@
-// Shells: pixel art as data.
-import { draw, pack, pal, sym } from './_px.js';
+// Seashells: dug up from shore spots (damp sand).
 
-const NAUTILUS = draw(14, 14, (x, y) => {
-  const dx = x - 6.5, dy = y - 6.5, d = Math.hypot(dx, dy);
-  if (d > 6.6 || (dx > 1 && dy > 2.5 && d > 4)) return null;
-  const turn = (Math.atan2(dy, dx) + Math.PI + d * 0.9) % 1.6;
-  return d < 1.3 ? 'c' : turn < 0.5 ? 'd' : d > 5 ? 'b' : 'a';
-});
-const SCALLOP = sym(['.....###', '...##aab', '..#aabbb', '.#abaabb', '#aabaabb', '#abaabab', '#aaabaab', '.#aaabaa', '..#cccdd', '...#dddd']);
-const COWRIE = sym(['....####', '..##bbbb', '.#bbaaaa', '#baadaaa', '#bacdaaa', '#bacdaaa', '#bacdaaa', '#baadaaa', '.#baaaaa', '..##cccc']);
-const CONCH = draw(16, 12, (x, y) => {
-  const dx = x - 8, dy = y - 6;
-  if (x < 3 && Math.abs(dy) < 1 + x * 0.4) return 'a';
-  if ((dx / 6.5) ** 2 + (dy / 4.8) ** 2 < 1) return (x + y) % 5 === 0 ? 'd' : dx + dy > 2 ? 'c' : dy < -1.5 ? 'b' : 'a';
-  if (dx > 4 && dx < 7.6 && dy > 0 && dy < 3.6) return 'd';
-  return null;
+const SPIRAL = [
+  '.....##.....',
+  '....#bb#....',
+  '...#baab#...',
+  '..#bacab#...',
+  '..#bacab#...',
+  '.#bacccab#..',
+  '.#bacccab#..',
+  '#bbaaaaabb#.',
+  '#bb#bbbb#bb#',
+  '.##......##.',
+];
+const FAN = [
+  '............',
+  '.....##.....',
+  '..#.#bb#.#..',
+  '.#b#baab#b#.',
+  '#bb#bcab#bb#',
+  '#ba#bcab#ab#',
+  '#ba#bcab#ab#',
+  '.#bbbaabbb#.',
+  '..#bbbbbb#..',
+  '....####....',
+];
+const CONCH = [
+  '......##....',
+  '.....#bb#...',
+  '....#baab#..',
+  '.##.#bcab#..',
+  '#bb##bcab#.#',
+  '#bbaabccab##',
+  '#bcccccccab#',
+  '#baaaaaaab#.',
+  '.#bbbbbbb#..',
+  '..#######...',
+];
+const STAR = [
+  '.....##.....',
+  '....#bb#....',
+  '....#ba#....',
+  '##..#ba#..##',
+  '#bb#bccb#bb#',
+  '.#bbbccbbb#.',
+  '..#bbccbb#..',
+  '..#bb##bb#..',
+  '.#bb#..#bb#.',
+  '.##......##.',
+];
+const shell = (slug, title, rows, [a, b, c, o], rarity, kind, blurb, facts) => ({
+  id: `shell:${slug}`,
+  collection: 'shell',
+  title,
+  blurb,
+  facts,
+  rarity,
+  set: 'shell-box',
+  tags: [kind],
+  image: { kind: 'pixels', rows, palette: { '#': o, a, b, c } },
+  display: ['case', 'plinth'],
+  provenance: { how: 'dug', where: 'Shore dig spots' },
+  source: { license: 'Original', credit: 'Curation' },
+  value: 2 * rarity,
 });
 
-export default pack({
-  id: 'shell', name: 'Shells', noun: 'shells', icon: '🐚', tab: 'nature', tabLabel: 'Nature', order: 7,
-  intro: '{have} of {total} nature finds. Look for butterflies and shells out on the islands.',
-  where: 'The beaches', how: 'dug', set: 'shell-shelf', reward: 450,
-  plaque: 'Four shells for the windowsill: each one built by a soft animal.',
-  entries: [
-    ['nautilus', 'Chambered nautilus', NAUTILUS, pal('#f0e4d0', '#fffaf0', '#c8a888', '#b05028'), 3, 'sea',
-      'A nautilus lives in the newest, largest chamber of its spiral shell and seals off the old ones behind it. The empty chambers help it float.',
-      ['Its spiral is among the most famous shapes in nature.']],
-    ['scallop', 'Scallop', SCALLOP, pal('#f0b898', '#fff0e0', '#c87858', '#a04830'), 1, 'sea',
-      'A scallop can swim by clapping its two shells together and squirting water out.',
-      ['Along the edge it has a row of tiny eyes.']],
-    ['cowrie', 'Cowrie', COWRIE, pal('#e8c898', '#fff0d0', '#b08858', '#6a4020'), 2, 'sea',
-      'Smooth, shiny cowrie shells were used as money for centuries in parts of Africa, Asia and the Pacific.',
-      ['Their smoothness comes from a soft layer that covers the outside as the snail grows.']],
-    ['conch', 'Queen conch', CONCH, pal('#f4c8a8', '#fff2e4', '#c07c5c', '#e87868'), 2, 'sea',
-      'Hold a big shell to your ear and you hear the “ocean”. It is really the noise around you, echoing inside the shell.',
-      ['The inside of a queen conch is a glossy pink.']],
+const entries = [
+  shell('periwinkle', 'Periwinkle', SPIRAL, ['#b8a88c', '#dccfb4', '#7c6c54', '#2c241a'], 1, 'snail',
+    'A small sea snail that lives on rocks between the tides. Its shell grows in a spiral as the snail grows.',
+    ['Periwinkles graze on tiny algae.']),
+  shell('scallop', 'Scallop shell', FAN, ['#f0c8a8', '#fce8d4', '#c88c68', '#5a3420'], 1, 'clam',
+    'Scallops are clams that swim by clapping their two shells together. The ridges are growth lines.',
+    ['A scallop has many tiny eyes along the edge of its shell.']),
+  shell('conch', 'Conch shell', CONCH, ['#f0a890', '#ffd8c4', '#c0705a', '#5a2418'], 2, 'snail',
+    'A large sea snail shell with a pink glossy inside. Hold one to your ear and you hear the sound of the air in the shell.',
+    ['The “sea” sound is really ambient noise echoing in the hollow.']),
+  shell('starfish', 'Sea star', STAR, ['#e8784c', '#f8a478', '#b04828', '#4a1c0c'], 2, 'star',
+    'Sea stars are not fish. They move on hundreds of tiny tube feet, and most can regrow a lost arm.',
+    ['A sea star has no brain.']),
+  shell('nautilus', 'Nautilus shell', SPIRAL, ['#f4e8d8', '#fffaf0', '#c88c58', '#4a2c14'], 3, 'snail',
+    'The nautilus is a relative of the octopus living in a coiled, chambered shell. It has hardly changed in hundreds of millions of years.',
+    ['The animal adjusts gas in its chambers to rise and sink.']),
+  shell('sand-dollar', 'Sand dollar', STAR, ['#e8dcc4', '#faf2e0', '#a89870', '#3a3220'], 3, 'urchin',
+    'A flat relative of the sea urchin. The pattern on top looks like a five-petalled flower.',
+    ['When alive, a sand dollar is covered with tiny spines.']),
+];
+
+export default {
+  collection: {
+    id: 'shell',
+    name: 'Shells',
+    noun: 'shells',
+    icon: '🐚',
+    kinds: ['shell'],
+    display: 'case',
+    ownership: 'earned',
+    meta: ['rarity', 'where'],
+    journal: { tab: 'shells', label: 'Shells', order: 9, layout: 'tiles', intro: '{have} of {total} shells found. Dig them out of damp sand on the shore.' },
+    viewer: { look: 'case' },
+  },
+  sets: [
+    { id: 'shell-box', name: 'Shell box', collection: 'shell', entries: entries.map((e) => e.id), reward: { gold: 400 }, plaque: 'Six treasures of the tide line.' },
   ],
-});
+  entries,
+};

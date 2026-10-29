@@ -1,36 +1,84 @@
-// Coins: pixel art as data, like minerals. Nothing hands them out yet; they are
-// meant for dig sites and expeditions.
-import { disc, pack, pal } from './_px.js';
+// Coins: dug from ruin spots. They arrive dirty (Chat 4 cleans them).
 
-const owl = disc(14, (x, y, dx, dy, d) => {
-  if (d < 5.2 && ((Math.abs(dx + 1.5) < 1 && Math.abs(dy + 1) < 1) || (Math.abs(dx - 1.5) < 1 && Math.abs(dy + 1) < 1))) return 'd';
-  if (d < 4.6 && dy > 0.2 && dy < 3.2 && Math.abs(dx) < 2.5 - dy * 0.3) return 'c';
-  return null;
+const COIN = [
+  '...######...',
+  '..#bbbbbb#..',
+  '.#bccccccb#.',
+  '#bcaaaaaacb#',
+  '#bcaabbaacb#',
+  '#bcabccbacb#',
+  '#bcabccbacb#',
+  '#bcaabbaacb#',
+  '#bcaaaaaacb#',
+  '.#bccccccb#.',
+  '..#bbbbbb#..',
+  '...######...',
+];
+const SQUARE = [
+  '.##########.',
+  '#bbbbbbbbbb#',
+  '#bccccccccb#',
+  '#bcaaaaaacb#',
+  '#bcab##bacb#',
+  '#bcab##bacb#',
+  '#bcaaaaaacb#',
+  '#bccccccccb#',
+  '#bbbbbbbbbb#',
+  '.##########.',
+];
+const coin = (slug, title, rows, [a, b, c, o], rarity, age, blurb, facts) => ({
+  id: `coin:${slug}`,
+  collection: 'coin',
+  title,
+  blurb,
+  facts,
+  rarity,
+  set: 'coin-tray',
+  tags: [age],
+  image: { kind: 'pixels', rows, palette: { '#': o, a, b, c } },
+  display: ['case', 'plinth'],
+  provenance: { how: 'dug', where: 'Ruin dig spots' },
+  source: { license: 'Original', credit: 'Curation' },
+  dirty: true,
+  value: 4 * rarity,
 });
-const head = disc(14, (x, y, dx, dy, d) => {
-  if (d < 4.8 && dx > -3 && dx < 2 && dy > -3.5 && dy < 3 && (dx + 3) * 1.3 > Math.abs(dy) * 0.6) return d > 3.6 ? 'c' : 'd';
-  return null;
-});
-const lion = disc(14, (x, y, dx, dy, d) => (d < 4.6 && (Math.abs(dy - Math.round(dx / 2)) < 0.6 || (dx > 1 && Math.abs(dy + 2) < 0.6)) ? 'd' : null));
-const cross = disc(14, (x, y, dx, dy, d) => (d < 5 && (Math.abs(dx) < 0.9 || Math.abs(dy) < 0.9) ? 'd' : null));
 
-export default pack({
-  id: 'coin', name: 'Coins', noun: 'coins', icon: '🪙', tab: 'treasures', tabLabel: 'Treasures', order: 6,
-  intro: '{have} of {total} treasures found. Dig sites and expeditions turn them up.',
-  where: 'Dig sites', set: 'coin-purse', reward: 500,
-  plaque: 'Four coins that paid for ancient cities, legions and ships.',
-  entries: [
-    ['owl-tetradrachm', 'Athenian owl', owl, pal('#c8ccd4', '#f4f6fa', '#848a98', '#4a4e5c'), 2, 'greek',
-      'A silver coin from Athens, stamped with the owl of Athena. It was so trusted that traders called the coins “owls”.',
-      ['Athens minted owls for hundreds of years in the ancient world.']],
-    ['denarius', 'Roman denarius', head, pal('#bcc0c8', '#eef0f4', '#7c8290', '#404452'), 1, 'roman',
-      'The silver coin of the Roman Republic and Empire. A legionary’s pay was counted in denarii.',
-      ['Emperors put their own faces on the front, so a coin was also a portrait.']],
-    ['electrum-stater', 'Lydian stater', lion, pal('#e0c068', '#f8e8a8', '#a88830', '#5a4410'), 3, 'greek',
-      'One of the oldest coins in the world, from Lydia, in what is now Turkey. It is made of electrum, a natural mix of gold and silver.',
-      ['These coins date to around 600 BC.']],
-    ['piece-of-eight', 'Piece of eight', cross, pal('#c4c8d0', '#f0f2f6', '#808694', '#464a58'), 2, 'pirate',
-      'The Spanish silver dollar. It could be cut into eight “bits”, which is how it got its name.',
-      ['It was used as money from Spain to the Americas and across Asia.']],
+const entries = [
+  coin('copper-coin', 'Copper coin', COIN, ['#b86a3c', '#d89060', '#7a4222', '#2c1608'], 1, 'copper',
+    'Copper was one of the first metals people turned into money, because it was easy to melt and stamp.',
+    ['Copper coins turn green over time as the metal slowly corrodes.']),
+  coin('silver-denarius', 'Silver denarius', COIN, ['#c8ccd4', '#eef0f4', '#8a909c', '#30343c'], 2, 'roman',
+    'The denarius was the standard Roman silver coin for hundreds of years.',
+    ['Emperors put their own faces on coins, so a coin was also a way of showing who ruled.']),
+  coin('gold-coin', 'Gold coin', COIN, ['#e0b030', '#f8e078', '#a07818', '#3e2c06'], 3, 'gold',
+    'Gold does not rust or tarnish, so gold coins can look almost new after centuries underground.',
+    ['Gold is soft enough that a coin can be marked with a tooth.']),
+  coin('pierced-coin', 'Coin with a square hole', SQUARE, ['#b08048', '#d0a468', '#70502c', '#2a1a0a'], 2, 'copper',
+    'Chinese coins were cast with a square hole so many could be strung together on a cord.',
+    ['A string of 1,000 such coins was a common unit of money.']),
+  coin('silver-penny', 'Hammered silver penny', COIN, ['#b8bcc4', '#e0e4ea', '#7c828e', '#2a2e36'], 2, 'medieval',
+    'Medieval pennies were stamped by hammering a blank between two dies, so no two look exactly alike.',
+    ['Pennies were sometimes cut into halves or quarters to make change.']),
+  coin('gold-doubloon', 'Gold doubloon', COIN, ['#e8b838', '#fff088', '#a87c14', '#42300a'], 4, 'gold',
+    'A doubloon was a large Spanish gold coin. Spanish ships carried them across the Atlantic, and some ended up on the sea floor.',
+    ['The word comes from the Spanish for “double”.']),
+];
+
+export default {
+  collection: {
+    id: 'coin',
+    name: 'Coins',
+    noun: 'coins',
+    icon: '🪙',
+    kinds: ['coin'],
+    display: 'case',
+    ownership: 'earned',
+    meta: ['rarity', 'where'],
+    journal: { tab: 'coins', label: 'Coins', order: 7, layout: 'tiles', intro: '{have} of {total} coins found. Dig them out of ruin spots.' },
+    viewer: { look: 'case' },
+  },
+  sets: [
+    { id: 'coin-tray', name: 'Coin tray', collection: 'coin', entries: entries.map((e) => e.id), reward: { gold: 700 }, plaque: 'Six coins, from copper pennies to Spanish gold.' },
   ],
-});
+  entries,
+};

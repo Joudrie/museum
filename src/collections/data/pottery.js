@@ -1,35 +1,97 @@
-// Pottery: pixel art as data. A vase is drawn from a width profile, top to bottom.
-import { draw, pack, pal } from './_px.js';
+// Pottery shards: dug from ruin spots (src/dig.js). They arrive dirty, so they
+// wait for the restoration desk (Chat 4). Pixel art is rows and a palette.
 
-const vase = (profile, band) =>
-  draw(16, profile.length, (x, y) => {
-    const w = profile[y], dx = Math.abs(x - 7.5);
-    if (dx > w) return null;
-    if (band(y)) return 'd';
-    return dx > w - 1.3 ? (x < 8 ? 'b' : 'c') : 'a';
-  });
-const AMPHORA = vase([2, 2, 1.5, 2, 3, 5, 6, 6.5, 6.5, 6, 5, 3.5, 2.5, 2.5, 3.5], (y) => y === 7 || y === 9);
-const MING = vase([2.5, 2, 2, 3, 4.5, 6, 6.8, 7, 6.6, 5.6, 4.2, 3.4, 3.4, 4.2], (y) => y === 6 || y === 8 || (y === 7 && 0));
-const JOMON = vase([6, 5.4, 5, 5.5, 6.2, 6.8, 6.8, 6, 4.8, 3.6, 3.6], (y) => y % 2 === 0 && y > 2 && y < 8);
-const CANOPIC = vase([2.5, 3.2, 3.6, 3.6, 3.6, 4.6, 5, 5, 4.6, 4, 3.6, 3.6], (y) => y === 4 || y === 6);
-
-export default pack({
-  id: 'pottery', name: 'Pottery', noun: 'pottery', icon: '🏺', tab: 'treasures', tabLabel: 'Treasures', order: 6,
-  intro: '{have} of {total} treasures found. Dig sites and expeditions turn them up.',
-  where: 'Dig sites', how: 'dug', set: 'potters-shelf', reward: 500,
-  plaque: 'Four pots from four corners of the world.',
-  entries: [
-    ['amphora', 'Greek amphora', AMPHORA, pal('#d87838', '#f0a868', '#9a4a1c', '#2a1a14'), 1, 'greek',
-      'A tall clay jar with two handles, used in ancient Greece to carry and store wine and olive oil.',
-      ['Its pointed bottom made it easy to stack on a ship.']],
-    ['ming-vase', 'Ming vase', MING, pal('#f4f4f8', '#ffffff', '#c0c4d4', '#2a50a8'), 3, 'chinese',
-      'Blue-and-white porcelain from China’s Ming dynasty. The blue is painted with cobalt before the vase is glazed and fired.',
-      ['Porcelain is fired so hot that it turns glassy and hard.']],
-    ['jomon-pot', 'Jōmon pot', JOMON, pal('#a8744c', '#d0a078', '#6a4428', '#4a2c18'), 3, 'japanese',
-      'Jōmon people in Japan pressed cords into wet clay to decorate it. Their pottery is among the oldest in the world.',
-      ['“Jōmon” means “cord-marked”.']],
-    ['canopic-jar', 'Canopic jar', CANOPIC, pal('#e0d4b0', '#f8f0d8', '#a89870', '#3a5aa0'), 2, 'egyptian',
-      'In ancient Egypt, four jars like this held parts of the body removed during mummification.',
-      ['The lids were carved as the heads of four protective gods.']],
-  ],
+const SHERD = [
+  '............',
+  '..#######...',
+  '.#bbbbbba#..',
+  '#bbaaaaaaa#.',
+  '#bcccccccca#',
+  '#baaaaaaaab#',
+  '#bbbbbbbbb#.',
+  '.#########..',
+];
+const HANDLE = [
+  '..######....',
+  '.#bbbbbb#...',
+  '#bb####bb#..',
+  '#b#....#b#..',
+  '#b#....#bb#.',
+  '#bb#...#aab#',
+  '.#b#..#aaab#',
+  '..##..######',
+];
+const BASE = [
+  '............',
+  '.##########.',
+  '#bbbbbbbbbb#',
+  '#bcccccccab#',
+  '#baaaaaaaab#',
+  '.#bbbbbbbb#.',
+  '..########..',
+];
+const LAMP = [
+  '.......###..',
+  '..#######b#.',
+  '.#bbbbbbbb#.',
+  '#bbaaaaaab#.',
+  '#bccccccab#.',
+  '.#baaaaab#..',
+  '..#######...',
+];
+const pot = (slug, title, rows, [a, b, c, o], rarity, age, blurb, facts) => ({
+  id: `pottery:${slug}`,
+  collection: 'pottery',
+  title,
+  blurb,
+  facts,
+  rarity,
+  set: 'potters-shelf',
+  tags: [age],
+  image: { kind: 'pixels', rows, palette: { '#': o, a, b, c } },
+  display: ['case', 'plinth'],
+  provenance: { how: 'dug', where: 'Ruin dig spots' },
+  source: { license: 'Original', credit: 'Curation' },
+  dirty: true,
+  value: 3 * rarity,
 });
+
+const entries = [
+  pot('red-sherd', 'Red clay sherd', SHERD, ['#b8603c', '#d88a5c', '#8a4426', '#3a1c10'], 1, 'everyday',
+    'A broken piece of a clay pot. Archaeologists call these sherds, and because fired clay lasts almost forever they are the most common thing found at old settlements.',
+    ['Changes in how pots were shaped and decorated help date the layer of earth they come from.']),
+  pot('painted-sherd', 'Painted sherd', SHERD, ['#e8d4a8', '#f4e8c8', '#a04a30', '#3a2418'], 2, 'decorated',
+    'Painted pottery could show gods, animals and daily life. A scrap with a stripe of paint can still tell a story.',
+    ['Greek vase painters sometimes signed their work.']),
+  pot('jar-handle', 'Jar handle', HANDLE, ['#c88a58', '#e0a878', '#8a5a34', '#3a2414'], 1, 'everyday',
+    'Handles are strong joints, so they often survive when the rest of a jar does not.',
+    ['Some ancient handles carry a stamp that names the maker or the town.']),
+  pot('jar-base', 'Jar base', BASE, ['#a89070', '#c8b090', '#6a5438', '#2a2014'], 1, 'everyday',
+    'The thick bottom of a storage jar. Big jars like this held oil, wine and grain.',
+    ['Potters often left fingerprints in the clay, still there thousands of years later.']),
+  pot('oil-lamp', 'Clay oil lamp', LAMP, ['#9a8a6a', '#bcae88', '#5e5038', '#241c10'], 2, 'lamp',
+    'Before electric light, a small clay lamp burned oil through a wick. Many ancient lamps were mass produced in moulds.',
+    ['A lamp burned for a few hours on a spoonful of oil.']),
+  pot('black-figure', 'Black-figure fragment', SHERD, ['#c8703c', '#e89868', '#1c1814', '#0c0a08'], 3, 'decorated',
+    'Greek potters painted figures in black slip on red clay, then scratched details into the black before firing.',
+    ['The technique was used in Athens from about the 7th to the 5th century BCE.']),
+];
+
+export default {
+  collection: {
+    id: 'pottery',
+    name: 'Pottery',
+    noun: 'pottery pieces',
+    icon: '🏺',
+    kinds: ['pottery'],
+    display: 'case',
+    ownership: 'earned',
+    meta: ['rarity', 'where'],
+    journal: { tab: 'pottery', label: 'Pottery', order: 6, layout: 'tiles', intro: '{have} of {total} pottery pieces found. Dig them out of ruin spots.' },
+    viewer: { look: 'case' },
+  },
+  sets: [
+    { id: 'potters-shelf', name: "Potter's shelf", collection: 'pottery', entries: entries.map((e) => e.id), reward: { gold: 500 }, plaque: 'Six scraps of clay from people who lived long ago.' },
+  ],
+  entries,
+};
