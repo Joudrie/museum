@@ -14,15 +14,18 @@ export const MORE_HATS = {
   fedora: 'Fedora', pith: 'Pith helmet', pompom: 'Pom-pom hat', visor: 'Visor', fur: 'Fur hat', hood: 'Hood up', miner: 'Miner’s helmet',
   welder: 'Welding mask', chef: 'Chef’s hat', hairnet: 'Hairnet', pirate: 'Pirate hat', cowboy: 'Cowboy hat', headband: 'Headband', headphones: 'Headphones',
   swimcap: 'Swim cap', campaign: 'Ranger hat', wrap: 'Head wrap', veil: 'Veil', helmet: 'Bike helmet', police: 'Police cap', paperhat: 'Paper hat', tiara: 'Tiara',
-  kingcrown: 'Crown',
+  kingcrown: 'Crown', nemes: 'Pharaoh’s headcloth', greekhelm: 'Greek helmet', romanhelm: 'Roman helmet', knighthelm: 'Knight’s helmet', hennin: 'Hennin',
+  jesterhat: 'Jester’s cap', tricorn: 'Tricorn', bonnet: 'Bonnet', bobby: 'Constable’s helmet', cloche: 'Cloche', norsehelm: 'Norse helmet',
+  wizardhat: 'Wizard’s hat', witchhat: 'Witch’s hat', wingedhat: 'Winged hat', horns: 'Horns', santahat: 'Santa hat', elfhat: 'Elf hat',
+  bunnyears: 'Bunny ears', pumpkinhat: 'Pumpkin hat', mascothead: 'Mascot head',
 };
 export const MORE_HAIR = {
   pompadour: 'Pompadour', slick: 'Slicked back', spiky: 'Spiky', horseshoe: 'Balding', mullet: 'Mullet', bowl: 'Bowl cut', pixie: 'Pixie',
   manbun: 'Man bun', sidepony: 'Side ponytail', braid: 'Braid', braids: 'Two braids', dreads: 'Locs', afropuff: 'Afro puff', spacebuns: 'Space buns',
-  cornrows: 'Cornrows', wavy: 'Long wavy',
+  cornrows: 'Cornrows', wavy: 'Long wavy', snakes: 'Snakes',
 };
 // new hairstyles drawn on top of one of the first ones
-export const HAIR_BASE = { wavy: 'long', dreads: 'long', braids: 'short', sidepony: 'short', mullet: 'short', manbun: 'short' };
+export const HAIR_BASE = { wavy: 'long', dreads: 'long', braids: 'short', sidepony: 'short', mullet: 'short', manbun: 'short', snakes: 'short' };
 export const MORE_FACIAL = { stubble: 'Stubble', sideburns: 'Sideburns', muttonchops: 'Mutton chops', walrus: 'Walrus mustache', bigbeard: 'Big beard', wizard: 'Long beard', soulpatch: 'Soul patch' };
 export const MORE_GLASSES = { square: 'Square glasses', goggles: 'Safety goggles', monocle: 'Monocle', patch: 'Eye patch', half: 'Reading glasses', divemask: 'Diving mask' };
 export const MORE_OUTFITS = {
@@ -30,12 +33,14 @@ export const MORE_OUTFITS = {
   captain: 'Captain’s coat', striped: 'Striped shirt', flannel: 'Flannel shirt', fieldvest: 'Field vest', trunks: 'Swim trunks', swimsuit: 'Swimsuit',
   labcoat: 'Lab coat', blazer: 'Blazer', cardigan: 'Cardigan', turtleneck: 'Turtleneck', parka: 'Parka', uniform: 'Uniform shirt', robe: 'Robe', mummy: 'Mummy wrap',
   varsity: 'Varsity jacket', tracksuit: 'Track suit', chefwhites: 'Chef’s whites', denim: 'Denim jacket', leotard: 'Leotard', tutu: 'Tutu',
-  clown: 'Clown suit', doublet: 'Doublet', trench: 'Trench coat', scrubs: 'Scrubs',
+  clown: 'Clown suit', doublet: 'Doublet', trench: 'Trench coat', scrubs: 'Scrubs', kilt: 'Linen kilt', tunic: 'Tunic', armour: 'Armour',
+  jester: 'Jester’s motley', bustle: 'Bustle gown', flapper: 'Flapper dress', leather: 'Leather jacket', tiedye: 'Tie-dye shirt', disco: 'Disco suit',
+  sheet: 'Ghost sheet', skeleton: 'Skeleton suit', santa: 'Santa suit', snowman: 'Snowman suit', onesie: 'Costume onesie',
 };
 export const MORE_ACCESSORIES = {
   toolbelt: 'Tool belt', keyring: 'Key ring', lanyard: 'Lanyard', backpack: 'Backpack', whistle: 'Whistle', lifejacket: 'Life jacket', radio: 'Radio',
   gloves: 'Gloves', earmuffs: 'Ear defenders', towel: 'Towel', tank: 'Air tank', hook: 'Hook hand', sash: 'Sash', mailbag: 'Mail bag', cape: 'Cape',
-  stethoscope: 'Stethoscope', tape: 'Tape measure',
+  stethoscope: 'Stethoscope', tape: 'Tape measure', collar: 'Broad collar',
 };
 export const LEGS = { trousers: 'Trousers', shorts: 'Shorts', rolled: 'Rolled up', boots: 'Tall boots', peg: 'Peg leg' };
 export const FEET = { shoes: 'Shoes', bare: 'Bare feet' };
@@ -437,6 +442,150 @@ export function moreOutfit(out, view, look) {
     }
     swap(legs, ['p'], 'c');
   }
+  if (style === 'kilt') {
+    // bare chest and a white linen kilt to the knee
+    [11, 12, 13, 14, 15, 16, 17, 18, 19].forEach((r) => body(r, (c, i) => (out[r][i] = c === 'd' ? 'S' : 's')));
+    out[20].forEach((c, i) => c !== 'o' && !isSkin(c) && (out[20][i] = 'g'));
+    [21, 22].forEach((r) => out[r].forEach((c, i) => i > 0 && i < len(r) - 1 && (out[r][i] = 'c')));
+    if (front) [21, 22].forEach((r) => [mid(r) - 1, mid(r)].forEach((i) => set(r, i, 'w')));
+    swap([23, 24], ['p'], 's');
+  }
+  if (style === 'tunic') {
+    swap(torso, ['w', 'g'], 'c');
+    if (view !== 'up') swap([11], ['w'], 's');
+    out[20].forEach((c, i) => c !== 'o' && !isSkin(c) && (out[20][i] = 'N'));
+    if (front) set(20, mid(20), 'Y');
+    [21, 22].forEach((r) => out[r].forEach((c, i) => i > 0 && i < len(r) - 1 && (out[r][i] = r === 22 ? 'd' : 'c')));
+  }
+  if (style === 'armour') {
+    swap(torso, ['w', 'g'], 'c');
+    swap([11], ['w'], 'd');
+    swap(legs, ['p'], 'c');
+    swap([25], ['b'], 'd');
+    if (front) {
+      [13, 14, 15, 17, 18, 19].forEach((r) => set(r, mid(r) - 1, 'C'));
+      [23].forEach((r) => [2, len(r) - 3].forEach((i) => set(r, i, 'C')));
+    }
+    if (side) [13, 14, 15].forEach((r) => set(r, len(r) - 3, 'C'));
+    body(16, (c, i) => (side || (i > 1 && i < len(16) - 2)) && (out[16][i] = 'd'));
+    out[20].forEach((c, i) => c !== 'o' && !isSkin(c) && (out[20][i] = 'd'));
+    arms([15], 'd');
+  }
+  if (style === 'jester') {
+    // two colours split down the middle, swapped on the legs, and a pointed collar
+    const left = (r, i) => (front ? i < mid(r) : view === 'up' ? i >= mid(r) : true);
+    torso.forEach((r) => body(r, (c, i) => (out[r][i] = left(r, i) ? 'c' : 'w')));
+    legs.forEach((r) => out[r].forEach((c, i) => c === 'p' && (out[r][i] = left(r, i) ? 'w' : 'c')));
+    out[11] = out[11].map((c, i) => (c === 'o' ? c : i % 2 ? 'c' : 'w'));
+    if (view !== 'up') for (let i = 2; i < len(12) - 2; i += 3) set(12, i, 'Y');
+  }
+  if (style === 'bustle') {
+    // a long gown gathered into a bustle at the back
+    swap(torso, ['w', 'g'], 'c');
+    [21, 22, 23, 24].forEach((r) => out[r].forEach((c, i) => i > 0 && i < len(r) - 1 && (out[r][i] = r === 24 ? 'd' : 'c')));
+    if (side) [[19, 1], [20, 2], [21, 3], [22, 2], [23, 1], [24, 1]].forEach(([r, n]) => (out[r] = ['o', ...Array(n).fill(r === 24 ? 'd' : 'c'), ...out[r].slice(1), ...Array(n).fill('.')]));
+    else [22, 23, 24].forEach((r) => (out[r] = ['o', r === 24 ? 'd' : 'c', ...out[r].slice(1, -1), r === 24 ? 'd' : 'c', 'o']));
+    if (front) [13, 15, 17].forEach((r) => set(r, mid(r), 'w'));
+  }
+  if (style === 'flapper') {
+    // sleeveless, a low sash at the hips, a fringed skirt to the knee
+    swap(torso, ['w', 'g'], 'c');
+    swap([11], ['w'], 's');
+    arms([12, 13, 14, 15, 16, 17, 18, 19], 's');
+    body(19, (c, i) => (out[19][i] = 'X'));
+    [21, 22].forEach((r) => out[r].forEach((c, i) => i > 0 && i < len(r) - 1 && (out[r][i] = r === 22 && i % 2 ? 'd' : 'c')));
+    swap([23, 24], ['p'], 's');
+  }
+  if (style === 'leather') {
+    swap(torso, ['w', 'g'], 'c');
+    if (front) {
+      [12, 13, 14].forEach((r) => [mid(r) - 1, mid(r)].forEach((i) => set(r, i, 'w')));
+      [mid(12) - 2, mid(12) + 1].forEach((i) => set(12, i, 'C'));
+      [15, 16, 17, 18, 19].forEach((r) => set(r, mid(r), 'a'));
+      set(16, 3, 'a');
+    } else if (side) [12, 13].forEach((r) => set(r, len(r) - 3, 'C'));
+    out[20].forEach((c, i) => c !== 'o' && !isSkin(c) && (out[20][i] = 'd'));
+  }
+  if (style === 'tiedye') {
+    swap(torso, ['w', 'g'], 'c');
+    if (view !== 'up') swap([11], ['w'], 's');
+    const ring = ['x', 'V', 'P', 'L', 'B', 'c'];
+    torso.forEach((r) => body(r, (c, i) => (out[r][i] = ring[Math.round(Math.hypot(i - (len(r) - 1) / 2, (r - 16) * 1.2)) % ring.length])));
+  }
+  if (style === 'disco') {
+    // a shiny suit with a wide collar and flares
+    swap(torso, ['w', 'g'], 'c');
+    swap([11], ['w'], 's');
+    swap(legs, ['p'], 'c');
+    if (front) {
+      [mid(12) - 3, mid(12) - 2, mid(12) + 1, mid(12) + 2].forEach((i) => set(12, i, 'w'));
+      [mid(12) - 1, mid(12)].forEach((i) => set(12, i, 's'));
+      [mid(13) - 1, mid(13)].forEach((i) => set(13, i, 's'));
+    }
+    [...torso, ...legs].forEach((r) => body(r, (c, i) => (r * 3 + i * 5) % 11 === 0 && (out[r][i] = 'Q')));
+    if (out[24]) out[24] = ['o', 'c', ...out[24].slice(1, -1), 'c', 'o'];
+  }
+  if (style === 'sheet') {
+    // one white sheet over everything, two eye holes, a wavy hem
+    out.forEach((row, r) => row.forEach((c, i) => c !== 'o' && c !== '.' && (row[i] = c === 'e' ? 'k' : 'c')));
+    out[10] = out[10].map((c, i, a) => (i === 0 || i === a.length - 1 ? 'o' : 'c'));
+    out[11] = ['o', ...Array(10).fill('c'), 'o'];
+    [21, 22, 23, 24].forEach((r) => out[r] && (out[r] = out[r].map((c, i, a) => (i === 0 || i === a.length - 1 ? 'o' : 'c'))));
+    if (out[25]) out[25] = out[25].map((c, i, a) => (i === 0 || i === a.length - 1 || i % 3 === 1 ? 'o' : 'c'));
+    if (out[26]) out[26] = out[26].map((c, i) => (i % 3 === 1 ? 'o' : '.'));
+  }
+  if (style === 'skeleton') {
+    // a black suit with the bones painted on
+    swap(torso, ['w', 'g', 'C', 'd'], 'c');
+    swap([11], ['w'], 's');
+    swap(legs, ['p'], 'c');
+    if (front) {
+      [mid(8) - 1, mid(8)].forEach((i) => set(8, i, 'k'));
+      [mid(10) - 2, mid(10), mid(10) + 1].forEach((i) => set(10, i, 'k'));
+    } else if (side) set(8, len(8) - 3, 'k');
+    if (!side) {
+      [13, 15, 17].forEach((r) => {
+        for (let i = 3; i < len(r) - 3; i++) set(r, i, 's');
+      });
+      [12, 14, 16, 18, 19, 20].forEach((r) => [mid(r) - 1, mid(r)].forEach((i) => set(r, i, 's')));
+      [13, 14, 15, 16, 17].forEach((r) => [1, len(r) - 2].forEach((i) => set(r, i, 's')));
+      legs.forEach((r) => [2, len(r) - 3].forEach((i) => set(r, i, 's')));
+    } else {
+      [13, 15, 17].forEach((r) => {
+        for (let i = 3; i < len(r) - 2; i++) set(r, i, 's');
+      });
+      [12, 14, 16, 18, 19, 20].forEach((r) => set(r, 2, 's'));
+      legs.forEach((r) => set(r, Math.floor(len(r) / 2), 's'));
+    }
+  }
+  if (style === 'santa') {
+    swap(torso, ['w', 'g'], 'c');
+    out[11] = out[11].map((c) => (c === 'o' ? c : 'w'));
+    if (front) [12, 13, 14, 15, 16, 17, 18, 19].forEach((r) => [mid(r) - 1, mid(r)].forEach((i) => set(r, i, 'w')));
+    arms([17], 'w');
+    out[20].forEach((c, i) => c !== 'o' && !isSkin(c) && (out[20][i] = 'k'));
+    if (front) [mid(20) - 1, mid(20)].forEach((i) => set(20, i, 'Y'));
+    [21, 22].forEach((r) => out[r].forEach((c, i) => i > 0 && i < len(r) - 1 && (out[r][i] = r === 22 ? 'w' : 'c')));
+    swap([23, 24], ['p'], 'c');
+    swap([25], ['b'], 'k');
+  }
+  if (style === 'snowman') {
+    // a round white body with coal buttons
+    swap(torso, ['w', 'g', 'C', 'd'], 'c');
+    swap([11], ['w'], 'c');
+    swap(legs, ['p'], 'c');
+    if (front) [14, 16, 18].forEach((r) => set(r, mid(r) - 1, 'k'));
+    [15, 16, 17, 18, 19].forEach((r) => (out[r] = ['o', 'c', ...out[r].slice(1, -1), 'c', 'o']));
+    swap([25], ['b'], 'k');
+  }
+  if (style === 'onesie') {
+    // one piece from neck to feet, with a lighter belly
+    swap(torso, ['w', 'g'], 'c');
+    swap([11], ['w'], 'c');
+    swap(legs, ['p'], 'c');
+    swap([25], ['b'], 'd');
+    if (front) [14, 15, 16, 17, 18, 19].forEach((r) => [mid(r) - 2, mid(r) - 1, mid(r), mid(r) + 1].forEach((i) => (r > 14 && r < 19) || (i > mid(r) - 2 && i < mid(r) + 1) ? set(r, i, 'C') : null));
+  }
   if (style === 'mummy') {
     // wrapped from head to toe; only the eyes show
     out.forEach((row, r) => row.forEach((c, i) => c !== 'o' && c !== 'e' && c !== '.' && (row[i] = (r + Math.floor(i / 3)) % 3 === 0 ? 'a' : 'r')));
@@ -578,6 +727,20 @@ export function moreAccessories(out, view, look) {
     if (acc === 'tape') {
       if (front) [11, 12, 13, 14, 15, 16].forEach((r) => [2, len(r) - 3].forEach((i) => set(r, r === 11 ? (i === 2 ? 1 : len(r) - 2) : i, 'Y')));
       else if (side) [11, 12, 13, 14, 15].forEach((r) => set(r, len(r) - 3, 'Y'));
+    }
+    if (acc === 'collar') {
+      // a broad collar of beads in bands
+      if (view !== 'up') {
+        out[11] = out[11].map((c) => (c === 'o' ? c : 'X'));
+        if (front) {
+          for (let i = 2; i < len(12) - 2; i++) set(12, i, i % 2 ? 'Y' : 'X');
+          for (let i = 3; i < len(13) - 3; i++) set(13, i, 'Y');
+          for (let i = 4; i < len(14) - 4; i++) set(14, i, i % 2 ? 'X' : 'Y');
+        } else {
+          for (let i = 3; i < len(12) - 1; i++) set(12, i, 'Y');
+          for (let i = 5; i < len(13) - 1; i++) set(13, i, 'X');
+        }
+      } else out[11] = out[11].map((c) => (c === 'o' ? c : 'X'));
     }
     if (acc === 'towel') {
       const is = front ? [2, 3] : view === 'up' ? [len(12) - 4, len(12) - 3] : [2, 3];
@@ -840,6 +1003,33 @@ export function moreHair(out, view, look, hatOn) {
     }
     open();
   }
+  if (style === 'snakes') {
+    // a head of snakes: wriggles on top, tails down the sides, little eyes and tongues
+    if (crown) {
+      top = D || U ? pre([[10, 'o.o..o..o.o'], [10, 'ohohohhohoho'.slice(0, 12)]]) : pre([[11, 'o.o..o.o'], [11, 'ohohhohoo']]);
+      R(0, D || U ? 'ohhHhhhhHhho' : [10, 'ohhHhhhhHhho']);
+    }
+    const tail = (x, dir) => {
+      for (let r = 4; r <= 11; r++) P(r, x + (r % 2 ? 0 : dir), dir < 0 ? 'oh' : 'ho');
+      P(12, x + dir, dir < 0 ? 'ok' : 'ko');
+      P(13, x + dir + (dir < 0 ? 1 : 0), 'R');
+    };
+    if (D) {
+      tail(8, -1);
+      tail(22, 1);
+      P(1, 13, 'k');
+      P(1, 18, 'k');
+    }
+    if (U) {
+      cover([2, 3, 4, 5, 6, 7, 8, 9], ['h'], 'H', (x, r) => (x + r) % 3 === 0);
+      tail(9, -1);
+      tail(21, 1);
+    }
+    if (S) {
+      tail(9, -1);
+      P(1, 17, 'k');
+    }
+  }
   if (style === 'wavy') {
     const rows = D ? [4, 5, 6, 7, 8, 9, 10, 11, 12] : U ? [8, 9, 10, 11, 12] : [8, 9, 10, 11];
     cover(rows, ['h'], 'H', (x, r) => (x + r) % 3 === 0);
@@ -972,6 +1162,254 @@ const HAT_ROWS = {
     up: { rows: { 0: 'oooooooo', 1: 'oTTTTTTTTo', 2: 'oTTUTTTTTTTo', 3: 'oTTTTTTTTTTo' }, cover: [[4, 5, 6, 7, 8, 9], ['h', 'H'], 'T'] },
     side: { rows: { 0: 'oooooooo', 1: 'oTTTTTTTTo', 2: 'oTTUTTTTTTTo', 3: 'oTTTTTTTTTTo' }, cover: [[4, 5, 6, 7, 8], ['h', 'H'], 'T'] },
   },
+  // a striped headcloth with lappets down to the chest (The Met, Sphinx of Hatshepsut, 31.3.166)
+  nemes: {
+    down: {
+      pre: ['oooooo'],
+      rows: { 0: 'oTTTTTTTTo', 1: 'oUUUUUUUUUUo', 2: 'oTTTTTTTTTTTTo', 3: 'oUUUUUUUUUUUUo' },
+      paint: { 4: [8, 'oTT          TTo'], 5: [8, 'oUU          UUo'], 6: [8, 'oTT          TTo'], 7: [8, 'oUU          UUo'], 8: [8, 'oTT          TTo'], 9: [8, 'oUU          UUo'], 10: [8, 'oTTo        oTTo'], 11: [9, 'oUUo      oUUo'], 12: [10, 'TT        TT'], 13: [10, 'UU        UU'], 14: [10, 'oo        oo'] },
+    },
+    up: {
+      pre: ['oooooo'],
+      rows: { 0: 'oTTTTTTTTo', 1: 'oUUUUUUUUUUo', 2: 'oTTTTTTTTTTTTo', 3: 'oUUUUUUUUUUUUo', 4: 'oTTTTTTTTTTTTo', 5: 'oUUUUUUUUUUUUo', 6: 'oTTTTTTTTTTTTo', 7: 'oUUUUUUUUUUUUo', 8: 'oTTTTTTTTTTTTo', 9: 'oUUUUUUUUUUUUo', 10: 'ooTTTTTTTTTToo' },
+      paint: { 11: [14, 'oTTo'], 12: [14, 'oUUo'], 13: [15, 'oo'] },
+    },
+    side: {
+      pre: ['oooooo'],
+      rows: { 0: 'oTTTTTTTTo', 1: 'oUUUUUUUUUUo', 2: 'oTTTTTTTTTTTTo', 3: 'oUUUUUUUUUUUUo' },
+      cover: [[4, 5, 6, 7, 8, 9, 10], ['h', 'H'], 'T'],
+      paint: { 4: [13, 'UU'], 5: [13, 'TT'], 6: [13, 'UU'], 7: [13, 'TT'], 8: [13, 'UU'], 9: [13, 'TT'], 10: [13, 'UU'], 11: [12, 'oTTo'], 12: [12, 'oUUo'], 13: [13, 'oo'] },
+    },
+  },
+  // a bronze helmet with cheek guards and a crest (The Met, helmet of Corinthian type, 1992.180.2)
+  greekhelm: {
+    down: {
+      pre: [[15, 'oo'], [14, 'oUUo'], [14, 'oUUo']],
+      rows: { 0: 'oTTUUTTo', 1: 'oTTTTTTTTo', 2: 'oTTTTTTTTTTo', 3: 'oTTTTTTTTTTo', 4: 'oTTTTTTTTTTo' },
+      paint: { 5: [10, 'oTTTTTTTTTTo'], 6: [10, 'oTT  TT  TTo'], 7: [10, 'oTT  TT  TTo'], 8: [10, 'oTTT TT TTTo'], 9: [10, 'oTTT    TTTo'], 10: [10, 'ooTT    TToo'] },
+    },
+    up: {
+      pre: [[15, 'oo'], [14, 'oUUo'], [14, 'oUUo']],
+      rows: { 0: 'oTTUUTTo', 1: 'oTTTUUTTTo', 2: 'oTTTTUUTTTTo', 3: 'oTTTTUUTTTTo', 4: 'oTTTTTTTTTTo', 5: 'oTTTTTTTTTTo', 6: 'oTTTTTTTTTTo', 7: 'oTTTTTTTTTTo', 8: 'oTTTTTTTTTTo', 9: 'oTTTTTTTTTTo', 10: 'ooTTTTTTTToo' },
+    },
+    side: {
+      pre: [[11, 'oooooooo'], [10, 'oUUUUUUUUo']],
+      rows: { 0: 'oTTTTTTo', 1: 'oTTTTTTTTo', 2: 'oTTTTTTTTTTo', 3: 'oTTTTTTTTTTo' },
+      cover: [[4, 5, 6, 7, 8, 9, 10], ['h', 'H'], 'T'],
+      paint: { 4: [14, 'TTTTTTT'], 5: [14, 'TTTTTTT'], 6: [14, 'TTTTT'], 7: [14, 'TTTTT'], 8: [14, 'TTTTTT'], 9: [14, 'TTTT'], 10: [14, 'TTT'] },
+    },
+  },
+  // an iron helmet with a brow ridge, cheek guards and a neck guard (The Met, marble head of a helmeted soldier, 25.78.62)
+  romanhelm: {
+    down: {
+      pre: ['oooooo', 'oUUUUo'],
+      rows: { 0: 'oTTTTTTo', 1: 'oTTTTTTTTo', 2: 'oTTTTTTTTTTo', 3: 'oTTTTTTTTTTTTo' },
+      paint: { 4: [9, 'oTT        TTo'], 5: [9, 'oTT        TTo'], 6: [9, 'oTT        TTo'], 7: [9, 'oTT        TTo'], 8: [9, 'oTT        TTo'], 9: [9, 'oTT        TTo'], 10: [9, 'ooo        ooo'] },
+    },
+    up: {
+      pre: ['oooooo', 'oUUUUo'],
+      rows: { 0: 'oTTTTTTo', 1: 'oTTTTTTTTo', 2: 'oTTTTTTTTTTo', 3: 'oTTTTTTTTTTTTo' },
+      cover: [[4, 5, 6, 7, 8, 9, 10], ['h', 'H', 'S'], 'T'],
+      flaps: [[8, 9, 10], 'T'],
+    },
+    side: {
+      pre: [[12, 'oooooo'], [11, 'oUUUUUUo']],
+      rows: { 0: 'oTTTTTTo', 1: 'oTTTTTTTTo', 2: 'oTTTTTTTTTTo', 3: [10, 'oTTTTTTTTTTTTo'] },
+      cover: [[4, 5, 6, 7, 8, 9], ['h', 'H'], 'T'],
+      paint: { 5: [15, 'TTT'], 6: [15, 'TTT'], 7: [15, 'TTT'], 8: [8, 'oT      TTT'], 9: [8, 'oTT'], 10: [8, 'ooo'] },
+    },
+  },
+  // a closed helmet with an eye slit (The Met, armet, Milan, ca. 1475, 29.158.51)
+  knighthelm: {
+    down: {
+      pre: ['oooooo'],
+      rows: { 0: 'oTTTTTTo', 1: 'oTTTTTTTTo', 2: 'oTTTTTTTTTTo', 3: 'oTTTTQTTTTTo', 4: 'oTTTTQTTTTTo', 5: 'oTTTTTTTTTTo', 6: 'oTkkkkkkkkTo', 7: 'oTTTTTTTTTTo', 8: 'oTTTTTTTTTTo', 9: 'oTTkTkkTkTTo', 10: 'ooTTTTTTTToo' },
+    },
+    up: {
+      pre: ['oooooo'],
+      rows: { 0: 'oTTTTTTo', 1: 'oTTTTTTTTo', 2: 'oTTTTTTTTTTo', 3: 'oTTTTTTTTTTo', 4: 'oTTTTTTTTTTo', 5: 'oTTTTTTTTTTo', 6: 'oTTTTTTTTTTo', 7: 'oTTTTTTTTTTo', 8: 'oTTTTTTTTTTo', 9: 'oTTTTTTTTTTo', 10: 'ooTTTTTTTToo' },
+    },
+    side: {
+      pre: ['oooooo'],
+      rows: { 0: 'oTTTTTTo', 1: 'oTTTTTTTTo', 2: 'oTTTTTTTTTTo', 3: [10, 'oTTTTTTQTTTo'], 4: [10, 'oTTTTTTQTTTo'], 5: [10, 'oTTTTTTTTTTo'], 6: [10, 'oTTTTTTTkkkTo'], 7: [10, 'oTTTTTTTTTTTo'], 8: [10, 'oTTTTTTTTTTo'], 9: [10, 'oTTTTTTTkTko'], 10: [10, 'ooTTTTTTTToo'] },
+    },
+  },
+  // a tall cone with a veil (The Met, Memling, Maria Portinari, 14.40.626–27)
+  hennin: {
+    down: {
+      pre: [[15, 'oo'], [14, 'oTTo'], [14, 'oTTUo'], [13, 'oTTTUo'], [13, 'oTTTTUo'], [12, 'oTTTTTUo'], [12, 'oTTTTTTUo'], [11, 'oTTTTTTTUUo'], [11, 'oTTTTTTTTUo']],
+      rows: { 0: 'oTTTTTTTTTUo', 1: 'okkkkkkkkkko', 2: 'oTTTTTTTTTTo' },
+      paint: { 3: [21, 'Uo'], 4: [21, 'Uo'], 5: [21, 'UUo'], 6: [21, 'UUo'], 7: [22, 'Uo'], 8: [22, 'Uo'], 9: [22, 'oo'] },
+    },
+    up: {
+      pre: [[15, 'oo'], [14, 'oTTo'], [13, 'oUTTo'], [13, 'oUTTTo'], [12, 'oUTTTTo'], [12, 'oUTTTTTo'], [11, 'oUTTTTTTo'], [10, 'oUUTTTTTTTo'], [10, 'oUTTTTTTTTo']],
+      rows: { 0: 'oUTTTTTTTTTo', 1: 'okkkkkkkkkko', 2: 'oTTTTTTTTTTo' },
+      cover: [[3, 4, 5, 6, 7, 8, 9, 10], ['h', 'H'], 'U', (x) => x >= 13 && x <= 18],
+    },
+    side: {
+      pre: [[7, 'oo'], [7, 'oTTo'], [8, 'oTTo'], [8, 'oTTTo'], [9, 'oTTTo'], [9, 'oTTTTo'], [10, 'oTTTTTo'], [10, 'oTTTTTTo'], [11, 'oTTTTTTTo']],
+      rows: { 0: 'oTTTTTTTTTTo', 1: 'okkkkkkkkkko', 2: 'oTTTTTTTTTTo' },
+      paint: { 3: [9, 'oU'], 4: [8, 'oUU'], 5: [8, 'oUU'], 6: [7, 'oUU'], 7: [7, 'oUo'], 8: [7, 'oo'] },
+    },
+  },
+  // a two-pointed cap in two colours with bells (The Met, Meissen, The Court Jester Joseph Fröhlich, 1982.60.305)
+  jesterhat: {
+    down: {
+      pre: [[6, 'oYo                oYo'], [7, 'oTo              oUo'], [8, 'oTTo          oUUo'], [9, 'oTTTTooooooUUUUo']],
+      rows: { 0: 'oTTTTTUUUUUo', 1: 'oTTTTTUUUUUo', 2: 'oTTTTTTUUUUUUo', 3: 'oUUUUUUTTTTTTo' },
+    },
+    up: {
+      pre: [[6, 'oYo                oYo'], [7, 'oUo              oTo'], [8, 'oUUo          oTTo'], [9, 'oUUUUooooooTTTTo']],
+      rows: { 0: 'oUUUUUTTTTTo', 1: 'oUUUUUTTTTTo', 2: 'oUUUUUUTTTTTTo', 3: 'oTTTTTTUUUUUUo' },
+    },
+    side: {
+      pre: [[5, 'oYo'], [6, 'oTo     oo'], [7, 'oTTo  oUUo'], [8, 'oTTTTooUUUoYo']],
+      rows: { 0: 'oTTTTTUUUUo', 1: 'oTTTTTUUUUUo', 2: 'oTTTTTTUUUUUo', 3: 'oUUUUUUTTTTTo' },
+    },
+  },
+  // three corners turned up (The Met, Self-Portrait in a Cocked Hat, ca. 1790, 1975.1.976)
+  tricorn: {
+    down: {
+      pre: [[8, 'oo            oo'], [8, 'oTo  oooooo  oTo'], [8, 'oTToTTTTTTTToTTo']],
+      rows: { 0: 'oTTTTTTTTTTTTTTo', 1: 'ooTTTTUUTTTToo', 2: 'ooooTTooo' },
+    },
+    up: {
+      pre: [[8, 'oo            oo'], [8, 'oTo  oooooo  oTo'], [8, 'oTToTTTTTTTToTTo']],
+      rows: { 0: 'oTTTTTTTTTTTTTTo', 1: 'ooTTTTTTTTTToo' },
+    },
+    side: {
+      pre: [[8, 'oo        oo'], [8, 'oToooooooToTo'], [8, 'oTTTTTTTTTTTTo']],
+      rows: { 0: [8, 'oTTTTTTTTTTTTTo'], 1: [9, 'ooTTTTTTTTToo'] },
+    },
+  },
+  // a white cap that frames the face and ties under the chin (Rijksmuseum, Vermeer, The Milkmaid, SK-A-2344)
+  bonnet: {
+    down: {
+      rows: { 0: 'oooooooooooo', 1: 'oTTTTTTTTTTTTo', 2: 'oTTUUUUUUUUTTo', 3: 'oTUUUUUUUUUUTo' },
+      paint: { 4: [8, 'oTU          UTo'], 5: [8, 'oTU          UTo'], 6: [8, 'oTU          UTo'], 7: [8, 'oTU          UTo'], 8: [8, 'oTU          UTo'], 9: [8, 'ooTo        oToo'], 10: [9, 'oo          oo'], 11: [13, 'oUUUUo'], 12: [14, 'UooU'] },
+    },
+    up: { rows: { 0: 'oooooooooooo', 1: 'oTTTTTTTTTTTTo', 2: 'oTTTTTTTTTTTTo', 3: 'oTTTTTTTTTTTTo' }, cover: [[4, 5, 6, 7, 8, 9], ['h', 'H', 'S'], 'T'], flaps: [[4, 5, 6, 7, 8], 'T'], paint: { 10: [13, 'oUUUUo'], 11: [14, 'UooU'] } },
+    side: {
+      rows: { 0: [11, 'oooooooooo'], 1: [10, 'oTTTTTTTTTTTo'], 2: [10, 'oTTTTTTTTTTTTo'], 3: [10, 'oTTTTTTTTTUUTo'] },
+      cover: [[4, 5, 6, 7, 8, 9], ['h', 'H'], 'T'],
+      paint: { 4: [20, 'UTo'], 5: [20, 'UTo'], 6: [20, 'To'], 7: [20, 'To'], 8: [19, 'Too'], 10: [15, 'UU'], 11: [15, 'UoU'] },
+    },
+  },
+  // a tall dome with a badge (The Met, policeman photograph, ca. 1875, 2016.22)
+  bobby: {
+    down: { pre: ['oo', 'oUUo', 'oTTTTo', 'oTTTTTTo', 'oTTTTTTo', 'oTTTTTTTTo', 'oTTTUUTTTo'], rows: { 0: 'oTTTTUUTTTTo', 1: 'oTTTTTTTTTTo', 2: 'okkkkkkkkkkkko' } },
+    up: { pre: ['oo', 'oUUo', 'oTTTTo', 'oTTTTTTo', 'oTTTTTTo', 'oTTTTTTTTo', 'oTTTTTTTTo'], rows: { 0: 'oTTTTTTTTTTo', 1: 'oTTTTTTTTTTo', 2: 'okkkkkkkkkkkko' } },
+    side: { pre: [[15, 'oo'], [14, 'oUUo'], [13, 'oTTTTo'], [12, 'oTTTTTTo'], [12, 'oTTTTTTo'], [11, 'oTTTTTTTTo'], [11, 'oTTTTTTTTUo']], rows: { 0: 'oTTTTTTTTTUo', 1: 'oTTTTTTTTTTo', 2: [9, 'okkkkkkkkkkkkko'] } },
+  },
+  // a bell-shaped hat pulled down to the eyebrows (The Met, cloche, 1923–25, 2009.300.1600)
+  cloche: {
+    down: { rows: { 0: 'oooooooo', 1: 'oTTTTTTTTo', 2: 'oTTTTTTTTTTo', 3: 'oUUUUUUUUUUo', 4: 'oTTTTTTTTTTTTo' }, flaps: [[5, 6], 'T'] },
+    up: { rows: { 0: 'oooooooo', 1: 'oTTTTTTTTo', 2: 'oTTTTTTTTTTo', 3: 'oUUUUUUUUUUo', 4: 'oTTTTTTTTTTTTo' }, cover: [[5, 6], ['h', 'H'], 'T'] },
+    side: { rows: { 0: 'oooooooo', 1: 'oTTTTTTTTo', 2: 'oTTTTTTTTTTo', 3: 'oUUUUUUUUUUo', 4: [9, 'oTTTTTTTTTTTTo'] }, cover: [[5, 6], ['h', 'H'], 'T'] },
+  },
+  // a rounded iron cap with a guard around the eyes, no horns (Museum of Cultural History, Oslo, the Gjermundbu helmet)
+  norsehelm: {
+    down: {
+      pre: ['oooo'],
+      rows: { 0: 'oTTTTTTo', 1: 'oTTTUUTTTo', 2: 'oTTTTUUTTTTo', 3: 'oTTTTUUTTTTo', 4: 'oTTTTTTTTTTo' },
+      paint: { 5: [12, 'TTTTTTTT'], 6: [12, 'T TTTT T'], 7: [12, 'T TTTT T'], 8: [12, 'TTT  TTT'] },
+    },
+    up: { pre: ['oooo'], rows: { 0: 'oTTTTTTo', 1: 'oTTTUUTTTo', 2: 'oTTTTUUTTTTo', 3: 'oTTTTUUTTTTo', 4: 'oTTTTTTTTTTo' }, cover: [[5], ['h', 'H'], 'T'] },
+    side: {
+      pre: ['oooo'],
+      rows: { 0: 'oTTTTTTo', 1: 'oTTTTTTTTo', 2: 'oUUUUUUUUUUo', 3: 'oTTTTTTTTTTo' },
+      cover: [[4], ['h', 'H'], 'T'],
+      paint: { 4: [14, 'TTTTTTT'], 5: [17, 'TTTT'], 6: [18, 'T T'], 7: [18, 'T T'], 8: [18, 'TTT'] },
+    },
+  },
+  wizardhat: {
+    down: {
+      pre: [[17, 'oo'], [16, 'oTTo'], [16, 'oTTo'], [15, 'oTUTo'], [15, 'oTTTTo'], [14, 'oTTTTTo'], [14, 'oTTUTTTo'], [13, 'oTTTTTTTo'], [13, 'oTTTTTTTTo']],
+      rows: { 0: 'oUUUUUUUUUUo', 1: 'oTTTTTTTTTTTTTTTTo' },
+    },
+    side: {
+      pre: [[9, 'oo'], [9, 'oTTo'], [10, 'oTTo'], [10, 'oTUTo'], [11, 'oTTTTo'], [11, 'oTTTTTo'], [12, 'oTTUTTTo'], [12, 'oTTTTTTTo'], [12, 'oTTTTTTTTo']],
+      rows: { 0: 'oUUUUUUUUUUo', 1: 'oTTTTTTTTTTTTTTTTo' },
+    },
+  },
+  witchhat: {
+    down: {
+      pre: [[20, 'oo'], [18, 'ooTTo'], [17, 'oTTo'], [16, 'oTTo'], [15, 'oTTTo'], [15, 'oTTTTo'], [14, 'oTTTTTo'], [13, 'oTTTTTTTo'], [13, 'oTTTTTTTTo']],
+      rows: { 0: 'oUUUUYUUUUUo', 1: 'oTTTTTTTTTTTTTTTTTTo' },
+    },
+    up: {
+      pre: [[10, 'oo'], [11, 'oTToo'], [13, 'oTTo'], [14, 'oTTo'], [14, 'oTTTo'], [14, 'oTTTTo'], [14, 'oTTTTTo'], [13, 'oTTTTTTTo'], [12, 'oTTTTTTTTo']],
+      rows: { 0: 'oUUUUUUUUUUo', 1: 'oTTTTTTTTTTTTTTTTTTo' },
+    },
+    side: {
+      pre: [[6, 'oo'], [6, 'oTToo'], [8, 'oTTo'], [9, 'oTTo'], [10, 'oTTTo'], [11, 'oTTTTo'], [11, 'oTTTTTo'], [12, 'oTTTTTTTo'], [12, 'oTTTTTTTTo']],
+      rows: { 0: 'oUUUUUUUYUUo', 1: 'oTTTTTTTTTTTTTTTTTTo' },
+    },
+  },
+  // a round hat with little wings (Hermes)
+  wingedhat: {
+    down: {
+      pre: [[6, 'oo                oo'], [5, 'oQQo  oooooooo  oQQo'], [6, 'oQQooTTTTTTTToQQo']],
+      rows: { 0: 'oQQTTTTTTTTTTQQo', 1: 'oTTTTTTTTTTTTTTTTo' },
+    },
+    side: {
+      pre: [[8, 'oo'], [7, 'oQQo oooooooo'], [8, 'oQQooTTTTTTTTo']],
+      rows: { 0: [8, 'oQQTTTTTTTTTTTo'], 1: 'oTTTTTTTTTTTTTTTTo' },
+    },
+  },
+  // curved horns from the temples (the Minotaur)
+  horns: {
+    down: { pre: [[7, 'oo              oo'], [7, 'oro            oro'], [8, 'oro          oro'], [8, 'orro        orro']], paint: { 0: [9, 'orro'], 1: [9, 'oro'], 2: [9, 'o'] } },
+    side: { pre: [[17, 'oo'], [16, 'oro'], [15, 'oro'], [14, 'orro']], paint: { 0: [14, 'rr'], 1: [14, 'r'] } },
+  },
+  santahat: {
+    down: {
+      pre: [[13, 'oooooo'], [12, 'oTTTTTToo'], [12, 'oTTTTTTTTooo'], [11, 'oTTTTTTTTTToUUo'], [11, 'oTTTTTTTTTTooUUo']],
+      rows: { 0: 'oTTTTTTTTTTo', 1: 'oUUUUUUUUUUUUo', 2: 'oUUUUUUUUUUUUo' },
+    },
+    up: {
+      pre: [[13, 'oooooo'], [11, 'ooTTTTTTo'], [9, 'oooTTTTTTTTo'], [7, 'oUUoTTTTTTTTTTo'], [7, 'oUUooTTTTTTTTTTo']],
+      rows: { 0: 'oTTTTTTTTTTo', 1: 'oUUUUUUUUUUUUo', 2: 'oUUUUUUUUUUUUo' },
+    },
+    side: {
+      pre: [[12, 'oooooo'], [10, 'ooTTTTTTo'], [8, 'oooTTTTTTTTo'], [6, 'oUUoTTTTTTTTTTo'], [6, 'oUUooTTTTTTTTTTo']],
+      rows: { 0: 'oTTTTTTTTTTo', 1: 'oUUUUUUUUUUUUo', 2: 'oUUUUUUUUUUUUo' },
+    },
+  },
+  elfhat: {
+    down: {
+      pre: [[16, 'oYo'], [15, 'oTo'], [14, 'oTTo'], [14, 'oTTTo'], [13, 'oTTTTTo'], [12, 'oTTTTTTTo']],
+      rows: { 0: 'oTTTTTTTTo', 1: 'oTTTTTTTTTTo', 2: 'oUUUUUUUUUUUUo' },
+    },
+    side: {
+      pre: [[20, 'oYo'], [18, 'ooTo'], [16, 'ooTTo'], [14, 'ooTTTo'], [13, 'oTTTTTo'], [12, 'oTTTTTTTo']],
+      rows: { 0: 'oTTTTTTTTo', 1: 'oTTTTTTTTTTo', 2: 'oUUUUUUUUUUUUo' },
+    },
+  },
+  bunnyears: {
+    down: { pre: [[11, 'oo    oo'], [10, 'oTTo  oTTo'], [10, 'oUTo  oTUo'], [10, 'oUTo  oTUo'], [10, 'oUTo  oTUo'], [11, 'oTo  oTo']], rows: { 1: 'oTTTTTTTTo' } },
+    up: { pre: [[11, 'oo    oo'], [10, 'oTTo  oTTo'], [10, 'oTTo  oTTo'], [10, 'oTTo  oTTo'], [10, 'oTTo  oTTo'], [11, 'oTo  oTo']], rows: { 1: 'oTTTTTTTTo' } },
+    side: { pre: [[13, 'oo'], [12, 'oTTo'], [12, 'oTUo'], [12, 'oTUo'], [12, 'oTUo'], [13, 'oTo']], rows: { 1: 'oTTTTTTTTo' } },
+  },
+  pumpkinhat: {
+    down: { pre: [[15, 'ooo'], [15, 'oUUo'], [11, 'ooooUUoooo'], [10, 'oTTPTTTTPTTo']], rows: { 0: 'oTTPTTTTPTTTo', 1: 'oTTTPTTTTPTTTo', 2: 'oTTTPTTTTPTTTo', 3: 'ooTTTTTTTTTToo' } },
+    side: { pre: [[13, 'ooo'], [13, 'oUUo'], [11, 'ooooUUooo'], [10, 'oTTPTTTTPTTo']], rows: { 0: 'oTTPTTTTPTTTo', 1: 'oTTTPTTTTPTTTo', 2: 'oTTTPTTTTPTTTo', 3: 'ooTTTTTTTTTToo' } },
+  },
+  // a big friendly costume head in the suit's colour, with round ears
+  mascothead: {
+    down: {
+      pre: [[8, 'ooo          ooo'], [7, 'oCCCo        oCCCo'], [7, 'oCcCoooooooooCcCo'], [8, 'occccccccccccccco'.slice(0, 16)]],
+      rows: { 0: 'occccccccccccccco', 1: 'occQQQccccQQQcco', 2: 'occQkQccccQkQcco', 3: 'occQQQccccQQQcco', 4: 'occcccCCCCcccccco', 5: 'occcccCkkCcccccco', 6: 'occcccCCCCcccccco', 7: 'occckccccccckccco', 8: 'occcckkkkkkkccccco'.slice(0, 16), 9: 'oocccccccccccoo', 10: 'oooooooooooo' },
+    },
+    up: {
+      pre: [[8, 'ooo          ooo'], [7, 'oCCCo        oCCCo'], [7, 'oCcCoooooooooCcCo'], [8, 'occccccccccccccco'.slice(0, 16)]],
+      rows: { 0: 'occccccccccccccco', 1: 'occccccccccccccco', 2: 'occccccccccccccco', 3: 'occccccccccccccco', 4: 'occccccccccccccco', 5: 'occccccccccccccco', 6: 'occccccccccccccco', 7: 'occccccccccccccco', 8: 'occccccccccccccco'.slice(0, 16), 9: 'oocccccccccccoo', 10: 'oooooooooooo' },
+    },
+    side: {
+      pre: [[10, 'ooo'], [9, 'oCCCo'], [9, 'oCcCooooooo'], [9, 'occcccccccccco']],
+      rows: { 0: [9, 'occcccccccccccco'], 1: [9, 'occcccccccQQQco'], 2: [9, 'occcccccccQkQcoo'], 3: [9, 'occcccccccQQQcCCo'], 4: [9, 'occcccccccccccCCo'], 5: [9, 'occcccccccccckCo'], 6: [9, 'occccccccccccko'], 7: [9, 'occcccccccckko'], 8: [9, 'occcccccccccco'], 9: [10, 'oocccccccoo'], 10: [11, 'ooooooooo'] },
+    },
+  },
   headphones: {
     down: { rows: { 1: 'okkkkkkkko' }, flaps: [[5, 6, 7], 'T'] },
     side: { paint: { 1: [15, 'k'], 2: [15, 'k'], 3: [15, 'k'], 4: [15, 'k'], 5: [13, 'TTT'], 6: [12, 'oTTT'], 7: [13, 'TTT'], 8: [13, 'ooo'] } },
@@ -1043,14 +1481,15 @@ export function applyBuild(rows, build) {
 
 // where things are on a person after a build: base row r is at row Y(r) of the grid
 function metrics(g, view, build) {
-  const n = (build === 'tall' ? 2 : build === 'short' ? -2 : 0) - (view === 'sit' ? 2 : 0);
-  if (view === 'sit') view = 'down';
+  const sit = view === 'sit';
+  const n = (build === 'tall' ? 2 : build === 'short' ? -2 : 0) - (sit ? 2 : 0);
+  if (sit) view = 'down';
   const top = g.length - BASE - n;
   const Y = (r) => top + r + (build === 'tall' ? (r > 16) + (r > 22) : build === 'short' ? -((r > 16) + (r > 22)) : 0);
   const wide = build === 'broad' ? 1 : 0;
   // the hand that holds things: on the left from the front, the right from the back
   const hx = view === 'down' ? 10 - wide : view === 'up' ? 21 + wide : 15;
-  return { top, Y, hx, hy: Y(18), gy: Y(26), wide, view };
+  return { top, Y, hx, hy: Y(18), gy: Y(sit ? 24 : 26), wide, view }; // (sitting, the folded legs end two rows higher)
 }
 
 function draw(g) {
@@ -1102,7 +1541,9 @@ export const CARRY = {
   plates: 'Stack of plates', candyjar: 'Jar of sweets', mug: 'Mug',
   palette: 'Paint palette', balloondog: 'Balloon dog', flask2: 'Bubbling flask', gadget: 'Gadget', firstaid: 'First-aid kit', kitten: 'A kitten',
   samples: 'Tray of samples', pot: 'Clay pot', stainedglass: 'Stained glass', yarn: 'Ball of yarn', scissors: 'Scissors', cloth: 'Bolt of cloth', mosaic: 'Mosaic tiles',
-  candles: 'Candles', boom: 'Boom mic',
+  candles: 'Candles', boom: 'Boom mic', shield: 'Shield', amphora: 'Amphora', block: 'Stone block', jug: 'Jug', basket: 'Basket', parasol: 'Parasol',
+  sweepbrush: 'Chimney brush', newspaper: 'Newspapers', boombox: 'Boombox', staff: 'Staff', bolt: 'Thunderbolt', presents: 'Sack of presents', present: 'A present',
+  bow: 'Bow',
 };
 
 // a pole down the outside of the hand, with a head at the bottom (mop, broom, shovel...)
@@ -1478,6 +1919,72 @@ const CARRY_DRAW = {
     d.pic(x + s * 7 - 1, top - 7, ['kkk', 'kkk']);
     hand(d, m, x);
   },
+  shield: (d, m) => {
+    const { hx, hy, view } = m;
+    const disc = ['  ddd  ', ' dgggd ', 'dgggggd', 'dggYggd', 'dgggggd', ' dgggd ', '  ddd  '];
+    const x = view === 'down' ? hx - 6 : view === 'up' ? hx : hx - 2;
+    d.pic(x, hy - 6, view === 'up' ? disc.map((r) => r.replace(/[gY]/g, 'd')) : disc);
+  },
+  amphora: (d, m) => hang(d, m, [' nnn ', 'n n n', ' nnn ', 'nnnnn', 'nkkkn', 'nnnnn', ' nnn ', '  n  ']),
+  block: (d, m) => {
+    const box = ['rrrrrrrr', 'rrrrrrrr', 'rrIrrrrr', 'rrrrrrIr', 'IIIIIIII'];
+    if (m.view === 'up') return;
+    if (m.view === 'side') d.pic(m.hx + 2, m.hy - 3, box.map((r) => r.slice(0, 6)));
+    else d.pic(12 - m.wide, m.hy - 2, box);
+  },
+  jug: (d, m) => hang(d, m, [' NN ', 'nnnnN', 'nnnn N', 'nnnnN', ' nn ']),
+  basket: (d, m) => hang(d, m, [' kkk ', 'k   k', 'xBPxB', 'nNnNn', 'NnNnN', ' nNn ']),
+  parasol: (d, m) => {
+    const { hx, hy, view, top } = m;
+    const x = view === 'down' ? hx - 2 : hx + 2;
+    d.line(x, hy + 1, x, top - 3, 'k');
+    d.pic(x - 4, top - 6, ['   TTT   ', ' TTTTTTT ', 'TTTTTTTTT', 'Q Q Q Q Q']);
+    hand(d, m, x);
+  },
+  sweepbrush: (d, m) => {
+    const { hx, hy, view } = m;
+    const x = view === 'down' ? hx - 2 : view === 'up' ? hx + 2 : hx + 2;
+    d.line(x, hy + 4, x, m.top - 3, 'N');
+    d.pic(x - 2, m.top - 7, ['k k k', ' kkk ', 'kkkkk', ' kkk ', 'k k k']);
+    hand(d, m, x);
+  },
+  newspaper: (d, m) => {
+    if (m.view === 'up') return;
+    if (m.view === 'side') d.pic(m.hx + 1, m.hy - 3, ['QQ', 'kQ', 'QQ', 'Qk']);
+    else d.pic(m.hx - 4, m.hy - 3, ['QQQQ', 'QkkQ', 'QQQQ', 'QkQQ']);
+    hand(d, m);
+  },
+  boombox: (d, m) => hang(d, m, ['  kkkk  ', 'kkkkkkkk', 'kAAkkAAk', 'kAvkkAvk', 'kkkkkkkk']),
+  staff: (d, m) => {
+    const { hx, gy, view, top } = m;
+    const x = view === 'down' ? hx - 2 : hx + 2;
+    d.line(x, gy, x, top - 1, 'N');
+    d.pic(x - 1, top - 4, [' j ', 'jvj', ' j '], null);
+    hand(d, m, x);
+  },
+  bolt: (d, m) => {
+    const { hx, hy, view } = m;
+    const x = view === 'down' ? hx - 3 : hx + 1;
+    d.pic(x, hy - 9, ['  jY', ' jY ', 'jYYY', ' YY ', ' Yj ', 'Yj  ', 'j   ']);
+    hand(d, m);
+  },
+  presents: (d, m) => {
+    if (m.view === 'side') return d.pic(m.hx - 4, m.top + 9, [' xB ', 'rrrr', 'rrrrr', 'rrrrr', 'rrrr', ' rr ']);
+    const x = m.view === 'down' ? 3 - m.wide : 22 + m.wide;
+    d.pic(x, m.top + 8, [' xBP ', 'rNNNr', 'rrrrrr', 'rrrrrr', 'rrrrrr', 'rrrrr ', ' rrr  ']);
+  },
+  present: (d, m) => {
+    if (m.view === 'up') return;
+    if (m.view === 'side') d.pic(m.hx + 1, m.hy - 3, ['YY', 'xY', 'xY']);
+    else d.pic(12 - m.wide, m.hy - 3, [' Y  Y ', 'xxYYxx', 'YYYYYY', 'xxYYxx', 'xxYYxx']);
+  },
+  bow: (d, m) => {
+    const { hx, hy, view } = m;
+    const bow = [' NN ', 'N  A', 'N  A', 'Nn A', 'N  A', 'N  A', ' NN '];
+    const x = view === 'down' ? hx - 6 : view === 'up' ? hx + 2 : hx;
+    d.pic(x, hy - 3, view === 'up' ? d.flip(bow) : bow);
+    hand(d, m, view === 'down' ? x + 1 : null);
+  },
   blueprint: (d, m) => {
     const { hx, hy, view } = m;
     if (view === 'side') d.pic(hx - 1, hy - 1, ['BBBBBB']);
@@ -1555,12 +2062,33 @@ export function drawGround(rows, view, look) {
 }
 
 // ---------- Companions ----------
-export const BUDDIES = { parrot: 'Parrot on the shoulder', gull: 'Gull on the shoulder' };
+export const BUDDIES = { parrot: 'Parrot on the shoulder', gull: 'Gull on the shoulder', wings: 'Wings' };
+// wings behind the shoulders: from the front and the side they only fill empty cells, so the body stays in front
+function wings(g, m, view) {
+  const y = m.Y(9);
+  const left = ['ll    ', 'lfl   ', 'lffl  ', ' lffll', ' lfffl', '  lffl', '   lll'];
+  const put = (x, rows, over) => rows.forEach((row, j) => [...row].forEach((c, i) => {
+    const at = g[y + j];
+    if (c === ' ' || !at || x + i < 0 || x + i >= T || (!over && at[x + i] !== '.')) return;
+    at[x + i] = c;
+  }));
+  const right = left.map((r) => [...r].reverse().join(''));
+  if (view === 'side') put(5, left, false);
+  else {
+    put(4 - m.wide, left, view === 'up');
+    put(22 + m.wide, right, view === 'up');
+  }
+  const d = draw(g);
+  const edge = [];
+  g.forEach((row, yy) => row.forEach((c, x) => (c === 'l' || c === 'f') && edge.push([x, yy])));
+  edge.forEach(([x, yy]) => [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(([dx, dy]) => d.get(x + dx, yy + dy) === '.' && d.px(x + dx, yy + dy, 'o')));
+}
 export function drawBuddy(rows, view, look) {
   const kind = look.buddy;
   if (!BUDDIES[kind]) return rows;
   return withRoom(rows, (g) => {
     const m = metrics(g, view, look.build);
+    if (kind === 'wings') return wings(g, m, view);
     const d = draw(g);
     const bird = kind === 'parrot' ? [' xx ', 'xxQY', 'xGx ', 'GGx ', ' Bx '] : [' QQ ', 'QQkY', 'QAQ ', 'AQQ ', ' Q  '];
     const y = m.Y(9);
@@ -1591,17 +2119,20 @@ export const POSES = {
   statue: 'Holding still', soliloquy: 'Holding a skull', bow: 'Taking a bow', typewriter: 'Typewriter', megaphone: 'Megaphone', clapper: 'Clapperboard',
   vogue: 'Striking a pose', scratch: 'Scratching records', pour: 'Pouring', stargaze: 'Stargazing', swoop: 'Butterfly net', feed: 'Feeding',
   chalkboard: 'Writing on a board', anvil: 'At the anvil', wheel: 'Potter’s wheel', glassblow: 'Glassblowing', whittle: 'Whittling', weave: 'Weaving',
-  cobble: 'Mending a shoe', press: 'Printing', gild: 'Gilding',
+  cobble: 'Mending a shoe', press: 'Printing', gild: 'Gilding', bell: 'Ringing a bell', charleston: 'Charleston', disco: 'Disco', spell: 'Casting a spell',
+  float: 'Floating', dance: 'Dancing', capeswirl: 'Cape swirl', sparkler: 'Sparkler',
 };
 export const POSE_VIEW = { dust: 'down', wipe: 'up', polish: 'down', jackhammer: 'down', flag: 'down', roll: 'up', plaster: 'up', wave: 'down', swim: 'down', lounge: 'down', read: 'down', sift: 'down', shush: 'down', present: 'down', type: 'down',
   kite: 'down', knit: 'sit', rest: 'sit', nap: 'sit', speech: 'down', yoga: 'down', book: 'down',
   sketch: 'sit', guitar: 'down', cello: 'sit', accordion: 'down', drum: 'down', conduct: 'down', sing: 'down', ballet: 'down', mimebox: 'down', juggle: 'down',
-  rabbit: 'down', statue: 'down', bow: 'down', typewriter: 'sit', clapper: 'down', vogue: 'down', scratch: 'down', wheel: 'sit', whittle: 'down', cobble: 'sit', lute: 'down', twirl: 'down' };
+  rabbit: 'down', statue: 'down', bow: 'down', typewriter: 'sit', clapper: 'down', vogue: 'down', scratch: 'down', wheel: 'sit', whittle: 'down', cobble: 'sit', lute: 'down', twirl: 'down',
+  bell: 'down', charleston: 'down', disco: 'down', spell: 'down', float: 'down', dance: 'down', capeswirl: 'down', sparkler: 'down' };
 export const POSE_RATE = { flag: 0.5, survey: 0.7, telescope: 0.6, lounge: 0.3, read: 0.4, point: 1.2, fish: 0.9, wave: 2.5, jackhammer: 10, polish: 5, weld: 7, swim: 2, binoculars: 0.5, inspect: 0.6, shush: 0.5, present: 1.5, photo: 0.4, type: 3, sift: 5, lurch: 1.5, gavel: 1.5,
   kite: 1, selfie: 0.4, stroller: 2, knit: 2, rest: 0.4, nap: 0.6, call: 0.5, speech: 1, jog: 4, yoga: 0.5, book: 0.3, tvcamera: 1, magnify: 0.8, sneak: 2, lookaround: 0.7, knead: 2, stir: 2,
   easel: 0.8, sketch: 2, chalk: 1.5, violin: 3, guitar: 3, cello: 2, sax: 2, trumpet: 2, flute: 2, accordion: 1.5, drum: 4, harp: 2, lute: 3, conduct: 2.5, sing: 1,
   ballet: 0.8, breakdance: 3, twirl: 2, mimebox: 1, juggle: 4, wand: 2, rabbit: 0.7, statue: 0.2, soliloquy: 0.5, bow: 0.6, typewriter: 4, megaphone: 1, clapper: 1,
-  vogue: 0.5, scratch: 3, pour: 1, stargaze: 0.3, swoop: 2, feed: 1.5, chalkboard: 2, anvil: 3, wheel: 3, glassblow: 1, whittle: 2, weave: 2, cobble: 3, press: 1, gild: 1.5 };
+  vogue: 0.5, scratch: 3, pour: 1, stargaze: 0.3, swoop: 2, feed: 1.5, chalkboard: 2, anvil: 3, wheel: 3, glassblow: 1, whittle: 2, weave: 2, cobble: 3, press: 1, gild: 1.5,
+  bell: 4, charleston: 3, disco: 1.5, spell: 2, float: 1.2, dance: 3, capeswirl: 0.8, sparkler: 6 };
 
 // the hand at the side is painted over with the clothes next to it
 function tuck(g, m) {
@@ -2384,6 +2915,85 @@ const POSE_DRAW = {
     arm(d, [16, top + 14], [19, top + (f ? 9 : 11)]);
     d.px(21, top + (f ? 8 : 10), 'n');
   },
+  bell: (d, m, f, g) => {
+    tuck(g, m);
+    const { top } = m;
+    const w = m.wide;
+    const h = f ? [5 - w, top + 5] : [7 - w, top + 4];
+    armOut(d, [[8 - w, top + 12], [7 - w, top + 10], [7 - w, top + 8], [f ? 6 - w : 7 - w, top + 7]], h);
+    d.pic(h[0] - 1 + (f ? -1 : 1), h[1] + 2, [' Y ', 'YYY', 'YYY', ' k '].map((r) => r));
+  },
+  charleston: (d, m, f, g) => {
+    tuck(g, m);
+    tuck(g, { ...m, hx: 21 + m.wide, view: 'down' });
+    const { top } = m;
+    const w = m.wide;
+    kick(g, m, f ? 1 : -1);
+    if (f) {
+      armOut(d, [[8 - w, top + 13], [7 - w, top + 14]], [5 - w, top + 15]);
+      armOut(d, [[23 + w, top + 12], [24 + w, top + 11]], [25 + w, top + 9]);
+    } else {
+      armOut(d, [[8 - w, top + 12], [7 - w, top + 11]], [5 - w, top + 9]);
+      armOut(d, [[23 + w, top + 13], [24 + w, top + 14]], [25 + w, top + 15]);
+    }
+  },
+  disco: (d, m, f, g) => {
+    tuck(g, { ...m, hx: 21 + m.wide, view: 'down' });
+    const { top } = m;
+    const w = m.wide;
+    if (f) armOut(d, [[23 + w, top + 12], [24 + w, top + 10], [25 + w, top + 8], [26 + w, top + 6]], [27 + w, top + 3]);
+    else armOut(d, [[22 + w, top + 14], [21 + w, top + 16], [20 + w, top + 17]], [18 + w, top + 18]);
+  },
+  spell: (d, m, f, g) => {
+    tuck(g, m);
+    tuck(g, { ...m, hx: 21 + m.wide, view: 'down' });
+    const { top } = m;
+    const w = m.wide;
+    armOut(d, [[8 - w, top + 12], [7 - w, top + 11]], [5 - w, top + (f ? 9 : 10)]);
+    armOut(d, [[23 + w, top + 12], [24 + w, top + 11]], [25 + w, top + (f ? 9 : 10)]);
+    (f ? [[4, top + 5, 'j'], [15, top - 3, 'v'], [27, top + 4, 'j'], [9, top + 1, 'v'], [22, top, 'j']] : [[6, top + 3, 'v'], [12, top - 2, 'j'], [20, top - 3, 'v'], [26, top + 6, 'j'], [3, top + 8, 'j']]).forEach(([x, y, c]) => d.px(x, y, c));
+  },
+  float: (d, m, f, g) => {
+    if (f) g.push(Array(T).fill('.'), Array(T).fill('.'));
+  },
+  dance: (d, m, f, g) => {
+    tuck(g, m);
+    tuck(g, { ...m, hx: 21 + m.wide, view: 'down' });
+    const { top } = m;
+    const w = m.wide;
+    if (f) {
+      armOut(d, [[8 - w, top + 12], [7 - w, top + 11], [6 - w, top + 10], [5 - w, top + 9]], [3 - w, top + 7]);
+      armOut(d, [[23 + w, top + 12], [24 + w, top + 11], [25 + w, top + 10], [26 + w, top + 9]], [27 + w, top + 7]);
+      g.push(Array(T).fill('.'));
+    } else {
+      armOut(d, [[8 - w, top + 13], [7 - w, top + 13], [6 - w, top + 13]], [4 - w, top + 12]);
+      armOut(d, [[23 + w, top + 13], [24 + w, top + 13], [25 + w, top + 13]], [26 + w, top + 12]);
+      kick(g, m, -1);
+    }
+  },
+  capeswirl: (d, m, f, g) => {
+    tuck(g, m);
+    tuck(g, { ...m, hx: 21 + m.wide, view: 'down' });
+    const { top } = m;
+    const w = m.wide;
+    if (f) {
+      armOut(d, [[8 - w, top + 12], [7 - w, top + 12], [6 - w, top + 12], [5 - w, top + 11]], [3 - w, top + 10], 'X');
+      armOut(d, [[23 + w, top + 12], [24 + w, top + 12], [25 + w, top + 12], [26 + w, top + 11]], [27 + w, top + 10], 'X');
+      d.pic(4 - w, top + 13, ['XXXXX', ' XXXX', '  XXX', '   XX'], 'o');
+      d.pic(23 + w, top + 13, ['XXXXX', 'XXXX ', 'XXX  ', 'XX   '], 'o');
+    } else {
+      armOut(d, [[22 + w, top + 12], [21 + w, top + 11], [20 + w, top + 10]], [18 + w, top + 9], 'X');
+      d.pic(22 + w, top + 12, ['XX', 'XXX', 'XXX', 'XXXX', 'XXXX', 'XXX', 'XX'], 'o');
+    }
+  },
+  sparkler: (d, m, f, g) => {
+    tuck(g, m);
+    const { top } = m;
+    const w = m.wide;
+    armOut(d, [[8 - w, top + 12], [7 - w, top + 10], [7 - w, top + 8]], [6 - w, top + 6]);
+    d.line(7 - w, top + 5, 5 - w, top + 1, 'A');
+    (f ? [[4, top - 1, 'j'], [6, top - 2, 'V'], [3, top + 1, 'Q'], [7, top, 'j'], [2, top - 2, 'V']] : [[5, top - 2, 'Q'], [3, top, 'j'], [7, top - 1, 'V'], [4, top + 2, 'V'], [6, top + 1, 'j']]).forEach(([x, y, c]) => d.px(x - w, y, c));
+  },
   detect: (d, m, f, g) => {
     tuck(g, m);
     const { top, gy } = m;
@@ -2411,6 +3021,21 @@ function kneel(g, m) {
   const d = draw(g);
   d.pic(5, m.gy - 1, ['bbpppp']);
   return { ...m, top: m.top + 2, hy: m.hy + 2 };
+}
+// one lower leg swings out to the side: dir -1 is the left leg (from the front), 1 the right
+function kick(g, m, dir) {
+  const rows = [m.Y(23), m.Y(24), m.Y(25)];
+  const mid = 16;
+  rows.forEach((y, k) => {
+    const row = g[y];
+    if (!row) return;
+    const n = k + 1;
+    if (dir < 0) {
+      for (let x = 0; x < mid; x++) row[x] = x + n < mid ? row[x + n] : '.';
+    } else {
+      for (let x = T - 1; x >= mid; x--) row[x] = x - n >= mid ? row[x - n] : '.';
+    }
+  });
 }
 function hands(d, list) {
   list.forEach(([x, y]) => {

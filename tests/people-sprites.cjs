@@ -59,6 +59,10 @@ const seeded = (n) => (k) => {
   const keys = [...fs.readFileSync(path.join(__dirname, '..', 'src', 'people', 'classes.js'), 'utf8').matchAll(/^  ([a-z0-9]+): \{$/gm)].map((k) => k[1]);
   const twice = keys.filter((k, i) => keys.indexOf(k) !== i);
   check(!twice.length, 'every class has its own name', `classes written twice: ${twice.join(', ')}`);
+  // every crew is made of real people
+  const ids = new Set(people.PEOPLE_LIST.map((p) => p.id));
+  const crewBad = Object.entries(people.CREWS).flatMap(([c, crew]) => crew.members.filter(([id]) => !ids.has(id)).map(([id]) => `${c}: ${id}`));
+  check(!crewBad.length, `${Object.keys(people.CREWS).length} crews, every member a real class`, `crew members missing: ${crewBad.join(', ')}`);
   const classes = Object.keys(people.CLASSES).length;
   check(classes >= 54 && people.PEOPLE_LIST.length >= 130, `${classes} classes, ${people.PEOPLE_LIST.length} variants`, `only ${classes} classes / ${people.PEOPLE_LIST.length} variants`);
   // every part offered in a menu draws something different from no part at all
@@ -86,9 +90,13 @@ const seeded = (n) => (k) => {
 
   // ---------- 2. on an island ----------
   const W = 44;
-  const H = 8 + Math.ceil(people.PEOPLE_LIST.length / 12) * 4; // tall enough for everyone
+  const crews = Object.keys(people.CREWS);
+  const H = 8 + Math.ceil(people.PEOPLE_LIST.length / 12) * 4 + Math.ceil(crews.length / 6) * 4; // tall enough for everyone
   const corners = Array.from({ length: H + 1 }, (_, y) => Array.from({ length: W + 1 }, (_, x) => (y < 3 || x < 2 || x > W - 2 || y > H - 2 ? '0' : y < 4 || x < 3 || x > W - 3 || y > H - 3 ? '1' : '2')).join(''));
   const objects = people.PEOPLE_LIST.map((p, i) => (p.id === 'swimmer.swim' ? { ref: `t:${p.tile}`, x: 10 * 32, y: 0 } : { ref: `t:${p.tile}`, x: (3 + (i % 12) * 3) * 32, y: (4 + Math.floor(i / 12) * 4) * 32 }));
+  const crewTop = 4 + Math.ceil(people.PEOPLE_LIST.length / 12) * 4;
+  crews.forEach((c, i) => objects.push({ ref: `t:crew_${c}`, x: (3 + (i % 6) * 6) * 32, y: (crewTop + Math.floor(i / 6) * 4) * 32 }));
+  const crewPeople = crews.reduce((n, c) => n + people.CREWS[c].members.length, 0);
   const map = { format: 'curation-map', version: 2, tile: 32, name: 'People test island', kind: 'island', w: W, h: H, corners, tiles: {}, objects };
 
   const browser = await chromium.launch();
@@ -106,7 +114,7 @@ const seeded = (n) => (k) => {
     textures: s.islanders.every((i) => s.textures.exists(`${i.prefix}_down`) && s.textures.exists(`${i.prefix}_side_1`) && (!i.pose || (s.textures.exists(`${i.prefix}_pose_0`) && s.textures.exists(`${i.prefix}_pose_1`)))),
     titles: [...new Set(s.islanders.map((i) => i.title))].length,
   }));
-  check(info.n === people.PEOPLE_LIST.length && info.textures, `all ${info.n} people stand on the island with their frames (${info.posed} at work, ${info.titles} jobs)`, `island people wrong: ${JSON.stringify(info)}`);
+  check(info.n === people.PEOPLE_LIST.length + crewPeople && info.textures, `all ${info.n} people (${crewPeople} of them in ${crews.length} crews) stand on the island with their frames (${info.posed} at work, ${info.titles} jobs)`, `island people wrong: ${JSON.stringify(info)} (want ${people.PEOPLE_LIST.length + crewPeople})`);
 
   // someone at work loops their two frames; walk up beside the first janitor
   const near = (i) => scene((s, a) => {
@@ -158,7 +166,7 @@ const seeded = (n) => (k) => {
   const boot = Date.now() - t0;
   if (await b.locator('#resume-go').waitFor({ state: 'visible', timeout: 4000 }).then(() => true, () => false)) await b.click('#resume-go');
   const lists = await b.evaluate(() => [...document.querySelectorAll('#palette details summary')].map((s) => s.textContent));
-  const wanted = Object.values(people.GROUPS).map((g) => `People: ${g}`);
+  const wanted = [...Object.values(people.GROUPS), 'Crews'].map((g) => `People: ${g}`);
   check(wanted.every((w) => lists.some((l) => l.startsWith(w))), `the builder has the People lists (${wanted.join(', ')}), opened in ${boot} ms`, `People lists missing: ${lists.join(' | ')}`);
   const listed = await b.evaluate((w) => {
     const d = [...document.querySelectorAll('#palette details')].find((x) => x.querySelector('summary').textContent.startsWith(w));

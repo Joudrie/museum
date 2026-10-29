@@ -1976,8 +1976,8 @@ export function personPalette(colors = {}) {
 }
 
 // Paints one frame (rows of palette letters, as personRows gives) onto a 2D canvas,
-// each row centred like sprite() does, the last row at y = `bottom`.
-export function drawRows(ctx, rows, pal, bottom) {
+// each row centred like sprite() does in a 32-wide cell at `left`, the last row at y = `bottom`.
+export function drawRows(ctx, rows, pal, bottom, left = 0, flip = false) {
   const { width: w, height: h } = ctx.canvas;
   const img = ctx.getImageData(0, 0, w, h);
   const rgb = {};
@@ -1987,9 +1987,10 @@ export function drawRows(ctx, rows, pal, bottom) {
     const off = Math.floor((T - row.length) / 2);
     for (let i = 0; i < row.length; i++) {
       const ch = row[i];
-      if (!pal[ch] || off + i < 0 || off + i >= w) continue;
+      const x = left + (flip ? T - 1 - (off + i) : off + i);
+      if (!pal[ch] || x < 0 || x >= w) continue;
       const c = (rgb[ch] ||= hex(pal[ch]));
-      const k = (y * w + off + i) * 4;
+      const k = (y * w + x) * 4;
       img.data[k] = c[0];
       img.data[k + 1] = c[1];
       img.data[k + 2] = c[2];

@@ -26,9 +26,10 @@ export const CHARACTER_PALETTES = {
 };
 // What the main color is called for each outfit, and which colors an outfit shows.
 const MAIN_LABEL = { suit: 'Jacket', vest: 'Waistcoat', sweater: 'Sweater', tee: 'T-shirt', hoodie: 'Hoodie', coat: 'Coat', apron: 'Shirt', dress: 'Dress', gown: 'Gown', toga: 'Toga',
-  coveralls: 'Coveralls', overalls: 'Overalls', hivis: 'Vest', oilskins: 'Oilskins', waders: 'Waders', wetsuit: 'Wetsuit', sailor: 'Top', captain: 'Coat', striped: 'Shirt', flannel: 'Shirt', fieldvest: 'Vest', trunks: 'Trunks', swimsuit: 'Swimsuit' };
-const W_LABEL = { striped: 'Stripes' };
-const G_LABEL = { toga: 'Sash', apron: 'Apron', wetsuit: 'Stripe', sailor: 'Collar' };
+  coveralls: 'Coveralls', overalls: 'Overalls', hivis: 'Vest', oilskins: 'Oilskins', waders: 'Waders', wetsuit: 'Wetsuit', sailor: 'Top', captain: 'Coat', striped: 'Shirt', flannel: 'Shirt', fieldvest: 'Vest', trunks: 'Trunks', swimsuit: 'Swimsuit',
+  kilt: 'Kilt', tunic: 'Tunic', armour: 'Armour', jester: 'Motley', bustle: 'Gown', flapper: 'Dress', leather: 'Jacket', tiedye: 'Shirt', disco: 'Suit', sheet: 'Sheet', skeleton: 'Suit', santa: 'Suit', snowman: 'Snow', onesie: 'Onesie' };
+const W_LABEL = { striped: 'Stripes', kilt: 'Front panel', jester: 'Second colour', bustle: 'Buttons', leather: 'T-shirt', disco: 'Collar', santa: 'Fur trim' };
+const G_LABEL = { toga: 'Sash', apron: 'Apron', wetsuit: 'Stripe', sailor: 'Collar', kilt: 'Belt' };
 const USES = {
   suit: ['w', 'g', 'p'],
   vest: ['w', 'g', 'p'],
@@ -53,6 +54,14 @@ const USES = {
   fieldvest: ['w', 'p'],
   trunks: [],
   swimsuit: [],
+  kilt: ['w', 'g'],
+  tunic: ['p'],
+  jester: ['w'],
+  bustle: ['w'],
+  leather: ['w', 'p'],
+  tiedye: ['p'],
+  disco: ['w'],
+  santa: ['w'],
 };
 const ACC_COLORS = ['#c0392b', '#2e7d7a', '#c9a23f', '#3d6fb6', '#e8e2d4', '#1e1e22', '#6a4c93'];
 export const DEFAULT_CHARACTER = { h: '#4a2e20', s: '#f2c6a0', c: '#7a2e3a', p: '#2f2b3d', b: '#1a1418', w: '#efe6d4', g: '#c9a23f', hair: 'short', outfit: 'suit' };
