@@ -82,7 +82,7 @@ const seeded = (n) => (k) => {
 
   // ---------- 2. on an island ----------
   const W = 44;
-  const H = 54;
+  const H = 8 + Math.ceil(people.PEOPLE_LIST.length / 12) * 4; // tall enough for everyone
   const corners = Array.from({ length: H + 1 }, (_, y) => Array.from({ length: W + 1 }, (_, x) => (y < 3 || x < 2 || x > W - 2 || y > H - 2 ? '0' : y < 4 || x < 3 || x > W - 3 || y > H - 3 ? '1' : '2')).join(''));
   const objects = people.PEOPLE_LIST.map((p, i) => (p.id === 'swimmer.swim' ? { ref: `t:${p.tile}`, x: 10 * 32, y: 0 } : { ref: `t:${p.tile}`, x: (3 + (i % 12) * 3) * 32, y: (4 + Math.floor(i / 12) * 4) * 32 }));
   const map = { format: 'curation-map', version: 2, tile: 32, name: 'People test island', kind: 'island', w: W, h: H, corners, tiles: {}, objects };
