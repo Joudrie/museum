@@ -3,7 +3,6 @@
 // swatches, ending in a + that opens a full color picker.
 import { HATS, FACIAL, GLASSES, HAIRSTYLES, OUTFITS, ACCESSORIES, PALETTES, FLOOR_PATTERNS, WOOD_FLOORS, TWO_COLOR_FLOORS, FLOOR_DEFAULTS, WALL_PATTERNS, WAINSCOT_STYLES, LIGHTS, PLANTS, personRows } from './art.js';
 import { BUILDS, LEGS, FEET, ACCENT_OUTFITS } from './people/parts.js';
-import { openColorWheel } from './colorwheel.js';
 import { TRACKS } from './music.js';
 import { PETS, PET_COLORS } from './pets.js';
 
@@ -97,8 +96,8 @@ export function strip(colors, value, onPick, opts = {}) {
   if (isCustom) custom.style.background = value;
   custom.innerHTML = '<span>+</span>';
   custom.setAttribute('aria-label', 'Pick any color');
-  custom.onclick = () =>
-    openColorWheel(value || colors[0], {
+  custom.onclick = async () =>
+    (await import('./colorwheel.js')).openColorWheel(value || colors[0], {
       onLive: (hex) => onPick(hex, true),
       onDone: (hex) => onPick(hex),
       onCancel: () => (value ? onPick(value) : opts.clear ? opts.clear() : onPick(colors[0])),

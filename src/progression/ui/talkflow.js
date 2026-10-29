@@ -19,7 +19,7 @@ export function* namedConverse(p, npcId, ui = {}) {
     const f = p.state.friends[npcId];
     if (f?.quest && !f.quest.done) choices.push({ id: 'quest', label: 'Your story' });
     choices.push({ id: 'bye', label: 'Bye!' });
-    const c = yield { type: 'hub', text: reqs.length ? reqs[0].text : `${'♥'.repeat(hearts())}${'♡'.repeat(10 - hearts())}`, choices };
+    const c = yield { type: 'hub', text: reqs.length ? reqs[0].text : `Friendship: ${hearts()} of 10 hearts.`, choices };
     if (c === 'bye') break;
     if (c === 'quest') {
       const q = f.quest;

@@ -173,6 +173,12 @@ export class IslandScene extends Phaser.Scene {
     const start = this.map ? (this.door && this.spawnAt !== 'dock' ? { x: this.door.x, y: this.door.y + 22 } : this.landing()) : this.spawnAt === 'cottage' ? { x: COTTAGE.x, y: COTTAGE.y + 16 } : this.spawnAt === 'dock' ? { x: 12.5 * T, y: 38.6 * T } : { x: DOOR.x, y: DOOR.y + 22 };
     this.player = this.add.sprite(start.x, start.y, 'player_down').setOrigin(0.5, 1).setScale(PLAYER_SCALE);
     this.shadow = this.add.ellipse(0, 0, 18, 6, 0x000000, 0.25).setDepth(0.5);
+    this.row?.destroy();
+    this.row = null;
+    const visit = (this.visit = (this.visit || 0) + 1);
+    import('./rowing.js').then(({ Rowing }) => {
+      if (this.visit === visit) this.row = new Rowing(this, { W, H }); // walk into the water to row
+    });
     if (ch.pet && ch.pet !== 'none') this.pet = new Pet(this, ch.pet, ch.petColor, this.player);
     this.doorLock = this.spawnAt !== 'cottage' && this.spawnAt !== 'dock'; // don't walk straight back in
     this.cottageLock = this.spawnAt === 'cottage';
@@ -929,7 +935,15 @@ export class IslandScene extends Phaser.Scene {
     });
   }
 
-  // Can the player's feet stand here?
+  tileInfo(name) {
+    return TILES[name];
+  }
+
+  walkFree(x, y) {
+    return this.free(x, y);
+  }
+
+  // Can the player's feet stand here? (The rowboat asks src/rowing.js instead.)
   free(x, y) {
     const pts = [[x - 6, y - 2], [x + 6, y - 2], [x - 6, y - 7], [x + 6, y - 7]];
     if (this.posts.some((b) => x + 6 > b.x0 && x - 6 < b.x1 && y - 2 > b.y0 && y - 7 < b.y1)) return false;
@@ -1486,9 +1500,12 @@ export class IslandScene extends Phaser.Scene {
     }
     if (progression().has('exploring.light_foot')) pace *= 1.06; // Exploring 16
     if (this.season === 'winter' && progression().has('exploring.snow_speed')) pace *= 1.1; // Exploring 6: deep snow
+    if (this.row?.on) pace *= 0.85; // rowing is a little slower than walking
     if (this.puzzles.sliding) vx = vy = 0; // sliding on ice: no steering
     const len = Math.hypot(vx, vy);
     const p = this.player;
+    const was = { x: p.x, y: p.y };
+    const ok = this.row?.on ? (x, y) => this.row.free(x, y) : (x, y) => this.free(x, y); // afloat, the boat decides
     if (len) {
       // small sub-steps, so a slow frame still stops against a wall where a fast one would
       // (otherwise one big step skips over the strip in front of a door that triggers it)
@@ -1497,8 +1514,8 @@ export class IslandScene extends Phaser.Scene {
       for (let i = 0; i < steps; i++) {
         const nx = p.x + ((vx / len) * dist) / steps;
         const ny = p.y + ((vy / len) * dist) / steps;
-        if (this.free(nx, p.y)) p.x = nx;
-        if (this.free(p.x, ny)) p.y = ny;
+        if (ok(nx, p.y)) p.x = nx;
+        if (ok(p.x, ny)) p.y = ny;
       }
       if (Math.abs(vx) > Math.abs(vy)) {
         p.setTexture('player_side').setFlipX(vx < 0);
@@ -1508,9 +1525,13 @@ export class IslandScene extends Phaser.Scene {
         this.facing = vy < 0 ? 'up' : 'down';
       }
     }
-    if (this.puzzles.any) this.puzzles.update(dt, len ? vx / len : 0, len ? vy / len : 0);
-    if (animateWalker(this, p, len > 0 || !!this.puzzles.sliding, dt, 0.8 + pace * 0.5)) this.onStep(p, pace);
-    this.pet?.update(dt);
+    const moved = Math.abs(p.x - was.x) + Math.abs(p.y - was.y) > 0.05;
+    this.row?.check(dt, vx, vy, len, moved); // into the water: "Row out?"; rowing into land: climb out
+    const rowing = !!this.row?.update(dt, len > 0 && moved);
+    if (this.puzzles.any && !rowing) this.puzzles.update(dt, len ? vx / len : 0, len ? vy / len : 0);
+    if (!rowing && animateWalker(this, p, len > 0 || !!this.puzzles.sliding, dt, 0.8 + pace * 0.5)) this.onStep(p, pace);
+    if (rowing) this.row.carryPet(this.pet);
+    else this.pet?.update(dt);
     this.exp?.update(dt);
     this.critters.update(dt, p);
     this.ambient.update(dt, p);

@@ -60,7 +60,7 @@ export const META_FIELDS = ['by', 'year', 'rarity', 'where'];
  * @property {string} id
  * @property {string} name          "Paintings"
  * @property {string} noun          lower-case plural for sentences: "paintings"
- * @property {string} icon          a short emoji or glyph
+ * @property {string} icon          a pixel icon name from src/ui/icons.js (never an emoji)
  * @property {string[]} [kinds]     what its entries are called, e.g. ["painting"]
  * @property {string} display       default display: wall, case, plinth, tank, floor
  * @property {'all'|'earned'} ownership  'all': every entry is yours from the start; 'earned': it has to be collected

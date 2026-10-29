@@ -52,13 +52,13 @@ body.pill-away #prog-pill { visibility: hidden; pointer-events: none; }
 #prog-skill .sk-perk { margin-top: 5px; font: 500 12px/1.25 var(--ui-font); color: var(--ui-gold-hi); }
 
 /* ---- reward cards (species stamp, tasks, hearts, milestones …) ---- */
-#prog-card { position: absolute; left: 50%; bottom: calc(24% + env(safe-area-inset-bottom)); transform: translate(-50%, 24px); opacity: 0; width: min(320px, 88vw); pointer-events: auto; padding: 12px 14px 12px; background: var(--ui-panel); border: 3px solid var(--ui-shadow); box-shadow: inset 2px 2px 0 rgba(255, 240, 200, 0.1), 0 4px 0 var(--ui-shadow); text-align: center; transition: transform 0.22s var(--ui-ease), opacity 0.22s; }
+#prog-card { position: absolute; left: 50%; top: calc(var(--hud-top, 10px) + 176px); transform: translate(-50%, -14px); opacity: 0; width: min(300px, 80vw); pointer-events: auto; padding: 8px 12px 9px; background: var(--ui-panel); border: 3px solid var(--ui-shadow); box-shadow: inset 2px 2px 0 rgba(255, 240, 200, 0.1), 0 4px 0 var(--ui-shadow); text-align: center; transition: transform 0.22s var(--ui-ease), opacity 0.22s; }
 #prog-card.on { transform: translate(-50%, 0); opacity: 1; }
 #prog-card .pc-kicker { font: 600 var(--fs-small)/1 var(--ui-font); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ui-muted); }
-#prog-card .pc-title { display: block; margin: 5px 0 3px; font: 700 var(--fs-lead)/1.15 var(--ui-font); }
+#prog-card .pc-title { display: block; margin: 4px 0 2px; font: 700 var(--fs-body)/1.15 var(--ui-font); }
 #prog-card .pc-sub { font: 500 var(--fs-small)/1.3 var(--ui-font); color: var(--ui-muted); }
-#prog-card .pc-pic { display: grid; place-items: center; height: 72px; margin: 6px 0 2px; }
-#prog-card .pc-pic canvas { image-rendering: pixelated; height: 64px; width: auto; }
+#prog-card .pc-pic { display: grid; place-items: center; height: 52px; margin: 4px 0 2px; }
+#prog-card .pc-pic canvas { image-rendering: pixelated; height: 48px; width: auto; }
 #prog-card .pc-pic .sil { filter: brightness(0) contrast(1); opacity: 0.8; animation: wash 0.7s 0.15s forwards; }
 @keyframes wash { to { filter: none; opacity: 1; } }
 #prog-card .stamp { position: absolute; right: 10px; top: 8px; border: 2px solid var(--ui-gold-hi); color: var(--ui-gold-hi); padding: 2px 6px; font: 700 12px/1 var(--ui-font); letter-spacing: 0.1em; transform: rotate(8deg) scale(2.4); opacity: 0; animation: stamp-in 0.3s 0.5s ease-out forwards; }
