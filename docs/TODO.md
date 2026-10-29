@@ -137,7 +137,7 @@ Owns: `src/famous.js`, `src/lines.js`, `src/quests.js`, `src/talk.js`, `src/staf
 ## CHAT 11: Atmosphere, seasons and audio
 Owns: `src/weather.js`, `src/lighting.js`, `src/ambient.js`, `src/music.js`, `src/foliage.js`, `src/critters.js`. Claim: `claimed: 2026-10-29`
 - [ ] Seasons on the real calendar (snow on the lawn, fall leaves, holiday decor, seasonal visitors like trick-or-treaters). Snow, fall leaves and recoloured trees already exist; **cherry trees stay pink in autumn (done, this PR)**. **Halloween (Oct 24-31): jack-o'-lanterns at the museum doors and costumed trick-or-treat kids; winter (Dec 18-26): woolly hats (done, this PR; `holiday()` in weather.js, `?holiday=halloween|winter`).** Still to do: winter lights, other holidays.
-- [ ] Daily rhythm (Animal Crossing / Stardew feel); weather effects inside and outside; day / night polish.
+- [ ] Daily rhythm (Animal Crossing / Stardew feel); weather effects inside and outside; day / night polish. **Rain / snow now shade the light inside and out, and stormy rainy days have distant thunder with a faint flash (done, this PR).** Still to do: daily rhythm (quiet mornings, evening crowds).
 - [ ] Per-room music and ambience; sound effects pass; a mute and volume mix.
 - [ ] Lighting performance on phones (High / Low / Off already exist).
 - [ ] Critters, birds, fish and bugs that live on the islands and in the garden.
