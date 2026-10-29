@@ -37,6 +37,13 @@ Open it: https://joudrie.github.io/museum/wakefield.html (its own page, `wakefie
   crosses (a bridge). Drag to walk, or WASD/arrows. It remembers where you were.
 - The **Aa** button toggles names (on by default, remembered). The **map** button cycles the real map off / half / full: it
   loads OpenStreetMap's own zoom-19 pictures around you (credit shown) and places each by its coordinates.
+- **Names (Aa):** street names along the roads, plus **374 place names** (shops, restaurants, banks, schools, churches, parks, cemeteries,
+  lakes...) from every named thing in OpenStreetMap inside the town (406; 32 dropped where they would cover another label). Laid out
+  by the generator (`poi_labels`: big landmarks first, then civic places, then shops; nothing overlaps; street names win). Colours: white
+  shops, green parks, blue water, gold civic. Names are drawn on a layer above any picture laid over the town.
+- **Map button:** a panel with **Map** (OpenStreetMap) and **Satellite** (Esri World Imagery, zoom 19, about 0.2 m a pixel; credit
+  shown) and a strength slider. The choice and strength are remembered. The satellite view is there so the user can place trees from it.
+  Imagery is a photo, so tall buildings can lean a few metres off the building outlines.
 - **Accuracy (measured, not assumed):** the building shapes laid over the real map's own pictures at the centre and all four far
   edges of town: 85-91% overlap, best-fit offset at most 0.2 m (one real-map pixel) everywhere, so no drift or scale error.
 - Import only the engine (`../tiles.js` art, `../art.js` character). **Do not import `decor.js` or other museum UI modules**: they

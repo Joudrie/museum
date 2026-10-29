@@ -17,6 +17,13 @@ const VIEW_TILES = 9; // tiles across the screen
 const SAND = '#e2c68a';
 const BRICK_EDGE = '#6e2f25';
 const TILE_Z = 19; // the real map's zoom: its biggest, about 0.2 m a pixel
+const POI_SIZE = { 1: 15, 2: 20, 3: 26 }; // named places: shops 15, schools and churches 20, lakes and parks 26
+const POI_COLOR = ['#ffffff', '#d6ffbd', '#cfe9ff', '#ffe9a8']; // shop, park, water, civic
+// the pictures that can lie over the town, each placed by its own coordinates
+const LAYERS = {
+  street: { url: (z, i, j) => `https://tile.openstreetmap.org/${z}/${i}/${j}.png`, credit: '© OpenStreetMap contributors' },
+  sat: { url: (z, i, j) => `https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${z}/${j}/${i}`, credit: 'Imagery © Esri, Maxar, Earthstar Geographics' },
+};
 const POS = 'wakefield.pos';
 const DEFAULT_CHARACTER = { h: '#4a2e20', s: '#f2c6a0', c: '#7a2e3a', p: '#2f2b3d', b: '#1a1418', w: '#efe6d4', g: '#c9a23f', hair: 'short', outfit: 'suit' };
 
@@ -310,6 +317,12 @@ export class WakefieldScene extends Phaser.Scene {
     ctx.lineJoin = 'miter';
     ctx.stroke();
     if (cls === 'edge') ctx.restore();
+  }
+
+  // street and place names, on a layer of their own above any picture laid over the town
+  paintLabels(ctx, cx, cy) {
+    const b = this.world.bucket(cx, cy);
+    ctx.translate(1 - cx * S, 1 - cy * S);
     if (this.showNames && b.labels.length) {
       ctx.font = `bold ${FONT}px sans-serif`;
       ctx.textAlign = 'center';
@@ -327,6 +340,19 @@ export class WakefieldScene extends Phaser.Scene {
         ctx.restore();
       });
     }
+    if (this.showNames && b.pois.length) {
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.lineJoin = 'round';
+      ctx.lineWidth = 4;
+      b.pois.forEach(([text, x, y, tier, kind]) => {
+        ctx.font = `bold ${POI_SIZE[tier]}px sans-serif`;
+        ctx.strokeStyle = 'rgba(30, 20, 10, 0.92)';
+        ctx.strokeText(text, x, y);
+        ctx.fillStyle = POI_COLOR[kind];
+        ctx.fillText(text, x, y);
+      });
+    }
   }
 
   buildChunk(cx, cy) {
@@ -341,7 +367,15 @@ export class WakefieldScene extends Phaser.Scene {
       return key;
     });
     const img = this.add.image(cx * S - 1, cy * S - 1, keys[0]).setOrigin(0).setDepth(0);
-    const entry = { img, keys, cx, cy };
+    const entry = { img, keys, cx, cy, lab: null };
+    if (this.showNames && (b.labels.length || b.pois.length)) {
+      const key = `wl_${cx}_${cy}`;
+      if (this.textures.exists(key)) this.textures.remove(key);
+      const tex = this.textures.createCanvas(key, S + 2, S + 2);
+      this.paintLabels(tex.getContext(), cx, cy);
+      tex.refresh();
+      entry.lab = { key, img: this.add.image(cx * S - 1, cy * S - 1, key).setOrigin(0).setDepth(0.6) }; // over the ground and any picture, under you
+    }
     if (keys.length > 1) this.groundAnim.add(entry);
     this.chunks.set(`${cx},${cy}`, entry);
   }
@@ -349,6 +383,10 @@ export class WakefieldScene extends Phaser.Scene {
   dropChunk(e) {
     this.groundAnim.delete(e);
     e.img.destroy();
+    if (e.lab) {
+      e.lab.img.destroy();
+      this.textures.remove(e.lab.key);
+    }
     e.keys.forEach((k) => this.textures.remove(k));
     this.chunks.delete(`${e.cx},${e.cy}`);
   }
@@ -372,39 +410,71 @@ export class WakefieldScene extends Phaser.Scene {
   }
 
   // ---------- buttons ----------
-  // Aa: street names on and off. The map: the real map (as a GPS shows it) laid over the town, so you can
-  // judge how well the shapes sit on it.
+  // Aa: street and place names on and off. Map: a picture lying over the town, to judge how well the shapes
+  // sit on it. It is the real map (as a GPS shows it) or the satellite view, at any strength.
   setupButtons() {
     this.showNames = pref.get('names', true);
-    this.mapLevel = 0;
     this.tileImgs = new Map();
+    this.mapOn = false;
+    this.layer = localStorage.getItem('wakefield.layer') === 'sat' ? 'sat' : 'street';
+    this.alpha = Number(localStorage.getItem('wakefield.alpha')) || 0.7;
     const names = $('names-btn');
     names.classList.toggle('on', this.showNames);
     names.onclick = () => {
       this.showNames = !this.showNames;
       pref.set('names', this.showNames);
       names.classList.toggle('on', this.showNames);
-      this.toast(this.showNames ? 'Street names on' : 'Street names off');
+      this.toast(this.showNames ? 'Names on' : 'Names off');
       [...this.chunks.values()].forEach((e) => this.dropChunk(e)); // paint the ground again
       this.chunkRange = '';
       this.streamChunks();
     };
-    const levels = [0, 0.5, 1];
-    this.levels = levels;
+    const panel = $('map-panel');
+    const refresh = () => {
+      $('map-btn').classList.toggle('on', this.mapOn);
+      panel.hidden = !this.mapOn;
+      $('osm-credit').hidden = !this.mapOn;
+      $('osm-credit').textContent = LAYERS[this.layer].credit;
+      panel.querySelectorAll('[data-layer]').forEach((b) => b.classList.toggle('on', b.dataset.layer === this.layer));
+      $('map-alpha').value = Math.round(this.alpha * 100);
+      this.tileImgs.forEach((t) => t.img?.setVisible(this.mapOn).setAlpha(this.alpha));
+    };
     $('map-btn').onclick = () => {
-      this.mapLevel = (this.mapLevel + 1) % levels.length;
-      $('map-btn').classList.toggle('on', this.mapLevel > 0);
-      $('osm-credit').hidden = !this.mapLevel;
-      this.tileImgs.forEach((t) => t.img?.setVisible(this.mapLevel > 0).setAlpha(levels[this.mapLevel]));
-      this.toast(['Real map hidden', 'Real map over the town · half', 'Real map over the town · full'][this.mapLevel]);
+      this.mapOn = !this.mapOn;
+      refresh();
       this.streamTiles();
     };
+    panel.querySelectorAll('[data-layer]').forEach((b) => {
+      b.onclick = () => {
+        if (this.layer === b.dataset.layer) return;
+        this.layer = b.dataset.layer;
+        try {
+          localStorage.setItem('wakefield.layer', this.layer);
+        } catch {
+          // fine
+        }
+        [...this.tileImgs.values()].forEach((t) => this.dropTile(t)); // the other kind of picture
+        refresh();
+        this.streamTiles();
+      };
+    });
+    $('map-alpha').oninput = (e) => {
+      this.alpha = Number(e.target.value) / 100;
+      try {
+        localStorage.setItem('wakefield.alpha', String(this.alpha));
+      } catch {
+        // fine
+      }
+      this.tileImgs.forEach((t) => t.img?.setAlpha(this.alpha));
+    };
+    refresh();
   }
 
-  // the real map's pictures (OpenStreetMap, zoom 19) around you, each placed by its own coordinates
+  // the pictures (zoom 19) around you, each placed by its own coordinates
   streamTiles() {
-    if (!this.mapLevel) return;
+    if (!this.mapOn) return;
     const w = this.world;
+    const layer = this.layer;
     const n = 2 ** TILE_Z;
     const tx = (lon) => ((lon + 180) / 360) * n;
     const ty = (lat) => ((1 - Math.asinh(Math.tan((lat * Math.PI) / 180)) / Math.PI) / 2) * n;
@@ -418,7 +488,7 @@ export class WakefieldScene extends Phaser.Scene {
     const [y0, y1] = [Math.floor(ty(w.latOf(y - hh))), Math.floor(ty(w.latOf(y + hh)))];
     for (let j = y0; j <= y1; j++)
       for (let i = x0; i <= x1; i++) {
-        const key = `${i},${j}`;
+        const key = `${layer}:${i},${j}`;
         if (this.tileImgs.has(key)) continue;
         const t = { key, i, j, img: null };
         this.tileImgs.set(key, t);
@@ -426,7 +496,7 @@ export class WakefieldScene extends Phaser.Scene {
         pic.crossOrigin = 'anonymous';
         pic.onload = () => {
           if (this.tileImgs.get(key) !== t || !this.sys.isActive()) return;
-          const tk = `osm_${i}_${j}`;
+          const tk = `pic_${layer}_${i}_${j}`;
           if (!this.textures.exists(tk)) this.textures.addImage(tk, pic);
           this.textures.get(tk).setFilter(Phaser.Textures.FilterMode.LINEAR); // a picture, not pixel art
           const [ax, ay] = [w.xOf(lon(i)), w.yOf(lat(j))];
@@ -436,10 +506,10 @@ export class WakefieldScene extends Phaser.Scene {
             .setOrigin(0)
             .setDisplaySize(w.xOf(lon(i + 1)) - ax + 0.7, w.yOf(lat(j + 1)) - ay + 0.7) // a little over, so no seam shows between pictures
             .setDepth(0.45) // over the ground, under you
-            .setAlpha(this.levels[this.mapLevel])
-            .setVisible(this.mapLevel > 0);
+            .setAlpha(this.alpha)
+            .setVisible(this.mapOn);
         };
-        pic.src = `https://tile.openstreetmap.org/${TILE_Z}/${i}/${j}.png`;
+        pic.src = LAYERS[layer].url(TILE_Z, i, j);
       }
     [...this.tileImgs.values()].forEach((t) => (t.i < x0 - 2 || t.i > x1 + 2 || t.j < y0 - 2 || t.j > y1 + 2) && this.dropTile(t));
   }

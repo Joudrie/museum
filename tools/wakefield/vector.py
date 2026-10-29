@@ -46,6 +46,32 @@ QUERIES = {
 }
 
 
+POIS = '(' + ''.join(f'nwr["name"]["{k}"];' for k in ('shop', 'amenity', 'office', 'leisure', 'tourism', 'historic', 'craft', 'healthcare', 'building', 'natural', 'landuse', 'place', 'man_made', 'club', 'sport', 'emergency')) + 'nwr["name"]["railway"="station"];);out center tags;'
+
+# what is not worth a label
+SKIP_AMENITY = {'bench', 'waste_basket', 'vending_machine', 'post_box', 'bicycle_parking', 'parking_space', 'parking_entrance', 'recycling', 'atm', 'shelter', 'bicycle_repair_station', 'charging_station', 'clock', 'drinking_water', 'grit_bin', 'toilets'}
+SKIP_PLACE = {'town', 'city', 'county', 'state', 'country', 'region', 'municipality'}
+CIVIC = {'school', 'college', 'university', 'kindergarten', 'hospital', 'clinic', 'townhall', 'library', 'fire_station', 'police', 'courthouse', 'community_centre', 'place_of_worship', 'theatre', 'cinema', 'post_office', 'arts_centre', 'museum', 'social_facility'}
+GREEN = {'park', 'garden', 'playground', 'pitch', 'golf_course', 'nature_reserve', 'recreation_ground', 'dog_park', 'common', 'track', 'cemetery', 'forest', 'wood', 'grass', 'meadow', 'farmland', 'wetland', 'scrub', 'village_green', 'orchard'}
+POI_SIZE = {1: 15, 2: 20, 3: 26}  # px, by how big a deal the place is
+
+
+def classify(t):
+    """(tier, kind): tier 3 big landmarks, 2 civic places, 1 everything else; kind 0 shop, 1 green, 2 water, 3 civic."""
+    a, l, n, lu = t.get('amenity'), t.get('leisure'), t.get('natural'), t.get('landuse')
+    if n == 'water':
+        return 3, 2
+    if l in ('park', 'nature_reserve', 'golf_course', 'recreation_ground', 'common') or lu in ('cemetery', 'forest', 'recreation_ground') or t.get('historic') == 'cemetery' or t.get('place') in ('neighbourhood', 'suburb', 'quarter'):
+        return 3, 1
+    if l in ('stadium', 'sports_centre') or t.get('shop') == 'mall' or t.get('railway') == 'station' or t.get('historic'):
+        return 2, 3
+    if a in CIVIC:
+        return 2, 3
+    if l in GREEN or n in GREEN or lu in GREEN:
+        return 1, 1
+    return 1, 0
+
+
 def overpass(body, path):
     data = urllib.parse.urlencode({'data': body}).encode()
     req = urllib.request.Request(OVERPASS, data, {'User-Agent': 'museum-game/1.0'})
@@ -63,6 +89,8 @@ def fetch(d):
     # the big lakes (Quannapowitt, Crystal, Silver...) are relations: they only come back with their shapes
     # when asked for on their own, not inside the bounding-box query above
     overpass(f'[out:json][timeout:150];rel["natural"="water"]({bb});out geom;', f'{d}/waterrels.json')
+    # everything with a name: shops, restaurants, schools, parks, lakes...
+    overpass(f'[out:json][timeout:150][bbox:{bb}];{POIS}', f'{d}/pois.json')
 
 
 def load(d, name):
@@ -223,6 +251,70 @@ def labels_for(named):
     return out
 
 
+def poi_labels(d, street_labels, inside):
+    """[text, x, y, tier, kind, width] for every named place that fits without covering another label."""
+    fonts = {}
+
+    def width(text, tier):
+        if tier not in fonts:
+            try:
+                fonts[tier] = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', POI_SIZE[tier])
+            except OSError:
+                fonts[tier] = None
+        f = fonts[tier]
+        return round((f.getlength(text) if f else len(text) * POI_SIZE[tier] * 0.65) + 8)
+
+    cell = 64
+    grid = {}
+    placed = []
+
+    def free(x0, y0, x1, y1):
+        for gx in range(int(x0 // cell), int(x1 // cell) + 1):
+            for gy in range(int(y0 // cell), int(y1 // cell) + 1):
+                for bx0, by0, bx1, by1 in grid.get((gx, gy), ()):
+                    if x0 < bx1 and x1 > bx0 and y0 < by1 and y1 > by0:
+                        return False
+        return True
+
+    def take(x0, y0, x1, y1):
+        for gx in range(int(x0 // cell), int(x1 // cell) + 1):
+            for gy in range(int(y0 // cell), int(y1 // cell) + 1):
+                grid.setdefault((gx, gy), []).append((x0, y0, x1, y1))
+
+    for text, x, y, a, w in street_labels:  # the street names go first
+        ang = a / 1000
+        hx = abs(math.cos(ang)) * w / 2 + abs(math.sin(ang)) * (FONT + 8) / 2
+        hy = abs(math.sin(ang)) * w / 2 + abs(math.cos(ang)) * (FONT + 8) / 2
+        take(x - hx, y - hy, x + hx, y + hy)
+
+    things = []
+    for e in load(d, 'pois'):
+        t = e['tags']
+        name = t.get('name', '').strip()
+        c = e.get('center') or ({'lat': e['lat'], 'lon': e['lon']} if 'lat' in e else None)
+        if not name or not c or t.get('amenity') in SKIP_AMENITY or t.get('place') in SKIP_PLACE or t.get('natural') in ('peak', 'tree', 'spring'):
+            continue
+        x, y = px(c)
+        if not inside(x, y):
+            continue
+        tier, kind = classify(t)
+        things.append((-tier, name, x, y, tier, kind))
+    out, seen = [], set()
+    for _, name, x, y, tier, kind in sorted(things):
+        w, h = width(name, tier), POI_SIZE[tier] + 8
+        if (name, round(x / 160), round(y / 160)) in seen:  # the same place twice (a node and its building)
+            continue
+        for dx, dy in ((0, 0), (0, -h), (0, h), (0, -2 * h), (0, 2 * h)):
+            bx, by = x + dx, y + dy
+            if free(bx - w / 2, by - h / 2, bx + w / 2, by + h / 2):
+                take(bx - w / 2, by - h / 2, bx + w / 2, by + h / 2)
+                out.append([name, round(bx), round(by), tier, kind, w])
+                seen.add((name, round(x / 160), round(y / 160)))
+                break
+    print(f'{len(out)} of {len(things)} named places fit as labels')
+    return out
+
+
 def build(d):
     boundary = next(e for e in load(d, 'boundary') if e['type'] == 'relation')
     town_rings, _ = multipolygon(boundary)
@@ -290,6 +382,7 @@ def build(d):
     cx, cy = px({'lat': 42.5064840, 'lon': -71.0728306})
     spawn = min((q for p in named['Main Street'] for q in p), key=lambda q: (q[0] - cx) ** 2 + (q[1] - cy) ** 2)
 
+    street_labels = labels_for(named)
     data = {
         'format': 'curation-vector', 'version': 1, 'name': 'Wakefield, MA', 'ppm': PPM, 'w': W, 'h': H,
         'spawn': list(spawn),
@@ -300,7 +393,8 @@ def build(d):
         'roads': [{'w': w, 'p': delta(p)} for w, p in roads],
         'buildings': [delta(p) for p in buildings],
         'geo': {'lat0': lat0, 'lon0': lon0, 'lat1': lat1, 'lon1': lon1, 'cos': COS},
-        'labels': labels_for(named),
+        'labels': street_labels,
+        'pois': poi_labels(d, street_labels, lambda x, y: 0 <= x // TILE < gw and 0 <= y // TILE < gh and mask[y // TILE, x // TILE]),
         'credit': 'Map data (c) OpenStreetMap contributors, ODbL',
     }
     print(f'{W}x{H} px ({W // TILE}x{H // TILE} tiles, {W / PPM / 1000:.1f} x {H / PPM / 1000:.1f} km): {len(roads)} roads '

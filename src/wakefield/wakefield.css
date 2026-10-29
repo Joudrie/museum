@@ -117,3 +117,38 @@ body {
 #toast.hidden {
   opacity: 0;
 }
+
+#map-panel {
+  position: fixed;
+  left: calc(max(10px, env(safe-area-inset-left)) + 58px);
+  top: calc(max(12px, env(safe-area-inset-top)) + 58px);
+  z-index: 5;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  width: 190px;
+  padding: 8px;
+  border-radius: 10px;
+  background: rgba(20, 20, 20, 0.75);
+}
+#map-panel[hidden] {
+  display: none;
+}
+#map-panel .seg {
+  min-height: 36px;
+  padding: 0 6px;
+  font: 700 13px system-ui, sans-serif;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid transparent;
+  border-radius: 8px;
+}
+#map-panel .seg.on {
+  border-color: #e8c867;
+  background: rgba(232, 200, 103, 0.3);
+}
+#map-alpha {
+  grid-column: 1 / 3;
+  width: 100%;
+  accent-color: #e8c867;
+}
