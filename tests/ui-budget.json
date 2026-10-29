@@ -98,8 +98,8 @@
    "minFont": 13
   },
   "30-builder": {
-   "smallTargets": 2,
-   "minFont": 12.5
+   "smallTargets": 0,
+   "minFont": 13
   },
   "03-journal-overview": {
    "smallTargets": 0,
@@ -126,8 +126,20 @@
    "minFont": 13
   },
   "31-builder-menu": {
-   "smallTargets": 5,
-   "minFont": 12.5
+   "smallTargets": 0,
+   "minFont": 13
+  },
+  "11b-viewer-info": {
+   "smallTargets": 0,
+   "minFont": 13
+  },
+  "24-catch-card": {
+   "smallTargets": 0,
+   "minFont": 13
+  },
+  "25-celebrate": {
+   "smallTargets": 0,
+   "minFont": 13
   }
  }
 }

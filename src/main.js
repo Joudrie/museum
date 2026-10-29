@@ -47,6 +47,17 @@ if (new URLSearchParams(location.search).has('play')) {
   }
 }
 
+// The title card (in index.html) goes once the game is running.
+const boot = document.getElementById('boot');
+if (boot) {
+  const hide = () =>
+    requestAnimationFrame(() => {
+      boot.classList.add('gone');
+      setTimeout(() => boot.remove(), 400);
+    });
+  game.events.once('postrender', hide); // the first frame is drawn, so the scene's create() has run and the HUD has its numbers
+}
+
 window.__game = game; // handy for debugging in the console
 window.__makeCharacter = makeCharacter; // (and for sprite contact sheets in tests)
 

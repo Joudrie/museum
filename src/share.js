@@ -296,6 +296,7 @@ if (typeof document !== 'undefined') {
     name.type = 'text';
     name.maxLength = 30;
     name.placeholder = 'Museum name (optional)';
+    name.setAttribute('aria-label', 'Museum name');
     name.value = load(NAME_KEY, '');
     name.oninput = () => save(NAME_KEY, name.value);
     const link = mk('button', 'wide-btn', 'Copy visit link');
