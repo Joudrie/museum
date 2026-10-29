@@ -223,6 +223,10 @@ island scene streams ground chunks around the player.
 - `npm test` builds, starts the preview server (and a dev server for `dig`, which imports `/src/...` straight from the page), runs content, gaps, collections, smoke, builder, dig, puzzles, restore, display, expedition, halls, people, presets, share and chatter, and prints one line each. `ONLY=gaps,content`, `SKIP_BUILD=1`, `ALL=1` (adds playtest and perf), `RETRY=1`.
 - `.github/workflows/tests.yml` runs that on every pull request (Playwright 1.63 installed in CI only). A new test file goes in `FAST` in `tests/run-all.mjs`. Don't run two test runs at once: CPU load changes frame rate and has caused false failures.
 
+### Save safety and bundle budget (Chat 3, #175)
+- `tests/saves.cjs` writes junk into every `curation.*` key found in `src/` (bad JSON, wrong type, nested junk) and checks the game still opens. `load()` in `src/storage.js` keeps an unreadable save once under `curation.bak.<key>`. Reset museum needs two taps and keeps the old save in `curation.bak.reset`. A new store should use `load(key, fallback)` with a fallback of the right shape.
+- `tests/bundle.cjs` checks gzip sizes in `dist/` (phaser 360, main 230, all JS 760 KB). Raise a number on purpose, with a reason.
+
 ### Gotchas we hit
 - **Phaser reuses the previous scene data** if you call `scene.start('island')` with no data.
   Always pass data explicitly, e.g. `{ map: 'main' }`. Leaving the museum once dropped you on

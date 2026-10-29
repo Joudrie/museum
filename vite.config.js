@@ -38,6 +38,7 @@ export default defineConfig({
   base: './',
   plugins: [swapIndex()],
   build: {
+    chunkSizeWarningLimit: 1600, // Phaser alone is ~1.5 MB (330 KB gzip, its own cached chunk); tests/bundle.cjs holds the real budget
     rollupOptions: {
       input: { main: 'index.html', tiles: 'tiles.html', art: 'art.html', builder: 'builder.html', wakefield: 'wakefield.html' },
     },

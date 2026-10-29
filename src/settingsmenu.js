@@ -34,6 +34,30 @@ function button(label, onClick, cls = 'wide-btn') {
   return b;
 }
 
+// Two taps, so a stray touch can't wipe a museum; and the old save is kept first (curation.bak.reset).
+let armedAt = 0;
+function confirmReset(e) {
+  const btn = e.target;
+  if (Date.now() - armedAt > 4000) {
+    armedAt = Date.now();
+    btn.textContent = 'Tap again to reset everything';
+    setTimeout(() => btn.isConnected && (btn.textContent = 'Reset museum (rooms, gold, mess)'), 4000);
+    return;
+  }
+  armedAt = 0;
+  try {
+    const snap = {};
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k.startsWith('curation.') && !k.startsWith('curation.bak.')) snap[k] = localStorage.getItem(k);
+    }
+    localStorage.setItem('curation.bak.reset', JSON.stringify({ at: Date.now(), snap }));
+  } catch {
+    // storage full: reset anyway, the person asked twice
+  }
+  state.onReset();
+}
+
 function render() {
   const s = settings();
   const onOff = { on: 'On', off: 'Off' };
@@ -49,7 +73,7 @@ function render() {
     section('Testing', button('+1,000 gold', () => state.onAddCoins(1000)), button('Collect one of everything', (e) => {
         const n = state.onCollectAll();
         e.target.textContent = n ? `Added ${n} to your collection` : 'You already have one of everything';
-      }), button('Reset museum (rooms, gold, mess)', () => state.onReset(), 'wide-btn danger')),
+      }), button('Reset museum (rooms, gold, mess)', confirmReset, 'wide-btn danger')),
   );
   const note = document.createElement('p');
   note.className = 'toolkit-note';

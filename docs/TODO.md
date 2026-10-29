@@ -53,9 +53,9 @@ Owns: `tests/`, `.github/`, `vite.config.js`, `src/settings*.js`, `src/ui.js`. C
 - [x] **Stabilise the flaky tests** (playtest, smoke "cottage door"). Real causes: walking took one big step per slow frame and jumped over the strip in front of the door (now sub-steps of 3 px), and the ambient life probed `isPond` past the island edge and crashed (now bounds-checked). (#170)
 - [x] Phone performance: measure on huge islands, many NPCs and lighting; budgets in HANDOFF; `tests/perf.cjs`; off-screen culling and idle islanders far away (#173)
 - [x] Tests for dig, fossils, turn families and the content pipeline (`dig.cjs`, `builder.cjs`, `content.cjs`); CI runs every test on every PR (`.github/workflows/tests.yml`, `npm test`) (#174)
-- [ ] Save safety: versioned saves and corrupt-save recovery for every store (`curation.digs`, codex, builder).
-- [ ] Bundle size (the build warns about a large chunk): split by scene, lazy-load.
-- [ ] Accessibility and settings polish that doesn't change the look the user is about to set. Menu and collection-screen **redesign waits for the user's direction.**
+- [x] Save safety: `tests/saves.cjs` breaks every save key 7 ways and the game still opens (it already did); an unreadable save is kept under `curation.bak.<key>`; Reset museum takes two taps and keeps the old save (`curation.bak.reset`) (#175)
+- [x] Bundle size: Phaser is already its own cached chunk (332 KB gzip) and the builder and Wakefield are separate pages; the warning is silenced and `tests/bundle.cjs` holds gzip budgets (phaser 360, main 230, total 760 KB). Splitting scenes is not worth the risk across 14 chats' shared files (#175)
+- [x] Accessibility and settings polish (no look change): reduced-motion media query for the menus, two-tap Reset. Menu and collection-screen **redesign waits for the user's direction.** (#175)
 - [ ] A bug sweep with a repeatable full-flow test after each big merge.
 
 ## CHAT 4: Restoration and provenance (loop step 4)
