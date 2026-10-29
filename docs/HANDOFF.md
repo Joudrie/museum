@@ -194,6 +194,8 @@ See `docs/ASSET-HUNT.md` (the "super dig" prompt plus the to-do list) and `docs/
 7. Seasonal recolouring turns the user's cherry trees orange in autumn. This is expected, but
    be ready to exempt cherry trees if they ask.
 
+### Chat 11 (atmosphere, seasons, audio)
+- Seasons already existed (`src/weather.js`, `seasonFrames` in `src/scenery.js`). Cherry trees now stay pink in autumn: no recolour and no swap to the maple tile.
 ### Chat 9: rooms
 - Two new shaped plans in `src/shaped.js`: `lhall` (L-shaped hall) and `corner` (its mirror). They join the end of the shaped row, so old saves get them via `withShaped` and built rooms move back two places. `tests/gaps.cjs` and `tests/smoke.cjs` now count 7 shaped rooms (3 to 9) and built rooms start at index 10.
 
