@@ -6,6 +6,8 @@
   python3 tools/wakefield/vector.py DIR --pavement  the same, plus real street edges, parking lots and sidewalks
                                                     along Main Street (needs opencv-python-headless scipy shapely, and
                                                     downloads satellite photos into DIR/sat; see pavement.py)
+  python3 tools/wakefield/vector.py DIR --markings  the same, plus the painted yellow and white lines on the streets
+                                                    and the crosswalks (see markings.py); can be combined with --pavement
 
 The game draws this file (src/wakefield/WakefieldScene.js): the town line, lakes and rivers, every road
 as a line of its own width, the railway, and every building as a polygon. Nothing snaps to a grid,
@@ -95,7 +97,7 @@ def fetch(d):
     overpass(f'[out:json][timeout:150];rel["natural"="water"]({bb});out geom;', f'{d}/waterrels.json')
     # everything with a name: shops, restaurants, schools, parks, lakes...
     overpass(f'[out:json][timeout:150][bbox:{bb}];{POIS}', f'{d}/pois.json')
-    overpass(f'[out:json][timeout:150][bbox:{bb}];(way["amenity"="parking"];way["highway"="footway"]["footway"="sidewalk"];);out geom tags;', f'{d}/pavement.json')
+    overpass(f'[out:json][timeout:150][bbox:{bb}];(way["amenity"="parking"];way["highway"="footway"]["footway"="sidewalk"];way["highway"="footway"]["footway"="crossing"];);out geom tags;', f'{d}/pavement.json')
 
 
 def load(d, name):
@@ -386,7 +388,7 @@ def poly_data(g):
     return {'o': ring(g.exterior), 'i': [ring(h) for h in g.interiors if len(h.coords) >= 4]}
 
 
-def build(d, pavement=False):
+def build(d, pavement=False, markings=False):
     boundary = next(e for e in load(d, 'boundary') if e['type'] == 'relation')
     town_rings, _ = multipolygon(boundary)
     town_rings = [simplify(r, 2) for r in town_rings]
@@ -470,6 +472,7 @@ def build(d, pavement=False):
 
     street_labels = labels_for(named)
     pave = None
+    footprint_extra = []
     if pavement:
         import pavement as pv
         proj = pv.Proj({'lat0': lat0, 'lon0': lon0, 'lat1': lat1, 'lon1': lon1, 'cos': COS}, PPM)
@@ -479,8 +482,44 @@ def build(d, pavement=False):
             parking_world=[pts(e['geometry']) for e in osm if e['tags'].get('amenity') == 'parking' and len(e['geometry']) >= 4],
             walks_world=[pts(e['geometry']) for e in osm if e['tags'].get('footway') == 'sidewalk' and len(e['geometry']) >= 2],
         )
+        footprint_extra = [g for _, _, g in res['streets']] + list(res['lots'])
         pave = {'streets': [poly_data(g) for _, _, g in res['streets']], 'lots': [poly_data(g) for g in res['lots']], 'walks': [poly_data(g) for g in res['walks']]}
         print(f'  pavement: {len(pave["streets"])} street polygons, {len(pave["lots"])} parking lots, {len(pave["walks"])} sidewalk strips')
+    marks = None
+    if markings:
+        import markings as mk
+        from shapely.geometry import LineString as LS, Point as Pt
+        from shapely.ops import unary_union
+        from shapely.prepared import prep
+        proj_m = __import__('pavement').Proj({'lat0': lat0, 'lon0': lon0, 'lat1': lat1, 'lon1': lon1, 'cos': COS}, PPM)
+        osm = load(d, 'pavement')
+        classes = ('motorway', 'trunk', 'primary', 'secondary', 'tertiary', 'unclassified', 'residential', 'living_street')
+        painted = [(wid, p, t) for wid, name, t, p in raw if t['highway'].replace('_link', '') in classes and inside_town(*p[len(p) // 2])]
+        found = mk.analyze(painted, proj_m, f'{d}/sat', crossings=[pts(e['geometry']) for e in osm if e['tags'].get('footway') == 'crossing' and len(e['geometry']) >= 2])
+        # paint only counts where the game draws stone: a street shape, a lot, or a road's own width
+        shapes = [LS(p).buffer(w / 2 + 4) for w, p in roads] + footprint_extra
+        stone = prep(unary_union(shapes))
+
+        def on_stone(line):
+            a = np.array(line, float)
+            n = max(2, int(length(line) / 8))
+            xs, ys = np.interp(np.linspace(0, len(a) - 1, n), np.arange(len(a)), a[:, 0]), np.interp(np.linspace(0, len(a) - 1, n), np.arange(len(a)), a[:, 1])
+            return sum(stone.contains(Pt(x, y)) for x, y in zip(xs, ys)) >= 0.85 * n
+
+        def enc(lines):
+            out = []
+            for l in lines:
+                q = []
+                for x, y in l:
+                    pt = (round(x), round(y))
+                    if not q or q[-1] != pt:
+                        q.append(pt)
+                if len(q) >= 2 and on_stone(q):
+                    out.append(delta(q))
+            return out
+
+        marks = {'y': enc(found['yellow']), 'w': enc(found['white'])}
+        print(f'  paint kept on the stone: {len(marks["y"])} yellow, {len(marks["w"])} white')
     data = {
         'format': 'curation-vector', 'version': 1, 'name': 'Wakefield, MA', 'ppm': PPM, 'w': W, 'h': H,
         'spawn': list(spawn),
@@ -492,6 +531,7 @@ def build(d, pavement=False):
         'buildings': [delta(p) for p in buildings],
         'geo': {'lat0': lat0, 'lon0': lon0, 'lat1': lat1, 'lon1': lon1, 'cos': COS},
         'labels': street_labels,
+        **({'marks': marks} if marks else {}),
         **({'pave': pave} if pave else {}),
         'pois': poi_labels(d, street_labels, lambda x, y: 0 <= x // TILE < gw and 0 <= y // TILE < gh and mask[y // TILE, x // TILE]),
         'credit': 'Map data (c) OpenStreetMap contributors, ODbL',
@@ -504,10 +544,10 @@ def build(d, pavement=False):
 if __name__ == '__main__':
     if len(sys.argv) == 3 and sys.argv[1] == '--fetch':
         fetch(sys.argv[2])
-    elif len(sys.argv) in (2, 3):
+    elif len(sys.argv) in (2, 3, 4):
         os.makedirs('public/wakefield', exist_ok=True)
         out = 'public/wakefield/wakefield.vec.json'
-        json.dump(build(sys.argv[1], pavement='--pavement' in sys.argv), open(out, 'w'), separators=(',', ':'))
+        json.dump(build(sys.argv[1], pavement='--pavement' in sys.argv, markings='--markings' in sys.argv), open(out, 'w'), separators=(',', ':'))
         print('wrote', out, os.path.getsize(out) // 1024, 'KB')
     else:
         sys.exit(__doc__)

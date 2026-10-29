@@ -48,6 +48,15 @@ Open it: https://joudrie.github.io/museum/wakefield.html (its own page, `wakefie
   3. **Left over pavement:** wide (opens under a 4.7 m disc) = parking lot or driveway; thin and within 3.6 m of a street = sidewalk.
      Mapped OSM parking lots near the streets are added. Cars, being bridged over, are simply parking.
   The rest of the town keeps fixed-width stroked roads (2 tiles, main roads 2.5), also grey stone.
+- **Painted lines** (`tools/wakefield/markings.py`, `vector.py --markings`, needs opencv-python-headless and scipy): the user wanted yellow and
+  white lines so a road reads as a road, not a lumpy paved blob (a street with parking beside it looks like a splash otherwise). Creative
+  liberty on exact spacing, but a line goes where the real one is, in its real colour, dashed if it is dashed. Found in the satellite photos:
+  every metre along each road the photo is sampled across it (as wide as the road's lane/width tags say, plus 1.5 m); paint is a thin bright
+  ridge (brightness minus its local median across the road); a ridge that holds one distance from the centre for 30 m is a line; yellow if it has
+  more red-over-blue than the pavement beside it; solid if over 80% of it is painted, otherwise drawn as the dashes the photo shows; a solid
+  yellow line down the middle of a two-way road is drawn double. Only on pavement (low saturation) and only where the game draws stone.
+  Crosswalks come from OSM's mapped crossings, drawn as white bars. Drawn 5 world px wide, white `#f3f3ec`, yellow `#f2c12e`, over the stone
+  and under buildings. The slow reading is cached (`paint.pkl`).
 - Walking uses the exact shapes: roads, grass and buildings are walkable; the sea and water block you, except where a road
   crosses (a bridge). Drag to walk, or WASD/arrows. It remembers where you were.
 - The **Aa** button toggles names (on by default, remembered). The **map** button cycles the real map off / half / full: it

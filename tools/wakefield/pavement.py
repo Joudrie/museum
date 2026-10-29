@@ -73,6 +73,7 @@ class Photos:
         self.folder = folder
         os.makedirs(folder, exist_ok=True)
         self.mem = {}
+        self.limit = None  # keep at most this many photos in memory
 
     def path(self, i, j):
         return f'{self.folder}/{i}_{j}.jpg'
@@ -99,6 +100,8 @@ class Photos:
             f = self.path(i, j)
             img = cv2.imread(f) if os.path.exists(f) else None
             self.mem[(i, j)] = None if img is None else cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+            if self.limit and len(self.mem) > self.limit:
+                self.mem.pop(next(iter(self.mem)))
         return self.mem[(i, j)]
 
 
