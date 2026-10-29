@@ -51,6 +51,9 @@ import { PERSONALITIES, lineFor, QUIPS, CONTEXT } from './lines.js';
 import { iconSvg } from './icons.js';
 import { bakeFountain, bakeSideStairs, FOUNTAIN } from './atrium.js';
 import { openViewer } from './viewer.js';
+import { isFixture, newId, clear as clearDisplay } from './display.js';
+import { showDisplays } from './displayart.js';
+import { openDisplay } from './displaymenu.js';
 import { openDecor, closeDecor, load, save, DEFAULT_CHARACTER } from './decor.js';
 import { openBuild } from './build.js';
 import { showTalk, hideTalk, talking } from './talk.js';
@@ -350,6 +353,7 @@ export class RoomScene extends Phaser.Scene {
     this.items = [];
     this.fitItems();
     this.itemSprites = [];
+    this.displayObjs = [];
     this.placeItems();
     this.overlay = this.add.graphics().setDepth(6000);
     this.mode = null; // toolkit: null | 'browse' | 'place' | 'edit'
@@ -1790,6 +1794,13 @@ export class RoomScene extends Phaser.Scene {
     if (this.boardFront) consider(Math.hypot(x - this.boardFront.x, y - this.boardFront.y) - 6, { board: true, icon: 'look' });
     if (this.isBreak) consider(Math.hypot(x - this.L.entrance.ax, y - this.L.entrance.ay), { entrance: true, icon: 'back' });
     if (this.deskFront) consider(Math.hypot(x - this.deskFront.x, y - this.deskFront.y) - 6, { office: true, icon: 'office' });
+    this.items.forEach((it) => {
+      if (!isFixture(it)) return;
+      const { w, h } = footprint(it);
+      const fx = this.g.xL + (it.c + w / 2) * T;
+      const fy = this.g.y0 + (it.r + h) * T + 8; // just in front
+      consider(Math.hypot(x - fx, y - fy) - (w * T) / 3, { fixture: it, icon: 'look' });
+    });
     for (const n of this.npcs) consider(Math.hypot(x - n.s.x, y - n.s.y) - 2, { npc: n, icon: 'talk' });
     if (this.pet) consider(Math.hypot(x - this.pet.s.x, y - this.pet.s.y) + 4, { pet: true, icon: 'talk' });
     const { exit, entrance } = this.L;
@@ -1807,6 +1818,7 @@ export class RoomScene extends Phaser.Scene {
     if (!f || !this.input.enabled) return;
     if (f.painting) this.view(f.painting);
     else if (f.slot) this.editSlot(f.slot);
+    else if (f.fixture) this.openFixture(f.fixture);
     else if (f.mess) this.clean(f.mess);
     else if (f.office) this.openOfficePanel();
     else if (f.board) this.openStaff();
@@ -1827,6 +1839,22 @@ export class RoomScene extends Phaser.Scene {
       else this.openBuildMenu();
     }
     this.focus = null;
+  }
+
+  // Open the display panel for a case, plinth, shelf, easel or tank.
+  openFixture(item) {
+    this.pause(true);
+    openDisplay({
+      item,
+      def: ITEMS[item.type],
+      toast: (t) => this.toast(t),
+      before: () => this.settleAll(),
+      onChange: () => {
+        this.placeDisplays();
+        this.updateHud();
+      },
+      onClose: () => this.pause(false),
+    });
   }
 
   // The main hall starts locked behind the entrance's double doors, and the
@@ -1904,6 +1932,10 @@ export class RoomScene extends Phaser.Scene {
     const saved = loadItems(this.roomIndex);
     let changed = false;
     saved.forEach((it) => {
+      if (isFixture(it) && !it.d) {
+        it.d = newId(); // (a fixture placed before displays existed)
+        changed = true;
+      }
       if (this.canPlace(it)) return this.items.push(it);
       // Find the nearest free spot; only drop the item if the room has none.
       const { w, h } = footprint(it);
@@ -2318,7 +2350,17 @@ export class RoomScene extends Phaser.Scene {
       const sp = this.add.image(x + (w * T) / 2, y, key).setOrigin(0.5, 1).setDepth(flat ? 0.55 : y - 1);
       return sp;
     });
+    this.placeDisplays();
     this.lighting?.build();
+  }
+
+  // What is on each case, plinth, shelf, easel and tank, drawn over its sprite.
+  placeDisplays() {
+    this.displayObjs?.forEach((o) => {
+      this.tweens.killTweensOf(o);
+      o.destroy();
+    });
+    this.displayObjs = showDisplays(this, this.items, this.g);
   }
 
   enterBuild() {
@@ -2437,7 +2479,7 @@ export class RoomScene extends Phaser.Scene {
       this.settleAll();
       bump('placed');
     }
-    this.items.push({ type, c, r, rot });
+    this.items.push({ type, c, r, rot, ...(isFixture({ type }) && { d: orig?.d || newId() }) });
     sfx('place');
     saveItems(this.roomIndex, this.items);
     this.placeItems();
@@ -2474,6 +2516,7 @@ export class RoomScene extends Phaser.Scene {
         label: `Sell +${sellPrice(hit.type)}`,
         onClick: () => {
           this.settleAll();
+          if (hit.d) clearDisplay(hit.d);
           addCoins(sellPrice(hit.type));
           sfx('sell');
           this.toast(`Sold for ${sellPrice(hit.type)} gold`);

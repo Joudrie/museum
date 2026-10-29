@@ -5,6 +5,7 @@ import { paintingsFor } from './rooms.js';
 import { ITEMS, loadItems } from './items.js';
 import { dirtCount, DIRT_PENALTY, guides, GUIDE_BOOST } from './staff.js';
 import { museumRating } from './rating.js';
+import { displayIncome } from './display.js';
 import { famousBoost } from './famous.js';
 import { loveBoost } from './love.js';
 
@@ -67,6 +68,7 @@ function decorRate(rooms, i) {
   const items = loadItems(i);
   let gold = 0;
   items.forEach((it) => (gold += ITEMS[it.type]?.income || 0));
+  gold += displayIncome(i); // pieces on display earn too
   if (items.some((it) => it.type === 'counter')) gold += coffeeIncome(rooms);
   return gold * roomMult(rooms, i);
 }
