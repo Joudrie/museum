@@ -51,7 +51,7 @@ Owns: `src/builder/`, `builder.html`, `public/builder/`, `tools/build_palette.py
 ## CHAT 3: Quality, performance and polish
 Owns: `tests/`, `.github/`, `vite.config.js`, `src/settings*.js`, `src/ui.js`. Claim: `claimed: 2026-10-29`
 - [x] **Stabilise the flaky tests** (playtest, smoke "cottage door"). Real causes: walking took one big step per slow frame and jumped over the strip in front of the door (now sub-steps of 3 px), and the ambient life probed `isPond` past the island edge and crashed (now bounds-checked). (#170)
-- [x] Phone performance: measure on huge islands, many NPCs and lighting; budgets in HANDOFF; `tests/perf.cjs`; off-screen culling and idle islanders far away (#171)
+- [x] Phone performance: measure on huge islands, many NPCs and lighting; budgets in HANDOFF; `tests/perf.cjs`; off-screen culling and idle islanders far away (#173)
 - [ ] Tests for dig, fossils, turn families and the content pipeline; CI that runs content, collections and gaps on every PR.
 - [ ] Save safety: versioned saves and corrupt-save recovery for every store (`curation.digs`, codex, builder).
 - [ ] Bundle size (the build warns about a large chunk): split by scene, lazy-load.
@@ -82,12 +82,12 @@ Owns: `src/showcase.js`, `src/viewer.js`, `src/collections/render.js`, new `src/
 ## CHAT 6: Digging v2 and puzzle mechanics
 Owns: `src/dig.js`, `src/puzzles*.js`, `src/collections/data/{minerals,fossils}.js`. Claim: `claimed: 2026-10-29`
 - [x] More finds as data collections: pottery shards, coins, arrowheads, shells, meteorites (amber was already a fossil) (PR 122). Dig kinds: mineral, fossil, ruin, shore, crater.
-- [x] Dig tools (brush, trowel, pick) that change speed and what turns up; a bone that needs several spots to complete (PR 123).
-- [x] Bigger dig sites: a cliff face or trench worked across several tiles (touching spots of one kind form a site; dig them all in one rest period for a bonus rare find) (PR 123). A dig-site sandbox map is still to do (see Needs Sean).
-- [ ] Metal-detector hunt (warmer / colder); map fragments (collect 4 and the X appears).
-- [x] Puzzle pieces as builder tiles and runtime: push blocks, boulders to smash, pressure plates and levers, iron gates, ice sliding, fog that clears as you walk, riddles from NPCs, mazes (hedges; build them in the builder) (PR 150). `src/puzzles.js`; the test bed is `content/maps/puzzle-yard.json`.
+- [x] Dig tools (brush, trowel, pick) that change speed and what turns up; a bone that needs several spots to complete (PR 145).
+- [x] Bigger dig sites: a cliff face or trench worked across several tiles (touching spots of one kind form a site; dig them all in one rest period for a bonus rare find) (PR 145). A dig-site sandbox map is still to do (see Needs Sean).
+- [x] Metal-detector hunt (warmer / colder); map fragments (collect 4 and the X appears) (PR 169).
+- [x] Puzzle pieces as builder tiles and runtime: push blocks, boulders to smash, pressure plates and levers, iron gates, ice sliding, fog that clears as you walk, riddles from NPCs, mazes (hedges; build them in the builder) (PR 157). `src/puzzles.js`; the test bed is `content/maps/puzzle-yard.json`.
 - [ ] Dig spots in the builder palette under "Dig sites" (done, PR 106); spots show their rest time; daily dig goals.
-- [ ] Finds arrive dirty where Chat 4 expects them (`dirty: true` on a stack).
+- [x] Finds arrive dirty where Chat 4 expects them (`dirty: true` on the entry; pottery, coins, stone tools, meteorites, skeletons) (PR 122).
 
 ## CHAT 7: Expeditions, leads and expedition islands
 Owns: new `src/expedition*.js`, `src/leads.js`, `src/maps/` (new islands). Claim: `claimed: 2026-10-29`
@@ -128,6 +128,7 @@ Owns: `src/famous.js`, `src/lines.js`, `src/quests.js`, `src/talk.js`, `src/staf
 - [~] **Memories done (#this PR: `src/regulars.js`, visitors you chat with 3 times become regulars with their own lines).** Left: goals, relationships, more lines per personality. Visitors with memories, goals and relationships; regulars that grow into characters; personalities (nerd, casual, superfan, snob, kid, grump, tourist) with more lines.
 - [~] Famous visitors with quest chains and period-accurate dialogue; they send you places (feeds Chat 7). Odds rise with their works in your codex; permanent boosts. **Done: chains for Vermeer, Rembrandt, Hokusai (3 sourced steps each, last step offers a lead).** Left: the other 17 visitors, odds by codex.
 - [x] A **Gardner-style heist mystery** as the first full story arc. "The Empty Frames", told by Edmund in 5 chapters, every line quoted from the Gardner Museum's own theft page (this PR).
+- [x] **Guest conversation overhaul** (done in the main chat, not chat 10): real conversations with ordinary visitors, painting info, jokes, tips, requests, daily gifts. See `docs/HANDOFF.md` → Guest conversations. Chat 10: build on `src/chatter.js` and `chatter_lines.js` (add topics and lines), don't rebuild it.
 - [ ] Semi-mythological famous visitors (the user said later).
 - [ ] The caretaker (name and look), the tutorial and first session; day 2 and day 3 beats; daily guests.
 - [ ] Daily and weekly quests, goal pacing (the 19 goals and rewards; daily goals?).
@@ -183,6 +184,9 @@ Owns: `assets/vendor/`, `docs/ASSETS.md`, `tools/extract_sprites.py`, `tools/` s
 Mini-games (Mop Rush, No Flash!, Restoration-as-minigame, Crate Tetris, Hang it Straight, Tour Guide, Night Watch, Catch the Thief, Paparazzi) · gems, ads, cosmetics, exhibition pass, crates · multiplayer / auctions · a sequel where the museum is part of a city · menu redesign · art direction and hiring.
 
 ## Needs Sean (parked questions; chats keep working)
+- **Chat 6:** defaults I picked, all in `src/dig.js` / `src/puzzles-hunt.js` for easy change: trowel unlocks at 6 different dug finds, pick at 16, metal detector at 10; digs rest 10 min; daily dig goal is 3 digs for 120 gold; 3 things buried per island per day; a site bonus needs 3+ touching dig tiles.
+- **Chat 6:** the one `x_mark` tile on Main Island (and one on Island One) is now the map-fragment treasure and stays hidden until you hold four map pieces. Do you want it to stay, move, or should I use a different tile?
+- **Chat 6:** the Puzzle yard test island (`content/maps/puzzle-yard.json`) is not in the boat yet; it needs the builder's import (Chat 2) or a boat entry (Chat 7). Dig-site sandbox: same file.
 - **Chat 12:** what is "your own artwork" for the late-game frame sink: a drawing the player makes in the game, a photo they upload, or a painting they restore? Until you say, it is not built.
 - **Chat 12:** the Library/archive (where the stored collection lives) and a live lecture-hall talk event are not built; the stage only pays per famous visitor met.
 - **Review tonight:** the 82 painting drafts (27 earlier + 55 from batches 3 to 5; rarity for each) and which of the 11 flagged images to replace (`content/image-proposals.md`).
