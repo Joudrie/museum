@@ -60,3 +60,6 @@ progression(); // rank, skills, journal and goals: the progression layer (docs/P
 import './progression/ui/fieldoverlay.js';
 import { installFishHints } from './progression/ui/fieldjournal.js';
 installFishHints();
+import './progression/ui/subcard.js';
+import { mountDebug } from './progression/ui/debugpanel.js';
+mountDebug(); // (dev only: ?debug=1)

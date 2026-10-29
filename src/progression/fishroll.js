@@ -26,6 +26,7 @@ export function eligible(s, ctx) {
   if (!s.weathers.includes(ctx.weather)) return false;
   if (!s.seasons.includes(ctx.season)) return false;
   if (s.nocturnal && !ctx.perks?.has('fishing.night_fishing')) return false;
+  if (s.event && !ctx.events?.includes(s.event)) return false; // festival fish only bite during their festival
   return true;
 }
 

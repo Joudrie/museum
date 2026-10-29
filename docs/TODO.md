@@ -189,6 +189,16 @@ Owns: new `src/ui/`, `ui.html`, `docs/UI*.md`, `docs/ui/`, `tests/ui-*.cjs`; res
 - [~] Migrate every screen, most-used first. **Done: HUD and Menu hub, Journal overview.** Left: HUD and Interact, Journal, Toolkit, Customize, dialogs, viewer, Settings and Income, Build a room, wall spot and Display, Office and Staff, daily / share / sail / leads, discovery overlays, conversation and tutorial, title screen, Builder page.
 - [ ] Polish: sound, haptics, motion, empty and error states, copy sweep, large-text and left-handed modes, accessibility labels.
 
+## PROGRESSION AND RETENTION (the layer in `docs/PROGRESSION.md`)
+Owns: `src/progression/`, `tools/{validate,sim}_progression.mjs`, `tests/progression*.cjs`. Claim: `claimed: 2026-10-29`
+- [x] Phase 1: event bus, RewardQueue, Rank, fishing rarity/size/variants/pity, journal hints, rarity colours, reveal choreography.
+- [x] Phase 2: skills and perks, friendship with gifts, request board, daily tasks, goals tab, stuck detector.
+- [x] Phase 3: economy ladder, shop rotation, baits and crafting, lodge and aquarium, cosmetics.
+- [x] Phase 4: traversal ladder, fog chunks, viewpoints, secrets, rumours, legendary trails, locked docks.
+- [x] Phase 5: weekly rhythm, login calendar, streak shields, rested XP, return and leaving cards, seasons, events.
+- [x] Phase 6: subscription gating (flag, not enforced), telemetry and report, sim, validator, tuning.
+- [ ] Open: the race with the kids, notifications that fire while the game is closed (needs a push backend), a real payment path, player-facing art for hats and outfits (placeholder colours now), the lantern radius perk, art for the ghost variant.
+
 ## Hold list (parked by the user; no chat builds these)
 Mini-games (Mop Rush, No Flash!, Restoration-as-minigame, Crate Tetris, Hang it Straight, Tour Guide, Night Watch, Catch the Thief, Paparazzi) · gems, ads, cosmetics, exhibition pass, crates · multiplayer / auctions · a sequel where the museum is part of a city · menu redesign · art direction and hiring.
 

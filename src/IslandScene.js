@@ -1206,7 +1206,7 @@ export class IslandScene extends Phaser.Scene {
       if (!o.go.map && !o.go.expedition) return;
       const reg = regionOfMap(o.go.map || 'main');
       const a = regionAccess(prog.state, reg);
-      if (!a.open) Object.assign(o, { locked: true, sub: a.need, preview: lockedPreview(reg, prog), onLocked: () => { prog.telemetry.track('paywall_view', { context: a.reason === 'sub' ? 'locked_dock' : 'rank_lock', region: reg }); this.toast(a.need); } });
+      if (!a.open) Object.assign(o, { locked: true, sub: a.need, preview: lockedPreview(reg, prog), onLocked: () => { const o = a.reason === 'sub' && prog.sub.moment('locked_dock', reg); if (o) prog.hooks.paywall?.(o); this.toast(a.need); } });
     });
     Object.keys(REGIONS).forEach((reg) => {
       if (reg === this.regionKey || options.some((o) => o.go.map && REGIONS[reg].maps.includes(o.go.map))) return;
@@ -1229,7 +1229,13 @@ export class IslandScene extends Phaser.Scene {
     openLeads({
       titles: expeditionTitles(),
       onClose: () => (this.paused = false),
-      onSail: (island) => unlocked[island] && this.setSail(unlocked[island].go),
+      onSail: (island) => {
+        const o = unlocked[island];
+        if (!o) return;
+        const a = regionAccess(progression().state, regionOfMap(o.go.map));
+        if (!a.open) return this.toast(a.need); // a lead shows the way; the boat still has to be able to make the trip
+        this.setSail(o.go);
+      },
     });
   }
 
@@ -1444,6 +1450,8 @@ export class IslandScene extends Phaser.Scene {
       ({ x: vx, y: vy } = this.dragVec);
       pace = this.dragMag > 0.7 ? 1 : 0.62;
     }
+    if (progression().has('exploring.light_foot')) pace *= 1.06; // Exploring 16
+    if (this.season === 'winter' && progression().has('exploring.snow_speed')) pace *= 1.1; // Exploring 6: deep snow
     if (this.puzzles.sliding) vx = vy = 0; // sliding on ice: no steering
     const len = Math.hypot(vx, vy);
     const p = this.player;

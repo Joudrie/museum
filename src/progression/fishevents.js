@@ -3,7 +3,7 @@
 import { TUNING } from './config.js';
 import { speciesById, REGIONS } from './species.js';
 import { fishValue } from './fishroll.js';
-import { stamp, checkMilestones } from './journal.js';
+import { stamp, checkMilestones, completion } from './journal.js';
 import { grant } from './grants.js';
 import { SIZE_CLASSES } from './fishroll.js';
 
@@ -64,6 +64,8 @@ export function installFish(p) {
     if (freshVariant) stamp(p, 'fish', `${sp.id}:${ev.variant}`, where);
     if (fresh) {
       p.telemetry.track('species_discovered', { id: sp.id, rarity: sp.rarity, region: ev.region });
+      const pct = Math.round(completion(p, 'fish').pct);
+      if (pct % 10 === 0 || pct >= 100) p.telemetry.track('journal_pct', { page: 'fish', pct });
       p.telemetry.once('first_catch', { id: sp.id, minutes: p.telemetry.playMinutes() });
     }
     if (sp.rarity === 5) p.telemetry.track('legend_caught', { id: sp.id });

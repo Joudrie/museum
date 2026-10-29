@@ -55,12 +55,16 @@ function init() {
   const field = document.createElement('button');
   field.id = 'hub-field';
   field.onclick = () => window.dispatchEvent(new CustomEvent('open-field', { detail: 'goals' }));
+  const rest = document.createElement('button');
+  rest.id = 'hub-rest';
+  rest.onclick = () => import('../progression/ui/restui.js').then((m) => m.openBreak());
   const tiles = [
     tile(field, 'map', 'Field journal', 'Goals, fish, people, places'),
     today && tile(today, 'gift', 'Today', 'Gift, wheel, painting of the day'),
     tile(income, 'coin', 'Your museum', 'Income and rooms'),
     tile(share, 'share', 'Share & visit', 'Send a link, visit a friend'),
     settings && tile(settings, 'gear', 'Settings', 'Sound, look, your data'),
+    tile(rest, 'clock', 'Take a break', 'What is waiting for next time'),
   ].filter(Boolean);
   grid.append(...tiles);
 

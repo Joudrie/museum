@@ -257,6 +257,14 @@ export function present(item, done) {
     }
     case 'rank':
       return rankCeremony(item, done);
+    case 'away': {
+      const close = cardShow(`<div class="pc-kicker">Welcome back</div><b class="pc-title">${esc(item.title)}</b><div class="pc-sub">${item.lines.map(esc).join('<br>')}</div><div class="pc-rewards">${item.gold ? `<span class="pc-chip">${icon('gold')}${item.gold} gold in a letter</span>` : ''}${item.rested ? `<span class="pc-chip">${icon('star')}Rested XP +${item.rested}</span>` : ''}</div>`, 3, 9000, () => {
+        progRef.away2.collect();
+        done();
+      });
+      sfx('unlock');
+      return close;
+    }
     case 'milestone':
       cardShow(`<div class="pc-kicker">Journal milestone</div><b class="pc-title">${item.pct}% of ${esc(item.page)}</b><div class="pc-rewards">${(item.rewards || []).map(chip).join('')}</div>`, 4, 2300, done);
       sfx('burst');

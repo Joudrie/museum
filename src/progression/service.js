@@ -71,6 +71,8 @@ export function createProgression({ store, bus = createBus(), clock, rng = creat
     p.idleMs = 0;
   };
   p.today = () => clock.day();
+  // the dev panel's overrides: time, weather, season and the next catch (never set in normal play)
+  p.debug = { hour: null, weather: null, season: null, force: null, on: false };
 
   // ---- rank ----
   let pendingRanks = [];

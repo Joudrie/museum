@@ -69,7 +69,10 @@ export class IslandLife {
     const p = this.p;
     const named = !!n.npcId;
     p.bus.emit('NPC_TALKED', { npcId: named ? n.npcId : `anon:${s.regionKey}:${n.name}`, kind: n.kind, region: s.regionKey });
-    if (!named) return false;
+    if (!named) {
+      this.ambient(n);
+      return false;
+    }
     const npc = NPCS.find((x) => x.id === n.npcId);
     s.paused = true;
     const portrait = s.textures.exists(`${n.prefix}_down`) ? s.textures.get(`${n.prefix}_down`).getSourceImage() : null;
@@ -83,6 +86,26 @@ export class IslandLife {
       },
     });
     return true;
+  }
+
+  // unnamed islanders are friendly too, once a day each: the raker hands you what he gathered, the reader on the bench trades a rumour
+  ambient(n) {
+    const s = this.scene;
+    const p = this.p;
+    const key = `${s.regionKey}:${n.name}:${p.today()}`;
+    this.given ||= new Set();
+    if (this.given.has(key) || n.animal) return;
+    this.given.add(key);
+    if (n.kind === 'elder') {
+      const item = s.season === 'winter' || s.season === 'autumn' ? 'pinecone' : 'flower';
+      p.bus.emit('ITEM_FORAGED', { itemId: item, region: s.regionKey });
+      s.toast(`${n.name} gives you a ${item === 'pinecone' ? 'pinecone' : 'wildflower'}.`);
+      this.emote(n, 'heart');
+    } else if (n.kind === 'nerd' || n.kind === 'superfan') {
+      const hint = p.friendship.ambientRumor(s.regionKey);
+      if (hint) s.toast(`${n.name}: ${hint}`);
+      this.emote(n, 'note');
+    } else if (n.kind === 'kid') this.emote(n, 'star');
   }
 
   // people who know you wave: a close friend's own emote, and (with Familiar face) anyone's heart

@@ -60,7 +60,7 @@ async function dataChecks() {
   check(ms.completion({ seen: {} }).pct === 0 && ms.completion({ seen: {} }).total === reg.list().length, 'completion counts every collectable entry', 'completion wrong');
   const vg = reg.getSet('artist-vangogh');
   check(vg && vg.entries.length === reg.list({ q: 'van gogh', collection: 'painting' }).length && vg.reward.gold === 100 * vg.entries.length && !reg.sets('painting').length && reg.sets('painting', true).length >= 5, 'artist sets are made from the paintings and are journal goals only', 'artist sets wrong');
-  check(reg.list({ tag: 'pond' }).length === 15, 'tag filter works', 'tag filter broken: ' + reg.list({ tag: 'pond' }).length);
+  check(reg.list({ tag: 'pond' }).length === 18, 'tag filter works', 'tag filter broken: ' + reg.list({ tag: 'pond' }).length);
   // Dig finds: each new dig collection has dirty-or-clean entries and a full set, and the codex keeps a sane `dirty` count.
   ['pottery', 'coin', 'arrowhead', 'shell', 'meteorite'].forEach((id) => check(reg.list({ collection: id }).length >= 5, `${id}: at least 5 entries`, `${id} is missing entries`));
   check(reg.get('pottery:red-sherd').dirty === true && reg.get('shell:conch').dirty === undefined, 'dirty is set on the entries that arrive dirty', 'dirty flag wrong');
@@ -271,9 +271,9 @@ async function shopChecks() {
   await jtab(p, 'fish');
   await wait(400);
   check((await S(() => document.querySelectorAll('.bobber').length)) === 5, 'fish tab keeps its bobbers', 'bobbers missing');
-  check((await S(() => document.querySelectorAll('.fish-cell').length)) === 63, '60 fish and 3 finds in the log', 'fish log size wrong');
-  check((await S(() => document.querySelectorAll('.fish-cell.unknown').length)) === 62, 'all are silhouettes on a fresh save but the minnow Edmund gives you', 'fresh save shows catches');
-  check((await S(() => document.querySelectorAll('.set-row').length)) === 9, 'pond, sea and the seven new fish sets show', 'fish sets missing');
+  check((await S(() => document.querySelectorAll('.fish-cell').length)) === 75, '72 fish and 3 finds in the log', 'fish log size wrong');
+  check((await S(() => document.querySelectorAll('.fish-cell.unknown').length)) === 74, 'all are silhouettes on a fresh save but the minnow Edmund gives you', 'fresh save shows catches');
+  check((await S(() => document.querySelectorAll('.set-row').length)) === 10, 'pond, sea and the eight new fish sets show', 'fish sets missing');
   await shot('journal-fish');
   await noSideScroll('fish');
 
@@ -291,7 +291,7 @@ async function shopChecks() {
   await p.click('text=Collect one of everything');
   await wait(300);
   const msg = await S(() => [...document.querySelectorAll('#settings button')].find((b) => /^Added/.test(b.textContent))?.textContent);
-  check(/Added 141/.test(msg || ''), `testing button: ${msg}`, `testing button said: ${msg}`); // 18 fish + 3 finds + 8 minerals + 8 fossils + 6 pottery + 6 coins + 6 stone tools + 6 shells + 5 meteorites + 28 more (stamps, armour, insects, ships, glass, clocks, inventions) + 2 skeletons + 4 map pieces
+  check(/Added 153/.test(msg || ''), `testing button: ${msg}`, `testing button said: ${msg}`); // 18 fish + 3 finds + 8 minerals + 8 fossils + 6 pottery + 6 coins + 6 stone tools + 6 shells + 5 meteorites + 28 more (stamps, armour, insects, ships, glass, clocks, inventions) + 2 skeletons + 4 map pieces
   await p.click('.settings-close');
   await wait(300);
   await openJournal('minerals');

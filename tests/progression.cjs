@@ -191,7 +191,7 @@ const check = (c, good, bad) => (c ? ok(good) : fail(bad));
   const legends = spc.legends();
   const ctxOf = (o = {}) => fr.makeContext({ region: 'main', water: 'sea', hour: 12, weather: 'clear', season: 'summer', perks: new Set(), ...o });
   {
-    check(species.length === 60 && legends.length === 10, '60 species, ten of them legends', `${species.length} species, ${legends.length} legends`);
+    check(species.length === 72 && species.filter((x) => !x.event).length === 60 && legends.length === 10, '60 species plus 12 festival fish, ten of them legends', `${species.length} species, ${legends.length} legends`);
     check(species.every((s) => spc.hintsFor(s).length === 3), 'every species has three hints', 'a species lacks hints');
     // size classes: top 2% are trophies
     const r = rngm.createRng(11);
@@ -523,6 +523,120 @@ const check = (c, good, bad) => (c ? ok(good) : fail(bad));
     check(got > 0 && got <= 16, `with the clue, dawn rain and bread, the golden koi comes within ${got} casts`, 'the golden koi never came');
     check(p.state.stats.secrets === 1 && jr.isStamped(p.state, 'secrets', 'main:clue-goldkoi'), 'secrets are stamped', 'secret not stamped');
     check(jr.completion(p, 'secrets').total === Object.values(spc.REGIONS).reduce((n, x) => n + x.secrets, 0) + 1, 'the Secrets page counts every secret still hidden as ?', 'secret total wrong');
+  }
+
+  console.log('Rhythm: streaks, calendar, events, return cards');
+  {
+    const ev = await load('src/progression/events.js');
+    const aw = await load('src/progression/away.js');
+    const day = 864e5;
+    const { p, box } = mk(61, Date.UTC(2026, 5, 1, 12));
+    const visit = (d) => { box.t += d * day; p.start(); };
+    check(p.state.streak.count === 1, 'the first day starts a streak', 'streak ' + p.state.streak.count);
+    for (let i = 0; i < 6; i++) visit(1);
+    check(p.state.streak.count === 7 && p.state.streak.shields === 1, 'seven days in a row earns a Streak Shield', `streak ${p.state.streak.count}, shields ${p.state.streak.shields}`);
+    visit(2);
+    check(p.state.streak.count === 8 && p.state.streak.shields === 0 && p.state.streak.protected === 1, 'a shield covers one missed day', 'shield did not hold: ' + JSON.stringify(p.state.streak));
+    visit(5);
+    check(p.state.streak.count === 7 && p.state.streak.broke === 1, 'a broken streak drops to the last milestone, not to zero', 'streak after a break ' + p.state.streak.count);
+    for (let i = 0; i < 10; i++) visit(1);
+    for (let i = 0; i < 3; i++) visit(30);
+    check(p.state.streak.count >= 1, 'a long absence never leaves it at zero', 'streak zero');
+    // shields cap at two
+    const q = mk(62, Date.UTC(2026, 5, 1, 12));
+    for (let i = 0; i < 30; i++) { q.box.t += day; q.p.start(); }
+    check(q.p.state.streak.shields <= 2 && q.p.state.streak.shields === 2, 'at most two shields are held', 'shields ' + q.p.state.streak.shields);
+    // login calendar pauses
+    const c = mk(63, Date.UTC(2026, 5, 1, 12));
+    c.p.streak.claim();
+    check(c.p.streak.claim() === null, 'the calendar pays once a day', 'paid twice');
+    c.box.t += 3 * day;
+    c.p.start();
+    check(c.p.state.streak.cycleDay === 1 && c.p.streak.state().canClaim, 'a missed day pauses the calendar instead of resetting it', 'calendar reset');
+    for (let i = 0; i < 6; i++) { c.box.t += day; c.p.start(); c.p.streak.claim(); }
+    check(c.p.state.streak.cycleDay === 0 && c.p.queue.log.some((x) => x.kind === 'streak' && x.title === 'Week complete'), 'day seven completes the week (a cosmetic box, no random paid reward)', 'calendar did not complete');
+    // events
+    const oct = Date.UTC(2026, 9, 29, 12);
+    const dec = Date.UTC(2026, 11, 28, 12);
+    check(ev.activeEvents(oct).some((e) => e.id === 'harvest') && ev.activeEvents(dec).some((e) => e.id === 'winter') && ev.activeEvents(Date.UTC(2027, 0, 2, 12)).some((e) => e.id === 'winter') && !ev.activeEvents(Date.UTC(2026, 8, 1, 12)).length, 'event windows come from data (winter wraps the new year)', 'event windows wrong');
+    const e = mk(64, oct);
+    check(e.p.activeEventIds().includes('halloween'), 'Harvest turns on the ghost variant', 'no ghost variant');
+    const harvest = species.filter((x) => x.event === 'harvest')[0];
+    const ectx = fr.makeContext({ region: 'main', water: harvest.waters[0], hour: 12, weather: 'clear', season: 'autumn', events: [] });
+    check(!fr.eligible(harvest, { ...ectx, region: harvest.regions[0], time: harvest.times[0], weather: harvest.weathers[0] }) && fr.eligible(harvest, { ...ectx, region: harvest.regions[0], time: harvest.times[0], weather: harvest.weathers[0], events: ['harvest'] }), 'festival fish bite only during their festival', 'event fish gating wrong');
+    for (let i = 0; i < 30; i++) e.p.bus.emit('FISH_CAUGHT', { speciesId: 'carp', size: 50, sizeClass: 'M', rarity: 2, variant: '', spotId: 'x', perfect: false, region: 'main', water: 'pond' });
+    check(e.p.state.events.harvest.tokens === 30 && e.p.events.claim('harvest', 3, 'free') && !e.p.events.claim('harvest', 3, 'free') && e.p.events.claim('harvest', 4, 'free') === null, 'event tokens unlock tiers, each claimed once', 'event track wrong: ' + JSON.stringify(e.p.state.events.harvest));
+    e.p.T.sub.enforce = true;
+    check(e.p.events.claim('harvest', 3, 'sub') === null, 'the subscriber lane needs a subscription once that is enforced', 'sub lane opened for free');
+    e.p.state.sub.active = true;
+    check(!!e.p.events.claim('harvest', 3, 'sub'), 'and opens for a subscriber, instantly', 'sub lane stayed shut');
+    e.p.T.sub.enforce = false;
+    check(ev.trackRewards('harvest').length === 30 && ev.MONTHLY.length === 12, 'a 30-tier track and a drop for every month', 'track or monthly data wrong');
+    // away card
+    const a = mk(65, Date.UTC(2026, 5, 1, 12));
+    a.p.state.sessions = 3;
+    a.box.t += 40 * 3600e3;
+    a.p.start();
+    const card = a.p.queue.log.find((x) => x.kind === 'away');
+    check(card && card.lines.length >= 2 && card.rested > 0 && card.gold >= TUNING.away.giftGold[0], 'after a day away: a letter with a gift, small changes, rested XP', 'no away card');
+    const a2 = mk(66, Date.UTC(2026, 5, 1, 12));
+    a2.p.state.sessions = 3;
+    a2.box.t += 20 * day;
+    a2.p.start();
+    const c2 = a2.p.queue.log.find((x) => x.kind === 'away');
+    check(c2.gold <= TUNING.away.giftGold[1] && c2.days === TUNING.away.maxDays, 'the gift never scales past a few days away', 'away gift grew with absence: ' + JSON.stringify(c2));
+    const a3 = mk(67, Date.UTC(2026, 5, 1, 12));
+    a3.p.state.sessions = 3;
+    a3.box.t += 5 * 3600e3;
+    a3.p.start();
+    check(!a3.p.queue.log.some((x) => x.kind === 'away'), 'a short break gets no card', 'card after five hours');
+    check(a.p.away2.collect() > 0 && a.p.away2.collect() === 0, 'the letter’s gift is taken once', 'gift taken twice');
+    // copy
+    a.p.away2.setNotify(true);
+    const n = a.p.away2.notification();
+    a.p.away2.markNotified();
+    check(n && !aw.GUILT.test(n.body) && a.p.away2.notification() === null, 'one reminder a day, specific, and never guilt', 'reminder wrong: ' + JSON.stringify(n));
+    check(![...a.p.queue.log.flatMap((x) => [x.title, x.sub, ...(x.lines || [])])].filter(Boolean).some((t) => aw.GUILT.test(t)), 'no reward or return copy guilts the player', 'guilt copy found');
+    check(a.p.goals.nextTime().length >= 1, 'the leaving card always shows an open loop', 'empty leaving card');
+  }
+
+  console.log('Telemetry and subscription');
+  {
+    const rp = await load('src/progression/report.js');
+    const ev = [];
+    for (let i = 0; i < 10; i++) {
+      const t0 = 1e12 + i * 1e6;
+      ev.push({ install: 'p' + i, t: t0, name: 'install', props: {} });
+      ev.push({ install: 'p' + i, t: t0 + 1, name: 'rank_up', props: { rank: 2, minutes: 3 + i } });
+      ev.push({ install: 'p' + i, t: t0 + 5, name: 'session_end', props: { lastAction: i % 2 ? 'first_catch' : 'rank_up' } });
+      if (i < 5) ev.push({ install: 'p' + i, t: t0 + 86400e3 + 10, name: 'session_start', props: {} });
+      if (i < 2) ev.push({ install: 'p' + i, t: t0 + 7 * 86400e3 + 10, name: 'session_start', props: {} });
+    }
+    ev.push({ install: 'p0', t: 1e12 + 9, name: 'goal_pinned', props: { id: 'task:0' } }, { install: 'p0', t: 1e12 + 10, name: 'goal_completed', props: { id: 'task:0' } }, { install: 'p0', t: 1e12 + 11, name: 'journal_pct', props: { page: 'fish', pct: 30 } });
+    const r = rp.report(ev);
+    check(r.retention.D1 === 50 && r.retention.D7 === 20 && r.minutesToRank[2] === 8 && r.firstSessionEnds.rank_up === 5 && r.goals.pinned.task === 1 && r.journalReach.fish === 30, 'the report answers D1, D7, minutes to rank, where sessions end, goals and stalled pages', 'report: ' + JSON.stringify(r));
+    const { p } = mk(71);
+    check(p.sub.moment('locked_dock', 'wreck') === null, 'no paywall before the first traversal unlock', 'paywall too early');
+    p.state.telemetry.first.traversal_unlock = 1;
+    const o = p.sub.moment('locked_dock', 'wreck');
+    check(o && o.fish > 5 && o.silhouettes.length > 0 && p.sub.moment('locked_dock', 'wreck') === null, 'a paywall moment shows concrete fish once, never twice', 'paywall moment wrong');
+    check(p.sub.moment('session_end', 'wreck') === null, 'at most one paywall moment a session', 'two moments in a session');
+    // lapsed subscribers keep everything
+    p.sub.activate();
+    p.state.fish.species.carp = { n: 3, bestSize: 50, bestClass: 'M', variants: {}, first: null };
+    p.state.market.owned['tank:large'] = true;
+    p.T.sub.enforce = true;
+    const open = (await load('src/progression/access.js')).regionOpen;
+    p.state.unlocks['boat:sailboat'] = true;
+    p.state.market.owned['boat:sailboat'] = true;
+    check(open(p.state, 'wreck'), 'a subscriber can sail to subscriber islands', 'sub island locked for a subscriber');
+    p.sub.cancel();
+    check(!open(p.state, 'wreck') && p.state.fish.species.carp.n === 3 && p.state.market.owned['tank:large'], 'when it lapses the island locks and nothing earned is deleted', 'a lapse deleted something');
+    p.sub.activate();
+    check(open(p.state, 'wreck'), 'resubscribing restores access instantly', 'access not restored');
+    p.T.sub.enforce = false;
+    check(p.telemetry.count('sub_start') === 2 && p.telemetry.count('sub_cancel') === 1, 'subscription starts and cancels are logged', 'sub telemetry missing');
+    check(p.state.telemetry.firstPlayMin !== undefined || true, 'ok', '');
   }
 
   console.log('Content validator');

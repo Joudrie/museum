@@ -6,7 +6,7 @@
 // The queue knows nothing about the screen: a `present(item, done, ctx)` function
 // is injected (ui/juice.js in the browser; the tests and the sim use an instant one).
 
-export const KINDS = ['xp', 'species', 'variant', 'skill', 'rank', 'task', 'heart', 'request', 'milestone', 'gold', 'item', 'streak', 'unlock', 'note'];
+export const KINDS = ['away', 'xp', 'species', 'variant', 'skill', 'rank', 'task', 'heart', 'request', 'milestone', 'gold', 'item', 'streak', 'unlock', 'note'];
 
 // bigger moments go first when several are waiting (stable otherwise)
 

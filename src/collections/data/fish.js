@@ -3,6 +3,7 @@
 // right here as data. 'acquire' holds the rules fishing.js reads. Junk is
 // never collected.
 import { MORE_FISH, MORE_SETS } from './fish_more.js';
+import { EVENT_FISH, EVENT_SETS } from './fish_events.js';
 
 export default [
   {
@@ -50,6 +51,7 @@ export default [
         'fish:moonfish',
       ], reward: { gold: 800 }, plaque: 'The whole catch from the open sea, day and night.' },
       ...MORE_SETS,
+      ...EVENT_SETS,
     ],
     entries: [
       {
@@ -421,6 +423,7 @@ export default [
         acquire: { water: 'sea', waters: ['sea'], regions: ['one'], size: [90,190], sizeDist: [130,20], times: ['night'], weathers: ['clear'], baits: ['glowbug'] },
       },
       ...MORE_FISH,
+      ...EVENT_FISH,
     ],
   },
   {

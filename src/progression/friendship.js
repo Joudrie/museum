@@ -280,6 +280,15 @@ export function installFriendship(p) {
       if (h >= 10 && npc?.line) return npc.line;
       return pickLine(pool, npcId + DAY(p) + h);
     },
+    /** An unnamed reader on a bench trades a rumour: hint two for a fish nobody has told you about. */
+    ambientRumor(region) {
+      const left = allSpecies().filter((s) => s.rarity < 5 && !s.event && s.regions.includes(region) && !p.state.fish.species[s.id]?.n && !p.state.journal.leads[`rumor:${s.id}`]);
+      if (!left.length) return null;
+      const sp = left[p.rng.int(left.length)];
+      p.state.journal.leads[`rumor:${sp.id}`] = { at: p.clock.now(), from: 'bench', state: 'open' };
+      p.store.commit();
+      return hintsFor(sp)[1];
+    },
     heartsOf: (id) => heartsOf(p.state, id),
     reactions: (id) => p.state.friends[id]?.reactions || {},
     /** The icon hint for gift sense: a small heart over things they love (Friendship 6). */

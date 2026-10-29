@@ -9,6 +9,10 @@ import { installGoals } from './goals.js';
 import { installMarket } from './market.js';
 import { installHouse } from './house.js';
 import { installFirstHour } from './firsthour.js';
+import { installEvents } from './events.js';
+import { installStreak } from './streak.js';
+import { installAway } from './away.js';
+import { installSub } from './sub.js';
 
 export const CORE = [
   { name: 'fish', install: installFish },
@@ -19,7 +23,11 @@ export const CORE = [
   { name: 'market-m', install: installMarket },
   { name: 'house-m', install: installHouse },
   { name: 'firsthour-m', install: installFirstHour },
+  { name: 'events-m', install: installEvents },
+  { name: 'streak-m', install: installStreak },
   { name: 'goals-m', install: installGoals },
+  { name: 'away-m', install: installAway },
+  { name: 'sub-m', install: installSub },
 ];
 export function standardModules() {
   return [...CORE];

@@ -96,6 +96,17 @@ export function installGoals(p) {
   p.mods.goals = mod;
   p.goals = mod;
 
+  // a pinned goal that finishes is noted (which goals get pinned versus completed) and unpinned
+  ['TASK_DONE', 'REQUEST_DONE', 'HEART_UP', 'RANK_UP', 'SKILL_UP'].forEach((t) =>
+    bus.on(t, () => {
+      const pin = p.state.pinned;
+      if (pin && !all().find((g) => g.id === pin && !g.done)) {
+        p.telemetry.track('goal_completed', { id: pin });
+        p.state.pinned = null;
+      }
+    }),
+  );
+
   // stuck detector: five minutes of active play with no visible progress
   bus.on('SESSION_TICK', () => {
     if (p.idleMs < T.stuckMinutes * 60e3) return;

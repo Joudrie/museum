@@ -59,6 +59,9 @@ export function frenzyNow(p) {
 export function prepareCast(p, o) {
   const s = p.state;
   const f = s.fish;
+  if (p.debug.hour !== null) o = { ...o, hour: p.debug.hour };
+  if (p.debug.weather) o = { ...o, weather: p.debug.weather };
+  if (p.debug.season) o = { ...o, season: p.debug.season };
   const region = regionOfMap(o.mapId);
   const info = regionInfo(region);
   const perks = p.perks();
@@ -101,6 +104,10 @@ export function prepareCast(p, o) {
       f.rolls += 1;
     } else roll = rollSpecies(s, ctx, p.rng);
   } else roll = rollSpecies(s, ctx, p.rng);
+  if (p.debug.force?.speciesId) {
+    const sp = speciesById(p.debug.force.speciesId);
+    if (sp) roll = { species: sp, junk: false, tier: sp.rarity, via: 'debug', z: p.debug.force.z ?? 0.3 };
+  }
   const plan = {
     ctx,
     region,
@@ -119,7 +126,7 @@ export function prepareCast(p, o) {
     wait: biteWait(rod, ctx, p.rng),
     window: reactWindow(rod, perks, ctx, { first }),
     tell: tellFor(roll.species ? roll.species.rarity : 1),
-    variant: roll.species ? rollVariant(p.rng, ctx) : '',
+    variant: roll.species ? p.debug.force?.variant ?? rollVariant(p.rng, ctx) : '',
     startedAt: p.clock.now(),
     // for the fish-shadow perk: how big it looks
     shadow: roll.species ? { size: sizeClassOf(roll.z), rarity: perks.has('fishing.legend_sense') && roll.species.rarity === 5 ? 5 : 0 } : null,

@@ -10,6 +10,7 @@ import { EVENTS } from './bus.js';
 import RANKS from './data/ranks.json' with { type: 'json' };
 import RODS from './data/rods.json' with { type: 'json' };
 import SHOP from './data/shop.json' with { type: 'json' };
+import { EVENTS as FESTIVALS, MONTHLY, trackRewards, speciesOf } from './events.js';
 import NPCS from './data/npcs.json' with { type: 'json' };
 import { problems as registryProblems } from '../collections/index.js';
 
@@ -99,7 +100,7 @@ export function validate({ extra = [], perkUses = [], mapIds = null, busWired = 
           if (water === 'pond' && season === 'winter' && info.freezes) continue;
           if (water === 'ice' && !info.iceAlways && season !== 'winter') continue;
           if (info.iceAlways && water === 'sea') continue;
-          if (eligible(s, { region, water, time, weather, season, perks })) ok = true;
+          if (eligible(s, { region, water, time, weather, season, perks, events: s.event ? [s.event] : [] })) ok = true;
         }
     }
     if (!ok) add(`${s.id}: no region, water, time, weather and season ever lets it bite`);
@@ -141,6 +142,17 @@ export function validate({ extra = [], perkUses = [], mapIds = null, busWired = 
   });
   SHOP.staples.concat(SHOP.lures).forEach((id) => !BAITS[id] && !LURES[id] && add(`shop sells ${id}, which does not exist`));
   SHOP.weeklyCosmetics.forEach((id) => COSMETICS[id]?.source !== 'shop' && add(`weekly cosmetic ${id} is not a shop item`));
+
+  // ---- events and the monthly cadence ----
+  Object.entries(FESTIVALS).forEach(([id, ev]) => {
+    if (speciesOf(id).length < 3 || speciesOf(id).length > 5) add(`event ${id} has ${speciesOf(id).length} species (wanted 3 to 5)`);
+    ev.cosmetics.forEach((c) => !COSMETICS[c] && add(`event ${id}: cosmetic ${c} does not exist`));
+    if (!ev.cosmetics.length || !ev.currency || ev.start.length !== 2 || ev.end.length !== 2) add(`event ${id} is missing its window, currency or cosmetics`);
+    trackRewards(id).forEach((r) => [...r.free, ...r.sub].forEach((x) => checkReward(x, `event ${id} tier ${r.tier}`, add)));
+    if (!trackRewards(id).every((r) => r.free.length)) add(`event ${id} has a tier with no free reward`);
+  });
+  if (MONTHLY.length !== 12) add('monthly.json needs twelve months');
+  MONTHLY.forEach((m) => !m.ships?.length && add(`month ${m.month} ships nothing`));
 
   // ---- cosmetics ----
   Object.entries(COSMETICS).forEach(([id, c]) => {

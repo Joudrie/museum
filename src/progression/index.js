@@ -45,10 +45,22 @@ export function progression() {
       collect: (id, o) => collect(id, o),
       hourNow,
       weatherToday,
+      paywall: (o) => window.dispatchEvent(new CustomEvent('prog-paywall', { detail: o })),
       nudge: (o) => window.dispatchEvent(new CustomEvent('prog-nudge', { detail: o })),
       toast: (m) => window.__game?.scene.getScenes(true)[0]?.toast?.(m),
     },
     modules: standardModules(),
+    // events stay on this device: the last 300 are kept so they can be exported and read (tools/telemetry_report.mjs)
+    sink: (row) => {
+      try {
+        const k = 'curation.telemetry';
+        const list = JSON.parse(localStorage.getItem(k) || '[]');
+        list.push(row);
+        localStorage.setItem(k, JSON.stringify(list.slice(-300)));
+      } catch {
+        // storage unavailable
+      }
+    },
   });
   P.start();
   // the museum's ledger knows the fish Edmund gave you
@@ -68,5 +80,6 @@ export function progression() {
   window.addEventListener('pagehide', () => P.end());
   window.__prog = P;
   window.__pill = pillState;
+  window.__exportTelemetry = () => JSON.parse(localStorage.getItem('curation.telemetry') || '[]').map((r) => ({ install: String(P.state.installAt), ...r }));
   return P;
 }

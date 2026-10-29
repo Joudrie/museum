@@ -31,6 +31,7 @@ export function createTelemetry(p, sink = null) {
     once(name, props) {
       if (p.state.telemetry.first[name]) return null;
       p.state.telemetry.first[name] = p.clock.now();
+      (p.state.telemetry.firstPlayMin ||= {})[name] = t.playMinutes();
       return t.track(name, props);
     },
     count: (name) => events.filter((e) => e.name === name).length,

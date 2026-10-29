@@ -57,6 +57,7 @@ export function toSpecies(e) {
     xp: a.xp,
     entry: e,
   };
+  s.event = a.event || '';
   s.legend = s.rarity === 5 ? LEGENDS[s.id] || null : null;
   s.nocturnal = s.times.length === 1 && s.times[0] === 'night' && s.rarity >= 3;
   return s;
