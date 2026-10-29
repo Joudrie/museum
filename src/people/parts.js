@@ -29,11 +29,13 @@ export const MORE_OUTFITS = {
   coveralls: 'Coveralls', overalls: 'Overalls', hivis: 'Hi-vis vest', oilskins: 'Oilskins', waders: 'Waders', wetsuit: 'Wetsuit', sailor: 'Sailor top',
   captain: 'Captain’s coat', striped: 'Striped shirt', flannel: 'Flannel shirt', fieldvest: 'Field vest', trunks: 'Swim trunks', swimsuit: 'Swimsuit',
   labcoat: 'Lab coat', blazer: 'Blazer', cardigan: 'Cardigan', turtleneck: 'Turtleneck', parka: 'Parka', uniform: 'Uniform shirt', robe: 'Robe', mummy: 'Mummy wrap',
-  varsity: 'Varsity jacket', tracksuit: 'Track suit', chefwhites: 'Chef’s whites',
+  varsity: 'Varsity jacket', tracksuit: 'Track suit', chefwhites: 'Chef’s whites', denim: 'Denim jacket', leotard: 'Leotard', tutu: 'Tutu',
+  clown: 'Clown suit', doublet: 'Doublet', trench: 'Trench coat', scrubs: 'Scrubs',
 };
 export const MORE_ACCESSORIES = {
   toolbelt: 'Tool belt', keyring: 'Key ring', lanyard: 'Lanyard', backpack: 'Backpack', whistle: 'Whistle', lifejacket: 'Life jacket', radio: 'Radio',
-  gloves: 'Gloves', earmuffs: 'Ear defenders', towel: 'Towel', tank: 'Air tank', hook: 'Hook hand', sash: 'Sash', mailbag: 'Mail bag',
+  gloves: 'Gloves', earmuffs: 'Ear defenders', towel: 'Towel', tank: 'Air tank', hook: 'Hook hand', sash: 'Sash', mailbag: 'Mail bag', cape: 'Cape',
+  stethoscope: 'Stethoscope', tape: 'Tape measure',
 };
 export const LEGS = { trousers: 'Trousers', shorts: 'Shorts', rolled: 'Rolled up', boots: 'Tall boots', peg: 'Peg leg' };
 export const FEET = { shoes: 'Shoes', bare: 'Bare feet' };
@@ -384,6 +386,57 @@ export function moreOutfit(out, view, look) {
     if (front) [13, 15, 17].forEach((r) => [4, len(r) - 5].forEach((i) => set(r, i, 'k')));
     if (side) [13, 15, 17].forEach((r) => set(r, len(r) - 3, 'k'));
   }
+  if (style === 'denim') {
+    swap(torso, ['g'], 'w');
+    if (front) torso.slice(0, 8).forEach((r) => [mid(r) - 1, mid(r)].forEach((i) => set(r, i, 'w')));
+    [14, 17].forEach((r) => body(r, (c, i) => c === 'c' && (i === 3 || i === len(r) - 4) && (out[r][i] = 'C')));
+  }
+  if (style === 'leotard' || style === 'tutu') {
+    swap(torso, ['w', 'g'], 'c');
+    swap([11], ['w'], 's');
+    arms([12, 13, 14, 15, 16, 17, 18, 19], 's');
+    swap(legs, ['p'], 'p');
+    if (style === 'tutu') {
+      out[20] = ['o', 'Q', ...out[20].slice(1, -1).map(() => 'Q'), 'Q', 'o'];
+      out[21] = ['.', 'o', 'Q', ...out[21].slice(2, -2).map(() => 'Q'), 'Q', 'o', '.'];
+    }
+  }
+  if (style === 'clown') {
+    swap(torso, ['w', 'g'], 'c');
+    torso.forEach((r) => body(r, (c, i) => (r + i * 2) % 5 === 0 && (out[r][i] = 'w')));
+    out[11] = out[11].map((c) => (c === 'o' ? c : 'w'));
+    swap(legs, ['p'], 'p');
+    legs.forEach((r) => body(r, (c, i) => (r + i) % 4 === 0 && (out[r][i] = 'P')));
+    if (out[25]) out[25] = ['o', ...out[25], 'o'].map((c, i, a) => (i > 0 && i < a.length - 1 && c !== 'o' ? 'b' : c));
+  }
+  if (style === 'doublet') {
+    swap(torso, ['w', 'g'], 'c');
+    if (front) [13, 15, 17].forEach((r) => set(r, mid(r), 'Y'));
+    arms([13, 15], 'w');
+    [21, 22].forEach((r) => out[r] && (out[r] = ['o', 'c', ...out[r].slice(1, -1).map((c) => (c === 'o' ? 'o' : 'c')), 'c', 'o']));
+  }
+  if (style === 'trench') {
+    swap(torso, ['w', 'g'], 'c');
+    swap([11], ['w'], 'c');
+    if (front) {
+      [12, 13].forEach((r) => [mid(r) - 1, mid(r)].forEach((i) => set(r, i, 'd')));
+      [14, 16].forEach((r) => [4, len(r) - 5].forEach((i) => set(r, i, 'k')));
+    }
+    body(18, (c, i) => (side || (i > 1 && i < len(18) - 2)) && (out[18][i] = 'N'));
+    tails([21, 22, 23]);
+  }
+  if (style === 'scrubs') {
+    swap(torso, ['w', 'g'], 'c');
+    swap([11], ['w'], 's');
+    if (front) {
+      [mid(12) - 1, mid(12)].forEach((i) => set(12, i, 's'));
+      set(13, mid(13) - 1, 'd');
+      set(13, mid(13), 'd');
+      set(15, 3, 'd');
+      set(15, 4, 'd');
+    }
+    swap(legs, ['p'], 'c');
+  }
   if (style === 'mummy') {
     // wrapped from head to toe; only the eyes show
     out.forEach((row, r) => row.forEach((c, i) => c !== 'o' && c !== 'e' && c !== '.' && (row[i] = (r + Math.floor(i / 3)) % 3 === 0 ? 'a' : 'r')));
@@ -509,6 +562,22 @@ export function moreAccessories(out, view, look) {
         for (let r = 12; r <= 18; r++) set(r, 2 + (r - 12), 'K');
         [18, 19, 20, 21].forEach((r) => [len(r) - 5, len(r) - 4, len(r) - 3, len(r) - 2].forEach((i) => set(r, i, 'K')));
       } else [18, 19, 20, 21].forEach((r) => [1, 2, 3].forEach((i) => set(r, i, r === 18 ? 'k' : 'K')));
+    }
+    if (acc === 'cape') {
+      if (view === 'up') for (let r = 11; r <= 22; r++) out[r]?.forEach((c, i) => c !== 'o' && c !== '.' && !isSkin(c) && (out[r][i] = r === 11 ? 'U' : 'X'));
+      else if (side) for (let r = 11; r <= 22; r++) out[r] && (out[r] = ['o', 'X', ...out[r], '.', '.']);
+      else for (let r = 12; r <= 21; r++) out[r] && (out[r] = ['o', 'X', ...out[r], 'X', 'o']);
+    }
+    if (acc === 'stethoscope') {
+      if (front) {
+        [mid(12) - 2, mid(12) + 1].forEach((i) => set(12, i, 'k'));
+        [13, 14].forEach((r) => set(r, mid(r) + 1, 'k'));
+        set(15, mid(15) + 1, 'a');
+      } else if (side) [12, 13, 14].forEach((r) => set(r, len(r) - 3, 'k'));
+    }
+    if (acc === 'tape') {
+      if (front) [11, 12, 13, 14, 15, 16].forEach((r) => [2, len(r) - 3].forEach((i) => set(r, r === 11 ? (i === 2 ? 1 : len(r) - 2) : i, 'Y')));
+      else if (side) [11, 12, 13, 14, 15].forEach((r) => set(r, len(r) - 3, 'Y'));
     }
     if (acc === 'towel') {
       const is = front ? [2, 3] : view === 'up' ? [len(12) - 4, len(12) - 3] : [2, 3];
@@ -1031,6 +1100,9 @@ export const CARRY = {
   balloon: 'Balloon', teddy: 'Teddy bear', scooter: 'Scooter', icecream: 'Ice cream', skateboard: 'Skateboard', shopping: 'Shopping bags', suitcase: 'Suitcase',
   coffee: 'Coffee', briefcase: 'Briefcase', lunchbag: 'Lunch bag', letter: 'Letter', bouquet: 'Bouquet', bread: 'Tray of bread', tray: 'Serving tray',
   plates: 'Stack of plates', candyjar: 'Jar of sweets', mug: 'Mug',
+  palette: 'Paint palette', balloondog: 'Balloon dog', flask2: 'Bubbling flask', gadget: 'Gadget', firstaid: 'First-aid kit', kitten: 'A kitten',
+  samples: 'Tray of samples', pot: 'Clay pot', stainedglass: 'Stained glass', yarn: 'Ball of yarn', scissors: 'Scissors', cloth: 'Bolt of cloth', mosaic: 'Mosaic tiles',
+  candles: 'Candles', boom: 'Boom mic',
 };
 
 // a pole down the outside of the hand, with a head at the bottom (mop, broom, shovel...)
@@ -1368,6 +1440,44 @@ const CARRY_DRAW = {
   },
   candyjar: (d, m) => hang(d, m, ['AAA', 'vxv', 'vPv', 'vvv']),
   mug: (d, m) => hang(d, m, ['QQ ', 'QQQ', 'QQ ']),
+  palette: (d, m) => hang(d, m, [' nnnn', 'nxnBn', 'nnPGn', ' nnn ']),
+  balloondog: (d, m) => hang(d, m, ['PP  ', 'PPPP', 'P  P']),
+  flask2: (d, m) => hang(d, m, [' Q ', ' A ', 'AGA', 'GGG', 'AAA']),
+  gadget: (d, m) => hang(d, m, ['A A', 'AjA', 'kxk', 'kkk']),
+  firstaid: (d, m) => hang(d, m, ['  kk  ', 'QQQQQQ', 'QQxxQQ', 'QQQQQQ']),
+  kitten: (d, m) => {
+    if (m.view === 'up') return;
+    if (m.view === 'side') d.pic(m.hx + 1, m.hy - 3, ['V V', 'VVV', 'VkV', ' VV']);
+    else d.pic(12 - m.wide, m.hy - 4, ['V   V', 'VVVVV', 'VkVkV', ' VVV ', ' V V ']);
+  },
+  samples: (d, m) => {
+    if (m.view === 'up') return;
+    if (m.view === 'side') d.pic(m.hx + 2, m.hy - 2, ['vG', 'AA']);
+    else d.pic(10 - m.wide, m.hy - 3, ['vG v B Gv', 'vG v B Gv', 'AAAAAAAAA']);
+  },
+  pot: (d, m) => hang(d, m, [' nn ', 'nNNn', 'nnnn', ' nn ']),
+  stainedglass: (d, m) => beside(d, m, ['kkkkk', 'kxkBk', 'kBkGk', 'kGkPk', 'kPkxk', 'kxkBk', 'kkkkk']),
+  yarn: (d, m) => hang(d, m, [' x ', 'xVx', ' x ']),
+  scissors: (d, m) => hang(d, m, ['k k', ' a ', 'a a', 'a a']),
+  cloth: (d, m) => {
+    if (m.view === 'up') return;
+    if (m.view === 'side') d.pic(m.hx + 1, m.hy - 3, ['BB', 'BB', 'BB']);
+    else d.pic(10 - m.wide, m.hy - 3, ['nBBBBBBBn', 'nBXBXBXBn', 'nBBBBBBBn']);
+  },
+  mosaic: (d, m) => {
+    if (m.view === 'up') return;
+    if (m.view === 'side') d.pic(m.hx + 2, m.hy - 2, ['xB', 'nn']);
+    else d.pic(11 - m.wide, m.hy - 3, ['xBGPxB', 'GPxBGP', 'nnnnnn']);
+  },
+  candles: (d, m) => hang(d, m, ['j j', 'Q Q', 'QQQ', 'QQQ']),
+  boom: (d, m) => {
+    const { hx, hy, view, top } = m;
+    const x = view === 'down' ? hx - 2 : hx + 2;
+    const s = view === 'down' ? -1 : 1;
+    d.line(x, hy + 1, x + s * 7, top - 4, 'A');
+    d.pic(x + s * 7 - 1, top - 7, ['kkk', 'kkk']);
+    hand(d, m, x);
+  },
   blueprint: (d, m) => {
     const { hx, hy, view } = m;
     if (view === 'side') d.pic(hx - 1, hy - 1, ['BBBBBB']);
@@ -1388,6 +1498,7 @@ export const GROUND = {
   trap: 'Lobster trap', fishbucket: 'Bucket of fish', bricks: 'Stack of bricks', paint: 'Paint cans', cart: 'Cleaning cart', barrow: 'Wheelbarrow',
   bin: 'Wheelie bin', pot: 'Flower pot', barrel: 'Barrel', buoy: 'Buoy', fishcrate: 'Crate of fish', plants: 'Seedlings', block: 'Stone block', bones: 'Fossil bones', campfire: 'Campfire', tent: 'Tent', sled: 'Sled', dog: 'A dog', tripod: 'Camera on a tripod',
   bike: 'Bicycle', coffeecart: 'Coffee cart', foodcart: 'Food cart', icecart: 'Ice-cream cart', flowers: 'Bucket of flowers', fruit: 'Crate of fruit', counter: 'Shop counter',
+  tiphat: 'Hat for tips', decks: 'DJ decks', scope: 'Telescope', chalkboard: 'Chalkboard', anvil: 'Anvil', loom: 'Loom', press: 'Printing press',
 };
 const GROUND_PICS = {
   bucket: [' kkkk ', 'AAAAAA', 'PPPPPP', 'PvvvvP', 'PPPPPP', ' PPPP '],
@@ -1423,6 +1534,13 @@ const GROUND_PICS = {
   flowers: [' xPx ', 'PGxGP', ' GGG ', ' nnn ', ' nnn ', ' nnn '],
   fruit: ['xVGxVPx', 'nnnnnnn', 'nNnnnNn', 'nnnnnnn'],
   counter: ['QQQQQQQQ', 'nnnnnnnn', 'nNnnnnNn', 'nnnnnnnn', 'nNnnnnNn', 'nnnnnnnn'],
+  tiphat: ['TYTYT', ' TTT '],
+  decks: ['kkkkkkkk', 'kAkkkkAk', 'AAAkkAAA', 'kAkkkkAk', 'kkkkkkkk', ' k    k ', ' k    k '],
+  scope: ['    AA', '   AA ', '  AA  ', ' A A  ', ' N N  ', 'N   N ', 'N   N '],
+  chalkboard: ['nnnnnnnn', 'nGQGGGGn', 'nGGQQGGn', 'nGGGGQGn', 'nnnnnnnn', ' n    n ', ' n    n '],
+  anvil: ['AAAAAA ', ' AAAAAA', '  AA   ', ' NNNN  ', ' NNNN  '],
+  loom: ['nnnnnnn', 'nlxlxln', 'nlxlxln', 'nxBxBxn', 'nnnnnnn', 'n     n', 'n     n'],
+  press: ['  N    ', 'kkkkkk ', 'k    k ', 'kQQQQk ', 'kkkkkk ', 'k    k ', 'k    k '],
 };
 export function drawGround(rows, view, look) {
   const pic = GROUND_PICS[look.ground];
@@ -1467,11 +1585,23 @@ export const POSES = {
   kite: 'Flying a kite', selfie: 'Selfie', stroller: 'Pushing a stroller', knit: 'Knitting', rest: 'Resting', nap: 'Napping', call: 'On the phone', speech: 'Giving a speech',
   jog: 'Jogging', yoga: 'Yoga', book: 'Reading a book', tvcamera: 'TV camera', magnify: 'Magnifying glass', sneak: 'Sneaking', lookaround: 'Looking around',
   knead: 'Kneading dough', stir: 'Stirring a pot',
+  easel: 'Painting at the easel', sketch: 'Sketching', chalk: 'Chalk drawing', violin: 'Violin', guitar: 'Guitar', cello: 'Cello', sax: 'Saxophone',
+  trumpet: 'Trumpet', flute: 'Flute', accordion: 'Accordion', drum: 'Drum', harp: 'Harp', lute: 'Lute', conduct: 'Conducting', sing: 'Singing', ballet: 'Ballet',
+  breakdance: 'Breakdancing', twirl: 'Twirling', mimebox: 'Mime box', juggle: 'Juggling', wand: 'Magic wand', rabbit: 'Rabbit from a hat',
+  statue: 'Holding still', soliloquy: 'Holding a skull', bow: 'Taking a bow', typewriter: 'Typewriter', megaphone: 'Megaphone', clapper: 'Clapperboard',
+  vogue: 'Striking a pose', scratch: 'Scratching records', pour: 'Pouring', stargaze: 'Stargazing', swoop: 'Butterfly net', feed: 'Feeding',
+  chalkboard: 'Writing on a board', anvil: 'At the anvil', wheel: 'Potter’s wheel', glassblow: 'Glassblowing', whittle: 'Whittling', weave: 'Weaving',
+  cobble: 'Mending a shoe', press: 'Printing', gild: 'Gilding',
 };
 export const POSE_VIEW = { dust: 'down', wipe: 'up', polish: 'down', jackhammer: 'down', flag: 'down', roll: 'up', plaster: 'up', wave: 'down', swim: 'down', lounge: 'down', read: 'down', sift: 'down', shush: 'down', present: 'down', type: 'down',
-  kite: 'down', knit: 'sit', rest: 'sit', nap: 'sit', speech: 'down', yoga: 'down', book: 'down' };
+  kite: 'down', knit: 'sit', rest: 'sit', nap: 'sit', speech: 'down', yoga: 'down', book: 'down',
+  sketch: 'sit', guitar: 'down', cello: 'sit', accordion: 'down', drum: 'down', conduct: 'down', sing: 'down', ballet: 'down', mimebox: 'down', juggle: 'down',
+  rabbit: 'down', statue: 'down', bow: 'down', typewriter: 'sit', clapper: 'down', vogue: 'down', scratch: 'down', wheel: 'sit', whittle: 'down', cobble: 'sit', lute: 'down', twirl: 'down' };
 export const POSE_RATE = { flag: 0.5, survey: 0.7, telescope: 0.6, lounge: 0.3, read: 0.4, point: 1.2, fish: 0.9, wave: 2.5, jackhammer: 10, polish: 5, weld: 7, swim: 2, binoculars: 0.5, inspect: 0.6, shush: 0.5, present: 1.5, photo: 0.4, type: 3, sift: 5, lurch: 1.5, gavel: 1.5,
-  kite: 1, selfie: 0.4, stroller: 2, knit: 2, rest: 0.4, nap: 0.6, call: 0.5, speech: 1, jog: 4, yoga: 0.5, book: 0.3, tvcamera: 1, magnify: 0.8, sneak: 2, lookaround: 0.7, knead: 2, stir: 2 };
+  kite: 1, selfie: 0.4, stroller: 2, knit: 2, rest: 0.4, nap: 0.6, call: 0.5, speech: 1, jog: 4, yoga: 0.5, book: 0.3, tvcamera: 1, magnify: 0.8, sneak: 2, lookaround: 0.7, knead: 2, stir: 2,
+  easel: 0.8, sketch: 2, chalk: 1.5, violin: 3, guitar: 3, cello: 2, sax: 2, trumpet: 2, flute: 2, accordion: 1.5, drum: 4, harp: 2, lute: 3, conduct: 2.5, sing: 1,
+  ballet: 0.8, breakdance: 3, twirl: 2, mimebox: 1, juggle: 4, wand: 2, rabbit: 0.7, statue: 0.2, soliloquy: 0.5, bow: 0.6, typewriter: 4, megaphone: 1, clapper: 1,
+  vogue: 0.5, scratch: 3, pour: 1, stargaze: 0.3, swoop: 2, feed: 1.5, chalkboard: 2, anvil: 3, wheel: 3, glassblow: 1, whittle: 2, weave: 2, cobble: 3, press: 1, gild: 1.5 };
 
 // the hand at the side is painted over with the clothes next to it
 function tuck(g, m) {
@@ -1488,13 +1618,13 @@ function tuck(g, m) {
   void top;
 }
 // a sleeve from the shoulder to a hand, side view
-function arm(d, from, to, sleeve = 'c') {
+function arm(d, from, to, sleeve = d.sleeve || 'c') {
   d.line(from[0], from[1], to[0], to[1], sleeve);
   d.px(to[0], to[1], 's');
   d.px(to[0] + 1, to[1], 's');
 }
 // a sleeve and hand that leave the body: outlined
-function armOut(d, cells, handAt, sleeve = 'c', skin = 's') {
+function armOut(d, cells, handAt, sleeve = d.sleeve || 'c', skin = 's') {
   cells.forEach(([x, y]) => d.px(x, y, sleeve));
   d.pic(handAt[0], handAt[1], [skin + skin, skin + skin]);
   cells.forEach(([x, y]) => [[1, 0], [-1, 0], [0, -1], [0, 1]].forEach(([dx, dy]) => d.get(x + dx, y + dy) === '.' && d.px(x + dx, y + dy, 'o')));
@@ -1930,6 +2060,330 @@ const POSE_DRAW = {
     d.line(21, top + 16, f ? 23 : 25, gy - 6, 'A');
     d.pic(f ? 22 : 24, top + 12, ['Q', ' ', 'Q'], null);
   },
+  easel: (d, m, f, g) => {
+    tuck(g, m);
+    const { top, gy } = m;
+    d.pic(21, top + 7, ['QQQQQQ', 'QQvvQQ', 'QGGvQQ', f ? 'QGGxQQ' : 'QGGGQQ', 'QQQQQQ', 'nnnnnn']);
+    d.line(22, top + 13, 21, gy, 'n');
+    d.line(25, top + 13, 26, gy, 'n');
+    d.line(24, top + 13, 24, gy - 2, 'n');
+    arm(d, [16, top + 14], [19, top + (f ? 10 : 12)]);
+  },
+  sketch: (d, m, f) => {
+    const { hy } = m;
+    d.pic(11, hy - 3, ['QQQQQQQQ', f ? 'QkQQQQQQ' : 'QQQkkQQQ', 'QQQQQQQQ']);
+    d.px(f ? 16 : 19, hy - 4, 'k');
+  },
+  chalk: (d, m, f, g) => {
+    const k = kneel(g, m);
+    const gy = m.gy;
+    arm(d, [16, k.top + 14], [19, gy - 3]);
+    d.pic(21, gy, [f ? 'xxPPBBGG' : 'xxPPBB  ']);
+  },
+  violin: (d, m, f, g) => {
+    tuck(g, m);
+    const { top } = m;
+    d.pic(16, top + 9, ['NNN', 'NnN', 'NNN']);
+    d.line(19, top + 10, 21, top + 11, 'N');
+    arm(d, [15, top + 13], [16, top + 12]);
+    d.line(f ? 18 : 20, top + 7, f ? 24 : 26, top + 13, 'r');
+  },
+  guitar: (d, m, f) => {
+    const { hy } = m;
+    d.pic(11, hy - 3, ['  nnn  ', ' nNNNn ', 'nnNkNnn', ' nnnnn ']);
+    d.line(17, hy - 2, 22, hy - 7, 'N');
+    d.px(f ? 13 : 14, hy - 4, 's');
+  },
+  cello: (d, m, f, g) => {
+    tuck(g, m);
+    tuck(g, { ...m, hx: 21 + m.wide });
+    const { hy } = m;
+    d.line(18, hy - 4, 23, hy - 12, 'N');
+    d.pic(12, hy - 4, ['  nnn  ', ' nnnnn ', ' nNkNn ', '  nkn  ', ' nnknn ', 'nnnknnn', 'nnNkNnn', 'nnnknnn', ' nnnnn ', '  nnn  ', '   A   ']);
+    d.line(f ? 7 : 9, hy + 1, f ? 19 : 21, hy + 2, 'r');
+    hands(d, [[f ? 7 : 9, hy], [20, hy - 8]]);
+  },
+  sax: (d, m, f, g) => {
+    tuck(g, m);
+    const { top } = m;
+    d.pic(19, top + 9, ['Y  ', ' Y ', ' Y ', ' Y ', ' YY', ' YYY', '  YY']);
+    hands(d, [[18, top + 12], [18, top + 14]]);
+    if (f) d.px(24, top + 14, 'j');
+  },
+  trumpet: (d, m, f, g) => {
+    tuck(g, m);
+    const { top } = m;
+    d.pic(19, top + 8, ['YYYYYYY ', ' Y Y  YY', 'YYYYYYYY'.slice(0, f ? 8 : 7)]);
+    hands(d, [[19, top + 11]]);
+  },
+  flute: (d, m, f, g) => {
+    tuck(g, m);
+    const { top } = m;
+    d.line(17, top + 9, 27, top + 10, 'a');
+    hands(d, [[f ? 20 : 21, top + 11], [24, top + 11]]);
+  },
+  accordion: (d, m, f) => {
+    const { hy } = m;
+    const w = f ? 12 : 10;
+    const x = 16 - w / 2;
+    d.pic(x, hy - 4, ['k' + 'xQ'.repeat(w / 2 - 1) + 'k', 'k' + 'Qx'.repeat(w / 2 - 1) + 'k', 'k' + 'xQ'.repeat(w / 2 - 1) + 'k', 'k' + 'k'.repeat(w - 2) + 'k']);
+  },
+  drum: (d, m, f) => {
+    const { hy } = m;
+    d.pic(11, hy - 1, ['QQQQQQQQQQ', 'xYxYxYxYxY', 'xxxxxxxxxx', 'xYxYxYxYxY']);
+    d.pic(f ? 12 : 13, hy - 4, ['N', 'N']);
+    d.pic(f ? 19 : 18, hy - 4, ['N', 'N']);
+  },
+  harp: (d, m, f, g) => {
+    tuck(g, m);
+    const { top, gy } = m;
+    d.pic(21, top + 3, ['YYYYYYY', 'Y l l Y', 'Y l l Y', ' Yl l Y', ' Yl l Y', '  Y l Y', '  Y l Y', '   Yl Y', '   Yl Y', '    YYY', '    YYY']);
+    arm(d, [16, top + 14], [21, top + (f ? 9 : 11)]);
+    void gy;
+  },
+  lute: (d, m, f) => {
+    const { hy } = m;
+    d.pic(11, hy - 3, ['  NNN  ', ' NnnnN ', 'NnnknnN', ' NnnnN ']);
+    d.line(17, hy - 2, 21, hy - 6, 'N');
+    d.px(f ? 13 : 14, hy - 4, 's');
+  },
+  conduct: (d, m, f, g) => {
+    tuck(g, { ...m, hx: 21 + m.wide, view: 'down' });
+    const { top } = m;
+    const w = m.wide;
+    if (f) armOut(d, [[22 + w, top + 12], [22 + w, top + 11], [23 + w, top + 10]], [23 + w, top + 8]);
+    else armOut(d, [[22 + w, top + 13], [23 + w, top + 13], [24 + w, top + 12]], [25 + w, top + 11]);
+    d.line(f ? 24 + w : 27 + w, f ? top + 7 : top + 11, f ? 26 + w : 29 + w, f ? top + 4 : top + 9, 'Q');
+  },
+  sing: (d, m, f, g) => {
+    tuck(g, m);
+    tuck(g, { ...m, hx: 21 + m.wide, view: 'down' });
+    const { top } = m;
+    const w = m.wide;
+    const y = top + (f ? 10 : 12);
+    armOut(d, [[8 - w, top + 13], [7 - w, y + 1]], [5 - w, y]);
+    armOut(d, [[23 + w, top + 13], [24 + w, y + 1]], [25 + w, y]);
+    const row = g[top + 9];
+    if (row) row[16] = 'k';
+  },
+  ballet: (d, m, f, g) => {
+    tuck(g, m);
+    tuck(g, { ...m, hx: 21 + m.wide, view: 'down' });
+    const { top } = m;
+    const w = m.wide;
+    if (f) {
+      armOut(d, [[8 - w, top + 12], [7 - w, top + 12], [6 - w, top + 12]], [4 - w, top + 11]);
+      armOut(d, [[23 + w, top + 12], [24 + w, top + 12], [25 + w, top + 12]], [26 + w, top + 11]);
+    } else {
+      armOut(d, [[8 - w, top + 12], [7 - w, top + 11], [6 - w, top + 10], [5 - w, top + 9]], [3 - w, top + 7]);
+      armOut(d, [[23 + w, top + 12], [24 + w, top + 11], [25 + w, top + 10], [26 + w, top + 9]], [27 + w, top + 7]);
+    }
+  },
+  breakdance: (d, m, f, g) => {
+    const k = kneel(g, m);
+    const gy = m.gy;
+    d.pic(f ? 5 : 21, gy - 4, f ? ['bb', 'pp', 'pp'] : ['  bb', ' pp ', 'pp  ']);
+    hands(d, [[18, gy - 1]]);
+    void k;
+  },
+  twirl: () => {},
+  mimebox: (d, m, f, g) => {
+    tuck(g, m);
+    tuck(g, { ...m, hx: 21 + m.wide, view: 'down' });
+    const { top } = m;
+    const w = m.wide;
+    const y = top + (f ? 9 : 11);
+    armOut(d, [[8 - w, top + 13], [7 - w, y + 2]], [6 - w, y]);
+    armOut(d, [[23 + w, top + 13], [24 + w, y + 2]], [25 + w, y]);
+  },
+  juggle: (d, m, f) => {
+    const { top, hy } = m;
+    const balls = f ? [[9, top - 2, 'x'], [16, top - 5, 'B'], [22, top - 1, 'P']] : [[12, top - 4, 'x'], [19, top - 4, 'B'], [8, top + 1, 'P']];
+    balls.forEach(([x, y, c]) => d.pic(x, y, [c + c, c + c]));
+    hands(d, [[8 - m.wide, hy - 2], [22 + m.wide, hy - 2]]);
+  },
+  wand: (d, m, f, g) => {
+    tuck(g, m);
+    const { top } = m;
+    armOut(d, [[17, top + 13], [18, top + 12], [19, top + 12]], [20, top + 11]);
+    d.line(22, top + 11, 25, top + 8, 'k');
+    d.px(25, top + 7, 'Q');
+    (f ? [[27, top + 5], [24, top + 4], [28, top + 9]] : [[26, top + 6], [28, top + 7], [27, top + 3]]).forEach(([x, y]) => d.px(x, y, 'j'));
+  },
+  rabbit: (d, m, f, g) => {
+    tuck(g, m);
+    const { hy } = m;
+    const x = 2 - m.wide;
+    armOut(d, [[9 - m.wide, hy - 3], [8 - m.wide, hy - 3]], [7 - m.wide, hy - 4]);
+    d.pic(x, hy - 3, ['kkkkkkk', ' kUUUk ', ' kTTTk ', ' kTTTk ', ' kkkkk ']);
+    d.pic(x + 1, hy - (f ? 9 : 6), f ? [' Q Q ', ' R R ', ' QQQ ', 'QkQkQ', ' QRQ '] : [' Q Q ', ' R R ', ' Q Q ']);
+  },
+  statue: (d, m, f, g) => {
+    tuck(g, { ...m, hx: 21 + m.wide, view: 'down' });
+    const { top } = m;
+    const w = m.wide;
+    armOut(d, [[22 + w, top + 12], [22 + w, top + 11], [23 + w, top + 10], [23 + w, top + 9]], [23 + w, top + 7]);
+    if (f) {
+      const row = g[top + 6];
+      const x = row?.lastIndexOf('e');
+      if (x > 0) row[x] = 'S';
+    }
+  },
+  soliloquy: (d, m, f, g) => {
+    tuck(g, m);
+    const { top } = m;
+    armOut(d, [[17, top + 13], [18, top + 12], [19, top + 12], [20, top + 11]], [21, top + 10]);
+    d.pic(22, top + 7 - (f ? 1 : 0), ['QQQ', 'kQk', 'QQQ', ' Q ']);
+  },
+  bow: (d, m, f, g) => {
+    if (!f) {
+      tuck(g, { ...m, hx: 21 + m.wide, view: 'down' });
+      armOut(d, [[22 + m.wide, m.top + 13], [23 + m.wide, m.top + 12], [24 + m.wide, m.top + 12]], [25 + m.wide, m.top + 11]);
+      return;
+    }
+    // bowing: the upper body dips two rows
+    const at = m.top + 14;
+    g.splice(at, 2);
+    g.unshift(Array(T).fill('.'), Array(T).fill('.'));
+  },
+  typewriter: (d, m, f) => {
+    const { hy } = m;
+    d.pic(10, hy - 5, ['   QQQQQ   ', '  kkkkkkk  ', ' kQkQkQkQk ', f ? ' kkQkkQkkk ' : ' kkkQkkQkk ', ' kkkkkkkkk ']);
+  },
+  megaphone: (d, m, f, g) => {
+    tuck(g, m);
+    const { top } = m;
+    d.pic(19, top + 7, f ? ['xx  ', 'xxQQ', 'xxQQ', 'xx  '] : [' x  ', 'xxQ ', 'xxQ ', ' x  ']);
+    hands(d, [[18, top + 10]]);
+  },
+  clapper: (d, m, f) => {
+    const { hy } = m;
+    d.pic(10 - m.wide, hy - 6, f ? ['kQkQk ', 'kkkkk ', 'QQQQQ', 'QkQkQ', 'QQQQQ'] : [' kQkQk', 'k     ', 'QQQQQ', 'QkQkQ', 'QQQQQ']);
+    hands(d, [[9 - m.wide, hy - 2]]);
+  },
+  vogue: (d, m, f, g) => {
+    tuck(g, m);
+    tuck(g, { ...m, hx: 21 + m.wide, view: 'down' });
+    const { top } = m;
+    const w = m.wide;
+    if (f) {
+      armOut(d, [[22 + w, top + 12], [22 + w, top + 11], [23 + w, top + 10]], [22 + w, top + 8]);
+      d.pic(9 - w, top + 16, ['ss']);
+    } else {
+      armOut(d, [[9 - w, top + 12], [8 - w, top + 11], [8 - w, top + 10]], [8 - w, top + 8]);
+      d.pic(21 + w, top + 16, ['ss']);
+    }
+  },
+  scratch: (d, m, f, g) => {
+    tuck(g, { ...m, hx: 21 + m.wide, view: 'down' });
+    const { top, hy } = m;
+    const w = m.wide;
+    if (f) armOut(d, [[22 + w, top + 12], [22 + w, top + 10]], [21 + w, top + 7]);
+    else d.pic(22 + w, hy - 1, ['ss']);
+  },
+  pour: (d, m, f, g) => {
+    tuck(g, m);
+    const { top } = m;
+    arm(d, [16, top + 14], [19, top + 13]);
+    d.pic(21, top + 11, f ? ['AA ', 'AGG', ' GA'] : ['AA', 'GA', 'GA']);
+    d.pic(23, top + 16, ['AvA', 'AGA', 'AAA']);
+    if (f) d.px(24, top + 14, 'G');
+  },
+  stargaze: (d, m, f, g) => {
+    tuck(g, m);
+    const { top, gy } = m;
+    d.pic(19, top + 3 - (f ? 1 : 0), ['     AA', '   AAAA', ' AAAA  ', 'kAA    ']);
+    d.line(22, top + 7, 20, gy, 'N');
+    d.line(22, top + 7, 25, gy, 'N');
+    arm(d, [16, top + 13], [19, top + 8]);
+  },
+  swoop: (d, m, f, g) => {
+    tuck(g, m);
+    const { top, gy } = m;
+    if (!f) {
+      d.line(15, top + 15, 22, top + 4, 'N');
+      d.pic(21, top + 1, [' AAA ', 'AlllA', ' lll ']);
+    } else {
+      d.line(15, top + 15, 25, gy - 6, 'N');
+      d.pic(24, gy - 7, ['AAA', 'lll', ' l ']);
+    }
+    hands(d, [[16, top + 14]]);
+    d.pic(f ? 27 : 26, f ? top + 2 : top + 6, ['R R', ' k ']);
+  },
+  feed: (d, m, f, g) => {
+    tuck(g, m);
+    const { top } = m;
+    arm(d, [16, top + 14], [19, top + (f ? 11 : 14)]);
+    if (f) d.pic(23, top + 6, ['ff', ' f']);
+    else d.pic(21, top + 13, ['f']);
+  },
+  chalkboard: (d, m, f, g) => {
+    tuck(g, m);
+    const { top, gy } = m;
+    d.pic(21, top + 4, ['nnnnnnnnn', 'nGGGGGGGn', 'nGQGQGGGn', 'nGGGGGGGn', f ? 'nGQQGQGGn' : 'nGQGGGGGn', 'nGGGGGGGn', 'nnnnnnnnn']);
+    d.line(22, top + 11, 22, gy, 'n');
+    d.line(28, top + 11, 28, gy, 'n');
+    armOut(d, [[17, top + 13], [18, top + 12], [19, top + 11]], [20, top + (f ? 8 : 9)]);
+  },
+  anvil: (d, m, f, g) => {
+    tuck(g, m);
+    const { top, gy } = m;
+    d.pic(20, gy - 5, ['AAAAAAA ', ' AAAAAAA', '  AAA   ', ' NNNNN  ', ' NNNNN  ']);
+    d.pic(23, gy - 6, ['VVj']);
+    if (!f) {
+      armOut(d, [[17, top + 12], [18, top + 11]], [19, top + 9]);
+      d.pic(20, top + 6, ['AA', 'n ']);
+    } else {
+      arm(d, [16, top + 14], [20, gy - 9]);
+      d.pic(22, gy - 8, ['AA']);
+      [[26, gy - 9], [27, gy - 7], [24, gy - 10]].forEach(([x, y]) => d.px(x, y, 'j'));
+    }
+  },
+  wheel: (d, m, f) => {
+    const { hy } = m;
+    d.pic(10, hy - 1, ['AAAAAAAAAAAA', ' kkkkkkkkkk ']);
+    d.pic(14, hy - 5, f ? [' nn ', 'nNNn', 'nnnn', ' nn '] : ['nnnn', 'nNnn', ' nn ', 'nnnn']);
+  },
+  glassblow: (d, m, f, g) => {
+    tuck(g, m);
+    const { top } = m;
+    d.line(18, top + 9, 26, top + 15, 'A');
+    d.pic(26, top + 14 - (f ? 1 : 0), f ? [' jj', 'jVVj', 'jVVj', ' jj'] : ['jj', 'VV', 'jj']);
+    hands(d, [[20, top + 11]]);
+  },
+  whittle: (d, m, f) => {
+    const { hy } = m;
+    d.pic(12, hy - 3, ['  nn  ', ' nNNn ', '  nn  ']);
+    d.pic(f ? 17 : 18, hy - 3, ['a', 'a']);
+    if (f) d.px(15, hy + 1, 'n');
+  },
+  weave: (d, m, f, g) => {
+    tuck(g, m);
+    const { top, gy } = m;
+    d.pic(21, top + 6, ['nnnnnnnn', 'nlxlxlxn', 'nlxlxlxn', 'nxBxBxBn', 'nBxBxBxn', 'nnnnnnnn']);
+    d.line(21, top + 12, 21, gy, 'n');
+    d.line(28, top + 12, 28, gy, 'n');
+    arm(d, [16, top + 14], [20, top + (f ? 9 : 11)]);
+  },
+  cobble: (d, m, f) => {
+    const { hy } = m;
+    d.pic(12, hy - 2, ['NNNNN ', 'NNNNNN']);
+    d.pic(f ? 18 : 19, hy - (f ? 4 : 6), ['AA', 'n ', 'n ']);
+  },
+  press: (d, m, f, g) => {
+    tuck(g, m);
+    const { top, gy } = m;
+    d.pic(21, gy - 8, ['kkkkkkk', 'k     k', 'kQQQQQk', 'kkkkkkk', 'k     k', 'k     k', 'k     k']);
+    d.line(19, top + (f ? 10 : 14), 22, gy - 9, 'N');
+    hands(d, [[18, top + (f ? 10 : 14)]]);
+  },
+  gild: (d, m, f, g) => {
+    tuck(g, m);
+    const { top } = m;
+    d.pic(21, top + 7, ['YYYYYY', 'Y    Y', 'Y    Y', 'Y    Y', 'YYYYYY']);
+    arm(d, [16, top + 14], [19, top + (f ? 9 : 11)]);
+    d.px(21, top + (f ? 8 : 10), 'n');
+  },
   detect: (d, m, f, g) => {
     tuck(g, m);
     const { top, gy } = m;
@@ -2015,9 +2469,19 @@ export function poseFrames(pose, base, look) {
   if (!fn) return null;
   const stepping = pose === 'jog' || pose === 'sneak';
   return [0, 1].map((f) => {
-    let rows = base(view, stepping ? f + 1 : 0);
+    let rows = base(pose === 'twirl' && f ? 'side' : view, stepping ? f + 1 : 0);
     if (pose === 'lookaround' && f) rows = fromGrid(toGrid(rows).map((r) => r.reverse()));
-    return withRoom(rows, (g) => fn(draw(g), metrics(g, view, look.build), f, g));
+    return withRoom(rows, (g) => {
+      const m = metrics(g, view, look.build);
+      const d = draw(g);
+      d.sleeve = sleeveOf(g, m);
+      fn(d, m, f, g);
+    });
   });
+}
+// the colour of the arm just above the hanging hand, so a raised arm keeps its sleeve (or bare skin)
+function sleeveOf(g, m) {
+  const c = m.view === 'side' ? g[m.hy - 1]?.[m.hx] : g[m.hy - 2]?.[m.hx];
+  return c && c !== 'o' && c !== '.' ? c : 'c';
 }
 export const poseView = (pose) => (pose === 'lounge' ? 'sit' : POSE_VIEW[pose] || 'side');
