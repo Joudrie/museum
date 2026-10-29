@@ -111,7 +111,7 @@ function init() {
   // a goal to claim: the Journal button's dot
   const jdot = $('journal-btn')?.querySelector('.badge');
   if (jdot) {
-    const watch = () => !jdot.classList.contains('hidden') && hint('journal-claim', 'A goal is done. Open the Journal to claim its gold.', '#journal-btn');
+    const watch = () => !jdot.classList.contains('hidden') && hint('journal-claim', 'A goal is done. Open the Journal to claim its gold.', '#journal-btn', { side: 'right' });
     new MutationObserver(watch).observe(jdot, { attributes: true, attributeFilter: ['class'] });
     watch();
   }

@@ -2,11 +2,11 @@
  "_note": "A ratchet: each screen may not get worse than this. Lower the numbers as screens are migrated (node tests/ui-layout.cjs --update). Goal: smallTargets 0 and minFont 13 everywhere.",
  "screens": {
   "01-world": {
-   "smallTargets": 1,
+   "smallTargets": 0,
    "minFont": 13
   },
   "02-hud-income": {
-   "smallTargets": 1,
+   "smallTargets": 0,
    "minFont": 13
   },
   "03-journal-goals": {
@@ -14,71 +14,71 @@
    "minFont": 11
   },
   "03-journal-paintings": {
-   "smallTargets": 1,
+   "smallTargets": 0,
    "minFont": 13
   },
   "04-toolkit": {
-   "smallTargets": 1,
+   "smallTargets": 0,
    "minFont": 13
   },
   "05-customize-room": {
-   "smallTargets": 3,
+   "smallTargets": 0,
    "minFont": 13
   },
   "06-customize-rooms": {
-   "smallTargets": 1,
+   "smallTargets": 0,
    "minFont": 13
   },
   "07-customize-character": {
-   "smallTargets": 1,
+   "smallTargets": 0,
    "minFont": 13
   },
   "08-settings": {
-   "smallTargets": 3,
+   "smallTargets": 0,
    "minFont": 13
   },
   "09-build-room": {
-   "smallTargets": 1,
+   "smallTargets": 0,
    "minFont": 13
   },
   "10-wall-spot": {
-   "smallTargets": 2,
+   "smallTargets": 0,
    "minFont": 13
   },
   "11-viewer": {
-   "smallTargets": 6,
+   "smallTargets": 0,
    "minFont": 13
   },
   "12-staff-board": {
-   "smallTargets": 1,
+   "smallTargets": 0,
    "minFont": 13
   },
   "13-office": {
-   "smallTargets": 1,
+   "smallTargets": 0,
    "minFont": 13
   },
   "14-ask-unlock": {
-   "smallTargets": 1,
+   "smallTargets": 0,
    "minFont": 13
   },
   "15-daily": {
-   "smallTargets": 1,
+   "smallTargets": 0,
    "minFont": 13
   },
   "16-share": {
-   "smallTargets": 2,
+   "smallTargets": 0,
    "minFont": 13
   },
   "17-conversation": {
-   "smallTargets": 1,
+   "smallTargets": 0,
    "minFont": 13
   },
   "18-staff-bubble": {
-   "smallTargets": 1,
+   "smallTargets": 0,
    "minFont": 13
   },
   "19-toast": {
-   "smallTargets": 1,
+   "smallTargets": 0,
    "minFont": 13
   },
   "20-island-world": {
@@ -98,16 +98,36 @@
    "minFont": 13
   },
   "30-builder": {
-   "smallTargets": 16,
-   "minFont": 11
+   "smallTargets": 2,
+   "minFont": 12.5
   },
   "03-journal-overview": {
-   "smallTargets": 3,
+   "smallTargets": 0,
    "minFont": 13
   },
   "16b-menu-hub": {
-   "smallTargets": 1,
+   "smallTargets": 0,
    "minFont": 13
+  },
+  "05b-customize-floor": {
+   "smallTargets": 0,
+   "minFont": 13
+  },
+  "40-large-text-hud": {
+   "smallTargets": 0,
+   "minFont": 15
+  },
+  "41-large-text-settings": {
+   "smallTargets": 0,
+   "minFont": 15
+  },
+  "42-left-handed": {
+   "smallTargets": 0,
+   "minFont": 13
+  },
+  "31-builder-menu": {
+   "smallTargets": 5,
+   "minFont": 12.5
   }
  }
 }
