@@ -26,8 +26,8 @@ builder ⟳ turn for multi-side pieces, one family linked (#82) · dig spots wit
 
 ## CHAT 1: Content and images (the pipeline)
 Owns: `tools/`, `content/`, `docs/CONTENT*.md`, `public/paintings/`, `src/collections/data/paintings.js`. Claim: `claimed: 2026-10-29`
-- [ ] **Host our own copies of the 49 paintings.** They hot-link Wikimedia (429 / 404). Download the *same* image, resize to 1280px long side, JPEG under about 500 KB, save to `public/paintings/<slug>.jpg`, point the data at it (same ids, saves keep working). Don't swap any image for a different work.
-- [ ] 3 broken links (horse-fair, temeraire, crossing-delaware) and 8 wrong shapes (school-athens, emmaus, water-lilies, cafe-terrace, creation-adam, anatomy-lesson, pearl-earring, wheatfield-crows): write proposals to `content/image-proposals.md` with source, size, shape. Don't apply them; the user approves.
+- [x] (#113; 46 of 49, the other 3 are broken links) **Host our own copies of the 49 paintings.** They hot-link Wikimedia (429 / 404). Download the *same* image, resize to 1280px long side, JPEG under about 500 KB, save to `public/paintings/<slug>.jpg`, point the data at it (same ids, saves keep working). Don't swap any image for a different work.
+- [x] (#119) 3 broken links (horse-fair, temeraire, crossing-delaware) and 8 wrong shapes (school-athens, emmaus, water-lilies, cafe-terrace, creation-adam, anatomy-lesson, pearl-earring, wheatfield-crows): write proposals to `content/image-proposals.md` with source, size, shape. Don't apply them; the user approves.
 - [ ] Hooks for the 4 Met drafts (Night-Shining White, Esther, Gulf Stream, Drawing Lesson): a quotable museum or Commons sentence, as a claim with the exact quote.
 - [ ] Third, fourth and fifth batches (about 20 each): women artists, 18th to 20th century, Africa, Pacific, Middle East, Latin America, Indigenous work, more non-European. Pin by id. Mechanical fixes only; rarity and wording are the user's.
 - [ ] Natural-history and archaeology imagery (public domain) for the other collections, with a quoted source for every fact.
@@ -38,15 +38,15 @@ Owns: `tools/`, `content/`, `docs/CONTENT*.md`, `public/paintings/`, `src/collec
 
 ## CHAT 2: Builder and ground tools
 Owns: `src/builder/`, `builder.html`, `public/builder/`, `tools/build_palette.py`, `src/mapformat.js`. Claim: `claimed: 2026-10-29`
-- [ ] **Turn families:** `public/builder/rotations.json` links the sides of one object (one chair so far). Find the true sets in the free packs (verify each by eye, never auto-group), add them. Keep the file format so the user's new sprites drop in.
-- [ ] Search box for pieces; recently used at the top; favourites.
+- [ ] **Turn families (started, #117: 4 armchair colours verified; more sets to check with `tools/rotation_sheet.py`):** `public/builder/rotations.json` links the sides of one object (one chair so far). Find the true sets in the free packs (verify each by eye, never auto-group), add them. Keep the file format so the user's new sprites drop in.
+- [x] Search box for pieces; recently used at the top; favourites. (#117)
 - [ ] **Grass that blends** into paths, dirt, sand and stone (autotile edges); jagged rocks instead of round ones.
 - [ ] Every ground type, path block and furniture piece is its own named, placeable item (so the user can redraw them one by one).
-- [ ] Builder palette organisation (clear groups, e.g. Dig sites, Paths, Buildings); a "what's new" row.
-- [ ] Copy / paste regions, rotate-selection, multi-select move, layers view, grid toggle, measure tool.
-- [ ] Map import / export (share a map as a file or link; the format is already shareable).
-- [ ] Builder Playwright tests (place, turn, undo, save, vault restore).
-- [ ] Never lose work: keep the autosave and vault paths intact; test crash and reload.
+- [x] Builder palette organisation (duplicate lists merged, "What's new" row from `public/builder/whatsnew.json`; a Dig sites list waits for Chat 6's tiles) (#120).
+- [x] Copy / paste regions, multi-select move (cut + paste), layers view (menu → Options: Ground / Pieces), grid toggle, measure (the Area tool shows W×H). Mirror the copied area is in; rotating a whole area is not (sprites don't turn without a family) (#121).
+- [x] Map import / export (already in ☰: Save map file, Copy map code, Open file…; #119) (share a map as a file or link; the format is already shareable).
+- [x] Builder Playwright tests (place, turn, undo, save, vault restore): `tests/builder.cjs` (#119).
+- [x] Never lose work: autosave and vault paths intact; reload and wiped-storage restore are tested in `tests/builder.cjs` (#119). (Keep it passing on every builder change.)
 
 ## CHAT 3: Quality, performance and polish
 Owns: `tests/`, `.github/`, `vite.config.js`, `src/settings*.js`, `src/ui.js`. Claim: `claimed: 2026-10-29`
@@ -81,12 +81,12 @@ Owns: `src/showcase.js`, `src/viewer.js`, `src/collections/render.js`, new `src/
 
 ## CHAT 6: Digging v2 and puzzle mechanics
 Owns: `src/dig.js`, `src/puzzles*.js`, `src/collections/data/{minerals,fossils}.js`. Claim: `claimed: 2026-10-29`
-- [ ] More finds as data collections: pottery shards, coins, arrowheads, shells, meteorites, amber.
+- [x] More finds as data collections: pottery shards, coins, arrowheads, shells, meteorites (amber was already a fossil) (PR 106). Dig kinds: mineral, fossil, ruin, shore, crater.
 - [ ] Dig tools (brush, trowel, pick) that change speed and what turns up; a bone that needs several spots to complete.
 - [ ] Bigger dig sites: a cliff face or trench worked across several tiles; a dig-site room sandbox.
 - [ ] Metal-detector hunt (warmer / colder); map fragments (collect 4 and the X appears).
 - [ ] Puzzle pieces as builder tiles and runtime: push blocks, boulders to smash, pressure plates and levers, iron gates, ice sliding, fog that clears as you walk, riddles from NPCs, mazes.
-- [ ] Dig spots in the builder palette under "Dig sites"; spots show their rest time; daily dig goals.
+- [ ] Dig spots in the builder palette under "Dig sites" (done, PR 106); spots show their rest time; daily dig goals.
 - [ ] Finds arrive dirty where Chat 4 expects them (`dirty: true` on a stack).
 
 ## CHAT 7: Expeditions, leads and expedition islands
@@ -113,7 +113,7 @@ Owns: `src/collections/` (except render.js), `src/journal.js`, `tools/import_col
 ## CHAT 9: Rooms and the museum building
 Owns: `src/rooms.js`, `src/shaped.js`, `src/walldraw.js`, `src/atrium.js`, `src/RoomScene.js` (shared, take care). Claim: `claimed: 2026-10-29`
 - [ ] **Non-square rooms** (glass walls, curved, domed, sharp angles, open plan, small quiet rooms). **Blocked: needs a design pass with the user. Do the other items first.**
-- [ ] Corner and L-shaped rooms; truly seamless archways that show both rooms at once.
+- [ ] Corner and L-shaped rooms (done, PR pending: `lhall`, `corner`); truly seamless archways that show both rooms at once.
 - [ ] Elevator in the lobby and the first new floor (each floor a self-contained pack).
 - [ ] Front lawn you walk out onto (steps, banners, fountain, sign); museum exterior and facade styles that change the building (look comes from the user).
 - [ ] Rooftop terrace with a telescope at night.
@@ -135,8 +135,8 @@ Owns: `src/famous.js`, `src/lines.js`, `src/quests.js`, `src/talk.js`, `src/staf
 - [ ] Pets and animals in the museum.
 
 ## CHAT 11: Atmosphere, seasons and audio
-Owns: `src/weather.js`, `src/lighting.js`, `src/ambient.js`, `src/music.js`, `src/foliage.js`, `src/critters.js`. Claim: `open`
-- [ ] Seasons on the real calendar (snow on the lawn, fall leaves, holiday decor, seasonal visitors like trick-or-treaters). Cherry trees must stay pink in autumn if the user asks.
+Owns: `src/weather.js`, `src/lighting.js`, `src/ambient.js`, `src/music.js`, `src/foliage.js`, `src/critters.js`. Claim: `claimed: 2026-10-29`
+- [ ] Seasons on the real calendar (snow on the lawn, fall leaves, holiday decor, seasonal visitors like trick-or-treaters). Snow, fall leaves and recoloured trees already exist; **cherry trees stay pink in autumn (done, this PR)**. Still to do: holiday decor, seasonal visitors.
 - [ ] Daily rhythm (Animal Crossing / Stardew feel); weather effects inside and outside; day / night polish.
 - [ ] Per-room music and ambience; sound effects pass; a mute and volume mix.
 - [ ] Lighting performance on phones (High / Low / Off already exist).
@@ -153,14 +153,14 @@ Owns: `src/staffmenu.js`, `src/officemenu.js`, `src/office.js`, `src/incomemenu.
 - [ ] ON HOLD (needs the user): gems as time (skip construction, "X days of income"), rewarded ads, cosmetics, a seasonal exhibition pass, crates with odds and pity. Rule: **no pay-to-win; never a gem or crate economy as the core.**
 
 ## CHAT 13: Share, visit and retention
-Owns: new `src/share*.js`, `src/daily.js`. Claim: `open`
+Owns: new `src/share*.js`, `src/daily.js`. Claim: `claimed: 2026-10-29`
 - [ ] Export a museum as a link; a short tour image strip or clip; "rate my museum" screenshot card.
 - [ ] Visit a friend's museum asynchronously (no multiplayer server); friends' islands in the boat picker (the map format is shareable).
 - [ ] Daily wheel spin, first-game-of-the-day and streak bonuses, daily guests, Painting of the Day surfaced in the UI.
 - [ ] Auction house and co-op cleanup (later, social; ON HOLD).
 
 ## CHAT 14: Halls (the content that fills the rooms)
-Owns: new `src/halls/`, room-preset JSON in `content/halls/`. Claim: `open`. Depends on Chats 5, 8 and 9 landing; start with presets and decor lists.
+Owns: new `src/halls/`, room-preset JSON in `content/halls/`. Claim: `claimed: 2026-10-29`. Depends on Chats 5, 8 and 9 landing; start with presets and decor lists.
 - [ ] **Art:** galleries by era (Renaissance, Dutch, Impressionist, American, Japanese prints); sculpture court; **the Gardner Room** (salon walls around a courtyard garden; the empty heist frames); modern wing (white cube, when copyright allows); prints and early photography.
 - [ ] **Science:** dinosaur hall (T. rex centrepiece, fossil shelves in HD); space (planetarium dome, meteorites, moon rock, rocket); electricity (Van de Graaff and a timed lightning show); human body, optics, illusions (mirror maze, camera obscura).
 - [ ] **Natural history:** glass flowers, minerals and gems, taxidermy dioramas, ocean hall with a whale skeleton, aquarium wing.
@@ -171,7 +171,7 @@ Owns: new `src/halls/`, room-preset JSON in `content/halls/`. Claim: `open`. Dep
 - [ ] Each hall = a themed room preset + decor + which collections and sets belong there.
 
 ## CHAT 15: Asset hunt and art swap support
-Owns: `assets/vendor/`, `docs/ASSETS.md`, `tools/extract_sprites.py`, `tools/` sprite scripts. Claim: `open`
+Owns: `assets/vendor/`, `docs/ASSETS.md`, `tools/extract_sprites.py`, `tools/` sprite scripts. Claim: `claimed: 2026-10-29`
 - [ ] Run the **super dig** in `docs/ASSET-HUNT.md` (find, don't make; CC0 / CC-BY / CC-BY-SA / OGA-BY / GPL only; no non-commercial). Check network access first and don't get around bot checks; list itch.io links for the user to download by hand. Save results to `docs/ASSETS.md` (round 3), ranked top 20.
 - [ ] Categories: statues and sculpture (busts, plinths, display cases, rope barriers); jagged rocks and nature; museum architecture pieces (glass, curved, arches, domes, skylights, spiral stairs, facades); exhibits (dinosaur skeletons, mummies, armour, pottery, meteorites, ship models, taxidermy, aquarium tanks); furniture with four facings; island buildings, fences, docks, boats, market stalls, playground, festival decor; characters and animals; dig-site props (tents, crates, tools).
 - [ ] A script that lists every placeholder sprite and tile by name, size and where it's used, so the user can redraw one at a time.
