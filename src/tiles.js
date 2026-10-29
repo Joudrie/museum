@@ -11,6 +11,7 @@
 import { addLandmarks } from './landmarks.js';
 import { addScenery } from './scenery.js';
 import { applyTileSwap } from './swap.js';
+import { addCliffKits } from './cliffkit.js';
 
 export const T = 32;
 const FRAMES = 4;
@@ -362,6 +363,7 @@ export function buildTiles() {
 
   // Cliffs and ledges (facing the camera)
   addCliffs(add);
+  addCliffKits(add, { pixels, tnoise, hash, hex, T }); // grey and brown cliffs on any ground (src/cliffkit.js)
 
   // Plants
   addPlants(add, anim);
