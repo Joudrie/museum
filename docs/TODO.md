@@ -128,6 +128,7 @@ Owns: `src/famous.js`, `src/lines.js`, `src/quests.js`, `src/talk.js`, `src/staf
 - [~] **Memories done (#this PR: `src/regulars.js`, visitors you chat with 3 times become regulars with their own lines).** Left: goals, relationships, more lines per personality. Visitors with memories, goals and relationships; regulars that grow into characters; personalities (nerd, casual, superfan, snob, kid, grump, tourist) with more lines.
 - [~] Famous visitors with quest chains and period-accurate dialogue; they send you places (feeds Chat 7). Odds rise with their works in your codex; permanent boosts. **Done: chains for Vermeer, Rembrandt, Hokusai (3 sourced steps each, last step offers a lead).** Left: the other 17 visitors, odds by codex.
 - [x] A **Gardner-style heist mystery** as the first full story arc. "The Empty Frames", told by Edmund in 5 chapters, every line quoted from the Gardner Museum's own theft page (this PR).
+- [x] **Guest conversation overhaul** (done in the main chat, not chat 10): real conversations with ordinary visitors, painting info, jokes, tips, requests, daily gifts. See `docs/HANDOFF.md` → Guest conversations. Chat 10: build on `src/chatter.js` and `chatter_lines.js` (add topics and lines), don't rebuild it.
 - [ ] Semi-mythological famous visitors (the user said later).
 - [ ] The caretaker (name and look), the tutorial and first session; day 2 and day 3 beats; daily guests.
 - [ ] Daily and weekly quests, goal pacing (the 19 goals and rewards; daily goals?).

@@ -104,7 +104,8 @@ const ok = (msg) => console.log('  ✓ ' + msg);
       s.npcs.forEach((v) => {
         if (v.kind === 'guard') return; // opens the camera offer
         s.talkTo(v);
-        if (!document.querySelector('.talk-text').textContent) throw new Error('empty line from ' + v.kind);
+        const chatting = !document.getElementById('chat')?.classList.contains('hidden'); // visitors open the conversation box
+        if (!chatting && !document.querySelector('.talk-text').textContent) throw new Error('empty line from ' + v.kind);
         s.endTalk();
         n++;
       });

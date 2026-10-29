@@ -44,6 +44,11 @@ import { officeLevel, setOfficeLevel, resetOffice, perks, itemLevel, LEVELS, MAX
 import { openOffice } from './officemenu.js';
 import { ask } from './ask.js';
 import { remember } from './regulars.js';
+import { converse, giftStatus, recordGift } from './chatter.js';
+import { runDialogue } from './dialogue.js';
+import { list as listEntries } from './collections/index.js';
+import { collect as collectEntry } from './collections/codex.js';
+import { load as loadStore, save as saveStore } from './storage.js';
 import { heistBeat, chainStep, chainAsk, complete as completeBeat } from './story.js';
 import { PAINTINGS } from './paintings.js';
 import { roomRating, museumRating, starText } from './rating.js';
@@ -863,6 +868,8 @@ export class RoomScene extends Phaser.Scene {
       const col = PET_COLORS.dog[Math.floor(hash(seed, 31, 70) * PET_COLORS.dog.length)];
       n.pet = new Pet(this, 'dog', col, s, { leash: true, gap: 6 });
     }
+    // some visitors have a gift for you today: a star shows over their head now and then
+    n.hasGift = !this.isBreak && hash(seed, 77, 99) < 0.4 && giftStatus(n.name, kind, { get: loadStore, set: saveStore }).giftOK;
     return n;
   }
 
@@ -1286,6 +1293,7 @@ export class RoomScene extends Phaser.Scene {
     }
     if (!n.staff && Math.random() < 0.3) line = this.contextLine() || line;
     if (!n.staff) line = remember(n.name, n.kind) || line;
+    if (KINDS.includes(n.kind) && !n.staff && n.kind !== 'caretaker') return this.chat(n, line);
     if (n.kind === 'guard' && nextSecurity()) return this.offerCameras(n, line);
     if (n.kind === 'caretaker' && this.tellStory(n, heistBeat(this.storyContext()), 'The Empty Frames')) return;
     n.talking = true;
@@ -1297,6 +1305,55 @@ export class RoomScene extends Phaser.Scene {
     sfx('talk');
     const at = this.screenAt(n.s.x, n.s.y - 34);
     showTalk(n.name, PERSONALITIES[n.kind].label, line, at);
+  }
+
+  // A real conversation with a visitor (src/chatter.js): about the painting they stand by,
+  // something funny, a tip, a request, and sometimes a gift.
+  chat(n, opener) {
+    const near = this.paintingNear(n.s.x, n.s.y);
+    const info = near ? PAINTINGS.find((p) => p.id === near.id) : null;
+    const hungBy = this.storyContext().hungBy;
+    const store = { get: loadStore, set: saveStore };
+    const { giftOK, given } = giftStatus(n.name, n.kind, store);
+    const artists = [...new Set(PAINTINGS.map((p) => p.by))];
+    const wantBy = artists[Math.floor(Math.random() * artists.length)];
+    const finds = { mineral: listEntries({ collection: 'mineral' }).filter((e) => (e.rarity || 1) <= 2), fossil: listEntries({ collection: 'fossil' }).filter((e) => (e.rarity || 1) <= 2) };
+    this.pause(true);
+    n.talking = true;
+    n.target = null;
+    n.path = null;
+    n.goal = null;
+    n.hasGift = false;
+    this.talkingTo = n; // (so endTalk, and anything that opens a panel, closes the conversation)
+    if (!n.seat) this.faceSprite(n.s, n.prefix, this.player.x - n.s.x, this.player.y - n.s.y);
+    sfx('talk');
+    const gen = converse({ kind: n.kind, name: n.name, opener, painting: info && { title: info.title, by: info.by, year: info.year, blurb: info.blurb }, hungBy: hungBy.length ? PAINTINGS.filter((p) => hungBy.includes(p.artist)).map((p) => p.by) : [], wantBy, giftOK, given, finds });
+    const tex = this.textures.get(`${n.prefix}_down`)?.getSourceImage?.();
+    this.chatHandle = runDialogue(gen, {
+      name: n.name,
+      label: PERSONALITIES[n.kind].label,
+      portrait: tex,
+      onGift: (gift) => {
+        recordGift(n.name, n.kind, store);
+        sfx('unlock');
+        if (gift.type === 'gold') {
+          addCoins(gift.n);
+          this.updateHud();
+          this.toast(`${n.name} gave you ${gift.n} gold`);
+        } else {
+          collectEntry(gift.id);
+          this.toast(`${n.name} gave you: ${gift.title}`);
+        }
+        this.emote(n, 'heart');
+      },
+      onEnd: () => {
+        this.chatHandle = null;
+        if (this.talkingTo === n) this.talkingTo = null;
+        if (!this.chatExternal) this.pause(false); // (closed by pause(true): that panel is in charge of the pause)
+        n.talking = false;
+        n.wait = 1500;
+      },
+    });
   }
 
   // What the story chapters ask about: who you've met and whose paintings are hung.
@@ -1419,7 +1476,14 @@ export class RoomScene extends Phaser.Scene {
     showTalk('Edmund', PERSONALITIES.caretaker.label, line, at, 10000);
   }
 
-  endTalk() {
+  endTalk(fromPause = false) {
+    if (this.chatHandle) {
+      const h = this.chatHandle;
+      this.chatHandle = null;
+      this.chatExternal = fromPause;
+      h.close();
+      this.chatExternal = false;
+    }
     if (!this.talkingTo) return;
     this.talkingTo.talking = false;
     this.talkingTo.wait = 1500;
@@ -1759,7 +1823,7 @@ export class RoomScene extends Phaser.Scene {
     if (on) {
       this.bubble.setVisible(false);
       this.interactBtn.classList.add('hidden');
-      this.endTalk();
+      this.endTalk(true);
       hideTalk(); // the caretaker's tips too: never leave a speech bubble over a panel
     }
   }
@@ -2722,6 +2786,12 @@ export class RoomScene extends Phaser.Scene {
       this.leashes.lineStyle(1, 0x7a2232, 1).beginPath().moveTo(hx, hy).lineTo((hx + px) / 2, Math.max(hy, py) + 4).lineTo(px, py).strokePath();
       this.leashes.setDepth(Math.min(n.s.y, n.pet.s.y) - 1);
     });
+    this.starT = (this.starT || 0) + dt;
+    if (this.starT > 5) {
+      this.starT = 0;
+      const gifters = this.npcs.filter((n) => n.hasGift && !n.talking && n.s.active);
+      if (gifters.length) this.emote(gifters[Math.floor(Math.random() * gifters.length)], 'star');
+    }
     this.npcs.forEach((n) => {
       this.updateVisitor(n, dt);
       this.animate(n.s, (!!n.target || !!n.walking) && !n.talking, dt);
