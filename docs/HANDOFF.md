@@ -122,6 +122,11 @@ Scenes (`src/main.js`):
   49 paintings** (no network here); `content/batches/first-batch.json` (12 works, 9+ regions) is waiting to be built.
 - Test: `node tests/content.cjs` (no browser, no network).
 
+### Halls (chat 14): themed room presets
+- `content/halls/halls.json` holds 18 halls (art, science, nature, history, garden): a theme from `src/themes.js` (moved out of decor.js, still re-exported), decor tweaks, items placed as 0-1 fractions of the floor, painting eras for the walls, and the collections/sets that belong there. `planned` lists collections that don't exist yet.
+- `src/halls/preset.js` is pure (validate, fit items to any room size without blocking doors, `hallEntries`); `apply.js` writes a hall into a built room and returns what it replaced for `undoHall`. Fixed rooms are refused. Test: `node tests/halls.cjs` (plain Node).
+- Halls carry no facts of their own; true, quoted facts live in collection entries. Nothing in the UI uses halls yet.
+
 ### Wakefield, MA is NOT part of the game
 A separate personal project (the user's hometown, for friends) that only shares the engine. Its page is `wakefield.html`, its code
 `src/wakefield/`, its notes `docs/WAKEFIELD.md`. Never add it to the game. Engine improvements made along the way and kept in the
