@@ -11,8 +11,9 @@ Open it: https://joudrie.github.io/museum/wakefield.html (its own page, `wakefie
   No tile may ever sit on both a road and grass, or on both grass and a building. It must be a precise overlay of the real map.
 - **Scale comes from the character.** A tile is about 4 m, so an ordinary street is **two tiles wide** and no road is
   narrower. Wakefield is about 1,350 x 1,650 tiles. A huge map is fine.
-- **Every road goes in**, even the smallest streets. Roads are plain **dirt path** for now (no cobblestone), buildings are brick.
-  No trees or elevation yet.
+- **Every road goes in**, even the smallest streets. Roads are **grey stone** (the greyest plain tile in the engine, `rock_1`; never
+  cobblestone), parking lots the same stone, sidewalks lighter flagstone, the railway brown gravel, buildings brick. No trees or
+  elevation yet.
 - A button toggles **street names** (all of them). A button lays the **real map** over the town (like a GPS) to judge accuracy.
 - Walking is fast (3x the museum's pace) because the town is 6 km long.
 - Editing by hand is for later ("fuck it for now"). The first two attempts (22 m then 12 m **tile** maps, with cut border
@@ -33,6 +34,20 @@ Open it: https://joudrie.github.io/museum/wakefield.html (its own page, `wakefie
 - **Lakes:** Lake Quannapowitt, Crystal Lake, Silver Lake, Pearce Lake, Spring Pond and the rivers are drawn with the engine's
   water tiles (animated) and a beach. The big lakes are OpenStreetMap *relations*, which only return their shapes when asked for on
   their own (`waterrels.json` in the generator); in the bounding-box query they come back empty and silently vanish.
+- **Main Street study area (street edges, parking lots, sidewalks measured from the satellite photos):** Main Street plus the first half of
+  every road that touches it get real shapes instead of fixed-width strokes. `tools/wakefield/pavement.py` (run with `--pavement`; needs
+  opencv-python-headless, scipy, shapely; downloads the Esri photos once into the cache folder):
+  1. **Pavement as if there were no cars.** Pavement is the least colourful thing in the photo, so a blurred saturation threshold (picked
+     per block of photo from its own histogram, Otsu, between 0.22 and 0.29) finds it; known roofs (OSM buildings) are masked out; a
+     13 px closing bridges cars and lane paint and gaps under 43 m2 are filled. (A learned classifier was tried first and was worse: this
+     photo has a yellow haze, so colour alone separates poorly, and OpenStreetMap has almost no parking lots or sidewalks mapped near
+     the Common to teach it with.)
+  2. **Curb to curb:** along every road, a sample a metre, a ray each side finds where the pavement ends; that is held to what the road's
+     lane and width tags allow, and replaced by the inside of a mapped sidewalk (curb = about 1 m inside the line) where one exists;
+     then median-smoothed along the road. The edge is a straight-edged polygon, never narrower than 8 m (two tiles).
+  3. **Left over pavement:** wide (opens under a 4.7 m disc) = parking lot or driveway; thin and within 3.6 m of a street = sidewalk.
+     Mapped OSM parking lots near the streets are added. Cars, being bridged over, are simply parking.
+  The rest of the town keeps fixed-width stroked roads (2 tiles, main roads 2.5), also grey stone.
 - Walking uses the exact shapes: roads, grass and buildings are walkable; the sea and water block you, except where a road
   crosses (a bridge). Drag to walk, or WASD/arrows. It remembers where you were.
 - The **Aa** button toggles names (on by default, remembered). The **map** button cycles the real map off / half / full: it

@@ -53,4 +53,7 @@ Read docs/VISION.md first: every feature should serve it. Then docs/HANDOFF.md f
 - The user is making their hometown for their friends. It only shares the engine. **Never add Wakefield to the game** (boat
   menu, HUD, journal, viewer, collections) and never apply the museum's rules to it. Its code is `src/wakefield/`, its page is
   `wakefield.html`, and **all its rules and notes are in docs/WAKEFIELD.md. Read that before touching it.**
+- **Roads are grey stone** (never cobblestone, never dirt): the greyest plain tile, `rock_1`. Parking lots are filled the same,
+  sidewalks lighter. Pretend there are no cars anywhere (cars are parking, not obstacles). The Main Street area (Main Street and the
+  first half of every road off it) is measured from satellite photos for real curbs, lots and sidewalks; see docs/WAKEFIELD.md.
 - When the work is Wakefield, send its link, not the game and builder links: https://joudrie.github.io/museum/wakefield.html

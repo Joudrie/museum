@@ -3,6 +3,9 @@
 
   python3 tools/wakefield/vector.py --fetch DIR    download the OpenStreetMap data into DIR (once)
   python3 tools/wakefield/vector.py DIR            build public/wakefield/wakefield.vec.json from DIR
+  python3 tools/wakefield/vector.py DIR --pavement  the same, plus real street edges, parking lots and sidewalks
+                                                    along Main Street (needs opencv-python-headless scipy shapely, and
+                                                    downloads satellite photos into DIR/sat; see pavement.py)
 
 The game draws this file (src/wakefield/WakefieldScene.js): the town line, lakes and rivers, every road
 as a line of its own width, the railway, and every building as a polygon. Nothing snaps to a grid,
@@ -16,6 +19,7 @@ Map data (c) OpenStreetMap contributors, ODbL.
 """
 import json, math, os, sys, urllib.parse, urllib.request
 import numpy as np
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from PIL import Image, ImageDraw, ImageFont
 
 BBOX = (42.4716, -71.1007, 42.5311, -71.0348)  # south, west, north, east
@@ -91,6 +95,7 @@ def fetch(d):
     overpass(f'[out:json][timeout:150];rel["natural"="water"]({bb});out geom;', f'{d}/waterrels.json')
     # everything with a name: shops, restaurants, schools, parks, lakes...
     overpass(f'[out:json][timeout:150][bbox:{bb}];{POIS}', f'{d}/pois.json')
+    overpass(f'[out:json][timeout:150][bbox:{bb}];(way["amenity"="parking"];way["highway"="footway"]["footway"="sidewalk"];);out geom tags;', f'{d}/pavement.json')
 
 
 def load(d, name):
@@ -315,7 +320,73 @@ def poi_labels(d, street_labels, inside):
     return out
 
 
-def build(d):
+def length(p):
+    return sum(math.hypot(b[0] - a[0], b[1] - a[1]) for a, b in zip(p, p[1:]))
+
+
+def study_area(raw, inside):
+    """The roads to measure from the photos: Main Street, and the first half of every road that touches it.
+    raw: [(id, name, tags, polyline)]. Returns (pieces [(name, polyline, tags)], refined {id: [(first, last) vertex ranges]})."""
+    main = [r for r in raw if r[1] == 'Main Street' and inside(*r[3][len(r[3]) // 2])]
+    on_main = {v for r in main for v in r[3]}
+    pieces, refined = [], {}
+    for wid, name, tags, p in main:
+        pieces.append((name, p, tags))
+        refined[wid] = [(0, len(p) - 1)]
+    for wid, name, tags, p in raw:
+        if name == 'Main Street' or not any(v in on_main for v in p) or not inside(*p[len(p) // 2]):
+            continue
+        cum = [0.0]
+        for a, b in zip(p, p[1:]):
+            cum.append(cum[-1] + math.hypot(b[0] - a[0], b[1] - a[1]))
+        half = cum[-1] / 2
+        ranges = []
+        for j in (k for k, v in enumerate(p) if v in on_main):
+            lo, hi = j, j
+            while lo > 0 and cum[j] - cum[lo - 1] <= half:
+                lo -= 1
+            while hi < len(p) - 1 and cum[hi + 1] - cum[j] <= half:
+                hi += 1
+            if hi > lo:
+                ranges.append((lo, hi))
+        ranges.sort()
+        merged = []
+        for lo, hi in ranges:
+            if merged and lo <= merged[-1][1]:
+                merged[-1] = (merged[-1][0], max(merged[-1][1], hi))
+            else:
+                merged.append((lo, hi))
+        if merged:
+            refined[wid] = merged
+            pieces += [(name, p[lo:hi + 1], tags) for lo, hi in merged]
+    return pieces, refined
+
+
+def far_parts(p, ranges):
+    """The parts of a road polyline outside the ranges that were measured: they stay plain strokes."""
+    out, at = [], 0
+    for lo, hi in sorted(ranges):
+        if lo > at:
+            out.append(p[at:lo + 1])
+        at = max(at, hi)
+    if at < len(p) - 1:
+        out.append(p[at:])
+    return [q for q in out if len(q) >= 2]
+
+
+def poly_data(g):
+    """A shapely polygon in world px as {'o': ring, 'i': [rings]}, whole pixels, delta-encoded."""
+    def ring(r):
+        q = []
+        for x, y in r.coords:
+            pt = (round(x), round(y))
+            if not q or q[-1] != pt:
+                q.append(pt)
+        return delta(q[:-1] if len(q) > 3 and q[0] == q[-1] else q)
+    return {'o': ring(g.exterior), 'i': [ring(h) for h in g.interiors if len(h.coords) >= 4]}
+
+
+def build(d, pavement=False):
     boundary = next(e for e in load(d, 'boundary') if e['type'] == 'relation')
     town_rings, _ = multipolygon(boundary)
     town_rings = [simplify(r, 2) for r in town_rings]
@@ -335,6 +406,16 @@ def build(d):
     def near(p):
         return any(0 <= x // TILE < gw and 0 <= y // TILE < gh and grown[y // TILE, x // TILE] for x, y in p)
 
+    raw = []
+    for e in load(d, 'roads'):
+        t = e['tags']
+        if t.get('tunnel') in ('yes', 'building_passage') or t.get('service') in LEFT_OUT:
+            continue
+        p = pts(e['geometry'])
+        if len(p) >= 2:
+            raw.append((e['id'], t.get('name'), t, p))
+    inside_town = lambda x, y: 0 <= x // TILE < gw and 0 <= y // TILE < gh and mask[y // TILE, x // TILE]
+    pieces, refined = study_area(raw, inside_town) if pavement else ([], {})
     roads, left = [], 0
     named = {}
     for e in load(d, 'roads'):
@@ -346,9 +427,14 @@ def build(d):
         if len(p) < 2 or not near(p):
             continue
         h = t['highway'].replace('_link', '')
-        roads.append((ROAD_W.get(h, ROAD_DEFAULT), p))
         if t.get('name') and not t['highway'].endswith('_link'):
-            named.setdefault(t['name'], []).append(p)
+            named.setdefault(t['name'], []).append(p)  # names go along the whole street
+        if e['id'] in refined:  # measured from the photos: only what is outside that stays a plain stroke
+            rawp = next(r[3] for r in raw if r[0] == e['id'])
+            for part in far_parts(rawp, refined[e['id']]):
+                roads.append((ROAD_W.get(h, ROAD_DEFAULT), simplify(part)))
+            continue
+        roads.append((ROAD_W.get(h, ROAD_DEFAULT), p))
     roads.sort(key=lambda r: r[0])  # narrow first, so the wide roads are drawn over the junctions
 
     buildings = []
@@ -383,6 +469,18 @@ def build(d):
     spawn = min((q for p in named['Main Street'] for q in p), key=lambda q: (q[0] - cx) ** 2 + (q[1] - cy) ** 2)
 
     street_labels = labels_for(named)
+    pave = None
+    if pavement:
+        import pavement as pv
+        proj = pv.Proj({'lat0': lat0, 'lon0': lon0, 'lat1': lat1, 'lon1': lon1, 'cos': COS}, PPM)
+        osm = load(d, 'pavement')
+        res = pv.analyze(
+            pieces, buildings, proj, f'{d}/sat',
+            parking_world=[pts(e['geometry']) for e in osm if e['tags'].get('amenity') == 'parking' and len(e['geometry']) >= 4],
+            walks_world=[pts(e['geometry']) for e in osm if e['tags'].get('footway') == 'sidewalk' and len(e['geometry']) >= 2],
+        )
+        pave = {'streets': [poly_data(g) for _, _, g in res['streets']], 'lots': [poly_data(g) for g in res['lots']], 'walks': [poly_data(g) for g in res['walks']]}
+        print(f'  pavement: {len(pave["streets"])} street polygons, {len(pave["lots"])} parking lots, {len(pave["walks"])} sidewalk strips')
     data = {
         'format': 'curation-vector', 'version': 1, 'name': 'Wakefield, MA', 'ppm': PPM, 'w': W, 'h': H,
         'spawn': list(spawn),
@@ -394,6 +492,7 @@ def build(d):
         'buildings': [delta(p) for p in buildings],
         'geo': {'lat0': lat0, 'lon0': lon0, 'lat1': lat1, 'lon1': lon1, 'cos': COS},
         'labels': street_labels,
+        **({'pave': pave} if pave else {}),
         'pois': poi_labels(d, street_labels, lambda x, y: 0 <= x // TILE < gw and 0 <= y // TILE < gh and mask[y // TILE, x // TILE]),
         'credit': 'Map data (c) OpenStreetMap contributors, ODbL',
     }
@@ -405,10 +504,10 @@ def build(d):
 if __name__ == '__main__':
     if len(sys.argv) == 3 and sys.argv[1] == '--fetch':
         fetch(sys.argv[2])
-    elif len(sys.argv) == 2:
+    elif len(sys.argv) in (2, 3):
         os.makedirs('public/wakefield', exist_ok=True)
         out = 'public/wakefield/wakefield.vec.json'
-        json.dump(build(sys.argv[1]), open(out, 'w'), separators=(',', ':'))
+        json.dump(build(sys.argv[1], pavement='--pavement' in sys.argv), open(out, 'w'), separators=(',', ':'))
         print('wrote', out, os.path.getsize(out) // 1024, 'KB')
     else:
         sys.exit(__doc__)
