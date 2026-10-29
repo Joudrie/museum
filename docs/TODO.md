@@ -186,7 +186,7 @@ Owns: new `src/ui/`, `ui.html`, `docs/UI*.md`, `docs/ui/`, `tests/ui-*.cjs`; res
 - [x] (PR #181, #this) Navigation and flow decisions (menu hub, sheet / modal / full-screen weights, one-at-a-time rule, event queue); three-line summary for the user at the top of `docs/UI.md`.
 - [x] (PR #181) Design system and the live style guide page `ui.html`.
 - [x] (PR #181) Automated checks (`ui-layout` done; `ui-flows` tap-budget test still to do): `tests/ui-flows.cjs` (tap budgets) and `tests/ui-layout.cjs` (overflow, clipped text, target size, NaN text, aria) at 360x640, 390x844, 430x932.
-- [~] Migrate every screen, most-used first. **Done: HUD and Menu hub, Journal overview.** Left: HUD and Interact, Journal, Toolkit, Customize, dialogs, viewer, Settings and Income, Build a room, wall spot and Display, Office and Staff, daily / share / sail / leads, discovery overlays, conversation and tutorial, title screen, Builder page.
+- [~] Migrate every screen, most-used first. **Done: HUD and Menu hub, Journal overview, and the skin that puts every older menu on the system (Toolkit, Customize with groups, Settings regrouped, Build, wall spot, Display, Office, Staff, Income, daily, share, sail, ask, dig, viewer chrome, toasts queue, tips, builder page chrome).** Left: dialogs and cards (catch, celebrate, talk bubble), viewer polish, conversation box and tutorial, title screen, builder menu and sheet flow, event queue for reward cards.
 - [ ] Polish: sound, haptics, motion, empty and error states, copy sweep, large-text and left-handed modes, accessibility labels.
 
 ## Hold list (parked by the user; no chat builds these)
