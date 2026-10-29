@@ -206,6 +206,14 @@ island scene streams ground chunks around the player.
 
 - Services items (toolkit → Services, max 1 each): gift shop (gold per hung painting, doubled per rarity step), food court and discovery table (scale with visitors), lecture stage (per famous visitor met). Earnings logic: `serviceGold()` in `src/wallet.js`, numbers in `SERVICES`. Their art is placeholder, in `bakeItem` in `src/art.js`.
 
+### Guest conversations (`src/chatter.js`, `src/chatter_lines.js`, `src/dialogue.js`)
+- Tapping Interact on an ordinary visitor now opens a **conversation box** (portrait, typed-out text, choices; tap to go on) instead of a one-line bubble. Staff, famous visitors and the caretaker keep their own flows.
+- Topics, each offered once: **About this painting** (the museum's own blurb, a sentence at a time), **Something funny** (2 jokes per visitor kind), **Heard anything?** (true tips about digging, the boat, fish, restoration), and **What are you looking for?** (they ask for an artist; hang one and they're pleased and give more).
+- **Gifts:** after you've talked, a visitor may give gold or a rock or fossil they "found". **One gift per visitor per day**, and gifts shrink after 4 a day (full, half, quarter). Saved in `curation.chatter`. Visitors with a gift today show a star over their head now and then.
+- The engine is a generator (`converse`) with no DOM, so it is tested in Node: `node tests/chatter.cjs`. Lines live in `chatter_lines.js` (data); add jokes, tips and gifts there.
+- `endTalk()` closes an open conversation; `pause(true)` closes it too and leaves the pause to the panel that asked.
+- Not done: island people (IslandScene still uses the old bubble), famous visitors' dialogue (Chat 10's chains), portraits beyond the walking sprite.
+
 ### Gotchas we hit
 - **Phaser reuses the previous scene data** if you call `scene.start('island')` with no data.
   Always pass data explicitly, e.g. `{ map: 'main' }`. Leaving the museum once dropped you on
