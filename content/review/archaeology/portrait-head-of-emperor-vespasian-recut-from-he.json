@@ -1,0 +1,112 @@
+{
+  "status": "draft",
+  "collection": "archaeology",
+  "slug": "portrait-head-of-emperor-vespasian-recut-from-he",
+  "notes": "region: Rome. era removed: the paintings date buckets do not fit antiquity; Chat 8 defines this collection",
+  "entry": {
+    "id": "archaeology:portrait-head-of-emperor-vespasian-recut-from-he",
+    "collection": "archaeology",
+    "title": "Portrait Head of Emperor Vespasian, Recut from Head of Nero",
+    "year": "64–79 CE",
+    "ratio": 1.1528,
+    "blurb": "Although this portrait head was designed to fit into a statue of a body, it did not originally belong with the togate body that held it when purchased by the museum in 1929.",
+    "rarity": 1,
+    "tags": [
+      "italy",
+      "portrait"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1929.998/1929.998_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Purchase from the J. H. Wade Fund",
+      "url": "https://clevelandart.org/art/1929.998"
+    },
+    "value": 5,
+    "facts": [
+      "In 1973, the two were separated, and the body is now in storage.",
+      "Originally a portrait of Emperor Nero, this head was recarved after his damnatio memoriae (condemnation of memory).",
+      "The head itself was recarved in antiquity, from a likeness of Nero to one of Vespasian, following the damnatio memoriae (condemnation of memory) of the former."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "111518",
+    "title": "Portrait Head of Emperor Vespasian, Recut from Head of Nero",
+    "maker": "",
+    "year": "64–79 CE",
+    "medium": "marble",
+    "dimensions": "Overall: 40 x 21.6 x 24.9 cm (15 3/4 x 8 1/2 x 9 13/16 in.)",
+    "widthCm": 24.9,
+    "heightCm": 21.6,
+    "ratio": 1.1528,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1929.998/1929.998_web.jpg",
+    "imageWidth": 626,
+    "imageHeight": 893,
+    "pageUrl": "https://clevelandart.org/art/1929.998",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Purchase from the J. H. Wade Fund",
+    "description": "Although this portrait head was designed to fit into a statue of a body, it did not originally belong with the togate body that held it when purchased by the museum in 1929. In 1973, the two were separated, and the body is now in storage. The head itself was recarved in antiquity, from a likeness of Nero to one of Vespasian, following the damnatio memoriae (condemnation of memory) of the former. A line at the back of head shows clearly where the long hair of Nero has been shortened, while other Neronian features, such as a receding lower lip, remain. Originally a portrait of Emperor Nero, this head was recarved after his damnatio memoriae (condemnation of memory).",
+    "culture": "Italy, Roman",
+    "classification": "Sculpture",
+    "tags": [
+      "Greek and Roman Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Portrait Head of Emperor Vespasian, Recut from Head of Nero",
+      "maker": "",
+      "year": "64–79 CE",
+      "medium": "marble",
+      "dimensions": "Overall: 40 x 21.6 x 24.9 cm (15 3/4 x 8 1/2 x 9 13/16 in.)",
+      "culture": "Italy, Roman",
+      "classification": "Sculpture",
+      "credit": "The Cleveland Museum of Art. Purchase from the J. H. Wade Fund",
+      "description": "Although this portrait head was designed to fit into a statue of a body, it did not originally belong with the togate body that held it when purchased by the museum in 1929. In 1973, the two were separated, and the body is now in storage. The head itself was recarved in antiquity, from a likeness of Nero to one of Vespasian, following the damnatio memoriae (condemnation of memory) of the former. A line at the back of head shows clearly where the long hair of Nero has been shortened, while other Neronian features, such as a receding lower lip, remain. Originally a portrait of Emperor Nero, this head was recarved after his damnatio memoriae (condemnation of memory).",
+      "tombstone": "Portrait Head of Emperor Vespasian, Recut from Head of Nero, 64–79 CE. Italy, Roman. Marble; overall: 40 x 21.6 x 24.9 cm (15 3/4 x 8 1/2 x 9 13/16 in.). The Cleveland Museum of Art, Purchase from the J. H. Wade Fund, 1929.998",
+      "funFact": "",
+      "didYouKnow": "Originally a portrait of Emperor Nero, this head was recarved after his damnatio memoriae (condemnation of memory).",
+      "creators": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "Although this portrait head was designed to fit into a statue of a body, it did not originally belong with the togate body that held it when purchased by the museum in 1929.",
+      "quote": "Although this portrait head was designed to fit into a statue of a body, it did not originally belong with the togate body that held it when purchased by the museum in 1929.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "In 1973, the two were separated, and the body is now in storage.",
+      "quote": "In 1973, the two were separated, and the body is now in storage.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Originally a portrait of Emperor Nero, this head was recarved after his damnatio memoriae (condemnation of memory).",
+      "quote": "Originally a portrait of Emperor Nero, this head was recarved after his damnatio memoriae (condemnation of memory).",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The head itself was recarved in antiquity, from a likeness of Nero to one of Vespasian, following the damnatio memoriae (condemnation of memory) of the former.",
+      "quote": "The head itself was recarved in antiquity, from a likeness of Nero to one of Vespasian, following the damnatio memoriae (condemnation of memory) of the former.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "unknown collection \"archaeology\"",
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

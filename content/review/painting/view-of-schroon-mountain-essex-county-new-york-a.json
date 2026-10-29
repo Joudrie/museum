@@ -1,0 +1,113 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "view-of-schroon-mountain-essex-county-new-york-a",
+  "notes": "region: United States, 1838",
+  "entry": {
+    "id": "painting:view-of-schroon-mountain-essex-county-new-york-a",
+    "collection": "painting",
+    "title": "View of Schroon Mountain, Essex County, New York, After a Storm",
+    "by": "Thomas Cole",
+    "year": "1838",
+    "era": "romantic",
+    "ratio": 1.6092,
+    "blurb": "Championing the American wilderness, Cole declared, \"We are still in Eden,\" in his Essay on American Scenery, published two years before he painted this view of the Adirondacks.",
+    "rarity": 1,
+    "tags": [
+      "united states",
+      "oil"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1917.1335/1917.1335_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Hinman B. Hurlbut Collection",
+      "url": "https://clevelandart.org/art/1917.1335"
+    },
+    "value": 5,
+    "facts": [
+      "At this time, the Adirondacks remained home to many Native Americans long after most had been forcibly removed from land east of the Mississippi River.",
+      "Nicknamed \"Schroon Mountain\" by the artist, the peak's official name is Hoffman Mountain.",
+      "The artist sketched the scene in early summer, but when he created the painting in his studio, he rendered it in a dramatic blaze of fall colors."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "93014",
+    "title": "View of Schroon Mountain, Essex County, New York, After a Storm",
+    "maker": "Thomas Cole",
+    "year": "1838",
+    "medium": "oil on canvas",
+    "dimensions": "Framed: 132.5 x 193.5 x 13 cm (52 3/16 x 76 3/16 x 5 1/8 in.); Unframed: 99.8 x 160.6 cm (39 5/16 x 63 1/4 in.)",
+    "widthCm": 160.6,
+    "heightCm": 99.8,
+    "ratio": 1.6092,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1917.1335/1917.1335_web.jpg",
+    "imageWidth": 1263,
+    "imageHeight": 775,
+    "pageUrl": "https://clevelandart.org/art/1917.1335",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Hinman B. Hurlbut Collection",
+    "description": "Championing the American wilderness, Cole declared, \"We are still in Eden,\" in his Essay on American Scenery, published two years before he painted this view of the Adirondacks. The artist sketched the scene in early summer, but when he created the painting in his studio, he rendered it in a dramatic blaze of fall colors. Such a choice likely had nationalistic overtones; he once proclaimed that autumn was \"one season where the American forest surpasses all the world in gorgeousness.\" Cole included two Indigenous men in the painting’s right foreground foliage. At this time, the Adirondacks remained home to many Native Americans long after most had been forcibly removed from land east of the Mississippi River. While continuing to live, hunt, and fish in the area, these Algonquian and Iroquoian peoples were compelled to significantly adapt their existence amid increasing White settlement and its attendant lumber, mining, and tourist industries. Nicknamed \"Schroon Mountain\" by the artist, the peak's official name is Hoffman Mountain.",
+    "culture": "United States",
+    "classification": "Painting",
+    "tags": [
+      "American Painting and Sculpture"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "View of Schroon Mountain, Essex County, New York, After a Storm",
+      "maker": "Thomas Cole",
+      "year": "1838",
+      "medium": "oil on canvas",
+      "dimensions": "Framed: 132.5 x 193.5 x 13 cm (52 3/16 x 76 3/16 x 5 1/8 in.); Unframed: 99.8 x 160.6 cm (39 5/16 x 63 1/4 in.)",
+      "culture": "United States",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Hinman B. Hurlbut Collection",
+      "description": "Championing the American wilderness, Cole declared, \"We are still in Eden,\" in his Essay on American Scenery, published two years before he painted this view of the Adirondacks. The artist sketched the scene in early summer, but when he created the painting in his studio, he rendered it in a dramatic blaze of fall colors. Such a choice likely had nationalistic overtones; he once proclaimed that autumn was \"one season where the American forest surpasses all the world in gorgeousness.\" Cole included two Indigenous men in the painting’s right foreground foliage. At this time, the Adirondacks remained home to many Native Americans long after most had been forcibly removed from land east of the Mississippi River. While continuing to live, hunt, and fish in the area, these Algonquian and Iroquoian peoples were compelled to significantly adapt their existence amid increasing White settlement and its attendant lumber, mining, and tourist industries. Nicknamed \"Schroon Mountain\" by the artist, the peak's official name is Hoffman Mountain.",
+      "tombstone": "View of Schroon Mountain, Essex County, New York, After a Storm, 1838. Thomas Cole (American, born England,1801–1848). Oil on canvas; framed: 132.5 x 193.5 x 13 cm (52 3/16 x 76 3/16 x 5 1/8 in.); unframed: 99.8 x 160.6 cm (39 5/16 x 63 1/4 in.). The Cleveland Museum of Art, Hinman B. Hurlbut Collection, 1917.1335",
+      "funFact": "",
+      "didYouKnow": "Nicknamed \"Schroon Mountain\" by the artist, the peak's official name is Hoffman Mountain.",
+      "creators": "Thomas Cole (American, born England,1801–1848)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "Championing the American wilderness, Cole declared, \"We are still in Eden,\" in his Essay on American Scenery, published two years before he painted this view of the Adirondacks.",
+      "quote": "Championing the American wilderness, Cole declared, \"We are still in Eden,\" in his Essay on American Scenery, published two years before he painted this view of the Adirondacks.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "At this time, the Adirondacks remained home to many Native Americans long after most had been forcibly removed from land east of the Mississippi River.",
+      "quote": "At this time, the Adirondacks remained home to many Native Americans long after most had been forcibly removed from land east of the Mississippi River.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Nicknamed \"Schroon Mountain\" by the artist, the peak's official name is Hoffman Mountain.",
+      "quote": "Nicknamed \"Schroon Mountain\" by the artist, the peak's official name is Hoffman Mountain.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The artist sketched the scene in early summer, but when he created the painting in his studio, he rendered it in a dramatic blaze of fall colors.",
+      "quote": "The artist sketched the scene in early summer, but when he created the painting in his studio, he rendered it in a dramatic blaze of fall colors.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

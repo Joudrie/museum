@@ -52,14 +52,15 @@ function render() {
         const b = document.createElement('button');
         const lvl = def.lvl || 1;
         const offSeason = def.season && def.season !== season();
-        const locked = lvl > state.level() || offSeason;
+        const need = state.blocked?.(type); // exhibits built from finds: what is still missing
+        const locked = lvl > state.level() || offSeason || !!need;
         b.className = locked ? 'tool-item locked' : !state.canAfford(def.price) ? 'tool-item poor' : 'tool-item';
         // Scale the icon up, but keep tall or wide items inside the tile.
         const iw = def.plant ? 24 : def.w * 32;
         const ih = def.plant ? 34 : def.h * 32 + def.rise;
         const k = Math.min(1.4, 56 / ih, 76 / iw);
         b.innerHTML = `<span class="ti-icon"><img alt="" src="${state.icon(type)}" style="width:${iw * k}px;height:${ih * k}px" /></span>
-          <b>${def.name}</b><span class="ti-meta">${offSeason ? `<i class="lock"></i> In ${def.season}` : locked ? `<i class="lock"></i> Office Lv ${lvl}` : `<i class="coin"></i> ${def.price.toLocaleString()}`}</span><span class="ti-meta">${def.note || `+${def.income}/hr`}</span>
+          <b>${def.name}</b><span class="ti-meta">${need ? `<i class="lock"></i> ${need.replace('Dig up ', 'Needs ')}` : offSeason ? `<i class="lock"></i> In ${def.season}` : locked ? `<i class="lock"></i> Office Lv ${lvl}` : `<i class="coin"></i> ${def.price.toLocaleString()}`}</span><span class="ti-meta">${def.note || `+${def.income}/hr`}</span>
           <span class="ti-size">${def.w}×${def.h} tiles</span>`;
         if (!locked && !known.has(type)) {
           b.insertAdjacentHTML('beforeend', '<span class="new-tag">NEW</span>');

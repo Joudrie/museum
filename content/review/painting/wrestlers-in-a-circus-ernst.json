@@ -1,0 +1,113 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "wrestlers-in-a-circus-ernst",
+  "notes": "region: Germany, 1909",
+  "entry": {
+    "id": "painting:wrestlers-in-a-circus-ernst",
+    "collection": "painting",
+    "title": "Wrestlers in a Circus",
+    "by": "Ernst Ludwig Kirchner",
+    "year": "1909",
+    "era": "modern",
+    "ratio": 1.1677,
+    "blurb": "During the 1930s, 639 works by Kirchner were removed from German museums and either destroyed or sold to foreign collectors and museums.",
+    "rarity": 1,
+    "tags": [
+      "germany",
+      "oil"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1966.49/1966.49_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Contemporary Collection of The Cleveland Museum of Art and Bequest of William R. Valentiner",
+      "url": "https://clevelandart.org/art/1966.49"
+    },
+    "value": 5,
+    "facts": [
+      "The year after the Nazis organized the Degenerate Art exhibition in Munich, Kirchner committed suicide.",
+      "Locked in a dangerous embrace, beefy wrestlers writhe on a brightly colored mat.",
+      "Imagine watching this intense match, surrounded by screaming spectators."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "142792",
+    "title": "Wrestlers in a Circus",
+    "maker": "Ernst Ludwig Kirchner",
+    "year": "1909",
+    "medium": "oil on canvas",
+    "dimensions": "Framed: 107.5 x 121 x 7 cm (42 5/16 x 47 5/8 x 2 3/4 in.); Unframed: 80.5 x 94 cm (31 11/16 x 37 in.)",
+    "widthCm": 94,
+    "heightCm": 80.5,
+    "ratio": 1.1677,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1966.49/1966.49_web.jpg",
+    "imageWidth": 1046,
+    "imageHeight": 893,
+    "pageUrl": "https://clevelandart.org/art/1966.49",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Contemporary Collection of The Cleveland Museum of Art and Bequest of William R. Valentiner",
+    "description": "Locked in a dangerous embrace, beefy wrestlers writhe on a brightly colored mat. Famous for his scenes of urban life, Kirchner uses loose brushstrokes to capture the blur of bodies in motion. Imagine watching this intense match, surrounded by screaming spectators. During the 1930s, 639 works by Kirchner were removed from German museums and either destroyed or sold to foreign collectors and museums. The year after the Nazis organized the Degenerate Art exhibition in Munich, Kirchner committed suicide.",
+    "culture": "Germany, 20th century",
+    "classification": "Painting",
+    "tags": [
+      "Modern European Painting and Sculpture"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Wrestlers in a Circus",
+      "maker": "Ernst Ludwig Kirchner",
+      "year": "1909",
+      "medium": "oil on canvas",
+      "dimensions": "Framed: 107.5 x 121 x 7 cm (42 5/16 x 47 5/8 x 2 3/4 in.); Unframed: 80.5 x 94 cm (31 11/16 x 37 in.)",
+      "culture": "Germany, 20th century",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Contemporary Collection of The Cleveland Museum of Art and Bequest of William R. Valentiner",
+      "description": "Locked in a dangerous embrace, beefy wrestlers writhe on a brightly colored mat. Famous for his scenes of urban life, Kirchner uses loose brushstrokes to capture the blur of bodies in motion. Imagine watching this intense match, surrounded by screaming spectators. During the 1930s, 639 works by Kirchner were removed from German museums and either destroyed or sold to foreign collectors and museums. The year after the Nazis organized the Degenerate Art exhibition in Munich, Kirchner committed suicide.",
+      "tombstone": "Wrestlers in a Circus, 1909. Ernst Ludwig Kirchner (German, 1880–1938). Oil on canvas; framed: 107.5 x 121 x 7 cm (42 5/16 x 47 5/8 x 2 3/4 in.); unframed: 80.5 x 94 cm (31 11/16 x 37 in.). The Cleveland Museum of Art, Contemporary Collection of The Cleveland Museum of Art and Bequest of William R. Valentiner, 1966.49",
+      "funFact": "",
+      "didYouKnow": "During the 1930s, 639 works by Kirchner were removed from German museums and either destroyed or sold to foreign collectors and museums. The year after the Nazis organized the Degenerate Art exhibition in Munich, Kirchner committed suicide.",
+      "creators": "Ernst Ludwig Kirchner (German, 1880–1938)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "During the 1930s, 639 works by Kirchner were removed from German museums and either destroyed or sold to foreign collectors and museums.",
+      "quote": "During the 1930s, 639 works by Kirchner were removed from German museums and either destroyed or sold to foreign collectors and museums.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The year after the Nazis organized the Degenerate Art exhibition in Munich, Kirchner committed suicide.",
+      "quote": "The year after the Nazis organized the Degenerate Art exhibition in Munich, Kirchner committed suicide.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Locked in a dangerous embrace, beefy wrestlers writhe on a brightly colored mat.",
+      "quote": "Locked in a dangerous embrace, beefy wrestlers writhe on a brightly colored mat.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Imagine watching this intense match, surrounded by screaming spectators.",
+      "quote": "Imagine watching this intense match, surrounded by screaming spectators.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

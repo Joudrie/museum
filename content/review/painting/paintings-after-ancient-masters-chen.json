@@ -1,0 +1,106 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "paintings-after-ancient-masters-chen",
+  "notes": "region: China",
+  "entry": {
+    "id": "painting:paintings-after-ancient-masters-chen",
+    "collection": "painting",
+    "title": "Paintings after Ancient Masters",
+    "by": "Chen Hongshou",
+    "year": "1598–1652",
+    "era": "renaissance",
+    "ratio": 0.8841,
+    "blurb": "The twenty paintings in this double album by Chen Hongshou include landscapes, figures, and flowers.",
+    "rarity": 1,
+    "tags": [
+      "china",
+      "ink"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1979.27/1979.27_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. John L. Severance Fund",
+      "url": "https://clevelandart.org/art/1979.27"
+    },
+    "value": 5,
+    "facts": [
+      "Chen Hongshou made this double album with twenty paintings for a friend, Lin Zhongqing.",
+      "His late works are wonderful summations of Chen's peculiar and quirky art—archaistic, hyper-refined—but without accompanying shallowness or sentimentality."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "149603",
+    "title": "Paintings after Ancient Masters",
+    "maker": "Chen Hongshou",
+    "year": "1598–1652",
+    "medium": "Double album with twenty-two leaves; ink or ink and color on silk",
+    "dimensions": "Overall: 30.2 x 26.7 cm (11 7/8 x 10 1/2 in.)",
+    "widthCm": 26.7,
+    "heightCm": 30.2,
+    "ratio": 0.8841,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1979.27/1979.27_web.jpg",
+    "imageWidth": 759,
+    "imageHeight": 900,
+    "pageUrl": "https://clevelandart.org/art/1979.27",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. John L. Severance Fund",
+    "description": "The twenty paintings in this double album by Chen Hongshou include landscapes, figures, and flowers. It also has one leaf featuring a woman, an often-used subject not found in the other albums from the latter part of his career. His late works are wonderful summations of Chen's peculiar and quirky art—archaistic, hyper-refined—but without accompanying shallowness or sentimentality. His figures and landscapes in the late albums are miniaturized, not unlike the small Chinese gardens, or the carefully selected small table rocks or old roots used for contemplation to see the world in miniature. This loss of scale is quite deliberate and reflects the psychological situation of a depressed class like the Ming loyalist officials and scholars, deprived of their integrity and honor, and forced to lead a diminished and restricted existence. Chen Hongshou made this double album with twenty paintings for a friend, Lin Zhongqing.",
+    "culture": "China, Ming dynasty (1368–1644)",
+    "classification": "Painting",
+    "tags": [
+      "Chinese Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Paintings after Ancient Masters",
+      "maker": "Chen Hongshou",
+      "year": "1598–1652",
+      "medium": "Double album with twenty-two leaves; ink or ink and color on silk",
+      "dimensions": "Overall: 30.2 x 26.7 cm (11 7/8 x 10 1/2 in.)",
+      "culture": "China, Ming dynasty (1368–1644)",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. John L. Severance Fund",
+      "description": "The twenty paintings in this double album by Chen Hongshou include landscapes, figures, and flowers. It also has one leaf featuring a woman, an often-used subject not found in the other albums from the latter part of his career. His late works are wonderful summations of Chen's peculiar and quirky art—archaistic, hyper-refined—but without accompanying shallowness or sentimentality. His figures and landscapes in the late albums are miniaturized, not unlike the small Chinese gardens, or the carefully selected small table rocks or old roots used for contemplation to see the world in miniature. This loss of scale is quite deliberate and reflects the psychological situation of a depressed class like the Ming loyalist officials and scholars, deprived of their integrity and honor, and forced to lead a diminished and restricted existence. Chen Hongshou made this double album with twenty paintings for a friend, Lin Zhongqing.",
+      "tombstone": "Paintings after Ancient Masters (老蓮橅古), 1598–1652. Chen Hongshou (Chinese, 1598/99–1652). Double album with twenty-two leaves; ink or ink and color on silk; overall: 30.2 x 26.7 cm (11 7/8 x 10 1/2 in.). The Cleveland Museum of Art, John L. Severance Fund, 1979.27",
+      "funFact": "",
+      "didYouKnow": "Chen Hongshou made this double album with twenty paintings for a friend, Lin Zhongqing.",
+      "creators": "Chen Hongshou (Chinese, 1598/99–1652)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "The twenty paintings in this double album by Chen Hongshou include landscapes, figures, and flowers.",
+      "quote": "The twenty paintings in this double album by Chen Hongshou include landscapes, figures, and flowers.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Chen Hongshou made this double album with twenty paintings for a friend, Lin Zhongqing.",
+      "quote": "Chen Hongshou made this double album with twenty paintings for a friend, Lin Zhongqing.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "His late works are wonderful summations of Chen's peculiar and quirky art—archaistic, hyper-refined—but without accompanying shallowness or sentimentality.",
+      "quote": "His late works are wonderful summations of Chen's peculiar and quirky art—archaistic, hyper-refined—but without accompanying shallowness or sentimentality.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}
