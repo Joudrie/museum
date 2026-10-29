@@ -49,20 +49,17 @@ if (new URLSearchParams(location.search).has('play')) {
   }
 }
 
-// The splash (in index.html) goes once the first scene has been drawn.
-{
-  const splash = document.getElementById('splash');
-  const done = () => {
-    if (!splash?.isConnected) return;
-    splash.classList.add('gone');
-    setTimeout(() => splash.remove(), 300);
-  };
-  game.events.once('ready', () => {
-    requestAnimationFrame(() => requestAnimationFrame(done));
-    setTimeout(warmTiles, 2500); // the island's tiles, drawn in idle moments while you look round the museum
-  });
-  setTimeout(done, 12000); // (never hide the game behind it)
+// The title card (in index.html) goes once the game is running.
+const boot = document.getElementById('boot');
+if (boot) {
+  const hide = () =>
+    requestAnimationFrame(() => {
+      boot.classList.add('gone');
+      setTimeout(() => boot.remove(), 400);
+    });
+  game.events.once('postrender', hide); // the first frame is drawn, so the scene's create() has run and the HUD has its numbers
 }
+game.events.once('ready', () => setTimeout(warmTiles, 2500)); // the island's tiles, drawn in idle moments while you look round the museum
 
 window.__game = game; // handy for debugging in the console
 window.__makeCharacter = makeCharacter; // (and for sprite contact sheets in tests)

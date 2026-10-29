@@ -22,6 +22,13 @@ const measure = (p) =>
       const r = e.getBoundingClientRect();
       if (r.width < 44 || r.height < 44) small.push(`${(e.id && '#' + e.id) || e.className.toString().split(' ')[0] || e.tagName.toLowerCase()} "${(e.textContent || e.getAttribute('aria-label') || '').trim().slice(0, 18)}" ${Math.round(r.width)}x${Math.round(r.height)}`);
     });
+    // controls a screen reader could not name: no text, no aria-label, no title, no <label>
+    const unlabelled = [];
+    document.querySelectorAll('button, a[href], input:not([type=hidden]), select, textarea, [role=button], summary').forEach((e) => {
+      if (!vis(e) || inHidden(e)) return;
+      const named = (e.textContent || '').trim() || e.getAttribute('aria-label') || e.getAttribute('aria-labelledby') || e.getAttribute('title') || (e.id && document.querySelector(`label[for="${e.id}"]`)) || e.closest('label') || (e.tagName === 'INPUT' && e.type === 'range' && e.getAttribute('aria-label'));
+      if (!named) unlabelled.push((e.id && '#' + e.id) || e.className.toString().split(' ')[0] || e.tagName.toLowerCase());
+    });
     let minFont = 99;
     const tiny = new Set();
     const walk = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
@@ -39,7 +46,7 @@ const measure = (p) =>
       if (e.scrollWidth > e.clientWidth + 2 && getComputedStyle(e).overflowX !== 'visible' && e.clientWidth > 0 && !e.closest('canvas')) overflow.push((e.className.toString().split(' ')[0] || e.tagName.toLowerCase()) + ` ${e.scrollWidth}>${e.clientWidth}`);
     });
     const text = document.body.innerText || '';
-    return { smallTargets: small.length, smallList: small.slice(0, 12), minFont, tinyFonts: [...tiny], overflow: [...new Set(overflow)].slice(0, 6), badText: /undefined|NaN|\[object/.test(text), docOverflow: document.documentElement.scrollWidth > innerWidth + 1 };
+    return { unlabelled: [...new Set(unlabelled)].slice(0, 8), smallTargets: small.length, smallList: small.slice(0, 12), minFont, tinyFonts: [...tiny], overflow: [...new Set(overflow)].slice(0, 6), badText: /undefined|NaN|\[object/.test(text), docOverflow: document.documentElement.scrollWidth > innerWidth + 1 };
   });
 
 const SCREENS = {
@@ -55,6 +62,7 @@ const SCREENS = {
   '09-build-room': async (p) => { await p.evaluate(() => { const s = __game.scene.getScene('room'); s.travel && 0; }); await p.evaluate(() => __game.scene.getScene('room').openBuildMenu()); },
   '10-wall-spot': (p) => p.evaluate(() => { const s = __game.scene.getScene('room'); s.editSlot(s.slots?.[0] || s.hung[0]); }),
   '11-viewer': (p) => p.evaluate(() => { const s = __game.scene.getScene('room'); s.view(s.hung[0]); }),
+  '11b-viewer-info': async (p) => { await p.evaluate(() => { const s = __game.scene.getScene('room'); s.view(s.hung[0]); }); await sleep(700); await p.evaluate(() => { document.querySelector('.viewer-scroll').scrollTop = 99999; }); },
   '12-staff-board': (p) => p.evaluate(() => __game.scene.getScene('room').openStaff()),
   '13-office': (p) => p.evaluate(() => __game.scene.getScene('room').openOfficePanel()),
   '14-ask-unlock': (p) => p.evaluate(() => __game.scene.getScene('room').offerUnlock(1)),
@@ -62,12 +70,14 @@ const SCREENS = {
   '16-share': async (p) => { await click(p, '#menu-btn'); await click(p, '#hub-share'); },
   '16b-menu-hub': (p) => click(p, '#menu-btn'),
   '17-conversation': (p) => p.evaluate(() => { const s = __game.scene.getScene('room'); const n = s.npcs.find((n) => !n.staff && !n.famous); s.player.setPosition(n.s.x, n.s.y + 14); s.talkTo(n); }),
-  '18-staff-bubble': (p) => p.evaluate(() => { const s = __game.scene.getScene('room'); const n = s.npcs.find((n) => n.kind === 'caretaker'); s.talkTo(n); }),
+  '18-staff-bubble': (p) => p.evaluate(() => { const s = __game.scene.getScene('room'); const n = s.npcs.find((n) => n.kind === 'caretaker'); s.player.setPosition(n.s.x, n.s.y + 14); s.talkTo(n); }),
   '19-toast': (p) => p.evaluate(() => __game.scene.getScene('room').toast('Saved your note. +40 gold')),
   '20-island-world': async (p) => { await p.evaluate(() => __game.scene.start('island', { map: 'one' })); await sleep(2500); },
   '21-island-sail': async (p) => { await p.evaluate(() => __game.scene.start('island', { map: 'one' })); await sleep(2500); await p.evaluate(() => __game.scene.getScene('island').sail()); },
   '22-dig': async (p) => { await p.evaluate(() => __game.scene.start('island', { map: 'one' })); await sleep(2500); await p.evaluate(() => { const s = __game.scene.getScene('island'); const d = s.digs[0]; s.player.setPosition(d.x, d.y + 14); s.digAt(d); }); },
   '23-dig-fossil': async (p) => { await p.evaluate(() => __game.scene.start('island', { map: 'one' })); await sleep(2500); await p.evaluate(() => { const s = __game.scene.getScene('island'); const d = s.digs.find((x) => x.kind === 'fossil'); s.player.setPosition(d.x, d.y + 14); s.digAt(d); }); },
+  '24-catch-card': (p) => p.evaluate(() => { const c = document.getElementById('catch'); c.querySelector('.catch-pic').innerHTML = '<canvas width="96" height="48" style="width:96px;height:48px"></canvas>'; c.querySelector('.catch-title').textContent = 'You caught a Golden Koi!'; c.querySelector('.catch-meta').innerHTML = '<span class="r3">Rare</span> · 62 cm · <b class="catch-new">New!</b>'; c.querySelector('.catch-note').textContent = 'Added to your fish log (Journal → Fish).'; c.classList.remove('hidden'); }),
+  '25-celebrate': async (p) => { await p.evaluate(() => { window.__celebrate('+1,200 gold', 'Goal complete', 'coin'); window.__celebrate('Office level 3!', 'More rooms unlocked', 'star'); }); await sleep(500); },
   // the look settings: large text and the left-handed layout
   '40-large-text-hud': async (p) => { await p.evaluate(() => { const s = JSON.parse(localStorage.getItem('curation.settings') || '{}'); s.text = 'large'; localStorage.setItem('curation.settings', JSON.stringify(s)); window.dispatchEvent(new CustomEvent('settings', { detail: { key: 'x', value: 1 } })); }); await sleep(300); await click(p, '#menu-btn'); },
   '41-large-text-settings': async (p) => { await p.evaluate(() => { const s = JSON.parse(localStorage.getItem('curation.settings') || '{}'); s.text = 'large'; localStorage.setItem('curation.settings', JSON.stringify(s)); window.dispatchEvent(new CustomEvent('settings', { detail: { key: 'x', value: 1 } })); }); await sleep(300); await click(p, '#menu-btn'); await click(p, '#settings-btn'); },

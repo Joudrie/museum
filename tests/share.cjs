@@ -66,6 +66,14 @@ async function browserChecks() {
   check(await page.$eval('#daily .daily-card:nth-child(2) .wide-btn', (b) => b.disabled), 'wheel cannot be spun twice', 'wheel button still live');
   check(await page.$('#daily .daily-poty .t').then(async (e) => !!(await e.textContent())), 'painting of the day shows', 'no painting of the day');
   await page.screenshot({ path: path.join(OUT, 'daily.png') });
+  await page.click('#daily .daily-art');
+  await page.waitForTimeout(500);
+  const potyTitle = await page.$eval('#daily .daily-poty .t', (e) => e.textContent);
+  check(await page.$eval('#viewer', (e) => !e.classList.contains('hidden') && e.classList.contains('over')) && (await page.$eval('#viewer .info-title', (e) => e.textContent)) === potyTitle, 'tapping the painting of the day opens it in the viewer, on top', 'viewer did not open for the painting of the day');
+  await page.screenshot({ path: path.join(OUT, 'daily-viewer.png') });
+  await page.click('#viewer .viewer-close');
+  await page.waitForTimeout(300);
+  check(await page.$eval('#daily', (e) => !e.classList.contains('hidden')), 'closing the viewer goes back to Today', 'Today closed with the viewer');
   await page.click('.daily-close');
   check(await page.$eval('#daily-btn .badge', (b) => b.classList.contains('hidden')), 'badge clears once claimed', 'badge stuck on');
 
@@ -95,6 +103,11 @@ async function browserChecks() {
   check(await page.$eval('#visit', (e) => !e.classList.contains('hidden')), 'a pasted museum opens the visit view', 'visit view did not open');
   check((await page.$$eval('.visit-art', (n) => n.length)) === 2, 'both paintings listed (the unknown one gracefully)', 'wrong painting count');
   await page.screenshot({ path: path.join(OUT, 'visit.png') });
+  await page.click('#visit button.visit-img');
+  await page.waitForTimeout(500);
+  check(await page.$eval('#viewer', (e) => !e.classList.contains('hidden')) && (await page.$$eval('#viewer .slide', (n) => n.length)) === 1, 'a friend’s painting opens in the viewer (unknown ones left out)', 'visit viewer wrong');
+  await page.click('#viewer .viewer-close');
+  await page.waitForTimeout(300);
   await page.click('#visit .wide-btn');
   const after = await ev(() => JSON.stringify(Object.keys(localStorage).filter((k) => k !== 'curation.friends' && k !== 'curation.daily').sort().map((k) => [k, localStorage.getItem(k)])));
   check(before === after, 'visiting leaves your own save untouched', 'visit changed the save');

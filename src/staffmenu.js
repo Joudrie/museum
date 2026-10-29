@@ -3,13 +3,21 @@ const el = document.getElementById('staffmenu');
 const list = el.querySelector('.staff-list');
 let state = null;
 
+// A finished state (hired, maxed) is a badge, not a dead button; an action is a full-width button under the text.
+const DONE = ['Hired', 'Maxed', 'All hired'];
+
 function row(title, info, button) {
   const r = document.createElement('div');
   r.className = 'staff-row';
-  r.innerHTML = '<div><b></b><small></small></div>';
+  r.innerHTML = '<div class="staff-head"><b></b></div><small></small>';
   r.querySelector('b').textContent = title;
   r.querySelector('small').textContent = info;
-  if (button) {
+  if (button && DONE.includes(button.label)) {
+    const tag = document.createElement('span');
+    tag.className = 'ui-badge staff-done';
+    tag.textContent = button.label;
+    r.querySelector('.staff-head').appendChild(tag);
+  } else if (button) {
     const b = document.createElement('button');
     b.className = 'pixel-btn';
     b.textContent = button.label;

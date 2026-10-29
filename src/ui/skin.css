@@ -342,3 +342,144 @@ body .gallery-eras.choices button {
   scroll-snap-align: start;
 }
 body .gallery-search { margin-top: var(--sp-3); width: 100%; }
+
+/* ---- reward cards: the catch card and the celebration card are one family ---- */
+body .catch-card,
+body .celebrate-card {
+  min-width: 232px;
+  max-width: min(320px, calc(100vw - 32px));
+  padding: var(--sp-5) var(--sp-6) var(--sp-4);
+  background: var(--ui-panel);
+  border: 3px solid var(--ui-shadow);
+  border-radius: var(--ui-r);
+  box-shadow: inset 0 0 0 2px var(--ui-gold), 0 8px 30px rgba(0, 0, 0, 0.6);
+  font-family: var(--ui-font);
+}
+body .celebrate-card {
+  gap: var(--sp-1);
+  justify-items: center;
+}
+body .celebrate-icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: var(--sp-1);
+  color: var(--ui-gold-hi);
+  background: var(--ui-gold-lo);
+  border: 2px solid var(--ui-shadow);
+  border-radius: var(--ui-r);
+}
+body .celebrate-icon .ui-ic { width: 26px; height: 26px; }
+body .celebrate-title,
+body .catch-title {
+  font: 600 var(--fs-title) / 1.1 var(--ui-font);
+  color: var(--ui-gold-hi);
+}
+body .catch-title { font-size: var(--fs-lead); line-height: 1.2; }
+body .celebrate-sub,
+body .catch-meta {
+  font: 400 var(--fs-body) / 1.35 var(--ui-font);
+  color: var(--ui-muted);
+}
+body .celebrate-more {
+  font: 400 var(--fs-small) / 1 var(--ui-font);
+  color: var(--ui-muted);
+}
+body .celebrate-more:empty { display: none; }
+body .catch-card .catch-pic {
+  padding: var(--sp-2);
+  background: var(--ui-bg);
+  border: 2px solid var(--ui-line);
+  border-radius: var(--ui-r);
+}
+body .catch-hint {
+  margin-top: var(--sp-2);
+  padding: var(--sp-2) var(--sp-4);
+  font: 600 var(--fs-small) / 1 var(--ui-font);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ui-on-gold);
+  background: var(--ui-gold);
+  border-radius: var(--ui-r);
+}
+body .catch-new { color: var(--ui-good); }
+
+/* ---- staff board: title and state on one line, the text full width, the action underneath ---- */
+body .staff-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--sp-1);
+  padding: var(--sp-3) var(--sp-4);
+}
+body .staff-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-2);
+}
+body .staff-head b { font: 600 var(--fs-lead) / 1.2 var(--ui-font); }
+body .staff-row small {
+  font: 400 var(--fs-small) / 1.35 var(--ui-font);
+  color: var(--ui-muted);
+}
+body .staff-row button {
+  width: 100%;
+  min-height: var(--ui-hit);
+  margin-top: var(--sp-2);
+  font-size: var(--fs-body);
+}
+body .staff-done { color: var(--ui-good); background: transparent; border-color: var(--ui-good); }
+
+/* ---- "turn your phone upright": a phone that turns, in the UI font ---- */
+@media (orientation: landscape) and (max-height: 520px) {
+  body #rotate {
+    align-content: center;
+    justify-items: center;
+    gap: var(--sp-4);
+    background: var(--ui-bg);
+    font: 600 var(--fs-lead) / 1.3 var(--ui-font);
+    color: var(--ui-ink);
+  }
+  body #rotate p { margin: 0; max-width: 320px; }
+  .rotate-phone {
+    display: block;
+    width: 28px;
+    height: 48px;
+    border: 4px solid var(--ui-gold-hi);
+    border-radius: 6px;
+    box-shadow: inset 0 -6px 0 var(--ui-gold-lo);
+    animation: rotate-hint 2.4s var(--ui-ease) infinite;
+  }
+}
+@keyframes rotate-hint {
+  0%, 25% { transform: rotate(-90deg); }
+  55%, 100% { transform: rotate(0deg); }
+}
+.rotate-phone { display: none; }
+@media (orientation: landscape) and (max-height: 520px) { .rotate-phone { display: block; } }
+
+/* ---- viewer: the plaque and the actions under the painting ---- */
+body .viewer-change {
+  min-height: var(--ui-hit);
+  font: 600 var(--fs-body) / 1 var(--ui-font);
+  color: var(--ui-ink);
+  background: var(--ui-fill);
+  border: 2px solid var(--ui-line);
+  border-radius: var(--ui-r);
+}
+body .info-meta { font-size: var(--fs-body); }
+
+/* the one thing to do on a screen is gold (daily gift, spin) */
+body .wide-btn.primary:not(:disabled) {
+  color: var(--ui-on-gold);
+  background: #e8c867;
+  box-shadow: inset 2px 2px 0 #fff0b0, inset -2px -2px 0 #a87f2c, 0 3px 0 var(--ui-shadow);
+}
+
+/* confirm dialogs: the answer you're asked for is gold, "Not now" is the quiet brown one */
+body .ask-buttons .ask-no {
+  color: var(--ui-ink);
+  background: var(--ui-panel-2);
+  box-shadow: inset 2px 2px 0 rgba(255, 240, 200, 0.16), inset -2px -2px 0 rgba(0, 0, 0, 0.4), 0 3px 0 var(--ui-shadow);
+}

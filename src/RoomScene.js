@@ -1880,7 +1880,7 @@ export class RoomScene extends Phaser.Scene {
           const gold = claim(id);
           addCoins(gold);
           sfx('coin');
-          celebrate(`+${gold.toLocaleString()} gold`, 'Goal complete');
+          celebrate(`+${gold.toLocaleString()} gold`, 'Goal complete', 'coin');
           this.checkQuests();
         },
         hungIn: () => hungAnywhere(this.rooms),
@@ -1888,7 +1888,7 @@ export class RoomScene extends Phaser.Scene {
         onClaimSet: (set, gold) => {
           addCoins(gold);
           sfx('coin');
-          celebrate(`+${gold.toLocaleString()} gold`, set.name);
+          celebrate(`+${gold.toLocaleString()} gold`, set.name, 'trophy');
         },
         met: () => metList(),
         portraitCanvas: (id) => {
@@ -2141,7 +2141,7 @@ export class RoomScene extends Phaser.Scene {
       updateRoom(i, { locked: false });
       sfx('unlock');
       this.rooms = loadRooms();
-      celebrate(`The ${name} is open!`, atrium ? 'A waterfall, statues, and the way to new wings' : 'A grand hall with a balcony, and famous faces');
+      celebrate(`The ${name} is open!`, atrium ? 'A waterfall, statues, and the way to new wings' : 'A grand hall with a balcony, and famous faces', 'house');
       this.travel(i, 'entrance');
     });
   }
@@ -2154,7 +2154,7 @@ export class RoomScene extends Phaser.Scene {
       onBuild: (room) => {
         addRoom(room);
         sfx('unlock');
-        celebrate('New room built!', `${ORIENT_LABELS[room.orient]} · ${SIZE_LABELS[room.orient][room.size]}`);
+        celebrate('New room built!', `${ORIENT_LABELS[room.orient]} · ${SIZE_LABELS[room.orient][room.size]}`, 'house');
         this.travel(this.roomIndex + 1, 'entrance');
       },
       onCancel: () => this.pause(false),
@@ -2466,7 +2466,7 @@ export class RoomScene extends Phaser.Scene {
         if (lvl >= MAX_LEVEL || !spend(LEVELS[lvl + 1].cost)) return lvl;
         setOfficeLevel(lvl + 1);
         sfx('levelup');
-        celebrate(`Office level ${lvl + 1}!`, LEVELS[lvl + 1].unlocks || 'More rooms unlocked');
+        celebrate(`Office level ${lvl + 1}!`, LEVELS[lvl + 1].unlocks || 'More rooms unlocked', 'star');
         this.updateHud();
         return lvl + 1;
       },

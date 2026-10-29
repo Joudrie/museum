@@ -22,7 +22,7 @@ import { animateWalker, footstep, dust } from './motion.js';
 import { Pet } from './pets.js';
 import { Fishing, catchOpen } from './fishing.js';
 import { say } from './ui/toast.js';
-import { startDig, readyIn, DIG_TILES, siteOf, siteKey, siteBonusReady, bonusEntry } from './dig.js';
+import { startDig, readyIn, DIG_TILES, siteOf, siteKey, siteBonusReady, bonusEntry, mapKey } from './dig.js';
 import { Puzzles } from './puzzles.js';
 import { openJournal } from './journal.js';
 import isle1 from './maps/isle-1.json';
@@ -852,7 +852,7 @@ export class IslandScene extends Phaser.Scene {
 
   // A spot to brush open (src/dig.js). It rests, shown as a flattened patch, after it has been dug.
   addDig(x, y, kind = 'mineral') {
-    const key = `${this.mapId || 'one'}:${x},${y}`;
+    const key = `${mapKey(this)}:${x},${y}`;
     const d = { key, kind, x: (x + 0.5) * T, y: (y + 0.5) * T, gx: x, gy: y };
     d.img = this.place(readyIn(key) > 0 ? 'dig_spot@dug' : kind === 'mineral' ? 'dig_spot' : `dig_${kind === 'fossil' ? 'fossil' : kind}`, x, y, { flat: true });
     this.digs.push(d);
@@ -1534,6 +1534,7 @@ export class IslandScene extends Phaser.Scene {
   // What the Interact button says for what you're facing.
   focusLabel(f) {
     if (!f) return 'Interact';
+    if (f.label) return f.label; // (something that names its own action, like a hunt or a trap)
     if (f.fish) return 'Fish';
     if (f.skiff) return 'Hop in';
     if (f.exp) return f.exp.label;

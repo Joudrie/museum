@@ -22,13 +22,13 @@ async function once(browser) {
   const cdp = await ctx.newCDPSession(page);
   if (PROFILES[NET]) await cdp.send('Network.emulateNetworkConditions', { offline: false, ...PROFILES[NET] });
   await cdp.send('Emulation.setCPUThrottlingRate', { rate: CPU });
-  // note when the first scene is up and when the splash (if the page has one) is gone
+  // note when the first scene is up and when the title card (if the page has one) is gone
   await page.addInitScript(() => {
     window.__t = {};
     const tick = () => {
       const now = performance.now();
       if (!window.__t.scene && window.__game?.scene.getScenes(true).length) window.__t.scene = now;
-      if (window.__t.scene && !window.__t.shown && !document.getElementById('splash')) window.__t.shown = now;
+      if (window.__t.scene && !window.__t.shown && !(document.getElementById('boot') || document.getElementById('splash'))) window.__t.shown = now;
       if (!window.__t.shown) requestAnimationFrame(tick);
     };
     requestAnimationFrame(tick);

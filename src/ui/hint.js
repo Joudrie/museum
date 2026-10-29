@@ -53,6 +53,10 @@ export function hint(id, text, anchor, { ms = 8000, tries = 8, side = 'below' } 
     const off = () => {
       if (open === tip) closeHint();
     };
+    const watch = setInterval(() => {
+      if (open !== tip) clearInterval(watch);
+      else if (!calm()) off(); // a panel opened over it: put the tip away
+    }, 400);
     document.addEventListener('pointerdown', off, { once: true, capture: true }); // any touch puts it away; the touch still works
     a.addEventListener('click', off, { once: true });
     setTimeout(off, ms);
