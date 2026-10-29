@@ -28,6 +28,11 @@ Open it: https://joudrie.github.io/museum/wakefield.html (its own page, `wakefie
 - Ground is painted in 16x16-tile chunks on demand near the player: sea, a beach along the town line, grass, lakes and rivers,
   rail, roads as strokes of their own width (the engine's dirt art as the fill), buildings as brick polygons, then street names.
   Fills are anchored to the town and chunks have a 1 px margin, so there is never a seam.
+- **Start: Main Street**, at the point nearest the middle of town (by the Common). Where you left off is remembered, but only
+  while the start hasn't moved.
+- **Lakes:** Lake Quannapowitt, Crystal Lake, Silver Lake, Pearce Lake, Spring Pond and the rivers are drawn with the engine's
+  water tiles (animated) and a beach. The big lakes are OpenStreetMap *relations*, which only return their shapes when asked for on
+  their own (`waterrels.json` in the generator); in the bounding-box query they come back empty and silently vanish.
 - Walking uses the exact shapes: roads, grass and buildings are walkable; the sea and water block you, except where a road
   crosses (a bridge). Drag to walk, or WASD/arrows. It remembers where you were.
 - The **Aa** button toggles names (on by default, remembered). The **map** button cycles the real map off / half / full: it

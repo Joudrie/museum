@@ -41,7 +41,7 @@ LABEL_EVERY = 560  # px, about 70 m between names along a street
 QUERIES = {
     'roads': 'way["highway"]["highway"!~"footway|path|steps|cycleway|pedestrian|corridor|bridleway|proposed|construction|elevator|raceway|platform"];',
     'buildings': 'way["building"];',
-    'water': 'way["natural"="water"];rel["natural"="water"];way["waterway"~"river|canal"];',
+    'water': 'way["natural"="water"];way["waterway"~"river|canal"];',
     'rail': 'way["railway"~"rail|light_rail"];',
 }
 
@@ -60,6 +60,9 @@ def fetch(d):
     for name, body in QUERIES.items():
         overpass(f'[out:json][timeout:150][bbox:{bb}];({body});out geom tags;', f'{d}/{name}.json')
     overpass(f'[out:json][timeout:100];rel({RELATION});out geom;', f'{d}/boundary.json')
+    # the big lakes (Quannapowitt, Crystal, Silver...) are relations: they only come back with their shapes
+    # when asked for on their own, not inside the bounding-box query above
+    overpass(f'[out:json][timeout:150];rel["natural"="water"]({bb});out geom;', f'{d}/waterrels.json')
 
 
 def load(d, name):
@@ -265,7 +268,7 @@ def build(d):
             buildings.append(p)
 
     water, rivers = [], []
-    for e in load(d, 'water'):
+    for e in load(d, 'waterrels') + load(d, 'water'):
         t = e.get('tags', {})
         if e['type'] == 'relation':
             outer, inner = multipolygon(e)
@@ -283,9 +286,9 @@ def build(d):
 
     rail = [p for p in (simplify(pts(e['geometry'])) for e in load(d, 'rail')) if len(p) >= 2 and near(p)]
 
-    # where you start: the road point nearest the middle of town
+    # where you start: Main Street, at the point nearest the middle of town
     cx, cy = px({'lat': 42.5064840, 'lon': -71.0728306})
-    spawn = min((q for _, p in roads for q in p), key=lambda q: (q[0] - cx) ** 2 + (q[1] - cy) ** 2)
+    spawn = min((q for p in named['Main Street'] for q in p), key=lambda q: (q[0] - cx) ** 2 + (q[1] - cy) ** 2)
 
     data = {
         'format': 'curation-vector', 'version': 1, 'name': 'Wakefield, MA', 'ppm': PPM, 'w': W, 'h': H,

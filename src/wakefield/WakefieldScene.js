@@ -92,21 +92,21 @@ export class WakefieldScene extends Phaser.Scene {
     $('loading')?.remove();
   }
 
-  // where you left off, or the middle of town
+  // where you left off, or the start on Main Street (a position saved before the start moved is forgotten)
   startPoint() {
+    const [sx, sy] = this.world.spawn;
     try {
-      const [x, y] = JSON.parse(localStorage.getItem(POS) || 'null') || [];
-      if (this.world.walkable(x, y)) return { x, y };
+      const { at, from } = JSON.parse(localStorage.getItem(POS) || 'null') || {};
+      if (from?.[0] === sx && from?.[1] === sy && this.world.walkable(at[0], at[1])) return { x: at[0], y: at[1] };
     } catch {
       // the first time
     }
-    const [x, y] = this.world.spawn;
-    return { x, y };
+    return { x: sx, y: sy };
   }
 
   savePos() {
     try {
-      localStorage.setItem(POS, JSON.stringify([Math.round(this.player.x), Math.round(this.player.y)]));
+      localStorage.setItem(POS, JSON.stringify({ at: [Math.round(this.player.x), Math.round(this.player.y)], from: this.world.spawn }));
     } catch {
       // fine
     }
