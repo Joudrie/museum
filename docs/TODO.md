@@ -119,7 +119,7 @@ Owns: `src/rooms.js`, `src/shaped.js`, `src/walldraw.js`, `src/atrium.js`, `src/
 - [ ] Rooftop terrace with a telescope at night.
 - [x] Room presets (PR pending): save a room's layout ("Winter", "Halloween") and load it again.
 - [ ] Construction takes real time (small quick, big about a day, 2 builders); everything else instant.
-- [ ] Themed room bonus (1.5x income for a one-section room); unlimited rooms and a performance test at 100+ rooms.
+- [ ] Themed room bonus: done (PR pending); unlimited rooms and a performance test at 100+ rooms: open.
 - [ ] Re-shuffle and repurpose rooms; the West Wing (waits for the user's outline).
 - [ ] Always re-run `tests/gaps.cjs`: no black gaps between walls, ever.
 

@@ -16,6 +16,7 @@ export const THEMES = {
 };
 import { SIZE_LABELS, ORIENT_LABELS, roomName, isFixed } from './rooms.js';
 import { roomRating, starText } from './rating.js';
+import { roomTheme, THEME_BONUS } from './wallet.js';
 import { listPresets, savePreset, deletePreset, presetCost } from './presets.js';
 
 export const CHARACTER_PALETTES = {
@@ -166,6 +167,12 @@ function renderRating() {
     row.querySelector('small').textContent = p.tip;
     list.appendChild(row);
   });
+  const era = roomTheme(state.rooms, state.index);
+  if (era) {
+    const t = document.createElement('p');
+    t.textContent = `Themed room: every painting is ${era}. Paintings here earn ${THEME_BONUS}x.`;
+    list.appendChild(t);
+  }
   return section(`Rating ${starText(r.stars)} · ${r.score}/100`, list);
 }
 

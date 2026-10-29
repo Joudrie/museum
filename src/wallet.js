@@ -63,8 +63,17 @@ export const coffeeIncome = (rooms) => Math.round(museumVisitors(rooms) / COFFEE
 // Tour guides raise it too, and so does visitor love.
 const roomMult = (rooms, i) => (1 - DIRT_PENALTY * dirtCount(rooms, i)) * famousBoost() * (1 + guideBoost() * guides()) * loveBoost(i);
 
+// A themed room: three or more paintings, all from one era (Baroque,
+// Impressionist...), earn 1.5x. Returns that era, or null.
+export const THEME_MIN = 3;
+export const THEME_BONUS = 1.5;
+export function roomTheme(rooms, i) {
+  const eras = paintingsFor(rooms, i).map((p) => p.entry?.era);
+  return eras.length >= THEME_MIN && eras[0] && eras.every((e) => e === eras[0]) ? eras[0] : null;
+}
+
 // Gold per hour from one painting, and from a room's decor (items + coffee).
-const artRate = (rooms, i) => PAINTING_INCOME * roomMult(rooms, i);
+const artRate = (rooms, i) => PAINTING_INCOME * roomMult(rooms, i) * (roomTheme(rooms, i) ? THEME_BONUS : 1);
 function decorRate(rooms, i) {
   const items = loadItems(i);
   let gold = 0;
