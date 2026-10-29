@@ -31,7 +31,7 @@ import {
   LIGHT_TINTS,
 } from './art.js';
 import { setTrack, sfx, setAmbience } from './music.js';
-import { weatherToday, season } from './weather.js';
+import { weatherToday, season, holiday, stormRumble, crowdShift } from './weather.js';
 import { ORIENT_LABELS, SIZE_LABELS, BREAK, roomAt, MAIN_HALL_PRICE, ATRIUM_PRICE, isFixed, seedEntry, loadRooms, addRoom, resetRooms, updateRoom, swapRooms, roomName, layout, paintingsFor, slotStates, setSlot, hungAnywhere, placeArt, wallItems, plantSpots, carpetRect } from './rooms.js';
 import { openSlotMenu } from './slotmenu.js';
 import { applyPreset, presetCost } from './presets.js';
@@ -43,18 +43,19 @@ import { hasCameras, buyCameras, resetSecurity, CAMERA_COST, trackSeen, maybeRob
 import { officeLevel, setOfficeLevel, resetOffice, perks, itemLevel, LEVELS, MAX_LEVEL } from './office.js';
 import { openOffice } from './officemenu.js';
 import { ask } from './ask.js';
+import { remember } from './regulars.js';
 import { heistBeat, chainStep, chainAsk, complete as completeBeat } from './story.js';
 import { PAINTINGS } from './paintings.js';
 import { roomRating, museumRating, starText } from './rating.js';
 import { FAMOUS, meet, resetMet, metList, famousBoost } from './famous.js';
-import { FREE, coins, canAfford, addCoins, spend, resetWallet, museumIncome, museumVisitors, coffeeIncome, roomIncome, settle, sellPrice, artPile, decorPile, collectArt, collectDecor, collectAll, pile, pileFull } from './wallet.js';
+import { FREE, coins, canAfford, addCoins, spend, resetWallet, museumIncome, museumVisitors, coffeeIncome, serviceGold, roomIncome, settle, sellPrice, artPile, decorPile, collectArt, collectDecor, collectAll, pile, pileFull } from './wallet.js';
 import { openToolkit, hideToolkit, showBar, hideBar } from './toolkit.js';
 import { artBounds, paintArt, wallRef } from './walldraw.js';
 import { PERSONALITIES, lineFor, QUIPS, CONTEXT } from './lines.js';
 import { iconSvg } from './icons.js';
 import { bakeFountain, bakeSideStairs, FOUNTAIN } from './atrium.js';
 import { openViewer } from './viewer.js';
-import { isFixture, newId, clear as clearDisplay } from './display.js';
+import { isFixture, newId, clear as clearDisplay, missingFor } from './display.js';
 import { showDisplays } from './displayart.js';
 import { openDisplay } from './displaymenu.js';
 import { openDecor, closeDecor, load, save, DEFAULT_CHARACTER } from './decor.js';
@@ -71,7 +72,8 @@ import { activeQuests, claim, bump, stat, resetQuests } from './quests.js';
 import { celebrate } from './ui.js';
 import { addLove, loveOf, resetLove } from './love.js';
 import { hasCameras as camerasOn } from './security.js';
-import { hourNow } from './settings.js';
+import { hourNow, settings } from './settings.js';
+import { spriteUrl } from './swap.js';
 
 const VIEW_TILES = 9; // the camera always shows 9 tiles across
 const SPEED = 176; // px per second
@@ -176,6 +178,19 @@ export function visitorLook(kind, r) {
     colors.c = '#e8762c'; // safety orange
     colors.p = '#3c4a63';
   }
+  // seasonal visitors: kids trick-or-treat in costume near Halloween, and woolly hats come out in winter
+  const day = holiday();
+  if (day === 'halloween' && (kind === 'kid' || (kind === 'student' && r(20) < 0.3))) {
+    const costume = Math.floor(r(21) * 3);
+    look.hat = costume === 2 ? 'beanie' : 'top';
+    if (costume === 0) Object.assign(colors, { c: '#3a2a52', p: '#2a1e3a', T: '#2a1a3a', U: '#6a3a9a' }); // witch
+    else if (costume === 1) Object.assign(colors, { c: '#f4f4f4', p: '#e0e0e8', T: '#f4f4f4', U: '#c8c8d8' }); // ghost
+    else Object.assign(colors, { c: '#e8762c', p: '#6a4a1a', T: '#e8762c', U: '#4f8a4a' }); // pumpkin
+  } else if (day === 'winter' && !['barista', 'caretaker', 'guard', 'guide', 'carpenter', 'janitor'].includes(kind) && !look.hat && !look.bald && r(22) < 0.5) {
+    look.hat = 'beanie';
+    colors.T = pick(['#c0392b', '#2e5a8a', '#f4f0e6', '#2e7d7a'], 23);
+    colors.U = '#f4f0e6';
+  }
   if (kind === 'guard') {
     colors.c = '#1e1e22';
     colors.p = '#1e1e22';
@@ -274,7 +289,7 @@ export class RoomScene extends Phaser.Scene {
     // furniture sprites from the free art packs (see docs/ASSETS.md)
     const sprites = new Set((this.L.props || []).map((q) => q.s));
     if ((this.L.props || []).some((q) => q.flames)) [0, 1, 2, 3].forEach((f) => sprites.add(`flame_${f}`));
-    sprites.forEach((s) => this.textures.exists(`lpc_${s}`) || this.load.image(`lpc_${s}`, `sprites/lpc/${s}.png`));
+    sprites.forEach((s) => this.textures.exists(`lpc_${s}`) || this.load.image(`lpc_${s}`, spriteUrl(s, `sprites/lpc/${s}.png`)));
     this.load.setCORS('anonymous');
     this.hung.forEach((p) => {
       if (!this.textures.exists(`art_${p.id}`)) this.load.image(`art_${p.id}`, p.src);
@@ -367,7 +382,8 @@ export class RoomScene extends Phaser.Scene {
     const start = this.spawnPoint();
     this.player = this.add.sprite(start.x, start.y, start.face).setOrigin(0.5, 1).setScale(PLAYER_SCALE);
     this.makePet();
-    const count = this.isBreak ? 0 : Math.min(5, 3 + Math.floor(this.L.slots.length / 6)); // the break room is staff only
+    const rhythm = settings().dayNight ? crowdShift(hourNow(), weatherToday()) : 0; // quiet mornings, a busy afternoon
+    const count = this.isBreak ? 0 : Math.max(2, Math.min(6, 3 + Math.floor(this.L.slots.length / 6) + rhythm)); // the break room is staff only
     this.npcs = Array.from({ length: count }, (_, i) => this.spawnVisitor(i));
     this.pairCouples();
     if (!this.isBreak && this.roomIndex >= 1 && Math.random() < 0.3) this.spawnSchoolTrip();
@@ -377,6 +393,7 @@ export class RoomScene extends Phaser.Scene {
     this.bubble = this.add.image(0, 0, 'bubble').setOrigin(0.5, 1).setDepth(5000).setVisible(false);
     this.lighting = new Lighting(this);
     setAmbience(weatherToday() === 'rain' && !this.isBreak ? ['rainSoft'] : []); // rain on the roof
+    if (!this.isBreak) stormRumble(this, weatherToday());
     this.time.addEvent({ delay: 60000, loop: true, callback: () => this.lighting.build() }); // the sun moves
 
     this.setupCamera();
@@ -1268,6 +1285,7 @@ export class RoomScene extends Phaser.Scene {
       line = `There ${j === 1 ? 'is 1 of us' : `are ${j} of us`}. One janitor per room keeps the whole place spotless.`;
     }
     if (!n.staff && Math.random() < 0.3) line = this.contextLine() || line;
+    if (!n.staff) line = remember(n.name, n.kind) || line;
     if (n.kind === 'guard' && nextSecurity()) return this.offerCameras(n, line);
     if (n.kind === 'caretaker' && this.tellStory(n, heistBeat(this.storyContext()), 'The Empty Frames')) return;
     n.talking = true;
@@ -1504,6 +1522,7 @@ export class RoomScene extends Phaser.Scene {
     });
     this.input.on('pointerup', (p) => {
       if (this.mode && this.mode !== 'place' && this.press && !this.dragging) this.tapItem(p.worldX, p.worldY);
+      else if (!this.mode && this.press && !this.dragging && this.input.enabled) this.tapDisplayed(p.worldX, p.worldY);
       this.ghostDrag = null;
       this.press = null;
       this.dragging = false;
@@ -1645,6 +1664,9 @@ export class RoomScene extends Phaser.Scene {
     const dirty = this.rooms.filter((_, i) => dirtCount(this.rooms, i) > 0).length;
     if (dirty) boosts.push(`${dirty} room${dirty > 1 ? 's' : ''} need${dirty > 1 ? '' : 's'} mopping (−10% per spot): hire janitors`);
     if (this.items.some((it) => it.type === 'counter') || this.rooms.some((_, i) => loadItems(i).some((it) => it.type === 'counter'))) boosts.push(`Coffee: +${coffeeIncome(this.rooms)} gold/hr from cups`);
+    ['giftshop', 'foodcourt', 'discovery', 'lectern'].forEach((type) => {
+      if (this.rooms.some((_, i) => loadItems(i).some((it) => it.type === type))) boosts.push(`${ITEMS[type].name}: +${serviceGold(this.rooms, type)} gold/hr`);
+    });
     return {
       income: museumIncome(this.rooms),
       visitors: museumVisitors(this.rooms),
@@ -1719,9 +1741,10 @@ export class RoomScene extends Phaser.Scene {
           celebrate(`+${gold.toLocaleString()} gold`, set.name);
         },
         met: () => metList(),
-        portrait: (id) => {
+        portraitCanvas: (id) => {
+          if (!FAMOUS[id]) return null;
           if (!this.textures.exists(`famous_${id}_down`)) makeCharacter(this, `famous_${id}`, FAMOUS[id].colors, FAMOUS[id].look);
-          return this.textures.get(`famous_${id}_down`).getSourceImage().toDataURL();
+          return this.textures.get(`famous_${id}_down`).getSourceImage();
         },
         onClose: () => this.pause(false),
       },
@@ -1893,6 +1916,20 @@ export class RoomScene extends Phaser.Scene {
       else this.openBuildMenu();
     }
     this.focus = null;
+  }
+
+  // Tap a piece on display (a fish in a tank, a fossil in a case) to read its card;
+  // swipe along to the others in this room.
+  tapDisplayed(wx, wy) {
+    const shown = this.displayObjs.filter((o) => o.getData?.('entry'));
+    const hit = shown.find((o) => {
+      const b = o.getBounds();
+      return wx > b.x - 3 && wx < b.right + 3 && wy > b.y - 3 && wy < b.bottom + 3;
+    });
+    if (!hit) return;
+    const entries = shown.map((o) => o.getData('entry'));
+    this.pause(true);
+    openViewer(entries, shown.indexOf(hit), () => this.pause(false), null);
   }
 
   // Open the display panel for a case, plinth, shelf, easel or tank.
@@ -2205,7 +2242,7 @@ export class RoomScene extends Phaser.Scene {
         cost: upgradeCost(id),
         now: u.show(upgradeValue(id)),
         next: lvl < u.cost.length ? u.show(u.effect[lvl]) : null,
-        locked: id === 'toolbox' && !hasCarpenter() ? 'Hire the carpenter' : id === 'training' && !guides() ? 'Hire a guide' : null,
+        locked: id === 'toolbox' && !hasCarpenter() ? 'Hire the carpenter' : id === 'training' && !guides() ? 'Hire a guide' : id === 'beans' && !this.rooms.some((_, i) => loadItems(i).some((it) => it.type === 'counter')) ? 'Build a coffee counter' : null,
       };
     });
   }
@@ -2467,9 +2504,12 @@ export class RoomScene extends Phaser.Scene {
       icon: (type) => this.textures.get(this.itemKey(type, 0)).getSourceImage().toDataURL(),
       canAfford,
       level: () => officeLevel(),
+      blocked: (type) => missingFor(type),
       onPick: (type) => {
         if (ITEMS[type].season && ITEMS[type].season !== season()) return this.toast(`Only for sale in ${ITEMS[type].season}`);
         if (itemLevel(type) > officeLevel()) return this.toast(`Unlocks at Curator’s Office level ${itemLevel(type)}`);
+        const missing = missingFor(type);
+        if (missing) return this.toast(missing);
         const max = ITEMS[type].max;
         if (max && countPlaced(type, this.rooms.length) >= max) return this.toast(`Only ${max} allowed in the museum`);
         if (!canAfford(ITEMS[type].price)) return this.toast(`Need ${(ITEMS[type].price - coins()).toLocaleString()} more gold`);

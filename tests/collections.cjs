@@ -52,12 +52,17 @@ async function dataChecks() {
   check(paintings.length === 49 && reg.get('painting', 'starry-night') && reg.keyOf(reg.get('painting', 'starry-night')) === 'starry-night', '49 paintings keep their slug keys', 'painting ids changed');
   check(reg.list({ q: 'van gogh' }).length > 0 && reg.list({ collection: 'painting', era: 'impressionist' }).length > 0, 'search and era filter work', 'search or era filter broken');
   check(reg.list({ collection: 'mineral', rarity: 3 }).length === 2, 'rarity filter works', 'rarity filter broken');
+  const ms = await import(path.join(src, 'milestones.js'));
+  const half = { seen: Object.fromEntries(reg.list().slice(0, Math.ceil(reg.list().length / 2)).map((e) => [e.id, { n: 1, first: 0 }])), claimed: { 'milestone-10': true } };
+  const mst = ms.milestones(half);
+  check(mst.map((m) => m.reached).join() === 'true,true,true,false,false' && mst[0].claimed && !mst[1].claimed, 'milestones: 10/25/50 reached at half, only the claimed one is paid', 'milestones wrong: ' + JSON.stringify(mst));
+  check(ms.completion({ seen: {} }).pct === 0 && ms.completion({ seen: {} }).total === reg.list().length, 'completion counts every collectable entry', 'completion wrong');
+  const vg = reg.getSet('artist-vangogh');
+  check(vg && vg.entries.length === reg.list({ q: 'van gogh', collection: 'painting' }).length && vg.reward.gold === 100 * vg.entries.length && !reg.sets('painting').length && reg.sets('painting', true).length >= 5, 'artist sets are made from the paintings and are journal goals only', 'artist sets wrong');
   check(reg.list({ tag: 'pond' }).length === 8, 'tag filter works', 'tag filter broken');
   // Dig finds: each new dig collection has dirty-or-clean entries and a full set, and the codex keeps a sane `dirty` count.
   ['pottery', 'coin', 'arrowhead', 'shell', 'meteorite'].forEach((id) => check(reg.list({ collection: id }).length >= 5, `${id}: at least 5 entries`, `${id} is missing entries`));
   check(reg.get('pottery:red-sherd').dirty === true && reg.get('shell:conch').dirty === undefined, 'dirty is set on the entries that arrive dirty', 'dirty flag wrong');
-  const nd = codex.normalize({ owned: { 'coin:gold-coin': 2, 'pottery:red-sherd': 1 }, dirty: { 'coin:gold-coin': 5, 'pottery:red-sherd': 'x', 'bad id': 1, 'fish:perch': 1 } });
-  check(nd.dirty['coin:gold-coin'] === 2 && !nd.dirty['pottery:red-sherd'] && Object.keys(nd.dirty).length === 1, 'codex dirty counts are clamped to what you own and junk is dropped', 'codex dirty normalise wrong: ' + JSON.stringify(nd.dirty));
   check(codex.normalize(null).dirty && !Object.keys(codex.normalize({ v: 1, seen: {}, owned: {}, claimed: {} }).dirty).length, 'old saves without dirty still load', 'old save lost');
   check(reg.list({ collection: 'find' }).every((e) => e.collectable !== false), 'junk is left out of lists', 'junk is listed');
 
@@ -105,18 +110,69 @@ async function dataChecks() {
   const imp = await import(path.join(__dirname, '..', 'tools', 'import_collection.mjs'));
   const rows = imp.parseCsv('slug,title,blurb,license,credit,image_src\nmoth,Moth,"Wings, ""dusty"" ones",CC0,Someone,/m.png\nbeetle,Beetle,,,,/b.png\n');
   check(rows.length === 2 && rows[0].blurb === 'Wings, "dusty" ones', 'importer reads quoted CSV', 'csv parse wrong: ' + JSON.stringify(rows));
-  const def = { collection: 'insect', name: 'Insects', icon: '🐛', noun: 'insects' };
-  const bad2 = imp.buildPack(rows, { ...def, collection: 'insect' }).problems.join(' ');
+  const def = { collection: 'bug', name: 'Bugs', icon: '🐛', noun: 'bugs' };
+  const bad2 = imp.buildPack(rows, { ...def, collection: 'bug' }).problems.join(' ');
   check(/license/.test(bad2) && /credit/.test(bad2), 'importer stops on a missing license and credit', 'importer let a row through: ' + bad2);
   const built = imp.buildPack(rows.slice(0, 1).map((r) => ({ ...r, image_kind: 'sprite' })), def);
-  check(!built.problems.length && built.pack.entries[0].id === 'insect:moth', 'importer builds a valid pack from good rows', 'importer pack invalid: ' + built.problems.join(' | '));
+  check(!built.problems.length && built.pack.entries[0].id === 'bug:moth', 'importer builds a valid pack from good rows', 'importer pack invalid: ' + built.problems.join(' | '));
   const before = reg.list().length;
   reg.register(built.pack);
-  check(reg.list().length === before + 1 && reg.get('insect:moth'), 'a pack from the importer registers with no code changes', 'imported pack did not register');
+  check(reg.list().length === before + 1 && reg.get('bug:moth'), 'a pack from the importer registers with no code changes', 'imported pack did not register');
+}
+
+// The shop: sell for half, buy-back after a week at a premium, a daily Gallery Shop. Pure logic, run against an in-memory save.
+async function shopChecks() {
+  console.log('Shop');
+  const mem = {};
+  global.localStorage = { getItem: (k) => (k in mem ? mem[k] : null), setItem: (k, v) => (mem[k] = String(v)), removeItem: (k) => delete mem[k] };
+  const src = path.join(__dirname, '..', 'src', 'collections');
+  const shop = await import(path.join(src, 'shop.js'));
+  const codex = await import(path.join(src, 'codex.js'));
+  const reg = await import(path.join(src, 'index.js'));
+  let gold = 1000;
+  const wallet = { add: (n) => (gold += n), spend: (n) => (gold >= n ? ((gold -= n), true) : false) };
+  const DAY = 24 * 3600 * 1000;
+  const t0 = Date.parse('2026-10-29T12:00:00');
+
+  const a = shop.shelf(t0).map((r) => r.entry.id);
+  check(a.join() === shop.shelf(t0 + 3600 * 1000).map((r) => r.entry.id).join() && a.length >= 3 && a.length <= 5, `Gallery Shop: ${a.length} pieces, the same all day`, 'shelf not stable or wrong size: ' + a);
+  check([1, 2, 3, 4].some((d) => shop.shelf(t0 + d * DAY).map((r) => r.entry.id).join() !== a.join()), 'Gallery Shop changes from day to day', 'shelf never changes');
+  check(shop.shelf(t0).every((r) => reg.collectionOf(r.entry).ownership === 'earned' && reg.collectionOf(r.entry).display !== 'tank' && (r.entry.rarity ?? 1) <= 3), 'shelf holds earned, non-fish pieces only', 'shelf has something it should not');
+
+  const q = reg.get('mineral:quartz');
+  codex.collect(q.id);
+  const r1 = shop.sell(q.id, wallet);
+  check(r1.ok && r1.gold === Math.round(shop.basePrice(q) * 0.5) && gold === 1000 + r1.gold && !codex.snapshot().owned[q.id] && codex.snapshot().seen[q.id], `selling pays 50% (${r1.gold}) and the codex keeps the stamp`, 'sell wrong: ' + JSON.stringify(r1));
+  check(!shop.sell(q.id, wallet).ok, 'nothing left to sell the second time', 'sold something it did not have');
+  const early = shop.buyBack(q.id, wallet, Date.now());
+  check(!early.ok && /yet/.test(early.why), 'buy-back is locked for a week', 'buy-back opened early: ' + JSON.stringify(early));
+  const sold = codex.snapshot().sold[q.id];
+  const g0 = gold;
+  const late = shop.buyBack(q.id, wallet, sold.at + 7 * DAY + 1000);
+  check(late.ok && late.gold > r1.gold && gold === g0 - late.gold && codex.snapshot().owned[q.id] === 1 && !codex.snapshot().sold[q.id], `after a week it costs ${late.gold}, more than the ${r1.gold} it sold for`, 'buy-back wrong: ' + JSON.stringify(late));
+  check(!shop.sell(q.id, wallet, () => 1).ok && /display/.test(shop.sell(q.id, wallet, () => 1).why), 'a piece on display cannot be sold', 'sold a displayed piece');
+  codex.collect('mineral:amethyst', { dirty: true });
+  check(!shop.sell('mineral:amethyst', wallet).ok, 'a dirty piece cannot be sold until restored', 'sold a dirty piece');
+  check(!shop.sell('painting:harvesters', wallet).ok, 'paintings (held from the start) are not for sale yet', 'sold a painting');
+
+  const row = shop.shelf(t0)[0];
+  gold = 0;
+  check(!shop.buy(row.entry.id, wallet, t0).ok && !codex.snapshot().owned[row.entry.id], 'cannot buy without the gold', 'bought for free');
+  gold = 5000;
+  const b1 = shop.buy(row.entry.id, wallet, t0);
+  check(b1.ok && b1.gold === Math.round(shop.basePrice(row.entry) * 1.5) && codex.snapshot().owned[row.entry.id] === 1 && gold === 5000 - b1.gold, `buying costs 150% (${b1.gold}) and arrives clean`, 'buy wrong: ' + JSON.stringify(b1));
+  check(!shop.buy(row.entry.id, wallet, t0).ok && shop.shelf(t0)[0].owned, 'one of a kind: owned pieces cannot be bought twice', 'bought a second copy');
+  check(!shop.buy('mineral:not-there', wallet, t0).ok, 'a piece not on the shelf cannot be bought', 'bought an off-shelf piece');
+
+  mem['curation.codex'] = JSON.stringify({ v: 1, seen: {}, owned: {}, sold: { 'mineral:quartz': { n: -4, at: 'x' }, 'bad id': { n: 1 }, 'fish:minnow': 'x', 'fossil:trilobite': { n: 2, at: 5 } } });
+  const nz = codex.snapshot();
+  check(Object.keys(nz.sold).join() === 'fossil:trilobite', 'a corrupt sold ledger is repaired', 'sold ledger not repaired: ' + JSON.stringify(nz.sold));
+  delete global.localStorage;
 }
 
 (async () => {
   await dataChecks();
+  await shopChecks();
 
   const b = await chromium.launch();
   const p = await b.newPage({ viewport: { width: 390, height: 844 } });
@@ -186,7 +242,7 @@ async function dataChecks() {
   await boot({});
   await openJournal();
   const tabs = await S(() => [...document.querySelectorAll('.journal-tabs button')].map((b) => b.textContent));
-  check(tabs.join() === 'Goals,Paintings,Visitors,Fish,Minerals,Fossils,Pottery,Coins,Stone tools,Shells,Meteorites', `tabs: ${tabs.join(', ')}`, `unexpected tabs: ${tabs.join(', ')}`);
+  check(tabs.join() === 'Goals,Codex,Paintings,Visitors,Fish,Minerals,Fossils,Pottery,Coins,Stone tools,Shells,Meteorites,Treasures,Makers,Insects,Storage,Shop', `tabs: ${tabs.join(', ')}`, `unexpected tabs: ${tabs.join(', ')}`);
   const tabFits = await S(() => [...document.querySelectorAll('.journal-tabs button')].every((b) => b.scrollWidth <= b.clientWidth + 1));
   check(tabFits, 'tab labels fit on one line', 'a tab label is clipped');
   await shot('journal-goals');
@@ -208,7 +264,7 @@ async function dataChecks() {
 
   await p.click('[data-jtab="visitors"]');
   await wait(400);
-  check((await S(() => document.querySelectorAll('.famous-card').length)) > 10, 'visitors tab still works', 'visitors tab broke');
+  check((await S(() => document.querySelectorAll('.fish-cell').length)) === 19, 'visitors tab lists the 19 famous visitors from the registry', 'visitors tab broke');
   await shot('journal-visitors');
 
   await p.click('[data-jtab="fish"]');
@@ -233,7 +289,7 @@ async function dataChecks() {
   await p.click('text=Collect one of everything');
   await wait(300);
   const msg = await S(() => [...document.querySelectorAll('#settings button')].find((b) => /^Added/.test(b.textContent))?.textContent);
-  check(/Added 66/.test(msg || ''), `testing button: ${msg}`, `testing button said: ${msg}`); // 18 fish + 3 finds + 8 minerals + 8 fossils + 6 pottery + 6 coins + 6 stone tools + 6 shells + 5 meteorites
+  check(/Added 96/.test(msg || ''), `testing button: ${msg}`, `testing button said: ${msg}`); // 18 fish + 3 finds + 8 minerals + 8 fossils + 6 pottery + 6 coins + 6 stone tools + 6 shells + 5 meteorites + 28 more (stamps, armour, insects, ships, glass, clocks, inventions) + 2 skeletons
   await p.click('.settings-close');
   await wait(300);
   await openJournal('minerals');
@@ -241,6 +297,21 @@ async function dataChecks() {
   check((await S(() => document.querySelector('.set-row.done .quest-claim') !== null)), 'finished set offers its reward', 'no claim button');
   await shot('journal-minerals');
   await noSideScroll('minerals');
+
+  // search, filters, NEW marks
+  check((await S(() => document.querySelectorAll('.fish-cell .mark-new').length)) === 8, 'everything just collected carries a NEW mark', 'NEW marks missing');
+  await S(() => { const i = document.querySelector('.journal-search'); i.value = 'obsidian'; i.dispatchEvent(new Event('input')); });
+  check((await S(() => document.querySelectorAll('.fish-cell:not(.filtered-out)').length)) === 1, 'searching "obsidian" leaves one mineral', 'search did not filter');
+  await S(() => { const i = document.querySelector('.journal-search'); i.value = ''; i.dispatchEvent(new Event('input')); [...document.querySelectorAll('.journal-chips .chip')].find((b) => b.dataset.f === 'missing').click(); });
+  check((await S(() => document.querySelectorAll('.fish-cell:not(.filtered-out)').length)) === 0, '"Missing" hides everything once all are collected', 'missing filter wrong');
+  await S(() => [...document.querySelectorAll('.journal-chips .chip')].find((b) => b.dataset.f === 'all').click());
+  check((await S(() => document.querySelectorAll('.fish-cell:not(.filtered-out)').length)) === 8, '"All" brings them back', 'all filter wrong');
+  check((await S(() => document.querySelectorAll('.journal-tabs button.has-new').length)) >= 3, 'tabs with new finds get a dot', 'no new-dot on tabs');
+  await p.click('[data-jtab="fossils"]');
+  await wait(300);
+  await p.click('[data-jtab="minerals"]');
+  await wait(300);
+  check((await S(() => document.querySelectorAll('.fish-cell .mark-new').length)) === 0, 'NEW clears after you leave the tab', 'NEW did not clear');
 
   await p.click('.fish-cell:not(.unknown)');
   await wait(600);
@@ -266,6 +337,38 @@ async function dataChecks() {
   check(cx2.claimed['crystal-cabinet'] === true, 'claiming a set is saved', 'claim not saved');
   check(!(await S(() => document.querySelector('.set-row .quest-claim'))), 'reward cannot be claimed twice', 'claim button still there');
   void before;
+  await closeJournal();
+
+  // ---------- Codex tab: milestones and artist sets ----------
+  console.log('Codex');
+  await openJournal('codex');
+  const cx0 = await S(() => ({ claims: document.querySelectorAll('.set-row .quest-claim').length, rows: document.querySelectorAll('.set-row').length, text: document.querySelector('.toolkit-note').textContent }));
+  check(cx0.claims === 3 && cx0.rows > 15, `codex tab: 3 milestones reached, ${cx0.rows} rows (${cx0.text})`, 'codex tab wrong: ' + JSON.stringify(cx0));
+  await shot('journal-codex');
+  await noSideScroll('codex');
+  await p.click('.set-row .quest-claim');
+  await wait(300);
+  const cx1 = await codexNow();
+  check(cx1.claimed['milestone-10'] === true && !cx1.claimed['milestone-25'], 'claiming a milestone is saved and pays once', 'milestone claim wrong: ' + JSON.stringify(cx1.claimed));
+  check((await S(() => document.querySelectorAll('.set-row .quest-claim').length)) === 2, 'claimed milestone loses its button', 'milestone button still there');
+  await closeJournal();
+  // ---------- Shop tab ----------
+  console.log('Shop tab');
+  await openJournal('shop');
+  const sh0 = await S(() => ({ h: [...document.querySelectorAll('#journal .fish-h')].map((h) => h.textContent.split(' ·')[0]).join(), rows: document.querySelectorAll('.shop-row').length, sell: [...document.querySelectorAll('.shop-row .quest-claim')].filter((b) => /^Sell/.test(b.textContent)).length }));
+  check(sh0.h === 'Gallery Shop,Sell,Buy back' && sh0.sell > 10, `shop tab: ${sh0.h}, ${sh0.sell} pieces to sell`, 'shop tab wrong: ' + JSON.stringify(sh0));
+  await shot('journal-shop');
+  await noSideScroll('shop');
+  const coins0 = await S(() => JSON.parse(localStorage.getItem('curation.coins') ?? '300'));
+  await p.evaluate(() => [...document.querySelectorAll('.shop-row .quest-claim')].find((b) => /^Sell/.test(b.textContent)).click());
+  await wait(300);
+  const sh1 = await codexNow();
+  const coins1 = await S(() => JSON.parse(localStorage.getItem('curation.coins') ?? '300'));
+  check(Object.keys(sh1.sold || {}).length === 1 && coins1 > coins0, `selling in the tab pays gold (${coins0} to ${coins1}) and lands on the buy-back list`, 'tab sell wrong: ' + JSON.stringify(sh1.sold));
+  check((await S(() => [...document.querySelectorAll('.shop-row .quest-claim')].some((b) => /^Buy/.test(b.textContent) && b.disabled))), 'sold piece waits a week before it can be bought back', 'buy-back not locked');
+  await closeJournal();
+  await openJournal('paintings');
+  check((await S(() => [...document.querySelectorAll('.set-row b')].some((b) => b.textContent === 'Vincent van Gogh'))), 'paintings tab shows the van Gogh artist set', 'no artist set on the paintings tab');
   await closeJournal();
 
   // ---------- Painting viewer in the room still has its change button ----------

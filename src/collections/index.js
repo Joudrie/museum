@@ -2,6 +2,7 @@
 // about, in one place. To add a collection, drop a data file in ./data and
 // add one line to PACKS below. Nothing here touches the page, so tests can
 // import it from Node.
+import { artistSets } from './artistsets.js';
 import { validateEntry, validateCollection, validateSet, RARITY } from './schema.js';
 import paintings from './data/paintings.js';
 import fish from './data/fish.js';
@@ -12,11 +13,19 @@ import coins from './data/coins.js';
 import arrowheads from './data/arrowheads.js';
 import shells from './data/shells.js';
 import meteorites from './data/meteorites.js';
+import insects from './data/insects.js';
+import stamps from './data/stamps.js';
+import ships from './data/ships.js';
+import glassflowers from './data/glassflowers.js';
+import armour from './data/armour.js';
+import clocks from './data/clocks.js';
+import inventions from './data/inventions.js';
+import visitors from './data/visitors.js';
 
 export { RARITY } from './schema.js';
 
 // A data file exports one pack ({ collection, sets, entries }) or a list of them.
-const PACKS = [paintings, fish, minerals, fossils, pottery, coins, arrowheads, shells, meteorites];
+const PACKS = [paintings, fish, minerals, fossils, pottery, coins, arrowheads, shells, meteorites, insects, stamps, ships, glassflowers, armour, clocks, inventions, visitors];
 
 const COLLECTIONS = new Map();
 const ENTRIES = new Map();
@@ -49,6 +58,10 @@ export function register(pack) {
   });
 }
 PACKS.forEach(register);
+// One set per artist with several paintings, worked out from the paintings.
+artistSets([...ENTRIES.values()].filter((e) => e.collection === 'painting')).forEach((s) => {
+  if (!SETS.has(s.id) && !validateSet(s, (id) => ENTRIES.has(id)).length) SETS.set(s.id, s);
+});
 
 export const problems = () => PROBLEMS.slice();
 export const collections = () => [...COLLECTIONS.values()];
@@ -88,7 +101,9 @@ export function list({ collection: col, set, rarity, era, tag, q, all } = {}) {
 }
 export const find = list;
 
-export const sets = (col) => [...SETS.values()].filter((s) => !col || s.collection === col);
+/** Sets, optionally for one collection. Artist sets (made from the paintings) only come with `withArtists`:
+ *  they are goals in the journal, not display bonuses. */
+export const sets = (col, withArtists = false) => [...SETS.values()].filter((s) => (!col || s.collection === col) && (withArtists || !s.artist));
 export const getSet = (id) => SETS.get(id);
 
 /** The journal's tabs: one per tab id, in order, with the collections that share it. */

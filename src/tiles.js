@@ -10,6 +10,7 @@
 
 import { addLandmarks } from './landmarks.js';
 import { addScenery } from './scenery.js';
+import { applyTileSwap } from './swap.js';
 
 export const T = 32;
 const FRAMES = 4;
@@ -377,7 +378,7 @@ export function buildTiles() {
   // the museum and people, for builder islands
   addLandmarks(add);
 
-  return tiles;
+  return applyTileSwap(tiles); // art dropped in public/swap/tiles replaces the code-drawn tile
 }
 
 const WATER_CSS = ['#2a5ea8', '#3474bc', '#4890d0', '#6cb0e4', '#a6d8f6'];
@@ -818,6 +819,30 @@ function addProps(add, anim) {
         R(19, 11, 1, 1, '#f0e0ff');
       }
     });
+  // a worked-across face: a cliff of stone with a fossil showing, and a trench. Touching spots of one kind form a site (src/dig.js).
+  const face = (trench) =>
+    draw(T, T, ({ R, E }) => {
+      if (trench) {
+        R(2, 8, 28, 20, OUT);
+        R(3, 9, 26, 18, '#5a3a20');
+        R(3, 9, 26, 3, '#946640');
+        R(3, 24, 26, 3, '#3a2410');
+        [[7, 15], [15, 18], [22, 14]].forEach(([x, y]) => R(x, y, 3, 2, '#a89a84'));
+        R(20, 18, 4, 2, '#b8603c');
+      } else {
+        R(2, 3, 28, 25, OUT);
+        R(3, 4, 26, 23, css(STONE[2]));
+        R(3, 4, 26, 3, css(STONE[4]));
+        R(3, 22, 26, 5, css(STONE[1]));
+        R(7, 9, 1, 12, css(STONE[1]));
+        R(21, 8, 1, 10, css(STONE[1]));
+        R(12, 12, 8, 1, '#e8dfc8'); // a rib bone in the rock
+        R(13, 14, 7, 1, '#e8dfc8');
+        R(14, 16, 6, 1, '#e8dfc8');
+      }
+    });
+  add('dig_cliff', face(false), { group: 'Dig sites', label: 'Dig cliff (fossils)', walk: 'walk' });
+  add('dig_trench', face(true), { group: 'Dig sites', label: 'Dig trench (ruins)', walk: 'walk' });
   add('dig_spot', mound(false), { group: 'Dig sites', label: 'Dig spot (minerals)', walk: 'walk' });
   add('dig_fossil', mound(false, 'fossil'), { group: 'Dig sites', label: 'Dig spot (fossils)', walk: 'walk' });
   add('dig_ruin', mound(false, 'ruin'), { group: 'Dig sites', label: 'Dig spot (ruins)', walk: 'walk' });
@@ -919,6 +944,37 @@ function addProps(add, anim) {
     R(3, 18, 26, 6, OUT);
     R(4, 19, 24, 4, css(STONE[1]));
   }), { group: 'Puzzles', label: 'Stone head (1×2)', w: T, h: 2 * T, walk: 'block' });
+
+  // Puzzle pieces with a runtime (src/puzzles.js): a boulder that only a pick can crack, drifting fog that clears as you
+  // walk through it, and a riddler who gives a find for a right answer. (Boulder (push), plates, levers and gates are above.)
+  add('rock_crack', draw(T, T, ({ R, E }) => {
+    E(16, 28, 12, 3, 'rgba(0,0,0,0.28)');
+    E(16, 18, 13, 11, OUT);
+    E(16, 18, 12, 10, css(STONE[2]));
+    E(13, 14, 7, 5, css(STONE[3]));
+    for (let i = 0; i < 12; i++) R(18 - ((i * 5) % 4), 8 + i, 2, 2, OUT); // the crack
+    R(9, 22, 4, 2, css(STONE[1]));
+    R(21, 21, 4, 2, css(STONE[1]));
+  }), { group: 'Puzzles', label: 'Cracked boulder (needs a pick)', walk: 'block' });
+  add('fog', draw(T, T, ({ E }) => {
+    [[10, 12, 10, 7], [20, 14, 10, 8], [15, 20, 12, 7], [8, 22, 8, 5], [23, 22, 8, 5]].forEach(([x, y, rx, ry]) => E(x, y, rx, ry, 'rgba(236,240,246,0.78)'));
+    [[14, 14, 7, 4], [21, 19, 6, 3]].forEach(([x, y, rx, ry]) => E(x, y, rx, ry, 'rgba(255,255,255,0.5)'));
+  }), { group: 'Puzzles', label: 'Fog (clears as you walk)', walk: 'over' });
+  add('riddler', draw(T, 2 * T, ({ R, E }) => {
+    E(16, 60, 10, 3, 'rgba(0,0,0,0.28)');
+    R(8, 24, 16, 34, OUT); // robe
+    R(9, 25, 14, 32, '#5a4a8a');
+    R(9, 25, 14, 4, '#7a6ab0');
+    R(12, 10, 8, 14, OUT); // face
+    R(13, 11, 6, 12, '#e8c49a');
+    R(11, 6, 10, 6, OUT); // hat
+    R(12, 7, 8, 4, '#3a2f66');
+    R(14, 15, 1, 2, OUT);
+    R(18, 15, 1, 2, OUT);
+    R(14, 31, 4, 4, '#f2d36b'); // a glowing question mark
+    R(16, 29, 2, 2, '#f2d36b');
+    R(15, 37, 2, 2, '#f2d36b');
+  }), { group: 'Puzzles', label: 'Riddler (1×2)', w: T, h: 2 * T, walk: 'block' });
 
   addOutdoor(add, anim, WOOD);
 }
@@ -1070,4 +1126,87 @@ function addOutdoor(add, anim, WOOD) {
     R(22, 2, 2, 7, '#e0405a');
     R(22, 2, 5, 3, '#e0405a');
   }), { group: 'Grounds & garden', label: 'Mailbox', walk: 'block' });
+
+  // ---- Expedition props (placeholder art; the user is redrawing these by hand later)
+  add('tent', draw(2 * T, 2 * T, ({ ctx: g, R, E }) => {
+    E(32, 58, 27, 4, 'rgba(0,0,0,0.28)');
+    const tri = (x0, y0, x1, y1, x2, y2, col) => {
+      g.fillStyle = col;
+      g.beginPath();
+      g.moveTo(x0, y0);
+      g.lineTo(x1, y1);
+      g.lineTo(x2, y2);
+      g.fill();
+    };
+    tri(4, 58, 32, 10, 60, 58, OUT);
+    tri(7, 56, 32, 14, 57, 56, '#d8c9a0');
+    tri(32, 14, 57, 56, 32, 56, '#bfae82');
+    tri(24, 56, 32, 32, 40, 56, '#3a2a1a');
+    R(31, 6, 2, 8, WOOD[1]);
+    R(33, 6, 6, 3, '#b0413e');
+  }), { group: 'Expedition', label: 'Camp tent (2×2)', w: 2 * T, h: 2 * T, walk: 'block' });
+  add('skull_flag', anim((f) => draw(T, 2 * T, ({ R, E }) => {
+    E(16, 61, 8, 2, 'rgba(0,0,0,0.28)');
+    R(15, 4, 3, 58, OUT);
+    R(16, 4, 1, 57, WOOD[2]);
+    const w = f % 2;
+    R(18, 6, 12, 14 + w, OUT);
+    R(19, 7, 10, 12 + w, '#1d1714');
+    R(22, 9, 4, 4, '#f4ecd8');
+    R(23, 13, 2, 2, '#f4ecd8');
+    R(21, 15 + w, 6, 1, '#f4ecd8');
+    R(22, 9, 1, 1, '#1d1714');
+    R(25, 9, 1, 1, '#1d1714');
+  })), { group: 'Expedition', label: 'Pirate flag', w: T, h: 2 * T, walk: 'block' });
+  add('wreck_hull', draw(3 * T, 2 * T, ({ R, E }) => {
+    E(48, 58, 42, 4, 'rgba(0,0,0,0.3)');
+    E(48, 40, 44, 20, OUT);
+    E(48, 40, 42, 18, WOOD[1]);
+    R(4, 18, 88, 22, WOOD[1]);
+    R(4, 18, 88, 3, WOOD[3]);
+    for (let x = 8; x < 90; x += 9) R(x, 20, 2, 32, WOOD[0]);
+    R(10, 38, 76, 2, '#56545a');
+    R(56, 4, 4, 20, OUT);
+    R(57, 4, 2, 19, WOOD[2]);
+    R(30, 10, 3, 10, WOOD[2]);
+    E(48, 50, 36, 6, 'rgba(0,0,0,0.25)');
+  }), { group: 'Expedition', label: 'Shipwreck hull (3×2)', w: 3 * T, h: 2 * T, walk: 'block' });
+  add('sarcophagus', draw(2 * T, T, ({ R, E }) => {
+    E(32, 28, 26, 3, 'rgba(0,0,0,0.28)');
+    R(5, 8, 54, 20, OUT);
+    R(6, 9, 52, 18, css(STONE[2]));
+    R(6, 9, 52, 4, css(STONE[4]));
+    R(6, 14, 52, 2, '#d8a838');
+    R(6, 22, 52, 2, '#d8a838');
+    E(14, 18, 5, 6, '#d8a838');
+    E(14, 18, 3, 4, '#3a78c8');
+  }), { group: 'Expedition', label: 'Sarcophagus (2×1)', w: 2 * T, h: T, walk: 'block' });
+  add('mammoth_skeleton', draw(3 * T, 2 * T, ({ R, E }) => {
+    E(48, 60, 42, 3, 'rgba(0,0,0,0.25)');
+    const bone = '#e8dfc8';
+    const edge = '#a89870';
+    R(34, 14, 38, 3, bone); // spine
+    for (let x = 36; x < 72; x += 5) {
+      R(x, 17, 3, 16, edge);
+      R(x, 17, 2, 15, bone);
+    }
+    R(70, 10, 14, 14, bone); // skull
+    R(72, 12, 4, 3, '#2a2a30');
+    R(83, 16, 5, 20, bone); // trunk bones
+    [[40, 34], [66, 34]].forEach(([x, y]) => {
+      R(x, y, 4, 20, bone);
+      R(x - 1, y + 20, 6, 3, edge);
+    });
+    R(62, 18, 3, 22, bone); // tusk
+    R(58, 36, 8, 3, bone);
+    R(30, 12, 6, 5, bone); // tail
+  }), { group: 'Expedition', label: 'Mammoth skeleton (3×2)', w: 3 * T, h: 2 * T, walk: 'block' });
+  add('ice_block', draw(T, T, ({ R, E }) => {
+    E(16, 27, 12, 3, 'rgba(0,0,0,0.25)');
+    R(5, 8, 22, 19, OUT);
+    R(6, 9, 20, 17, '#a8d8f0');
+    R(6, 9, 20, 3, '#e0f4ff');
+    R(9, 14, 3, 9, '#d0ecfa');
+    R(18, 17, 5, 2, '#78b8e0');
+  }), { group: 'Expedition', label: 'Ice block', walk: 'block' });
 }

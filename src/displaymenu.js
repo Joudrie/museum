@@ -3,7 +3,7 @@
 // opens its card in the viewer.
 import { list, metaLine } from './collections/index.js';
 import { fillPicture } from './collections/render.js';
-import { candidates, heldBy, put, take, slotCount, earns } from './display.js';
+import { accepts, candidates, heldBy, put, take, slotCount, earns, setsShown, shownEverywhere } from './display.js';
 import { get } from './collections/index.js';
 import { openViewer } from './viewer.js';
 
@@ -65,7 +65,10 @@ function render() {
         onPick: () => {
           if (full) return state.toast('This is full: take something off first');
           state.before?.();
+          const was = doneSets();
           put(item, e.id);
+          const now = setsShown(shownEverywhere()).filter((r) => r.done && !was.has(r.set.id));
+          if (now.length) state.toast(`${now[0].set.name} complete! Its pieces earn double`);
           changed();
         },
         onLook: () => look(pool, pool.indexOf(e)),
@@ -75,8 +78,23 @@ function render() {
   if (!pool.length) {
     add.appendChild(node('p', 'empty-note', def.fixture.accepts.includes('tank') ? 'No fish to show. Catch some at the pond or the sea.' : 'You have nothing that fits here yet. Dig, fish and collect, then come back.'));
   }
-  body.replaceChildren(head, node('h3', 'display-sub', 'On display'), shown, node('h3', 'display-sub', 'You could show'), add);
+  // sets that could be completed with what fits here, and how far along they are on display
+  const cols = new Set(state.entries.filter((e) => accepts(item.type, e)).map((e) => e.collection));
+  const plaques = node('div', 'set-list');
+  [...cols].flatMap((c) => setsShown(shownEverywhere(), c)).filter((r) => r.have > 0).forEach((r) => {
+    const row = node('div', 'set-row' + (r.done ? ' done' : ''));
+    const text = node('div', 'set-text');
+    text.append(node('b', '', r.set.name), node('small', '', r.done ? `${r.set.plaque || 'Every piece is on display.'} Its pieces earn double.` : `${r.have} of ${r.total} on display`));
+    const bar = node('div', 'quest-bar');
+    bar.appendChild(Object.assign(node('i'), { style: `width:${Math.round((100 * r.have) / r.total)}%` }));
+    text.appendChild(bar);
+    row.appendChild(text);
+    plaques.appendChild(row);
+  });
+  body.replaceChildren(head, node('h3', 'display-sub', 'On display'), shown, node('h3', 'display-sub', 'You could show'), add, ...(plaques.children.length ? [node('h3', 'display-sub', 'Sets on display'), plaques] : []));
 }
+
+const doneSets = () => new Set(setsShown(shownEverywhere()).filter((r) => r.done).map((r) => r.set.id));
 
 function look(entries, i) {
   openViewer(entries, i, null, null, { over: true });

@@ -91,6 +91,30 @@ const BONE = [
   '.##......##.',
 ];
 
+const SKULL = [
+  '..########..',
+  '.#bbbbbbbb#.',
+  '#bbaaaaaabb#',
+  '#baa#aa#aab#',
+  '#baa#aa#aab#',
+  '#bbaaaaaabb#',
+  '.#bbccccbb#.',
+  '.#b#b##b#b#.',
+  '..#.#..#.#..',
+];
+const RIB = [
+  '...#####....',
+  '..#bbbbb#...',
+  '.#bb###bb#..',
+  '#bb#...#bb#.',
+  '#b#.....#b#.',
+  '#b#.....#b#.',
+  '#bb#...#bb#.',
+  '.#bb###bb#..',
+  '..#bbbbb#...',
+  '...#####....',
+];
+
 const fossil = (slug, title, rows, [a, b, c, o], rarity, age, blurb, facts) => ({
   id: `fossil:${slug}`,
   collection: 'fossil',
@@ -105,6 +129,17 @@ const fossil = (slug, title, rows, [a, b, c, o], rarity, age, blurb, facts) => (
   provenance: { how: 'dug', where: 'Fossil dig spots' },
   source: { license: 'Original', credit: 'Curation' },
   value: 3 * rarity,
+});
+
+// Big finds: one skeleton takes several fossil spots (`parts`). Each dig that turns up a piece is counted in src/dig.js;
+// the whole skeleton lands in your codex only when the last piece is out. Chat 5 (display) assembles them.
+const skeleton = (slug, title, rows, pal, parts, age, blurb, facts) => ({
+  ...fossil(slug, title, rows, pal, 4, age, blurb, facts),
+  set: undefined,
+  parts,
+  display: ['floor', 'plinth'],
+  dirty: true,
+  value: 40,
 });
 
 const entries = [
@@ -132,6 +167,12 @@ const entries = [
   fossil('trex-tooth', 'T. rex tooth', TOOTH, ['#e8e0c8', '#fffbe8', '#b8ac88', '#4a4230'], 4, 'dinosaur',
     'The biggest Tyrannosaurus rex teeth, root and all, were about 30 centimetres long.',
     ['The teeth were thick and strong, built to crush bone.']),
+  skeleton('trex-skeleton', 'T. rex skeleton', SKULL, ['#d8caa8', '#fffbe8', '#9a8a68', '#3a3020'], 6, 'dinosaur',
+    'Tyrannosaurus rex was one of the largest meat-eating animals ever to walk on land. Complete skeletons are very rare: most are found in pieces.',
+    ['A big T. rex skull is about a metre and a half long.']),
+  skeleton('triceratops-skeleton', 'Triceratops skeleton', RIB, ['#c8b898', '#f0e4c4', '#8a7a58', '#342a1a'], 4, 'dinosaur',
+    'Triceratops had three horns and a bony frill on its head. It lived at the very end of the age of dinosaurs.',
+    ['Its name means “three-horned face”.']),
 ];
 
 export default {
@@ -158,7 +199,7 @@ export default {
       id: 'fossil-drawer',
       name: 'Fossil drawer',
       collection: 'fossil',
-      entries: entries.map((e) => e.id),
+      entries: entries.filter((e) => !e.parts).map((e) => e.id),
       reward: { gold: 800 },
       plaque: 'Eight fossils from the sea, the swamps and the age of dinosaurs.',
     },

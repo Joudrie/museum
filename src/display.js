@@ -9,7 +9,7 @@
 // Nothing here touches the page, so tests can import it from Node.
 import { ITEMS, loadItems } from './items.js';
 import { load, save } from './storage.js';
-import { get, collectionOf } from './collections/index.js';
+import { get, collectionOf, sets } from './collections/index.js';
 import { ownedCount, snapshot } from './collections/codex.js';
 
 export const DISPLAY_KEY = 'curation.display';
@@ -89,12 +89,48 @@ export function shownIn(i, all = contents()) {
   return loadItems(i).flatMap((it) => (isFixture(it) ? heldBy(it.d, all).map((id) => get(id)).filter(Boolean) : []));
 }
 
-export const displayIncome = (i, all = contents()) => shownIn(i, all).reduce((n, e) => n + earns(e), 0);
+/**
+ * Sets with every piece on display somewhere (the Fossil drawer, the Crystal cabinet...).
+ * `ids` is the list of entry ids on display (several copies count once).
+ */
+export function setsShown(ids, collectionId) {
+  const on = new Set(ids);
+  return sets(collectionId).map((s) => {
+    const have = s.entries.filter((id) => on.has(id)).length;
+    return { set: s, have, total: s.entries.length, done: have === s.entries.length };
+  });
+}
 
-/** Every entry id on display in any of the first `roomCount` rooms. */
-export function shownEverywhere(roomCount) {
-  const all = contents();
-  const ids = [];
-  for (let i = 0; i < roomCount; i++) shownIn(i, all).forEach((e) => ids.push(e.id));
-  return ids;
+/** Entry ids that earn double because their whole set is on display. */
+export function bonusIds(ids) {
+  return new Set(setsShown(ids).filter((r) => r.done).flatMap((r) => r.set.entries));
+}
+
+export function displayIncome(i, all = contents()) {
+  const bonus = bonusIds(shownEverywhere(all));
+  return shownIn(i, all).reduce((n, e) => n + earns(e) * (bonus.has(e.id) ? 2 : 1), 0);
+}
+
+/** Every entry id on display, in any room (one read of the saved items). */
+export function shownEverywhere(all = contents()) {
+  const rooms = load('curation.items', {});
+  return Object.values(rooms)
+    .filter(Array.isArray)
+    .flatMap((list) => list.filter((it) => ITEMS[it?.type]?.fixture).flatMap((it) => heldBy(it.d, all)));
+}
+
+/**
+ * Pieces an exhibit has to be built from (the T. rex skeleton: dug bones and a tooth).
+ * Returns [{ id, title, need, have }] for each requirement, or [] if the item has none.
+ */
+export function needsOf(type, snap = snapshot()) {
+  return Object.entries(ITEMS[type]?.needs || {}).map(([id, need]) => ({ id, title: get(id)?.title || id, need, have: ownedCount(id, snap) }));
+}
+
+/** Words for what is still missing, or null when you can build it. */
+export function missingFor(type, snap = snapshot()) {
+  const short = needsOf(type, snap).filter((n) => n.have < n.need);
+  if (!short.length) return null;
+  const say = short.map((n) => `${n.need} ${n.title.toLowerCase()}${n.need > 1 ? 's' : ''} (you have ${n.have})`);
+  return `Dig up ${say.join(' and ')} first`;
 }

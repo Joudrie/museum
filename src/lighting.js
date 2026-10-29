@@ -9,6 +9,7 @@ import { T } from './art.js';
 import { artBounds, wallRef } from './walldraw.js';
 import { ITEMS, footprint } from './items.js';
 import { settings, hourNow } from './settings.js';
+import { weatherToday } from './weather.js';
 
 const DEPTH = 4998; // under speech/interact bubbles (5000), over people
 // Ambient light through the day: [hour, r, g, b].
@@ -54,6 +55,14 @@ export function ambientAt(hour) {
     }
   }
   return AMBIENT[0].slice(1);
+}
+
+// Rain and snow shade the daylight: a grey, cooler sky on wet days, a soft
+// bright one under snow. (After dark it barely changes anything.)
+const OVERCAST = { rain: [0.84, 0.89, 0.98], snow: [0.95, 0.98, 1.03] };
+export function overcast(rgb, weather = weatherToday()) {
+  const m = OVERCAST[weather];
+  return m ? rgb.map((v, i) => Math.min(255, Math.round(v * m[i]))) : rgb;
 }
 
 // A short label for the time of day (for the HUD).
@@ -185,7 +194,7 @@ export class Lighting {
     this.glow = null;
     this.motes.forEach((m) => m.img.destroy());
     this.motes = [];
-    this.ambient = settings().dayNight ? ambientAt(hourNow()) : DAY;
+    this.ambient = settings().dayNight ? overcast(ambientAt(hourNow())) : DAY;
     const dark = this.dark;
     const lights = [];
     const add = (l) => lights.push({ strength: 1, color: WARM, flicker: 0, ...l, strength: (l.strength ?? 1) * (0.45 + 0.55 * dark) });
@@ -282,6 +291,7 @@ export class Lighting {
   update(dt) {
     this.time += dt;
     const sc = this.scene;
+    this.watchSpeed();
     this.updateShadows();
     if (!this.rt) return;
     if (this.dirty) this.draw();
@@ -301,6 +311,26 @@ export class Lighting {
       });
     }
     void sc;
+  }
+
+  // A slow phone: if High keeps the game under about 22 frames a second for
+  // five seconds, drop to Low for this visit (the setting itself is left alone).
+  watchSpeed() {
+    const now = performance.now() / 1000;
+    const dt = now - (this.lastTick || now); // (real time: Phaser's own delta is smoothed)
+    this.lastTick = now;
+    if (this.quality !== 'high' || dt <= 0 || dt > 0.5) return; // (ignore pauses and tab switches)
+    this.slow = (this.slow || 0) + dt;
+    this.slowFrames = (this.slowFrames || 0) + 1;
+    if (this.slow < 5) return;
+    const avg = this.slow / this.slowFrames;
+    this.slow = 0;
+    this.slowFrames = 0;
+    if (avg > 0.046) {
+      this.quality = 'low';
+      this.makeLayer();
+      this.build();
+    }
   }
 
   draw() {

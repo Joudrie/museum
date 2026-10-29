@@ -1,0 +1,111 @@
+{
+  "status": "draft",
+  "collection": "archaeology",
+  "slug": "master-of-animals-cheekpiece",
+  "notes": "region: Iran (Luristan). era removed: the paintings date buckets do not fit antiquity; Chat 8 defines this collection",
+  "entry": {
+    "id": "archaeology:master-of-animals-cheekpiece",
+    "collection": "archaeology",
+    "title": "Master of Animals Cheekpiece",
+    "year": "c. 700 BCE",
+    "ratio": 1.4295,
+    "blurb": "A ring penetrating the male figure’s torso provides a means of attachment for a metal horse bit, now missing, and a second cheekpiece, likely nearly identical.",
+    "rarity": 1,
+    "tags": [
+      "iran"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1961.33/1961.33_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Purchase from the J. H. Wade Fund",
+      "url": "https://clevelandart.org/art/1961.33"
+    },
+    "value": 5,
+    "facts": [
+      "In this cast bronze cheekpiece, a horned male figure with sidelocks grabs two winged felines by their forelegs.",
+      "This design is an ancient Near Eastern motif known as the Master of Animals.",
+      "Incised chevrons, lines, and crosses decorate the master and the winged felines."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "136839",
+    "title": "Master of Animals Cheekpiece",
+    "maker": "",
+    "year": "c. 700 BCE",
+    "medium": "bronze, cast and incised",
+    "dimensions": "Overall: 14.9 x 21.3 cm (5 7/8 x 8 3/8 in.)",
+    "widthCm": 21.3,
+    "heightCm": 14.9,
+    "ratio": 1.4295,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1961.33/1961.33_web.jpg",
+    "imageWidth": 1263,
+    "imageHeight": 876,
+    "pageUrl": "https://clevelandart.org/art/1961.33",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Purchase from the J. H. Wade Fund",
+    "description": "In this cast bronze cheekpiece, a horned male figure with sidelocks grabs two winged felines by their forelegs. Each feline tramples a rabbit beneath its feet. This design is an ancient Near Eastern motif known as the Master of Animals. Incised chevrons, lines, and crosses decorate the master and the winged felines. A ring penetrating the male figure’s torso provides a means of attachment for a metal horse bit, now missing, and a second cheekpiece, likely nearly identical. This work likely originates from Luristan, a region in northwestern Iran known for its metalworking and horse-breeding in the Iron Age. The Master of Animals may represent a god of nature or the hunt.",
+    "culture": "Iran, Luristan",
+    "classification": "Metalwork",
+    "tags": [
+      "Egyptian and Ancient Near Eastern Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Master of Animals Cheekpiece",
+      "maker": "",
+      "year": "c. 700 BCE",
+      "medium": "bronze, cast and incised",
+      "dimensions": "Overall: 14.9 x 21.3 cm (5 7/8 x 8 3/8 in.)",
+      "culture": "Iran, Luristan",
+      "classification": "Metalwork",
+      "credit": "The Cleveland Museum of Art. Purchase from the J. H. Wade Fund",
+      "description": "In this cast bronze cheekpiece, a horned male figure with sidelocks grabs two winged felines by their forelegs. Each feline tramples a rabbit beneath its feet. This design is an ancient Near Eastern motif known as the Master of Animals. Incised chevrons, lines, and crosses decorate the master and the winged felines. A ring penetrating the male figure’s torso provides a means of attachment for a metal horse bit, now missing, and a second cheekpiece, likely nearly identical. This work likely originates from Luristan, a region in northwestern Iran known for its metalworking and horse-breeding in the Iron Age. The Master of Animals may represent a god of nature or the hunt.",
+      "tombstone": "Master of Animals Cheekpiece, c. 700 BCE. Iran, Luristan. Bronze, cast and incised; overall: 14.9 x 21.3 cm (5 7/8 x 8 3/8 in.). The Cleveland Museum of Art, Purchase from the J. H. Wade Fund, 1961.33",
+      "funFact": "",
+      "didYouKnow": "The Master of Animals may represent a god of nature or the hunt.",
+      "creators": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "A ring penetrating the male figure’s torso provides a means of attachment for a metal horse bit, now missing, and a second cheekpiece, likely nearly identical.",
+      "quote": "A ring penetrating the male figure’s torso provides a means of attachment for a metal horse bit, now missing, and a second cheekpiece, likely nearly identical.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "In this cast bronze cheekpiece, a horned male figure with sidelocks grabs two winged felines by their forelegs.",
+      "quote": "In this cast bronze cheekpiece, a horned male figure with sidelocks grabs two winged felines by their forelegs.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "This design is an ancient Near Eastern motif known as the Master of Animals.",
+      "quote": "This design is an ancient Near Eastern motif known as the Master of Animals.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Incised chevrons, lines, and crosses decorate the master and the winged felines.",
+      "quote": "Incised chevrons, lines, and crosses decorate the master and the winged felines.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "unknown collection \"archaeology\"",
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

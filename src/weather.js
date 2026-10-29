@@ -1,3 +1,4 @@
+import { sfx } from './music.js';
 // Seasons and weather outside. The season follows the real calendar; the
 // weather is picked per day (the same all day). ?weather=rain|snow|leaves|petals|clear
 // pins it for testing (and ?season=winter|spring|summer|autumn the season).
@@ -13,6 +14,19 @@ export function season(date = new Date()) {
   return m === 11 || m <= 1 ? 'winter' : m <= 4 ? 'spring' : m <= 7 ? 'summer' : 'autumn';
 }
 
+// A holiday on the real calendar, or null. ?holiday=halloween|winter pins it for testing.
+//   halloween: Oct 24-31 (trick-or-treaters, jack-o'-lanterns)
+//   winter:    Dec 18-26 (woolly hats and a few lights)
+export function holiday(date = new Date()) {
+  const pinned = /[?&]holiday=(\w+)/.exec(location.search);
+  if (pinned) return pinned[1] === 'none' ? null : pinned[1];
+  const m = date.getMonth();
+  const d = date.getDate();
+  if (m === 9 && d >= 24) return 'halloween';
+  if (m === 11 && d >= 18 && d <= 26) return 'winter';
+  return null;
+}
+
 export function weatherToday(date = new Date()) {
   const pinned = /[?&]weather=(\w+)/.exec(location.search);
   if (pinned) return pinned[1];
@@ -22,6 +36,23 @@ export function weatherToday(date = new Date()) {
   if (s === 'winter') return r < 0.55 ? 'snow' : 'clear';
   if (r < 0.22) return 'rain';
   return s === 'autumn' ? 'leaves' : s === 'spring' ? 'petals' : 'clear';
+}
+
+// Now and then a distant rumble on rainy days, with a faint flash. Call once
+// from a scene's create(); it stops itself when the scene shuts down.
+export function stormRumble(scene, kind) {
+  if (kind !== 'rain') return;
+  const day = Math.floor(Date.now() / 86400000);
+  if (Math.abs(Math.sin(day * 78.233) * 4375.5) % 1 > 0.4 && !/[?&]weather=rain/.test(location.search)) return; // not every wet day is stormy
+  const next = () => {
+    const ev = scene.time.delayedCall(18000 + Math.random() * 40000, () => {
+      scene.cameras.main.flash(160, 235, 240, 255, true);
+      scene.time.delayedCall(700 + Math.random() * 900, () => sfx('thunder'));
+      next();
+    });
+    return ev;
+  };
+  next();
 }
 
 const PARTS = {
@@ -92,4 +123,12 @@ export class Weather {
     const s = this.scene.add.ellipse(x, y, 4, 2).setStrokeStyle(1, 0xd8e8ff, 0.7).setDepth(0.8);
     this.scene.tweens.add({ targets: s, scaleX: 2, scaleY: 2, alpha: 0, duration: 400, onComplete: () => s.destroy() });
   }
+}
+
+// The museum's daily rhythm: how many more (or fewer) visitors are around at
+// this hour. Quiet early and late, busiest after lunch, and a few more come
+// in out of the rain.
+export function crowdShift(hour, weather = 'clear') {
+  const base = hour < 9 || hour >= 20 ? -1 : hour >= 12 && hour < 17 ? 1 : 0;
+  return base + (weather === 'rain' ? 1 : 0);
 }

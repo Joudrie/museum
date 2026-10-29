@@ -146,6 +146,8 @@ Scenes (`src/main.js`):
   quotable description; Met and Commons ones are flagged "needs a real hook". Live APIs: the Met rate-limits (HTML block page) and Cleveland's `fields=` param 500s.
 - **Rarity and Painting of the Day (Chat 1, #137):** `content/rarity-proposals.json` (49 paintings, status `proposed`; `tools/apply_rarity.mjs` applies it only once approved) and
   `tools/potd.mjs` (`build` drafts quoted lines into `content/potd/draft.json`, `publish` writes `src/collections/data/potd.json` from approved ones, `pickFor(date, list)` rotates). Chat 13 shows it.
+- **Archaeology drafts (Chat 1):** `content/batches/archaeology-batch.json` built 25 Cleveland objects (Egypt, Near East, Greece and Rome, ancient Americas) in
+  `content/review/archaeology/`, all draft, `era` left blank, waiting for Chat 8 to define the collection. Natural history has no quotable open source yet.
 - `check_images.mjs` flags broken, tiny, heavy and wrong-shaped images for every painting. **Not run yet on the
   49 paintings** (no network here); `content/batches/first-batch.json` (12 works, 9+ regions) is waiting to be built.
 - Test: `node tests/content.cjs` (no browser, no network).
@@ -164,6 +166,7 @@ Scenes (`src/main.js`):
 - **The Empty Frames** (heist arc): Edmund tells 5 chapters of the real 1990 Gardner theft. Every line has the museum's quoted sentence; `node tests/people.cjs --live` checks each quote is still on its source page.
 - **Chains** for Vermeer, Rembrandt, Hokusai: talk to them again after each ask is met (hang their painting, meet more visitors). Add a visitor = add an entry in `chains.js`.
 - **Hook for expeditions (Chat 7):** finished beats with a `lead` append `{id, text, from, at}` to `curation.leads_offered` (`leadsOffered()` in `story.js`). Chat 7 reads that list and starts the trip. Ids so far: `heist-hideout`, `sphinx-letter`, `studio-chest`, `last-scrolls`.
+- **Regulars:** `src/regulars.js` counts talks per visitor (name + type, `curation.regulars`); the 3rd talk they recognise you, later talks use regular lines. `regularCount()` is there for goals/Journal later.
 
 ### Display: fixtures that hold collection entries (Chat 5)
 - A fixture is a decor item with a `fixture` block in `src/items.js` (kind, `accepts` display tags, `slots`). Today: easel, plinth, glass case,
@@ -172,6 +175,16 @@ Scenes (`src/main.js`):
   picture opens its card in the viewer. `src/displayart.js` draws the pieces over the sprite (fish swim); rare and legendary pieces get a glow.
 - Pieces on display earn `value` (or 2 x rarity) gold/hr (`wallet.js`) and count as decor in the room rating (`rating.js`). Moving a fixture keeps its
   pieces; selling empties it. Test: `node tests/display.cjs`.
+- Tap a displayed piece in the room (no toolkit open) to read its card and swipe to the others in the room (`RoomScene.tapDisplayed`).
+- A set with every piece on display (any rooms) earns double for those pieces; the panel shows each started set's progress and plaque. Items can
+  carry `needs: { entryId: count }` (the T-rex skeleton: 6 dinosaur bones + a T. rex tooth); `missingFor()` blocks buying and the toolkit says what is missing.
+
+### Expeditions (chat 7): leads, boat scene, seven islands
+- **Leads** (`src/leads.js`): letters, torn maps, notes and rumours, kept in `curation.leads`. The first (a bottle note) turns up when you first open the boat menu; finishing an island hands out the next (`then`). The boat menu only lists an expedition island once a lead points at it, and has a **Letters & leads** entry with a "Set sail" button per lead. Add a lead = one entry in `LEADS`.
+- **Islands** are `src/maps/exp-<id>.json` (builder format) with an `expedition` block: `spots` (note, dig, chest, crate, plate, gate, lever), `patrols`, `clock`, `goals`. `src/expedition.js` runs it (auto-loads every `exp-*.json`). `tools/gen_expeditions.mjs` drew the seven first drafts (Skull Isle, Drowned Reef, Sandstone Tomb, Red Badlands, Lost Temple, Thieves' Rock, Frozen North); repaint them in the builder but keep the block. Failing is gentle: caught or washed out puts you back at the boat, finds and flags stay.
+- **Finds come home dirty** with chat 4's contract: `collect(id, { dirty: true })`, so they are in your bag and the Restoration Studio cleans them. `foundAt(id)` (`src/foundat.js`) remembers the island and `provenanceLine` shows "Recovered from Skull Isle". Leads offered by chat 10's story chapters (`curation.leads_offered`: `heist-hideout`, `sphinx-letter`, `studio-chest`, `last-scrolls`) open Thieves' Rock, the Tomb, the Reef and the Temple.
+- Each map's `expedition.climate` pins its season and weather (Frozen North is always snowing, the Temple always rains); new props are in `src/tiles.js` under the "Expedition" group.
+- Test: `PW=... OUT=<dir> node tests/expedition.cjs` (a whole trip on Skull Isle, and every island's spots are reachable from the boat; run it alone, not next to another browser test).
 
 ### Wakefield, MA is NOT part of the game
 A separate personal project (the user's hometown, for friends) that only shares the engine. Its page is `wakefield.html`, its code
@@ -187,6 +200,8 @@ island scene streams ground chunks around the player.
 
 - Security is a tier (`curation.cameras`, old `true` = tier 2). The guard sells the next tier; each tier has a `stop` chance for the rare robbery, and camera tiers turn a stopped robbery into a "thief caught" bounty.
 
+- Services items (toolkit → Services, max 1 each): gift shop (gold per hung painting, doubled per rarity step), food court and discovery table (scale with visitors), lecture stage (per famous visitor met). Earnings logic: `serviceGold()` in `src/wallet.js`, numbers in `SERVICES`. Their art is placeholder, in `bakeItem` in `src/art.js`.
+
 ### Gotchas we hit
 - **Phaser reuses the previous scene data** if you call `scene.start('island')` with no data.
   Always pass data explicitly, e.g. `{ map: 'main' }`. Leaving the museum once dropped you on
@@ -196,6 +211,13 @@ island scene streams ground chunks around the player.
   `setPosition()` and `scene.start()` return huge objects and crash the run with
   ERR_STRING_TOO_LONG. Wrap calls in `{ ...; }`.
 - **iOS Safari ignores `user-scalable=no`.** Use `touch-action` instead.
+
+### Art swap and placeholder list (Chat 15)
+- **Drop-in swap:** a PNG with the same name as a placeholder, put in `public/swap/` (`tiles/<name>.png`, `sprites/<name>.png`, `pieces/<group>/<n>.png`), overrides it with no code change. See `public/swap/README.md`. Code: `src/swap.js`; `vite.config.js` writes `swap/index.json`; `src/boot.js` waits for it before the game starts. A wrong-size file is ignored with a console warning.
+- **Placeholder list:** `node tools/list_placeholders.mjs` (add `--md` to rewrite `docs/PLACEHOLDERS.md`) lists every tile, room sprite and builder piece by name, size and where it's used, and marks swapped ones. Needs playwright (`PW=` path).
+
+### Asset hunt round 3 (Chat 15)
+- `docs/ASSETS.md` "Round 3": 30 OpenGameArt packs (licences read on each page) saved in `assets/vendor/<dir>/` with a `SOURCE.txt`, a ranked top 20, itch.io links to download by hand, and the gaps still open (display cases, plinths, glass walls, dig-site tools). `tools/fetch_oga.sh` downloads a pack. None are in the game yet.
 
 ## 4. Tests
 
@@ -245,8 +267,24 @@ See `docs/ASSET-HUNT.md` (the "super dig" prompt plus the to-do list) and `docs/
 ### Chat 9: rooms
 - Two new shaped plans in `src/shaped.js`: `lhall` (L-shaped hall) and `corner` (its mirror). They join the end of the shaped row, so old saves get them via `withShaped` and built rooms move back two places. `tests/gaps.cjs` and `tests/smoke.cjs` now count 7 shaped rooms (3 to 9) and built rooms start at index 10.
 
+- `holiday()` in `src/weather.js` (real calendar; `?holiday=halloween|winter|none` pins it). Halloween: pumpkins by the museum doors (`holidayDecor` in IslandScene), kids and some students in witch / ghost / pumpkin costumes (`visitorLook`). Winter: woolly hats.
+- Room presets (`src/presets.js`, `tests/presets.cjs`): Customize > This room > Saved layouts saves a room's decor and items under a name and loads them into any room. Loading sells what is there and buys the preset's items at normal prices, so layouts are not free items.
+
+## Chat 8: collections, codex, journal, shop
+- **New data collections** (stamps, armour, insects, ship models, glass flowers, timekeepers, inventions): `src/collections/data/*.js`, pixel art drawn by the helpers in `data/_px.js` (`pack()`, `draw()`, `sym()`), all placeholder art. Famous visitors are a collection too (`data/visitors.js`, `people: true`, so "Collect one of everything" skips them); their picture comes from the `visitor` renderer registered in `journal.js`, fed by `portraitCanvas` in RoomScene.
+- **Codex tab** (`milestones.js`, `codextab.js`): overall %, milestones 10/25/50/75/100% that pay once (`claimed['milestone-N']`), and ever-collected vs held-now per collection. **Artist sets** (`artistsets.js`) are made from the paintings (any artist with 2+), pay 100 gold per painting, and are journal goals only: `sets()` leaves them out unless you pass `true`, so they never become display bonuses.
+- **Shop** (`shop.js`, `shoptab.js`, Shop tab): sell for 50%, buy back after 7 days at 75% of price, a Gallery Shop of 3 to 5 pieces seeded by the date (150% of price, one of a kind: owned pieces can't be bought). The codex got a `sold` ledger (additive, repaired by `normalize`). Money is passed in, so tests run it in Node with an in-memory save. Paintings have nothing to sell until their collection is `'earned'` (Needs Sean).
+- **Journal polish** (`tab.js`): search and filter chips (hide cells in place), NEW marks (`curation.journalSeen`, cleared when you leave the tab) with a dot on tabs that have something new, and your stars and notes shown on tiles. `normalize` now clamps `dirty` to what you own (a test from the digging chat was failing on it).
+- Weather shades the light: `overcast()` in `src/lighting.js` (rain greyer, snow brighter), used by rooms and islands. `stormRumble(scene, kind)` in `src/weather.js` = thunder (`sfx('thunder')`, generated noise) plus a faint flash on some rainy days.
+- Themed rooms (`roomTheme` in `src/wallet.js`): 3+ paintings all from one era earn 1.5x; Customize > Rating says so. "Section" is read as the painting's `era`.
+
 ## Digging v2 (Chat 6)
 - **Dig kinds** live in `src/dig.js` (`DIG_KINDS`, `DIG_TILES`): a builder tile maps to a kind, a kind maps to collections. mineral, fossil, ruin (pottery, coins, stone tools), shore (shells), crater (meteorites). To add a kind: a data collection, one line in `DIG_KINDS`, one tile in `src/tiles.js` (group "Dig sites"), one line in `DIG_TILES`.
-- **`dirty: true` on an entry** means finds of it arrive dirty (pottery, coins, stone tools, meteorites). `collect(id, { dirty })` records `codex.dirty[id]` (a count, never more than you own). Chat 4 owns what cleaning does; it should lower that count. Until then dirty finds display as normal.
+- **Dirty finds:** entries flagged `dirty: true` (pottery, coins, stone tools, meteorites, skeletons) arrive dirty through Chat 4's contract (`collect` handles the flag); nothing extra is needed in `src/dig.js`.
 - Journal tabs now wrap to two rows (12 tabs). `tests/dig.cjs` needs the dev server (`npx vite --port 5173`, `URL=http://localhost:5173/`).
-- Room presets (`src/presets.js`, `tests/presets.cjs`): Customize > This room > Saved layouts saves a room's decor and items under a name and loads them into any room. Loading sells what is there and buys the preset's items at normal prices, so layouts are not free items.
+- **Dig tools** (`TOOLS` in `src/dig.js`): brush (gentle, rare finds more likely), trowel (wider), pick (widest, favours common). Earned: trowel after 6 different dug finds, pick after 16 (counted from the codex, no new save). The row stays hidden until the trowel is earned.
+- **Big finds** use `parts: n` on an entry (T. rex 6, Triceratops 4): each fossil-spot dig that rolls one adds a piece (`curation.digparts`); the entry reaches the codex, dirty, on the last piece. They are `display: ['floor','plinth']` and in no set, for Chat 5 to assemble.
+- **Sites:** touching dig tiles of one kind (`dig_cliff` fossils, `dig_trench` ruins, or any mix of spots) form a site (`siteOf` in `src/dig.js`). With 3 or more tiles, digging every one inside a rest period triggers `IslandScene.bonusDig`: a rare find (rarity 3+ or a skeleton piece). The bonus has its own `site:<key>` rest timer.
+- Daily rhythm: `crowdShift(hour, weather)` in weather.js sets how many visitors a room starts with (only when day/night is on). A swan glides on the pond (`updateSwan` in critters.js). `Lighting.watchSpeed` auto-drops High to Low for the visit on slow phones; the saved setting is untouched.
+- **Puzzles** (`src/puzzles.js`, data in `src/puzzles-data.js`): `IslandScene.placeMapPieces` hands each tile to `puzzles.piece()`. Boulder (push) slides when you walk into it (Interact beside it puts it back); plate, lever, gate (a gate belongs to every plate, lever and riddler within 8 tiles of it, chained; it opens for good once all are done); `rock_crack` needs the pick (16 finds); `ice` ground tiles slide you; `fog` clears for good (`curation.fog`); `riddler` asks a riddle picked by its position, a right answer opens a dig patch (ruin finds), a wrong one costs nothing. Everything resets on reload except fog. Mazes are just hedges: build them.
+- **Puzzle yard**: `node tools/puzzle_yard.mjs` writes `content/maps/puzzle-yard.json` (one of every puzzle piece and dig site). `tests/puzzles.cjs` runs it via `scene.start('island', { mapData })`; it is not in the boat. Import it in the builder to play with it.

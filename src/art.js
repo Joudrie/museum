@@ -2682,6 +2682,24 @@ export function bakeItem(scene, key, type, def, rot) {
       [10, 52].forEach((x) => [0, 1, 2, 3].forEach((k) => R(x + (k % 2), gy - 16 - k * 4, 2, 4, '#3f8f4a')));
       R(4, gy - 38, 56, 2, '#1e1a20');
       break;
+    case 'stanchion':
+      // one brass post with a short red belt, to line up with ropes
+      shadow(16, gy, 9, 3);
+      E(16, gy - 1, 6, 2, '#7a5a1e');
+      box(14, gy - 26, 4, 25, BRASS, OUT);
+      R(14, gy - 26, 1, 25, BRASS_L);
+      E(16, gy - 28, 3, 3, BRASS_L);
+      R(18, gy - 22, 8, 3, '#6a1420');
+      R(19, gy - 22, 6, 1, '#b8404e');
+      break;
+    case 'info_sign':
+      // a little sign on a stand for the exhibit's name
+      shadow(16, gy, 9, 3);
+      R(15, gy - 18, 2, 17, WOOD_D);
+      box(5, gy - 36, 22, 18, WOOD, OUT);
+      R(7, gy - 34, 18, 14, '#f4f0e6');
+      [30, 26, 22].forEach((y, k) => R(9, gy - y - 7 + 8, k === 2 ? 8 : 14, 1, '#6a5a4a'));
+      break;
     case 'plinth':
       // a marble pedestal; the exhibit stands on top
       shadow(16, gy, 11, 3);
@@ -2802,6 +2820,62 @@ export function bakeItem(scene, key, type, def, rot) {
         box(x, gy - 37, 5, 6, '#f4f0e8', OUT);
         R(x + 1, gy - 37, 3, 1, '#6a3a20');
       });
+      break;
+    }
+    case 'giftshop': {
+      shadow(48, gy, 46, 4);
+      box(3, gy - 24, 90, 23, WOOD_D, OUT);
+      for (let x = 8; x < 90; x += 14) R(x, gy - 20, 10, 15, WOOD);
+      box(1, gy - 29, 94, 6, MARBLE, OUT);
+      // Shelf of prints, tote bags and postcards.
+      box(6, gy - 52, 84, 22, '#e8dcc0', OUT);
+      [['#c0392b', 8], ['#2f6a9a', 22], ['#e0bc55', 36], ['#4f9a64', 50]].forEach(([c, x]) => {
+        box(x, gy - 49, 10, 12, c, OUT);
+        R(x + 2, gy - 46, 6, 4, '#f4f0e8');
+      });
+      box(66, gy - 48, 14, 16, '#f4f0e8', OUT); // tote
+      R(69, gy - 52, 2, 5, '#3a2a20');
+      R(75, gy - 52, 2, 5, '#3a2a20');
+      R(68, gy - 44, 10, 3, '#c0392b');
+      break;
+    }
+    case 'foodcourt': {
+      shadow(48, gy, 46, 4);
+      box(3, gy - 24, 90, 23, '#8a3a2a', OUT);
+      for (let x = 8; x < 90; x += 14) R(x, gy - 20, 10, 15, '#b8523a');
+      box(1, gy - 29, 94, 6, MARBLE, OUT);
+      // Striped awning and a menu board.
+      for (let x = 0; x < 96; x += 12) {
+        R(x, gy - 62, 6, 14, '#c0392b');
+        R(x + 6, gy - 62, 6, 14, '#f4f0e8');
+      }
+      R(0, gy - 48, 96, 2, '#7a2232');
+      box(36, gy - 44, 24, 12, '#2a2a30', OUT);
+      [0, 4, 8].forEach((y) => R(39, gy - 42 + y, 18, 1, '#e8e4d8'));
+      E(14, gy - 33, 5, 3, '#e0a850'); // burger
+      E(82, gy - 33, 5, 3, '#e8c070'); // fries
+      break;
+    }
+    case 'discovery': {
+      shadow(32, gy, 30, 4);
+      R(6, gy - 12, 4, 11, WOOD_D);
+      R(54, gy - 12, 4, 11, WOOD_D);
+      box(2, gy - 17, 60, 6, '#4a8ac4', OUT);
+      [['#e05a40', 8, 0], ['#e0bc55', 18, 3], ['#4f9a64', 28, 0], ['#9a5ac4', 38, 4]].forEach(([c, x, y]) => box(x, gy - 27 - y, 8, 8, c, OUT));
+      E(52, gy - 25, 5, 5, 'rgba(200,230,240,0.7)'); // magnifier glass
+      R(55, gy - 21, 2, 6, BRASS);
+      break;
+    }
+    case 'lectern': {
+      shadow(32, gy, 30, 4);
+      box(2, gy - 10, 60, 9, WOOD_D, OUT); // stage
+      R(2, gy - 10, 60, 2, WOOD_L);
+      box(22, gy - 36, 20, 26, WOOD, OUT); // lectern
+      R(24, gy - 34, 16, 3, WOOD_L);
+      R(31, gy - 46, 2, 10, '#3a3a40'); // microphone
+      E(32, gy - 48, 3, 3, '#6a6a72');
+      box(8, gy - 30, 8, 20, '#7a2232', OUT); // curtain
+      box(48, gy - 30, 8, 20, '#7a2232', OUT);
       break;
     }
     case 'desk':
