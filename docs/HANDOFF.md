@@ -155,7 +155,8 @@ Scenes (`src/main.js`):
 
 ### Share, visit and daily (Chat 13)
 - No server. `src/sharecode.js` packs a museum "postcard" (rooms, painting ids, decor counts, rating; **no gold, saves or character**) or a builder island into a link (`?visit=` / `?island=`), read back with strict cleaning. `src/share.js` is the Settings → "Share & visit friends" panel: copy link, rating card and tour strip pictures (canvas), paste a link or open a map file. Visiting is a look-around card; "Keep" stores it in `curation.friends`. Friends' islands join the boat list (`friendIslands()` in sailmenu.js).
-- `src/daily.js` is the gift icon under the journal: welcome gift, one wheel spin a day, Painting of the Day (same for everyone, stepped through `PAINTINGS`). Gentle: a streak survives up to 3 missed days and never nags. Numbers sit at the top of the file.
+- `src/daily.js` is Menu → Today (its `#daily-btn` now lives in Chat 16's Menu hub): welcome gift, one wheel spin a day, Painting of the Day (same for everyone, stepped through `PAINTINGS`). Gentle: a streak survives up to 3 missed days and never nags. Numbers sit at the top of the file.
+- Painting of the Day and a friend's paintings open in the HD viewer (`openViewer(..., { over: true })`, above every sheet); the wheel's top slice gets the confetti card.
 - Test: `PW=/opt/node-tools/node_modules/playwright OUT=<dir> node tests/share.cjs`.
 
 ### Halls (chat 14): themed room presets
