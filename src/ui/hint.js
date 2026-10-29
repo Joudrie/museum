@@ -20,7 +20,7 @@ export function closeHint() {
 }
 
 /** Shows the tip once the screen is calm (tries again for about 30 s). Returns false if it won't show. */
-export function hint(id, text, anchor, { ms = 8000, tries = 8, side = 'below' } = {}) {
+export function hint(id, text, anchor, { ms = 8000, tries = 8, side: wanted = 'below' } = {}) {
   if (hinted(id) || settings().tips === false) return false;
   const go = (left) => {
     const a = typeof anchor === 'string' ? document.querySelector(anchor) : anchor;
@@ -28,16 +28,23 @@ export function hint(id, text, anchor, { ms = 8000, tries = 8, side = 'below' } 
     if (!calm() || open) return left > 0 && setTimeout(() => go(left - 1), 4000);
     mark(id);
     const r = a.getBoundingClientRect();
+    // 'right' means "beside the button, away from the screen edge it hangs on" (it flips for the left-handed layout)
+    const side = wanted === 'right' && r.left + r.width / 2 > innerWidth / 2 ? 'left' : wanted;
     const tip = document.createElement('div');
     tip.className = 'ui-tip';
     tip.setAttribute('role', 'status');
     tip.textContent = text;
     document.body.appendChild(tip);
     // beside a left-column button the tip must stop short of the Menu button on the right (60 px wide plus its gap)
-    const w = side === 'right' ? Math.max(150, Math.min(230, innerWidth - r.right - 12 - 76)) : Math.min(230, innerWidth - 24);
+    const w = side === 'right' ? Math.max(150, Math.min(230, innerWidth - r.right - 12 - 76)) : side === 'left' ? Math.max(150, Math.min(230, r.left - 12 - 76)) : Math.min(230, innerWidth - 24);
     tip.style.width = `${w}px`;
     tip.dataset.side = side;
-    if (side === 'right') {
+    if (side === 'left') {
+      const h = tip.offsetHeight;
+      tip.style.left = `${r.left - 12 - w}px`;
+      tip.style.top = `${Math.max(8, r.top + r.height / 2 - h / 2)}px`;
+      tip.style.setProperty('--arrow', `${Math.min(h - 14, Math.max(14, h / 2))}px`);
+    } else if (side === 'right') {
       // beside a button in the left column, so it never covers the buttons under it
       const h = tip.offsetHeight;
       tip.style.left = `${r.right + 12}px`;

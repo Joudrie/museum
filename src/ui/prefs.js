@@ -8,7 +8,8 @@ function apply() {
   const root = document.documentElement;
   if (s.text === 'large') root.dataset.text = 'large';
   else delete root.dataset.text;
-  if (s.reduceMotion) root.dataset.motion = 'reduce';
+  // the phone's own "reduce motion" counts too (it wins: the switch can only add to it)
+  if (s.reduceMotion || matchMedia('(prefers-reduced-motion: reduce)').matches) root.dataset.motion = 'reduce';
   else delete root.dataset.motion;
   if (s.leftHanded) root.dataset.hand = 'left';
   else delete root.dataset.hand;
