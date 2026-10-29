@@ -133,8 +133,15 @@ Scenes (`src/main.js`):
   of their own width (dirt art as the fill), buildings as brick polygons. Fills are anchored to the town so chunks never show seams.
   Walking uses the exact shapes: you can walk on roads, grass and buildings; the sea and water block you, except where a road
   crosses (a bridge). Fishing, weather and the boat work as on islands.
+- **Street names:** `labels` in the data (2,628 names on 571 streets, placed along straight stretches about every 70 m, upright)
+  are painted into the ground chunks; the **Aa** button toggles them (on by default, remembered). Two tiny streets are too short for a name.
+- **Real-map overlay:** the **🗺** button cycles off / half / full. It loads OpenStreetMap's own zoom-19 pictures around you
+  (tile.openstreetmap.org, credit shown) and places each by its coordinates, over the ground and under the character.
+- **Accuracy (measured, not assumed):** my building shapes were laid over the real map's own pictures at the centre and all four
+  far edges of town: 85-91% overlap, best-fit offset at most 0.2 m (one real-map pixel) everywhere, so no drift or scale error.
+- **Speed:** `speedBoost` 3 on the Wakefield scene (`SPEED_UP` in `src/WakefieldScene.js`); the island scene reads `this.speedBoost`.
 - Start: `index.html?wakefield`, or sail there from any rowboat (the boat lists "Wakefield, MA"). You start on a road in the middle.
-- Next (not done): street names on the roads, landmarks and place names, a way to edit shapes by hand, trees, a faster way
+- Next (not done): landmarks and place names (schools, parks, lakes), a way to edit shapes by hand, trees, a faster way
   to cross 6 km (it is about 5 minutes end to end on foot), cutting the museum doors in.
 - Generic things built along the way and kept: the builder cap is 700 (New map boxes stay 300), big builder maps save their tiles
   packed (`src/mapformat.js`), the island scene streams ground chunks around the player, and a map can carry an `overlay` picture

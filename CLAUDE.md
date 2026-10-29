@@ -58,4 +58,6 @@ Read docs/VISION.md first: every feature should serve it. Then docs/HANDOFF.md f
   Wakefield is about 1,350 x 1,650 tiles. A huge map is fine.
 - **Every road goes in**, even the smallest streets. Roads are plain **dirt path** for now (no cobblestone), buildings are brick.
   No trees or elevation yet.
+- Two buttons in the game: **Aa** toggles street names (all of them, along the roads) and **🗺** lays the real OpenStreetMap
+  picture over the town (off, half, full) so the user can judge accuracy, like a GPS. Walking is 3x the island pace.
 - Open it with index.html?wakefield or sail there from a rowboat.
