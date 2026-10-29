@@ -48,7 +48,6 @@ body #chosen-fav {
   border: 0;
   box-shadow: none;
 }
-body #sheet-handle { min-height: 28px; }
 body input,
 body select {
   min-height: var(--ui-hit);
@@ -57,7 +56,29 @@ body select {
   border: 3px solid var(--ui-shadow);
   border-radius: 0;
 }
-body .check input { min-height: 0; width: 22px; height: 22px; }
+body #chosen-fav { min-width: var(--ui-hit); }
+body #chosen-fav .ui-ic { width: 26px; height: 26px; }
+body #map-name { display: flex; align-items: center; min-height: var(--ui-hit); cursor: pointer; }
+/* options: the check boxes are real 44 px targets */
+body .check { flex: 1 1 100%; justify-content: space-between; min-height: var(--ui-hit); gap: var(--sp-2); padding: 0 var(--sp-1); font-size: var(--fs-body); color: var(--ui-ink); }
+body .check input[type='checkbox'] { order: 2; }
+body .check input[type='checkbox'] {
+  -webkit-appearance: none;
+  appearance: none;
+  flex: none;
+  width: var(--ui-hit);
+  height: var(--ui-hit);
+  min-height: 0;
+  margin: 0;
+  background: rgba(0, 0, 0, 0.3) no-repeat center / 24px;
+  border: 3px solid var(--ui-shadow);
+  border-radius: 0;
+  box-shadow: inset 2px 2px 0 rgba(0, 0, 0, 0.35);
+}
+body .check input[type='checkbox']:checked {
+  background-color: var(--ui-gold);
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2011%2011'%20shape-rendering='crispEdges'%20fill='%232a1a12'%3E%3Cpath%20d='M9%201h1v1h-1zM10%201h1v1h-1zM8%202h1v1h-1zM9%202h1v1h-1zM0%203h1v1h-1zM7%203h1v1h-1zM8%203h1v1h-1zM0%204h1v1h-1zM1%204h1v1h-1zM6%204h1v1h-1zM7%204h1v1h-1zM1%205h1v1h-1zM2%205h1v1h-1zM5%205h1v1h-1zM6%205h1v1h-1zM2%206h1v1h-1zM3%206h1v1h-1zM4%206h1v1h-1zM5%206h1v1h-1zM3%207h1v1h-1zM4%207h1v1h-1z'/%3E%3C/svg%3E");
+}
 
 /* top bar and rows */
 body #top { border-bottom: 3px solid var(--ui-shadow); }
@@ -90,3 +111,6 @@ body .hint,
 body .field,
 body .check { font-family: var(--ui-font); font-size: var(--fs-small); }
 body #toast { font: 600 var(--fs-body) / 1.25 var(--ui-font); border: 3px solid var(--ui-shadow); border-radius: 0; background: var(--ui-panel-2); }
+
+/* <small> defaults to "smaller" (12.5 px): hold the 13 px floor */
+body small { font-size: var(--fs-small); }

@@ -2,6 +2,7 @@
 // opens. Panels themselves slide in with CSS (see .overlay / .sheet).
 import { sfx } from './music.js';
 import { settings } from './settings.js';
+import { uiIcon } from './ui/icons.js';
 
 export function haptic(ms = 8) {
   if (!settings().haptics || !navigator.vibrate) return;
@@ -33,17 +34,30 @@ const watch = new MutationObserver((changes) =>
 document.querySelectorAll('.overlay, #toolkit').forEach((o) => watch.observe(o, { attributes: true, attributeFilter: ['class'], attributeOldValue: true }));
 
 // A big moment: a card in the middle of the screen and a burst of confetti.
+// Moments that arrive together (a goal and the set it finishes) wait their turn instead of overwriting each other.
 const party = document.getElementById('celebrate');
+const waiting = [];
 let partyTimer = null;
-export function celebrate(title, sub = '') {
-  party.querySelector('.celebrate-title').textContent = title;
-  party.querySelector('.celebrate-sub').textContent = sub;
+let showing = false;
+const colors = ['#f2d36b', '#e0405a', '#6fd07a', '#5aa8e0', '#f08a3a', '#fff4d0'];
+
+function showNext() {
+  const it = waiting.shift();
+  if (!it) {
+    showing = false;
+    party.classList.add('hidden');
+    return;
+  }
+  showing = true;
+  party.querySelector('.celebrate-icon').innerHTML = uiIcon(it.icon);
+  party.querySelector('.celebrate-title').textContent = it.title;
+  party.querySelector('.celebrate-sub').textContent = it.sub;
+  party.querySelector('.celebrate-more').textContent = waiting.length ? `${waiting.length} more` : '';
   const card = party.querySelector('.celebrate-card');
   party.querySelectorAll('.confetti').forEach((c) => c.remove());
   card.style.animation = 'none';
   void card.offsetWidth; // restart the animation
   card.style.animation = '';
-  const colors = ['#f2d36b', '#e0405a', '#6fd07a', '#5aa8e0', '#f08a3a', '#fff4d0'];
   for (let i = 0; i < 46; i++) {
     const c = document.createElement('i');
     c.className = 'confetti';
@@ -55,5 +69,13 @@ export function celebrate(title, sub = '') {
   party.classList.remove('hidden');
   haptic(30);
   clearTimeout(partyTimer);
-  partyTimer = setTimeout(() => party.classList.add('hidden'), 2500);
+  partyTimer = setTimeout(showNext, 2500);
 }
+
+/** `icon` is a name from src/ui/icons.js (trophy, star, gift, coin, ...). */
+export function celebrate(title, sub = '', icon = 'star') {
+  waiting.push({ title, sub, icon });
+  if (!showing) showNext();
+  else party.querySelector('.celebrate-more').textContent = `${waiting.length} more`;
+}
+window.__celebrate = celebrate; // (for the UI screenshot tests)

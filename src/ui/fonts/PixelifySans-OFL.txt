@@ -91,3 +91,9 @@ INCLUDING ANY GENERAL, SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL
 DAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM
 OTHER DEALINGS IN THE FONT SOFTWARE.
+
+
+-----------------------------------------------------------
+NOTE ON THIS COPY
+-----------------------------------------------------------
+This copy of Pixelify Sans was modified for Curation: the numeral 5 was redrawn with a flat top, because in the original it reads as the letter S at small sizes (money and levels such as "3,500" looked like "3,S00"). Nothing else was changed. The licence above still applies to the modified file.

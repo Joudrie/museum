@@ -121,7 +121,7 @@ if (typeof document !== 'undefined') {
     gift.querySelector('.daily-note').textContent =
       s.streak > 1 ? `You've visited ${s.streak} days running. Take your time; missing a day never costs you anything.` : 'Good to see you. Drop in whenever you like.';
     const g = document.createElement('button');
-    g.className = 'wide-btn';
+    g.className = 'wide-btn' + (s.giftReady ? ' primary' : '');
     if (s.giftReady) {
       g.textContent = `Collect ${s.giftAmount} gold${isMilestone(s.streak) ? ' (week bonus!)' : ''}`;
       g.onclick = () => {
@@ -141,7 +141,7 @@ if (typeof document !== 'undefined') {
     const { w, wheel } = wheelEl();
     spin.appendChild(w);
     const go = document.createElement('button');
-    go.className = 'wide-btn';
+    go.className = 'wide-btn' + (s.wheelReady && !spinning ? ' primary' : '');
     const msg = document.createElement('p');
     msg.className = 'daily-note';
     if (landed) {

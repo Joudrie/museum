@@ -18,6 +18,14 @@ function upgrade(root) {
   });
 }
 
+// Escape closes the panel on top (keyboards, tablets with a keyboard, screen readers)
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Escape' || e.defaultPrevented || e.target?.matches?.('input, textarea, select')) return;
+  if (document.querySelector('#viewer:not(.hidden)')) return; // the viewer closes itself first
+  const open = [...document.querySelectorAll('.overlay:not(.hidden), #toolkit:not(.hidden)')].pop();
+  open?.querySelector('.ui-close, [class*="-close"], [class*="-cancel"], .toolkit-done')?.click();
+});
+
 function init() {
   upgrade(document.body);
   new MutationObserver((muts) => {

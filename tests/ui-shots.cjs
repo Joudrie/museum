@@ -16,7 +16,7 @@ runScreens({
   only,
   log: console.log,
   onShot: async (name, page, m) => {
-    if (page) await page.screenshot({ path: path.join(out, `${name}.png`), animations: 'disabled', timeout: 15000 });
+    if (page) await page.screenshot({ path: path.join(out, `${name}.png`), animations: name.startsWith('25') ? 'allow' : 'disabled', timeout: 15000 });
     if (m) METRICS[name.replace(/^(03-journal)-\d+-/, '$1-')] = m;
   },
 }).then(() => fs.writeFileSync(path.join(out, 'metrics.json'), JSON.stringify(METRICS, null, 1)));

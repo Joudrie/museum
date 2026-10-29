@@ -44,6 +44,7 @@ function render() {
   search.className = 'room-name gallery-search';
   search.type = 'search';
   search.placeholder = 'Search title or artist…';
+  search.setAttribute('aria-label', 'Search paintings');
   search.value = state.query;
   const chips = document.createElement('div');
   chips.className = 'choices gallery-eras';
