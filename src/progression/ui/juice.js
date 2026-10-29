@@ -133,7 +133,7 @@ function popXp(item) {
 function skillBarShow(item) {
   clearTimeout(skillTimer);
   skillBar.classList.remove('hidden');
-  skillBar.querySelector('.sk-name').textContent = `${item.icon || ''} ${item.name}`;
+  skillBar.querySelector('.sk-name').innerHTML = `${item.icon ? icon(item.icon, 's') + ' ' : ''}${esc(item.name)}`; // a pixel icon (skills.json names one), never an emoji
   skillBar.querySelector('.sk-lv').textContent = `Lv ${item.level}`;
   const fill = skillBar.querySelector('.sk-bar i');
   fill.style.width = item.up ? '100%' : `${item.pct || 0}%`;

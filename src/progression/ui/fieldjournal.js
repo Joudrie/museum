@@ -7,6 +7,7 @@ import { REGIONS, LEGENDS, allSpecies, speciesById, hintsFor } from '../species.
 import { registerTileHint } from '../../collections/tab.js';
 import { drawShadow } from '../../collections/render.js';
 import { sfx } from '../../music.js';
+import { uiIcon } from '../../ui/icons.js';
 import { skillLevel, SKILLS } from '../skills.js';
 
 const el = (tag, cls, text) => {
@@ -15,7 +16,7 @@ const el = (tag, cls, text) => {
   if (text !== undefined) n.textContent = text;
   return n;
 };
-const EMOTE_GLYPH = { heart: '♥', star: '★', note: '♪', zzz: 'Zzz', sweat: '💧', dots: '…', bang: '!', q: '?' };
+const EMOTE_GLYPH = { heart: 'Heart', star: 'Star', note: 'Song', zzz: 'Zzz', sweat: 'Sweat', dots: '…', bang: '!', q: '?' }; // words, never emoji
 const sizeText = (cm) => (cm >= 100 ? `${(cm / 100).toFixed(2)} m` : `${cm} cm`);
 const fmtTime = (ms) => {
   const m = Math.round(ms / 60000);
@@ -48,12 +49,12 @@ function people(p, refresh) {
     const row = el('div', `pg-row${met ? '' : ' done'}`);
     const name = el('b', '', met ? `${e.npc.name} · ${e.npc.role}` : '???');
     if (isNew(p.state, 'people', e.id)) name.append(' ', Object.assign(el('span', 'new-dot'), { textContent: 'NEW' }));
-    const hearts = el('span', 'pg-hearts', met ? '♥'.repeat(f.hearts) + '♡'.repeat(10 - f.hearts) : '');
+    const hearts = el('span', 'pg-hearts', met ? `${f.hearts} of 10 hearts` : '');
     row.append(name, hearts);
     const reacts = Object.entries(f.reactions || {});
     const sub = el('small');
     sub.textContent = met
-      ? `${e.group}. ${reacts.length ? reacts.map(([k, v]) => `${k.split(':')[1]}: ${v === 'love' ? '♥' : v === 'like' ? '☺' : v === 'hate' ? '💧' : '…'}`).join('  ') : 'Give a gift and watch their face.'}`
+      ? `${e.group}. ${reacts.length ? reacts.map(([k, v]) => `${k.split(':')[1]}: ${v === 'love' ? 'loves' : v === 'like' ? 'likes' : v === 'hate' ? 'dislikes' : 'fine'}`).join('  ') : 'Give a gift and watch their face.'}`
       : e.hints[0];
     row.appendChild(sub);
     nodes.push(row);
@@ -79,7 +80,9 @@ function listPage(p, page, label) {
       box.append(Object.assign(el('p', 'pg-empty'), { textContent: left > 0 ? `${left} secret${left > 1 ? 's' : ''} still hidden here (shown as ?).` : 'Every secret here is found.' }));
       gated.forEach((g) => {
         const row = el('div', 'pg-row done');
-        row.append(el('b', '', `🔒 ${g.name}`), el('span', '', `Needs: ${g.needs}`));
+        const name = el('b', '', ` ${g.name}`);
+        name.insertAdjacentHTML('afterbegin', uiIcon('lock', 's'));
+        row.append(name, el('span', '', `Needs: ${g.needs}`));
         box.append(row);
       });
       nodes.push(box);

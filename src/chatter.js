@@ -100,7 +100,7 @@ export function* converse(o) {
     const gift = giftFor({ kind: o.kind, rnd, scale: giftScale(o.given || 0), bonus: pleased ? 2 : 1, finds: o.finds });
     yield { type: 'gift', text: gift.say, gift };
   }
-  yield line(pick(FAREWELL[o.kind] || FAREWELL.default, rnd));
+  yield { ...line(pick(FAREWELL[o.kind] || FAREWELL.default, rnd)), bye: true }; // (said in a bubble: no tap needed)
 }
 
 // ---------- the day's gifts (saved) ----------

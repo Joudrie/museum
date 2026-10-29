@@ -80,7 +80,7 @@ export default {
     id: 'arrowhead',
     name: 'Stone tools',
     noun: 'stone tools',
-    icon: '🏹',
+    icon: 'key',
     kinds: ['stone tool'],
     display: 'case',
     ownership: 'earned',

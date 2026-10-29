@@ -75,7 +75,7 @@ export function installFriendship(p) {
     p.telemetry.track('heart_up', { npc: npc.id, hearts: h });
     bus.emit('HEART_UP', { npcId: npc.id, hearts: h });
     p.queue.pushChain([
-      { kind: 'xp', amount: g.gained, bonus: g.bonus, label: `${npc.name} ${h}♥`, xpAfter: g.totalAfter },
+      { kind: 'xp', amount: g.gained, bonus: g.bonus, label: `${npc.name} · ${h} heart${h > 1 ? 's' : ''}`, xpAfter: g.totalAfter },
       { kind: 'heart', title: `${npc.name}: ${h} heart${h > 1 ? 's' : ''}`, sub: u.text, rewards: u.rewards || [] },
     ]);
     p.flushSkillBars();
@@ -296,7 +296,7 @@ export function installFriendship(p) {
       if (!has('friendship.gift_hints')) return '';
       const npc = npcById(npcId);
       const r = npc ? reactionTo(npc, itemId) : 'neutral';
-      return r === 'love' ? '♥' : r === 'like' ? '★' : r === 'hate' ? '💧' : '';
+      return r === 'love' ? '(loves it)' : r === 'like' ? '(likes it)' : r === 'hate' ? '(dislikes it)' : '';
     },
     addPoints(npcId, n) {
       const npc = npcById(npcId);

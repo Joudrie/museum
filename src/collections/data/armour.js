@@ -7,7 +7,7 @@ const KNIGHT = sym(['...###..', '..#bbbb#', '.#bbaaaa', '.#baaaaa', '.#bdddda', 
 const LEGIONARY = sym(['...###..', '..#bbaa#', '.#bbaaaa', '#baaaaaa', '#aaaaaaac', '#aaaaaac#', '#dddaaaa#', '#a#.#aaa#', '#cc#.#ccc', '.##...###']);
 
 export default pack({
-  id: 'armour', name: 'Armour', noun: 'armour', icon: '🛡️', tab: 'treasures', tabLabel: 'Treasures', order: 12,
+  id: 'armour', name: 'Armour', noun: 'armour', icon: 'trophy', tab: 'treasures', tabLabel: 'Treasures', order: 12,
   intro: '{have} of {total} treasures found. Dig sites and expeditions turn them up.',
   where: 'The armoury', how: 'gift', set: 'helmet-rack', reward: 500,
   plaque: 'Four helmets from four armies, ancient and medieval.',
