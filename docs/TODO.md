@@ -43,7 +43,7 @@ Owns: `src/builder/`, `builder.html`, `public/builder/`, `tools/build_palette.py
 - [ ] **Grass that blends** into paths, dirt, sand and stone (autotile edges); jagged rocks instead of round ones.
 - [ ] Every ground type, path block and furniture piece is its own named, placeable item (so the user can redraw them one by one).
 - [x] Builder palette organisation (duplicate lists merged, "What's new" row from `public/builder/whatsnew.json`; a Dig sites list waits for Chat 6's tiles) (#120).
-- [ ] Copy / paste regions, rotate-selection, multi-select move, layers view, grid toggle, measure tool.
+- [x] Copy / paste regions, multi-select move (cut + paste), layers view (menu → Options: Ground / Pieces), grid toggle, measure (the Area tool shows W×H). Mirror the copied area is in; rotating a whole area is not (sprites don't turn without a family) (#121).
 - [x] Map import / export (already in ☰: Save map file, Copy map code, Open file…; #119) (share a map as a file or link; the format is already shareable).
 - [x] Builder Playwright tests (place, turn, undo, save, vault restore): `tests/builder.cjs` (#119).
 - [x] Never lose work: autosave and vault paths intact; reload and wiped-storage restore are tested in `tests/builder.cjs` (#119). (Keep it passing on every builder change.)
