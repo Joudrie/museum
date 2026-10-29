@@ -149,7 +149,7 @@ Owns: `src/staffmenu.js`, `src/officemenu.js`, `src/office.js`, `src/incomemenu.
 - [x] Gift shop, food court stall, kids' discovery table and lecture stage as Services items (max 1 each, rules in `SERVICES` in `src/economy.js`); coffee depth via the Better beans upgrade (#144). Not done: library and archive (the Library room exists; where the stored collection lives belongs with Chats 5 and 8); the lecture stage pays per famous visitor met but has no live talk event yet.
 - [x] Income formula numbers in `src/economy.js`; 8-hour cap messaging (welcome-back toast, FULL flag, income-menu note); "Collect all" is now free of ads and keeps a 15% fee (#128).
 - [x] Security: four tiers (none, dummy cameras, cameras, alarm) in `src/economy.js`; stopped thieves at camera tiers are caught for a gold bounty (#135).
-- [ ] Late-game sink: frame your own artwork (very expensive).
+- [ ] Late-game sink: frame your own artwork (very expensive). Parked: the game has no way to make your own artwork yet, so it is a question under Needs Sean.
 - [ ] ON HOLD (needs the user): gems as time (skip construction, "X days of income"), rewarded ads, cosmetics, a seasonal exhibition pass, crates with odds and pity. Rule: **no pay-to-win; never a gem or crate economy as the core.**
 
 ## CHAT 13: Share, visit and retention
@@ -183,6 +183,8 @@ Owns: `assets/vendor/`, `docs/ASSETS.md`, `tools/extract_sprites.py`, `tools/` s
 Mini-games (Mop Rush, No Flash!, Restoration-as-minigame, Crate Tetris, Hang it Straight, Tour Guide, Night Watch, Catch the Thief, Paparazzi) · gems, ads, cosmetics, exhibition pass, crates · multiplayer / auctions · a sequel where the museum is part of a city · menu redesign · art direction and hiring.
 
 ## Needs Sean (parked questions; chats keep working)
+- **Chat 12:** what is "your own artwork" for the late-game frame sink: a drawing the player makes in the game, a photo they upload, or a painting they restore? Until you say, it is not built.
+- **Chat 12:** the Library/archive (where the stored collection lives) and a live lecture-hall talk event are not built; the stage only pays per famous visitor met.
 - **Review tonight:** the 82 painting drafts (27 earlier + 55 from batches 3 to 5; rarity for each) and which of the 11 flagged images to replace (`content/image-proposals.md`).
 - **Hooks for 4 Met drafts** (Night-Shining White, Esther, Gulf Stream, Drawing Lesson), plus every other Met / Commons draft marked "needs a real hook": the Met page text is behind a bot challenge, so paste one sentence per work and I add it as a quoted claim.
 - Latin America, the Pacific, the Middle East beyond Iran and Indigenous North America have almost no public-domain paintings with museum text in the Met, Cleveland or Commons; the Smithsonian key is the way in.
