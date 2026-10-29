@@ -6,12 +6,33 @@
 //
 // It reuses the island scene for everything else (walking, the boat, fishing, weather), overriding
 // only what the tile grid decided: what is drawn, where you can stand, and what the ground is.
+import Phaser from 'phaser';
 import { IslandScene, islandTiles } from './IslandScene.js';
 import { T } from './tiles.js';
 
 const S = 16 * T; // a chunk of ground is 16 x 16 tiles
 const SAND = '#e2c68a';
 const BRICK_EDGE = '#6e2f25';
+const FONT = 22; // street names (see tools/wakefield_vector.py)
+const SPEED_UP = 3; // walking is this many times the island pace: the town is 6 km long
+const TILE_Z = 19; // the real map's zoom: its biggest, about 0.2 m a pixel
+const prefs = {
+  get: (k, d) => {
+    try {
+      const v = localStorage.getItem(`curation.wakefield.${k}`);
+      return v === null ? d : v === '1';
+    } catch {
+      return d;
+    }
+  },
+  set: (k, v) => {
+    try {
+      localStorage.setItem(`curation.wakefield.${k}`, v ? '1' : '0');
+    } catch {
+      // fine
+    }
+  },
+};
 
 // [x0, y0, dx, dy, ...] to [x, y, x, y, ...]
 const unpack = (a) => {
@@ -66,6 +87,9 @@ class World {
     this.rail = vec.rail.map((r) => ({ w: r.w, p: unpack(r.p) }));
     this.roads = vec.roads.map((r) => ({ w: r.w, p: unpack(r.p) }));
     this.buildings = vec.buildings.map(unpack);
+    this.labels = vec.labels || [];
+    this.geo = vec.geo;
+    this.ppm = vec.ppm;
     this.buckets = new Map();
     this.rows = []; // town-line segments by chunk row, for "is this point in town?"
     this.edge = new Set(); // chunks the town line passes through
@@ -109,6 +133,10 @@ class World {
     this.rivers.forEach((r) => along(r.p, r.w / 2 + 12, (b) => b.rivers.push(r)));
     this.lakes.forEach((l) => l.outer.forEach((p) => box(p, 12, (b) => b.lakes.push(l))));
     this.buildings.forEach((p) => box(p, 2, (b) => b.buildings.push(p)));
+    this.labels.forEach((l) => {
+      const r = l[4] / 2 + FONT;
+      box([l[1] - r, l[2] - r, l[1] + r, l[2] + r], 0, (b) => b.labels.push(l));
+    });
   }
 
   addTownSegment(ax, ay, bx, by) {
@@ -124,8 +152,25 @@ class World {
   bucket(cx, cy) {
     const k = `${cx},${cy}`;
     let b = this.buckets.get(k);
-    if (!b) this.buckets.set(k, (b = { roads: [], rail: [], rivers: [], lakes: [], buildings: [] }));
+    if (!b) this.buckets.set(k, (b = { roads: [], rail: [], rivers: [], lakes: [], buildings: [], labels: [] }));
     return b;
+  }
+
+  // the real map's longitude and latitude of a point in the town, and back
+  lonOf(x) {
+    return this.geo.lon0 + x / (this.ppm * 111320 * this.geo.cos);
+  }
+
+  latOf(y) {
+    return this.geo.lat1 - y / (this.ppm * 111320);
+  }
+
+  xOf(lon) {
+    return (lon - this.geo.lon0) * 111320 * this.geo.cos * this.ppm;
+  }
+
+  yOf(lat) {
+    return (this.geo.lat1 - lat) * 111320 * this.ppm;
   }
 
   inTown(x, y) {
@@ -169,6 +214,8 @@ export class WakefieldScene extends IslandScene {
 
   init(data) {
     this.spawnAt = undefined;
+    this.speedBoost = SPEED_UP;
+    this.stride = 1.6;
     this.mapId = 'wakefield';
     this.world = worldFor(data.vec);
     this.map = { name: this.world.name, kind: 'island', w: Math.ceil(this.world.w / T), h: Math.ceil(this.world.h / T), corners: [], tiles: {}, objects: [] };
@@ -221,12 +268,12 @@ export class WakefieldScene extends IslandScene {
     const pat = (img) => ctx.createPattern(img, 'repeat');
     const cls = world.chunkClass(cx, cy);
     const b = world.bucket(cx, cy);
-    ctx.translate(-x0, -y0); // the fills are anchored to the town, so chunks meet with no seam
+    ctx.translate(1 - x0, 1 - y0); // the fills are anchored to the town, and each chunk has a 1 px margin, so chunks meet with no seam
     ctx.lineJoin = 'round';
     ctx.lineCap = 'round';
     if (cls !== 'in') {
       ctx.fillStyle = pat(src.water[f % src.water.length]);
-      ctx.fillRect(x0, y0, S, S);
+      ctx.fillRect(x0 - 1, y0 - 1, S + 2, S + 2);
     }
     if (cls === 'out') return;
     if (cls === 'edge') {
@@ -237,7 +284,7 @@ export class WakefieldScene extends IslandScene {
       ctx.clip(world.townPath);
     }
     ctx.fillStyle = pat(src.grass);
-    ctx.fillRect(x0, y0, S, S);
+    ctx.fillRect(x0 - 1, y0 - 1, S + 2, S + 2);
     b.lakes.forEach((l) => {
       ctx.beginPath();
       l.rings.forEach((r) => {
@@ -294,13 +341,37 @@ export class WakefieldScene extends IslandScene {
     ctx.lineJoin = 'miter';
     ctx.stroke();
     if (cls === 'edge') ctx.restore();
+    if (this.showNames && b.labels.length) {
+      ctx.font = `bold ${FONT}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.lineJoin = 'round';
+      ctx.lineWidth = 5;
+      b.labels.forEach(([text, x, y, a]) => {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(a / 1000);
+        ctx.strokeStyle = 'rgba(40, 25, 10, 0.92)';
+        ctx.strokeText(text, 0, 0);
+        ctx.fillStyle = '#fff';
+        ctx.fillText(text, 0, 0);
+        ctx.restore();
+      });
+    }
   }
 
   buildChunk(cx, cy) {
     const b = this.world.bucket(cx, cy);
     const frames = this.world.chunkClass(cx, cy) !== 'in' || b.lakes.length || b.rivers.length ? 4 : 1; // the water ebbs
-    const keys = Array.from({ length: frames }, (_, f) => this.chunkCanvas(`wk_${cx}_${cy}_${f}`, (ctx) => this.paintChunk(ctx, cx, cy, f)));
-    const img = this.add.image(cx * S, cy * S, keys[0]).setOrigin(0).setDepth(0);
+    const keys = Array.from({ length: frames }, (_, f) => {
+      const key = `wk_${cx}_${cy}_${f}`;
+      if (this.textures.exists(key)) this.textures.remove(key);
+      const tex = this.textures.createCanvas(key, S + 2, S + 2);
+      this.paintChunk(tex.getContext(), cx, cy, f);
+      tex.refresh();
+      return key;
+    });
+    const img = this.add.image(cx * S - 1, cy * S - 1, keys[0]).setOrigin(0).setDepth(0);
     const entry = { img, keys, cx, cy, snow: null };
     if (keys.length > 1) this.groundAnim.add(entry);
     this.chunks.set(`${cx},${cy}`, entry);
@@ -324,6 +395,110 @@ export class WakefieldScene extends IslandScene {
     if (!this.world.inTown(x, y)) return 'sand';
     if (this.world.onRoad(x, y)) return 'path';
     return this.world.inWater(x, y) ? 'shore' : 'grass';
+  }
+
+  streamChunks() {
+    super.streamChunks();
+    this.streamTiles?.();
+  }
+
+  // Two buttons: street names on and off, and the real map (as a GPS shows it) laid over the town
+  // so you can judge how well the shapes sit on it. Called by the island scene as it starts.
+  setupOverlay() {
+    [this.overlayBtn, this.namesBtn, this.credit].forEach((el) => el?.remove());
+    this.tiles = new Map();
+    this.mapLevel = 0;
+    this.showNames = prefs.get('names', true);
+    const button = (id, text, label) => {
+      const b = document.createElement('button');
+      b.id = id;
+      b.className = 'pixel-btn';
+      b.textContent = text;
+      b.setAttribute('aria-label', label);
+      document.body.appendChild(b);
+      return b;
+    };
+    this.namesBtn = button('names-btn', 'Aa', 'Street names');
+    this.namesBtn.classList.toggle('on', this.showNames);
+    this.namesBtn.onclick = () => {
+      this.showNames = !this.showNames;
+      prefs.set('names', this.showNames);
+      this.namesBtn.classList.toggle('on', this.showNames);
+      this.toast(this.showNames ? 'Street names on' : 'Street names off');
+      [...this.chunks.values()].forEach((e) => this.dropChunk(e)); // paint the ground again
+      this.chunkRange = '';
+      this.streamChunks();
+    };
+    this.overlayBtn = button('map-overlay-btn', '🗺', 'Show the real map over the town');
+    this.credit = document.createElement('div');
+    this.credit.id = 'osm-credit';
+    this.credit.textContent = '© OpenStreetMap contributors';
+    this.credit.hidden = true;
+    document.body.appendChild(this.credit);
+    const levels = [0, 0.5, 1];
+    this.overlayBtn.onclick = () => {
+      this.mapLevel = (this.mapLevel + 1) % levels.length;
+      this.overlayBtn.classList.toggle('on', this.mapLevel > 0);
+      this.credit.hidden = !this.mapLevel;
+      this.tiles.forEach((t) => t.img?.setVisible(this.mapLevel > 0).setAlpha(levels[this.mapLevel]));
+      this.toast(['Real map hidden', 'Real map over the town · half', 'Real map over the town · full'][this.mapLevel]);
+      this.alphas = levels;
+      this.streamTiles();
+    };
+    this.alphas = levels;
+    this.events.once('shutdown', () => {
+      [this.overlayBtn, this.namesBtn, this.credit].forEach((el) => el?.remove());
+      [...this.tiles.values()].forEach((t) => this.dropTile(t));
+    });
+  }
+
+  // the real map's pictures (OpenStreetMap, zoom 19) around you, each placed by its own coordinates
+  streamTiles() {
+    if (!this.mapLevel || !this.world) return;
+    const w = this.world;
+    const n = 2 ** TILE_Z;
+    const tx = (lon) => ((lon + 180) / 360) * n;
+    const ty = (lat) => ((1 - Math.asinh(Math.tan((lat * Math.PI) / 180)) / Math.PI) / 2) * n;
+    const lon = (x) => (x / n) * 360 - 180;
+    const lat = (y) => (Math.atan(Math.sinh(Math.PI * (1 - (2 * y) / n))) * 180) / Math.PI;
+    const cam = this.cameras.main;
+    const hw = this.scale.gameSize.width / cam.zoom / 2 + 300;
+    const hh = this.scale.gameSize.height / cam.zoom / 2 + 300;
+    const { x, y } = this.player;
+    const [x0, x1] = [Math.floor(tx(w.lonOf(x - hw))), Math.floor(tx(w.lonOf(x + hw)))];
+    const [y0, y1] = [Math.floor(ty(w.latOf(y - hh))), Math.floor(ty(w.latOf(y + hh)))];
+    for (let j = y0; j <= y1; j++)
+      for (let i = x0; i <= x1; i++) {
+        const key = `${i},${j}`;
+        if (this.tiles.has(key)) continue;
+        const t = { key, i, j, img: null };
+        this.tiles.set(key, t);
+        const pic = new Image();
+        pic.crossOrigin = 'anonymous';
+        pic.onload = () => {
+          if (this.tiles.get(key) !== t || !this.sys.isActive()) return;
+          const tk = `osm_${i}_${j}`;
+          if (!this.textures.exists(tk)) this.textures.addImage(tk, pic);
+          this.textures.get(tk).setFilter(Phaser.Textures.FilterMode.LINEAR); // a picture, not pixel art
+          const [ax, ay] = [w.xOf(lon(i)), w.yOf(lat(j))];
+          t.tk = tk;
+          t.img = this.add
+            .image(ax, ay, tk)
+            .setOrigin(0)
+            .setDisplaySize(w.xOf(lon(i + 1)) - ax + 0.7, w.yOf(lat(j + 1)) - ay + 0.7) // a little over, so no seam shows between pictures
+            .setDepth(0.45) // over the ground, under you
+            .setAlpha(this.alphas[this.mapLevel])
+            .setVisible(this.mapLevel > 0);
+        };
+        pic.src = `https://tile.openstreetmap.org/${TILE_Z}/${i}/${j}.png`;
+      }
+    [...this.tiles.values()].forEach((t) => (t.i < x0 - 2 || t.i > x1 + 2 || t.j < y0 - 2 || t.j > y1 + 2) && this.dropTile(t));
+  }
+
+  dropTile(t) {
+    t.img?.destroy();
+    if (t.tk) this.textures.remove(t.tk);
+    this.tiles.delete(t.key);
   }
 
   pondRect() {

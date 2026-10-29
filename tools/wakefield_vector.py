@@ -16,7 +16,7 @@ Map data (c) OpenStreetMap contributors, ODbL.
 """
 import json, math, os, sys, urllib.parse, urllib.request
 import numpy as np
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 
 BBOX = (42.4716, -71.1007, 42.5311, -71.0348)  # south, west, north, east
 RELATION = 1842129  # Wakefield, MA
@@ -35,6 +35,8 @@ ROAD_DEFAULT = 64
 LEFT_OUT = ('driveway', 'parking_aisle', 'drive-through')  # not streets
 RIVER_W = 80
 RAIL_W = 40
+FONT = 22  # px, street name labels (a road is 64 px wide)
+LABEL_EVERY = 560  # px, about 70 m between names along a street
 
 QUERIES = {
     'roads': 'way["highway"]["highway"!~"footway|path|steps|cycleway|pedestrian|corridor|bridleway|proposed|construction|elevator|raceway|platform"];',
@@ -141,6 +143,83 @@ def delta(p):
     return out
 
 
+def font_width(name):
+    try:
+        f = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', FONT)
+        return f.getlength(name)
+    except OSError:
+        return len(name) * FONT * 0.65
+
+
+def along(p):
+    """Cumulative distance at each vertex."""
+    d = [0.0]
+    for a, b in zip(p, p[1:]):
+        d.append(d[-1] + math.hypot(b[0] - a[0], b[1] - a[1]))
+    return d
+
+
+def at(p, d, s):
+    """The point s px along the line."""
+    s = max(0, min(d[-1], s))
+    i = 1
+    while i < len(d) - 1 and d[i] < s:
+        i += 1
+    t = (s - d[i - 1]) / ((d[i] - d[i - 1]) or 1)
+    return (p[i - 1][0] + (p[i][0] - p[i - 1][0]) * t, p[i - 1][1] + (p[i][1] - p[i - 1][1]) * t)
+
+
+def fits(p, d, s, w, slack):
+    """Is the street straight enough over the w px around s for a label to lie along it?"""
+    if s - w / 2 < 0 or s + w / 2 > d[-1]:
+        return None
+    a, b = at(p, d, s - w / 2), at(p, d, s + w / 2)
+    L = math.hypot(b[0] - a[0], b[1] - a[1]) or 1
+    for k in range(1, 8):
+        q = at(p, d, s - w / 2 + w * k / 8)
+        if abs((b[1] - a[1]) * (q[0] - a[0]) - (b[0] - a[0]) * (q[1] - a[1])) / L > slack:
+            return None
+    return (a, b)
+
+
+def labels_for(named):
+    """[text, x, y, angle in milliradians], reading upright, a few along every street."""
+    out = []
+    for name, ways in sorted(named.items()):
+        w = font_width(name) * 1.15 + 12
+        mine = []
+        for p in ways:
+            d = along(p)
+            n = max(1, int(d[-1] // LABEL_EVERY))
+            for k in range(n):
+                base = (k + 0.5) * d[-1] / n
+                for off in (0, 0.12, -0.12, 0.25, -0.25, 0.4, -0.4):
+                    s = base + off * d[-1] / n
+                    ab = fits(p, d, s, w, 6)
+                    if ab:
+                        mine.append((s, ab, p))
+                        break
+        if not mine:  # a short or bendy street still gets its name once, at its straightest
+            best = None
+            for p in ways:
+                d = along(p)
+                for step in range(0, int(d[-1]), 24):
+                    for slack in (10, 16, 24):
+                        ab = fits(p, d, step, w, slack)
+                        if ab:
+                            if not best or slack < best[0]:
+                                best = (slack, step, ab)
+                            break
+            if best:
+                mine.append((best[1], best[2], None))
+        for _, (a, b), _p in mine:
+            ang = math.atan2(b[1] - a[1], b[0] - a[0])
+            if abs(ang) > math.pi / 2:
+                ang += math.pi if ang < 0 else -math.pi
+            out.append([name, round((a[0] + b[0]) / 2), round((a[1] + b[1]) / 2), round(ang * 1000), round(w)])
+    return out
+
+
 def build(d):
     boundary = next(e for e in load(d, 'boundary') if e['type'] == 'relation')
     town_rings, _ = multipolygon(boundary)
@@ -162,6 +241,7 @@ def build(d):
         return any(0 <= x // TILE < gw and 0 <= y // TILE < gh and grown[y // TILE, x // TILE] for x, y in p)
 
     roads, left = [], 0
+    named = {}
     for e in load(d, 'roads'):
         t = e['tags']
         if t.get('tunnel') in ('yes', 'building_passage') or t.get('service') in LEFT_OUT:
@@ -172,6 +252,8 @@ def build(d):
             continue
         h = t['highway'].replace('_link', '')
         roads.append((ROAD_W.get(h, ROAD_DEFAULT), p))
+        if t.get('name') and not t['highway'].endswith('_link'):
+            named.setdefault(t['name'], []).append(p)
     roads.sort(key=lambda r: r[0])  # narrow first, so the wide roads are drawn over the junctions
 
     buildings = []
@@ -214,10 +296,12 @@ def build(d):
         'rail': [{'w': RAIL_W, 'p': delta(p)} for p in rail],
         'roads': [{'w': w, 'p': delta(p)} for w, p in roads],
         'buildings': [delta(p) for p in buildings],
+        'geo': {'lat0': lat0, 'lon0': lon0, 'lat1': lat1, 'lon1': lon1, 'cos': COS},
+        'labels': labels_for(named),
         'credit': 'Map data (c) OpenStreetMap contributors, ODbL',
     }
     print(f'{W}x{H} px ({W // TILE}x{H // TILE} tiles, {W / PPM / 1000:.1f} x {H / PPM / 1000:.1f} km): {len(roads)} roads '
-          f'({left} driveways, parking aisles and tunnels left out), {len(buildings)} buildings, {len(water)} lakes, {len(rivers)} rivers, {len(rail)} rails')
+          f'({left} driveways, parking aisles and tunnels left out), {len(buildings)} buildings, {len(named)} named streets, {len(water)} lakes, {len(rivers)} rivers, {len(rail)} rails')
     return data
 
 

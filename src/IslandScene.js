@@ -1299,8 +1299,8 @@ export class IslandScene extends Phaser.Scene {
     const len = Math.hypot(vx, vy);
     const p = this.player;
     if (len) {
-      const nx = p.x + (vx / len) * SPEED * pace * dt;
-      const ny = p.y + (vy / len) * SPEED * pace * dt;
+      const nx = p.x + (vx / len) * SPEED * (this.speedBoost || 1) * pace * dt;
+      const ny = p.y + (vy / len) * SPEED * (this.speedBoost || 1) * pace * dt;
       if (this.free(nx, p.y)) p.x = nx;
       if (this.free(p.x, ny)) p.y = ny;
       if (Math.abs(vx) > Math.abs(vy)) {
@@ -1311,7 +1311,7 @@ export class IslandScene extends Phaser.Scene {
         this.facing = vy < 0 ? 'up' : 'down';
       }
     }
-    if (animateWalker(this, p, len > 0, dt, 0.8 + pace * 0.5)) this.onStep(p, pace);
+    if (animateWalker(this, p, len > 0, dt, (0.8 + pace * 0.5) * (this.stride || 1))) this.onStep(p, pace);
     this.pet?.update(dt);
     this.critters.update(dt, p);
     this.ambient.update(dt, p);

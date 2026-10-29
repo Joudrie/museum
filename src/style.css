@@ -2344,7 +2344,8 @@ body.outside #hud {
   image-rendering: pixelated;
 }
 
-#map-overlay-btn {
+#map-overlay-btn,
+#names-btn {
   position: fixed;
   left: 10px;
   top: calc(64px + env(safe-area-inset-top, 0px));
@@ -2353,6 +2354,24 @@ body.outside #hud {
   min-height: 44px;
   font-size: 22px;
 }
-#map-overlay-btn.on {
+#map-overlay-btn.on,
+#names-btn.on {
   outline: 2px solid #e8c867;
+}
+
+#names-btn {
+  top: calc(120px + env(safe-area-inset-top, 0px));
+  font: 700 18px system-ui, sans-serif;
+}
+#osm-credit {
+  position: fixed;
+  left: 8px;
+  bottom: calc(6px + env(safe-area-inset-bottom, 0px));
+  z-index: 20;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.8);
+  color: #333;
+  font: 11px system-ui, sans-serif;
+  pointer-events: none;
 }
