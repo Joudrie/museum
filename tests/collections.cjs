@@ -8,6 +8,7 @@
 // Usage: npm run build && npx vite preview --port 4173 --base / &
 //        PW=/path/to/playwright OUT=some/dir node tests/collections.cjs
 const { chromium } = require(process.env.PW || 'playwright');
+const { openHub, jtab } = require('./nav.cjs');
 const fs = require('fs');
 const path = require('path');
 const URL = process.env.URL || 'http://localhost:4173/';
@@ -200,7 +201,7 @@ async function shopChecks() {
   const openJournal = async (tab) => {
     await p.click('#journal-btn');
     await wait(500);
-    if (tab) await p.click(`[data-jtab="${tab}"]`);
+    if (tab) await jtab(p, tab);
     await wait(500);
   };
   const closeJournal = async () => {
@@ -241,14 +242,14 @@ async function shopChecks() {
   console.log('Journal tabs');
   await boot({});
   await openJournal();
-  const tabs = await S(() => [...document.querySelectorAll('.journal-tabs button')].map((b) => b.textContent));
-  check(tabs.join() === 'Goals,Codex,Paintings,Visitors,Fish,Minerals,Fossils,Pottery,Coins,Stone tools,Shells,Meteorites,Treasures,Makers,Insects,Storage,Shop', `tabs: ${tabs.join(', ')}`, `unexpected tabs: ${tabs.join(', ')}`);
-  const tabFits = await S(() => [...document.querySelectorAll('.journal-tabs button')].every((b) => b.scrollWidth <= b.clientWidth + 1));
-  check(tabFits, 'tab labels fit on one line', 'a tab label is clipped');
+  const tabs = await S(() => [...document.querySelectorAll('#journal .jcard > b')].map((b) => b.textContent));
+  check(tabs.join() === 'Paintings,Visitors,Fish,Minerals,Fossils,Pottery,Coins,Stone tools,Shells,Meteorites,Treasures,Makers,Insects,Codex,Storage,Gallery Shop', `cards: ${tabs.join(', ')}`, `unexpected cards: ${tabs.join(', ')}`);
+  const tabFits = await S(() => [...document.querySelectorAll('#journal .jcard > b, #journal .jcard > small')].every((b) => b.scrollWidth <= b.clientWidth + 1));
+  check(tabFits, 'card labels fit', 'a card label is clipped');
   await shot('journal-goals');
   await noSideScroll('goals');
 
-  await p.click('[data-jtab="paintings"]');
+  await jtab(p, 'paintings');
   await wait(500);
   const cards = await S(() => document.querySelectorAll('.gallery-grid.book .slot-painting').length);
   check(cards === 49, '49 painting cards', `painting cards: ${cards}`);
@@ -262,12 +263,12 @@ async function shopChecks() {
   await shot('journal-paintings');
   await noSideScroll('paintings');
 
-  await p.click('[data-jtab="visitors"]');
+  await jtab(p, 'visitors');
   await wait(400);
   check((await S(() => document.querySelectorAll('.fish-cell').length)) === 19, 'visitors tab lists the 19 famous visitors from the registry', 'visitors tab broke');
   await shot('journal-visitors');
 
-  await p.click('[data-jtab="fish"]');
+  await jtab(p, 'fish');
   await wait(400);
   check((await S(() => document.querySelectorAll('.bobber').length)) === 5, 'fish tab keeps its bobbers', 'bobbers missing');
   check((await S(() => document.querySelectorAll('.fish-cell').length)) === 21, '18 fish and 3 finds in the log', 'fish log size wrong');
@@ -276,7 +277,7 @@ async function shopChecks() {
   await shot('journal-fish');
   await noSideScroll('fish');
 
-  await p.click('[data-jtab="minerals"]');
+  await jtab(p, 'minerals');
   await wait(400);
   check((await S(() => document.querySelectorAll('.fish-cell').length)) === 8, 'Minerals tab lists 8 minerals from data alone', 'minerals missing');
   await shot('journal-minerals-empty');
@@ -284,6 +285,7 @@ async function shopChecks() {
 
   // ---------- Minerals: collect, view, claim ----------
   console.log('Minerals');
+  await openHub(p);
   await p.click('#settings-btn');
   await wait(500);
   await p.click('text=Collect one of everything');
@@ -306,10 +308,12 @@ async function shopChecks() {
   check((await S(() => document.querySelectorAll('.fish-cell:not(.filtered-out)').length)) === 0, '"Missing" hides everything once all are collected', 'missing filter wrong');
   await S(() => [...document.querySelectorAll('.journal-chips .chip')].find((b) => b.dataset.f === 'all').click());
   check((await S(() => document.querySelectorAll('.fish-cell:not(.filtered-out)').length)) === 8, '"All" brings them back', 'all filter wrong');
-  check((await S(() => document.querySelectorAll('.journal-tabs button.has-new').length)) >= 3, 'tabs with new finds get a dot', 'no new-dot on tabs');
-  await p.click('[data-jtab="fossils"]');
+  await p.click('.journal-back');
   await wait(300);
-  await p.click('[data-jtab="minerals"]');
+  check((await S(() => document.querySelectorAll('#journal .jcard .jbadge').length)) >= 3, 'collections with new finds get a badge', 'no new-badge on the overview');
+  await jtab(p, 'fossils');
+  await wait(300);
+  await jtab(p, 'minerals');
   await wait(300);
   check((await S(() => document.querySelectorAll('.fish-cell .mark-new').length)) === 0, 'NEW clears after you leave the tab', 'NEW did not clear');
 

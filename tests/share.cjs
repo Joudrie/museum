@@ -6,6 +6,7 @@
 // Usage: npm run build && npx vite preview --port 4173 --base / &
 //        PW=/path/to/playwright OUT=some/dir node tests/share.cjs
 const { chromium } = require(process.env.PW || 'playwright');
+const { openHub } = require('./nav.cjs');
 const fs = require('fs');
 const path = require('path');
 const URL = process.env.URL || 'http://localhost:4173/';
@@ -49,6 +50,7 @@ async function browserChecks() {
   const ev = (f, a) => page.evaluate(f, a);
 
   // daily
+  await openHub(page);
   await page.click('#daily-btn');
   await page.waitForTimeout(300);
   const c0 = Number(await ev(() => localStorage.getItem('curation.coins') ?? 300));

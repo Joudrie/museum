@@ -50,15 +50,16 @@ const SCREENS = {
   '05-customize-room': (p) => click(p, '#home-btn'),
   '06-customize-rooms': async (p) => { await click(p, '#home-btn'); await click(p, '[data-tab=rooms]'); },
   '07-customize-character': async (p) => { await click(p, '#home-btn'); await click(p, '[data-tab=character]'); },
-  '08-settings': (p) => click(p, '#settings-btn'),
+  '08-settings': async (p) => { await click(p, '#menu-btn'); await click(p, '#settings-btn'); },
   '09-build-room': async (p) => { await p.evaluate(() => { const s = __game.scene.getScene('room'); s.travel && 0; }); await p.evaluate(() => __game.scene.getScene('room').openBuildMenu()); },
   '10-wall-spot': (p) => p.evaluate(() => { const s = __game.scene.getScene('room'); s.editSlot(s.slots?.[0] || s.hung[0]); }),
   '11-viewer': (p) => p.evaluate(() => { const s = __game.scene.getScene('room'); s.view(s.hung[0]); }),
   '12-staff-board': (p) => p.evaluate(() => __game.scene.getScene('room').openStaff()),
   '13-office': (p) => p.evaluate(() => __game.scene.getScene('room').openOfficePanel()),
   '14-ask-unlock': (p) => p.evaluate(() => __game.scene.getScene('room').offerUnlock(1)),
-  '15-daily': (p) => click(p, '#daily-btn'),
-  '16-share': (p) => p.evaluate(() => window.__share.openShare()),
+  '15-daily': async (p) => { await click(p, '#menu-btn'); await click(p, '#daily-btn'); },
+  '16-share': async (p) => { await click(p, '#menu-btn'); await click(p, '#hub-share'); },
+  '16b-menu-hub': (p) => click(p, '#menu-btn'),
   '17-conversation': (p) => p.evaluate(() => { const s = __game.scene.getScene('room'); const n = s.npcs.find((n) => !n.staff && !n.famous); s.player.setPosition(n.s.x, n.s.y + 14); s.talkTo(n); }),
   '18-staff-bubble': (p) => p.evaluate(() => { const s = __game.scene.getScene('room'); const n = s.npcs.find((n) => n.kind === 'caretaker'); s.talkTo(n); }),
   '19-toast': (p) => p.evaluate(() => __game.scene.getScene('room').toast('Saved your note. +40 gold')),
@@ -82,6 +83,7 @@ async function runScreens({ size = [390, 844], only = null, onShot, log = () => 
   await p0.evaluate(() => localStorage.clear());
   await p0.reload({ waitUntil: 'domcontentloaded' });
   await sleep(3000);
+  await click(p0, '#menu-btn');
   await click(p0, '#settings-btn');
   for (let i = 0; i < 4; i++) await p0.click('text=+1,000 gold');
   await p0.click('text=Collect one of everything');

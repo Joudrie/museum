@@ -54,3 +54,4 @@ window.addEventListener('resize', () => {
   game.scale.resize(...size());
   game.scale.refresh();
 });
+import './ui/hud.js'; // the labelled HUD and the Menu hub (after daily.js, whose button it adopts)

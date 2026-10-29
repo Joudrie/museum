@@ -1,0 +1,66 @@
+/* The Journal: overview cards and the page header (src/ui/journalhome.js, src/journal.js). */
+body #journal .journal-tabs {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: var(--sp-3);
+  margin: 0 0 var(--sp-3);
+}
+body #journal .journal-tabs .journal-back {
+  flex: none;
+  min-width: 0;
+  width: auto;
+  height: var(--ui-hit);
+  padding: 0 14px 0 10px;
+  font: 600 var(--fs-body) / 1 var(--ui-font);
+}
+body #journal .journal-page {
+  font: 600 var(--fs-lead) / 1.1 var(--ui-font);
+  color: var(--ui-gold-hi);
+}
+body #journal .ui-label:first-child { margin-top: var(--sp-4); }
+body #journal .ui-stats { margin-top: var(--sp-2); }
+
+body #journal .jcard {
+  position: relative;
+  display: grid;
+  align-content: start;
+  justify-items: start;
+  gap: 3px;
+  min-height: 132px;
+  padding: 10px;
+  text-align: left;
+  color: var(--ui-ink);
+  font-family: var(--ui-font);
+  background: var(--ui-fill);
+  border: 2px solid var(--ui-line);
+  border-radius: var(--ui-r);
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+body #journal .jcard:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0, 0, 0, 0.4); }
+body #journal .jcard.hot { border-color: var(--ui-gold); background: rgba(201, 162, 63, 0.12); }
+body #journal .jcover {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 56px;
+  margin-bottom: 4px;
+  overflow: hidden;
+  color: var(--ui-gold-hi);
+  background: rgba(0, 0, 0, 0.22);
+  border-radius: 6px;
+}
+body #journal .jcover img,
+body #journal .jcover canvas {
+  max-width: 100%;
+  max-height: 56px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+body #journal .jcard b { font: 600 var(--fs-body) / 1.15 var(--ui-font); }
+body #journal .jcard small { font: 400 var(--fs-small) / 1.25 var(--ui-font); color: var(--ui-muted); }
+body #journal .jcard .ui-bar { width: 100%; margin-top: 2px; }
+body #journal .jbadge { position: absolute; top: 6px; right: 6px; }
+body #journal .jmore { margin-top: var(--sp-2); }
