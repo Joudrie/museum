@@ -163,6 +163,8 @@ island scene streams ground chunks around the player.
 
 - Gold piles cap at 8 h per spot: welcome-back toast after 20+ min away, a FULL flag per room in the income menu. "Collect all" no longer shows an ad (ads are on hold); it keeps `COLLECT_ALL_FEE` (15%).
 
+- Security is a tier (`curation.cameras`, old `true` = tier 2). The guard sells the next tier; each tier has a `stop` chance for the rare robbery, and camera tiers turn a stopped robbery into a "thief caught" bounty.
+
 ### Gotchas we hit
 - **Phaser reuses the previous scene data** if you call `scene.start('island')` with no data.
   Always pass data explicitly, e.g. `{ map: 'main' }`. Leaving the museum once dropped you on
