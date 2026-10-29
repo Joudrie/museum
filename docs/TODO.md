@@ -96,7 +96,7 @@ Owns: new `src/expedition*.js`, `src/leads.js`, `src/maps/` (new islands). Claim
 - [x] Levels as playable island maps (#152: all seven, `src/maps/exp-*.json`, drawn by `tools/gen_expeditions.mjs`): pirate island (jungle maze, traps, captain's map, chest), shipwreck dive (water-damaged crates), desert tomb (sliding stones), dinosaur badlands (fossil cliff), lost temple (plates, hidden rooms), heist hideout (stealth), frozen north (ice cave, mammoth).
 - [x] Each level can be slow puzzle, chase with light parkour, a dig, or a mix; failing is gentle (caught by pirates, tide comes in: retry). (#152; the "parkour" is dodging patrols through long grass, there is no jump yet)
 - [x] Come home with finds that need restoring (Chat 4), then display (Chat 5); the plaque says where. (#152: `collect(id, {dirty:true})` and `foundAt()`, see HANDOFF)
-- [ ] More island buildings and props, island seasons and weather, animals and people to meet.
+- [x] More island buildings and props, island seasons and weather, animals and people to meet. (Expedition props in the builder's "Expedition" group: tent, pirate flag, shipwreck hull, sarcophagus, mammoth skeleton, ice block. Each expedition has its own `climate` {season, weather}. Parrots, crabs, cats, a dog and castaways to meet. Still open: buildings beyond tents and ruins, e.g. a lighthouse or a village.)
 - [x] The user's builder-made island as the default spawn (Main Island is already home; nothing to do).
 - [ ] Rule: **earned, not bought, no throwaway mini-games.**
 
