@@ -561,3 +561,4 @@ body .pg-tabs button {
 }
 body .pg-row button { min-height: var(--ui-hit); min-width: var(--ui-hit); padding: 6px 12px; }
 body .pg-cell { font-size: var(--fs-small); }
+body #talk .talk-who { font-size: var(--fs-small); }
