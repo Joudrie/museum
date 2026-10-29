@@ -110,12 +110,12 @@ async function dataChecks() {
   check((await run(() => document.getElementById('exp-hud')?.textContent || '')).includes('chart'), 'the goal shows at the top', 'no goal text');
   await shot('4-arrive');
   // the chest does nothing without the key
-  await run(() => { const s = __game.scene.getScene('island'); const it = s.exp.items.find((i) => i.sp.k === 'chest'); s.player.setPosition(it.px, it.py + 10); });
+  await run(() => { const s = __game.scene.getScene('island'); const it = s.exp.items.find((i) => i.sp.k === 'chest'); s.player.setPosition(it.px, it.py + 10); s.facing = 'up'; });
   await settle(400);
   await run(() => { const s = __game.scene.getScene('island'); s.interact(); });
   check(!(await shown('#exp-card')), 'the chest stays shut without the key', 'chest opened with no key');
   // read the chart
-  await run(() => { const s = __game.scene.getScene('island'); const it = s.exp.items.find((i) => i.sp.k === 'note'); s.player.setPosition(it.px, it.py + 10); });
+  await run(() => { const s = __game.scene.getScene('island'); const it = s.exp.items.find((i) => i.sp.k === 'note'); s.player.setPosition(it.px, it.py + 10); s.facing = 'up'; });
   await settle(400);
   await run(() => { __game.scene.getScene('island').interact(); });
   await settle(300);
@@ -174,7 +174,7 @@ async function dataChecks() {
   check(hid === 'walk', 'a pirate walking past does not spot you in the long grass', `spotted in the grass (${hid})`);
 
   // open the chest
-  await run(() => { const s = __game.scene.getScene('island'); s.exp.patrols.forEach((g) => (g.sprite.x = -999)); const it = s.exp.items.find((i) => i.sp.k === 'chest'); s.player.setPosition(it.px, it.py + 10); });
+  await run(() => { const s = __game.scene.getScene('island'); s.exp.patrols.forEach((g) => (g.sprite.x = -999)); const it = s.exp.items.find((i) => i.sp.k === 'chest'); s.player.setPosition(it.px, it.py + 10); s.facing = 'up'; });
   await settle(400);
   await run(() => { __game.scene.getScene('island').interact(); });
   await settle(400);

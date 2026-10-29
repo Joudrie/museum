@@ -31,7 +31,7 @@ export function animateWalker(scene, s, moving, dt, rate = 1) {
 
 // A soft footstep (player only).
 export function footstep(surface = 'floor') {
-  sfx(surface === 'sand' ? 'stepSoft' : surface === 'grass' ? 'stepGrass' : 'step');
+  sfx(surface === 'snow' ? 'stepSnow' : surface === 'sand' ? 'stepSoft' : surface === 'grass' ? 'stepGrass' : 'step');
 }
 
 // Little puffs of dust kicked up behind a running character.

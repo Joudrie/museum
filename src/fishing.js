@@ -18,6 +18,7 @@ import { showReveal, showNearMiss, runReel, catchOpen as revealOpen } from './pr
 import { WaterFx } from './progression/ui/waterfx.js';
 import { fishFinishLines } from './progression/ui/fieldjournal.js';
 import { cosmeticColor } from './progression/ui/lookfx.js';
+import { popEmote } from './emotes.js';
 
 // What the log shows: fish (rules in src/progression/species.js) and finds (not fish; some belong in the museum).
 const view = (e) => ({
@@ -141,6 +142,7 @@ export class Fishing {
     this.player = player;
     this.state = 'idle';
     this.g = scene.add.graphics().setDepth(4000);
+    this.me = { s: player }; // (for the faces you pull)
     this.fx = scene.waterfx = new WaterFx(scene, progression());
     scene.events.once('shutdown', () => {
       this.end();
@@ -187,7 +189,7 @@ export class Fishing {
       onUpdate: (tw) => {
         if (!this.bob) return;
         const k = tw.getValue();
-        const a = this.tip();
+        const a = this.rodTip();
         this.bob.setPosition(a.x + (target.x - a.x) * k, a.y + (target.y + 3 - a.y) * k - Math.sin(k * Math.PI) * 30);
       },
       onComplete: () => {
@@ -215,6 +217,23 @@ export class Fishing {
     return { x: p.x + dx, y: p.y + dy };
   }
 
+  // The rod swings back and forward as you cast, sways while you wait, bends when something bites and jerks while you reel.
+  rodTip() {
+    const tip = this.tip();
+    const p = this.player;
+    if (this.state === 'cast') {
+      const k = Math.min(1, this.t / 0.22);
+      const e = 1 - Math.pow(1 - k, 3);
+      const back = { x: p.x - (tip.x - p.x) * 0.6, y: p.y - 36 };
+      return { x: back.x + (tip.x - back.x) * e, y: back.y + (tip.y - back.y) * e };
+    }
+    if (this.state === 'bite') return { x: tip.x, y: tip.y + 3 + Math.sin(this.t * 40) * 1.2 };
+    if (this.state === 'wait') return { x: tip.x, y: tip.y + Math.sin(this.t * 2) * 0.5 };
+    if (this.state === 'reelin') return { x: tip.x, y: tip.y - 1 + Math.sin(this.t * 22) * 1.4 };
+    if (this.state === 'reel') return { x: tip.x, y: tip.y - 2 + Math.sin(this.t * 28) * 1.6 };
+    return tip;
+  }
+
   splash(x, y, big) {
     const s = this.scene;
     for (let i = 0; i < (big ? 2 : 1); i++) {
@@ -232,8 +251,17 @@ export class Fishing {
     const g = this.g;
     g.clear();
     this.fx.update(dt);
-    if (!this.busy || !this.bob) return;
+    if (!this.busy) return;
     this.t += dt;
+    if (this.state === 'reel' && this.fishImg?.active) {
+      // the catch flies to you: the rod jerks and the line runs tight to it
+      const p = this.player;
+      const a = this.rodTip();
+      g.lineStyle(1.5, cosmeticColor('rodskin') ?? 0x5a3a24, 1).lineBetween(p.x + (a.x - p.x) * 0.25, p.y - 14, a.x, a.y);
+      g.lineStyle(0.6, 0xf4f0e6, 0.9).lineBetween(a.x, a.y, this.fishImg.x, this.fishImg.y - 3);
+      return;
+    }
+    if (!this.bob) return;
     const tgt = this.target;
     if (this.state === 'wait') {
       let y = tgt.y + 3 + Math.sin(this.t * 3) * 0.6;
@@ -265,7 +293,7 @@ export class Fishing {
     }
     if (!this.bob) return; // it got away (or was hooked) this frame
     // the rod and the line (sagging a little while it waits)
-    const a = this.tip();
+    const a = this.rodTip();
     const p = this.player;
     g.lineStyle(1.5, cosmeticColor('rodskin') ?? 0x5a3a24, 1);
     g.lineBetween(p.x + (a.x - p.x) * 0.25, p.y - 14, a.x, a.y);
@@ -295,6 +323,7 @@ export class Fishing {
     if (this.state === 'bite') return this.hook();
     if (this.state === 'wait') {
       this.end();
+      popEmote(this.scene, this.me, 'sweat');
       this.scene.toast('Too soon! Wait for the bobber to go under, then tap.');
     }
   }
@@ -339,6 +368,8 @@ export class Fishing {
     if (!s.textures.exists(key)) s.textures.addCanvas(key, pic);
     const pl = this.player;
     const fish = s.add.image(this.target.x, this.target.y, key).setDepth(4002).setScale(0.9);
+    this.fishImg = fish;
+    this.t = 0;
     this.splash(this.target.x, this.target.y + 2, 1);
     s.tweens.add({
       targets: fish,
@@ -350,8 +381,10 @@ export class Fishing {
         s.tweens.add({ targets: fish, y: fish.y - 3, yoyo: true, repeat: -1, duration: 300 });
         const done = () => {
           fish.destroy();
+          this.fishImg = null;
           this.state = 'idle';
           release('fishing');
+          popEmote(s, this.me, junk ? 'confused' : sp.rarity >= 3 ? 'sparkle' : 'smile', { hold: 1800 });
         };
         if (junk) this.showJunk(junk, done);
         else showReveal(sp, p.last, done);
@@ -396,6 +429,7 @@ export class Fishing {
     showNearMiss(p.last, plan.species, () => {
       this.state = 'idle';
       release('fishing');
+      popEmote(this.scene, this.me, 'frown');
     });
   }
 

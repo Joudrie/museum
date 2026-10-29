@@ -17,7 +17,7 @@
   pointer-events: none;
 }
 #talk .talk-who {
-  font-size: 10px;
+  font-size: 13px; /* the 13px floor (tests/ui-layout.cjs) */
   line-height: 1.1;
 }
 #talk .talk-who span {

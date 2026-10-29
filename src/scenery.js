@@ -40,14 +40,24 @@ function canopy(E, R, cx, cy, rx, ry, pal = LEAF, seed = 0) {
   for (let k = 0; k < rx; k++) R(cx - rx + hash(k, 1, seed) * rx * 2, cy - ry * 0.6 + hash(k, 2, seed) * ry * 1.5, 2, 1, pal[0]);
 }
 
-export function addScenery(add, anim) {
+// Drawn one group at a time, so the game can do them in idle moments (see warmTiles in tiles.js).
+export function* addScenerySlices(add, anim) {
   addFlowers(add, anim);
+  yield;
   addTrees(add, anim);
+  yield;
   addMoreRocks(add, anim);
   addPaths(add);
+  yield;
   addBuildings(add, anim);
+  yield;
   addGardenProps(add, anim);
+  yield;
   addNaturalTrees(add, anim);
+  yield;
+}
+export function addScenery(add, anim) {
+  [...addScenerySlices(add, anim)];
 }
 
 // The trees and shrubs, drawn the natural way (see foliage.js). These replace

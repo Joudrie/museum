@@ -7,6 +7,7 @@ import { runDialogue } from '../../dialogue.js';
 import { makeEmotes } from '../../art.js';
 import { namedConverse } from './talkflow.js';
 import { sfx } from '../../music.js';
+import { popEmote } from '../../emotes.js';
 import { WorldLife } from './worldlife.js';
 
 const T = 32;
@@ -53,39 +54,39 @@ export class IslandLife {
   emote(n, id) {
     const s = this.scene;
     if (!n?.s?.active) return;
-    const key = `emote_${id === 'question' ? 'q' : id}`;
-    if (!s.textures.exists(key)) return;
-    n.emoteImg?.destroy();
-    const img = s.add.image(n.s.x, n.s.y - 40, key).setOrigin(0.5, 1).setDepth(5000).setScale(0);
-    n.emoteImg = img;
-    s.tweens.add({ targets: img, scale: 1, duration: 180, ease: 'Back.easeOut' });
-    s.tweens.add({ targets: img, alpha: 0, delay: 1700, duration: 300, onComplete: () => img.destroy() });
-    this.p.bus.emit('EMOTE_SEEN', { emoteId: id === 'question' ? 'q' : id, from: n.npcId || '' });
+    const key = id === 'question' ? 'q' : id;
+    // (the picture pops over their head and follows them: src/emotes.js)
+    if (popEmote(s, n, key, { hold: 1700 })) this.p.bus.emit('EMOTE_SEEN', { emoteId: key, from: n.npcId || '' });
   }
 
-  /** Called when the player taps a person. Returns true if a conversation took over. */
-  talk(n) {
+  // every talk counts, named or not (the sayings of people who have their own lines count it here too)
+  count(n) {
+    const s = this.scene;
+    this.p.bus.emit('NPC_TALKED', { npcId: n.npcId ? n.npcId : `anon:${s.regionKey}:${n.name}`, kind: n.kind, region: s.regionKey });
+  }
+
+  /** Called when the player taps a person. Returns the conversation's handle if one took over (a named person). `done` runs when it ends. */
+  talk(n, done) {
     const s = this.scene;
     const p = this.p;
-    const named = !!n.npcId;
-    p.bus.emit('NPC_TALKED', { npcId: named ? n.npcId : `anon:${s.regionKey}:${n.name}`, kind: n.kind, region: s.regionKey });
-    if (!named) {
+    this.count(n);
+    if (!n.npcId) {
       this.ambient(n);
-      return false;
+      return null;
     }
     const npc = NPCS.find((x) => x.id === n.npcId);
     // (no pause: the box sits up top and walking away ends the talk)
     const portrait = s.textures.exists(`${n.prefix}_down`) ? s.textures.get(`${n.prefix}_down`).getSourceImage() : null;
-    runDialogue(namedConverse(p, n.npcId, { emote: (id) => this.emote(n, id) }), {
+    return runDialogue(namedConverse(p, n.npcId, { emote: (id) => this.emote(n, id) }), {
       name: npc.name,
       label: npc.role,
       portrait,
       onEnd: () => {
+        done?.();
         p.queue.poke();
       },
-      leave: () => !s.sys.isActive() || Math.hypot(s.player.x - n.s.x, s.player.y - n.s.y) > 64,
+      leave: () => s.walkedFrom(n),
     });
-    return true;
   }
 
   // unnamed islanders are friendly too, once a day each: the raker hands you what he gathered, the reader on the bench trades a rumour

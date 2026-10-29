@@ -152,6 +152,7 @@ const ok = (msg) => console.log('  ✓ ' + msg);
     const d = s.L.decorDoors.find((d) => d.label === 'Break room');
     const st = s.standFor({ wall: d.wall, u: (d.rect.u0 + d.rect.u1) / 2 });
     s.player.setPosition(st.x, st.y);
+    s.faceSprite(s.player, 'player', st.fx, st.fy); // (you act on what you face)
     s.focus = s.findFocus();
     s.interact();
   });
@@ -162,6 +163,7 @@ const ok = (msg) => console.log('  ✓ ' + msg);
   await scene(() => {
     const s = __game.scene.getScene('room');
     s.player.setPosition(s.boardFront.x, s.boardFront.y + 4);
+    s.faceSprite(s.player, 'player', 0, -1);
     s.focus = s.findFocus();
     s.interact();
   });
@@ -178,6 +180,7 @@ const ok = (msg) => console.log('  ✓ ' + msg);
     const d = s.L.decorDoors.find((d) => d.label === 'Office');
     const st = s.standFor({ wall: d.wall, u: (d.rect.u0 + d.rect.u1) / 2 });
     s.player.setPosition(st.x, st.y);
+    s.faceSprite(s.player, 'player', st.fx, st.fy); // (you act on what you face)
     s.focus = s.findFocus();
     s.interact();
   });

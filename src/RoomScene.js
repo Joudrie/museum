@@ -44,7 +44,7 @@ import { hasCameras, buyCameras, resetSecurity, CAMERA_COST, trackSeen, maybeRob
 import { officeLevel, setOfficeLevel, resetOffice, perks, itemLevel, LEVELS, MAX_LEVEL } from './office.js';
 import { openOffice } from './officemenu.js';
 import { ask } from './ask.js';
-import { remember } from './regulars.js';
+import { remember, rareFor } from './regulars.js';
 import { converse, giftStatus, recordGift } from './chatter.js';
 import { say } from './ui/toast.js';
 import { runDialogue } from './dialogue.js';
@@ -68,7 +68,12 @@ import { showDisplays } from './displayart.js';
 import { openDisplay } from './displaymenu.js';
 import { openDecor, closeDecor, load, save, DEFAULT_CHARACTER } from './decor.js';
 import { openBuild } from './build.js';
-import { showTalk, hideTalk, talking, followSpeaker } from './talk.js';
+import { showTalk, hideTalk, talking } from './talk.js';
+import { facingOf, resolver, headY, bubbleSpot } from './focus.js';
+import { EMOTES, popEmote, startChat } from './emotes.js';
+import { FocusMark } from './focusmark.js';
+import { Tells } from './tells.js';
+import { Shadows } from './shadows.js';
 import { Lighting, timeOfDay, makeTextures as lightTextures } from './lighting.js';
 import { animateWalker, footstep, dust } from './motion.js';
 import { Pet, PET_COLORS } from './pets.js';
@@ -259,23 +264,6 @@ export function visitorLook(kind, r) {
   return { colors, look, scale };
 }
 
-// Which emotes each kind of person tends to show.
-const EMOTES = {
-  fanboy: ['heart', 'star', 'heart'],
-  kid: ['bang', 'q', 'heart', 'star'],
-  grump: ['zzz', 'q', 'zzz'],
-  snob: ['q', 'zzz', 'star'],
-  nerd: ['bang', 'star', 'q'],
-  casual: ['heart', 'note', 'star'],
-  tourist: ['bang', 'star', 'heart'],
-  artist: ['heart', 'star', 'bang'],
-  influencer: ['star', 'heart', 'note'],
-  couple: ['heart', 'heart', 'note'],
-  historian: ['bang', 'q', 'star'],
-  student: ['q', 'bang', 'zzz', 'note'],
-  elder: ['heart', 'note', 'heart'],
-  famous: ['star', 'heart', 'bang', 'note'],
-};
 const PHONE_KINDS = ['influencer', 'kid', 'casual', 'student', 'fanboy', 'tourist'];
 const SEATS = ['stool', 'bench', 'sofa'];
 export const KINDS = Object.keys(PERSONALITIES).filter((k) => !PERSONALITIES[k].staff);
@@ -405,6 +393,9 @@ export class RoomScene extends Phaser.Scene {
     if (this.g.main) this.spawnFamous();
     this.refreshDirt();
     this.bubble = this.add.image(0, 0, 'bubble').setOrigin(0.5, 1).setDepth(5000).setVisible(false);
+    this.mark = new FocusMark(this);
+    this.tells = new Tells(this); // breathing and blinking
+    this.shadowsP = new Shadows(this, 0.9, 0.2); // soft shadows under everyone
     this.lighting = new Lighting(this);
     setAmbience(weatherToday() === 'rain' && !this.isBreak ? ['rainSoft'] : []); // rain on the roof
     if (!this.isBreak) stormRumble(this, weatherToday());
@@ -880,7 +871,7 @@ export class RoomScene extends Phaser.Scene {
     }
     const s = this.add.sprite(x, y, `${prefix}_down`).setOrigin(0.5, 1).setScale(scale);
     const speed = kind === 'elder' || kind === 'grump' ? 0.65 : kind === 'kid' ? 1.25 : 1;
-    const n = { s, prefix, kind, speed, name: names[Math.floor(hash(seed, 6, 50) * names.length)], wait: 400 + Math.random() * 1500, target: null };
+    const n = { s, prefix, kind, speed, skin: colors.s, name: names[Math.floor(hash(seed, 6, 50) * names.length)], wait: 400 + Math.random() * 1500, target: null };
     // some visitors bring their dog (on a leash)
     if (!this.isBreak && ['casual', 'elder', 'tourist', 'couple', 'student'].includes(kind) && hash(seed, 30, 70) < 0.22) {
       const col = PET_COLORS.dog[Math.floor(hash(seed, 31, 70) * PET_COLORS.dog.length)];
@@ -913,7 +904,7 @@ export class RoomScene extends Phaser.Scene {
     makeCharacter(this, prefix, colors, look);
     const names = PERSONALITIES[kind].names;
     const s = this.add.sprite(x, y, `${prefix}_down`).setOrigin(0.5, 1).setScale(scale);
-    const n = { s, prefix, kind, staff: true, name: names[Math.floor(hash(seed, 6, 50) * names.length)], wait: 1000, target: null };
+    const n = { s, prefix, kind, staff: true, skin: colors.s, name: names[Math.floor(hash(seed, 6, 50) * names.length)], wait: 1000, target: null };
     this.npcs.push(n);
     return n;
   }
@@ -926,7 +917,7 @@ export class RoomScene extends Phaser.Scene {
       makeCharacter(this, prefix, colors, look);
       const names = PERSONALITIES[kind].names;
       const s = this.add.sprite(x, y, `${prefix}_down`).setOrigin(0.5, 1).setScale(scale);
-      const n = { s, prefix, kind, staff: true, name: names[Math.floor(hash(seed, 6, 50) * names.length)], wait: 1000, target: null };
+      const n = { s, prefix, kind, staff: true, skin: colors.s, name: names[Math.floor(hash(seed, 6, 50) * names.length)], wait: 1000, target: null };
       this.npcs.push(n);
       return n;
     };
@@ -1060,8 +1051,24 @@ export class RoomScene extends Phaser.Scene {
     this.refreshDirt();
   }
 
+  // Turn to the player for a talk, remembering which way they were facing; a moment after
+  // the talk they turn back (or go on with what they were doing).
+  turnToPlayer(n) {
+    if (n.seat || n.follow) return;
+    if (!n.prevFace) n.prevFace = { key: n.s.texture.key, flip: n.s.flipX };
+    n.faceUntil = this.time.now + 4000;
+    this.faceSprite(n.s, n.prefix, this.player.x - n.s.x, this.player.y - n.s.y);
+  }
+
+  turnBack(n) {
+    const f = n.prevFace;
+    n.prevFace = null;
+    if (f && !n.target && !n.seat && n.s.active) n.s.setTexture(f.key).setFlipX(f.flip);
+  }
+
   updateVisitor(n, dt) {
-    if (n.talking || n.fixed) return;
+    if (n.prevFace && !n.talking && !n.chatting && this.time.now > (n.faceUntil || 0)) this.turnBack(n);
+    if (n.talking || n.fixed || n.chatting) return;
     if (n.follow) {
       // trail the tour guide along the path they walked
       const t = n.follow.trail;
@@ -1123,6 +1130,7 @@ export class RoomScene extends Phaser.Scene {
       const roll = Math.random();
       if (roll < 0.35 && this.goLookAt(n)) return;
       if (roll < 0.43 && !n.trail && this.goSit(n)) return;
+      if (roll < 0.55 && !n.trail && this.goChat(n)) return;
     }
     const [dx, dy] = [[1, 0], [-1, 0], [0, 1], [0, -1]][Math.floor(Math.random() * 4)];
     const tiles = 1 + Math.floor(Math.random() * 2);
@@ -1205,10 +1213,71 @@ export class RoomScene extends Phaser.Scene {
     return true;
   }
 
+  // Two visitors who end up side by side stop for a little chat (src/emotes.js): they turn to
+  // each other and trade pictures, a heart, a star, a clover. Now and then one walks over to the other.
+  canChat(n) {
+    return n.s.active && !n.staff && !n.famous && !n.follow && !n.partner && !n.trail && !n.seat && !n.talking && !n.chatting && !n.target && !n.goal && (!n.chatAt || this.time.now - n.chatAt > 22000);
+  }
+
+  chatBetween(a, b) {
+    a.chatAt = b.chatAt = this.time.now;
+    a.admiring = b.admiring = null;
+    const near = Math.hypot(this.player.x - a.s.x, this.player.y - a.s.y) < 150;
+    return startChat(this, a, b, {
+      face: (n, to) => this.faceSprite(n.s, n.prefix, to.s.x - n.s.x, to.s.y - n.s.y),
+      sound: () => near && sfx('emote'),
+      onEnd: (x, y) => {
+        x.wait = 600 + Math.random() * 1500;
+        y.wait = 600 + Math.random() * 1500;
+      },
+    });
+  }
+
+  socialize(dt) {
+    this.socialT = (this.socialT ?? 3) - dt;
+    if (this.socialT > 0) return;
+    this.socialT = 1.4 + Math.random();
+    const free = this.npcs.filter((n) => this.canChat(n));
+    // visitors notice you walking by: a glance, and a picture (a start if you came running up)
+    const p = this.player;
+    const now = this.time.now;
+    free.forEach((n) => {
+      const d = Math.hypot(p.x - n.s.x, p.y - n.s.y);
+      if (d < 56 && d > 14 && (!n.noticeAt || now - n.noticeAt > 40000)) {
+        n.noticeAt = now;
+        this.turnToPlayer(n);
+        n.faceUntil = now + 1600;
+        popEmote(this, n, this.running ? 'bang' : ['smile', 'heart', 'note', 'sparkle'][Math.floor(Math.random() * 4)]);
+        if (this.running) this.tweens.add({ targets: n.s, y: n.s.y - 2, duration: 90, yoyo: true });
+      }
+    });
+    for (let i = 0; i < free.length; i++)
+      for (let j = i + 1; j < free.length; j++)
+        if (Math.hypot(free[i].s.x - free[j].s.x, free[i].s.y - free[j].s.y) < 34 && Math.random() < 0.5) return this.chatBetween(free[i], free[j]);
+  }
+
+  // Walk up beside someone idle nearby to chat.
+  goChat(n) {
+    if (!this.canChat(n)) return false;
+    const others = this.npcs.filter((o) => o !== n && this.canChat(o) && Math.hypot(o.s.x - n.s.x, o.s.y - n.s.y) < 7 * T);
+    if (!others.length) return false;
+    const o = others[Math.floor(Math.random() * others.length)];
+    const side = n.s.x < o.s.x ? -1 : 1;
+    for (const dx of [side, -side]) if (this.planWalk(n, Math.round(o.s.x + dx * 22), Math.round(o.s.y))) {
+      n.goal = { kind: 'friend', with: o };
+      return true;
+    }
+    return false;
+  }
+
   // Reached where they were going: look at the painting, or sit down.
   arrive(n) {
     const goal = n.goal;
     n.goal = null;
+    if (goal.kind === 'friend') {
+      if (this.canChat(goal.with) && Math.hypot(goal.with.s.x - n.s.x, goal.with.s.y - n.s.y) < 40) this.chatBetween(n, goal.with);
+      return;
+    }
     if (goal.kind === 'painting') {
       this.faceSprite(n.s, n.prefix, goal.fx, goal.fy);
       n.admiring = goal.p;
@@ -1234,7 +1303,7 @@ export class RoomScene extends Phaser.Scene {
 
   // Little things people do while standing around.
   idle(n, dt) {
-    if (n.seat || n.fixed || n.follow || n.talking) return;
+    if (n.seat || n.fixed || n.follow || n.talking || n.chatting) return;
     n.lookT = (n.lookT ?? 1 + Math.random() * 2) - dt;
     if (n.lookT > 0) return;
     n.lookT = 1.2 + Math.random() * 2;
@@ -1256,15 +1325,11 @@ export class RoomScene extends Phaser.Scene {
 
   // A pop-up bubble over someone's head.
   emote(n, id) {
-    if (!n.s.active || n.talking) return;
+    if (!n.s.active || n.talking || n.chatting) return;
     const pool = EMOTES[n.famous ? 'famous' : n.kind] || ['heart'];
     id = id || pool[Math.floor(Math.random() * pool.length)];
-    n.emoteImg?.destroy();
     if (id === 'heart' && !n.staff && !this.isBreak) addLove(this.roomIndex); // people love this room
-    const img = this.add.image(n.s.x, n.s.y - 36, `emote_${id}`).setOrigin(0.5, 1).setDepth(5000).setScale(0);
-    n.emoteImg = img;
-    this.tweens.add({ targets: img, scale: 1, duration: 180, ease: 'Back.easeOut' });
-    this.tweens.add({ targets: img, alpha: 0, delay: 1500, duration: 300, onComplete: () => img.destroy() });
+    popEmote(this, n, id, { lift: n.seat ? 7 : 5 });
   }
 
   // Something short said out loud (floating text).
@@ -1310,7 +1375,12 @@ export class RoomScene extends Phaser.Scene {
       line = `There ${j === 1 ? 'is 1 of us' : `are ${j} of us`}. One janitor per room keeps the whole place spotless.`;
     }
     if (!n.staff && Math.random() < 0.3) line = this.contextLine() || line;
-    if (!n.staff) line = remember(n.name, n.kind) || line;
+    n.rare = null;
+    if (!n.staff) {
+      line = remember(n.name, n.kind) || line;
+      n.rare = rareFor(n.name, n.kind); // a line only heard after many talks
+      if (n.rare) line = n.rare.line;
+    }
     // the progression layer counts every talk (Edmund the caretaker is a named friend; visitors are anonymous)
     progression().bus.emit('NPC_TALKED', { npcId: n.kind === 'caretaker' ? 'edmund' : `anon:visitor:${n.name}`, kind: n.kind, region: 'main' });
     if (KINDS.includes(n.kind) && !n.staff && n.kind !== 'caretaker') return this.chat(n, line);
@@ -1320,11 +1390,10 @@ export class RoomScene extends Phaser.Scene {
     n.target = null;
     n.path = null;
     n.goal = null;
-    if (!n.seat) this.faceSprite(n.s, n.prefix, this.player.x - n.s.x, this.player.y - n.s.y);
+    this.turnToPlayer(n);
     this.talkingTo = n;
     sfx('talk');
-    const at = this.screenAt(n.s.x, n.s.y - 34);
-    showTalk(n.name, PERSONALITIES[n.kind].label, line, at, 6000, followSpeaker(this, n.s, { leave: TALK_LEAVE }));
+    showTalk(n.name, PERSONALITIES[n.kind].label, line, this.speakerAt(n.s), undefined, this.walkedAway(n.s));
   }
 
   // A real conversation with a visitor (src/chatter.js): about the painting they stand by,
@@ -1345,14 +1414,15 @@ export class RoomScene extends Phaser.Scene {
     n.goal = null;
     n.hasGift = false;
     this.talkingTo = n; // (so endTalk, and anything that opens a panel, closes the conversation)
-    if (!n.seat) this.faceSprite(n.s, n.prefix, this.player.x - n.s.x, this.player.y - n.s.y);
+    this.turnToPlayer(n);
     sfx('talk');
-    const gen = converse({ kind: n.kind, name: n.name, opener, painting: info && { title: info.title, by: info.by, year: info.year, blurb: info.blurb }, hungBy: hungBy.length ? PAINTINGS.filter((p) => hungBy.includes(p.artist)).map((p) => p.by) : [], wantBy, giftOK, given, finds });
+    const gen = converse({ kind: n.kind, name: n.name, opener, openerMood: n.rare?.mood, painting: info && { title: info.title, by: info.by, year: info.year, blurb: info.blurb }, hungBy: hungBy.length ? PAINTINGS.filter((p) => hungBy.includes(p.artist)).map((p) => p.by) : [], wantBy, giftOK, given, finds });
     const tex = this.textures.get(`${n.prefix}_down`)?.getSourceImage?.();
     this.chatHandle = runDialogue(gen, {
       name: n.name,
       label: PERSONALITIES[n.kind].label,
       portrait: tex,
+      onMood: (m) => popEmote(this, n, m, { lift: n.seat ? 7 : 5 }),
       onGift: (gift) => {
         recordGift(n.name, n.kind, store);
         sfx('unlock');
@@ -1371,8 +1441,9 @@ export class RoomScene extends Phaser.Scene {
         if (this.talkingTo === n) this.talkingTo = null;
         n.talking = false;
         n.wait = 1500;
+        n.faceUntil = this.time.now + 900;
       },
-      onBye: (text) => showTalk(n.name, PERSONALITIES[n.kind].label, text, this.screenAt(n.s.x, n.s.y - 34), 2600, followSpeaker(this, n.s, { leave: TALK_LEAVE })),
+      onBye: (text) => showTalk(n.name, PERSONALITIES[n.kind].label, text, this.speakerAt(n.s), 2600, this.walkedAway(n.s)), // (the goodbye is said in a bubble)
     });
   }
 
@@ -1386,7 +1457,7 @@ export class RoomScene extends Phaser.Scene {
   // Tell the next chapter (a modal so long lines are easy to read). Returns true if one was told.
   tellStory(n, beat, title) {
     if (!beat) return false;
-    this.faceSprite(n.s, n.prefix, this.player.x - n.s.x, this.player.y - n.s.y);
+    this.turnToPlayer(n);
     sfx('talk');
     this.pause(true);
     ask(`${n.name} · ${title}`, `“${beat.line}”`, 'Go on', () => {
@@ -1422,7 +1493,7 @@ export class RoomScene extends Phaser.Scene {
 
   // The guard offers to put up cameras (no change to how the rooms look).
   offerCameras(n, line) {
-    this.faceSprite(n.s, n.prefix, this.player.x - n.s.x, this.player.y - n.s.y);
+    this.turnToPlayer(n);
     sfx('talk');
     this.pause(true);
     const next = nextSecurity();
@@ -1451,14 +1522,29 @@ export class RoomScene extends Phaser.Scene {
     n.target = null;
     n.path = null;
     n.goal = null;
-    if (!n.seat) this.faceSprite(n.s, n.prefix, this.player.x - n.s.x, this.player.y - n.s.y);
+    this.turnToPlayer(n);
     this.talkingTo = n;
     sfx(first ? 'build' : 'talk');
-    showTalk(def.name, first ? 'Famous visitor · first meeting!' : 'Famous visitor', line, this.screenAt(n.s.x, n.s.y - 34), 8000, followSpeaker(this, n.s, { leave: TALK_LEAVE }));
+    showTalk(def.name, first ? 'Famous visitor · first meeting!' : 'Famous visitor', line, this.speakerAt(n.s), 8000, this.walkedAway(n.s, 90));
     if (first) {
       this.toast(`You met ${def.name}! +5% income forever`);
       this.updateHud();
     }
+  }
+
+  // A speech bubble's anchor: the top of someone's head, followed as they (or the camera) move.
+  // Gone (null) once they're gone, so a bubble never hangs over a scene it doesn't belong to.
+  speakerAt(sprite) {
+    return () => (sprite.active && this.sys.isActive() ? bubbleSpot((x, y) => this.screenAt(x, y), sprite, this.player) : null);
+  }
+
+  // True once the player has walked away from `sprite` (a speech bubble goes at that moment).
+  // (Edmund's welcome starts from across the room, so "away" is measured from how far you were
+  // when it began: another 50 px further off, or past `r` if you were close.)
+  walkedAway(sprite, r = 70) {
+    const dist = () => Math.hypot(this.player.x - sprite.x, this.player.y - sprite.y);
+    const limit = Math.max(r, dist() + 50);
+    return () => dist() > limit;
   }
 
   // Where a point in the room is on the page (for speech bubbles).
@@ -1491,9 +1577,7 @@ export class RoomScene extends Phaser.Scene {
 
   caretakerSays(line) {
     const n = this.npcs.find((v) => v.kind === 'caretaker');
-    const at = n ? this.screenAt(n.s.x, n.s.y - 34) : this.screenAt(this.player.x, this.player.y - 34);
-    sfx('talk');
-    showTalk('Edmund', PERSONALITIES.caretaker.label, line, at, 10000, followSpeaker(this, n ? n.s : this.player, { leave: 6 * 32 }));
+    showTalk('Edmund', PERSONALITIES.caretaker.label, line, this.speakerAt(n ? n.s : this.player), 10000, n ? this.walkedAway(n.s, 120) : undefined);
   }
 
   endTalk(fromPause = false) {
@@ -1507,6 +1591,7 @@ export class RoomScene extends Phaser.Scene {
     if (!this.talkingTo) return;
     this.talkingTo.talking = false;
     this.talkingTo.wait = 1500;
+    this.talkingTo.faceUntil = this.time.now + 900;
     this.talkingTo = null;
     hideTalk();
   }
@@ -1916,24 +2001,21 @@ export class RoomScene extends Phaser.Scene {
 
   // ---------- Interaction ----------
 
-  // The nearest thing in reach: painting, mess, visitor, exit or entrance.
+  // The thing in reach that you are facing: painting, mess, visitor, exit or entrance.
+  // Close isn't enough (see src/focus.js): someone at your back while you face a door
+  // isn't who you mean. Things under your feet (mess) need no facing.
   findFocus() {
     const { x, y } = this.player;
-    let best = null;
-    let bestD = REACH;
-    const consider = (d, focus) => {
-      if (d < bestD) {
-        best = focus;
-        bestD = d;
-      }
-    };
+    const r = resolver(x, y, facingOf(this.player));
+    // d: how far it is; (tx, ty): where it is, for the facing test (leave out for things underfoot)
+    const consider = (d, focus, tx, ty) => r.consider(REACH, d, focus, tx, ty);
     for (const p of this.hung) {
       const s = this.standFor(p);
       const half = (p.art.u1 - p.art.u0) / 2;
       const flat = wallRef(p, this.g).face === 'back';
       const along = flat ? Math.abs(x - s.x) : Math.abs(y - s.y);
       const across = flat ? Math.abs(y - s.y) : Math.abs(x - s.x);
-      if (along < half + 14 && across < 16) consider(across + along / 4, { painting: p, icon: 'look' });
+      if (along < half + 14 && across < 16) consider(across + along / 4, { painting: p, icon: 'look' }, x + s.fx * 20, y + s.fy * 20);
     }
     for (const sl of this.states) {
       if (sl.kind === 'painting') continue;
@@ -1941,7 +2023,7 @@ export class RoomScene extends Phaser.Scene {
       const flat = wallRef(sl, this.g).face === 'back';
       const along = flat ? Math.abs(x - st.x) : Math.abs(y - st.y);
       const across = flat ? Math.abs(y - st.y) : Math.abs(x - st.x);
-      if (along < 22 && across < 16) consider(across + along / 4 + 1, { slot: sl, icon: sl.kind === 'door' ? 'door' : 'build' });
+      if (along < 22 && across < 16) consider(across + along / 4 + 1, { slot: sl, icon: sl.kind === 'door' ? 'door' : 'build' }, x + st.fx * 20, y + st.fy * 20);
     }
     for (const m of this.mess) {
       consider(Math.hypot(x - m.ax, y - 4 - m.ay), { mess: m, icon: { crack: 'repair', stain: 'clean', cobweb: 'sweep', puddle: 'clean', litter: 'sweep' }[m.kind] });
@@ -1949,30 +2031,59 @@ export class RoomScene extends Phaser.Scene {
     (this.L.decorDoors || []).forEach((d) => {
       if (!d.label) return;
       const st = this.standFor({ wall: d.wall, u: (d.rect.u0 + d.rect.u1) / 2 });
-      consider(Math.hypot(x - st.x, y - st.y), { door: d, icon: 'door' });
+      consider(Math.hypot(x - st.x, y - st.y), { door: d, icon: 'door' }, x + st.fx * 20, y + st.fy * 20);
     });
-    if (this.g.stairwell) consider(Math.hypot(x - (this.g.stairwell.x0 + this.g.stairwell.x1) / 2, y - this.g.stairwell.y1 - 8), { downstairs: true, icon: 'stairs' });
-    (this.L.upstairs || []).forEach((st) => consider(Math.hypot(x - (st.up === 'left' ? st.x1 + 8 : st.x0 - 8), y - (st.top + st.foot) / 2), { upstairs: true, icon: 'stairs' })); // at the bottom step
-    if (this.boardFront) consider(Math.hypot(x - this.boardFront.x, y - this.boardFront.y) - 6, { board: true, icon: 'look' });
-    if (this.isBreak) consider(Math.hypot(x - this.L.entrance.ax, y - this.L.entrance.ay), { entrance: true, icon: 'back' });
-    if (this.deskFront) consider(Math.hypot(x - this.deskFront.x, y - this.deskFront.y) - 6, { office: true, icon: 'office' });
+    if (this.g.stairwell) {
+      const sx = (this.g.stairwell.x0 + this.g.stairwell.x1) / 2;
+      const sy = this.g.stairwell.y1 - 8;
+      consider(Math.hypot(x - sx, y - sy), { downstairs: true, icon: 'stairs' }, sx, sy);
+    }
+    (this.L.upstairs || []).forEach((st) => {
+      const sx = st.up === 'left' ? st.x1 + 8 : st.x0 - 8; // at the bottom step
+      const sy = (st.top + st.foot) / 2;
+      consider(Math.hypot(x - sx, y - sy), { upstairs: true, icon: 'stairs' }, sx, sy);
+    });
+    if (this.boardFront) consider(Math.hypot(x - this.boardFront.x, y - this.boardFront.y) - 6, { board: true, icon: 'look' }, this.boardFront.x, this.boardFront.y - 16);
+    if (this.isBreak) consider(Math.hypot(x - this.L.entrance.ax, y - this.L.entrance.ay), { entrance: true, icon: 'back' }, this.L.entrance.ax, this.L.entrance.ay);
+    if (this.deskFront) consider(Math.hypot(x - this.deskFront.x, y - this.deskFront.y) - 6, { office: true, icon: 'office' }, this.deskFront.x, this.deskFront.y - 16);
     this.items.forEach((it) => {
       if (!isFixture(it)) return;
       const { w, h } = footprint(it);
       const fx = this.g.xL + (it.c + w / 2) * T;
       const fy = this.g.y0 + (it.r + h) * T + 8; // just in front
-      consider(Math.hypot(x - fx, y - fy) - (w * T) / 3, { fixture: it, icon: 'look' });
+      consider(Math.hypot(x - fx, y - fy) - (w * T) / 3, { fixture: it, icon: 'look' }, fx, this.g.y0 + (it.r + h / 2) * T);
     });
-    for (const n of this.npcs) consider(Math.hypot(x - n.s.x, y - n.s.y) - 2, { npc: n, icon: 'talk' });
-    if (this.pet) consider(Math.hypot(x - this.pet.s.x, y - this.pet.s.y) + 4, { pet: true, icon: 'talk' });
+    for (const n of this.npcs) consider(Math.hypot(x - n.s.x, y - n.s.y) - 2, { npc: n, icon: 'talk' }, n.s.x, n.s.y - 8);
+    if (this.pet) consider(Math.hypot(x - this.pet.s.x, y - this.pet.s.y) + 4, { pet: true, icon: 'talk' }, this.pet.s.x, this.pet.s.y - 4);
     const { exit, entrance } = this.L;
     if (exit) {
       const built = this.roomIndex + 1 < this.rooms.length;
       const icon = !built ? 'build' : exit.kind.startsWith('stairs') ? 'stairs' : 'door';
-      consider(Math.hypot(x - exit.ax, y - exit.ay), { exit: true, icon });
+      consider(Math.hypot(x - exit.ax, y - exit.ay), { exit: true, icon }, exit.ax, exit.ay);
     }
-    if (this.roomIndex > 0) consider(Math.hypot(x - entrance.ax, y - entrance.ay), { entrance: true, icon: 'back' });
-    return best;
+    if (this.roomIndex > 0) consider(Math.hypot(x - entrance.ax, y - entrance.ay), { entrance: true, icon: 'back' }, entrance.ax, entrance.ay);
+    return r.best;
+  }
+
+  // What the Interact button says for what you're facing.
+  focusLabel(f) {
+    if (!f) return 'Interact';
+    if (f.painting) return 'Look';
+    if (f.slot) return f.slot.kind === 'door' ? 'Open' : 'Hang';
+    if (f.fixture) return 'Display';
+    if (f.mess) return { crack: 'Repair', stain: 'Clean', cobweb: 'Sweep', puddle: 'Mop', litter: 'Sweep' }[f.mess.kind] || 'Clean';
+    if (f.office) return 'Office';
+    if (f.board) return 'Staff';
+    if (f.npc) return this.talkingTo === f.npc ? 'Bye' : f.npc.kind === 'guard' || f.npc.staff ? 'Talk' : 'Chat';
+    if (f.pet) return 'Pet';
+    if (f.upstairs || f.downstairs) return 'Stairs';
+    if (f.door) return f.door.label === 'Break room' || f.door.label === 'Office' ? 'Enter' : 'Door';
+    if (f.entrance) return 'Back';
+    if (f.exit) {
+      const next = this.rooms[this.roomIndex + 1];
+      return !next ? 'Build' : next.locked ? 'Unlock' : 'Enter';
+    }
+    return 'Interact';
   }
 
   interact() {
@@ -2803,17 +2914,24 @@ export class RoomScene extends Phaser.Scene {
       this.leashes.lineStyle(1, 0x7a2232, 1).beginPath().moveTo(hx, hy).lineTo((hx + px) / 2, Math.max(hy, py) + 4).lineTo(px, py).strokePath();
       this.leashes.setDepth(Math.min(n.s.y, n.pet.s.y) - 1);
     });
+    this.tells.update(dt, this.npcs, this.cameras.main.worldView);
+    // a soft shadow under everyone
+    const sh = this.shadowsP;
+    sh.begin();
+    this.npcs.forEach((n) => !n.seat && sh.add(n.s.x, n.s.y - 1, 15 * (n.s.scaleX / PLAYER_SCALE)));
+    sh.add(this.player.x, this.player.y - 1, 15);
+    sh.end();
     this.starT = (this.starT || 0) + dt;
     if (this.starT > 5) {
       this.starT = 0;
       const gifters = this.npcs.filter((n) => n.hasGift && !n.talking && n.s.active);
       if (gifters.length) this.emote(gifters[Math.floor(Math.random() * gifters.length)], 'star');
     }
+    this.socialize(dt);
     this.npcs.forEach((n) => {
       this.updateVisitor(n, dt);
       this.animate(n.s, (!!n.target || !!n.walking) && !n.talking, dt);
       n.s.setDepth(n.s.y + (n.lift || 0));
-      if (n.emoteImg?.active) n.emoteImg.setPosition(n.s.x, n.s.y - (n.seat ? 30 : 36));
       if (n.quipText?.active) n.quipText.setPosition(n.s.x, n.s.y - (n.emoteImg?.active ? 50 : 38));
       n.mop?.setPosition(n.s.x + 12, n.s.y).setDepth(n.s.y - 1);
       n.star?.setPosition(n.s.x, n.s.y - 38).setDepth(n.s.y + 1);
@@ -2831,6 +2949,7 @@ export class RoomScene extends Phaser.Scene {
     }
 
     const len = Math.hypot(vx, vy);
+    this.running = len > 0 && pace === 1;
     if (len > 0) {
       const b = this.bounds();
       const arch = this.archOpening();
@@ -2878,6 +2997,16 @@ export class RoomScene extends Phaser.Scene {
     this.bubble.setVisible(!!this.focus);
     this.interactBtn.classList.toggle('hidden', !this.focus);
     if (this.focus && this.focus.icon !== prev) this.interactIcon.innerHTML = iconSvg(this.focus.icon);
+    if (this.focus) {
+      const lab = this.interactBtn.querySelector('.label');
+      const label = this.focusLabel(this.focus);
+      if (lab.textContent !== label) lab.textContent = label;
+    }
+    // an arrow over the person or pet you'll act on; the "!" over your own head for everything else
+    const f = this.focus;
+    const target = f?.npc ? f.npc.s : f?.pet ? this.pet.s : null;
+    this.mark.update(dt, target ? { x: target.x, y: headY(target) - (f.npc?.emoteImg?.active ? 18 : 6) } : null);
+    this.bubble.setVisible(!!f && !target);
     if (this.focus) this.bubble.setPosition(Math.round(this.player.x), Math.round(this.player.y - 36));
     if (this.focus && (Phaser.Input.Keyboard.JustDown(k.SPACE) || Phaser.Input.Keyboard.JustDown(k.ENTER))) this.interact();
   }
