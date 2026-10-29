@@ -48,6 +48,7 @@ const SCREENS = {
   '03-journal-tabs': async (p) => { await click(p, '#journal-btn'); },
   '04-toolkit': (p) => click(p, '#build-btn'),
   '05-customize-room': (p) => click(p, '#home-btn'),
+  '05b-customize-floor': async (p) => { await click(p, '#home-btn'); await click(p, 'details[data-group="floor"] > summary'); },
   '06-customize-rooms': async (p) => { await click(p, '#home-btn'); await click(p, '[data-tab=rooms]'); },
   '07-customize-character': async (p) => { await click(p, '#home-btn'); await click(p, '[data-tab=character]'); },
   '08-settings': async (p) => { await click(p, '#menu-btn'); await click(p, '#settings-btn'); },
@@ -67,7 +68,12 @@ const SCREENS = {
   '21-island-sail': async (p) => { await p.evaluate(() => __game.scene.start('island', { map: 'one' })); await sleep(2500); await p.evaluate(() => __game.scene.getScene('island').sail()); },
   '22-dig': async (p) => { await p.evaluate(() => __game.scene.start('island', { map: 'one' })); await sleep(2500); await p.evaluate(() => { const s = __game.scene.getScene('island'); const d = s.digs[0]; s.player.setPosition(d.x, d.y + 14); s.digAt(d); }); },
   '23-dig-fossil': async (p) => { await p.evaluate(() => __game.scene.start('island', { map: 'one' })); await sleep(2500); await p.evaluate(() => { const s = __game.scene.getScene('island'); const d = s.digs.find((x) => x.kind === 'fossil'); s.player.setPosition(d.x, d.y + 14); s.digAt(d); }); },
+  // the look settings: large text and the left-handed layout
+  '40-large-text-hud': async (p) => { await p.evaluate(() => { const s = JSON.parse(localStorage.getItem('curation.settings') || '{}'); s.text = 'large'; localStorage.setItem('curation.settings', JSON.stringify(s)); window.dispatchEvent(new CustomEvent('settings')); }); await sleep(300); await click(p, '#menu-btn'); },
+  '41-large-text-settings': async (p) => { await p.evaluate(() => { const s = JSON.parse(localStorage.getItem('curation.settings') || '{}'); s.text = 'large'; localStorage.setItem('curation.settings', JSON.stringify(s)); window.dispatchEvent(new CustomEvent('settings')); }); await sleep(300); await click(p, '#menu-btn'); await click(p, '#settings-btn'); },
+  '42-left-handed': async (p) => { await p.evaluate(() => { const s = JSON.parse(localStorage.getItem('curation.settings') || '{}'); s.leftHanded = true; localStorage.setItem('curation.settings', JSON.stringify(s)); window.dispatchEvent(new CustomEvent('settings')); }); await sleep(300); },
   '30-builder': async (p) => { await p.goto(URL + 'builder.html', { waitUntil: 'domcontentloaded' }); await sleep(2500); },
+  '31-builder-menu': async (p) => { await p.goto(URL + 'builder.html', { waitUntil: 'domcontentloaded' }); await sleep(2500); if (await p.isVisible('#resume-go')) await p.click('#resume-go'); await sleep(500); await click(p, '#menu-btn'); },
 };
 
 

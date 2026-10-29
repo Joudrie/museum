@@ -1,5 +1,6 @@
 // Room presets: save a layout, change the room, load it back. Needs the preview server (npm run build && npx vite preview --port 4173).
 const { chromium } = require(process.env.PW || 'playwright');
+const { openGroup } = require('./nav.cjs');
 const URL = process.env.URL || 'http://localhost:4173/';
 (async () => {
   const b = await chromium.launch();
@@ -19,6 +20,7 @@ const URL = process.env.URL || 'http://localhost:4173/';
   await p.waitForTimeout(1200);
   await p.click('#home-btn');
   await p.waitForTimeout(400);
+  await openGroup(p, 'room');
   await p.fill('.presets input', 'Winter');
   await p.click('text=Save layout');
   const saved = await p.evaluate(() => JSON.parse(localStorage.getItem('curation.roomPresets') || '[]'));

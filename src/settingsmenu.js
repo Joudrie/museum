@@ -58,26 +58,66 @@ function confirmReset(e) {
   state.onReset();
 }
 
+// One on / off setting as a switch.
+function toggle(label, on, onChange) {
+  const row = document.createElement('div');
+  row.className = 'ui-toggle';
+  const text = document.createElement('span');
+  text.textContent = label;
+  const sw = document.createElement('button');
+  sw.setAttribute('role', 'switch');
+  sw.setAttribute('aria-label', label);
+  sw.setAttribute('aria-checked', on ? 'true' : 'false');
+  sw.onclick = () => {
+    const next = sw.getAttribute('aria-checked') !== 'true';
+    sw.setAttribute('aria-checked', next ? 'true' : 'false');
+    onChange(next);
+  };
+  row.append(text, sw);
+  return row;
+}
+
+// A titled group of settings.
+function group(title, ...children) {
+  const g = document.createElement('section');
+  g.className = 'settings-group';
+  const h = document.createElement('h3');
+  h.className = 'ui-label';
+  h.textContent = title;
+  g.append(h, ...children);
+  return g;
+}
+
 function render() {
   const s = settings();
-  const onOff = { on: 'On', off: 'Off' };
   body.replaceChildren(
-    section('Sound', choices({ on: 'On', off: 'Muted' }, isMuted() ? 'off' : 'on', (v) => (setMuted(v === 'off'), render()))),
-    section('Music volume', slider(s.music, (v) => setSetting('music', v))),
-    section('Sound effects', slider(s.sfx, (v) => setSetting('sfx', v))),
-    section('Lighting', choices(LIGHT_QUALITY, s.lights, (v) => (setSetting('lights', v), render()))),
-    section('Day & night', choices(onOff, s.dayNight ? 'on' : 'off', (v) => (setSetting('dayNight', v === 'on'), render()))),
-    section('Vibration', choices(onOff, s.haptics ? 'on' : 'off', (v) => (setSetting('haptics', v === 'on'), render()))),
-    section('Share', button('Share & visit friends', () => openShare())),
-    section('Design', button('Map builder: islands & rooms', () => (location.href = './builder.html'), 'wide-btn')),
-    section('Testing', button('+1,000 gold', () => state.onAddCoins(1000)), button('Collect one of everything', (e) => {
+    group('Sound', toggle('Sound on', !isMuted(), (v) => setMuted(!v)), section('Music volume', slider(s.music, (v) => setSetting('music', v))), section('Sound effects', slider(s.sfx, (v) => setSetting('sfx', v)))),
+    group(
+      'Look',
+      section('Lighting', choices(LIGHT_QUALITY, s.lights, (v) => (setSetting('lights', v), render()))),
+      toggle('Day & night follows your clock', s.dayNight, (v) => setSetting('dayNight', v)),
+      section('Text size', choices({ normal: 'Normal', large: 'Large' }, s.text, (v) => (setSetting('text', v), render()))),
+      toggle('Reduce motion', s.reduceMotion, (v) => setSetting('reduceMotion', v)),
+    ),
+    group('Play', toggle('Vibration', s.haptics, (v) => setSetting('haptics', v)), toggle('Left-handed layout', s.leftHanded, (v) => setSetting('leftHanded', v))),
+    group(
+      'Friends & data',
+      button('Share & visit friends', () => openShare()),
+      button('Map builder: islands & rooms', () => (location.href = './builder.html')),
+      button('Reset museum (rooms, gold, mess)', confirmReset, 'wide-btn danger'),
+    ),
+    group(
+      'Testing (for now)',
+      button('+1,000 gold', () => state.onAddCoins(1000)),
+      button('Collect one of everything', (e) => {
         const n = state.onCollectAll();
         e.target.textContent = n ? `Added ${n} to your collection` : 'You already have one of everything';
-      }), button('Reset museum (rooms, gold, mess)', confirmReset, 'wide-btn danger')),
+      }),
+    ),
   );
   const note = document.createElement('p');
   note.className = 'toolkit-note';
-  note.textContent = 'Day and night follow your clock. Lighting “Low” saves battery; “Off” turns the lamps and shadows of the night off.';
+  note.textContent = 'Lighting "Low" saves battery; "Off" turns the lamps and shadows off. Reset keeps a backup of your old save first.';
   body.appendChild(note);
 }
 

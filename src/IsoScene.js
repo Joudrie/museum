@@ -3,6 +3,7 @@
 // few pieces of furniture. Everything is drawn in code from boxes, so a chair
 // can turn to face any of the four ways without extra drawings; tap the
 // armchairs to turn them. Reached through the cottage door on the island.
+import { say } from './ui/toast.js';
 import Phaser from 'phaser';
 import { makeCharacter } from './art.js';
 import { load } from './storage.js';
@@ -523,11 +524,7 @@ export class IsoScene extends Phaser.Scene {
   }
 
   toast(text) {
-    const el = document.getElementById('toast');
-    el.textContent = text;
-    el.classList.remove('hidden');
-    clearTimeout(this.toastTimer);
-    this.toastTimer = setTimeout(() => el.classList.add('hidden'), 3200);
+    say(text, 3200);
   }
 
   update(_, dtMs) {

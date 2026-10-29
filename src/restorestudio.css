@@ -16,6 +16,6 @@
 #studio .slot { position: absolute; outline: 1px dashed rgba(244,230,200,.35); }
 #studio .studio-cmp { position: absolute; inset: 0; }
 #studio .studio-cmp .handle { position: absolute; top: 0; bottom: 0; width: 4px; margin-left: -2px; background: #fff; box-shadow: 0 0 6px #000; }
-#studio .studio-cmp .tag { position: absolute; top: 6px; padding: 2px 6px; background: rgba(0,0,0,.6); color: #fff; font-size: 12px; border-radius: 4px; }
+#studio .studio-cmp .tag { position: absolute; top: 6px; padding: 2px 6px; background: rgba(0,0,0,.6); color: #fff; font-size: 13px; border-radius: 4px; }
 #studio .studio-done { text-align: center; }
 #studio .studio-done b, #studio .studio-done small { display: block; margin: 2px 0; }

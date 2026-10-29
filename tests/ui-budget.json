@@ -6,55 +6,55 @@
    "minFont": 13
   },
   "02-hud-income": {
-   "smallTargets": 2,
-   "minFont": 11
+   "smallTargets": 1,
+   "minFont": 13
   },
   "03-journal-goals": {
    "smallTargets": 4,
    "minFont": 11
   },
   "03-journal-paintings": {
-   "smallTargets": 2,
-   "minFont": 12
+   "smallTargets": 1,
+   "minFont": 13
   },
   "04-toolkit": {
-   "smallTargets": 12,
-   "minFont": 11
+   "smallTargets": 1,
+   "minFont": 13
   },
   "05-customize-room": {
-   "smallTargets": 4,
-   "minFont": 11
+   "smallTargets": 3,
+   "minFont": 13
   },
   "06-customize-rooms": {
-   "smallTargets": 2,
-   "minFont": 12
+   "smallTargets": 1,
+   "minFont": 13
   },
   "07-customize-character": {
-   "smallTargets": 2,
+   "smallTargets": 1,
    "minFont": 13
   },
   "08-settings": {
-   "smallTargets": 4,
+   "smallTargets": 3,
    "minFont": 13
   },
   "09-build-room": {
-   "smallTargets": 2,
+   "smallTargets": 1,
    "minFont": 13
   },
   "10-wall-spot": {
-   "smallTargets": 10,
-   "minFont": 12
+   "smallTargets": 2,
+   "minFont": 13
   },
   "11-viewer": {
-   "smallTargets": 7,
+   "smallTargets": 6,
    "minFont": 13
   },
   "12-staff-board": {
-   "smallTargets": 7,
-   "minFont": 12
+   "smallTargets": 1,
+   "minFont": 13
   },
   "13-office": {
-   "smallTargets": 2,
+   "smallTargets": 1,
    "minFont": 13
   },
   "14-ask-unlock": {
@@ -62,16 +62,16 @@
    "minFont": 13
   },
   "15-daily": {
-   "smallTargets": 2,
+   "smallTargets": 1,
    "minFont": 13
   },
   "16-share": {
-   "smallTargets": 3,
+   "smallTargets": 2,
    "minFont": 13
   },
   "17-conversation": {
    "smallTargets": 1,
-   "minFont": 12
+   "minFont": 13
   },
   "18-staff-bubble": {
    "smallTargets": 1,
@@ -86,15 +86,15 @@
    "minFont": 13
   },
   "21-island-sail": {
-   "smallTargets": 5,
-   "minFont": 12
+   "smallTargets": 0,
+   "minFont": 13
   },
   "22-dig": {
-   "smallTargets": 4,
+   "smallTargets": 0,
    "minFont": 13
   },
   "23-dig-fossil": {
-   "smallTargets": 4,
+   "smallTargets": 0,
    "minFont": 13
   },
   "30-builder": {
@@ -102,7 +102,7 @@
    "minFont": 11
   },
   "03-journal-overview": {
-   "smallTargets": 4,
+   "smallTargets": 3,
    "minFont": 13
   },
   "16b-menu-hub": {
