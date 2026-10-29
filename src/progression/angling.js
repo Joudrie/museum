@@ -92,6 +92,14 @@ export function prepareCast(p, o) {
     const pick = common.length ? common[p.rng.int(common.length)] : allSpecies().find((sp) => sp.rarity === 1);
     roll = { species: pick, junk: false, tier: 1, via: 'first', z: 0.2 };
     f.rolls += 1;
+  } else if (ctx.region === 'isle' && !s.flags.firstHour.isleRare && f.catches >= 1) {
+    // the first traversal pays off: a Rare waits on the Far Isle
+    s.flags.firstHour.isleRare = p.clock.now();
+    const rares = allSpecies().filter((sp) => sp.rarity === 3 && sp.regions.includes('isle') && sp.waters.includes(ctx.water));
+    if (rares.length) {
+      roll = { species: rares[p.rng.int(rares.length)], junk: false, tier: 3, via: 'isle-rare', z: 0.4 };
+      f.rolls += 1;
+    } else roll = rollSpecies(s, ctx, p.rng);
   } else roll = rollSpecies(s, ctx, p.rng);
   const plan = {
     ctx,

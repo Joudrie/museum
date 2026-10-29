@@ -25,7 +25,7 @@ export function describe(r) {
 export const UNLOCK_NAMES = {
   'rod:cork': 'Cork rod', 'rod:feather': 'Feather rod', 'rod:golden': 'Golden rod', 'rod:glow': 'Glow rod',
   'boat:rowboat': 'Rowboat: the Far Isle and Skull Isle', 'boat:sailboat': 'Sailboat: open sea', 'boat:icehull': 'Ice hull: the Frozen North',
-  'gear:boots': 'Snow boots', 'gear:lantern': 'Lantern', 'gear:gloves': 'Climbing gloves',
+  'gear:boots': 'Snow boots: deep snow', 'gear:lantern': 'Lantern: dark caves', 'gear:gloves': 'Climbing gloves: ledges',
   'house:aquarium_room': 'Lodge: aquarium room', 'house:workshop': 'Lodge: workshop',
   'area:frozen_north': 'The Frozen North on your chart', 'slot:daily_extra': 'A fourth daily task',
 };

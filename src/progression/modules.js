@@ -8,6 +8,7 @@ import { installTasks } from './tasks.js';
 import { installGoals } from './goals.js';
 import { installMarket } from './market.js';
 import { installHouse } from './house.js';
+import { installFirstHour } from './firsthour.js';
 
 export const CORE = [
   { name: 'fish', install: installFish },
@@ -17,6 +18,7 @@ export const CORE = [
   { name: 'tasks-m', install: installTasks },
   { name: 'market-m', install: installMarket },
   { name: 'house-m', install: installHouse },
+  { name: 'firsthour-m', install: installFirstHour },
   { name: 'goals-m', install: installGoals },
 ];
 export function standardModules() {

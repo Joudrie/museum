@@ -95,6 +95,8 @@ export function installFriendship(p) {
     if (kind === 'recipe') {
       const id = REGIONS[npc.region]?.zone === 'arctic' ? 'snowchum' : 'berrypaste';
       p.state.unlocks[`recipe:${id}`] = true;
+      const lr = rumorFor(npc, 3, true); // a rumour-giver's big story comes out at three hearts
+      if (lr?.legend) p.queue.push({ kind: 'unlock', title: 'A rumour', sub: lr.text, rarity: 5 });
       return { text: `They teach you a bait recipe: ${id === 'snowchum' ? 'snow chum' : 'berry paste'}.` };
     }
     if (kind === 'emote') return { text: `They greet you with a ${npc.emote === 'bang' ? '!' : npc.emote} now.` };
@@ -114,7 +116,7 @@ export function installFriendship(p) {
   }
 
   // a fish rumour: hint 2 for a species this person's region holds that you have not caught
-  function rumorFor(npc, h) {
+  function rumorFor(npc, h, legendOnly = false) {
     const f = rec(npc.id);
     const legend = Object.entries(LEGENDS).find(([, l]) => l.rumorFrom === npc.id);
     if (legend && h >= 3) {
@@ -127,6 +129,7 @@ export function installFriendship(p) {
         return { text: legend[1].rumor, legend: legend[0] };
       }
     }
+    if (legendOnly) return null;
     const left = allSpecies().filter((s) => s.rarity < 5 && s.regions.includes(npc.region) && !p.state.fish.species[s.id]?.n && !p.state.journal.leads[`rumor:${s.id}`]);
     if (!left.length) return null;
     const sp = left[p.rngFor(`rumor:${npc.id}:${h}`).int(left.length)];

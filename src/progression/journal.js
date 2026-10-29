@@ -54,9 +54,8 @@ export function entriesOf(p, page) {
 }
 
 // planned counts for pages that grow as the player explores
-const PLAN = { places: 24, secrets: 40 };
-const totalFor = (page) => PLAN[page] || 0;
-export const setPlanned = (page, n) => (PLAN[page] = n);
+// every island plans a number of places and secrets (data/regions.json); the endowed one on Main Island is extra
+const totalFor = (page) => (page === 'places' || page === 'secrets' ? Object.values(REGIONS).reduce((n, r) => n + (r[page] || 0), 0) + 1 : 0);
 
 /** { have, total, pct } for a page. */
 export function completion(p, page) {

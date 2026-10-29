@@ -166,3 +166,7 @@ body:not(.outside) #prog-pill { top: calc(var(--hud-top, 10px) + 112px); }
 .lodge-fish { position: absolute; top: var(--y); left: -80px; height: 40px; width: auto; image-rendering: pixelated; animation: lodge-swim var(--d) linear infinite; animation-delay: var(--delay); cursor: pointer; }
 @keyframes lodge-swim { from { transform: translateX(0); } to { transform: translateX(520px); } }
 @media (prefers-reduced-motion: reduce) { .lodge-fish { animation: none; left: calc(var(--y) * 3); } }
+
+/* ---- locked docks in the boat menu ---- */
+.sail-dest.locked { opacity: 0.72; filter: saturate(0.5); }
+.sail-preview { display: block; margin-top: 3px; color: var(--ui-gold-hi, #f2d36b); }

@@ -500,6 +500,31 @@ const check = (c, good, bad) => (c ? ok(good) : fail(bad));
     void stock1;
   }
 
+  console.log('The world and the legendary trail');
+  {
+    const { p } = mk(91);
+    p.bus.emit('TILE_REVEALED', { region: 'main', count: 3, chunks: ['1,1', '1,2', '2,1'] });
+    p.bus.emit('TILE_REVEALED', { region: 'main', count: 3, chunks: ['1,1', '1,2', '2,1'] });
+    check(p.state.stats.chunks === 3 && Object.keys(p.state.world.chunks.main).length === 3, 'a map chunk only counts the first time it is uncovered', 'chunks counted twice: ' + p.state.stats.chunks);
+    p.bus.emit('LOCATION_DISCOVERED', { region: 'isle', placeId: 'isle:island', name: 'The Far Isle' });
+    p.bus.emit('LOCATION_DISCOVERED', { region: 'isle', placeId: 'isle:island', name: 'The Far Isle' });
+    check(Object.keys(p.state.world.locations).length === 2 && jr.isStamped(p.state, 'places', 'isle:island'), 'a place is stamped once', 'place stamped twice');
+    // the goldkoi trail: rumour from Wen, clue by the pond, then conditions
+    check(!p.state.journal.leads['legend:goldkoi'], 'no trail at the start', 'trail pre-started');
+    p.friendship.addPoints('wen', 300);
+    check(p.state.journal.leads['legend:goldkoi']?.stage === 'rumor', 'three hearts with Wen: the golden koi rumour', 'no rumour: ' + JSON.stringify(p.state.journal.leads['legend:goldkoi']));
+    p.bus.emit('SECRET_FOUND', { region: 'main', secretId: 'main:clue-goldkoi', name: 'A sign by the pond' });
+    check(p.state.journal.leads['legend:goldkoi'].stage === 'clue' && p.queue.log.some((i) => i.kind === 'unlock' && i.title === 'A clue'), 'finding the sign is the clue', 'clue not recorded');
+    const sy = p.state;
+    const ctx = fr.makeContext({ region: 'main', water: 'pond', hour: 7, weather: 'rain', season: 'spring', bait: 'bread', perks: new Set() });
+    let got = 0;
+    const r = rngm.createRng(3);
+    for (let i = 0; i < 25 && !got; i++) if (fr.rollSpecies(sy, ctx, r).species?.id === 'goldkoi') got = i + 1;
+    check(got > 0 && got <= 16, `with the clue, dawn rain and bread, the golden koi comes within ${got} casts`, 'the golden koi never came');
+    check(p.state.stats.secrets === 1 && jr.isStamped(p.state, 'secrets', 'main:clue-goldkoi'), 'secrets are stamped', 'secret not stamped');
+    check(jr.completion(p, 'secrets').total === Object.values(spc.REGIONS).reduce((n, x) => n + x.secrets, 0) + 1, 'the Secrets page counts every secret still hidden as ?', 'secret total wrong');
+  }
+
   console.log('Content validator');
   {
     const out = valid.validate({});

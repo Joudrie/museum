@@ -73,9 +73,12 @@
   "rank": 8,
   "rewards": [
    {
+    "unlock": "gear:lantern"
+   },
+   {
     "bait": [
-     "bread",
-     8
+     "glowbug",
+     6
     ]
    }
   ]
@@ -115,7 +118,10 @@
   "rank": 12,
   "rewards": [
    {
-    "cosmetic": "rodskin:bamboo"
+    "unlock": "gear:boots"
+   },
+   {
+    "gold": 120
    }
   ]
  },
@@ -173,10 +179,10 @@
   "rank": 18,
   "rewards": [
    {
-    "bait": [
-     "glowbug",
-     6
-    ]
+    "unlock": "gear:gloves"
+   },
+   {
+    "gold": 220
    }
   ]
  },

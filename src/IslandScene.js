@@ -39,12 +39,19 @@ import { blendAt } from './groundblend.js';
 import { IslandLife } from './progression/ui/islandlife.js';
 import { PlayerLook } from './progression/ui/lookfx.js';
 import { progression } from './progression/index.js';
-import { regionOfMap, REGIONS } from './progression/species.js';
+import { regionOfMap, REGIONS, speciesOfRegion } from './progression/species.js';
+import { regionAccess } from './progression/access.js';
 
 // Islands drawn in the map builder (builder.html), reached by boat from the
 // main island's dock. Each is a 'curation-map' file (see src/builder/main.js).
 // Main Island (drawn in the map builder) is home: the museum is there. Island
 // One is the first island, drawn in code; its museum doors stay shut.
+// what a locked island holds: how many fish, and the rarest kinds as "???" (a reason to want the way there)
+function lockedPreview(reg, prog) {
+  const list = speciesOfRegion(reg);
+  const left = list.filter((s) => !prog.state.fish.species[s.id]?.n).length;
+  return list.length ? `${left} fish you have not found live here: ${list.filter((s) => s.rarity >= 3).slice(0, 4).map(() => '???').join(' ')}` : '';
+}
 const MAPS = { main: mainIsland, 'isle-1': isle1, ...EXPEDITION_MAPS };
 
 // The main island is 24×40 tiles; the tile garden (see showcase.js) lies
@@ -1189,9 +1196,23 @@ export class IslandScene extends Phaser.Scene {
     const mine = builderIslands();
     mine.forEach((m) => m.name !== here && options.push({ label: m.name, sub: `Your island · ${m.w}×${m.h}`, go: { mapData: m } }));
     friendIslands().forEach((m) => m.name !== here && options.push({ label: m.name, sub: `A friend’s island · ${m.w}×${m.h}`, go: { mapData: m } }));
+    progression().firstHour.mark('chart'); // (looking at the chart counts for the first-hour script)
     const first = grantStartLeads()[0];
     if (first) this.toast(`${first.title}: read it under Letters`);
     expeditionOptions().forEach((o) => o.go.expedition !== this.exp?.def.id && options.push(o));
+    // every island is on the chart; the ones you cannot reach yet are locked and say what they need
+    const prog = progression();
+    options.forEach((o) => {
+      if (!o.go.map && !o.go.expedition) return;
+      const reg = regionOfMap(o.go.map || 'main');
+      const a = regionAccess(prog.state, reg);
+      if (!a.open) Object.assign(o, { locked: true, sub: a.need, preview: lockedPreview(reg, prog), onLocked: () => { prog.telemetry.track('paywall_view', { context: a.reason === 'sub' ? 'locked_dock' : 'rank_lock', region: reg }); this.toast(a.need); } });
+    });
+    Object.keys(REGIONS).forEach((reg) => {
+      if (reg === this.regionKey || options.some((o) => o.go.map && REGIONS[reg].maps.includes(o.go.map))) return;
+      const a = regionAccess(prog.state, reg);
+      options.push({ label: REGIONS[reg].name, sub: a.open ? 'Follow a lead to find the way' : a.need, locked: true, preview: lockedPreview(reg, prog), onLocked: () => this.toast(a.open ? 'Read your letters at the boat for a lead.' : a.need), go: {} });
+    });
     options.push({ label: 'Letters & leads', sub: `${foundLeads().length} found · letters, maps and rumours`, go: { leads: true } });
     this.paused = true;
     openSail(options, (pick) => {
@@ -1215,7 +1236,7 @@ export class IslandScene extends Phaser.Scene {
   // an expedition gets a short boat scene first
   setSail(go) {
     const e = go.expedition && EXPEDITIONS[go.expedition];
-    if (!e) return this.sailTo(go);
+    if (!e || progression().has('sailing.fast_travel')) return this.sailTo(go); // dock to dock (Sailing 12)
     this.paused = true;
     boatScene(e, () => this.sailTo(go));
   }
@@ -1227,7 +1248,7 @@ export class IslandScene extends Phaser.Scene {
     hideTalk();
     this.interactBtn.classList.add('hidden');
     sfx('door');
-    this.cameras.main.fadeOut(400, 20, 40, 70);
+    this.cameras.main.fadeOut(progression().has('sailing.speed2') ? 220 : progression().has('sailing.speed1') ? 320 : 400, 20, 40, 70); // faster crossings with Sailing 2 and 8
     this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start('island', go));
   }
 

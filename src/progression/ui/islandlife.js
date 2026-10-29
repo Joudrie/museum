@@ -7,6 +7,7 @@ import { runDialogue } from '../../dialogue.js';
 import { makeEmotes } from '../../art.js';
 import { namedConverse } from './talkflow.js';
 import { sfx } from '../../music.js';
+import { WorldLife } from './worldlife.js';
 
 const T = 32;
 
@@ -24,6 +25,7 @@ export class IslandLife {
     const info = REGIONS[scene.regionKey];
     if (info) this.p.bus.emit('LOCATION_DISCOVERED', { region: scene.regionKey, placeId: `${scene.regionKey}:island`, name: info.name });
     this.placeNamed();
+    scene.world = new WorldLife(scene); // fog, secrets, sparkles, viewpoints (src/progression/ui/worldlife.js)
     this.onNudge = (e) => this.nudge(e.detail);
     window.addEventListener('prog-nudge', this.onNudge);
     scene.events.once('shutdown', () => window.removeEventListener('prog-nudge', this.onNudge));
@@ -85,6 +87,7 @@ export class IslandLife {
 
   // people who know you wave: a close friend's own emote, and (with Familiar face) anyone's heart
   update(dt) {
+    s_world(this.scene, dt);
     this.t += dt;
     if (this.t < 1) return;
     this.t = 0;
@@ -122,4 +125,8 @@ export class IslandLife {
       sfx('plop');
     }
   }
+}
+
+function s_world(scene, dt) {
+  scene.world?.update(dt);
 }

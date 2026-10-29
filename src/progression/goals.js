@@ -68,6 +68,8 @@ export function installGoals(p) {
     pinnedOrAuto() {
       const pin = mod.pinned();
       if (pin) return { ...pin, auto: false };
+      const first = p.firstHour?.next();
+      if (first) return { ...first, pct: (100 * first.n) / first.of, auto: false };
       const here = p.where.region;
       const list = all().filter((g) => !g.done && g.group !== 'long' && (!g.region || g.region === here));
       if (!list.length) return all().filter((g) => g.group === 'long')[0] || null;

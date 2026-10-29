@@ -10,8 +10,22 @@ export function installActivity(p) {
   const mile = (page) => checkMilestones(p, page, (r) => grant(p, r, T)).forEach((m) => p.queue.push({ kind: 'milestone', page: m.page, pct: m.pct, rewards: m.rewards }));
   const has = (k) => p.perks().has(k);
 
-  bus.on('TILE_REVEALED', ({ region, count }) => {
+  bus.on('TILE_REVEALED', (ev) => {
+    const { region } = ev;
     const s = p.state;
+    let count = ev.count;
+    if (ev.chunks) {
+      // the world layer reports which chunks the player's walking has cleared; only new ones count
+      const seen = (s.world.chunks[region] ||= {});
+      count = 0;
+      ev.chunks.forEach((k) => {
+        if (!seen[k]) {
+          seen[k] = true;
+          count++;
+        }
+      });
+      if (!count) return;
+    }
     s.stats.chunks += count;
     p.xpQuiet(T.xp.chunk * count, 'map');
     p.skillXp('exploring', T.skills.gain.chunk * count, { silent: true });

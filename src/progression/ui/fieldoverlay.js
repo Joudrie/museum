@@ -12,7 +12,7 @@ import { uiIcon } from '../../ui/icons.js';
 
 let el = null;
 let tab = 'goals';
-const TABS = [{ id: 'goals', name: 'Goals' }, { id: 'fish', name: 'Fish' }, { id: 'shop', name: 'Market' }, { id: 'lodge', name: 'Lodge' }, ...PAGES.filter((p) => !['fish', 'curios'].includes(p.id)).map((p) => ({ id: p.id, name: p.name }))];
+const TABS = [{ id: 'goals', name: 'Goals' }, { id: 'fish', name: 'Fish' }, { id: 'shop', name: 'Market' }, { id: 'lodge', name: 'Lodge' }, { id: 'leads', name: 'Leads' }, ...PAGES.filter((p) => !['fish', 'curios'].includes(p.id)).map((p) => ({ id: p.id, name: p.name }))];
 
 function build() {
   el = document.createElement('div');

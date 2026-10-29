@@ -3,7 +3,7 @@
 import { progression } from '../index.js';
 import { PAGES, entriesOf, completion, hintLevel, hintPrice, buyHint, isStamped, markViewed, isNew, newCount, nearlyDone, regionFishProgress } from '../journal.js';
 import { COSMETICS } from '../grants.js';
-import { REGIONS, allSpecies, speciesById } from '../species.js';
+import { REGIONS, LEGENDS, allSpecies, speciesById, hintsFor } from '../species.js';
 import { registerTileHint } from '../../collections/tab.js';
 import { drawShadow } from '../../collections/render.js';
 import { sfx } from '../../music.js';
@@ -64,6 +64,27 @@ function people(p, refresh) {
 
 function listPage(p, page, label) {
   const nodes = [pageHead(p, page)];
+  if (page === 'places') {
+    // the island you are on: a small map with fog, how much you have uncovered, what you cannot reach yet
+    const w = window.__game?.scene.getScenes(true).find((sc) => sc.world)?.world;
+    if (w) {
+      const cov = w.coverage();
+      const box = el('div', 'pg-sec');
+      box.append(Object.assign(el('h3'), { textContent: `${w.info?.name || 'This island'} · ${cov.pct}% uncovered` }));
+      const cv = w.minimap();
+      cv.style.cssText = 'width:100%;max-width:264px;image-rendering:pixelated;border:3px solid var(--ui-shadow);display:block';
+      box.append(cv);
+      const gated = w.gated();
+      const left = (w.info?.secrets || 0) - Object.keys(p.state.world.secrets).filter((k) => k.startsWith(`${w.region}:`)).length;
+      box.append(Object.assign(el('p', 'pg-empty'), { textContent: left > 0 ? `${left} secret${left > 1 ? 's' : ''} still hidden here (shown as ?).` : 'Every secret here is found.' }));
+      gated.forEach((g) => {
+        const row = el('div', 'pg-row done');
+        row.append(el('b', '', `🔒 ${g.name}`), el('span', '', `Needs: ${g.needs}`));
+        box.append(row);
+      });
+      nodes.push(box);
+    }
+  }
   const entries = entriesOf(p, page);
   if (!entries.length) nodes.push(el('p', 'pg-empty', `Nothing yet. ${label}`));
   const grid = el('div', 'pg-grid');
@@ -167,6 +188,40 @@ function records(p) {
   return nodes;
 }
 
+function leads(p) {
+  const nodes = [];
+  const sec = el('div', 'pg-sec');
+  sec.append(Object.assign(el('h3'), { textContent: 'Leads' }));
+  sec.append(Object.assign(el('p', 'pg-empty'), { textContent: 'Rumours people tell you, and the trails of the legendary fish: a rumour, then a clue, then the right moment.' }));
+  const L = p.state.journal.leads;
+  let any = false;
+  Object.entries(L).forEach(([k, v]) => {
+    if (k.startsWith('legend:') && v.stage && v.stage !== 'none') {
+      any = true;
+      const id = k.slice(7);
+      const sp = speciesById(id);
+      const lg = LEGENDS[id];
+      const caught = p.state.fish.species[id]?.n;
+      const row = el('div', 'pg-row');
+      row.append(Object.assign(el('b', 'r5'), { textContent: caught ? sp.name : '???' }), el('span', '', caught ? 'Caught!' : v.stage === 'rumor' ? 'Rumour' : 'Clue found'));
+      row.append(el('small', '', lg.rumor));
+      if (v.stage === 'clue') row.append(el('small', '', `Clue: ${lg.clue.text}`), el('small', '', hintsFor(sp)[1] + ' ' + hintsFor(sp)[2]));
+      sec.appendChild(row);
+    } else if (k.startsWith('rumor:')) {
+      any = true;
+      const sp = speciesById(k.slice(6));
+      if (!sp) return;
+      const row = el('div', 'pg-row');
+      row.append(el('b', `r${sp.rarity}`, p.state.fish.species[sp.id]?.n ? sp.name : '???'), el('span', '', p.state.fish.species[sp.id]?.n ? 'Found' : 'Rumour'));
+      row.append(el('small', '', hintsFor(sp)[1]));
+      sec.appendChild(row);
+    }
+  });
+  if (!any) sec.appendChild(el('p', 'pg-empty', 'No leads yet. Say hello to people more than once.'));
+  nodes.push(sec);
+  return nodes;
+}
+
 /** One field-journal page: people, places, emotes, secrets, titles, records. */
 export function fieldPage(id, refresh) {
   const p = progression();
@@ -176,6 +231,7 @@ export function fieldPage(id, refresh) {
   if (id === 'emotes') return emotes(p);
   if (id === 'titles') return titles(p, refresh);
   if (id === 'records') return records(p);
+  if (id === 'leads') return leads(p);
   return [];
 }
 
@@ -255,7 +311,6 @@ export function installFishHints() {
     },
   });
 }
-import { hintsFor } from '../species.js';
 const spHints = (sp) => hintsFor(sp);
 
 /** Extra nodes above the fish log: the nearest finish lines (goal gradient) and each region's progress. */

@@ -108,13 +108,33 @@ const check = (c, good, bad) => (c ? ok(good) : fail(bad));
     await S(() => document.querySelector('#chat').classList.add('hidden'));
   }
 
+  console.log('The world');
+  const w = await S(() => { const sc = __game.scene.getScene('island'); const wl = sc.world; return { secrets: wl.secrets.length, views: wl.views.length, sparkles: wl.sparkles.length, clue: wl.secrets.some((x) => x.clue), locked: wl.gated().length }; });
+  check(w.secrets === 12 && w.views === 2 && w.sparkles >= 3, `Main Island has 12 secrets, 2 viewpoints and ${w.sparkles} sparkles today`, 'world content: ' + JSON.stringify(w));
+  check(w.clue, 'one secret is the clue to the island\'s legend', 'no clue secret');
+  const walk = await S(() => { const sc = __game.scene.getScene('island'); const sp = sc.world.sparkles[0]; sc.player.setPosition(sp.x, sp.y); return __prog.state.stats.foraged; });
+  await wait(600);
+  check((await S(() => __prog.state.stats.foraged)) === walk + 1, 'walking over a sparkle picks it up', 'sparkle not picked up');
+  await S(() => { const sc = __game.scene.getScene('island'); const sc0 = sc.world.secrets.find((x) => !x.needs); sc.player.setPosition(sc0.x, sc0.y); });
+  await wait(600);
+  check((await S(() => __prog.state.stats.secrets)) >= 1, 'walking onto a secret finds it', 'secret not found');
+  const chunks = await S(() => { const sc = __game.scene.getScene('island'); sc.player.setPosition(sc.tilesW * 16, sc.tilesH * 16); return 0; });
+  await wait(700);
+  check((await S(() => __prog.state.stats.chunks)) > 0, 'walking clears the fog (map chunks are counted)', 'no chunks revealed');
+  const mm = await S(() => { const c = __game.scene.getScene('island').world.minimap(); return [c.width, c.height]; });
+  check(mm[0] > 0, 'the island draws a fogged minimap for the Places page', 'no minimap');
+  const lockedDocks = await S(() => { __game.scene.getScene('island').sail(); return [...document.querySelectorAll('#sail .sail-dest.locked')].map((b) => b.textContent); });
+  check(lockedDocks.length >= 3 && lockedDocks.some((t) => /Needs|Buy|Subscriber/.test(t)), `the boat shows ${lockedDocks.length} locked islands with what they need`, 'no locked docks: ' + lockedDocks);
+  await S(() => document.querySelector('#sail .sail-stay').click());
+  await wait(300);
+
   console.log('Field journal');
   await S(() => { __game.scene.getScene('island').paused = false; });
   await S(() => window.dispatchEvent(new CustomEvent('open-field', { detail: 'goals' })));
   await wait(500);
   check(await vis('#field-journal'), 'the field journal opens', 'field journal closed');
   const tabs = await S(() => [...document.querySelectorAll('#field-journal .pg-tabs button')].map((x) => x.dataset.fj));
-  check(tabs.join() === 'goals,fish,shop,lodge,people,places,emotes,secrets,titles,records', 'goals and every page have a tab', 'tabs: ' + tabs);
+  check(tabs.join() === 'goals,fish,shop,lodge,leads,people,places,emotes,secrets,titles,records', 'goals and every page have a tab', 'tabs: ' + tabs);
   check((await S(() => document.querySelectorAll('#field-journal .pg-row').length)) >= 3, 'the goals tab lists goals', 'no goals');
   for (const t of tabs) {
     await S((id) => document.querySelector(`#field-journal [data-fj="${id}"]`).click(), t);
