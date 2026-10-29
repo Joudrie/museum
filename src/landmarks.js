@@ -4,6 +4,7 @@
 import { T, OUT, draw } from './tiles.js';
 import { makePet, PET_COLORS } from './pets.js';
 import { critterTextures } from './critters.js';
+import { addPeople } from './people/index.js';
 
 // how far each kind of person strays from their spot, in tiles
 export const PEOPLE = { person: 0, person_wander: 3, person_roam: 7 };
@@ -150,4 +151,5 @@ export function addLandmarks(add) {
   add('person', personCanvas('#c0392b'), { group: 'People', label: 'Stays put', h: 48, walk: 'person' });
   add('person_wander', personCanvas('#2e7d7a', 'rgba(232,200,103,0.35)'), { group: 'People', label: 'Wanders a little', h: 48, walk: 'person' });
   add('person_roam', personCanvas('#3d6fb6', 'rgba(232,200,103,0.6)'), { group: 'People', label: 'Wanders a lot', h: 48, walk: 'person' });
+  addPeople(add); // janitors, builders, fishermen... (people/classes.js)
 }

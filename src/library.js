@@ -2,6 +2,8 @@
 // looks, famous visitors, pets, decor items, creatures and emotes), so the
 // whole art set can be reviewed at a glance. Island tiles are on tiles.html.
 import { makeCharacter, makeEmotes, bakeItem, bakePlant, HATS, FACIAL, GLASSES, HAIRSTYLES, OUTFITS, ACCESSORIES } from './art.js';
+import { BUILDS, LEGS, FEET, CARRY, GROUND, BUDDIES, POSES } from './people/parts.js';
+import { CLASSES, GROUPS, PEOPLE_LIST, personFor } from './people/index.js';
 import { ITEMS, CATEGORIES } from './items.js';
 import { FAMOUS } from './famous.js';
 import { makePet, PETS, PET_COLORS } from './pets.js';
@@ -77,6 +79,29 @@ const tabs = {
     section('Facial hair', Object.entries(FACIAL).filter(([id]) => id !== 'none').map(([id, l]) => char(l, { facial: id })));
     section('Glasses', Object.entries(GLASSES).filter(([id]) => id !== 'none').map(([id, l]) => char(l, { glasses: id })));
     section('Poses', [char('Walking (front)', {}, {}, ['down', 'down_1', 'down', 'down_2']), char('Walking (side)', {}, {}, ['side', 'side_1']), char('Phone & sitting', {}, {}, ['phone', 'sit'])]);
+    section('Builds', Object.entries(BUILDS).map(([id, l]) => char(l, { build: id })));
+    section('Legs and feet', [...Object.entries(LEGS).filter(([id]) => id !== 'trousers').map(([id, l]) => char(l, { legs: id })), ...Object.entries(FEET).filter(([id]) => id !== 'shoes').map(([id, l]) => char(l, { feet: id }))]);
+    section('Things people carry', Object.entries(CARRY).map(([id, l]) => char(l, { carry: id }, {}, ['down', 'side', 'up', 'side_1'])));
+    section('Things set down', Object.entries(GROUND).map(([id, l]) => char(l, { ground: id }, {}, ['down', 'side'])));
+    section('On the shoulder', Object.entries(BUDDIES).map(([id, l]) => char(l, { buddy: id })));
+    section('Work poses', Object.entries(POSES).map(([id, l]) => char(l, { pose: id }, {}, ['pose_0', 'pose_1'])));
+  },
+  // every class and variant: one person's frames, then three more rolled people
+  people() {
+    Object.entries(GROUPS).forEach(([g, title]) => {
+      const list = PEOPLE_LIST.filter((p) => p.cls.group === g);
+      section(`${title} · ${Object.values(CLASSES).filter((c) => c.group === g).length} classes`, list.map((p) => {
+        const keys = [];
+        [0, 1, 2, 3].forEach((n) => {
+          const one = personFor(p.id, (k) => ((Math.sin((n + 1) * 91.7 + k * 12.9898) * 43758.5453) % 1 + 1) % 1);
+          const key = `pp_${p.tile}_${n}`;
+          makeCharacter(scene, key, one.colors, one.look);
+          if (n === 0) keys.push(...(one.pose ? ['pose_0', 'pose_1', 'down', 'side'] : ['down', 'side', 'up', 'side_1']).map((v) => `${key}_${v}`));
+          else keys.push(`${key}_${one.pose ? 'pose_0' : 'down'}`);
+        });
+        return card(p.label, keys, `t:${p.tile}`);
+      }));
+    });
   },
   famous() {
     section('Famous visitors', Object.entries(FAMOUS).map(([id, f]) => {

@@ -245,6 +245,11 @@ island scene streams ground chunks around the player.
   ERR_STRING_TOO_LONG. Wrap calls in `{ ...; }`.
 - **iOS Safari ignores `user-scalable=no`.** Use `touch-action` instead.
 
+### People sprites (Chat 17: `src/people/`, plan in `docs/PEOPLE-SPRITES.md`)
+- **Parts** (`src/people/parts.js`, merged into the menus in `art.js`): 23 more hats, 16 hairstyles, 7 facial hair, 6 glasses, 21 outfits, 12 accessories, legs (shorts, rolled, tall boots, peg leg), bare feet, 4 builds, 67 things to carry, 26 things to set down, a parrot or gull on the shoulder, and 46 two-frame work poses (`<prefix>_pose_0/1`; kneeling ones too). They draw after the first looks, so **old looks are pixel-identical**; `personRows(view, look, frame)` and `poseRows(look)` in `art.js` give the rows. The creator offers them too (Build, Legs, Feet, Hat trim).
+- **Classes** (`src/people/classes.js`, data): 98 jobs in 227 variants so far (cleaning & grounds, builders & trades, sea & shore, dig & expedition, museum jobs), each a builder piece `t:npc_<class>_<variant>` in the People lists. `personFor(id, seed)` rolls skin, hair, build and the class colors per person; a variant with a pose or a thing set down stays put and works, the rest wander. On islands they loop their pose, look up at you to chat, and talk with their job title and own lines. Previews draw one frame lazily (the game never builds them; the builder reads a piece's picture only when it draws it, so its start time is unchanged).
+- Gallery: `art.html` → People. Test: `node tests/people-sprites.cjs` (in `npm test`). The builder hides groups with "on " in the name, so group labels must avoid it.
+
 ### Art swap and placeholder list (Chat 15)
 - **Drop-in swap:** a PNG with the same name as a placeholder, put in `public/swap/` (`tiles/<name>.png`, `sprites/<name>.png`, `pieces/<group>/<n>.png`), overrides it with no code change. See `public/swap/README.md`. Code: `src/swap.js`; `vite.config.js` writes `swap/index.json`; `src/boot.js` waits for it before the game starts. A wrong-size file is ignored with a console warning.
 - **Placeholder list:** `node tools/list_placeholders.mjs` (add `--md` to rewrite `docs/PLACEHOLDERS.md`) lists every tile, room sprite and builder piece by name, size and where it's used, and marks swapped ones. Needs playwright (`PW=` path).
