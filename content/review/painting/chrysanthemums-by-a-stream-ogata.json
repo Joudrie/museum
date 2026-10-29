@@ -1,0 +1,113 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "chrysanthemums-by-a-stream-ogata",
+  "notes": "region: Japan",
+  "entry": {
+    "id": "painting:chrysanthemums-by-a-stream-ogata",
+    "collection": "painting",
+    "title": "Chrysanthemums by a Stream",
+    "by": "Ogata Kōrin",
+    "year": "c. 1715–30 or later",
+    "era": "baroque",
+    "ratio": 2.2665,
+    "blurb": "These screens recall a painting style so closely identified with Ogata Kōrin (1658–1716) that it is called Rinpa, or “Rin School,” after the ideograph “rin” in his name.",
+    "rarity": 1,
+    "tags": [
+      "japan",
+      "ink"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1958.206/1958.206_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Gift of the Hanna Fund",
+      "url": "https://clevelandart.org/art/1958.206"
+    },
+    "value": 5,
+    "facts": [
+      "The signature used on these screens can perhaps indicate paintings made in the last year of the artist's life, or works completed by his studio after his death.",
+      "The highly stylized background accentuates floral groupings that have been groomed so as to appear utterly artificial, like the synthetic arrangements available today.",
+      "In both scenarios, the lion’s share of the work would have been done by studio assistants, but little is truly known of his studio practice."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "135180",
+    "title": "Chrysanthemums by a Stream",
+    "maker": "Ogata Kōrin",
+    "year": "c. 1715–30 or later",
+    "medium": "Pair of six-panel folding screens; ink and color on gilded paper",
+    "dimensions": "Overall: 163.2 x 369.9 cm (64 1/4 x 145 5/8 in.)",
+    "widthCm": 369.9,
+    "heightCm": 163.2,
+    "ratio": 2.2665,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1958.206/1958.206_web.jpg",
+    "imageWidth": 900,
+    "imageHeight": 822,
+    "pageUrl": "https://clevelandart.org/art/1958.206",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Gift of the Hanna Fund",
+    "description": "These screens recall a painting style so closely identified with Ogata Kōrin (1658–1716) that it is called Rinpa, or “Rin School,” after the ideograph “rin” in his name. The highly stylized background accentuates floral groupings that have been groomed so as to appear utterly artificial, like the synthetic arrangements available today. Kōrin's genius derived in large measure from natural phenomena painstakingly observed and then manipulated to create compositions of startling refinement and sparkling isolation. This process may have grown out of Kōrin's early immersion in the family textile business, a medium that encourages such dramatic distillations of form: the stream's gold-crested waves bring to mind traditional kimono robe designs of Kōrin's era. Works with the signature seen on this painting, including a style name, or persona suggested to Kōrin by his brother Kenzan (1663–1743), are sometimes considered to have been produced either in the last year of his life, when he was very ill, or after his death. In both scenarios, the lion’s share of the work would have been done by studio assistants, but little is truly known of his studio practice. Given the regularity of the gold waves on the stream, and the tension in the arrangement of the chrysanthemums, it is also possible that the screens were made in emulation of Kōrin's designs by a later artist. The signature used on these screens can perhaps indicate paintings made in the last year of the artist's life, or works completed by his studio after his death.",
+    "culture": "Japan, Edo period (1615–1868)",
+    "classification": "Painting",
+    "tags": [
+      "Japanese Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Chrysanthemums by a Stream",
+      "maker": "Ogata Kōrin",
+      "year": "c. 1715–30 or later",
+      "medium": "Pair of six-panel folding screens; ink and color on gilded paper",
+      "dimensions": "Overall: 163.2 x 369.9 cm (64 1/4 x 145 5/8 in.)",
+      "culture": "Japan, Edo period (1615–1868)",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Gift of the Hanna Fund",
+      "description": "These screens recall a painting style so closely identified with Ogata Kōrin (1658–1716) that it is called Rinpa, or “Rin School,” after the ideograph “rin” in his name. The highly stylized background accentuates floral groupings that have been groomed so as to appear utterly artificial, like the synthetic arrangements available today. Kōrin's genius derived in large measure from natural phenomena painstakingly observed and then manipulated to create compositions of startling refinement and sparkling isolation. This process may have grown out of Kōrin's early immersion in the family textile business, a medium that encourages such dramatic distillations of form: the stream's gold-crested waves bring to mind traditional kimono robe designs of Kōrin's era. Works with the signature seen on this painting, including a style name, or persona suggested to Kōrin by his brother Kenzan (1663–1743), are sometimes considered to have been produced either in the last year of his life, when he was very ill, or after his death. In both scenarios, the lion’s share of the work would have been done by studio assistants, but little is truly known of his studio practice. Given the regularity of the gold waves on the stream, and the tension in the arrangement of the chrysanthemums, it is also possible that the screens were made in emulation of Kōrin's designs by a later artist. The signature used on these screens can perhaps indicate paintings made in the last year of the artist's life, or works completed by his studio after his death.",
+      "tombstone": "Chrysanthemums by a Stream, c. 1715–30 or later. Possibly by Ogata Kōrin (Japanese, 1658–1716). Pair of six-panel folding screens; ink and color on gilded paper; overall: 163.2 x 369.9 cm (64 1/4 x 145 5/8 in.). The Cleveland Museum of Art, Gift of the Hanna Fund, 1958.206",
+      "funFact": "",
+      "didYouKnow": "The signature used on these screens can perhaps indicate paintings made in the last year of the artist's life, or works completed by his studio after his death.",
+      "creators": "Ogata Kōrin (Japanese, 1658–1716)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "These screens recall a painting style so closely identified with Ogata Kōrin (1658–1716) that it is called Rinpa, or “Rin School,” after the ideograph “rin” in his name.",
+      "quote": "These screens recall a painting style so closely identified with Ogata Kōrin (1658–1716) that it is called Rinpa, or “Rin School,” after the ideograph “rin” in his name.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The signature used on these screens can perhaps indicate paintings made in the last year of the artist's life, or works completed by his studio after his death.",
+      "quote": "The signature used on these screens can perhaps indicate paintings made in the last year of the artist's life, or works completed by his studio after his death.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The highly stylized background accentuates floral groupings that have been groomed so as to appear utterly artificial, like the synthetic arrangements available today.",
+      "quote": "The highly stylized background accentuates floral groupings that have been groomed so as to appear utterly artificial, like the synthetic arrangements available today.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "In both scenarios, the lion’s share of the work would have been done by studio assistants, but little is truly known of his studio practice.",
+      "quote": "In both scenarios, the lion’s share of the work would have been done by studio assistants, but little is truly known of his studio practice.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

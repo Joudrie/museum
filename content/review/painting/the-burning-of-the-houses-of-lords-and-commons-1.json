@@ -1,0 +1,113 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "the-burning-of-the-houses-of-lords-and-commons-1",
+  "notes": "region: England, 1835",
+  "entry": {
+    "id": "painting:the-burning-of-the-houses-of-lords-and-commons-1",
+    "collection": "painting",
+    "title": "The Burning of the Houses of Lords and Commons, 16 October 1834",
+    "by": "Joseph Mallord William Turner",
+    "year": "1835",
+    "era": "romantic",
+    "ratio": 1.3391,
+    "blurb": "Turner painted two versions of this event.",
+    "rarity": 1,
+    "tags": [
+      "england",
+      "oil"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1942.647/1942.647_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Bequest of John L. Severance",
+      "url": "https://clevelandart.org/art/1942.647"
+    },
+    "value": 5,
+    "facts": [
+      "Initially, a low tide made it difficult to pump water to land and hampered steamers towing firefighting equipment along the river.",
+      "Turner records the struggle as the boats in the lower-right corner head toward the flames.",
+      "Brilliant swathes of color and variable atmospheric effects border on abstraction."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "122351",
+    "title": "The Burning of the Houses of Lords and Commons, 16 October 1834",
+    "maker": "Joseph Mallord William Turner",
+    "year": "1835",
+    "medium": "oil on canvas",
+    "dimensions": "Framed: 123.5 x 153.5 x 12 cm (48 5/8 x 60 7/16 x 4 3/4 in.); Unframed: 92 x 123.2 cm (36 1/4 x 48 1/2 in.)",
+    "widthCm": 123.2,
+    "heightCm": 92,
+    "ratio": 1.3391,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1942.647/1942.647_web.jpg",
+    "imageWidth": 900,
+    "imageHeight": 668,
+    "pageUrl": "https://clevelandart.org/art/1942.647",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Bequest of John L. Severance",
+    "description": "Fire consumed London’s famous Houses of Parliament on the night of October 16, 1834, and people gathered along the banks of the river Thames to gaze in awe at the horrifying spectacle. Initially, a low tide made it difficult to pump water to land and hampered steamers towing firefighting equipment along the river. The blaze burned uncontrollably for hours. J. M. W. Turner records the struggle as the boats in the lower-right corner head toward the flames. Although Turner based the painting on an actual event, he magnified the height of the flames, using the disaster as the starting point to express man’s helplessness when confronted with the destructive powers of nature. Brilliant swathes of color and variable atmospheric effects border on abstraction. Turner painted two versions of this event. Cleveland's painting views the fire downriver, from the southeast bank of the Thames, while the second version at the Philadelphia Museum of Art views the fire from directly across Westminster Bridge.",
+    "culture": "England, 19th century",
+    "classification": "Painting",
+    "tags": [
+      "Modern European Painting and Sculpture"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "The Burning of the Houses of Lords and Commons, 16 October 1834",
+      "maker": "Joseph Mallord William Turner",
+      "year": "1835",
+      "medium": "oil on canvas",
+      "dimensions": "Framed: 123.5 x 153.5 x 12 cm (48 5/8 x 60 7/16 x 4 3/4 in.); Unframed: 92 x 123.2 cm (36 1/4 x 48 1/2 in.)",
+      "culture": "England, 19th century",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Bequest of John L. Severance",
+      "description": "Fire consumed London’s famous Houses of Parliament on the night of October 16, 1834, and people gathered along the banks of the river Thames to gaze in awe at the horrifying spectacle. Initially, a low tide made it difficult to pump water to land and hampered steamers towing firefighting equipment along the river. The blaze burned uncontrollably for hours. J. M. W. Turner records the struggle as the boats in the lower-right corner head toward the flames. Although Turner based the painting on an actual event, he magnified the height of the flames, using the disaster as the starting point to express man’s helplessness when confronted with the destructive powers of nature. Brilliant swathes of color and variable atmospheric effects border on abstraction. Turner painted two versions of this event. Cleveland's painting views the fire downriver, from the southeast bank of the Thames, while the second version at the Philadelphia Museum of Art views the fire from directly across Westminster Bridge.",
+      "tombstone": "The Burning of the Houses of Lords and Commons, 16 October 1834, 1835. Joseph Mallord William Turner (British, 1775–1851). Oil on canvas; framed: 123.5 x 153.5 x 12 cm (48 5/8 x 60 7/16 x 4 3/4 in.); unframed: 92 x 123.2 cm (36 1/4 x 48 1/2 in.). The Cleveland Museum of Art, Bequest of John L. Severance, 1942.647",
+      "funFact": "",
+      "didYouKnow": "Turner painted two versions of this event. Cleveland's painting views the fire downriver, from the southeast bank of the Thames, while the second version at the Philadelphia Museum of Art views the fire from directly across Westminster Bridge.",
+      "creators": "Joseph Mallord William Turner (British, 1775–1851)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "Turner painted two versions of this event.",
+      "quote": "Turner painted two versions of this event.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Initially, a low tide made it difficult to pump water to land and hampered steamers towing firefighting equipment along the river.",
+      "quote": "Initially, a low tide made it difficult to pump water to land and hampered steamers towing firefighting equipment along the river.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Turner records the struggle as the boats in the lower-right corner head toward the flames.",
+      "quote": "Turner records the struggle as the boats in the lower-right corner head toward the flames.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Brilliant swathes of color and variable atmospheric effects border on abstraction.",
+      "quote": "Brilliant swathes of color and variable atmospheric effects border on abstraction.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}
