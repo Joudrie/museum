@@ -544,3 +544,21 @@ body:has(#viewer:not(.hidden)) #prog-pill {
   visibility: hidden;
   pointer-events: none;
 }
+
+/* ---- the Field Journal's page tabs: twelve of them, as an even grid of 44 px buttons ---- */
+body .pg-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-3);
+}
+body .pg-tabs button {
+  min-height: var(--ui-hit);
+  padding: 4px 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+body .pg-row button { min-height: var(--ui-hit); min-width: var(--ui-hit); padding: 6px 12px; }
+body .pg-cell { font-size: var(--fs-small); }
+body #talk .talk-who { font-size: var(--fs-small); }
