@@ -3,7 +3,8 @@
 import { load, save } from './storage.js';
 import { paintingsFor } from './rooms.js';
 import { ITEMS, loadItems } from './items.js';
-import { dirtCount, DIRT_PENALTY, guides, GUIDE_BOOST } from './staff.js';
+import { dirtCount, DIRT_PENALTY, guides, guideBoost, hasCarpenter, upgradeValue } from './staff.js';
+import { OFFLINE_CAP_H as CAP, PAINTING_INCOME as PAINT, VISITORS, COFFEE_VISITORS_PER_GOLD } from './economy.js';
 import { museumRating } from './rating.js';
 import { famousBoost } from './famous.js';
 import { loveBoost } from './love.js';
@@ -12,8 +13,8 @@ const COINS_KEY = 'curation.coins';
 const PILES_KEY = 'curation.piles'; // { [roomIndex]: { t, b } }
 
 export const START_COINS = 300;
-export const PAINTING_INCOME = 5;
-export const OFFLINE_CAP_H = 8;
+export const PAINTING_INCOME = PAINT;
+export const OFFLINE_CAP_H = CAP;
 const HOUR = 3600 * 1000;
 
 export function coins() {
@@ -51,15 +52,15 @@ export function museumVisitors(rooms) {
     loadItems(i).forEach((it) => (decor += ITEMS[it.type]?.income || 0));
   });
   // A well-rated museum draws more people: 0.6x at a score of 0, 1.4x at 100.
-  return Math.round((50 + paintings * 150 + decor * 25) * (0.6 + (0.8 * museumRating(rooms)) / 100));
+  return Math.round((VISITORS.base + paintings * VISITORS.perPainting + decor * VISITORS.perDecor) * (VISITORS.ratingLow + (VISITORS.ratingSpan * museumRating(rooms)) / 100));
 }
 
 // A coffee counter earns 1 gold an hour per 100 monthly visitors.
-export const coffeeIncome = (rooms) => Math.round(museumVisitors(rooms) / 100);
+export const coffeeIncome = (rooms) => Math.round(museumVisitors(rooms) / COFFEE_VISITORS_PER_GOLD);
 
 // What a room's income is multiplied by: dirt cuts it, famous visitors raise it.
 // Tour guides raise it too, and so does visitor love.
-const roomMult = (rooms, i) => (1 - DIRT_PENALTY * dirtCount(rooms, i)) * famousBoost() * (1 + GUIDE_BOOST * guides()) * loveBoost(i);
+const roomMult = (rooms, i) => (1 - DIRT_PENALTY * dirtCount(rooms, i)) * famousBoost() * (1 + guideBoost() * guides()) * loveBoost(i);
 
 // Gold per hour from one painting, and from a room's decor (items + coffee).
 const artRate = (rooms, i) => PAINTING_INCOME * roomMult(rooms, i);
@@ -179,7 +180,8 @@ export function collectAll(rooms) {
 const SIZE_COST = { short: 1, medium: 1.5, long: 2.2 };
 export function roomCost(count, orient, size) {
   const k = SIZE_COST[size] * (orient === 'square' ? 1.8 : 1);
-  return Math.round((150 * 1.8 ** (count - 1) * k) / 10) * 10;
+  const off = hasCarpenter() ? 1 - upgradeValue('toolbox') : 1; // the carpenter's toolbox
+  return Math.round((150 * 1.8 ** (count - 1) * k * off) / 10) * 10;
 }
 
 // Selling an item gives half its price back.
