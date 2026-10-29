@@ -153,7 +153,7 @@ Owns: `src/staffmenu.js`, `src/officemenu.js`, `src/office.js`, `src/incomemenu.
 - [ ] ON HOLD (needs the user): gems as time (skip construction, "X days of income"), rewarded ads, cosmetics, a seasonal exhibition pass, crates with odds and pity. Rule: **no pay-to-win; never a gem or crate economy as the core.**
 
 ## CHAT 13: Share, visit and retention
-Owns: new `src/share*.js`, `src/daily.js`. Claim: `open`
+Owns: new `src/share*.js`, `src/daily.js`. Claim: `claimed: 2026-10-29`
 - [ ] Export a museum as a link; a short tour image strip or clip; "rate my museum" screenshot card.
 - [ ] Visit a friend's museum asynchronously (no multiplayer server); friends' islands in the boat picker (the map format is shareable).
 - [ ] Daily wheel spin, first-game-of-the-day and streak bonuses, daily guests, Painting of the Day surfaced in the UI.
