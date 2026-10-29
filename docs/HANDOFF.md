@@ -72,7 +72,7 @@ Scenes (`src/main.js`):
   `index.html?play=1`. That starts the game on it, with a "← Builder" button.
 - The user's recovered island seeds once as "Recovered island" (`src/builder/recovered.json`).
 
-- **Palette search, favourites, recents (#104):** search box at the top of the palette (matches label, group and ref), a ★ in the
+- **Palette search, favourites, recents (#117):** search box at the top of the palette (matches label, group and ref), a ★ in the
   chosen bar, "Favourites" and "Recently used" rows (`curation.mapbuilder.favs` / `.recent`, convenience only).
 - **Turn families:** `tools/rotation_sheet.py <sheet> <from> <to>` draws a labelled contact sheet to check sets by eye. Done so far:
   the four armchair colours (front, left, back, right). Colour blocks repeat at fixed offsets but never auto-group; look first.
