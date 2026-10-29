@@ -137,6 +137,12 @@ Scenes (`src/main.js`):
   49 paintings** (no network here); `content/batches/first-batch.json` (12 works, 9+ regions) is waiting to be built.
 - Test: `node tests/content.cjs` (no browser, no network).
 
+### Story and leads (Chat 10)
+- `src/story.js` tells the next chapter of an arc or a famous visitor's chain when its condition is met; data is in `src/stories/` (`heist.js`, `chains.js`). State: `curation.story` `{done:{beatId:true}}`.
+- **The Empty Frames** (heist arc): Edmund tells 5 chapters of the real 1990 Gardner theft. Every line has the museum's quoted sentence; `node tests/people.cjs --live` checks each quote is still on its source page.
+- **Chains** for Vermeer, Rembrandt, Hokusai: talk to them again after each ask is met (hang their painting, meet more visitors). Add a visitor = add an entry in `chains.js`.
+- **Hook for expeditions (Chat 7):** finished beats with a `lead` append `{id, text, from, at}` to `curation.leads_offered` (`leadsOffered()` in `story.js`). Chat 7 reads that list and starts the trip. Ids so far: `heist-hideout`, `sphinx-letter`, `studio-chest`, `last-scrolls`.
+
 ### Display: fixtures that hold collection entries (Chat 5)
 - A fixture is a decor item with a `fixture` block in `src/items.js` (kind, `accepts` display tags, `slots`). Today: easel, plinth, glass case,
   specimen shelf, aquarium, giant tank. Placed fixtures get a stable id `d`; `curation.display` = `{ [d]: [entryId] }` (`src/display.js`, Node-safe).
