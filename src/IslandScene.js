@@ -166,6 +166,7 @@ export class IslandScene extends Phaser.Scene {
 
     this.boats = [];
     this.talkingTo = null;
+    this.bubbleNpc = null;
     this.chatHandle = null;
     this.islanders = []; // people and animals living on a builder island
     this.door = this.map ? null : DOOR; // a museum's front doors
@@ -1368,8 +1369,39 @@ export class IslandScene extends Phaser.Scene {
 
   // A real conversation, like the museum's visitors have (src/chatter.js): their first line
   // is about today, then topics, jokes, tips and now and then a gift.
+  // Named townsfolk (src/people/classes.js) say one of their own lines about their job, in a bubble
+  // over their head; talking again, walking off or tapping it puts it away.
+  sayOwnLine(n) {
+    if (talking() && this.bubbleNpc === n) return hideTalk();
+    n.chat?.cancel();
+    const knows = remember(n.name, n.kind);
+    const rare = rareFor(n.name, n.kind);
+    const line = rare?.line || knows || n.lines[Math.floor(Math.random() * n.lines.length)];
+    n.talking = true;
+    n.target = null;
+    n.after = null;
+    n.prevFace = { key: n.s.texture.key, flip: n.s.flipX };
+    this.bubbleNpc = n;
+    this.faceNpc(n, this.player.x, this.player.y);
+    sfx('talk');
+    if (rare) popEmote(this, n, rare.mood);
+    showTalk(n.name, n.title || 'Islander', line, this.speakerAt(n.s), undefined, () => Math.hypot(this.player.x - n.s.x, this.player.y - n.s.y) > 70);
+  }
+
+  // (the bubble is gone: they get back to work, and look back where they were looking)
+  releaseBubbleNpc() {
+    const n = this.bubbleNpc;
+    this.bubbleNpc = null;
+    n.talking = false;
+    n.wait = 1500;
+    const f = n.prevFace;
+    n.prevFace = null;
+    if (f && n.s.active && !n.target) n.s.setTexture(f.key).setFlipX(f.flip);
+  }
+
   talkTo(n) {
     if (this.chatHandle) return;
+    if (n.lines && !n.animal) return this.sayOwnLine(n);
     n.chat?.cancel();
     const store = { get: load, set: save };
     const { giftOK, given } = giftStatus(n.name, n.kind, store);
@@ -1566,7 +1598,7 @@ export class IslandScene extends Phaser.Scene {
     if (f.puzzle) return { lever: 'Pull', rock: 'Smash', riddler: 'Ask', boulder: 'Reset', x: 'Dig', buried: 'Dig' }[f.kind] || 'Look';
     if (f.thing) return f.thing.name === 'chest' ? 'Open' : 'Read';
     if (f.dig) return 'Dig';
-    if (f.npc) return this.talkingTo === f.npc ? 'Bye' : 'Talk';
+    if (f.npc) return this.talkingTo === f.npc || (talking() && this.bubbleNpc === f.npc) ? 'Bye' : 'Talk';
     if (f.animal || f.pet) return 'Pet';
     if (f.boat) return 'Sail';
     if (f.door || f.cottage) return 'Enter';
@@ -1849,6 +1881,7 @@ export class IslandScene extends Phaser.Scene {
     const dt = Math.min(dtMs, 50) / 1000;
     this.fishing.update(dt);
     this.prints.update();
+    if (this.bubbleNpc && !talking()) this.releaseBubbleNpc();
     this.moveIslanders(dt);
     this.tells.update(dt, this.islanders, this.cameras.main.worldView);
     this.socializeIslanders(dt);
