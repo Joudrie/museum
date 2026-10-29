@@ -174,6 +174,25 @@ const SFX = {
   quest: (t) => [659, 880, 1319].forEach((f, i) => tone(f, t + i * 0.09, 0.28, { gain: 0.24 })),
 };
 
+// Distant thunder: a long low rumble of filtered noise.
+SFX.thunder = (t) => {
+  const src = ctx.createBufferSource();
+  src.buffer = noiseBuffer();
+  const f = ctx.createBiquadFilter();
+  f.type = 'lowpass';
+  f.frequency.setValueAtTime(380, t);
+  f.frequency.exponentialRampToValueAtTime(70, t + 2.4);
+  const g = ctx.createGain();
+  g.gain.setValueAtTime(0, t);
+  g.gain.linearRampToValueAtTime(0.9, t + 0.15);
+  g.gain.exponentialRampToValueAtTime(0.001, t + 2.6);
+  src.connect(f);
+  f.connect(g);
+  g.connect(sfxBus);
+  src.start(t, Math.random());
+  src.stop(t + 2.7);
+};
+
 export function sfx(name) {
   if (!ctx || ctx.state !== 'running' || muted || !SFX[name]) return;
   SFX[name](ctx.currentTime + 0.01);

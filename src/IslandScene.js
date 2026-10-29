@@ -10,8 +10,8 @@ import { DEFAULT_CHARACTER } from './decor.js';
 import { showTalk, hideTalk, talking } from './talk.js';
 import { iconSvg } from './icons.js';
 import { sfx, setTrack, setAmbience } from './music.js';
-import { Weather, weatherToday, season, holiday } from './weather.js';
-import { ambientAt, makeTextures as lightTextures } from './lighting.js';
+import { Weather, weatherToday, season, holiday, stormRumble } from './weather.js';
+import { ambientAt, overcast, makeTextures as lightTextures } from './lighting.js';
 import { Critters } from './critters.js';
 import { Ambient } from './ambient.js';
 import { seasonFrames, seasonTile, TILE_LIGHTS } from './scenery.js';
@@ -179,6 +179,7 @@ export class IslandScene extends Phaser.Scene {
     this.seasonal();
     this.setupCamera();
     this.weather = new Weather(this, this.weatherKind);
+    stormRumble(this, this.weatherKind);
     if (this.weatherKind === 'rain') this.makePuddles();
     this.setupInput();
     this.time.addEvent({ delay: STEP_MS, loop: true, callback: () => this.tick() });
@@ -632,7 +633,7 @@ export class IslandScene extends Phaser.Scene {
   // the museum's windows, the lamp posts and the campfire.
   lightUp() {
     const lit = settings().dayNight && settings().lights !== 'off';
-    const [r, g, b] = lit ? ambientAt(hourNow()) : [255, 255, 255];
+    const [r, g, b] = lit ? overcast(ambientAt(hourNow()), this.weatherKind) : [255, 255, 255];
     this.dark = Math.max(0, Math.min(1, 1 - (0.3 * r + 0.55 * g + 0.15 * b) / 245));
     if (!lit) return;
     lightTextures(this);
