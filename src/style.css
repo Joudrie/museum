@@ -2185,10 +2185,15 @@ body.outside #hud {
   font-size: 13px;
   color: var(--muted);
 }
-.r1 { color: #c8c0b0; }
-.r2 { color: #7ac8e0; }
-.r3 { color: #c88af0; }
-.r4 { color: #f2d36b; }
+.r1 { color: #f0ece4; }
+.r2 { color: #6fd07a; }
+.r3 { color: #5aa8f0; }
+.r4 { color: #c88af0; }
+.r5 { color: #f2d36b; }
+/* a variant (golden, albino, ghost) shimmers through the rarity colours */
+.rv { background: linear-gradient(90deg, #f06a8a, #f2d36b, #6fd07a, #5aa8f0, #c88af0, #f06a8a); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: rv-shimmer 2.4s linear infinite; }
+@keyframes rv-shimmer { to { background-position: 200% 0; } }
+@media (prefers-reduced-motion: reduce) { .rv { animation: none; } }
 @keyframes catch-in {
   from {
     transform: scale(0.5);

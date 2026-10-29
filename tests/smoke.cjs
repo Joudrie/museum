@@ -441,8 +441,10 @@ const ok = (msg) => console.log('  ✓ ' + msg);
       await settle(800);
       await scene(() => { const f = __game.scene.getScene('island').fishing; f.biteAt = f.t + 0.2; });
       await settle(400);
-      await p.mouse.click(200, 300);
-      await settle(900);
+      await scene(() => { __prog.T.fishing.junkChance = 0; __game.scene.getScene('island').fishing.tap(); }); // hook it, then win the reel
+      await settle(300);
+      await scene(() => { const r = __game.scene.getScene('island').fishing.reel; if (r) { r.progress = 1; r.step(0.01, true); } });
+      await settle(1500);
       if (await shown('#catch')) ok('caught something fishing');
       else fail('fishing: no catch card after hooking');
       await p.click('#catch');

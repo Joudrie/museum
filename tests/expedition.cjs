@@ -79,13 +79,18 @@ async function dataChecks() {
   await settle(2500);
   await run(() => { __game.scene.start('island', { map: 'main' }); });
   await settle(2500);
-  const labels = () => run(() => [...document.querySelectorAll('.sail-dest b')].map((e) => e.textContent));
+  const labels = () => run(() => [...document.querySelectorAll('.sail-dest b')].map((e) => e.textContent.replace('🔒 ', '')));
+  const lockedLabels = () => run(() => [...document.querySelectorAll('.sail-dest.locked b')].map((e) => e.textContent.replace('🔒 ', '')));
+  // the boat can make the trip (rank 4 and a rowboat; the sailboat for open sea): the lead only shows the way
+  await run(() => { ['boat:rowboat', 'boat:sailboat'].forEach((k) => { __prog.state.unlocks[k] = true; __prog.state.market.owned[k] = true; }); });
   await run(() => { __game.scene.getScene('island').sail(); });
   await settle(500);
   let l = await labels();
   check(l.includes('Skull Isle'), 'the bottle note unlocks Skull Isle in the boat menu', `boat menu is ${JSON.stringify(l)}`);
   check(l.includes('Letters & leads'), 'the boat menu has Letters & leads', 'no Letters & leads entry');
-  check(!l.some((x) => /Drowned|Badlands|Tomb|Temple|Thieves|Frozen/i.test(x)), 'islands without a lead stay hidden', `locked islands are showing: ${JSON.stringify(l)}`);
+  const lk = await lockedLabels();
+  check(['Drowned', 'Badlands', 'Tomb', 'Temple', 'Thieves', 'Frozen'].every((n) => lk.some((x) => x.includes(n))), 'islands without a lead are on the chart, locked', `locked islands: ${JSON.stringify(lk)}`);
+  check(!lk.includes('Skull Isle'), 'Skull Isle is open once the bottle note and the rowboat are yours', `Skull Isle is locked: ${JSON.stringify(lk)}`);
   await shot('1-boat-menu');
   await run(() => [...document.querySelectorAll('.sail-dest')].find((e) => /Letters/.test(e.textContent)).click());
   await settle(500);

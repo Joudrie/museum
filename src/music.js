@@ -173,7 +173,7 @@ const SFX = {
   reel: (t) => [0, 1, 2, 3, 4].forEach((i) => tone(1200 + i * 90, t + i * 0.035, 0.03, { wave: 'square', gain: 0.05 })),
   quest: (t) => [659, 880, 1319].forEach((f, i) => tone(f, t + i * 0.09, 0.28, { gain: 0.24 })),
   chirp: (t) => [0, 1, 2].forEach((i) => tone(2500 + i * 420 + Math.random() * 200, t + i * 0.06, 0.07, { wave: 'sine', gain: 0.05, to: 3300 })), // sparrows going up
-  pop: (t) => tone(880, t, 0.09, { wave: 'sine', gain: 0.07, to: 1320 }), // an emote bubble
+  emote: (t) => tone(880, t, 0.09, { wave: 'sine', gain: 0.07, to: 1320 }), // an emote bubble
   hop: (t) => {
     tone(300, t, 0.14, { wave: 'sine', gain: 0.25, to: 150 });
     tone(520, t + 0.05, 0.08, { wave: 'sine', gain: 0.18, to: 180 });
@@ -181,6 +181,26 @@ const SFX = {
   oar: (t) => tone(260, t, 0.2, { wave: 'sine', gain: 0.05, to: 150 }),
   scrape: (t) => tone(760, t, 0.13, { wave: 'sawtooth', gain: 0.022, to: 360 }), // a rake on the ground
   stepSnow: (t) => tone(1700 + Math.random() * 500, t, 0.06, { wave: 'sawtooth', gain: 0.02, to: 650 }),
+  // progression layer: each step of a chain rings a little higher
+  tickup: (t, step = 0) => tone(660 * Math.pow(1.122, Math.min(12, step)), t, 0.09, { wave: 'square', gain: 0.07 }),
+  pop: (t, step = 0) => [0, 0.05].forEach((d, i) => tone(784 * Math.pow(1.122, Math.min(12, step)) * (i ? 1.5 : 1), t + d, 0.14, { wave: 'sine', gain: 0.2 })),
+  stamp: (t) => {
+    tone(130, t, 0.12, { wave: 'square', gain: 0.18, to: 70 });
+    tone(2400, t + 0.02, 0.05, { wave: 'sawtooth', gain: 0.04, to: 900 });
+  },
+  sting: (t) => [392, 494, 587, 784, 988, 1175].forEach((f, i) => tone(f, t + i * 0.09, 0.4 + i * 0.05, { gain: 0.2 })),
+  shimmer: (t) => [1568, 1976, 2349, 2637].forEach((f, i) => tone(f, t + i * 0.06, 0.3, { wave: 'sine', gain: 0.1 })),
+  burst: (t) => {
+    tone(196, t, 0.5, { wave: 'sawtooth', gain: 0.12, to: 392 });
+    [523, 659, 784, 1047].forEach((f, i) => tone(f, t + 0.1 + i * 0.06, 0.45, { gain: 0.18 }));
+  },
+  legend: (t) => {
+    tone(131, t, 2.2, { wave: 'sine', gain: 0.25 });
+    [262, 330, 392, 523, 659, 784, 1047].forEach((f, i) => tone(f, t + 0.3 + i * 0.22, 0.9, { wave: 'sine', gain: 0.17 }));
+    tone(1568, t + 1.9, 1.2, { wave: 'triangle', gain: 0.12 });
+  },
+  ping: (t) => tone(880, t, 0.5, { wave: 'sine', gain: 0.08, to: 880 }),
+  brink: (t) => tone(300, t, 0.1, { wave: 'square', gain: 0.1, to: 160 }), // the line creaks
 };
 
 // Distant thunder: a long low rumble of filtered noise.
@@ -202,9 +222,19 @@ SFX.thunder = (t) => {
   src.stop(t + 2.7);
 };
 
-export function sfx(name) {
+// `arg` goes to sounds that take one (the progression layer's rising ticks pass the step in a chain)
+export function sfx(name, arg) {
   if (!ctx || ctx.state !== 'running' || muted || !SFX[name]) return;
-  SFX[name](ctx.currentTime + 0.01);
+  SFX[name](ctx.currentTime + 0.01, arg);
+}
+
+// The music ducks under big moments (a legendary reveal) and comes back.
+export function duckMusic(ms = 2600, level = 0.15) {
+  if (!ctx || !musicBus || ctx.state !== 'running') return;
+  const base = MUSIC_LEVEL * settings().music;
+  musicBus.gain.cancelScheduledValues(ctx.currentTime);
+  musicBus.gain.setTargetAtTime(base * level, ctx.currentTime, 0.12);
+  musicBus.gain.setTargetAtTime(base, ctx.currentTime + ms / 1000, 0.4);
 }
 
 // Background ambience outside: waves on the shore, rain. Made from filtered

@@ -1,0 +1,877 @@
+{
+ "fishing": {
+  "name": "Fishing",
+  "icon": "🎣",
+  "levels": [
+   {
+    "level": 1,
+    "reward": {
+     "bait": [
+      "worm",
+      5
+     ]
+    }
+   },
+   {
+    "level": 2,
+    "perk": "early_bang",
+    "label": "Quick eye",
+    "text": "The \"!\" shows a beat earlier, so you get 0.4 s more to react.",
+    "reward": {
+     "gold": 40
+    }
+   },
+   {
+    "level": 3,
+    "reward": {
+     "bait": [
+      "worm",
+      8
+     ]
+    }
+   },
+   {
+    "level": 4,
+    "perk": "shadows",
+    "label": "Fish shadows",
+    "text": "You can see fish shadows in the water, and their size hints at what is coming.",
+    "reward": {
+     "gold": 50
+    }
+   },
+   {
+    "level": 5,
+    "reward": {
+     "gold": 70
+    }
+   },
+   {
+    "level": 6,
+    "perk": "wide_window",
+    "label": "Steady hands",
+    "text": "Your catch window is 15% longer.",
+    "reward": {
+     "gold": 60
+    }
+   },
+   {
+    "level": 7,
+    "reward": {
+     "bait": [
+      "worm",
+      12
+     ]
+    }
+   },
+   {
+    "level": 8,
+    "perk": "lure_slot",
+    "label": "Lure slot",
+    "text": "A second slot opens on the rod for lures.",
+    "reward": {
+     "gold": 70
+    }
+   },
+   {
+    "level": 9,
+    "reward": {
+     "gold": 94
+    }
+   },
+   {
+    "level": 10,
+    "perk": "night_fishing",
+    "label": "Night angler",
+    "text": "Night-only species start to bite after dark.",
+    "reward": {
+     "gold": 80
+    }
+   },
+   {
+    "level": 11,
+    "reward": {
+     "bait": [
+      "worm",
+      16
+     ]
+    }
+   },
+   {
+    "level": 12,
+    "perk": "double_catch",
+    "label": "Lucky pair",
+    "text": "A 5% chance to land two fish at once.",
+    "reward": {
+     "gold": 90
+    }
+   },
+   {
+    "level": 13,
+    "reward": {
+     "gold": 118
+    }
+   },
+   {
+    "level": 14,
+    "perk": "fish_finder",
+    "label": "Fish finder",
+    "text": "A soft ping rings out when you are near a hot spot.",
+    "reward": {
+     "gold": 100
+    }
+   },
+   {
+    "level": 15,
+    "reward": {
+     "bait": [
+      "worm",
+      20
+     ]
+    }
+   },
+   {
+    "level": 16,
+    "perk": "legend_sense",
+    "label": "Legend sense",
+    "text": "The water shimmers when a legendary is in range.",
+    "reward": {
+     "gold": 110
+    }
+   },
+   {
+    "level": 17,
+    "reward": {
+     "gold": 142
+    }
+   },
+   {
+    "level": 18,
+    "perk": "perfect_double",
+    "label": "Master reel",
+    "text": "Perfect-catch bonuses are doubled.",
+    "reward": {
+     "gold": 120
+    }
+   },
+   {
+    "level": 19,
+    "reward": {
+     "bait": [
+      "worm",
+      24
+     ]
+    }
+   },
+   {
+    "level": 20,
+    "perk": "master",
+    "label": "Master Angler",
+    "text": "Title: Master Angler, and the golden rod skin.",
+    "reward": {
+     "title": "fishing_master",
+     "cosmetic": "rodskin:golden"
+    }
+   }
+  ]
+ },
+ "sailing": {
+  "name": "Sailing",
+  "icon": "⛵",
+  "levels": [
+   {
+    "level": 1,
+    "reward": {
+     "bait": [
+      "worm",
+      5
+     ]
+    }
+   },
+   {
+    "level": 2,
+    "perk": "speed1",
+    "label": "Fair wind",
+    "text": "Crossings take 20% less time.",
+    "reward": {
+     "gold": 40
+    }
+   },
+   {
+    "level": 3,
+    "reward": {
+     "bait": [
+      "worm",
+      8
+     ]
+    }
+   },
+   {
+    "level": 4,
+    "perk": "wake_sparkle",
+    "label": "Wake sparkle",
+    "text": "Your boat leaves a trail of sparkles.",
+    "reward": {
+     "gold": 50
+    }
+   },
+   {
+    "level": 5,
+    "reward": {
+     "gold": 70
+    }
+   },
+   {
+    "level": 6,
+    "perk": "fog_routes",
+    "label": "Fog routes",
+    "text": "Fogged channels open on the chart.",
+    "reward": {
+     "gold": 60
+    }
+   },
+   {
+    "level": 7,
+    "reward": {
+     "bait": [
+      "worm",
+      12
+     ]
+    }
+   },
+   {
+    "level": 8,
+    "perk": "speed2",
+    "label": "Full sail",
+    "text": "Crossings take a further 20% less time.",
+    "reward": {
+     "gold": 70
+    }
+   },
+   {
+    "level": 9,
+    "reward": {
+     "gold": 94
+    }
+   },
+   {
+    "level": 10,
+    "perk": "rough_water",
+    "label": "Rough water",
+    "text": "You can cross rough water.",
+    "reward": {
+     "gold": 80
+    }
+   },
+   {
+    "level": 11,
+    "reward": {
+     "bait": [
+      "worm",
+      16
+     ]
+    }
+   },
+   {
+    "level": 12,
+    "perk": "fast_travel",
+    "label": "Dock to dock",
+    "text": "Visited docks become instant fast travel.",
+    "reward": {
+     "gold": 90
+    }
+   },
+   {
+    "level": 13,
+    "reward": {
+     "gold": 118
+    }
+   },
+   {
+    "level": 14,
+    "perk": "chart_reader",
+    "label": "Chart reader",
+    "text": "The chart lists what bites at each island.",
+    "reward": {
+     "gold": 100
+    }
+   },
+   {
+    "level": 15,
+    "reward": {
+     "bait": [
+      "worm",
+      20
+     ]
+    }
+   },
+   {
+    "level": 16,
+    "perk": "tide_reader",
+    "label": "Tide reader",
+    "text": "The chart shows when each hot spot moves.",
+    "reward": {
+     "gold": 110
+    }
+   },
+   {
+    "level": 17,
+    "reward": {
+     "gold": 142
+    }
+   },
+   {
+    "level": 18,
+    "perk": "convoy",
+    "label": "Old salt",
+    "text": "Sailing XP is doubled.",
+    "reward": {
+     "gold": 120
+    }
+   },
+   {
+    "level": 19,
+    "reward": {
+     "bait": [
+      "worm",
+      24
+     ]
+    }
+   },
+   {
+    "level": 20,
+    "perk": "master",
+    "label": "Admiral",
+    "text": "Title: Admiral, and a gold boat paint.",
+    "reward": {
+     "title": "sailing_master",
+     "cosmetic": "boatpaint:gold"
+    }
+   }
+  ]
+ },
+ "exploring": {
+  "name": "Exploring",
+  "icon": "🧭",
+  "levels": [
+   {
+    "level": 1,
+    "reward": {
+     "bait": [
+      "worm",
+      5
+     ]
+    }
+   },
+   {
+    "level": 2,
+    "perk": "sparkle_far",
+    "label": "Keen eyes",
+    "text": "Sparkling pickups show from much farther away.",
+    "reward": {
+     "gold": 40
+    }
+   },
+   {
+    "level": 3,
+    "reward": {
+     "bait": [
+      "worm",
+      8
+     ]
+    }
+   },
+   {
+    "level": 4,
+    "perk": "question_marks",
+    "label": "Hunch",
+    "text": "\"?\" markers show where an undiscovered secret is in this region.",
+    "reward": {
+     "gold": 50
+    }
+   },
+   {
+    "level": 5,
+    "reward": {
+     "gold": 70
+    }
+   },
+   {
+    "level": 6,
+    "perk": "snow_speed",
+    "label": "Snow legs",
+    "text": "You move faster in deep snow.",
+    "reward": {
+     "gold": 60
+    }
+   },
+   {
+    "level": 7,
+    "reward": {
+     "bait": [
+      "worm",
+      12
+     ]
+    }
+   },
+   {
+    "level": 8,
+    "perk": "lantern_wide",
+    "label": "Wide lantern",
+    "text": "Your lantern lights a wider circle at night.",
+    "reward": {
+     "gold": 70
+    }
+   },
+   {
+    "level": 9,
+    "reward": {
+     "gold": 94
+    }
+   },
+   {
+    "level": 10,
+    "perk": "map_sense",
+    "label": "Map sense",
+    "text": "You clear fog a chunk further out as you walk.",
+    "reward": {
+     "gold": 80
+    }
+   },
+   {
+    "level": 11,
+    "reward": {
+     "bait": [
+      "worm",
+      16
+     ]
+    }
+   },
+   {
+    "level": 12,
+    "perk": "viewpoint_xp",
+    "label": "Good view",
+    "text": "Viewpoints give double XP.",
+    "reward": {
+     "gold": 90
+    }
+   },
+   {
+    "level": 13,
+    "reward": {
+     "gold": 118
+    }
+   },
+   {
+    "level": 14,
+    "perk": "secret_chime",
+    "label": "Secret chime",
+    "text": "A soft chime rings when a secret is close.",
+    "reward": {
+     "gold": 100
+    }
+   },
+   {
+    "level": 15,
+    "reward": {
+     "bait": [
+      "worm",
+      20
+     ]
+    }
+   },
+   {
+    "level": 16,
+    "perk": "light_foot",
+    "label": "Light foot",
+    "text": "You move a little faster everywhere.",
+    "reward": {
+     "gold": 110
+    }
+   },
+   {
+    "level": 17,
+    "reward": {
+     "gold": 142
+    }
+   },
+   {
+    "level": 18,
+    "perk": "pathfinder",
+    "label": "Pathfinder",
+    "text": "New locations give double exploring XP.",
+    "reward": {
+     "gold": 120
+    }
+   },
+   {
+    "level": 19,
+    "reward": {
+     "bait": [
+      "worm",
+      24
+     ]
+    }
+   },
+   {
+    "level": 20,
+    "perk": "master",
+    "label": "Cartographer",
+    "text": "Title: Cartographer, and a map frame.",
+    "reward": {
+     "title": "exploring_master",
+     "cosmetic": "frame:map"
+    }
+   }
+  ]
+ },
+ "friendship": {
+  "name": "Friendship",
+  "icon": "💛",
+  "levels": [
+   {
+    "level": 1,
+    "reward": {
+     "bait": [
+      "worm",
+      5
+     ]
+    }
+   },
+   {
+    "level": 2,
+    "perk": "first_talk_plus",
+    "label": "Warm hello",
+    "text": "The first talk of the day with someone is worth more.",
+    "reward": {
+     "gold": 40
+    }
+   },
+   {
+    "level": 3,
+    "reward": {
+     "bait": [
+      "worm",
+      8
+     ]
+    }
+   },
+   {
+    "level": 4,
+    "perk": "rumors",
+    "label": "Good ear",
+    "text": "People share fish rumors with you.",
+    "reward": {
+     "gold": 50
+    }
+   },
+   {
+    "level": 5,
+    "reward": {
+     "gold": 70
+    }
+   },
+   {
+    "level": 6,
+    "perk": "gift_hints",
+    "label": "Gift sense",
+    "text": "Little icons hint at what people like.",
+    "reward": {
+     "gold": 60
+    }
+   },
+   {
+    "level": 7,
+    "reward": {
+     "bait": [
+      "worm",
+      12
+     ]
+    }
+   },
+   {
+    "level": 8,
+    "perk": "waves",
+    "label": "Familiar face",
+    "text": "People wave and emote at you unprompted.",
+    "reward": {
+     "gold": 70
+    }
+   },
+   {
+    "level": 9,
+    "reward": {
+     "gold": 94
+    }
+   },
+   {
+    "level": 10,
+    "perk": "discount",
+    "label": "Friendly price",
+    "text": "Shops give you 5% off.",
+    "reward": {
+     "gold": 80
+    }
+   },
+   {
+    "level": 11,
+    "reward": {
+     "bait": [
+      "worm",
+      16
+     ]
+    }
+   },
+   {
+    "level": 12,
+    "perk": "good_listener",
+    "label": "Good listener",
+    "text": "Liked gifts are worth 25% more.",
+    "reward": {
+     "gold": 90
+    }
+   },
+   {
+    "level": 13,
+    "reward": {
+     "gold": 118
+    }
+   },
+   {
+    "level": 14,
+    "perk": "discount2",
+    "label": "Regular",
+    "text": "Shops give you 10% off.",
+    "reward": {
+     "gold": 100
+    }
+   },
+   {
+    "level": 15,
+    "reward": {
+     "bait": [
+      "worm",
+      20
+     ]
+    }
+   },
+   {
+    "level": 16,
+    "perk": "heart_speed",
+    "label": "Open heart",
+    "text": "Hearts come 10% faster.",
+    "reward": {
+     "gold": 110
+    }
+   },
+   {
+    "level": 17,
+    "reward": {
+     "gold": 142
+    }
+   },
+   {
+    "level": 18,
+    "perk": "birthdays",
+    "label": "Remember the day",
+    "text": "Birthdays show on the People page.",
+    "reward": {
+     "gold": 120
+    }
+   },
+   {
+    "level": 19,
+    "reward": {
+     "bait": [
+      "worm",
+      24
+     ]
+    }
+   },
+   {
+    "level": 20,
+    "perk": "master",
+    "label": "Beloved",
+    "text": "Title: Beloved, and a heart frame.",
+    "reward": {
+     "title": "friendship_master",
+     "cosmetic": "frame:heart"
+    }
+   }
+  ]
+ },
+ "foraging": {
+  "name": "Foraging",
+  "icon": "🍂",
+  "levels": [
+   {
+    "level": 1,
+    "reward": {
+     "bait": [
+      "worm",
+      5
+     ]
+    }
+   },
+   {
+    "level": 2,
+    "perk": "yield1",
+    "label": "Good eye",
+    "text": "Pickups give a little more.",
+    "reward": {
+     "gold": 40
+    }
+   },
+   {
+    "level": 3,
+    "reward": {
+     "bait": [
+      "worm",
+      8
+     ]
+    }
+   },
+   {
+    "level": 4,
+    "perk": "extra_spots",
+    "label": "Hidden patch",
+    "text": "Another sparkle patch appears each day.",
+    "reward": {
+     "gold": 50
+    }
+   },
+   {
+    "level": 5,
+    "reward": {
+     "gold": 70
+    }
+   },
+   {
+    "level": 6,
+    "perk": "recipes",
+    "label": "Bait maker",
+    "text": "Craft bait from what you pick up.",
+    "reward": {
+     "gold": 60
+    }
+   },
+   {
+    "level": 7,
+    "reward": {
+     "bait": [
+      "worm",
+      12
+     ]
+    }
+   },
+   {
+    "level": 8,
+    "perk": "double_forage",
+    "label": "Double handful",
+    "text": "A 10% chance of double pickups.",
+    "reward": {
+     "gold": 70
+    }
+   },
+   {
+    "level": 9,
+    "reward": {
+     "gold": 94
+    }
+   },
+   {
+    "level": 10,
+    "perk": "rare_forage",
+    "label": "Rare finds",
+    "text": "Rare pickups appear.",
+    "reward": {
+     "gold": 80
+    }
+   },
+   {
+    "level": 11,
+    "reward": {
+     "bait": [
+      "worm",
+      16
+     ]
+    }
+   },
+   {
+    "level": 12,
+    "perk": "gift_basket",
+    "label": "Gift basket",
+    "text": "Foraged gifts count as liked by more people.",
+    "reward": {
+     "gold": 90
+    }
+   },
+   {
+    "level": 13,
+    "reward": {
+     "gold": 118
+    }
+   },
+   {
+    "level": 14,
+    "perk": "season_eye",
+    "label": "Seasonal eye",
+    "text": "You can see which pickups are in season.",
+    "reward": {
+     "gold": 100
+    }
+   },
+   {
+    "level": 15,
+    "reward": {
+     "bait": [
+      "worm",
+      20
+     ]
+    }
+   },
+   {
+    "level": 16,
+    "perk": "patch_memory",
+    "label": "Patch memory",
+    "text": "Patches you have picked glow when ready again.",
+    "reward": {
+     "gold": 110
+    }
+   },
+   {
+    "level": 17,
+    "reward": {
+     "gold": 142
+    }
+   },
+   {
+    "level": 18,
+    "perk": "bountiful",
+    "label": "Bountiful",
+    "text": "Pickups give double XP.",
+    "reward": {
+     "gold": 120
+    }
+   },
+   {
+    "level": 19,
+    "reward": {
+     "bait": [
+      "worm",
+      24
+     ]
+    }
+   },
+   {
+    "level": 20,
+    "perk": "master",
+    "label": "Gatherer",
+    "text": "Title: Gatherer, and a leaf frame.",
+    "reward": {
+     "title": "foraging_master",
+     "cosmetic": "frame:leaf"
+    }
+   }
+  ]
+ }
+}

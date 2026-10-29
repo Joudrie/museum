@@ -1,0 +1,31 @@
+{
+  "daily": [
+    { "id": "catch_n", "text": "Catch {n} fish", "event": "FISH_CAUGHT", "n": [4, 14], "weight": 3, "min": 1, "xp": 30, "gold": [20, 60] },
+    { "id": "catch_pond", "text": "Catch {n} pond fish", "event": "FISH_CAUGHT", "match": { "water": ["pond", "ice"] }, "n": [2, 6], "weight": 2, "min": 1, "xp": 30, "gold": [20, 60] },
+    { "id": "catch_sea", "text": "Catch {n} sea fish", "event": "FISH_CAUGHT", "match": { "water": ["sea"] }, "n": [2, 6], "weight": 2, "min": 1, "xp": 30, "gold": [20, 60] },
+    { "id": "catch_rain", "text": "Catch anything in the rain", "event": "FISH_CAUGHT", "ctx": { "weather": "rain" }, "n": [1, 2], "weight": 3, "min": 1, "xp": 30, "gold": [30, 70], "needs": "weather:rain" },
+    { "id": "catch_snow", "text": "Catch anything in the snow", "event": "FISH_CAUGHT", "ctx": { "weather": "snow" }, "n": [1, 2], "weight": 3, "min": 1, "xp": 30, "gold": [30, 70], "needs": "weather:snow" },
+    { "id": "catch_fog", "text": "Catch anything in the fog", "event": "FISH_CAUGHT", "ctx": { "weather": "fog" }, "n": [1, 2], "weight": 3, "min": 1, "xp": 30, "gold": [30, 70], "needs": "weather:fog" },
+    { "id": "catch_night", "text": "Catch {n} fish after dark", "event": "FISH_CAUGHT", "ctx": { "night": true }, "n": [1, 3], "weight": 2, "min": 3, "xp": 30, "gold": [30, 70] },
+    { "id": "catch_new", "text": "Discover a new species", "event": "FISH_CAUGHT", "match": { "fresh": true }, "n": [1, 1], "weight": 4, "min": 2, "xp": 40, "gold": [40, 90], "needs": "gaps" },
+    { "id": "catch_rare", "text": "Catch a Rare or better", "event": "FISH_CAUGHT", "match": { "minRarity": 3 }, "n": [1, 1], "weight": 2, "min": 6, "xp": 45, "gold": [50, 110] },
+    { "id": "catch_large", "text": "Catch a Large or bigger fish", "event": "FISH_CAUGHT", "match": { "minClass": "L" }, "n": [1, 2], "weight": 2, "min": 3, "xp": 35, "gold": [30, 80] },
+    { "id": "catch_perfect", "text": "Reel in {n} perfect catches", "event": "FISH_CAUGHT", "match": { "perfect": true }, "n": [1, 3], "weight": 2, "min": 4, "xp": 35, "gold": [30, 80] },
+    { "id": "talk_n", "text": "Talk to {n} people", "event": "NPC_TALKED", "n": [3, 6], "weight": 3, "min": 1, "xp": 30, "gold": [20, 50] },
+    { "id": "gift_1", "text": "Give a gift to someone", "event": "GIFT_GIVEN", "n": [1, 2], "weight": 2, "min": 2, "xp": 30, "gold": [20, 50] },
+    { "id": "secret_1", "text": "Find 1 secret", "event": "SECRET_FOUND", "n": [1, 1], "weight": 2, "min": 3, "xp": 40, "gold": [40, 90] },
+    { "id": "explore_n", "text": "Uncover {n} patches of map", "event": "TILE_REVEALED", "count": true, "n": [6, 18], "weight": 2, "min": 1, "xp": 30, "gold": [20, 60] },
+    { "id": "forage_n", "text": "Pick up {n} sparkles", "event": "ITEM_FORAGED", "n": [3, 8], "weight": 2, "min": 2, "xp": 30, "gold": [20, 60] },
+    { "id": "sail_1", "text": "Sail to another island", "event": "TRAVERSAL_USED", "n": [1, 1], "weight": 1, "min": 5, "xp": 30, "gold": [30, 70] },
+    { "id": "request_1", "text": "Finish a request on the board", "event": "REQUEST_DONE", "n": [1, 2], "weight": 2, "min": 2, "xp": 40, "gold": [40, 90] }
+  ],
+  "weekly": [
+    { "id": "w_catch", "text": "Catch {n} fish this week", "event": "FISH_CAUGHT", "n": 25 },
+    { "id": "w_talk", "text": "Talk to people {n} times this week", "event": "NPC_TALKED", "n": 12 },
+    { "id": "w_secret", "text": "Find {n} secrets this week", "event": "SECRET_FOUND", "n": 3 },
+    { "id": "w_rare", "text": "Catch {n} Rare or better fish", "event": "FISH_CAUGHT", "match": { "minRarity": 3 }, "n": 3 },
+    { "id": "w_tasks", "text": "Finish {n} daily tasks", "event": "TASK_DONE", "n": 6 },
+    { "id": "w_requests", "text": "Finish {n} board requests", "event": "REQUEST_DONE", "n": 4 },
+    { "id": "w_big", "text": "Catch {n} Large or bigger fish", "event": "FISH_CAUGHT", "match": { "minClass": "L" }, "n": 5 }
+  ]
+}

@@ -34,10 +34,11 @@
   --ui-info: #7ac8e0;
 
   /* rarity: colour is never the only signal (a label or pip goes with it) */
-  --ui-r1: #c8c0b0;
-  --ui-r2: #7ac8e0;
-  --ui-r3: #c88af0;
-  --ui-r4: #f2d36b;
+  --ui-r1: #f0ece4;
+  --ui-r2: #6fd07a;
+  --ui-r3: #5aa8f0;
+  --ui-r4: #c88af0;
+  --ui-r5: #f2d36b;
 
   /* type: Pixelify Sans for chrome and numbers, Georgia for museum prose */
   --ui-font: 'Pixelify Sans', ui-monospace, 'Courier New', monospace;

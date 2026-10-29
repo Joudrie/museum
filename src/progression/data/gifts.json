@@ -1,0 +1,11 @@
+{
+  "tea": { "name": "Tea tin", "price": 30, "source": "shop", "rarity": 2 },
+  "book": { "name": "Old book", "price": 60, "source": "shop", "rarity": 3 },
+  "bread": { "name": "Fresh bread", "price": 12, "source": "shop", "rarity": 1 },
+  "berry": { "name": "Wild berries", "source": "forage", "rarity": 1, "regions": ["temperate", "tropical"], "seasons": ["spring", "summer", "autumn"] },
+  "shell": { "name": "Spiral shell", "source": "forage", "rarity": 1, "regions": ["temperate", "tropical", "arctic"], "seasons": ["spring", "summer", "autumn", "winter"] },
+  "pinecone": { "name": "Pinecone", "source": "forage", "rarity": 1, "regions": ["temperate", "arctic"], "seasons": ["autumn", "winter"] },
+  "snowcrystal": { "name": "Snow crystal", "source": "forage", "rarity": 2, "regions": ["arctic", "temperate"], "seasons": ["winter"] },
+  "flower": { "name": "Wildflower", "source": "forage", "rarity": 1, "regions": ["temperate", "tropical"], "seasons": ["spring", "summer"] },
+  "boot": { "name": "Old boot", "source": "junk", "rarity": 1 }
+}

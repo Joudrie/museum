@@ -383,8 +383,10 @@
 .ui-rarity[data-r='2'] { color: var(--ui-r2); }
 .ui-rarity[data-r='3'] { color: var(--ui-r3); }
 .ui-rarity[data-r='4'] { color: var(--ui-r4); }
+.ui-rarity[data-r='5'] { color: var(--ui-r5); }
 .ui-rarity[data-r='3']::before { border-radius: 50%; }
 .ui-rarity[data-r='4']::before { box-shadow: 0 0 0 2px var(--ui-shadow), 0 0 0 4px currentColor; }
+.ui-rarity[data-r='5']::before { box-shadow: 0 0 0 2px var(--ui-shadow), 0 0 0 4px currentColor, 0 0 0 6px var(--ui-shadow); }
 
 /* text size (Settings → Look): every ui text honours the multiplier */
 html[data-text='large'] {

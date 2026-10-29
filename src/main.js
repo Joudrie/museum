@@ -71,3 +71,11 @@ window.addEventListener('resize', () => {
 import './ui/hud.js'; // the labelled HUD and the Menu hub (after daily.js, whose button it adopts)
 import './ui/chrome.js'; // the one close button on every older menu
 import './ui/prefs.js'; // text size and reduced motion from Settings
+import { progression } from './progression/index.js';
+progression(); // rank, skills, journal and goals: the progression layer (docs/PROGRESSION.md)
+import './progression/ui/fieldoverlay.js';
+import { installFishHints } from './progression/ui/fieldjournal.js';
+installFishHints();
+import './progression/ui/subcard.js';
+import { mountDebug } from './progression/ui/debugpanel.js';
+mountDebug(); // (dev only: ?debug=1)

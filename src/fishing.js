@@ -1,25 +1,26 @@
 // Fishing: stand at the water's edge facing the water and tap Fish. The line
-// goes out, the bobber floats and nibbles, then it's pulled under and a "!"
-// pops over your head: tap the screen quickly to hook what's there. Every
-// catch goes in the fish log (Journal → Fish), ready for the aquarium later.
-// Better bobbers, earned by fishing goals, bite sooner, give you longer to
-// react and turn up rarer fish.
+// goes out, the bobber floats and nibbles, then it dips and a "!" pops over your
+// head: tap to hook, then keep the hook on the fish while you reel it in. What
+// bites, how big it is and what it is worth are decided by the progression layer
+// (src/progression/): this file draws the cast and the line and reports what
+// happened. Every catch goes in the fish log (Journal → Fish).
 import Phaser from 'phaser';
-import { load, save } from './storage.js';
 import { sfx } from './music.js';
 import { haptic } from './ui.js';
 import { hourNow } from './settings.js';
 import { list, slugOf, RARITY as RARITY_NAMES } from './collections/index.js';
-import { snapshot, collect } from './collections/codex.js';
 import { drawEntry, drawShadow as shadowOf } from './collections/render.js';
 import { registerTabExtra } from './collections/tab.js';
+import { progression, hold, release } from './progression/index.js';
+import { prepareCast, completeCast, loseCast, newReel, RODS, rodUnlocked, equipRod, equipBait, equipLure, currentRod, BAITS, LURES } from './progression/angling.js';
+import { speciesById } from './progression/species.js';
+import { showReveal, showNearMiss, runReel, catchOpen as revealOpen } from './progression/ui/reveal.js';
+import { WaterFx } from './progression/ui/waterfx.js';
+import { fishFinishLines } from './progression/ui/fieldjournal.js';
+import { cosmeticColor } from './progression/ui/lookfx.js';
 import { popEmote } from './emotes.js';
 
-const KEY = 'curation.fishing'; // { total, night, bobber } (what you've caught lives in the codex; older saves kept it here as caught)
-
-// What bites comes from the collection registry (src/collections/data/fish.js).
-// These are the shapes the fishing code reads: water pond / sea, rarity 1
-// common … 4 legendary, time day / night / any. `entry` is the registry entry.
+// What the log shows: fish (rules in src/progression/species.js) and finds (not fish; some belong in the museum).
 const view = (e) => ({
   id: slugOf(e),
   name: e.title,
@@ -30,100 +31,10 @@ const view = (e) => ({
   entry: e,
 });
 export const FISH = list({ collection: 'fish' }).map(view);
-// Things that aren't fish. Some belong in the museum.
 export const FINDS = list({ collection: 'find', all: true }).map(view);
 export const RARITY = RARITY_NAMES;
-const ALL = [...FISH, ...FINDS];
-const byId = Object.fromEntries(ALL.map((f) => [f.id, f]));
 
-// Bobbers: wait = seconds until a bite [min, max], window = ms to react,
-// luck = how much rarer the catch, junk = chance of junk instead of a fish.
-export const BOBBERS = [
-  { id: 'basic', name: 'Red & white', top: '#e0405a', base: '#f4f0e6', wait: [4, 9], window: 1000, luck: 0, junk: 0.16, text: 'The one you started with.' },
-  { id: 'cork', name: 'Cork', top: '#c8904a', base: '#e8c890', wait: [3, 7], window: 1150, luck: 0.15, junk: 0.12, goal: { text: 'Catch 5 fish', n: (s) => s.total, of: 5 } },
-  { id: 'feather', name: 'Feather', top: '#4a9ad0', base: '#f4f0e6', wait: [3, 7], window: 1350, luck: 0.3, junk: 0.1, goal: { text: 'Catch 5 different kinds', n: (s) => kinds(s), of: 5 } },
-  { id: 'glow', name: 'Glow', top: '#7ae0a0', base: '#d8fff0', wait: [2.5, 6], window: 1350, luck: 0.45, junk: 0.08, night: true, goal: { text: 'Catch 3 fish at night', n: (s) => s.night || 0, of: 3 } },
-  { id: 'golden', name: 'Golden', top: '#f2d36b', base: '#fff4c8', wait: [2, 5], window: 1500, luck: 0.8, junk: 0.04, goal: { text: 'Catch 12 different kinds', n: (s) => kinds(s), of: 12 } },
-];
-const kinds = (s) => Object.keys(s.caught).filter((id) => byId[id] && !byId[id].junk && FISH.includes(byId[id])).length;
-
-// `caught` is read from the codex: { slug: { n, best } }, the shape older saves used.
-const caughtNow = () => {
-  const c = snapshot();
-  const out = {};
-  [...FISH, ...FINDS].forEach((f) => {
-    const r = c.seen[f.entry.id];
-    if (r) out[f.id] = { n: r.n, best: r.best || 0 };
-  });
-  return out;
-};
-export const fishState = () => {
-  const caught = caughtNow(); // (first, so an older save is moved into the codex before anything else)
-  return { total: 0, night: 0, bobber: 'basic', ...load(KEY, {}), caught };
-};
-const put = (s) => {
-  const { caught, ...rest } = s;
-  save(KEY, { ...load(KEY, {}), ...rest });
-};
-export const bobberUnlocked = (b, s = fishState()) => !b.goal || b.goal.n(s) >= b.goal.of;
-export const currentBobber = (s = fishState()) => {
-  const b = BOBBERS.find((x) => x.id === s.bobber);
-  return b && bobberUnlocked(b, s) ? b : BOBBERS[0];
-};
-export function equipBobber(id) {
-  const s = fishState();
-  s.bobber = id;
-  put(s);
-}
-
-const isNight = () => {
-  const h = hourNow();
-  return h < 6 || h >= 20;
-};
-
-// What bites: fish that live in this water at this time and weather,
-// weighted by rarity; a better bobber tilts the odds toward rare ones.
-export function roll(water, weather, bobber) {
-  const night = isNight();
-  if (Math.random() < bobber.junk) {
-    const junk = FINDS.filter((f) => f.junk && (!f.water || f.water === water));
-    return junk[Math.floor(Math.random() * junk.length)];
-  }
-  const pool = [...FISH, ...FINDS.filter((f) => !f.junk)].filter(
-    (f) => (!f.water || f.water === water) && (!f.time || f.time === (night ? 'night' : 'day')) && (!f.weather || f.weather === weather),
-  );
-  const base = [0, 60, 26, 9, 2.5];
-  const w = pool.map((f) => {
-    let v = base[f.rarity] * (1 + bobber.luck * (f.rarity - 1) * 1.6);
-    if (bobber.night && night && f.time === 'night') v *= 1.8;
-    if (!FISH.includes(f)) v *= 0.35; // treasures are scarce
-    return v;
-  });
-  let r = Math.random() * w.reduce((a, b) => a + b, 0);
-  for (let i = 0; i < pool.length; i++) if ((r -= w[i]) <= 0) return pool[i];
-  return pool[0];
-}
-
-// Records a catch; returns { fresh, size, best, unlocked: [bobbers] }.
-export function record(item) {
-  const s = fishState();
-  const before = BOBBERS.filter((b) => bobberUnlocked(b, s)).map((b) => b.id);
-  let size = null;
-  if (item.size) {
-    const [a, b] = item.size;
-    const t = Math.pow(Math.random(), 1.6); // big ones are rarer
-    size = Math.round(a + (b - a) * t);
-  }
-  const got = collect(item.entry.id, { size }); // null for junk, which is never kept
-  if (FISH.includes(item)) {
-    s.total += 1;
-    if (isNight()) s.night = (s.night || 0) + 1;
-  }
-  put(s);
-  const after = fishState();
-  const unlocked = BOBBERS.filter((b) => bobberUnlocked(b, after) && !before.includes(b.id));
-  return { fresh: !got || got.fresh, size, best: !!got?.improved, unlocked };
-}
+export const catchOpen = revealOpen;
 
 // ---------- Drawing ----------
 // Fish and finds are drawn from their registry entries (src/collections/render.js).
@@ -152,69 +63,75 @@ export function bobberTexture(scene, b) {
   return key;
 }
 
-// ---------- The catch card ----------
-const card = document.getElementById('catch');
-export function showCatch(item, info, onClose) {
-  const pic = card.querySelector('.catch-pic');
-  pic.replaceChildren(drawCatch(item, 6));
-  card.querySelector('.catch-title').textContent = item.junk ? item.name : `You caught ${/^[aeiou]/i.test(item.name) ? 'an' : 'a'} ${item.name}!`;
-  const bits = [];
-  if (!item.junk) bits.push(`<span class="r${item.rarity}">${RARITY[item.rarity]}</span>`);
-  if (info.size) bits.push(info.size >= 100 ? `${(info.size / 100).toFixed(2)} m` : `${info.size} cm`);
-  if (info.fresh && !item.junk) bits.push('<b class="catch-new">New!</b>');
-  else if (info.best) bits.push('<b class="catch-new">Biggest yet!</b>');
-  card.querySelector('.catch-meta').innerHTML = bits.join(' · ');
-  const notes = [];
-  if (item.junk) notes.push('Not a fish. Into the bin it goes.');
-  if (item.note) notes.push(item.note);
-  if (info.fresh && !item.junk && FISH.includes(item)) notes.push('Added to your fish log (Journal → Fish).');
-  info.unlocked.forEach((b) => notes.push(`New bobber unlocked: ${b.name}! Equip it in Journal → Fish.`));
-  card.querySelector('.catch-note').textContent = notes.join(' ');
-  card.classList.remove('hidden');
-  const close = () => {
-    card.classList.add('hidden');
-    card.onclick = null;
-    onClose?.();
-  };
-  setTimeout(() => (card.onclick = close), 350); // don't close on the same tap
-  if (info.unlocked.length) sfx('unlock');
-}
-export const catchOpen = () => !card.classList.contains('hidden');
-
 // ---------- The journal tab ----------
-// The Fish tab itself is generic (src/collections/tab.js). Fishing adds the
-// bobber list above the log.
+// The Fish tab itself is generic (src/collections/tab.js). Fishing adds the rods,
+// bait and lures above the log.
 registerTabExtra('fish', ({ refresh }) => {
-  const s = fishState();
+  const p = progression();
+  const st = p.state;
   const nodes = [];
-  const bh = document.createElement('h3');
-  bh.className = 'fish-h';
-  bh.textContent = 'Bobbers';
-  nodes.push(bh);
+  const h = (t) => {
+    const n = document.createElement('h3');
+    n.className = 'fish-h';
+    n.textContent = t;
+    return n;
+  };
+  fishFinishLines().forEach((n) => nodes.push(n));
+  nodes.push(h('Rods'));
   const blist = document.createElement('div');
   blist.className = 'bobber-list';
-  const cur = currentBobber(s);
-  BOBBERS.forEach((b) => {
-    const open = bobberUnlocked(b, s);
+  const cur = currentRod(st);
+  Object.entries(RODS).forEach(([id, r]) => {
+    const open = rodUnlocked(st, id);
     const row = document.createElement('button');
-    row.className = 'bobber' + (b.id === cur.id ? ' on' : '') + (open ? '' : ' locked');
+    row.className = 'bobber' + (id === cur.id ? ' on' : '') + (open ? '' : ' locked');
     row.disabled = !open;
-    const n = b.goal ? Math.min(b.goal.n(s), b.goal.of) : 0;
-    row.innerHTML = `<i class="bob-dot" style="--top:${b.top};--base:${b.base}"></i><span><b></b><small></small></span><em></em>`;
-    row.querySelector('b').textContent = b.name;
-    row.querySelector('small').textContent = open ? `Bites in ${b.wait[0]}–${b.wait[1]}s · ${(b.window / 1000).toFixed(2)}s to react${b.luck ? ` · rarer fish +${Math.round(b.luck * 100)}%` : ''}${b.night ? ' · night fish love it' : ''}` : `${b.goal.text} (${n}/${b.goal.of})`;
-    row.querySelector('em').textContent = b.id === cur.id ? 'Equipped' : open ? 'Equip' : 'Locked';
+    row.innerHTML = `<i class="bob-dot" style="--top:${r.top};--base:${r.base}"></i><span><b></b><small></small></span><em></em>`;
+    row.querySelector('b').textContent = r.name;
+    row.querySelector('small').textContent = open ? `Bites in ${r.wait[0]}–${r.wait[1]}s · ${(r.window / 1000).toFixed(2)}s to react${r.rareMult > 1 ? ` · rare fish +${Math.round((r.rareMult - 1) * 100)}%` : ''}` : r.text;
+    row.querySelector('em').textContent = id === cur.id ? 'Equipped' : open ? 'Equip' : 'Locked';
     if (open)
       row.onclick = () => {
-        equipBobber(b.id);
+        equipRod(st, id);
+        p.store.commit();
         sfx('tap');
         refresh();
       };
     blist.appendChild(row);
   });
   nodes.push(blist);
+
+  const gear = [...Object.entries(st.fish.baits).map(([id, n]) => ({ id, n, kind: 'bait', def: BAITS[id] })), ...(p.has('fishing.lure_slot') ? Object.entries(st.fish.lures).map(([id, n]) => ({ id, n, kind: 'lure', def: LURES[id] })) : [])].filter((g) => g.def);
+  nodes.push(h('Bait and lures'));
+  const glist = document.createElement('div');
+  glist.className = 'bobber-list';
+  if (!gear.length) {
+    const none = document.createElement('p');
+    none.className = 'catch-note';
+    none.textContent = 'No bait yet. Ranks, skills and the shop give some. A good bait pulls the fish you want.';
+    nodes.push(none);
+  }
+  gear.forEach((g) => {
+    const on = st.fish.equipped[g.kind] === g.id;
+    const row = document.createElement('button');
+    row.className = 'bobber' + (on ? ' on' : '');
+    row.innerHTML = `<i class="bob-dot" style="--top:#c8904a;--base:#e8c890"></i><span><b></b><small></small></span><em></em>`;
+    row.querySelector('b').textContent = `${g.def.name} ×${g.n}`;
+    row.querySelector('small').textContent = g.def.desc;
+    row.querySelector('em').textContent = on ? 'Equipped' : 'Equip';
+    row.onclick = () => {
+      const ok = on ? (g.kind === 'bait' ? equipBait(st, '') : equipLure(st, '', p.perks())) : g.kind === 'bait' ? equipBait(st, g.id) : equipLure(st, g.id, p.perks());
+      if (ok !== false) p.store.commit();
+      sfx('tap');
+      refresh();
+    };
+    glist.appendChild(row);
+  });
+  nodes.push(glist);
   return nodes;
 });
+
+const JUNK = () => FINDS.filter((f) => f.junk);
 
 // ---------- The fishing itself ----------
 // Runs inside a scene; the scene supplies the player sprite and calls
@@ -226,6 +143,12 @@ export class Fishing {
     this.state = 'idle';
     this.g = scene.add.graphics().setDepth(4000);
     this.me = { s: player }; // (for the faces you pull)
+    this.fx = scene.waterfx = new WaterFx(scene, progression());
+    scene.events.once('shutdown', () => {
+      this.end();
+      this.fx.destroy();
+      release('fishing');
+    });
   }
 
   get busy() {
@@ -236,15 +159,26 @@ export class Fishing {
   cast(target, water, weather) {
     if (this.busy) return;
     const s = this.scene;
-    this.water = water;
-    this.weather = weather;
-    this.bobber = currentBobber();
+    const p = progression();
+    const hot = this.fx.hotNear(target);
+    this.plan = prepareCast(p, {
+      mapId: s.regionKey,
+      water,
+      weather,
+      hour: hourNow(),
+      season: s.season,
+      hotNear: !!hot,
+      rumorHere: this.fx.rumorNear(target),
+      spotId: hot ? `hot:${hot.tx},${hot.ty}` : `${Math.floor(target.x / 32)},${Math.floor(target.y / 32)}`,
+    });
+    hold('fishing');
     this.target = target;
+    this.rod = this.plan.rod;
     this.state = 'cast';
     this.t = 0;
     sfx('cast');
     haptic(10);
-    const key = bobberTexture(s, this.bobber);
+    const key = bobberTexture(s, this.rod);
     const tip = this.tip();
     this.bob = s.add.image(tip.x, tip.y, key).setOrigin(0.5, 1).setDepth(target.y + 1);
     s.tweens.addCounter({
@@ -253,18 +187,23 @@ export class Fishing {
       duration: 480,
       ease: 'Sine.easeOut',
       onUpdate: (tw) => {
+        if (!this.bob) return;
         const k = tw.getValue();
         const a = this.rodTip();
         this.bob.setPosition(a.x + (target.x - a.x) * k, a.y + (target.y + 3 - a.y) * k - Math.sin(k * Math.PI) * 30);
       },
       onComplete: () => {
+        if (!this.bob || this.state !== 'cast') return;
         this.splash(target.x, target.y + 2, 1);
         sfx('plop');
         this.state = 'wait';
         this.t = 0;
-        const [a, b] = this.bobber.wait;
-        this.biteAt = a + Math.random() * (b - a);
+        this.biteAt = this.plan.wait;
         this.nibbles = [0.35, 0.6, 0.8].filter(() => Math.random() < 0.6).map((k) => this.biteAt * k);
+        // rarer fish twitch the bobber before they commit: the pulse rises before the reveal
+        const pulses = this.plan.tell.pulses;
+        this.twitches = Array.from({ length: pulses }, (_, i) => Math.max(0.2, this.biteAt - 0.28 * (pulses - i)));
+        this.fx.showShadow(this.plan, target);
       },
     });
   }
@@ -278,7 +217,7 @@ export class Fishing {
     return { x: p.x + dx, y: p.y + dy };
   }
 
-  // The rod swings back and forward as you cast, sways while you wait and bends when something bites.
+  // The rod swings back and forward as you cast, sways while you wait, bends when something bites and jerks while you reel.
   rodTip() {
     const tip = this.tip();
     const p = this.player;
@@ -290,6 +229,7 @@ export class Fishing {
     }
     if (this.state === 'bite') return { x: tip.x, y: tip.y + 3 + Math.sin(this.t * 40) * 1.2 };
     if (this.state === 'wait') return { x: tip.x, y: tip.y + Math.sin(this.t * 2) * 0.5 };
+    if (this.state === 'reelin') return { x: tip.x, y: tip.y - 1 + Math.sin(this.t * 22) * 1.4 };
     if (this.state === 'reel') return { x: tip.x, y: tip.y - 2 + Math.sin(this.t * 28) * 1.6 };
     return tip;
   }
@@ -310,13 +250,14 @@ export class Fishing {
   update(dt) {
     const g = this.g;
     g.clear();
+    this.fx.update(dt);
     if (!this.busy) return;
     this.t += dt;
     if (this.state === 'reel' && this.fishImg?.active) {
-      // reeling in: the rod jerks and the line runs tight to the catch as it flies to you
+      // the catch flies to you: the rod jerks and the line runs tight to it
       const p = this.player;
       const a = this.rodTip();
-      g.lineStyle(1.5, 0x5a3a24, 1).lineBetween(p.x + (a.x - p.x) * 0.25, p.y - 14, a.x, a.y);
+      g.lineStyle(1.5, cosmeticColor('rodskin') ?? 0x5a3a24, 1).lineBetween(p.x + (a.x - p.x) * 0.25, p.y - 14, a.x, a.y);
       g.lineStyle(0.6, 0xf4f0e6, 0.9).lineBetween(a.x, a.y, this.fishImg.x, this.fishImg.y - 3);
       return;
     }
@@ -333,17 +274,28 @@ export class Fishing {
           sfx('tap');
         }
       }
+      const tw = this.twitches.find((n) => this.t > n && this.t < n + 0.16);
+      if (tw !== undefined) {
+        y += this.plan.tell.dip * 0.5;
+        if (!this.twitched?.has(tw)) {
+          (this.twitched ||= new Set()).add(tw);
+          this.splash(tgt.x, tgt.y + 2, 1);
+          sfx('bite');
+          haptic(Math.round(this.plan.tell.haptic * 0.6));
+        }
+      }
       this.bob.setPosition(tgt.x, y);
       if (this.t >= this.biteAt) this.bite();
     } else if (this.state === 'bite') {
-      this.bob.setPosition(tgt.x + Math.sin(this.t * 40) * 0.8, tgt.y + 6).setAlpha(0.55);
-      if (this.t > this.bobber.window / 1000) this.miss();
+      const tell = this.plan.tell;
+      this.bob.setPosition(tgt.x + Math.sin(this.t * 40) * (0.6 + tell.shake * 0.5), tgt.y + 3 + tell.dip * 0.6).setAlpha(0.55);
+      if (this.t > this.plan.window / 1000) this.miss();
     }
     if (!this.bob) return; // it got away (or was hooked) this frame
     // the rod and the line (sagging a little while it waits)
     const a = this.rodTip();
     const p = this.player;
-    g.lineStyle(1.5, 0x5a3a24, 1);
+    g.lineStyle(1.5, cosmeticColor('rodskin') ?? 0x5a3a24, 1);
     g.lineBetween(p.x + (a.x - p.x) * 0.25, p.y - 14, a.x, a.y);
     g.lineStyle(0.6, 0xf4f0e6, 0.85);
     const b = { x: this.bob.x, y: this.bob.y - 8 };
@@ -356,11 +308,13 @@ export class Fishing {
     const s = this.scene;
     this.state = 'bite';
     this.t = 0;
+    this.fx.hideShadow();
     this.splash(this.target.x, this.target.y + 2, 1);
     sfx('bite');
-    haptic(60);
+    haptic(this.plan.tell.haptic || 40);
     const p = this.player;
-    this.bang = s.add.text(p.x, p.y - 46, '!', { fontFamily: 'Georgia, serif', fontSize: '34px', fontStyle: 'bold', color: '#ffe36b', stroke: '#1d1714', strokeThickness: 6 }).setOrigin(0.5, 1).setDepth(4001).setResolution(4);
+    const big = this.plan.species ? this.plan.species.rarity >= 4 : false;
+    this.bang = s.add.text(p.x, p.y - 46, '!', { fontFamily: 'Georgia, serif', fontSize: big ? '44px' : '34px', fontStyle: 'bold', color: big ? '#f2d36b' : '#ffe36b', stroke: '#1d1714', strokeThickness: 6 }).setOrigin(0.5, 1).setDepth(4001).setResolution(4);
     this.bang.setScale(0.2);
     s.tweens.add({ targets: this.bang, scale: 1, duration: 140, ease: 'Back.easeOut' });
   }
@@ -374,59 +328,129 @@ export class Fishing {
     }
   }
 
+  // hooked: the reel minigame (junk comes in without a fight)
   hook() {
-    const s = this.scene;
-    const item = roll(this.water, this.weather, this.bobber);
-    const info = record(item);
-    this.state = 'reel';
+    const plan = this.plan;
     this.bang?.destroy();
+    this.bang = null;
+    this.splash(this.target.x, this.target.y + 2, 1);
     sfx('reel');
     haptic(25);
-    // the catch flies out of the water to you
-    const pic = drawCatch(item, 1);
-    const key = `catch_${item.id}`;
-    if (!s.textures.exists(key)) s.textures.addCanvas(key, pic);
-    const p = this.player;
-    const fish = s.add.image(this.target.x, this.target.y, key).setDepth(4002).setScale(0.9);
-    this.fishImg = fish;
-    this.t = 0;
-    this.splash(this.target.x, this.target.y + 2, 1);
-    this.bob.destroy();
-    this.bob = null;
-    this.g.clear();
-    s.tweens.add({
-      targets: fish,
-      x: p.x,
-      y: p.y - 44,
-      duration: 420,
-      ease: 'Quad.easeOut',
-      onComplete: () => {
-        s.tweens.add({ targets: fish, y: fish.y - 3, yoyo: true, repeat: -1, duration: 300 });
-        sfx(item.junk ? 'nope' : item.rarity >= 3 ? 'levelup' : 'star');
-        showCatch(item, info, () => {
-          fish.destroy();
-          this.state = 'idle';
-          popEmote(s, this.me, item.junk ? 'confused' : item.rarity >= 3 ? 'sparkle' : 'smile', { hold: 1800 });
-        });
+    if (plan.junk || !plan.species) return this.land({ perfect: false });
+    this.state = 'reelin';
+    const reel = (this.reel = newReel(progression(), plan));
+    this.stopReel = runReel(reel, {
+      legend: plan.species.rarity === 5,
+      onEnd: (r) => {
+        this.stopReel = null;
+        if (r.won) this.land({ perfect: r.perfect });
+        else this.escape();
       },
     });
   }
 
-  miss() {
-    this.scene.toast('It got away…');
-    popEmote(this.scene, this.me, 'frown');
+  land(result) {
+    const s = this.scene;
+    const p = progression();
+    const plan = this.plan;
+    this.state = 'reel';
+    const rec = completeCast(p, plan, result);
+    this.bob?.destroy();
+    this.bob = null;
+    this.g.clear();
+    this.fx.hideShadow();
+    const junk = rec.junk ? JUNK()[Math.floor(Math.random() * JUNK().length)] : null;
+    const sp = rec.junk ? null : speciesById(p.last.speciesId);
+    const entry = junk ? junk.entry : sp.entry;
+    // the catch flies out of the water to you
+    const pic = drawEntry(entry, 1);
+    const key = `catch_${entry.id}`;
+    if (!s.textures.exists(key)) s.textures.addCanvas(key, pic);
+    const pl = this.player;
+    const fish = s.add.image(this.target.x, this.target.y, key).setDepth(4002).setScale(0.9);
+    this.fishImg = fish;
+    this.t = 0;
+    this.splash(this.target.x, this.target.y + 2, 1);
+    s.tweens.add({
+      targets: fish,
+      x: pl.x,
+      y: pl.y - 44,
+      duration: 420,
+      ease: 'Quad.easeOut',
+      onComplete: () => {
+        s.tweens.add({ targets: fish, y: fish.y - 3, yoyo: true, repeat: -1, duration: 300 });
+        const done = () => {
+          fish.destroy();
+          this.fishImg = null;
+          this.state = 'idle';
+          release('fishing');
+          popEmote(s, this.me, junk ? 'confused' : sp.rarity >= 3 ? 'sparkle' : 'smile', { hold: 1800 });
+        };
+        if (junk) this.showJunk(junk, done);
+        else showReveal(sp, p.last, done);
+      },
+    });
+  }
+
+  showJunk(item, done) {
+    const card = document.getElementById('catch');
+    card.className = 'rarity-1';
+    card.classList.remove('hidden');
+    const pic = card.querySelector('.catch-pic');
+    pic.className = 'catch-pic';
+    pic.replaceChildren(drawEntry(item.entry, 6));
+    card.querySelector('.catch-title').textContent = item.name;
+    card.querySelector('.catch-meta').textContent = '';
+    card.querySelector('.catch-note').textContent = 'Not a fish. Into the bin it goes.';
+    card.querySelector('.catch-hint').textContent = 'Tap to continue';
     sfx('nope');
-    this.end();
+    setTimeout(() => {
+      card.onclick = () => {
+        card.classList.add('hidden');
+        card.onclick = null;
+        done();
+      };
+    }, 350);
+  }
+
+  // the line snapped or the window passed: show what it was
+  escape() {
+    const p = progression();
+    const plan = this.plan;
+    this.bang?.destroy();
+    this.bang = null;
+    this.bob?.destroy();
+    this.bob = null;
+    this.g.clear();
+    this.fx.hideShadow();
+    this.state = 'reel';
+    loseCast(p, plan);
+    haptic(40);
+    showNearMiss(p.last, plan.species, () => {
+      this.state = 'idle';
+      release('fishing');
+      popEmote(this.scene, this.me, 'frown');
+    });
+  }
+
+  miss() {
+    this.escape();
   }
 
   // reel in with nothing
   end() {
+    this.stopReel?.();
+    this.stopReel = null;
     this.bang?.destroy();
     this.bang = null;
     this.bob?.destroy();
     this.bob = null;
     this.nibbled = null;
+    this.twitched = null;
     this.g.clear();
+    this.fx?.hideShadow();
+    if (this.state !== 'idle') progression().state.fish.pending = null;
     this.state = 'idle';
+    release('fishing');
   }
 }

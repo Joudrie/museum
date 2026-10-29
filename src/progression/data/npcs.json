@@ -1,0 +1,304 @@
+[
+ {
+  "id": "edmund",
+  "name": "Edmund",
+  "region": "main",
+  "role": "Caretaker",
+  "kind": "caretaker",
+  "birthday": [
+   3,
+   14
+  ],
+  "loves": [
+   "gift:tea"
+  ],
+  "likes": [
+   "gift:book",
+   "fish:carp"
+  ],
+  "hates": [
+   "gift:boot"
+  ],
+  "line": "I have kept this place for forty years, and it has never been quiet.",
+  "emote": "star",
+  "questItems": [
+   "gift:tea",
+   "gift:book"
+  ]
+ },
+ {
+  "id": "wen",
+  "name": "Wen",
+  "region": "main",
+  "role": "Pond keeper",
+  "kind": "elder",
+  "birthday": [
+   5,
+   2
+  ],
+  "loves": [
+   "fish:koi",
+   "gift:bread"
+  ],
+  "likes": [
+   "fish:carp",
+   "gift:berry"
+  ],
+  "hates": [
+   "gift:boot"
+  ],
+  "line": "Feed the pond and the pond feeds you back.",
+  "emote": "note",
+  "questItems": [
+   "fish:koi",
+   "gift:bread"
+  ]
+ },
+ {
+  "id": "mara",
+  "name": "Mara",
+  "region": "one",
+  "role": "Harbour sailor",
+  "kind": "casual",
+  "birthday": [
+   8,
+   20
+  ],
+  "loves": [
+   "fish:squid",
+   "gift:shell"
+  ],
+  "likes": [
+   "fish:mackerel",
+   "gift:tea"
+  ],
+  "hates": [
+   "fish:puffer"
+  ],
+  "line": "Harbours are for leaving, and for coming home to.",
+  "emote": "heart",
+  "questItems": [
+   "fish:squid",
+   "gift:shell"
+  ]
+ },
+ {
+  "id": "tal",
+  "name": "Tal",
+  "region": "isle",
+  "role": "Castaway",
+  "kind": "tourist",
+  "birthday": [
+   6,
+   9
+  ],
+  "loves": [
+   "fish:sardine",
+   "gift:berry"
+  ],
+  "likes": [
+   "gift:shell",
+   "fish:clownfish"
+  ],
+  "hates": [
+   "gift:tea"
+  ],
+  "line": "I came for a day. That was three summers ago.",
+  "emote": "star",
+  "questItems": [
+   "fish:sardine",
+   "gift:berry"
+  ]
+ },
+ {
+  "id": "rook",
+  "name": "Rook",
+  "region": "pirate",
+  "role": "Lookout",
+  "kind": "grump",
+  "birthday": [
+   10,
+   31
+  ],
+  "loves": [
+   "gift:pinecone",
+   "fish:barracuda"
+  ],
+  "likes": [
+   "fish:mackerel"
+  ],
+  "hates": [
+   "gift:flower"
+  ],
+  "line": "Keep your voice down. The jungle listens.",
+  "emote": "bang",
+  "questItems": [
+   "gift:pinecone",
+   "fish:barracuda"
+  ]
+ },
+ {
+  "id": "ines",
+  "name": "Ines",
+  "region": "wreck",
+  "role": "Diver",
+  "kind": "nerd",
+  "birthday": [
+   7,
+   4
+  ],
+  "loves": [
+   "fish:seahorse",
+   "gift:shell"
+  ],
+  "likes": [
+   "fish:parrotfish"
+  ],
+  "hates": [
+   "gift:boot"
+  ],
+  "line": "Down there the light comes in sideways.",
+  "emote": "question",
+  "questItems": [
+   "fish:seahorse",
+   "gift:shell"
+  ]
+ },
+ {
+  "id": "oda",
+  "name": "Oda",
+  "region": "north",
+  "role": "Ice elder",
+  "kind": "elder",
+  "birthday": [
+   1,
+   12
+  ],
+  "loves": [
+   "fish:char",
+   "gift:snowcrystal"
+  ],
+  "likes": [
+   "fish:smelt",
+   "gift:tea"
+  ],
+  "hates": [
+   "gift:flower"
+  ],
+  "line": "The ice remembers more than we do.",
+  "emote": "note",
+  "questItems": [
+   "fish:char",
+   "gift:snowcrystal"
+  ]
+ },
+ {
+  "id": "bram",
+  "name": "Bram",
+  "region": "heist",
+  "role": "Rock fisher",
+  "kind": "grump",
+  "birthday": [
+   11,
+   23
+  ],
+  "loves": [
+   "fish:cod",
+   "gift:tea"
+  ],
+  "likes": [
+   "fish:herring"
+  ],
+  "hates": [
+   "gift:berry"
+  ],
+  "line": "Nothing grows here but patience.",
+  "emote": "bang",
+  "questItems": [
+   "fish:cod",
+   "gift:tea"
+  ]
+ },
+ {
+  "id": "sefu",
+  "name": "Sefu",
+  "region": "tomb",
+  "role": "Dock keeper",
+  "kind": "elder",
+  "birthday": [
+   9,
+   15
+  ],
+  "loves": [
+   "fish:snapper",
+   "gift:book"
+  ],
+  "likes": [
+   "fish:mullet"
+  ],
+  "hates": [
+   "fish:puffer"
+  ],
+  "line": "The stones are older than the sea, I think.",
+  "emote": "note",
+  "questItems": [
+   "fish:snapper",
+   "gift:book"
+  ]
+ },
+ {
+  "id": "dune",
+  "name": "Dune",
+  "region": "badlands",
+  "role": "Cliff guide",
+  "kind": "casual",
+  "birthday": [
+   4,
+   27
+  ],
+  "loves": [
+   "fish:sardine",
+   "gift:pinecone"
+  ],
+  "likes": [
+   "gift:shell"
+  ],
+  "hates": [
+   "gift:tea"
+  ],
+  "line": "Red rock gets under your nails and into your heart.",
+  "emote": "heart",
+  "questItems": [
+   "fish:sardine",
+   "gift:pinecone"
+  ]
+ },
+ {
+  "id": "yuki",
+  "name": "Yuki",
+  "region": "temple",
+  "role": "Temple keeper",
+  "kind": "superfan",
+  "birthday": [
+   2,
+   8
+  ],
+  "loves": [
+   "fish:tarpon",
+   "gift:flower"
+  ],
+  "likes": [
+   "gift:berry",
+   "fish:snapper"
+  ],
+  "hates": [
+   "gift:boot"
+  ],
+  "line": "It rains, and the steps shine, and I sweep them again.",
+  "emote": "heart",
+  "questItems": [
+   "fish:tarpon",
+   "gift:flower"
+  ]
+ }
+]

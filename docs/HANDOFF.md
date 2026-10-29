@@ -250,6 +250,16 @@ island scene streams ground chunks around the player.
 - Tests: `node tests/interact.cjs` (rules and details), `node tests/qa-interactions.cjs` (plays through every kind of interaction and checks the target, the bubble's tail, and that input is never left stuck).
 - **Little scenes** (`src/vignettes.js`): on the home islands, by day: a groundskeeper whose chore follows the season (rake leaves, shovel snow, water flowers, sweep sand) with breaks and a gust that scatters the pile, three kids running circles and stopping dizzy, a painter whose canvas fills up, a kid with a kite on a clear day, someone sweeping the museum porch, someone reading on a bench, a dog chasing its tail, someone dozing under a tree, a jogger running laps (`src/vignettes2.js`); in spring and summer the groundskeeper waters the flowers. They are `islanders` with a `script` (see `moveIslanders`), placed by `findSpot` on plain lawn in front of the museum, seeded by the date. Add one = a class with `update(dt)` and a few lines in `buildVignettes`.
 
+### Progression and retention layer (docs/PROGRESSION.md)
+- **Read `docs/PROGRESSION.md` first**: it maps every part of the spec to code, logs the conflicts with VISION.md, and holds the tuning tables and sim results.
+- Code is `src/progression/` (pure, Node-safe modules + `ui/` for the screens). **Gameplay only emits events** on the bus (`bus.js`); `service.js` + the modules in `modules.js` route them to rank, skills, journal, tasks, friendship, economy and telemetry. Never call XP or journal code directly from a scene.
+- **All tuning numbers live in `src/progression/config.js`**; content is data in `src/progression/data/` (ranks, skills, rods, baits, shop ladder, regions, legends, NPCs, gifts, tasks, events, monthly, cosmetics) and the fish in `src/collections/data/fish*.js` (72 species: 60 plus 12 festival fish).
+- Save: one versioned key `curation.progress` (`store.js`, with migrations). Time is `clock.js` (day turns at 4:00, never runs backwards). Randomness is `rng.js` (seeded).
+- Rewards go through one `RewardQueue` (`rewardqueue.js`); `ui/juice.js` draws them; `index.js` holds it while a dialogue, menu, catch card or the reel is open.
+- Tests: `node tests/progression.cjs` (headless), `progression-content` (validator), `progression-ui` (browser), `progression-sim` (acceptance targets). Tools: `node tools/validate_progression.mjs`, `node tools/sim_progression.mjs --hours 150 --runs 3 --csv out.csv`, `node tools/telemetry_report.mjs events.json`.
+- Dev panel: open the game with `?debug=1`.
+- Things the old code did that changed: fishing is now the cast, wait, "!" and reel minigame; the museum's rarity scale has 5 tiers (Epic added); the daily reset is 4:00; boats are bought (rank, then gold); locked islands show in the boat menu (expedition tests were updated).
+
 ### Gotchas we hit
 - **Phaser reuses the previous scene data** if you call `scene.start('island')` with no data.
   Always pass data explicitly, e.g. `{ map: 'main' }`. Leaving the museum once dropped you on
