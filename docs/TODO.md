@@ -80,7 +80,7 @@ Owns: `src/showcase.js`, `src/viewer.js`, `src/collections/render.js`, new `src/
 - [ ] Rope barriers, stanchions and signage as placeable decor.
 
 ## CHAT 6: Digging v2 and puzzle mechanics
-Owns: `src/dig.js`, `src/puzzles*.js`, `src/collections/data/{minerals,fossils}.js`. Claim: `open`
+Owns: `src/dig.js`, `src/puzzles*.js`, `src/collections/data/{minerals,fossils}.js`. Claim: `claimed: 2026-10-29`
 - [ ] More finds as data collections: pottery shards, coins, arrowheads, shells, meteorites, amber.
 - [ ] Dig tools (brush, trowel, pick) that change speed and what turns up; a bone that needs several spots to complete.
 - [ ] Bigger dig sites: a cliff face or trench worked across several tiles; a dig-site room sandbox.
