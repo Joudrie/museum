@@ -366,6 +366,26 @@ export class IslandScene extends Phaser.Scene {
     [...this.chunks.values()].forEach((e) => (e.cx < x0 - 2 || e.cx > x1 + 2 || e.cy < y0 - 2 || e.cy > y1 + 2) && this.dropChunk(e));
   }
 
+  // Hide the placed pieces well off screen. Phaser sorts and culls every object on every frame,
+  // so on a big island thousands of far trees cost real time. (Pieces something else hid stay hidden.)
+  cullPlaced() {
+    if (!this.placed?.length || !this.cameras?.main) return;
+    const v = this.cameras.main.worldView;
+    const m = 96; // a walking step (~42 px between calls) plus slack
+    this.placed.forEach((e) => {
+      const i = e.img;
+      if (!i.scene) return;
+      const far = i.x > v.right + m || i.x + i.displayWidth < v.x - m || i.y - i.displayHeight > v.bottom + m || i.y < v.y - m;
+      if (far && i.visible) {
+        i.setVisible(false);
+        e.far = true;
+      } else if (!far && e.far) {
+        i.setVisible(true);
+        e.far = false;
+      }
+    });
+  }
+
   // A tile or object, standing on cell (x, y) (its bottom row), sorted by depth.
   place(name, x, y, opts = {}) {
     const t = TILES[name];
@@ -901,6 +921,7 @@ export class IslandScene extends Phaser.Scene {
     this.frame = (this.frame + 1) % 4;
     this.groundAnim.forEach(({ img, keys }) => img.setTexture(keys[this.frame]));
     this.streamChunks();
+    this.cullPlaced();
     this.animated.forEach(({ img, keys }) => img.setTexture(keys[this.frame % keys.length]));
   }
 
@@ -1066,8 +1087,11 @@ export class IslandScene extends Phaser.Scene {
   }
 
   moveIslanders(dt) {
+    const v = this.cameras.main.worldView;
     this.islanders.forEach((n) => {
       const { s } = n;
+      // (people well off screen stand still: nobody sees them, and hundreds of them cost frames)
+      if (!n.target && (s.x < v.x - 160 || s.x > v.right + 160 || s.y < v.y - 160 || s.y > v.bottom + 160)) return;
       if (this.focus?.npc === n && talking()) n.target = null; // stops to chat
       const a = n.animal;
       if (!n.target) {
