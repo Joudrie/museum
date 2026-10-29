@@ -117,9 +117,9 @@ Owns: `src/rooms.js`, `src/shaped.js`, `src/walldraw.js`, `src/atrium.js`, `src/
 - [ ] Elevator in the lobby and the first new floor (each floor a self-contained pack).
 - [ ] Front lawn you walk out onto (steps, banners, fountain, sign); museum exterior and facade styles that change the building (look comes from the user).
 - [ ] Rooftop terrace with a telescope at night.
-- [x] Room presets (PR pending): save a room's layout ("Winter", "Halloween") and load it again.
+- [x] Room presets (#133): save a room's layout ("Winter", "Halloween") and load it again.
 - [ ] Construction takes real time (small quick, big about a day, 2 builders); everything else instant.
-- [ ] Themed room bonus: done (PR pending); unlimited rooms and a performance test at 100+ rooms: open.
+- [ ] Themed room bonus: done (#146); unlimited rooms and a performance test at 100+ rooms: open.
 - [ ] Re-shuffle and repurpose rooms; the West Wing (waits for the user's outline).
 - [ ] Always re-run `tests/gaps.cjs`: no black gaps between walls, ever.
 
@@ -188,6 +188,7 @@ Mini-games (Mop Rush, No Flash!, Restoration-as-minigame, Crate Tetris, Hang it 
 - Latin America, the Pacific, the Middle East beyond Iran and Indigenous North America have almost no public-domain paintings with museum text in the Met, Cleveland or Commons; the Smithsonian key is the way in.
 - **Approve the rarity proposal** (`content/rarity-proposals.json`) and the Painting of the Day lines (`content/potd/draft.json`).
 - Smithsonian (`SI_API_KEY`) and Rijksmuseum (`RIJKS_API_KEY`) keys.
+- Chat 9: front lawn and facade (what does the outside look like?); rooftop terrace and telescope (where does it sit, which room reaches it?); elevator (what does each new floor hold?); construction times (is a day of waiting OK with "no wasted time"?); seamless archways showing two rooms at once (how much of the next room should show?).
 - Non-square rooms: what shapes, how they join, how they look (blocks Chat 9's first item).
 - West Wing outline; break-room upgrade ideas (defaults in `src/economy.js`: Better mops 90→120/160/220 min for 250/700/1800 gold, Guide training +10%→12/15/20% for 400/1100/2800, Carpenter's toolbox 10/20/30% off rooms for 350/900/2200; office levels 500/2000/8000/30000; collect-all fee 15%; security 150/400/1500, bounty 120; Better beans x1.25/1.5/2 for 300/800/2000; services: gift shop 600 gold, food court 1200, discovery table 700, lecture stage 1500, earnings in `SERVICES`); goal pacing and daily goals.
 - Dig spots on Main Island: place them in the builder where you want them.
