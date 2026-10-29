@@ -1,7 +1,7 @@
 # Master to-do board (every chat reads this first)
 
 Many chats work on Curation at the same time. This board is how they stay aware of each other.
-It lists **every feature we have considered**, split into **15 chats** (1 to 15). Each chat has its own area and files.
+It lists **every feature we have considered**, split into **15 chats** numbered by priority (1 is most important). Each chat has its own area and files.
 Read `CLAUDE.md`, `docs/VISION.md` and `docs/HANDOFF.md` first, then this file.
 
 **Your prompt is just:** *"Read CLAUDE.md, docs/VISION.md, docs/HANDOFF.md and docs/TODO.md. You are CHAT N. Claim it and work through it."*
@@ -48,14 +48,15 @@ Owns: `src/builder/`, `builder.html`, `public/builder/`, `tools/build_palette.py
 - [ ] Builder Playwright tests (place, turn, undo, save, vault restore).
 - [ ] Never lose work: keep the autosave and vault paths intact; test crash and reload.
 
-## CHAT 3: Asset hunt and art swap support
-Owns: `assets/vendor/`, `docs/ASSETS.md`, `tools/extract_sprites.py`, `tools/` sprite scripts. Claim: `open`
-- [ ] Run the **super dig** in `docs/ASSET-HUNT.md` (find, don't make; CC0 / CC-BY / CC-BY-SA / OGA-BY / GPL only; no non-commercial). Check network access first and don't get around bot checks; list itch.io links for the user to download by hand. Save results to `docs/ASSETS.md` (round 3), ranked top 20.
-- [ ] Categories: statues and sculpture (busts, plinths, display cases, rope barriers); jagged rocks and nature; museum architecture pieces (glass, curved, arches, domes, skylights, spiral stairs, facades); exhibits (dinosaur skeletons, mummies, armour, pottery, meteorites, ship models, taxidermy, aquarium tanks); furniture with four facings; island buildings, fences, docks, boats, market stalls, playground, festival decor; characters and animals; dig-site props (tents, crates, tools).
-- [ ] A script that lists every placeholder sprite and tile by name, size and where it's used, so the user can redraw one at a time.
-- [ ] **Drop-in swap:** a PNG with the same name in a folder overrides the placeholder, no code change.
-- [ ] Keep `tools/build_palette.py` outputs stable (piece ids never shift).
-- [ ] (Not wanted now: `docs/ART-AUDIT.md`, `ART-BIBLE.md`, `ART-BRIEF.md`. Don't continue them.)
+## CHAT 3: Quality, performance and polish
+Owns: `tests/`, `.github/`, `vite.config.js`, `src/settings*.js`, `src/ui.js`. Claim: `open`
+- [ ] **Stabilise the flaky tests** (playtest, smoke "cottage door"). Find the real race; don't just retry.
+- [ ] Phone performance: measure FPS on huge islands, many NPCs and lighting (today's numbers are the busiest room only). Set budgets and fix.
+- [ ] Tests for dig, fossils, turn families and the content pipeline; CI that runs content, collections and gaps on every PR.
+- [ ] Save safety: versioned saves and corrupt-save recovery for every store (`curation.digs`, codex, builder).
+- [ ] Bundle size (the build warns about a large chunk): split by scene, lazy-load.
+- [ ] Accessibility and settings polish that doesn't change the look the user is about to set. Menu and collection-screen **redesign waits for the user's direction.**
+- [ ] A bug sweep with a repeatable full-flow test after each big merge.
 
 ## CHAT 4: Restoration and provenance (loop step 4)
 Owns: new `src/restore.js`, `src/restorestudio.js`, `src/storage_room.js`. Claim: `open`
@@ -122,18 +123,7 @@ Owns: `src/rooms.js`, `src/shaped.js`, `src/walldraw.js`, `src/atrium.js`, `src/
 - [ ] Re-shuffle and repurpose rooms; the West Wing (waits for the user's outline).
 - [ ] Always re-run `tests/gaps.cjs`: no black gaps between walls, ever.
 
-## CHAT 10: Halls (the content that fills the rooms)
-Owns: new `src/halls/`, room-preset JSON in `content/halls/`. Claim: `open`. Depends on Chats 5, 8 and 9 landing; start with presets and decor lists.
-- [ ] **Art:** galleries by era (Renaissance, Dutch, Impressionist, American, Japanese prints); sculpture court; **the Gardner Room** (salon walls around a courtyard garden; the empty heist frames); modern wing (white cube, when copyright allows); prints and early photography.
-- [ ] **Science:** dinosaur hall (T. rex centrepiece, fossil shelves in HD); space (planetarium dome, meteorites, moon rock, rocket); electricity (Van de Graaff and a timed lightning show); human body, optics, illusions (mirror maze, camera obscura).
-- [ ] **Natural history:** glass flowers, minerals and gems, taxidermy dioramas, ocean hall with a whale skeleton, aquarium wing.
-- [ ] **History and archaeology:** Egypt (mummies, sarcophagi, canopic jars), Greek and Roman (urns, mosaics, columns), maritime (ship models, figureheads), arms and armor, clocks and inventions.
-- [ ] **Architecture:** model hall (famous buildings in miniature, Gothic arches, column orders).
-- [ ] **Themed wings:** Japanese (cherry blossoms, ukiyo-e), Chinese (ink scrolls), and other non-European wings.
-- [ ] **Outside:** huge garden (swan-boat pond, Japanese garden, hedge maze, greenhouse, koi pond, sculpture garden), petting zoo or farm floor.
-- [ ] Each hall = a themed room preset + decor + which collections and sets belong there.
-
-## CHAT 11: Living museum, people and story
+## CHAT 10: Living museum, people and story
 Owns: `src/famous.js`, `src/lines.js`, `src/quests.js`, `src/talk.js`, `src/staff.js`. Claim: `open`
 - [ ] Visitors with memories, goals and relationships; regulars that grow into characters; personalities (nerd, casual, superfan, snob, kid, grump, tourist) with more lines.
 - [ ] Famous visitors with quest chains and period-accurate dialogue; they send you places (feeds Chat 7). Odds rise with their works in your codex; permanent boosts.
@@ -144,7 +134,7 @@ Owns: `src/famous.js`, `src/lines.js`, `src/quests.js`, `src/talk.js`, `src/staf
 - [ ] Events: "Impressionism Week", "Hokusai Festival" with exclusive decor; limited-time collectibles.
 - [ ] Pets and animals in the museum.
 
-## CHAT 12: Atmosphere, seasons and audio
+## CHAT 11: Atmosphere, seasons and audio
 Owns: `src/weather.js`, `src/lighting.js`, `src/ambient.js`, `src/music.js`, `src/foliage.js`, `src/critters.js`. Claim: `open`
 - [ ] Seasons on the real calendar (snow on the lawn, fall leaves, holiday decor, seasonal visitors like trick-or-treaters). Cherry trees must stay pink in autumn if the user asks.
 - [ ] Daily rhythm (Animal Crossing / Stardew feel); weather effects inside and outside; day / night polish.
@@ -153,7 +143,7 @@ Owns: `src/weather.js`, `src/lighting.js`, `src/ambient.js`, `src/music.js`, `sr
 - [ ] Critters, birds, fish and bugs that live on the islands and in the garden.
 - [ ] Waterfalls, fountains, swans, fireflies and other life.
 
-## CHAT 13: Economy, staff and services
+## CHAT 12: Economy, staff and services
 Owns: `src/staffmenu.js`, `src/officemenu.js`, `src/office.js`, `src/incomemenu.js`, `src/wallet.js`, `src/rating.js`. Claim: `open`
 - [ ] Break-room upgrade menu (faster janitors, guide bonus, carpenter speed); Curator's Office level costs and unlocks.
 - [ ] Gift shop (merch of your best paintings), food court, kids' discovery room, lecture hall (a famous visitor gives a talk), library and archive where the stored collection lives, coffee shop depth.
@@ -162,22 +152,32 @@ Owns: `src/staffmenu.js`, `src/officemenu.js`, `src/office.js`, `src/incomemenu.
 - [ ] Late-game sink: frame your own artwork (very expensive).
 - [ ] ON HOLD (needs the user): gems as time (skip construction, "X days of income"), rewarded ads, cosmetics, a seasonal exhibition pass, crates with odds and pity. Rule: **no pay-to-win; never a gem or crate economy as the core.**
 
-## CHAT 14: Share, visit and retention
+## CHAT 13: Share, visit and retention
 Owns: new `src/share*.js`, `src/daily.js`. Claim: `open`
 - [ ] Export a museum as a link; a short tour image strip or clip; "rate my museum" screenshot card.
 - [ ] Visit a friend's museum asynchronously (no multiplayer server); friends' islands in the boat picker (the map format is shareable).
 - [ ] Daily wheel spin, first-game-of-the-day and streak bonuses, daily guests, Painting of the Day surfaced in the UI.
 - [ ] Auction house and co-op cleanup (later, social; ON HOLD).
 
-## CHAT 15: Quality, performance and polish
-Owns: `tests/`, `.github/`, `vite.config.js`, `src/settings*.js`, `src/ui.js`. Claim: `open`
-- [ ] **Stabilise the flaky tests** (playtest, smoke "cottage door"). Find the real race; don't just retry.
-- [ ] Phone performance: measure FPS on huge islands, many NPCs and lighting (today's numbers are the busiest room only). Set budgets and fix.
-- [ ] Tests for dig, fossils, turn families and the content pipeline; CI that runs content, collections and gaps on every PR.
-- [ ] Save safety: versioned saves and corrupt-save recovery for every store (`curation.digs`, codex, builder).
-- [ ] Bundle size (the build warns about a large chunk): split by scene, lazy-load.
-- [ ] Accessibility and settings polish that doesn't change the look the user is about to set. Menu and collection-screen **redesign waits for the user's direction.**
-- [ ] A bug sweep with a repeatable full-flow test after each big merge.
+## CHAT 14: Halls (the content that fills the rooms)
+Owns: new `src/halls/`, room-preset JSON in `content/halls/`. Claim: `open`. Depends on Chats 5, 8 and 9 landing; start with presets and decor lists.
+- [ ] **Art:** galleries by era (Renaissance, Dutch, Impressionist, American, Japanese prints); sculpture court; **the Gardner Room** (salon walls around a courtyard garden; the empty heist frames); modern wing (white cube, when copyright allows); prints and early photography.
+- [ ] **Science:** dinosaur hall (T. rex centrepiece, fossil shelves in HD); space (planetarium dome, meteorites, moon rock, rocket); electricity (Van de Graaff and a timed lightning show); human body, optics, illusions (mirror maze, camera obscura).
+- [ ] **Natural history:** glass flowers, minerals and gems, taxidermy dioramas, ocean hall with a whale skeleton, aquarium wing.
+- [ ] **History and archaeology:** Egypt (mummies, sarcophagi, canopic jars), Greek and Roman (urns, mosaics, columns), maritime (ship models, figureheads), arms and armor, clocks and inventions.
+- [ ] **Architecture:** model hall (famous buildings in miniature, Gothic arches, column orders).
+- [ ] **Themed wings:** Japanese (cherry blossoms, ukiyo-e), Chinese (ink scrolls), and other non-European wings.
+- [ ] **Outside:** huge garden (swan-boat pond, Japanese garden, hedge maze, greenhouse, koi pond, sculpture garden), petting zoo or farm floor.
+- [ ] Each hall = a themed room preset + decor + which collections and sets belong there.
+
+## CHAT 15: Asset hunt and art swap support
+Owns: `assets/vendor/`, `docs/ASSETS.md`, `tools/extract_sprites.py`, `tools/` sprite scripts. Claim: `open`
+- [ ] Run the **super dig** in `docs/ASSET-HUNT.md` (find, don't make; CC0 / CC-BY / CC-BY-SA / OGA-BY / GPL only; no non-commercial). Check network access first and don't get around bot checks; list itch.io links for the user to download by hand. Save results to `docs/ASSETS.md` (round 3), ranked top 20.
+- [ ] Categories: statues and sculpture (busts, plinths, display cases, rope barriers); jagged rocks and nature; museum architecture pieces (glass, curved, arches, domes, skylights, spiral stairs, facades); exhibits (dinosaur skeletons, mummies, armour, pottery, meteorites, ship models, taxidermy, aquarium tanks); furniture with four facings; island buildings, fences, docks, boats, market stalls, playground, festival decor; characters and animals; dig-site props (tents, crates, tools).
+- [ ] A script that lists every placeholder sprite and tile by name, size and where it's used, so the user can redraw one at a time.
+- [ ] **Drop-in swap:** a PNG with the same name in a folder overrides the placeholder, no code change.
+- [ ] Keep `tools/build_palette.py` outputs stable (piece ids never shift).
+- [ ] (Not wanted now: `docs/ART-AUDIT.md`, `ART-BIBLE.md`, `ART-BRIEF.md`. Don't continue them.)
 
 ## Hold list (parked by the user; no chat builds these)
 Mini-games (Mop Rush, No Flash!, Restoration-as-minigame, Crate Tetris, Hang it Straight, Tour Guide, Night Watch, Catch the Thief, Paparazzi) · gems, ads, cosmetics, exhibition pass, crates · multiplayer / auctions · a sequel where the museum is part of a city · menu redesign · art direction and hiring.
@@ -194,5 +194,5 @@ Mini-games (Mop Rush, No Flash!, Restoration-as-minigame, Crate Tetris, Hang it 
 ## Cross-chat requests (add a line, carry on)
 - (none yet)
 
-## Start order if you can't run all 15
-1 (images), 2 (builder), 15 (stability), 4 and 5 (the loop's payoff), 6 and 7 (the world), then 8, 9, 11, 12, 13, 14, and 10 and 3 last (10 needs 5, 8, 9; 3 is placeholder support).
+## Order
+The chat numbers **are the priority order**: 1 is most important, 15 least. If you can't run all 15, run them in number order. Chat 14 (halls) needs 5, 8 and 9 first; chat 15 (asset hunt) is placeholder support and can wait.
