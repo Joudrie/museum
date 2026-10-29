@@ -581,3 +581,36 @@ html[data-motion='reduce'] .prog-pop {
   animation-duration: 1.1s !important;
 }
 html[data-motion='reduce'] .confetti { display: none; }
+
+/* ---- placing something: the HUD tucks away so you can see what you are placing (the status strip stays) ---- */
+body:has(#placebar:not(.hidden)) #journal-btn,
+body:has(#placebar:not(.hidden)) #build-btn,
+body:has(#placebar:not(.hidden)) #home-btn,
+body:has(#placebar:not(.hidden)) #menu-btn,
+body:has(#placebar:not(.hidden)) #collect-all,
+body:has(#placebar:not(.hidden)) #detector,
+body:has(#placebar:not(.hidden)) #prog-pill {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* ---- letters and leads: a parchment note, set in the museum's prose font; the labels stay in the UI font ---- */
+body .lead-card {
+  gap: var(--sp-1);
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--ui-r);
+  font-family: var(--ui-prose);
+  box-shadow: inset 0 0 0 2px rgba(138, 90, 42, 0.25), 0 2px 0 rgba(0, 0, 0, 0.35);
+}
+body .lead-kind { font: 600 var(--fs-small) / 1.2 var(--ui-font); letter-spacing: 0.1em; }
+body .lead-title { font: 600 var(--fs-lead) / 1.2 var(--ui-font); }
+body .lead-from { font-family: var(--ui-prose); font-size: var(--fs-body); }
+body .lead-text { font-size: var(--fs-body); line-height: 1.45; }
+body .lead-card .lead-sail { margin-top: var(--sp-2); }
+/* two gold buttons in a row of choices is one too many: closing is the quiet one */
+body .leads-close {
+  color: var(--ui-ink);
+  background: var(--ui-panel-2);
+  box-shadow: inset 2px 2px 0 rgba(255, 240, 200, 0.16), inset -2px -2px 0 rgba(0, 0, 0, 0.4), 0 3px 0 var(--ui-shadow);
+}
+body .exp-sub { font: 400 var(--fs-small) / 1.3 var(--ui-font); }
