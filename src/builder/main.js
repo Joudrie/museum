@@ -101,7 +101,8 @@ async function loadPieces() {
   Object.entries(TILES).forEach(([name, t]) => {
     if (name.includes('@')) return;
     const flat = t.w === T && t.h === T && FLAT_GROUPS.includes(t.group);
-    PIECES[`t:${name}`] = { img: t.frames[0], sx: 0, sy: 0, w: t.w, h: t.h, layer: flat ? 'tile' : 'object', label: t.label || name, group: t.group, skip: SKIP_GROUP.test(t.group || '') };
+    // (the picture is read when it's first drawn: people's pictures are made on demand)
+    PIECES[`t:${name}`] = { get img() { return t.frames[0]; }, sx: 0, sy: 0, w: t.w, h: t.h, layer: flat ? 'tile' : 'object', label: t.label || name, group: t.group, skip: SKIP_GROUP.test(t.group || '') };
   });
   try {
     try {
