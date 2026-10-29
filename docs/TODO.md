@@ -137,11 +137,11 @@ Owns: `src/famous.js`, `src/lines.js`, `src/quests.js`, `src/talk.js`, `src/staf
 ## CHAT 11: Atmosphere, seasons and audio
 Owns: `src/weather.js`, `src/lighting.js`, `src/ambient.js`, `src/music.js`, `src/foliage.js`, `src/critters.js`. Claim: `claimed: 2026-10-29`
 - [ ] Seasons on the real calendar (snow on the lawn, fall leaves, holiday decor, seasonal visitors like trick-or-treaters). Snow, fall leaves and recoloured trees already exist; **cherry trees stay pink in autumn (done, this PR)**. **Halloween (Oct 24-31): jack-o'-lanterns at the museum doors and costumed trick-or-treat kids; winter (Dec 18-26): woolly hats (done, this PR; `holiday()` in weather.js, `?holiday=halloween|winter`).** Still to do: winter lights, other holidays.
-- [ ] Daily rhythm (Animal Crossing / Stardew feel); weather effects inside and outside; day / night polish. **Rain / snow now shade the light inside and out, and stormy rainy days have distant thunder with a faint flash (done, this PR).** Still to do: daily rhythm (quiet mornings, evening crowds).
+- [ ] Daily rhythm (Animal Crossing / Stardew feel); weather effects inside and outside; day / night polish. **Rain / snow now shade the light inside and out, and stormy rainy days have distant thunder with a faint flash (done, this PR).** **Daily rhythm: fewer visitors early and late, busiest 12-17, a few more on rainy days (done, this PR; `crowdShift`).**
 - [ ] Per-room music and ambience; sound effects pass; a mute and volume mix.
-- [ ] Lighting performance on phones (High / Low / Off already exist).
+- [x] Lighting performance on phones (High / Low / Off already exist). Done, this PR: High drops to Low for the visit if the game stays under ~22 fps for 5 s (`watchSpeed` in lighting.js). Measured in headless 390x844 at 21:00 (avg frame ms, high / low / off): 40 / 41 / 33, so Low saves little there; Off is the real saver.
 - [ ] Critters, birds, fish and bugs that live on the islands and in the garden.
-- [ ] Waterfalls, fountains, swans, fireflies and other life.
+- [ ] Waterfalls, fountains, swans, fireflies and other life. Swan on the pond done (this PR); fireflies and fountain lights already existed. Still to do: waterfalls.
 
 ## CHAT 12: Economy, staff and services
 Owns: `src/staffmenu.js`, `src/officemenu.js`, `src/office.js`, `src/incomemenu.js`, `src/wallet.js`, `src/rating.js`. Claim: `claimed: 2026-10-29`
