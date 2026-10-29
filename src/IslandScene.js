@@ -164,7 +164,10 @@ export class IslandScene extends Phaser.Scene {
         w: W * T,
         h: H * T,
         ground: (x, y) => this.ground_(x, y),
-        isPond: (x, y) => this.key(Math.floor(x / T), Math.floor(y / T), (m) => m === 3) !== '0000',
+        isPond: (x, y) => {
+          const cx = Math.floor(x / T), cy = Math.floor(y / T);
+          return cx >= 0 && cy >= 0 && cx < W && cy < H && this.key(cx, cy, (m) => m === 3) !== '0000'; // (ambient probes past the edge)
+        },
         flowers: this.flowerSpots,
         trees: this.trees.map((img) => ({ x: img.x + img.displayWidth / 2, y: img.y, h: img.displayHeight })),
         lamps: this.lampSpots,
@@ -1286,10 +1289,16 @@ export class IslandScene extends Phaser.Scene {
     const len = Math.hypot(vx, vy);
     const p = this.player;
     if (len) {
-      const nx = p.x + (vx / len) * SPEED * pace * dt;
-      const ny = p.y + (vy / len) * SPEED * pace * dt;
-      if (this.free(nx, p.y)) p.x = nx;
-      if (this.free(p.x, ny)) p.y = ny;
+      // small sub-steps, so a slow frame still stops against a wall where a fast one would
+      // (otherwise one big step skips over the strip in front of a door that triggers it)
+      const dist = SPEED * pace * dt;
+      const steps = Math.max(1, Math.ceil(dist / 3));
+      for (let i = 0; i < steps; i++) {
+        const nx = p.x + ((vx / len) * dist) / steps;
+        const ny = p.y + ((vy / len) * dist) / steps;
+        if (this.free(nx, p.y)) p.x = nx;
+        if (this.free(p.x, ny)) p.y = ny;
+      }
       if (Math.abs(vx) > Math.abs(vy)) {
         p.setTexture('player_side').setFlipX(vx < 0);
         this.facing = vx < 0 ? 'left' : 'right';
