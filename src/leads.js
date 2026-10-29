@@ -15,6 +15,7 @@ const KEY = 'curation.leads';
 export const LEADS = [
   {
     id: 'bottle-note',
+    hook: 'Dig where the X is, and mind the patrol.',
     kind: 'note',
     from: 'A bottle on the dock',
     title: 'A note in a bottle',
@@ -25,6 +26,7 @@ export const LEADS = [
   },
   {
     id: 'clerk-letter',
+    hook: 'The tide comes in fast. Be quick.',
     kind: 'letter',
     from: 'The harbour clerk',
     title: 'A letter from the harbour',
@@ -34,6 +36,7 @@ export const LEADS = [
   },
   {
     id: 'anning-rumour',
+    hook: 'Look where the rain has just washed the rock.',
     kind: 'rumour',
     from: 'Mary Anning (a visitor)',
     title: 'A fossil hunter’s rumour',
@@ -43,6 +46,7 @@ export const LEADS = [
   },
   {
     id: 'torn-map',
+    hook: 'Step softly. Stones remember.',
     kind: 'map',
     from: 'Half a map',
     title: 'A torn map',
@@ -52,6 +56,7 @@ export const LEADS = [
   },
   {
     id: 'tomb-map',
+    hook: 'Step softly. Stones remember.',
     kind: 'map',
     from: 'Half a map',
     title: 'A second torn map',
@@ -61,6 +66,7 @@ export const LEADS = [
   },
   {
     id: 'temple-letter',
+    hook: 'The sun rising, high, then setting.',
     kind: 'letter',
     from: 'A travelling scholar',
     title: 'A scholar’s letter',
@@ -70,6 +76,7 @@ export const LEADS = [
   },
   {
     id: 'hideout-note',
+    hook: 'The long grass hides you from the guards.',
     kind: 'note',
     from: 'An unsigned note',
     title: 'An unsigned note',
@@ -79,6 +86,7 @@ export const LEADS = [
   },
   {
     id: 'north-rumour',
+    hook: 'The wind turns to a blizzard without warning.',
     kind: 'rumour',
     from: 'A fur trader',
     title: 'A trader’s rumour',

@@ -107,7 +107,7 @@ export function boatScene(e, then) {
     document.body.appendChild(boatEl);
   }
   const first = foundLeads().find((l) => l.island === e.id);
-  boatEl.querySelector('.bs-line').textContent = `Sailing to ${e.title}…${first ? `\n“${first.text.split('. ')[0].replace(/\.$/, '')}.”` : ''}`;
+  boatEl.querySelector('.bs-line').textContent = `Sailing to ${e.title}…${first ? `\n“${first.hook || `${first.text.split('. ')[0].replace(/\.$/, '')}.`}”` : ''}`;
   boatEl.classList.remove('hidden');
   sfx('door');
   let go = false;
