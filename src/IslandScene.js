@@ -37,6 +37,7 @@ import { visitorLook, KINDS } from './RoomScene.js';
 import { PERSONALITIES, QUIPS } from './lines.js';
 import { blendAt } from './groundblend.js';
 import { IslandLife } from './progression/ui/islandlife.js';
+import { PlayerLook } from './progression/ui/lookfx.js';
 import { progression } from './progression/index.js';
 import { regionOfMap, REGIONS } from './progression/species.js';
 
@@ -201,6 +202,7 @@ export class IslandScene extends Phaser.Scene {
     stormRumble(this, this.weatherKind);
     if (this.weatherKind === 'rain') this.makePuddles();
     this.setupInput();
+    this.look = new PlayerLook(this, this.player); // hat and outfit (src/progression/ui/lookfx.js)
     this.life = new IslandLife(this); // named people, emotes and the stuck nudge (src/progression/)
     this.time.addEvent({ delay: STEP_MS, loop: true, callback: () => this.tick() });
     this.cameras.main.fadeIn(300, 29, 21, 18);
@@ -1405,6 +1407,7 @@ export class IslandScene extends Phaser.Scene {
     const dt = Math.min(dtMs, 50) / 1000;
     this.fishing.update(dt);
     this.life?.update(dt);
+    this.look?.update();
     this.moveIslanders(dt);
     if (this.paused) return;
     const k = this.keys;

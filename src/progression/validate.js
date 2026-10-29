@@ -9,6 +9,7 @@ import { COSMETICS, UNLOCK_NAMES } from './grants.js';
 import { EVENTS } from './bus.js';
 import RANKS from './data/ranks.json' with { type: 'json' };
 import RODS from './data/rods.json' with { type: 'json' };
+import SHOP from './data/shop.json' with { type: 'json' };
 import NPCS from './data/npcs.json' with { type: 'json' };
 import { problems as registryProblems } from '../collections/index.js';
 
@@ -131,6 +132,15 @@ export function validate({ extra = [], perkUses = [], mapIds = null, busWired = 
     ids.add(n.id);
     if (!REGIONS[n.region]) add(`npc ${n.id} lives in ${n.region}, which is not a region`);
   });
+
+  // ---- shop ladder: the next meaningful purchase is 20 to 40 minutes of play away ----
+  SHOP.ladder.forEach((l, i) => {
+    if (!(l.minutes >= 20 && l.minutes <= 40)) add(`ladder ${l.id}: ${l.minutes} minutes is outside 20 to 40`);
+    if (i && l.rank < SHOP.ladder[i - 1].rank) add(`ladder ${l.id} is out of rank order`);
+    if (l.kind === 'rod' && !RODS[l.id.slice(4)]) add(`ladder ${l.id} is not a rod`);
+  });
+  SHOP.staples.concat(SHOP.lures).forEach((id) => !BAITS[id] && !LURES[id] && add(`shop sells ${id}, which does not exist`));
+  SHOP.weeklyCosmetics.forEach((id) => COSMETICS[id]?.source !== 'shop' && add(`weekly cosmetic ${id} is not a shop item`));
 
   // ---- cosmetics ----
   Object.entries(COSMETICS).forEach(([id, c]) => {

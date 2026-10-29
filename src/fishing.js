@@ -17,6 +17,7 @@ import { speciesById } from './progression/species.js';
 import { showReveal, showNearMiss, runReel, catchOpen as revealOpen } from './progression/ui/reveal.js';
 import { WaterFx } from './progression/ui/waterfx.js';
 import { fishFinishLines } from './progression/ui/fieldjournal.js';
+import { cosmeticColor } from './progression/ui/lookfx.js';
 
 // What the log shows: fish (rules in src/progression/species.js) and finds (not fish; some belong in the museum).
 const view = (e) => ({
@@ -266,7 +267,7 @@ export class Fishing {
     // the rod and the line (sagging a little while it waits)
     const a = this.tip();
     const p = this.player;
-    g.lineStyle(1.5, 0x5a3a24, 1);
+    g.lineStyle(1.5, cosmeticColor('rodskin') ?? 0x5a3a24, 1);
     g.lineBetween(p.x + (a.x - p.x) * 0.25, p.y - 14, a.x, a.y);
     g.lineStyle(0.6, 0xf4f0e6, 0.85);
     const b = { x: this.bob.x, y: this.bob.y - 8 };

@@ -160,3 +160,9 @@ body:not(.outside) #prog-pill { top: calc(var(--hud-top, 10px) + 112px); }
 @media (prefers-reduced-motion: reduce) {
   #prog-layer *, #catch *, #reel * { animation-duration: 0.01ms !important; animation-delay: 0ms !important; transition-duration: 0.01ms !important; }
 }
+
+/* ---- the lodge aquarium ---- */
+.lodge-tank { position: relative; height: 190px; overflow: hidden; background: linear-gradient(#1c5a7a, #0f2b3c); border: 3px solid var(--ui-shadow); box-shadow: inset 0 0 24px rgba(0, 0, 0, 0.4); }
+.lodge-fish { position: absolute; top: var(--y); left: -80px; height: 40px; width: auto; image-rendering: pixelated; animation: lodge-swim var(--d) linear infinite; animation-delay: var(--delay); cursor: pointer; }
+@keyframes lodge-swim { from { transform: translateX(0); } to { transform: translateX(520px); } }
+@media (prefers-reduced-motion: reduce) { .lodge-fish { animation: none; left: calc(var(--y) * 3); } }

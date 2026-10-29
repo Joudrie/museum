@@ -94,6 +94,7 @@ export function refreshPill(p = progRef, instant = false) {
   if (instant) requestAnimationFrame(() => (fill.style.transition = ''));
   shown = { pct: lv.pct, level: lv.level };
   const g = p.goals?.pinnedOrAuto?.();
+  pill.title = p.market?.nameplate().title || '';
   pill.querySelector('.pp-goal-text').textContent = g ? g.title : 'Tap for your goals';
   pill.querySelector('.pp-n').textContent = g && g.n !== undefined ? `${g.n}/${g.of}` : '';
 }

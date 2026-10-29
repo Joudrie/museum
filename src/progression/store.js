@@ -67,7 +67,7 @@ export function defaults(now = 0) {
       regionsSeen: {},
     },
     market: { stock: { day: 0, items: [] }, owned: {}, bought: {}, spent: 0, sellBonus: 0, simGold: 0, equipped: { hat: '', outfit: '', title: '', frame: '', rodSkin: '', boatPaint: '' } },
-    house: { rooms: { porch: true }, mounts: [], tanks: 1 },
+    house: { rooms: { porch: true }, mounts: [], tanks: 1, aquarium: [] },
     events: {}, // eventId -> { tokens, claimed:{ tier: true }, joined: ms }
     titles: {},
     renown: { tokens: 0 },

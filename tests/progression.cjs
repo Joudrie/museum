@@ -452,6 +452,54 @@ const check = (c, good, bad) => (c ? ok(good) : fail(bad));
     check(nudged === 1, 'progress resets the stuck timer', 'nudged too early');
   }
 
+  console.log('Market and lodge');
+  {
+    const mk2 = load('src/progression/market.js');
+    const mkt = await mk2;
+    const acc = await load('src/progression/access.js');
+    const lad = mkt.ladder();
+    check(lad.every((l, i) => !i || l.price >= 1) && lad.every((l) => Math.abs((l.price / mkt.goldPerHour(l.rank)) * 60 - l.minutes) / l.minutes < 0.12), 'every ladder price is the earn rate times 20 to 40 minutes', 'ladder prices off target');
+    const { p } = mk(77);
+    check(!acc.regionOpen(p.state, 'isle') && acc.regionAccess(p.state, 'isle').reason === 'rank', 'the Far Isle needs the rowboat rank', 'isle open too early');
+    p.xp(rank.cumXp(5) - p.state.rank.xp, 'test');
+    check(acc.regionAccess(p.state, 'isle').reason === 'buy', 'with the rank it still has to be bought', 'access reason ' + acc.regionAccess(p.state, 'isle').reason);
+    p.gold.add(100000);
+    const r = p.market.buy('boat:rowboat');
+    check(r.ok && acc.regionOpen(p.state, 'isle') && acc.regionOpen(p.state, 'pirate'), 'buying the rowboat opens the Far Isle and Skull Isle', 'rowboat did not open islands: ' + JSON.stringify(r));
+    check(acc.regionAccess(p.state, 'wreck').reason === 'rank', 'the sailboat waters stay shut until rank 10', 'wreck access wrong');
+    check(!p.market.buy('rod:feather').ok && p.market.why('rod:feather') === 'Rank 20', 'a rod is locked until its rank', 'rod bought early');
+    check(p.market.buy('rod:cork').ok && ang.rodUnlocked(p.state, 'cork') && ang.equipRod(p.state, 'cork'), 'rank and gold together give you a rod', 'cork rod not usable');
+    const g0 = p.gold.get();
+    const w0 = p.state.fish.baits.worm || 0;
+    const sealed = p.market.buy('bait:worm');
+    check(sealed.ok && p.state.fish.baits.worm === w0 + 5 && p.gold.get() < g0, 'bait comes in packs and costs gold', 'bait purchase wrong');
+    // selling keeps the best of each
+    p.state.fish.bag = [{ id: 'carp', size: 40, sizeClass: 'M', variant: '', value: 20 }, { id: 'carp', size: 60, sizeClass: 'L', variant: '', value: 30 }, { id: 'carp', size: 50, sizeClass: 'M', variant: '', value: 25 }, { id: 'roach', size: 20, sizeClass: 'M', variant: '', value: 8 }];
+    const earned = p.market.sellDuplicates();
+    check(p.state.fish.bag.length === 2 && p.state.fish.bag.some((b) => b.size === 60) && earned === Math.round(20 * 0.5) + Math.round(25 * 0.5), 'selling extras keeps the best of each kind', 'sell extras: ' + p.state.fish.bag.length + ' kept, ' + earned);
+    p.state.skills.friendship = (await load('src/progression/skills.js')).skillCum('friendship', 10);
+    check(p.market.price('bait:worm') < mkt.priceOf('bait:worm'), 'Friendship gives a shop discount', 'no discount');
+    check(p.market.entries().some((e) => e.featured) && p.market.entries().some((e) => e.rare), 'the shop shows a rare item today and a featured cosmetic this week', 'no rotating stock');
+    const stock1 = p.state.market.stock.items.join();
+    // the lodge
+    p.xp(rank.cumXp(16) - p.state.rank.xp, 'test');
+    check(p.house.capacity() === 0, 'no tank until the aquarium room is bought', 'free tank');
+    p.market.buy('room:aquarium_room');
+    check(p.house.capacity() === 4, 'the aquarium room comes with a small tank', 'capacity ' + p.house.capacity());
+    p.state.fish.species.carp = { n: 1, bestSize: 60, bestClass: 'L', variants: {}, first: null };
+    check(p.house.addFish('carp') && !p.house.addFish('carp') && !p.house.addFish('koi'), 'only caught fish go in the tank, once', 'tank accepted a fish wrongly');
+    p.market.buy('tank:medium');
+    check(p.house.capacity() === 8, 'a medium tank holds eight', 'medium tank ' + p.house.capacity());
+    p.state.fish.trophies.push({ id: 'carp', size: 90, variant: '', at: 1 });
+    check(p.house.mount(0) && p.house.mounted().length === 1 && p.house.mountCapacity() >= 2, 'a Trophy can be mounted on the wall', 'trophy mount failed');
+    const cos = p.market.buy('hat:beanie');
+    check(cos.ok && p.market.equip('hat', 'hat:beanie') && p.state.market.equipped.hat === 'hat:beanie' && !p.market.equip('hat', 'hat:crown'), 'you can only wear cosmetics you own', 'cosmetic equip wrong');
+    p.state.unlocks['recipe:berrypaste'] = true;
+    p.state.gifts.stock.berry = 3;
+    check(p.market.craft('berrypaste') && p.state.fish.baits.berrypaste === 4 && p.state.gifts.stock.berry === 0, 'known recipes turn foraged items into bait', 'crafting failed');
+    void stock1;
+  }
+
   console.log('Content validator');
   {
     const out = valid.validate({});

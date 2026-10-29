@@ -5,12 +5,14 @@ import { progression } from '../index.js';
 import { PAGES, newCount } from '../journal.js';
 import { fieldPage } from './fieldjournal.js';
 import { goalsTab } from './goalsui.js';
+import { shopTab } from './shopui.js';
+import { lodgeTab } from './lodgeui.js';
 import { collectionTab } from '../../collections/tab.js';
 import { uiIcon } from '../../ui/icons.js';
 
 let el = null;
 let tab = 'goals';
-const TABS = [{ id: 'goals', name: 'Goals' }, { id: 'fish', name: 'Fish' }, ...PAGES.filter((p) => !['fish', 'curios'].includes(p.id)).map((p) => ({ id: p.id, name: p.name }))];
+const TABS = [{ id: 'goals', name: 'Goals' }, { id: 'fish', name: 'Fish' }, { id: 'shop', name: 'Market' }, { id: 'lodge', name: 'Lodge' }, ...PAGES.filter((p) => !['fish', 'curios'].includes(p.id)).map((p) => ({ id: p.id, name: p.name }))];
 
 function build() {
   el = document.createElement('div');
@@ -42,7 +44,7 @@ function render() {
     bar.appendChild(b);
   });
   const body = el.querySelector('.fj-body');
-  const nodes = tab === 'goals' ? goalsTab(p, render) : tab === 'fish' ? collectionTab('fish', { onClaimSet: (s, gold) => p.gold.add(gold) }, render) : fieldPage(tab, render);
+  const nodes = tab === 'goals' ? goalsTab(p, render) : tab === 'shop' ? shopTab(p, render) : tab === 'lodge' ? lodgeTab(p, render) : tab === 'fish' ? collectionTab('fish', { onClaimSet: (s, gold) => p.gold.add(gold) }, render) : fieldPage(tab, render);
   body.replaceChildren(...nodes);
   el.querySelector('.sheet').scrollTop = 0;
 }

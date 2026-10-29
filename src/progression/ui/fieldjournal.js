@@ -144,7 +144,10 @@ function records(p) {
     ['Requests done', s.stats.requests],
     ['Tasks done', s.stats.tasksDone],
   ];
-  const nodes = [pageHead(p, 'records')];
+  const plate = p.market.nameplate();
+  const head = el('div', 'pg-row pinned');
+  head.append(Object.assign(el('b'), { textContent: `${plate.frame ? plate.frame.name + ' · ' : ''}${plate.title || 'Curator'}` }), Object.assign(el('span'), { textContent: plate.rank.renown ? `Renown ${plate.rank.renown}` : `Rank ${plate.rank.rank}` }));
+  const nodes = [head, pageHead(p, 'records')];
   rows.forEach(([k, v]) => {
     const row = el('div', 'pg-row');
     row.append(el('span', '', k), Object.assign(el('b'), { textContent: String(v) }));

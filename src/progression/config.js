@@ -108,6 +108,10 @@ export const TUNING = {
     rarityValue: [0, 8, 20, 55, 140, 500],
   },
 
+  // subscription: gating is by region and content breadth, never power. `enforce` stays false until a payment
+  // path exists; the lock UI, the validator and the sim all work with it on.
+  sub: { enforce: false },
+
   seasons: { monthlyDropDay: 1 },
 
   telemetryMax: 400,

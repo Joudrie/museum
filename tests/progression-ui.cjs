@@ -112,7 +112,7 @@ const check = (c, good, bad) => (c ? ok(good) : fail(bad));
   await wait(500);
   check(await vis('#field-journal'), 'the field journal opens', 'field journal closed');
   const tabs = await S(() => [...document.querySelectorAll('#field-journal .pg-tabs button')].map((x) => x.dataset.fj));
-  check(tabs.join() === 'goals,fish,people,places,emotes,secrets,titles,records', 'goals and every page have a tab', 'tabs: ' + tabs);
+  check(tabs.join() === 'goals,fish,shop,lodge,people,places,emotes,secrets,titles,records', 'goals and every page have a tab', 'tabs: ' + tabs);
   check((await S(() => document.querySelectorAll('#field-journal .pg-row').length)) >= 3, 'the goals tab lists goals', 'no goals');
   for (const t of tabs) {
     await S((id) => document.querySelector(`#field-journal [data-fj="${id}"]`).click(), t);

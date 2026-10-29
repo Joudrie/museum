@@ -14,6 +14,7 @@ import { playBot } from './reel.js';
 import { allSpecies, REGIONS } from './species.js';
 import NPCS from './data/npcs.json' with { type: 'json' };
 import { completion } from './journal.js';
+import { regionOpen as accessOpen } from './access.js';
 
 export const PROFILES = {
   casual: { name: 'casual', efficiency: 0.5, skill: 0.45, minutesPerSession: 22, sessionsPerWeek: 5, mix: { fish: 0.6, explore: 0.2, social: 0.15, shop: 0.05 } },
@@ -178,12 +179,7 @@ export function simulate({ hours = 12, profile = PROFILES.casual, seed = 1, T = 
 }
 
 // ---- helpers (the market module owns the real versions; these keep the sim honest without it) ----
-export function regionOpen(p, id) {
-  const r = REGIONS[id];
-  if (!r) return false;
-  if (!r.req) return true;
-  return !!p.state.unlocks[r.req];
-}
+export const regionOpen = (p, id) => accessOpen(p.state, id, p.T);
 
 function sellDuplicates(p) {
   if (p.market?.sellDuplicates) return p.market.sellDuplicates();

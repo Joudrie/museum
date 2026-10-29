@@ -14,8 +14,9 @@ export function rodUnlocked(state, id) {
   const r = RODS[id];
   if (!r) return false;
   if (!r.unlock) return true;
-  if (r.unlock === 'goal:night3') return state.fish.nightCatches >= 3 || !!state.unlocks['rod:glow'];
-  return !!state.unlocks[r.unlock];
+  const owned = !r.price || !!state.market.owned[`rod:${id}`];
+  if (r.unlock === 'goal:night3') return (state.fish.nightCatches >= 3 || !!state.unlocks['rod:glow']) && owned;
+  return !!state.unlocks[r.unlock] && owned;
 }
 export function currentRod(state) {
   const id = state.fish.equipped.rod;
