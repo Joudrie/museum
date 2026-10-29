@@ -30,7 +30,7 @@ import { PEOPLE, ANIMALS } from './landmarks.js';
 import { makePet } from './pets.js';
 import { critterTextures } from './critters.js';
 import { openSail, builderIslands, friendIslands } from './sailmenu.js';
-import { EXPEDITION_MAPS, expeditionFor, expeditionOptions, expeditionTitles, EXPEDITIONS, boatScene } from './expedition.js';
+import { EXPEDITION_MAPS, expeditionOf, expeditionFor, expeditionOptions, expeditionTitles, EXPEDITIONS, boatScene } from './expedition.js';
 import { openLeads, grantStartLeads, foundLeads } from './leads.js';
 import { visitorLook, KINDS } from './RoomScene.js';
 import { PERSONALITIES, QUIPS } from './lines.js';
@@ -112,8 +112,9 @@ export class IslandScene extends Phaser.Scene {
     document.body.classList.add('outside');
     this.events.once('shutdown', () => document.body.classList.remove('outside'));
     setTrack('none');
-    this.weatherKind = weatherToday();
-    this.season = season();
+    const climate = expeditionOf(this.mapId)?.climate; // an expedition island has its own weather
+    this.weatherKind = climate?.weather || weatherToday();
+    this.season = climate?.season || season();
     setAmbience(this.weatherKind === 'rain' ? ['waves', 'rain'] : ['waves']);
     this.events.once('shutdown', () => setAmbience([]));
     this.frame = 0;

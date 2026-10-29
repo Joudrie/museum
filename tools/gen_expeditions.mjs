@@ -13,8 +13,8 @@ import { fileURLToPath } from 'node:url';
 const T = 32;
 const OUT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'src', 'maps');
 // piece heights in px (a piece stands on its bottom row)
-const H = { tree: 96, palm: 96, pine: 64, tall_grass: 46, rock_big: 64, cave: 64 };
-const W2 = new Set(['tree', 'palm', 'rock_big', 'log', 'rowboat', 'cave']);
+const H = { tree: 96, palm: 96, pine: 64, tall_grass: 46, rock_big: 64, cave: 64, tent: 64, skull_flag: 64, wreck_hull: 64, mammoth_skeleton: 64 };
+const W2 = new Set(['tree', 'palm', 'rock_big', 'log', 'rowboat', 'cave', 'tent', 'wreck_hull', 'sarcophagus', 'mammoth_skeleton']);
 
 let seed = 1;
 const rnd = () => {
@@ -57,6 +57,15 @@ export function island({ name, w, h, shape, ground = 2, rim = 1, expedition }) {
     },
     put(name, x, y, flip) {
       const t = H[name] || T;
+      if (!api.land(x, y) && name !== 'rowboat') {
+        // decoration that landed in the sea moves to the nearest dry, inland cell
+        let best = null;
+        for (let dy = -5; dy <= 5; dy++) for (let dx = -5; dx <= 5; dx++) if (api.land(x + dx, y + dy) && api.land(x + dx + 1, y + dy) && corners[y + dy][x + dx] === 2 || (api.land(x + dx, y + dy) && api.land(x + dx + 1, y + dy) && ground !== 2)) {
+          const d = Math.hypot(dx, dy);
+          if (!best || d < best.d) best = { d, x: x + dx, y: y + dy };
+        }
+        if (best) [x, y] = [best.x, best.y];
+      }
       objects.push({ ref: `t:${name}`, x: x * T, y: (y + 1) * T - t, ...(flip && { flip: true }) });
       taken.add(`${x},${y}`);
       if (W2.has(name)) taken.add(`${x + 1},${y}`);
@@ -103,6 +112,7 @@ const write = (id, m) => {
     shape: blob(18, 18, 16, 16),
     expedition: {
       id: 'pirate',
+      climate: { season: 'summer', weather: 'clear' },
       sub: 'pirates, a chart and a chest',
       outro: 'The captain’s chest is open and his men are none the wiser. The finds are muddy, so bring them home to be cleaned.',
       goals: [
@@ -154,6 +164,12 @@ const write = (id, m) => {
   api.scatter('flowers', 12);
   api.scatter('shells', 6);
   api.scatter('driftwood', 4);
+  api.put('skull_flag', 3, 12);
+  api.put('skull_flag', 19, 30);
+  api.put('animal_parrot_red', 7, 13);
+  api.put('animal_parrot_green', 29, 14);
+  api.put('animal_crab', 12, 30);
+  api.put('person', 22, 29); // a castaway to talk to
   api.put('rowboat', 17, 35);
   write('pirate', finish());
 }
@@ -173,6 +189,7 @@ const wall = (api, x0, x1, y, gaps = []) => {
     shape: blob(17, 14, 15, 11, 0.1),
     expedition: {
       id: 'wreck',
+      climate: { season: 'summer', weather: 'clear' },
       sub: 'a wreck, wet crates and the tide',
       outro: 'The strongbox is open and the tide is on its way. Everything is soaked, so bring it home to be cleaned.',
       goals: [
@@ -211,6 +228,10 @@ const wall = (api, x0, x1, y, gaps = []) => {
   api.scatter('driftwood', 6);
   api.scatter('palm', 6, (x, y) => y > 4);
   api.scatter('rock_small', 6);
+  api.put('wreck_hull', 19, 8);
+  api.put('animal_crab', 10, 16);
+  api.put('animal_crab', 24, 15);
+  api.put('person', 13, 23);
   api.put('rowboat', 16, 27);
   write('wreck', finish());
 }
@@ -225,6 +246,7 @@ const wall = (api, x0, x1, y, gaps = []) => {
     shape: blob(18, 17, 16, 15, 0.07),
     expedition: {
       id: 'tomb',
+      climate: { season: 'summer', weather: 'clear' },
       sub: 'a desert tomb and its stones',
       outro: 'The sarcophagus lid slides back and the tomb breathes out. Everything inside is dusty, so bring it home to be cleaned.',
       goals: [
@@ -275,6 +297,9 @@ const wall = (api, x0, x1, y, gaps = []) => {
   api.scatter('dune_grass', 12);
   api.scatter('palm', 4, (x, y) => y > 18);
   api.scatter('shells', 3);
+  api.put('sarcophagus', 20, 4);
+  api.put('animal_cat_ginger', 15, 20);
+  api.put('person', 22, 25);
   api.put('rowboat', 17, 32);
   write('tomb', finish());
 }
@@ -289,6 +314,7 @@ const wall = (api, x0, x1, y, gaps = []) => {
     shape: blob(19, 15, 17, 13, 0.09),
     expedition: {
       id: 'badlands',
+      climate: { season: 'summer', weather: 'clear' },
       sub: 'fossil cliffs and the rain',
       outro: 'The big skeleton is out of the rock at last. Every bone is caked in red mud, so bring them home to be cleaned.',
       goals: [
@@ -325,6 +351,9 @@ const wall = (api, x0, x1, y, gaps = []) => {
   api.scatter('rock_small', 10);
   api.scatter('dune_grass', 8);
   api.scatter('bush', 5);
+  api.put('tent', 4, 26);
+  api.put('animal_crab', 23, 27);
+  api.put('person_wander', 15, 27);
   api.put('rowboat', 18, 29);
   write('badlands', finish());
 }
@@ -341,6 +370,7 @@ const wall = (api, x0, x1, y, gaps = []) => {
     ground: 2,
     expedition: {
       id: 'temple',
+      climate: { season: 'summer', weather: 'rain' },
       sub: 'jungle, sun plates and a hidden room',
       outro: 'The hidden room is open at last. The idol’s treasure is thick with moss and dust, so bring it home to be cleaned.',
       goals: [
@@ -397,6 +427,9 @@ const wall = (api, x0, x1, y, gaps = []) => {
   api.scatter('mushrooms', 10);
   api.scatter('flowers', 8);
   api.scatter('stump', 4);
+  api.put('animal_parrot_green', 7, 18);
+  api.put('animal_frog', 12, 28);
+  api.put('animal_parrot_red', 29, 27);
   api.put('rowboat', 17, 34);
   write('temple', finish());
 }
@@ -412,6 +445,7 @@ const wall = (api, x0, x1, y, gaps = []) => {
     ground: 1,
     expedition: {
       id: 'heist',
+      climate: { season: 'summer', weather: 'clear' },
       sub: 'guards, a ledger and a vault',
       outro: 'The vault swings open and the guards never knew. The loot is greasy and bent, so bring it home to be cleaned.',
       goals: [
@@ -469,6 +503,8 @@ const wall = (api, x0, x1, y, gaps = []) => {
   api.scatter('rock_small', 8);
   api.scatter('bush', 8);
   api.scatter('pine', 8);
+  api.put('animal_cat_black', 12, 22);
+  api.put('tent', 3, 4);
   api.put('rowboat', 16, 30);
   write('heist', finish());
 }
@@ -484,6 +520,7 @@ const wall = (api, x0, x1, y, gaps = []) => {
     ground: 1,
     expedition: {
       id: 'north',
+      climate: { season: 'winter', weather: 'snow' },
       sub: 'an ice cave and a mammoth',
       outro: 'The ice cave gives up its treasure and the mammoth’s bones are in your hands. Everything is frozen and filthy, so bring it home to be cleaned.',
       goals: [
@@ -527,6 +564,11 @@ const wall = (api, x0, x1, y, gaps = []) => {
   api.scatter('rock_small', 8);
   api.scatter('rocks_pile', 5);
   api.scatter('stump', 3);
+  api.put('mammoth_skeleton', 5, 19);
+  api.put('tent', 26, 26);
+  api.put('animal_dog_golden', 21, 27);
+  api.put('person_wander', 15, 27);
+  for (let i = 0; i < 6; i++) api.scatter('ice_block', 1);
   api.put('rowboat', 17, 32);
   write('north', finish());
 }

@@ -1095,4 +1095,87 @@ function addOutdoor(add, anim, WOOD) {
     R(22, 2, 2, 7, '#e0405a');
     R(22, 2, 5, 3, '#e0405a');
   }), { group: 'Grounds & garden', label: 'Mailbox', walk: 'block' });
+
+  // ---- Expedition props (placeholder art; the user is redrawing these by hand later)
+  add('tent', draw(2 * T, 2 * T, ({ ctx: g, R, E }) => {
+    E(32, 58, 27, 4, 'rgba(0,0,0,0.28)');
+    const tri = (x0, y0, x1, y1, x2, y2, col) => {
+      g.fillStyle = col;
+      g.beginPath();
+      g.moveTo(x0, y0);
+      g.lineTo(x1, y1);
+      g.lineTo(x2, y2);
+      g.fill();
+    };
+    tri(4, 58, 32, 10, 60, 58, OUT);
+    tri(7, 56, 32, 14, 57, 56, '#d8c9a0');
+    tri(32, 14, 57, 56, 32, 56, '#bfae82');
+    tri(24, 56, 32, 32, 40, 56, '#3a2a1a');
+    R(31, 6, 2, 8, WOOD[1]);
+    R(33, 6, 6, 3, '#b0413e');
+  }), { group: 'Expedition', label: 'Camp tent (2×2)', w: 2 * T, h: 2 * T, walk: 'block' });
+  add('skull_flag', anim((f) => draw(T, 2 * T, ({ R, E }) => {
+    E(16, 61, 8, 2, 'rgba(0,0,0,0.28)');
+    R(15, 4, 3, 58, OUT);
+    R(16, 4, 1, 57, WOOD[2]);
+    const w = f % 2;
+    R(18, 6, 12, 14 + w, OUT);
+    R(19, 7, 10, 12 + w, '#1d1714');
+    R(22, 9, 4, 4, '#f4ecd8');
+    R(23, 13, 2, 2, '#f4ecd8');
+    R(21, 15 + w, 6, 1, '#f4ecd8');
+    R(22, 9, 1, 1, '#1d1714');
+    R(25, 9, 1, 1, '#1d1714');
+  })), { group: 'Expedition', label: 'Pirate flag', w: T, h: 2 * T, walk: 'block' });
+  add('wreck_hull', draw(3 * T, 2 * T, ({ R, E }) => {
+    E(48, 58, 42, 4, 'rgba(0,0,0,0.3)');
+    E(48, 40, 44, 20, OUT);
+    E(48, 40, 42, 18, WOOD[1]);
+    R(4, 18, 88, 22, WOOD[1]);
+    R(4, 18, 88, 3, WOOD[3]);
+    for (let x = 8; x < 90; x += 9) R(x, 20, 2, 32, WOOD[0]);
+    R(10, 38, 76, 2, '#56545a');
+    R(56, 4, 4, 20, OUT);
+    R(57, 4, 2, 19, WOOD[2]);
+    R(30, 10, 3, 10, WOOD[2]);
+    E(48, 50, 36, 6, 'rgba(0,0,0,0.25)');
+  }), { group: 'Expedition', label: 'Shipwreck hull (3×2)', w: 3 * T, h: 2 * T, walk: 'block' });
+  add('sarcophagus', draw(2 * T, T, ({ R, E }) => {
+    E(32, 28, 26, 3, 'rgba(0,0,0,0.28)');
+    R(5, 8, 54, 20, OUT);
+    R(6, 9, 52, 18, css(STONE[2]));
+    R(6, 9, 52, 4, css(STONE[4]));
+    R(6, 14, 52, 2, '#d8a838');
+    R(6, 22, 52, 2, '#d8a838');
+    E(14, 18, 5, 6, '#d8a838');
+    E(14, 18, 3, 4, '#3a78c8');
+  }), { group: 'Expedition', label: 'Sarcophagus (2×1)', w: 2 * T, h: T, walk: 'block' });
+  add('mammoth_skeleton', draw(3 * T, 2 * T, ({ R, E }) => {
+    E(48, 60, 42, 3, 'rgba(0,0,0,0.25)');
+    const bone = '#e8dfc8';
+    const edge = '#a89870';
+    R(34, 14, 38, 3, bone); // spine
+    for (let x = 36; x < 72; x += 5) {
+      R(x, 17, 3, 16, edge);
+      R(x, 17, 2, 15, bone);
+    }
+    R(70, 10, 14, 14, bone); // skull
+    R(72, 12, 4, 3, '#2a2a30');
+    R(83, 16, 5, 20, bone); // trunk bones
+    [[40, 34], [66, 34]].forEach(([x, y]) => {
+      R(x, y, 4, 20, bone);
+      R(x - 1, y + 20, 6, 3, edge);
+    });
+    R(62, 18, 3, 22, bone); // tusk
+    R(58, 36, 8, 3, bone);
+    R(30, 12, 6, 5, bone); // tail
+  }), { group: 'Expedition', label: 'Mammoth skeleton (3×2)', w: 3 * T, h: 2 * T, walk: 'block' });
+  add('ice_block', draw(T, T, ({ R, E }) => {
+    E(16, 27, 12, 3, 'rgba(0,0,0,0.25)');
+    R(5, 8, 22, 19, OUT);
+    R(6, 9, 20, 17, '#a8d8f0');
+    R(6, 9, 20, 3, '#e0f4ff');
+    R(9, 14, 3, 9, '#d0ecfa');
+    R(18, 17, 5, 2, '#78b8e0');
+  }), { group: 'Expedition', label: 'Ice block', walk: 'block' });
 }
