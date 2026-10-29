@@ -1,7 +1,7 @@
 {
  "fishing": {
   "name": "Fishing",
-  "icon": "🎣",
+  "icon": "fish",
   "levels": [
    {
     "level": 1,
@@ -176,7 +176,7 @@
  },
  "sailing": {
   "name": "Sailing",
-  "icon": "⛵",
+  "icon": "boat",
   "levels": [
    {
     "level": 1,
@@ -351,7 +351,7 @@
  },
  "exploring": {
   "name": "Exploring",
-  "icon": "🧭",
+  "icon": "map",
   "levels": [
    {
     "level": 1,
@@ -526,7 +526,7 @@
  },
  "friendship": {
   "name": "Friendship",
-  "icon": "💛",
+  "icon": "heart",
   "levels": [
    {
     "level": 1,
@@ -701,7 +701,7 @@
  },
  "foraging": {
   "name": "Foraging",
-  "icon": "🍂",
+  "icon": "gift",
   "levels": [
    {
     "level": 1,

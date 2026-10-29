@@ -20,11 +20,11 @@ function build() {
 const SPEED = 90; // characters a second (fast: the choices are already up while it types)
 
 /**
- * runDialogue(gen, { name, label, portrait, onGift, onEnd, leave })
+ * runDialogue(gen, { name, label, portrait, onGift, onEnd, leave, onBye })
  * `portrait` is a canvas or image to draw in the corner (drawn pixelated).
  * `leave()` is asked every frame; when it returns true (you walked off) the talk ends.
  */
-export function runDialogue(gen, { name, label, portrait, onGift, onEnd, leave }) {
+export function runDialogue(gen, { name, label, portrait, onGift, onEnd, leave, onBye }) {
   if (!el) build();
   const q = (s) => el.querySelector(s);
   const text = q('.chat-text');
@@ -106,6 +106,11 @@ export function runDialogue(gen, { name, label, portrait, onGift, onEnd, leave }
     const r = gen.next(value);
     if (r.done) return end();
     if (r.value.type === 'gift') onGift?.(r.value.gift);
+    // a last goodbye needs no box: close it and let the speaker say it in a bubble
+    if (r.value.bye && onBye) {
+      end();
+      return onBye(r.value.text);
+    }
     show(r.value);
   };
 

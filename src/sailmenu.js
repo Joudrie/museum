@@ -1,4 +1,5 @@
 import { hasTiles } from './mapformat.js';
+import { uiIcon } from './ui/icons.js';
 
 // Where to sail: the home island, the islands that ship with the game, and
 // every island drawn in the map builder on this phone.
@@ -25,7 +26,8 @@ export function openSail(options, cb) {
     const b = document.createElement('button');
     b.className = 'pixel-btn sail-dest' + (o.locked ? ' locked' : '');
     b.innerHTML = `<b></b><small></small>`;
-    b.querySelector('b').textContent = (o.locked ? '🔒 ' : '') + o.label;
+    b.querySelector('b').textContent = o.label;
+    if (o.locked) b.querySelector('b').insertAdjacentHTML('afterbegin', uiIcon('lock', 's') + ' '); // a pixel lock, never an emoji
     b.querySelector('small').textContent = o.sub || '';
     if (o.preview) {
       // what is out there (silhouettes), so a locked dock shows concrete value

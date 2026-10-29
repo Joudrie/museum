@@ -67,7 +67,7 @@ never lost. Original art says `license: 'Original'`.
 
 ```js
 {
-  id: 'mineral', name: 'Minerals', noun: 'minerals', icon: '💎',
+  id: 'mineral', name: 'Minerals', noun: 'minerals', icon: 'star', // a pixel icon name from src/ui/icons.js, never an emoji
   display: 'case',
   ownership: 'earned',         // 'all': yours from the start (paintings); 'earned': must be collected
   legacyKeys: false,           // true only if older saves key this collection by the bare slug
@@ -129,7 +129,7 @@ their old keys (`curation.journal`, by bare slug) because `painting` sets `legac
 2. **Write the entries.** Every entry needs `id`, `collection`, `title`, `image` and
    `source` (license and credit). Add a blurb that is short, true and makes someone curious.
    Or write a spreadsheet and run the importer:
-   `node tools/import_collection.mjs rows.csv --collection fossil --name Fossils --icon 🦴`
+   `node tools/import_collection.mjs rows.csv --collection fossil --name Fossils --icon box`
    (columns are listed at the top of the script; it refuses rows with no license or credit and writes
    nothing until every problem is fixed).
 3. **Register it**: add `import fossil from './data/fossil.js'` and put it in `PACKS` in

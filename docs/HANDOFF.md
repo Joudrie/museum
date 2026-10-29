@@ -248,6 +248,13 @@ island scene streams ground chunks around the player.
 - Dev panel: open the game with `?debug=1`.
 - Things the old code did that changed: fishing is now the cast, wait, "!" and reel minigame; the museum's rarity scale has 5 tiers (Epic added); the daily reset is 4:00; boats are bought (rank, then gold); locked islands show in the boat menu (expedition tests were updated).
 
+### The user's 29 Oct feedback (PRs #201 and next)
+- **No emojis anywhere in the UI, ever.** Use a pixel icon from `src/ui/icons.js` (`uiIcon('lock', 's')`) or words. Collection and skill `icon` fields are icon names now. Check with a scan for `\p{Extended_Pictographic}` before shipping.
+- **Non-urgent popups live in the top third and stay small** (reward cards `#prog-card`, "Row out?", the conversation box). Only big moments (rank-up) take the middle.
+- **Talking:** the conversation box (`src/dialogue.js`) opens with the topics already up, sits at the top, never pauses, and ends when you walk away (`TALK_LEAVE` in RoomScene, `leave` option in `runDialogue`). Speech bubbles (`src/talk.js`) sit just above the higher head, follow the speaker every frame (`followSpeaker`) and close when you leave; they never cover a character.
+- **Rowing** (`src/rowing.js`): walk into open water, say Row, and you row anywhere on that island's water; row into land to climb out. Off on expedition islands (their puzzles). Fishing works from the boat.
+- **Character:** color rows follow what the outfit draws (`personRows`); outfits with no shirt or trim get a second color (`ACCENT_OUTFITS`, letter `u`, drawn only when `look.second`); "pick your own" is the in-game wheel in `src/colorwheel.js`. Bubbles and lily pads can only sit on water (game and builder).
+
 ### Aesthetics audit (29 Oct 2026)
 - `docs/AESTHETICS-AUDIT.md`: 860 visual flaws found for the overhaul (none fixed; a second pass covered main up to #195), with the cross-cutting problems, quick bugs that look like art problems, and a redesign order. Per-area detail with code locations and screenshots in `docs/aesthetics/` (people, terrain/water, structures, interiors, creatures/items, ui). IDs P-, T-, S-, R-, C-, U-.
 - Read it before redrawing anything: it says what each sprite should become (e.g. P-23/P-24 glasses, S-45 scarecrow, S-51 fountain statues).

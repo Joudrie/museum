@@ -2,7 +2,7 @@
 // Turns a spreadsheet of rows into a collection data file.
 //
 //   node tools/import_collection.mjs rows.csv --collection fossil --name Fossils \
-//        --noun fossils --icon 🦴 --display case [--ownership earned] [--out path] [--publishable]
+//        --noun fossils --icon box --display case [--ownership earned] [--out path] [--publishable]
 //
 // rows.csv (or rows.json: a list of objects) has one row per entry. Columns:
 //   slug*, title*, license*, credit*      (* required: the tool stops without them)

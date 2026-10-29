@@ -69,7 +69,7 @@ export default {
     id: 'coin',
     name: 'Coins',
     noun: 'coins',
-    icon: '🪙',
+    icon: 'coin',
     kinds: ['coin'],
     display: 'case',
     ownership: 'earned',

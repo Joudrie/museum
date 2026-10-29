@@ -82,7 +82,7 @@ export default {
     id: 'pottery',
     name: 'Pottery',
     noun: 'pottery pieces',
-    icon: '🏺',
+    icon: 'box',
     kinds: ['pottery'],
     display: 'case',
     ownership: 'earned',

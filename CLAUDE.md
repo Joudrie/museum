@@ -18,6 +18,9 @@ Read docs/VISION.md first: every feature should serve it. Then docs/HANDOFF.md f
   the entrance and the main hall) for void pixels between wall planes before shipping.
 - Pixel art stays on the 32px tile grid; paintings render in HD on the wall.
 - Movement is press-and-drag only (no tap-to-walk).
+- **Never use emojis anywhere in the game's UI.** Pixel icons (`src/ui/icons.js`) or words only.
+- **Popups stay small and in the top third of the screen** unless it is a very important moment (a rank-up).
+  Speech bubbles never cover a character, follow the speaker, and close when you walk away.
 
 ## Islands
 - **Main Island** (src/maps/main-island.json, drawn by the user in the builder) is home: the museum
