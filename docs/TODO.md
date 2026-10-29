@@ -160,7 +160,7 @@ Owns: new `src/share*.js`, `src/daily.js`. Claim: `open`
 - [ ] Auction house and co-op cleanup (later, social; ON HOLD).
 
 ## CHAT 14: Halls (the content that fills the rooms)
-Owns: new `src/halls/`, room-preset JSON in `content/halls/`. Claim: `open`. Depends on Chats 5, 8 and 9 landing; start with presets and decor lists.
+Owns: new `src/halls/`, room-preset JSON in `content/halls/`. Claim: `claimed: 2026-10-29`. Depends on Chats 5, 8 and 9 landing; start with presets and decor lists.
 - [ ] **Art:** galleries by era (Renaissance, Dutch, Impressionist, American, Japanese prints); sculpture court; **the Gardner Room** (salon walls around a courtyard garden; the empty heist frames); modern wing (white cube, when copyright allows); prints and early photography.
 - [ ] **Science:** dinosaur hall (T. rex centrepiece, fossil shelves in HD); space (planetarium dome, meteorites, moon rock, rocket); electricity (Van de Graaff and a timed lightning show); human body, optics, illusions (mirror maze, camera obscura).
 - [ ] **Natural history:** glass flowers, minerals and gems, taxidermy dioramas, ocean hall with a whale skeleton, aquarium wing.
