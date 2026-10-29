@@ -36,8 +36,7 @@ MIN_TRACK = 30         # metres long, at least
 PAINT_T = 13           # brightness a ridge needs, per sample, to count as painted
 TRACK_T = 5.0          # brightness a ridge needs, averaged along the street, to start a track
 YELLOW_T = 6.0         # how much redder-than-blue than the pavement beside it, for a line to be called yellow
-LINE_W = 5             # world px (0.6 m): how wide a line is drawn
-DOUBLE_GAP = 4         # world px between the two lines of a double yellow
+DOUBLE_GAP = 8         # world px between the two lines of a double yellow
 
 
 def sample(photos, mx, my):

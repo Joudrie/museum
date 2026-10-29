@@ -25,7 +25,7 @@ const LAYERS = {
   sat: { url: (z, i, j) => `https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${z}/${j}/${i}`, credit: 'Imagery © Esri, Maxar, Earthstar Geographics' },
 };
 const POS = 'wakefield.pos';
-const MARK_W = 5; // world px (0.6 m): how wide a painted line is drawn
+const MARK_W = 4; // world px (0.5 m): how wide a painted line is drawn
 const PAINT = { w: '#f3f3ec', y: '#f2c12e' };
 const DEFAULT_CHARACTER = { h: '#4a2e20', s: '#f2c6a0', c: '#7a2e3a', p: '#2f2b3d', b: '#1a1418', w: '#efe6d4', g: '#c9a23f', hair: 'short', outfit: 'suit' };
 
