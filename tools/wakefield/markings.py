@@ -9,7 +9,9 @@ painted line (cars, shadows and curbs do not). For each line found:
   - yellow or white: paint has a little more red than blue than the pavement around it, when it is yellow;
   - solid or dashed: how much of its length is painted; a dashed line is returned as the dashes the photo shows;
   - a yellow line down the middle of a two-way road is drawn double, as it is painted.
-Crosswalks come from the ones OpenStreetMap has mapped, drawn as white bars. Exact spacing is not the point (the photos
+White is only kept where the photo clearly shows a long, mostly unbroken edge line (anything fainter was car edges and curbs). Dashed white
+lane lines are drawn by rule on roads whose tags say they have lanes to divide (4 or more, or 2 or more on a one-way road), a 3 m dash
+every 12 m, as they are painted; the photo cannot resolve them. Crosswalks come from the ones OpenStreetMap has mapped, drawn as white bars. Exact spacing is not the point (the photos
 are 22 cm a pixel and a dash is a few pixels), the point is a line where there is a line, in the colour it is.
 Everything is returned in world pixels (8 to the metre).
 """
@@ -20,6 +22,8 @@ import pickle
 import cv2
 import numpy as np
 from scipy.ndimage import median_filter, uniform_filter1d
+from shapely.geometry import LineString
+from shapely.ops import substring
 
 from pavement import PX, Photos, Proj, expected_width  # photo pixels to the metre, the photo cache, the world <-> photo maths
 
@@ -164,6 +168,44 @@ def lines_along(photos, proj, line_world, tags):
     return out
 
 
+LANE = 3.3  # metres: a lane
+
+
+def lane_lines(p, tags):
+    """Dashed white lines between the lanes of a multi-lane road, by rule: a 3 m dash every 12 m."""
+    try:
+        lanes = int(str(tags.get('lanes', '')).split(';')[0])
+    except ValueError:
+        return []
+    oneway = tags.get('oneway') in ('yes', '-1')
+    if tags.get('lane_markings') == 'no' or lanes < (2 if oneway else 4):
+        return []
+    if oneway:
+        offsets = [(k - lanes / 2) * LANE for k in range(1, lanes)]
+    else:
+        offsets = [side * k * LANE for k in range(1, lanes // 2) for side in (1, -1)]
+    base = LineString(p)
+    out = []
+    for off in offsets:
+        try:
+            line = base.offset_curve(off * 8)
+        except Exception:
+            continue
+        for part in (line.geoms if line.geom_type == 'MultiLineString' else [line]):
+            if part.is_empty or part.length < 8 * 12:
+                continue
+            for s0 in np.arange(4 * 8, part.length - 3 * 8, 12 * 8):
+                seg = substring(part, s0, s0 + 3 * 8)
+                if seg.length > 8:
+                    out.append([tuple(c) for c in seg.coords])
+    return out
+
+
+def path_length(line):
+    a = np.array(line, float)
+    return float(np.hypot(*np.diff(a, axis=0).T).sum())
+
+
 def double(line, gap_world):
     """A line as two lines a little apart (a double yellow)."""
     a = np.array(line, float)
@@ -225,8 +267,9 @@ def analyze(roads, proj, cache, crossings=()):
                     yellow += double(line, DOUBLE_GAP)  # painted double, down the middle of a two-way road
                 else:
                     yellow.append(line)
-            else:
+            elif solid and path_length(line) >= 40 * 8:  # a long, unbroken edge line
                 white.append(line)
+        white += lane_lines(p, tags)
         done += 1
         if done % 200 == 0:
             print(f'  {done} of {len(roads)} roads read for paint')
