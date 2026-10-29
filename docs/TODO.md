@@ -101,7 +101,7 @@ Owns: new `src/expedition*.js`, `src/leads.js`, `src/maps/` (new islands). Claim
 - [ ] Rule: **earned, not bought, no throwaway mini-games.**
 
 ## CHAT 8: Collections, codex, journal and the shop
-Owns: `src/collections/` (except render.js), `src/journal.js`, `tools/import_collection.mjs`. Claim: `open`
+Owns: `src/collections/` (except render.js), `src/journal.js`, `tools/import_collection.mjs`. Claim: `claimed: 2026-10-29`
 - [ ] New collections as data (or CSV): coins, butterflies and insects, shells, stamps, ship models, glass flowers, pottery, armour, clocks, inventions.
 - [ ] Famous visitors as a collection (the codex already stamps `visitor:<id>`; their tab is hand-built).
 - [ ] Codex milestones at 10 / 25 / 50 / 75 / 100% with rewards; sets and artist sets (0/12 van Gogh); inventory vs codex.
