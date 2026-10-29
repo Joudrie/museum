@@ -785,6 +785,24 @@ function addProps(add, anim) {
         R(5, 9, 22, 1, WOOD[3]);
       }
     });
+  // dig spots: a mound that can be brushed open (src/dig.js); "@dug" is the same spot while it rests (hidden from the builder)
+  const mound = (dug) =>
+    draw(T, T, ({ R, E }) => {
+      E(16, 24, 12, 5, 'rgba(0,0,0,0.2)');
+      if (dug) {
+        E(16, 21, 10, 5, '#7a5232');
+        E(16, 20, 8, 3, '#946640');
+        return;
+      }
+      E(16, 20, 12, 8, '#7a5232');
+      E(16, 18, 10, 7, '#946640');
+      E(15, 16, 7, 4, '#ad7c50');
+      [[11, 15], [18, 13], [21, 18], [14, 20], [9, 19]].forEach(([x, y]) => R(x, y, 2, 1, '#c49464'));
+      R(19, 10, 1, 4, '#5a3a20'); // a bone tip poking out
+      R(18, 9, 3, 2, '#e8dfc8');
+    });
+  add('dig_spot', mound(false), { group: 'Props', label: 'Dig spot', walk: 'walk' });
+  add('dig_spot@dug', mound(true), { group: 'Props', label: 'Dug spot', walk: 'walk' });
   add('chest', chest(false), { group: 'Props', label: 'Treasure chest', walk: 'block' });
   add('chest_open', chest(true), { group: 'Props', label: 'Chest (open)', walk: 'block' });
   add('barrel', draw(T, T, ({ R, E }) => {
