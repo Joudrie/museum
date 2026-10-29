@@ -3,6 +3,7 @@
 // the back wall faces the camera, the side walls lean outward at 45°, and
 // everything on a wall (wallpaper, panels, paintings) follows its angle.
 import { paintColumn, columnCanvas } from './columns.js';
+import { MORE_HATS, MORE_HAIR, HAIR_BASE, MORE_FACIAL, MORE_GLASSES, MORE_OUTFITS, MORE_ACCESSORIES, PART_PAL, moreFace, moreOutfit, moreAccessories, moreHair, moreHats, applyBuild, drawCarry, drawGround, drawBuddy, poseFrames, poseView } from './people/parts.js';
 
 export const T = 32;
 
@@ -1583,8 +1584,9 @@ const SIDE = [
 ];
 
 function sprite(scene, key, rows, pal) {
-  const top = T - rows.length - 1;
-  return bake(scene, key, T, T, (x, y) => {
+  const H = Math.max(T, rows.length + 1); // people holding things up high get a taller picture
+  const top = H - rows.length - 1;
+  return bake(scene, key, T, H, (x, y) => {
     const row = rows[y - top];
     if (!row) return null;
     const ch = row[x - Math.floor((T - row.length) / 2)];
@@ -1596,12 +1598,12 @@ function sprite(scene, key, rows, pal) {
 // 'sun' | 'cap' | 'top' | 'beret' | 'beanie' | 'straw' | 'crown', facial: 'stache' |
 // 'curly' | 'goatee' | 'beard', unibrow, earpiece }. Returns new row maps.
 // Hats are colored T (U for a band); facial hair is F.
-export const HATS = { none: 'None', hardhat: 'Hard hat', cap: 'Baseball cap', top: 'Top hat', beret: 'Beret', beanie: 'Beanie', straw: 'Straw hat', sun: 'Sun hat', crown: 'Flower crown', laurel: 'Laurel wreath', bicorne: 'Bicorne' };
-export const FACIAL = { none: 'None', stache: 'Mustache', curly: 'Curly mustache', goatee: 'Goatee', vandyke: 'Mustache + goatee', chinstrap: 'Chin beard', beard: 'Beard' };
-export const GLASSES = { none: 'None', round: 'Round glasses', shades: 'Sunglasses' };
+export const HATS = { none: 'None', hardhat: 'Hard hat', cap: 'Baseball cap', top: 'Top hat', beret: 'Beret', beanie: 'Beanie', straw: 'Straw hat', sun: 'Sun hat', crown: 'Flower crown', laurel: 'Laurel wreath', bicorne: 'Bicorne', ...MORE_HATS };
+export const FACIAL = { none: 'None', stache: 'Mustache', curly: 'Curly mustache', goatee: 'Goatee', vandyke: 'Mustache + goatee', chinstrap: 'Chin beard', beard: 'Beard', ...MORE_FACIAL };
+export const GLASSES = { none: 'None', round: 'Round glasses', shades: 'Sunglasses', ...MORE_GLASSES };
 
 // Hairstyles beyond the default short cut. `pre` rows sit above the head.
-export const HAIRSTYLES = { short: 'Short', part: 'Side part', buzz: 'Buzz cut', curly: 'Curly', long: 'Long', ponytail: 'Ponytail', bun: 'Bun', pigtails: 'Pigtails', bob: 'Bob', afro: 'Afro', mohawk: 'Mohawk', wild: 'Wild', bald: 'Bald' };
+export const HAIRSTYLES = { short: 'Short', part: 'Side part', buzz: 'Buzz cut', curly: 'Curly', long: 'Long', ponytail: 'Ponytail', bun: 'Bun', pigtails: 'Pigtails', bob: 'Bob', afro: 'Afro', mohawk: 'Mohawk', wild: 'Wild', ...MORE_HAIR, bald: 'Bald' };
 const widen = (out, r, ch) => out[r] && (out[r] = ['o', ch, ...out[r].slice(1, -1), ch, 'o']);
 function hairStyle(out, view, hair, set, pre, setPre) {
   const mid = (r) => Math.floor(out[r].length / 2);
@@ -1666,7 +1668,7 @@ function hairStyle(out, view, hair, set, pre, setPre) {
 }
 
 // Outfit styles. c = jacket or main color, w = shirt, g = tie or accent.
-export const OUTFITS = { suit: 'Suit & tie', vest: 'Waistcoat', sweater: 'Sweater', tee: 'T-shirt', hoodie: 'Hoodie', coat: 'Long coat', apron: 'Apron', dress: 'Dress', gown: 'Gown', toga: 'Toga' };
+export const OUTFITS = { suit: 'Suit & tie', vest: 'Waistcoat', sweater: 'Sweater', tee: 'T-shirt', hoodie: 'Hoodie', coat: 'Long coat', apron: 'Apron', dress: 'Dress', gown: 'Gown', toga: 'Toga', ...MORE_OUTFITS };
 function outfit(out, view, style, set) {
   if (!style || style === 'suit') return;
   const swap = (rows, from, to) => rows.forEach((r) => out[r]?.forEach((c, i) => from.includes(c) && (out[r][i] = to)));
@@ -1703,7 +1705,7 @@ function outfit(out, view, style, set) {
 }
 
 // Accessories, in color X (bag in K).
-export const ACCESSORIES = { none: 'None', scarf: 'Scarf', bowtie: 'Bow tie', necklace: 'Necklace', badge: 'Badge', bag: 'Shoulder bag', camera: 'Camera' };
+export const ACCESSORIES = { none: 'None', scarf: 'Scarf', bowtie: 'Bow tie', necklace: 'Necklace', badge: 'Badge', bag: 'Shoulder bag', camera: 'Camera', ...MORE_ACCESSORIES };
 function accessory(out, view, acc, set) {
   if (!acc || acc === 'none') return;
   const len = (r) => out[r].length;
@@ -1852,9 +1854,13 @@ function withLooks(rows, view, look) {
   }
   if (look.hair === 'bob' && view === 'up') out[2] = [...'oUUUUUUUUUUo'];
   if (look.collar === 'ruff' && view !== 'up') out[11] = [...'owwwwwwwwwwo']; // a frilly white ruff
-  hairStyle(out, view, look.hair, set, pre, (p) => (pre = p));
+  hairStyle(out, view, HAIR_BASE[look.hair] || look.hair, set, pre, (p) => (pre = p));
   outfit(out, view, look.outfit, set);
+  moreOutfit(out, view, look);
   accessory(out, view, look.acc, set);
+  if (look.acc2) accessory(out, view, look.acc2, set);
+  moreAccessories(out, view, look);
+  moreFace(out, view, look);
   if (look.phone && view === 'down') {
     // holding a phone up to look at it
     const mid = Math.floor(out[17].length / 2);
@@ -1915,17 +1921,45 @@ function withLooks(rows, view, look) {
     const r1 = out[1];
     for (let i = 1; i < r1.length - 1; i++) r1[i] = ['R', 'G', 'Y', 'G'][i % 4];
   }
+  // the newer hair and hats (people/parts.js) go on last
+  const hairTop = moreHair(out, view, look, !!hat && hat !== 'none');
+  if (hairTop) pre = hairTop;
+  const hatTop = moreHats(out, view, look);
+  if (hatTop) pre = hatTop;
   return [...pre, ...out.map((r) => r.join(''))];
 }
 
+// Every layer of one view of a person: the looks, the build, then whatever they set
+// down, carry or have on their shoulder. frame 0 stands, 1 and 2 are walking steps.
+const baseRows = (view, look) => applyBuild(withLooks(view === 'down' ? FRONT : view === 'up' ? BACK : SIDE, view, look), look.build);
+const held = (rows, view, look) => drawBuddy(drawCarry(drawGround(rows, view, look), view, look), view, look);
+export function personRows(view, look = {}, frame = 0) {
+  const rows = baseRows(view, look);
+  return held(frame ? stepFrames(rows, view)[frame - 1] : rows, view, look);
+}
+
+// Sitting: the legs fold forward under the body.
+function sitRows(look, down = baseRows('down', look)) {
+  const sit = held(down, 'down', { ...look, carry: null, ground: null });
+  const legs = sit.length - 6; // the pants and shoes rows
+  return [...sit.slice(0, legs), sit[legs], sit[legs + 1].replace(/oo(?=p)/, 'pp'), sit[sit.length - 2], sit[sit.length - 1]];
+}
+
+// The two frames of a person's work pose (see POSES in people/parts.js), or null.
+export function poseRows(look) {
+  if (!look.pose) return null;
+  const held = { ...look, carry: null, hat: look.pose === 'weld' && look.hat === 'welder' ? 'welderdown' : look.hat };
+  return poseFrames(look.pose, (v) => (v === 'sit' ? sitRows(held) : personRows(v, held)), look);
+}
+export { poseView };
+
 // Colors for the looks above.
-const LOOK_PAL = { T: '#e8d8a0', U: '#5a3b2c', R: '#e0506a', Y: '#f2d36b', G: '#4f8a4a', L: '#7fb06a', Q: '#ffffff', X: '#c0392b', K: '#6a4a2a', M: '#e8908a' };
+const LOOK_PAL = { T: '#e8d8a0', U: '#5a3b2c', R: '#e0506a', Y: '#f2d36b', G: '#4f8a4a', L: '#7fb06a', Q: '#ffffff', X: '#c0392b', K: '#6a4a2a', M: '#e8908a', ...PART_PAL };
 
 const toHexEarly = (v) => '#' + v.map((n) => Math.round(Math.min(255, n)).toString(16).padStart(2, '0')).join('');
 
-// One character = three views: `${prefix}_down`, `_up`, `_side` (faces right),
-// each with two walking frames (`_down_1`, `_down_2`...), plus `_phone` and `_sit`.
-export function makeCharacter(scene, prefix, colors = {}, look = {}) {
+// The palette a person is drawn with: the base colors, their shades, and the looks' colors.
+export function personPalette(colors = {}) {
   const pal = { ...PAL, k: '#1d1714', ...LOOK_PAL, ...colors };
   if (!pal.F) pal.F = colors.h ? toHexEarly(shade(hex(colors.h), 0.85)) : '#3a2418'; // facial hair follows the hair
   const toHex = (v) => '#' + v.map((n) => Math.round(Math.min(255, n)).toString(16).padStart(2, '0')).join('');
@@ -1937,20 +1971,52 @@ export function makeCharacter(scene, prefix, colors = {}, look = {}) {
   if (colors.h && !colors.H) pal.H = toHex(mix(hex(colors.h), WHITE, 0.22));
   if (colors.s && !colors.S) pal.S = toHex(shade(hex(colors.s), 0.85));
   pal.Z = toHex(shade(hex(pal.s), 0.72)); // freckles
-  sprite(scene, `${prefix}_down`, withLooks(FRONT, 'down', look), pal);
-  sprite(scene, `${prefix}_up`, withLooks(BACK, 'up', look), pal);
-  sprite(scene, `${prefix}_side`, withLooks(SIDE, 'side', look), pal);
-  // Walking: two step frames per view.
-  [['down', FRONT], ['up', BACK], ['side', SIDE]].forEach(([view, rows]) => {
-    const [a, b] = stepFrames(withLooks(rows, view, look), view);
-    sprite(scene, `${prefix}_${view}_1`, a, pal);
-    sprite(scene, `${prefix}_${view}_2`, b, pal);
+  pal.m = toHex(mix(hex(pal.s), hex(pal.F), 0.45)); // stubble
+  return pal;
+}
+
+// Paints one frame (rows of palette letters, as personRows gives) onto a 2D canvas,
+// each row centred like sprite() does, the last row at y = `bottom`.
+export function drawRows(ctx, rows, pal, bottom) {
+  const { width: w, height: h } = ctx.canvas;
+  const img = ctx.getImageData(0, 0, w, h);
+  const rgb = {};
+  rows.forEach((row, j) => {
+    const y = bottom - (rows.length - 1 - j);
+    if (y < 0 || y >= h) return;
+    const off = Math.floor((T - row.length) / 2);
+    for (let i = 0; i < row.length; i++) {
+      const ch = row[i];
+      if (!pal[ch] || off + i < 0 || off + i >= w) continue;
+      const c = (rgb[ch] ||= hex(pal[ch]));
+      const k = (y * w + off + i) * 4;
+      img.data[k] = c[0];
+      img.data[k + 1] = c[1];
+      img.data[k + 2] = c[2];
+      img.data[k + 3] = 255;
+    }
   });
-  sprite(scene, `${prefix}_phone`, withLooks(FRONT, 'down', { ...look, phone: true }), pal);
-  // Sitting: the legs fold forward under the body.
-  const sit = withLooks(FRONT, 'down', look);
-  const legs = sit.length - 6; // the pants and shoes rows
-  sprite(scene, `${prefix}_sit`, [...sit.slice(0, legs), sit[legs], sit[legs + 1].replace(/oo(?=p)/, 'pp'), sit[sit.length - 2], sit[sit.length - 1]], pal);
+  ctx.putImageData(img, 0, 0);
+}
+
+// One character = three views: `${prefix}_down`, `_up`, `_side` (faces right),
+// each with two walking frames (`_down_1`, `_down_2`...), plus `_phone` and `_sit`,
+// and `_pose_0` and `_pose_1` for someone at work (look.pose).
+export function makeCharacter(scene, prefix, colors = {}, look = {}) {
+  const pal = personPalette(colors);
+  let down = null;
+  ['down', 'up', 'side'].forEach((view) => {
+    const rows = baseRows(view, look);
+    if (view === 'down') down = rows;
+    // Walking: two step frames per view.
+    const [a, b] = stepFrames(rows, view);
+    sprite(scene, `${prefix}_${view}`, held(rows, view, look), pal);
+    sprite(scene, `${prefix}_${view}_1`, held(a, view, look), pal);
+    sprite(scene, `${prefix}_${view}_2`, held(b, view, look), pal);
+  });
+  sprite(scene, `${prefix}_phone`, personRows('down', { ...look, phone: true, carry: null, ground: null }), pal);
+  sprite(scene, `${prefix}_sit`, sitRows(look, down), pal);
+  poseRows(look)?.forEach((rows, i) => sprite(scene, `${prefix}_pose_${i}`, rows, pal));
 }
 
 // Step frames for walking. Facing front or back, one foot lifts off the

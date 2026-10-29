@@ -1,7 +1,12 @@
 # People sprites: the big list, and the prompt
 
 The plan for a lot more people in Curation, built the way Pokémon builds its overworld people.
-**This is a plan only. No game code was touched.** The prompt to paste into a new chat is in section 7.
+The prompt to paste into a new chat is in section 7.
+
+**Built so far** (Chat 17, see `docs/HANDOFF.md` → People sprites):
+- Tier 0 parts are in (`src/people/parts.js`): see section 3; the new ones are listed in the gallery (`art.html` → Characters).
+- Tier 1 classes are in (`src/people/classes.js`): A cleaning & grounds (8 classes), B builders & trades (24), D sea & shore (22), 137 placeable variants in the builder's People lists. `art.html` → People shows them all.
+- Next: Tier 2 (E dig, field and expedition; G museum professions).
 
 Today: 1 body, 8 skin tones, 11 hair colours, 13 hairstyles, 11 hats, 7 facial-hair options, 3 glasses,
 10 outfits, 7 accessories, 14 visitor kinds, 6 staff kinds, 19 famous visitors. All drawn in code in

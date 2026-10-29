@@ -104,6 +104,9 @@ const lookOf = (ch) => ({
   freckles: !!ch.freckles,
   blush: !!ch.blush,
   earrings: !!ch.earrings,
+  build: ch.build,
+  legs: ch.legs,
+  feet: ch.feet,
 });
 const TUTORIAL_KEY = 'curation.tutorial'; // how far the first-time walkthrough has got
 const BREAK_SEEDED_KEY = 'curation.breakSeeded';
