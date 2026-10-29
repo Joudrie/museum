@@ -388,6 +388,30 @@ def poly_data(g):
     return {'o': ring(g.exterior), 'i': [ring(h) for h in g.interiors if len(h.coords) >= 4]}
 
 
+def seal_stone(res, roads, buildings):
+    """No specks of grass in the stone: gaps up to 5 m between streets, lots, sidewalks and road strokes are filled
+    (as lot stone), holes under 60 m2 are filled, and stone reaches the wall of a building within 3 m of it."""
+    from shapely.geometry import LineString as LS, Polygon as Pg
+    from shapely.ops import unary_union
+    streets, lots, walks = [g.buffer(0) for _, _, g in res['streets']], [g.buffer(0) for g in res['lots']], [g.buffer(0) for g in res['walks']]
+    pave = unary_union(streets + lots + walks)
+    if pave.is_empty:
+        return res
+    strokes = unary_union([LS(p).buffer(w / 2) for w, p in roads])
+    bld = unary_union([Pg(b).buffer(0) for b in buildings if len(b) >= 3])
+    stone = unary_union([pave, strokes.intersection(pave.buffer(60))])
+    fill = stone.buffer(20).buffer(-20).difference(stone)                         # the narrow gaps
+    fill = unary_union([fill, pave.buffer(24).intersection(bld.buffer(24))])     # the rim along walls
+    fill = fill.difference(bld).buffer(-0.5).buffer(0.5)
+    new_lots = [g for g in (fill.geoms if hasattr(fill, 'geoms') else [fill]) if g.geom_type == 'Polygon' and g.area > 30]
+    # holes in the lots and sidewalks (cars, trees, a manhole) are stone too
+    def solid(g, hole=60 * 64):
+        return Pg(g.exterior, [r for r in g.interiors if Pg(r).area >= hole])
+    lots_all = unary_union(lots + new_lots).buffer(0)
+    lots_out = [solid(g) for g in (lots_all.geoms if hasattr(lots_all, 'geoms') else [lots_all]) if g.geom_type == 'Polygon']
+    return {'streets': [(n, w, solid(g)) for (n, w, _), g in zip(res['streets'], streets) if g.geom_type == 'Polygon'], 'lots': lots_out, 'walks': [solid(g) for g in walks if g.geom_type == 'Polygon']}
+
+
 def build(d, pavement=False, markings=False):
     boundary = next(e for e in load(d, 'boundary') if e['type'] == 'relation')
     town_rings, _ = multipolygon(boundary)
@@ -482,6 +506,7 @@ def build(d, pavement=False, markings=False):
             parking_world=[pts(e['geometry']) for e in osm if e['tags'].get('amenity') == 'parking' and len(e['geometry']) >= 4],
             walks_world=[pts(e['geometry']) for e in osm if e['tags'].get('footway') == 'sidewalk' and len(e['geometry']) >= 2],
         )
+        res = seal_stone(res, roads, buildings)
         footprint_extra = [g for _, _, g in res['streets']] + list(res['lots'])
         pave = {'streets': [poly_data(g) for _, _, g in res['streets']], 'lots': [poly_data(g) for g in res['lots']], 'walks': [poly_data(g) for g in res['walks']]}
         print(f'  pavement: {len(pave["streets"])} street polygons, {len(pave["lots"])} parking lots, {len(pave["walks"])} sidewalk strips')
@@ -496,6 +521,7 @@ def build(d, pavement=False, markings=False):
         classes = ('motorway', 'trunk', 'primary', 'secondary', 'tertiary', 'unclassified', 'residential', 'living_street')
         painted = [(wid, p, t) for wid, name, t, p in raw if t['highway'].replace('_link', '') in classes and inside_town(*p[len(p) // 2])]
         found = mk.analyze(painted, proj_m, f'{d}/sat', crossings=[pts(e['geometry']) for e in osm if e['tags'].get('footway') == 'crossing' and len(e['geometry']) >= 2])
+        found = mk.tidy(found)
         # paint only counts where the game draws stone: a street shape, a lot, or a road's own width
         shapes = [LS(p).buffer(w / 2 + 4) for w, p in roads] + footprint_extra
         stone = prep(unary_union(shapes))
