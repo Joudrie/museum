@@ -460,6 +460,8 @@ export class IslandScene extends Phaser.Scene {
     this.buildShowcase();
     this.addDig(20, 24);
     this.addDig(12, 24);
+    this.addDig(16, 23, 'fossil');
+    this.addDig(21, 23, 'fossil');
     this.thing('chest', 18, 25, 'A heavy chest, locked tight. Expeditions will turn up the keys.');
     // the dock at the south end
     for (let y = 36; y <= 39; y++) this.place('dock_v', 12, y, { flat: true });
@@ -735,10 +737,10 @@ export class IslandScene extends Phaser.Scene {
   }
 
   // A spot to brush open (src/dig.js). It rests, shown as a flattened patch, after it has been dug.
-  addDig(x, y) {
+  addDig(x, y, kind = 'mineral') {
     const key = `${this.mapId || 'one'}:${x},${y}`;
-    const d = { key, x: (x + 0.5) * T, y: (y + 0.5) * T, gx: x, gy: y };
-    d.img = this.place(readyIn(key) > 0 ? 'dig_spot@dug' : 'dig_spot', x, y, { flat: true });
+    const d = { key, kind, x: (x + 0.5) * T, y: (y + 0.5) * T, gx: x, gy: y };
+    d.img = this.place(readyIn(key) > 0 ? 'dig_spot@dug' : kind === 'fossil' ? 'dig_fossil' : 'dig_spot', x, y, { flat: true });
     this.digs.push(d);
   }
 
@@ -747,6 +749,7 @@ export class IslandScene extends Phaser.Scene {
     if (wait > 0) return this.toast(`Freshly dug. Come back in ${Math.ceil(wait / 60000)} min.`);
     this.paused = true;
     startDig(d.key, {
+      collection: d.kind,
       onClose: ({ found }) => {
         this.paused = false;
         if (!found) return;
@@ -885,7 +888,7 @@ export class IslandScene extends Phaser.Scene {
       if (name.startsWith('animal_') && ANIMALS[name.slice(7)]) return this.islanders.push(this.animal(name.slice(7), o.x + T / 2, o.y + t.h - 3, this.islanders.length));
       if (PEOPLE[name] !== undefined) return this.islanders.push(this.islander(o.x + T / 2, o.y + t.h - 4, PEOPLE[name], this.islanders.length));
       if (name === 'museum') return this.mapMuseum(x, y, t);
-      if (name === 'dig_spot') return this.addDig(x, y);
+      if (name === 'dig_spot' || name === 'dig_fossil') return this.addDig(x, y, name === 'dig_fossil' ? 'fossil' : 'mineral');
       if (name === 'tall_grass' || name === 'tall_grass_front') {
         if (!this.grassCells.has(`${x},${y}`)) this.tallGrass(x, y);
         return;

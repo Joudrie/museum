@@ -109,7 +109,7 @@ export default {
       label: 'Minerals',
       order: 4,
       layout: 'tiles',
-      intro: '{have} of {total} minerals found. They will turn up on dig sites. Until those open, Settings → Testing can drop a sample cabinet into your collection.',
+      intro: '{have} of {total} minerals found. Brush them out of dig spots on the islands.',
     },
     viewer: { look: 'case' },
   },

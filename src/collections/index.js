@@ -6,11 +6,12 @@ import { validateEntry, validateCollection, validateSet, RARITY } from './schema
 import paintings from './data/paintings.js';
 import fish from './data/fish.js';
 import minerals from './data/minerals.js';
+import fossils from './data/fossils.js';
 
 export { RARITY } from './schema.js';
 
 // A data file exports one pack ({ collection, sets, entries }) or a list of them.
-const PACKS = [paintings, fish, minerals];
+const PACKS = [paintings, fish, minerals, fossils];
 
 const COLLECTIONS = new Map();
 const ENTRIES = new Map();
