@@ -211,6 +211,10 @@ island scene streams ground chunks around the player.
   ERR_STRING_TOO_LONG. Wrap calls in `{ ...; }`.
 - **iOS Safari ignores `user-scalable=no`.** Use `touch-action` instead.
 
+### Art swap and placeholder list (Chat 15)
+- **Drop-in swap:** a PNG with the same name as a placeholder, put in `public/swap/` (`tiles/<name>.png`, `sprites/<name>.png`, `pieces/<group>/<n>.png`), overrides it with no code change. See `public/swap/README.md`. Code: `src/swap.js`; `vite.config.js` writes `swap/index.json`; `src/boot.js` waits for it before the game starts. A wrong-size file is ignored with a console warning.
+- **Placeholder list:** `node tools/list_placeholders.mjs` (add `--md` to rewrite `docs/PLACEHOLDERS.md`) lists every tile, room sprite and builder piece by name, size and where it's used, and marks swapped ones. Needs playwright (`PW=` path).
+
 ## 4. Tests
 
 The preview server must run first (it dies between turns):
@@ -261,6 +265,7 @@ See `docs/ASSET-HUNT.md` (the "super dig" prompt plus the to-do list) and `docs/
 
 - `holiday()` in `src/weather.js` (real calendar; `?holiday=halloween|winter|none` pins it). Halloween: pumpkins by the museum doors (`holidayDecor` in IslandScene), kids and some students in witch / ghost / pumpkin costumes (`visitorLook`). Winter: woolly hats.
 - Room presets (`src/presets.js`, `tests/presets.cjs`): Customize > This room > Saved layouts saves a room's decor and items under a name and loads them into any room. Loading sells what is there and buys the preset's items at normal prices, so layouts are not free items.
+- Weather shades the light: `overcast()` in `src/lighting.js` (rain greyer, snow brighter), used by rooms and islands. `stormRumble(scene, kind)` in `src/weather.js` = thunder (`sfx('thunder')`, generated noise) plus a faint flash on some rainy days.
 - Themed rooms (`roomTheme` in `src/wallet.js`): 3+ paintings all from one era earn 1.5x; Customize > Rating says so. "Section" is read as the painting's `era`.
 
 ## Digging v2 (Chat 6)

@@ -4,14 +4,15 @@
 // with stairs, tall grass, palms and a dock where expeditions will leave from.
 import Phaser from 'phaser';
 import { buildTiles, T } from './tiles.js';
+import { patchSheet } from './swap.js';
 import { makeCharacter } from './art.js';
 import { load } from './storage.js';
 import { DEFAULT_CHARACTER } from './decor.js';
 import { showTalk, hideTalk, talking } from './talk.js';
 import { iconSvg } from './icons.js';
 import { sfx, setTrack, setAmbience } from './music.js';
-import { Weather, weatherToday, season, holiday } from './weather.js';
-import { ambientAt, makeTextures as lightTextures } from './lighting.js';
+import { Weather, weatherToday, season, holiday, stormRumble } from './weather.js';
+import { ambientAt, overcast, makeTextures as lightTextures } from './lighting.js';
 import { Critters } from './critters.js';
 import { Ambient } from './ambient.js';
 import { seasonFrames, seasonTile, TILE_LIGHTS } from './scenery.js';
@@ -183,6 +184,7 @@ export class IslandScene extends Phaser.Scene {
     this.seasonal();
     this.setupCamera();
     this.weather = new Weather(this, this.weatherKind);
+    stormRumble(this, this.weatherKind);
     if (this.weatherKind === 'rain') this.makePuddles();
     this.setupInput();
     this.time.addEvent({ delay: STEP_MS, loop: true, callback: () => this.tick() });
@@ -637,7 +639,7 @@ export class IslandScene extends Phaser.Scene {
   // the museum's windows, the lamp posts and the campfire.
   lightUp() {
     const lit = settings().dayNight && settings().lights !== 'off';
-    const [r, g, b] = lit ? ambientAt(hourNow()) : [255, 255, 255];
+    const [r, g, b] = lit ? overcast(ambientAt(hourNow()), this.weatherKind) : [255, 255, 255];
     this.dark = Math.max(0, Math.min(1, 1 - (0.3 * r + 0.55 * g + 0.15 * b) / 245));
     if (!lit) return;
     lightTextures(this);
@@ -960,6 +962,17 @@ export class IslandScene extends Phaser.Scene {
       sheets.forEach((sh) => !this.textures.exists(`bp_${sh}`) && this.load.image(`bp_${sh}`, `./${sh}`));
       const put = () => {
         if (!this.sys.isActive()) return;
+        sheets.forEach((sh) => {
+          // art dropped in public/swap/pieces is painted over its cells in the sheet
+          const key = `bp_${sh}`;
+          if (!this.textures.exists(key) || this.textures.get(key).swapped) return;
+          const src = this.textures.get(key).getSourceImage();
+          const patched = patchSheet(src, ROOM.groups.find((g) => g.sheet === sh));
+          if (patched !== src) {
+            this.textures.remove(key);
+            this.textures.addCanvas(key, patched).swapped = true;
+          }
+        });
         wanted.forEach((o) => {
           const p = byId[o.ref.slice(2)];
           if (!p || !this.textures.exists(`bp_${p.sheet}`)) return;

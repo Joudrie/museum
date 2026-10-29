@@ -31,7 +31,7 @@ import {
   LIGHT_TINTS,
 } from './art.js';
 import { setTrack, sfx, setAmbience } from './music.js';
-import { weatherToday, season, holiday } from './weather.js';
+import { weatherToday, season, holiday, stormRumble } from './weather.js';
 import { ORIENT_LABELS, SIZE_LABELS, BREAK, roomAt, MAIN_HALL_PRICE, ATRIUM_PRICE, isFixed, seedEntry, loadRooms, addRoom, resetRooms, updateRoom, swapRooms, roomName, layout, paintingsFor, slotStates, setSlot, hungAnywhere, placeArt, wallItems, plantSpots, carpetRect } from './rooms.js';
 import { openSlotMenu } from './slotmenu.js';
 import { applyPreset, presetCost } from './presets.js';
@@ -73,6 +73,7 @@ import { celebrate } from './ui.js';
 import { addLove, loveOf, resetLove } from './love.js';
 import { hasCameras as camerasOn } from './security.js';
 import { hourNow } from './settings.js';
+import { spriteUrl } from './swap.js';
 
 const VIEW_TILES = 9; // the camera always shows 9 tiles across
 const SPEED = 176; // px per second
@@ -288,7 +289,7 @@ export class RoomScene extends Phaser.Scene {
     // furniture sprites from the free art packs (see docs/ASSETS.md)
     const sprites = new Set((this.L.props || []).map((q) => q.s));
     if ((this.L.props || []).some((q) => q.flames)) [0, 1, 2, 3].forEach((f) => sprites.add(`flame_${f}`));
-    sprites.forEach((s) => this.textures.exists(`lpc_${s}`) || this.load.image(`lpc_${s}`, `sprites/lpc/${s}.png`));
+    sprites.forEach((s) => this.textures.exists(`lpc_${s}`) || this.load.image(`lpc_${s}`, spriteUrl(s, `sprites/lpc/${s}.png`)));
     this.load.setCORS('anonymous');
     this.hung.forEach((p) => {
       if (!this.textures.exists(`art_${p.id}`)) this.load.image(`art_${p.id}`, p.src);
@@ -391,6 +392,7 @@ export class RoomScene extends Phaser.Scene {
     this.bubble = this.add.image(0, 0, 'bubble').setOrigin(0.5, 1).setDepth(5000).setVisible(false);
     this.lighting = new Lighting(this);
     setAmbience(weatherToday() === 'rain' && !this.isBreak ? ['rainSoft'] : []); // rain on the roof
+    if (!this.isBreak) stormRumble(this, weatherToday());
     this.time.addEvent({ delay: 60000, loop: true, callback: () => this.lighting.build() }); // the sun moves
 
     this.setupCamera();
