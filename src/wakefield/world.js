@@ -57,6 +57,7 @@ class World {
     this.roads = vec.roads.map((r) => ({ w: r.w, p: unpack(r.p) }));
     this.buildings = vec.buildings.map(unpack);
     this.labels = vec.labels || [];
+    this.pois = vec.pois || []; // named places: [text, x, y, tier, kind, width]
     this.geo = vec.geo;
     this.ppm = vec.ppm;
     this.buckets = new Map();
@@ -102,6 +103,10 @@ class World {
     this.rivers.forEach((r) => along(r.p, r.w / 2 + 12, (b) => b.rivers.push(r)));
     this.lakes.forEach((l) => l.outer.forEach((p) => box(p, 12, (b) => b.lakes.push(l))));
     this.buildings.forEach((p) => box(p, 2, (b) => b.buildings.push(p)));
+    this.pois.forEach((l) => {
+      const r = l[5] / 2 + 8;
+      box([l[1] - r, l[2] - r, l[1] + r, l[2] + r], 0, (b) => b.pois.push(l));
+    });
     this.labels.forEach((l) => {
       const r = l[4] / 2 + FONT;
       box([l[1] - r, l[2] - r, l[1] + r, l[2] + r], 0, (b) => b.labels.push(l));
@@ -121,7 +126,7 @@ class World {
   bucket(cx, cy) {
     const k = `${cx},${cy}`;
     let b = this.buckets.get(k);
-    if (!b) this.buckets.set(k, (b = { roads: [], rail: [], rivers: [], lakes: [], buildings: [], labels: [] }));
+    if (!b) this.buckets.set(k, (b = { roads: [], rail: [], rivers: [], lakes: [], buildings: [], labels: [], pois: [] }));
     return b;
   }
 

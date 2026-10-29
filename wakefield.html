@@ -10,8 +10,13 @@
     <div id="game"></div>
     <div id="loading">Loading Wakefield…</div>
     <button id="names-btn" class="wk-btn" aria-label="Street names">Aa</button>
-    <button id="map-btn" class="wk-btn" aria-label="Show the real map over the town">🗺</button>
-    <div id="osm-credit" hidden>© OpenStreetMap contributors</div>
+    <button id="map-btn" class="wk-btn" aria-label="Show the map or satellite view over the town">🗺</button>
+    <div id="map-panel" hidden>
+      <button data-layer="street" class="seg">Map</button>
+      <button data-layer="sat" class="seg">Satellite</button>
+      <input id="map-alpha" type="range" min="10" max="100" value="70" aria-label="Strength" />
+    </div>
+    <div id="osm-credit" hidden></div>
     <div id="toast" class="hidden"></div>
     <div id="stick"><div class="knob"></div></div>
     <script type="module" src="./src/wakefield/main.js"></script>
