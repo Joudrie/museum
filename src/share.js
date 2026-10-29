@@ -9,6 +9,7 @@ import { museumRating, starsFor, starText } from './rating.js';
 import { museumVisitors } from './wallet.js';
 import { PAINTINGS } from './paintings.js';
 import { toCode, fromCode, cleanVisit, cleanIsland } from './sharecode.js';
+import { openViewer } from './viewer.js';
 
 const FRIENDS = 'curation.friends'; // { museums: [{ id, saved, visit }], islands: [map] }
 const NAME_KEY = 'curation.share.name';
@@ -232,11 +233,14 @@ if (typeof document !== 'undefined') {
       const sec = mk('section', 'share-card');
       sec.appendChild(mk('h3', '', r.name));
       const row = mk('div', 'visit-row');
+      const known = r.paintings.map((id) => paintingById.get(id)).filter(Boolean);
       r.paintings.forEach((id) => {
         const p = paintingById.get(id);
         const c = mk('figure', 'visit-art');
         if (p) {
-          const holder = mk('div', 'visit-img');
+          const holder = mk('button', 'visit-img');
+          holder.setAttribute('aria-label', `Look closer: ${p.title}`);
+          holder.onclick = () => openViewer(known, known.indexOf(p), null, null, { over: true });
           holder.style.background = p.placeholder || '#2a1f18';
           const img = mk('img');
           img.alt = '';
@@ -292,6 +296,7 @@ if (typeof document !== 'undefined') {
     name.type = 'text';
     name.maxLength = 30;
     name.placeholder = 'Museum name (optional)';
+    name.setAttribute('aria-label', 'Museum name');
     name.value = load(NAME_KEY, '');
     name.oninput = () => save(NAME_KEY, name.value);
     const link = mk('button', 'wide-btn', 'Copy visit link');

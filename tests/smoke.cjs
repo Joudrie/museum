@@ -3,7 +3,7 @@
 // Usage: npm run build && npx vite preview --port 4173 --base / &
 //        PW=/path/to/playwright node tests/smoke.cjs
 const { chromium } = require(process.env.PW || 'playwright');
-const { jtab } = require('./nav.cjs');
+const { jtab, openGroup } = require('./nav.cjs');
 const URL = process.env.URL || 'http://localhost:4173/';
 
 const problems = [];
@@ -292,6 +292,7 @@ const ok = (msg) => console.log('  ✓ ' + msg);
     await settle(400);
     ok('applied a theme');
   } else fail('no theme buttons');
+  await openGroup(p, 'room');
   const sizeBtn = await p.$('section >> text=Short');
   if (sizeBtn) {
     await sizeBtn.click();

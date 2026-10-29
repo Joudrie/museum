@@ -8,6 +8,7 @@ import { drawEntry } from './collections/render.js';
 import { sfx } from './music.js';
 import { haptic } from './ui.js';
 import { addCoins } from './wallet.js';
+import { dayNum } from './daily.js';
 
 const KEY = 'curation.digs'; // { spotKey: readyAt (ms) }
 const PARTS = 'curation.digparts'; // { entryId: parts found so far } for big finds that take several spots
@@ -16,11 +17,12 @@ const SIZE = 240; // css px of the digging patch
 
 // Tools: what you dig with changes how fast the dirt clears and what turns up. They are earned:
 // each unlocks after you have found enough different things (no shop, nothing to buy).
-//   reach: brush width in css px; flat: how much rarity counts against a find (lower = rare finds turn up more)
+//   reach: brush width in css px; flat: how much rarity counts against a find (1 = the plain odds; higher = rare finds
+//   turn up less). The brush keeps the plain odds, so the faster tools trade a little luck for speed.
 export const TOOLS = {
-  brush: { name: 'Brush', reach: 22, flat: 0.6, need: 0, note: 'Slow and gentle. Rare finds turn up more often.' },
-  trowel: { name: 'Trowel', reach: 34, flat: 1, need: 6, note: 'Clears dirt faster. Plain odds.' },
-  pick: { name: 'Pick', reach: 52, flat: 1.2, need: 16, note: 'Very fast, but it favours the common finds.' },
+  brush: { name: 'Brush', reach: 22, flat: 1, need: 0, note: 'Slow and careful: the best odds for a rare find.' },
+  trowel: { name: 'Trowel', reach: 34, flat: 1.15, need: 6, note: 'Clears dirt faster; rare finds a little less likely.' },
+  pick: { name: 'Pick', reach: 52, flat: 1.3, need: 16, note: 'Very fast, but rare finds turn up less.' },
 };
 const DIG_COLLECTIONS = () => ['mineral', 'fossil', 'pottery', 'coin', 'arrowhead', 'shell', 'meteorite', 'map'];
 /** How many different dug things you have found so far (decides which tools you have). */
@@ -31,7 +33,7 @@ export const toolUnlocked = (t, found = foundCount()) => found >= (TOOLS[t]?.nee
 const DAILY = 'curation.digdaily'; // { day, n, paid }
 export const DAILY_GOAL = 3;
 export const DAILY_GOLD = 120;
-const dayNow = () => Math.floor(Date.now() / 864e5);
+const dayNow = () => dayNum(); // the player's own calendar day, like the daily gift
 export function dailyDigs() {
   const d = load(DAILY, {});
   return d.day === dayNow() ? { n: d.n || 0, paid: !!d.paid } : { n: 0, paid: false };
@@ -45,6 +47,9 @@ export function recordDig() {
   if (reached) addCoins(DAILY_GOLD);
   return { n: next, goal: DAILY_GOAL, reached };
 }
+
+/** A save key for the island a scene is on. Builder and friends' islands all load as 'test', so they go by name. */
+export const mapKey = (scene) => (scene.mapId === 'test' ? `isle:${scene.map?.name || 'test'}` : scene.mapId || 'one');
 
 export const partsOf = (id) => load(PARTS, {})[id] || 0;
 
@@ -194,7 +199,7 @@ function setup(key, { onClose, onFound, entry, tool }) {
       p[entry.id] = part;
       if (part >= entry.parts) {
         delete p[entry.id];
-        got = collect(entry.id);
+        got = onFound ? onFound(entry) : collect(entry.id);
       }
       save(PARTS, p);
     } else got = onFound ? onFound(entry) : collect(entry.id); // (expeditions bring finds home dirty instead)

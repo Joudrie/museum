@@ -2,7 +2,7 @@
 import { load, save } from './storage.js';
 
 const SETTINGS_KEY = 'curation.settings';
-export const DEFAULT_SETTINGS = { dayNight: true, lights: 'high', music: 0.7, sfx: 0.8, haptics: true };
+export const DEFAULT_SETTINGS = { dayNight: true, lights: 'high', music: 0.7, sfx: 0.8, haptics: true, text: 'normal', reduceMotion: false, leftHanded: false, tips: true };
 export const LIGHT_QUALITY = { high: 'High', low: 'Low', off: 'Off' };
 
 export const settings = () => ({ ...DEFAULT_SETTINGS, ...load(SETTINGS_KEY, {}) });

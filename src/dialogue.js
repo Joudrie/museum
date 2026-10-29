@@ -1,6 +1,7 @@
 // The conversation box: a portrait, a name, text that types out, and choices.
 // Tap the box to finish a line (or move on). Drives a generator from src/chatter.js.
 import { sfx } from './music.js';
+import { uiIcon } from './ui/icons.js';
 
 let el = null;
 function build() {
@@ -10,7 +11,7 @@ function build() {
   el.setAttribute('role', 'dialog');
   el.innerHTML =
     '<div class="chat-box"><div class="chat-head"><canvas class="chat-face" width="64" height="64"></canvas><div><b class="chat-name"></b><small class="chat-label"></small></div></div>' +
-    '<p class="chat-text"></p><div class="chat-choices"></div><span class="chat-more">▼</span></div>';
+    '<p class="chat-text"></p><div class="chat-choices"></div><span class="chat-more" aria-hidden="true">' + uiIcon('down', 's') + '</span></div>';
   document.body.appendChild(el);
 }
 
@@ -27,6 +28,7 @@ export function runDialogue(gen, { name, label, portrait, onGift, onEnd }) {
   const choices = q('.chat-choices');
   const more = q('.chat-more');
   q('.chat-name').textContent = name;
+  el.setAttribute('aria-label', `Talking to ${name}`);
   q('.chat-label').textContent = label || '';
   const face = q('.chat-face');
   const g = face.getContext('2d');

@@ -81,7 +81,7 @@ function render() {
   const buy = el.querySelector('.build-buy');
   const short = FREE ? 0 : cost - coins();
   buy.disabled = short > 0;
-  buy.textContent = short > 0 ? `Need ${short.toLocaleString()} more gold` : FREE ? `Build room · free while testing (${cost.toLocaleString()} gold)` : `Build room · ${cost.toLocaleString()} gold`;
+  buy.textContent = short > 0 ? `Need ${short.toLocaleString()} more gold` : FREE ? `Build room · Free (${cost.toLocaleString()} gold)` : `Build room · ${cost.toLocaleString()} gold`;
 
   const options = EXITS[orient];
   const drawn = options.map((exit) => drawRoom(scene, rooms, { orient, size, exit }, decor));

@@ -101,7 +101,8 @@ async function loadPieces() {
   Object.entries(TILES).forEach(([name, t]) => {
     if (name.includes('@')) return;
     const flat = t.w === T && t.h === T && FLAT_GROUPS.includes(t.group);
-    PIECES[`t:${name}`] = { img: t.frames[0], sx: 0, sy: 0, w: t.w, h: t.h, layer: flat ? 'tile' : 'object', label: t.label || name, group: t.group, skip: SKIP_GROUP.test(t.group || '') };
+    // (the picture is read when it's first drawn: people's pictures are made on demand)
+    PIECES[`t:${name}`] = { get img() { return t.frames[0]; }, sx: 0, sy: 0, w: t.w, h: t.h, layer: flat ? 'tile' : 'object', label: t.label || name, group: t.group, skip: SKIP_GROUP.test(t.group || '') };
   });
   try {
     try {
@@ -217,7 +218,7 @@ function pieceButton(ref) {
 function buildPalette() {
   const pal = $('palette');
   const lists = [];
-  pal.innerHTML = '<input id="search" type="search" placeholder="Search pieces…" autocomplete="off" /><div id="results" class="pieces" hidden></div><div id="quick"></div>';
+  pal.innerHTML = '<input id="search" type="search" placeholder="Search pieces…" aria-label="Search pieces" autocomplete="off" /><div id="results" class="pieces" hidden></div><div id="quick"></div>';
   const search = $('search');
   search.oninput = () => {
     const q = search.value.trim().toLowerCase();
@@ -250,7 +251,7 @@ function buildPalette() {
   });
   const order = ['Ground: Ground', 'Ground: Paths', 'Ground: Water', 'Buildings', 'People', 'Animals', 'Trees', 'Plants', 'Flowers & plants', 'Rocks', 'Buildings', 'Garden & park', 'Grounds & garden', 'Props', 'Dig sites', 'Puzzles', 'Ground: Cliffs & ledges', 'Cliffs & ledges'];
   Object.keys(byGroup)
-    .sort((a, b) => (order.indexOf(a) + 1 || 99) - (order.indexOf(b) + 1 || 99))
+    .sort((a, b) => (order.indexOf(a.startsWith('People') ? 'People' : a) + 1 || 99) - (order.indexOf(b.startsWith('People') ? 'People' : b) + 1 || 99)) // the People: lists sit with People
     .forEach((name) => lists.push({ name: name.replace('Ground: Ground', 'Ground tiles').replace('Ground: Cliffs & ledges', 'Cliff ground pieces').replace('Ground: ', ''), refs: byGroup[name] }));
   (ROOM?.groups || []).forEach((g) => lists.push({ name: `Room: ${g.name}`, refs: g.pieces.map((p) => `p:${p.id}`) }));
   lists.forEach((list, li) => {

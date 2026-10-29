@@ -2,10 +2,12 @@
 // "Character" changes the curator. Each color row is a swipeable strip of
 // swatches, ending in a + that opens a full color picker.
 import { HATS, FACIAL, GLASSES, HAIRSTYLES, OUTFITS, ACCESSORIES, PALETTES, FLOOR_PATTERNS, WOOD_FLOORS, TWO_COLOR_FLOORS, FLOOR_DEFAULTS, WALL_PATTERNS, WAINSCOT_STYLES, LIGHTS, PLANTS } from './art.js';
+import { BUILDS, LEGS, FEET } from './people/parts.js';
 import { TRACKS } from './music.js';
 import { PETS, PET_COLORS } from './pets.js';
 
 import { THEMES } from './themes.js';
+import { COLUMNS, DEFAULT_COLUMN, columnCanvas } from './columns.js';
 export { THEMES };
 import { SIZE_LABELS, ORIENT_LABELS, roomName, isFixed } from './rooms.js';
 import { roomRating, starText } from './rating.js';
@@ -23,7 +25,10 @@ export const CHARACTER_PALETTES = {
   b: { label: 'Shoes', colors: ['#1a1418', '#4a2e20', '#e8e2d4', '#7a2232', '#3c4a63', '#c9a23f'] },
 };
 // What the main color is called for each outfit, and which colors an outfit shows.
-const MAIN_LABEL = { suit: 'Jacket', vest: 'Waistcoat', sweater: 'Sweater', tee: 'T-shirt', hoodie: 'Hoodie', coat: 'Coat', apron: 'Shirt', dress: 'Dress', gown: 'Gown', toga: 'Toga' };
+const MAIN_LABEL = { suit: 'Jacket', vest: 'Waistcoat', sweater: 'Sweater', tee: 'T-shirt', hoodie: 'Hoodie', coat: 'Coat', apron: 'Shirt', dress: 'Dress', gown: 'Gown', toga: 'Toga',
+  coveralls: 'Coveralls', overalls: 'Overalls', hivis: 'Vest', oilskins: 'Oilskins', waders: 'Waders', wetsuit: 'Wetsuit', sailor: 'Top', captain: 'Coat', striped: 'Shirt', flannel: 'Shirt', fieldvest: 'Vest', trunks: 'Trunks', swimsuit: 'Swimsuit' };
+const W_LABEL = { striped: 'Stripes' };
+const G_LABEL = { toga: 'Sash', apron: 'Apron', wetsuit: 'Stripe', sailor: 'Collar' };
 const USES = {
   suit: ['w', 'g', 'p'],
   vest: ['w', 'g', 'p'],
@@ -35,6 +40,19 @@ const USES = {
   dress: [],
   gown: [],
   toga: ['g'],
+  coveralls: [],
+  overalls: ['w'],
+  hivis: ['w', 'p'],
+  oilskins: [],
+  waders: ['w'],
+  wetsuit: ['g'],
+  sailor: ['g', 'p'],
+  captain: ['w', 'p'],
+  striped: ['w', 'p'],
+  flannel: ['p'],
+  fieldvest: ['w', 'p'],
+  trunks: [],
+  swimsuit: [],
 };
 const ACC_COLORS = ['#c0392b', '#2e7d7a', '#c9a23f', '#3d6fb6', '#e8e2d4', '#1e1e22', '#6a4c93'];
 export const DEFAULT_CHARACTER = { h: '#4a2e20', s: '#f2c6a0', c: '#7a2e3a', p: '#2f2b3d', b: '#1a1418', w: '#efe6d4', g: '#c9a23f', hair: 'short', outfit: 'suit' };
@@ -55,6 +73,21 @@ export const section = (label, ...children) => {
   s.append(...children);
   return s;
 };
+
+// A collapsible group with a one-line summary of what is chosen (Customize's "This room"). Stays open across redraws.
+const openGroups = new Set();
+function group(id, title, summary, ...children) {
+  const det = document.createElement('details');
+  det.className = 'ui-group';
+  det.dataset.group = id;
+  det.open = openGroups.has(id);
+  det.innerHTML = '<summary><b></b><span></span></summary><div class="ui-group-body"></div>';
+  det.querySelector('b').textContent = title;
+  det.querySelector('span').textContent = summary;
+  det.querySelector('.ui-group-body').append(...children);
+  det.addEventListener('toggle', () => (det.open ? openGroups.add(id) : openGroups.delete(id)));
+  return det;
+}
 
 // A swipeable row of color swatches plus a custom color picker.
 export function strip(colors, value, onPick) {
@@ -93,11 +126,37 @@ export function choices(options, value, onPick, icon) {
   return row;
 }
 
+// Every column design as a tall card (picture, name, where it is from); the chosen one's fact underneath.
+const columnPics = {};
+function columnPicker(value, onPick) {
+  const box = document.createElement('div');
+  const grid = document.createElement('div');
+  grid.className = 'column-pick';
+  Object.entries(COLUMNS).forEach(([id, c]) => {
+    const b = document.createElement('button');
+    b.className = id === value ? 'on' : '';
+    b.dataset.column = id;
+    columnPics[id] ||= columnCanvas(id, 34, 88).toDataURL();
+    b.innerHTML = `<img alt="" src="${columnPics[id]}" /><b></b><i></i>`;
+    b.querySelector('b').textContent = c.name;
+    b.querySelector('i').textContent = c.place;
+    b.onclick = () => onPick(id);
+    grid.appendChild(b);
+  });
+  const fact = document.createElement('p');
+  fact.className = 'toolkit-note';
+  const c = COLUMNS[value];
+  fact.textContent = `${c.name} (${c.place}): ${c.note}`;
+  box.append(fact, grid);
+  return box;
+}
+
 // Room settings at the top of "This room": name, size, doorway style.
 function renderRoomSettings() {
   const { room, index } = state;
   const name = document.createElement('input');
   name.className = 'room-name';
+  name.setAttribute('aria-label', 'Room name');
   name.value = roomName(room, index);
   name.maxLength = 24;
   name.addEventListener('change', () => state.onRoom({ name: name.value.trim() || undefined }));
@@ -119,6 +178,7 @@ function renderPresets() {
   const nm = document.createElement('input');
   nm.className = 'room-name';
   nm.placeholder = 'Name this layout (Winter...)';
+  nm.setAttribute('aria-label', 'Layout name');
   nm.maxLength = 24;
   const save = document.createElement('button');
   save.textContent = 'Save layout';
@@ -182,7 +242,7 @@ function renderStaff() {
     b.textContent = 'Janitor hired: this room stays spotless';
     b.disabled = true;
   } else {
-    b.textContent = j.free ? `Hire a janitor · free while testing (${j.cost} gold)` : `Hire a janitor · ${j.cost} gold`;
+    b.textContent = j.free ? `Hire a janitor · Free (${j.cost} gold)` : `Hire a janitor · ${j.cost} gold`;
     b.onclick = () => {
       state.onHireJanitor();
       state.janitor = { ...j, hired: true };
@@ -236,28 +296,42 @@ function renderRoom() {
   };
   const themes = Object.fromEntries(Object.entries(THEMES).map(([id, t]) => [id, t.name]));
   const staffRoom = state.room.orient === 'break';
-  const parts = [
-    ...(staffRoom ? [] : [renderRating(), renderStaff(), ...renderRoomSettings()]),
-    ...(state.onPreset ? [renderPresets()] : []),
-    section('Theme (one tap)', choices(themes, null, (id) => set(THEMES[id].decor))),
-    section('Floor pattern', choices(FLOOR_PATTERNS, d.pattern, pickPattern)),
-  ];
+  const floorSections = [section('Floor pattern', choices(FLOOR_PATTERNS, d.pattern, pickPattern))];
   if (TWO_COLOR_FLOORS.includes(d.pattern)) {
-    parts.push(section('Floor color 1', strip(PALETTES.stone, d.checkA, (checkA, live) => set({ checkA }, live))));
-    parts.push(section('Floor color 2', strip(PALETTES.stone, d.checkB, (checkB, live) => set({ checkB }, live))));
+    floorSections.push(section('Floor color 1', strip(PALETTES.stone, d.checkA, (checkA, live) => set({ checkA }, live))));
+    floorSections.push(section('Floor color 2', strip(PALETTES.stone, d.checkB, (checkB, live) => set({ checkB }, live))));
   } else {
     const pal = WOOD_FLOORS.includes(d.pattern) ? PALETTES.wood : PALETTES.stone;
-    parts.push(section('Floor color', strip(pal, d.floor, (floor, live) => set({ floor }, live))));
+    floorSections.push(section('Floor color', strip(pal, d.floor, (floor, live) => set({ floor }, live))));
   }
-  parts.push(section('Wall pattern', choices(WALL_PATTERNS, d.paperStyle || 'stripes', (paperStyle) => set({ paperStyle }))));
-  parts.push(section('Wall color', strip(PALETTES.paper, d.paper, (paper, live) => set({ paper }, live))));
-  parts.push(section('Wainscot', choices(WAINSCOT_STYLES, d.wainscotStyle || 'panels', (wainscotStyle) => set({ wainscotStyle }))));
-  parts.push(section('Trim & wainscot color', strip(PALETTES.wainscot, d.wainscot, (wainscot, live) => set({ wainscot }, live))));
-  parts.push(section('Carpet', choices({ off: 'None', on: 'Runner' }, d.carpet ? 'on' : 'off', (v) => set({ carpet: v === 'on' }))));
-  if (d.carpet) parts.push(section('Carpet color', strip(PALETTES.carpet, d.carpetColor, (carpetColor, live) => set({ carpetColor }, live))));
-  parts.push(section('Plants (between paintings)', choices(PLANTS, d.plant, (plant) => set({ plant }), state.plantIcon)));
-  parts.push(section('Lighting', choices(LIGHTS, d.light || 'warm', (light) => set({ light }))));
-  parts.push(section('Music in this room', choices(TRACKS, d.music || 'none', (music) => set({ music }))));
+  const wallSections = [
+    section('Wall pattern', choices(WALL_PATTERNS, d.paperStyle || 'stripes', (paperStyle) => set({ paperStyle }))),
+    section('Wall color', strip(PALETTES.paper, d.paper, (paper, live) => set({ paper }, live))),
+    section('Wainscot', choices(WAINSCOT_STYLES, d.wainscotStyle || 'panels', (wainscotStyle) => set({ wainscotStyle }))),
+    section('Trim & wainscot color', strip(PALETTES.wainscot, d.wainscot, (wainscot, live) => set({ wainscot }, live))),
+  ];
+  const extraSections = [section('Carpet', choices({ off: 'None', on: 'Runner' }, d.carpet ? 'on' : 'off', (v) => set({ carpet: v === 'on' })))];
+  if (d.carpet) extraSections.push(section('Carpet color', strip(PALETTES.carpet, d.carpetColor, (carpetColor, live) => set({ carpetColor }, live))));
+  extraSections.push(section('Plants (between paintings)', choices(PLANTS, d.plant, (plant) => set({ plant }), state.plantIcon)));
+  const moodSections = [
+    section('Lighting', choices(LIGHTS, d.light || 'warm', (light) => set({ light }))),
+    section('Music in this room', choices(TRACKS, d.music || 'none', (music) => set({ music }))),
+  ];
+  // "This room": rating, janitor, name, size, doorway and saved layouts (the things you change less often)
+  const roomSections = [...(staffRoom ? [] : [renderRating(), renderStaff(), ...renderRoomSettings()]), ...(state.onPreset ? [renderPresets()] : [])];
+  const parts = [section('Theme (one tap)', choices(themes, null, (id) => set(THEMES[id].decor)))];
+  parts.push(group('floor', 'Floor', FLOOR_PATTERNS[d.pattern] || 'Planks', ...floorSections));
+  parts.push(group('walls', 'Walls', `${WALL_PATTERNS[d.paperStyle || 'stripes'] || 'Stripes'} · ${WAINSCOT_STYLES[d.wainscotStyle || 'panels'] || 'Panels'}`, ...wallSections));
+  if (state.columns) {
+    const col = COLUMNS[d.column] ? d.column : DEFAULT_COLUMN;
+    parts.push(group('columns', 'Columns', COLUMNS[col].name, columnPicker(col, (column) => set({ column }))));
+  }
+  parts.push(group('extras', 'Carpet & plants', `${d.carpet ? 'Runner' : 'No carpet'} · ${PLANTS[d.plant] || 'No plants'}`, ...extraSections));
+  parts.push(group('mood', 'Light & sound', `${LIGHTS[d.light || 'warm']} · ${TRACKS[d.music || 'none']}`, ...moodSections));
+  if (roomSections.length) {
+    const r = staffRoom ? null : roomRating(state.rooms, state.index);
+    parts.push(group('room', 'This room', r ? `${starText(r.stars)} ${r.score}/100` : 'Saved layouts', ...roomSections));
+  }
   return parts;
 }
 
@@ -288,7 +362,8 @@ function turntable(frames) {
       ctx.translate(c.width, 0);
       ctx.scale(-1, 1);
     }
-    ctx.drawImage(frames[i], 0, -bob * S, 32 * S, 32 * S);
+    const f = frames[i];
+    ctx.drawImage(f, 0, (32 - f.height - bob) * S, f.width * S, f.height * S); // (a tall hat on a tall build stands a little higher)
     ctx.restore();
     // the pet sits at their feet
     if (frames[3]) ctx.drawImage(frames[3], 13 * S, 6 * S, 22 * S, 22 * S);
@@ -337,13 +412,17 @@ function renderCharacter() {
   parts.push(section('Outfit', choices(OUTFITS, style, pick('outfit'))));
   parts.push(colorRow('c', MAIN_LABEL[style]));
   const uses = USES[style] || [];
-  if (uses.includes('w')) parts.push(colorRow('w'));
-  if (uses.includes('g')) parts.push(colorRow('g', style === 'toga' ? 'Sash' : style === 'apron' ? 'Apron' : 'Tie & trim'));
+  if (uses.includes('w')) parts.push(colorRow('w', W_LABEL[style]));
+  if (uses.includes('g')) parts.push(colorRow('g', G_LABEL[style] || 'Tie & trim'));
   if (uses.includes('p')) parts.push(colorRow('p'));
+  parts.push(section('Legs', choices(LEGS, ch.legs || 'trousers', pick('legs'))));
+  parts.push(section('Feet', choices(FEET, ch.feet || 'shoes', pick('feet'))));
   parts.push(colorRow('b'));
+  parts.push(section('Build', choices(BUILDS, ch.build || 'standard', pick('build'))));
   parts.push(section('Hat', choices(HATS, ch.hat || 'none', pick('hat'))));
   if (ch.hat && ch.hat !== 'none' && ch.hat !== 'crown' && ch.hat !== 'laurel') {
-    parts.push(section('Hat color', strip(HAT_COLORS, ch.T || '#e8d8a0', (T, live) => setChar({ T }, live))));
+    if (ch.hat !== 'hairnet') parts.push(section('Hat color', strip(HAT_COLORS, ch.T || '#e8d8a0', (T, live) => setChar({ T }, live))));
+    parts.push(section(ch.hat === 'hairnet' ? 'Net color' : 'Hat trim', strip(HAT_COLORS, ch.U || '#5a3b2c', (U, live) => setChar({ U }, live))));
   }
   parts.push(section('Glasses', choices(GLASSES, ch.glasses || 'none', pick('glasses'))));
   parts.push(section('Pet', choices(PETS, ch.pet || 'none', (v) => setChar({ pet: v, petColor: PET_COLORS[v]?.[0] }))));
@@ -385,7 +464,7 @@ export function closeDecor() {
 }
 
 // opts: { decor, character, room, index, rooms, onDecor, onCharacter, onRoom(patch), onMoveRoom(i, j),
-//         onGoRoom(i), onClose, plantIcon(id), characterPreview() }
+//         onGoRoom(i), onClose, plantIcon(id), characterPreview(), columns (the room has columns to restyle) }
 export function openDecor(opts) {
   state = { ...opts };
   render();

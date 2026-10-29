@@ -36,6 +36,7 @@ import { ORIENT_LABELS, SIZE_LABELS, BREAK, roomAt, MAIN_HALL_PRICE, ATRIUM_PRIC
 import { openSlotMenu } from './slotmenu.js';
 import { applyPreset, presetCost } from './presets.js';
 import { ITEMS, loadItems, saveItems, resetItems, footprint, countPlaced } from './items.js';
+import { COLUMNS, DEFAULT_COLUMN } from './columns.js';
 import { roomDirt, removeDirt, resetDirt, dirtCount, covered, janitors, janitorCost, hireJanitor, resetJanitors, guides, guideBoost, maxGuides, guideCost, hireGuide, upgradeLevel, upgradeValue, upgradeCost, buyUpgrade, hasCarpenter, hireCarpenter, CARPENTER_COST, staffCount } from './staff.js';
 import { openStaffMenu } from './staffmenu.js';
 import { UPGRADES, OFFLINE_CAP_H, COLLECT_ALL_FEE } from './economy.js';
@@ -45,6 +46,7 @@ import { openOffice } from './officemenu.js';
 import { ask } from './ask.js';
 import { remember } from './regulars.js';
 import { converse, giftStatus, recordGift } from './chatter.js';
+import { say } from './ui/toast.js';
 import { runDialogue } from './dialogue.js';
 import { progression } from './progression/index.js';
 import { list as listEntries } from './collections/index.js';
@@ -103,6 +105,9 @@ const lookOf = (ch) => ({
   freckles: !!ch.freckles,
   blush: !!ch.blush,
   earrings: !!ch.earrings,
+  build: ch.build,
+  legs: ch.legs,
+  feet: ch.feet,
 });
 const TUTORIAL_KEY = 'curation.tutorial'; // how far the first-time walkthrough has got
 const BREAK_SEEDED_KEY = 'curation.breakSeeded';
@@ -479,6 +484,12 @@ export class RoomScene extends Phaser.Scene {
     return (this.g.main ? bakeMainWalls : this.g.shaped ? bakeShapedWalls : bakeWalls)(this, 'walls', this.g, this.wallItems, decor).key;
   }
 
+  // This room's column design (Customize → Columns; see columns.js).
+  columnStyle() {
+    const id = this.decor?.column;
+    return COLUMNS[id] ? id : DEFAULT_COLUMN;
+  }
+
   // Main hall: stairs standing out from the balcony, columns one tile in front of
   // the wall holding up the railing, and what you can't walk through.
   placeHall() {
@@ -498,10 +509,11 @@ export class RoomScene extends Phaser.Scene {
     }
     // Columns: from the floor up to the underside of the railing's beam.
     const colH = g.columns[0].foot - (top + 8);
-    bakeColumn(this, 'hall_column', colH);
+    const style = this.columnStyle();
+    bakeColumn(this, `hall_column_${style}`, colH, style, 34);
     g.columns.forEach((col) => {
-      this.hallParts.push(this.add.image(col.x, col.foot, 'hall_column').setOrigin(0.5, 1).setDepth(col.foot));
-      this.blocks.push({ hall: true, x0: col.x - 6, x1: col.x + 6, y0: col.foot - 9, y1: col.foot - 8 });
+      this.hallParts.push(this.add.image(col.x, col.foot, `hall_column_${style}`).setOrigin(0.5, 1).setDepth(col.foot));
+      this.blocks.push({ hall: true, x0: col.x - 8, x1: col.x + 8, y0: col.foot - 9, y1: col.foot - 8 });
     });
     // Stairs: their top meets the balcony edge, their foot sits out on the floor.
     bakeHallStairs(this, 'hall_stairs', this.decor, g.stairRun);
@@ -534,9 +546,10 @@ export class RoomScene extends Phaser.Scene {
     this.blocks = this.blocks.filter((b) => !b.atrium);
     const parts = this.atriumParts;
     const block = (x0, x1, y0, y1) => this.blocks.push({ atrium: true, x0, x1, y0, y1 });
-    bakeColumn(this, 'atrium_column', g.D + 6);
+    const style = this.columnStyle();
+    bakeColumn(this, `atrium_column_${style}`, g.D + 6, style, 34);
     g.columns.forEach((col) => {
-      parts.push(this.add.image(col.x, col.foot, 'atrium_column').setOrigin(0.5, 1).setDepth(col.foot));
+      parts.push(this.add.image(col.x, col.foot, `atrium_column_${style}`).setOrigin(0.5, 1).setDepth(col.foot));
       block(col.x - 8, col.x + 8, col.foot - 12, col.foot - 8);
     });
     if (!this.textures.exists('atrium_statue')) bakeItem(this, 'atrium_statue', 'statue', ITEMS.statue, 0);
@@ -616,10 +629,11 @@ export class RoomScene extends Phaser.Scene {
       });
     });
     // columns
-    bakeColumn(this, 'shaped_column', 72);
+    const style = this.columnStyle();
+    bakeColumn(this, `shaped_column_${style}`, 88, style, 32);
     g.columns.forEach((c) => {
-      parts.push(this.add.image(c.x, c.y + 8, 'shaped_column').setOrigin(0.5, 1).setDepth(c.y + 8));
-      block(c.x - 7, c.x + 7, c.y - 2, c.y);
+      parts.push(this.add.image(c.x, c.y + 8, `shaped_column_${style}`).setOrigin(0.5, 1).setDepth(c.y + 8));
+      block(c.x - 8, c.x + 8, c.y - 2, c.y);
     });
     // the sunken pit: its far wall, a stone floor below, railings round it
     if (g.pit) {
@@ -1409,7 +1423,7 @@ export class RoomScene extends Phaser.Scene {
     sfx('talk');
     this.pause(true);
     const next = nextSecurity();
-    const price = FREE ? `Free while testing (${next.cost} gold).` : `${next.cost} gold.`;
+    const price = FREE ? `Free for now (${next.cost} gold).` : `${next.cost} gold.`;
     ask(`${n.name} · Security`, `“${line} ${securityTier() ? 'Want to upgrade?' : 'Thieves are a real risk when you’re away.'} ${next.name}: ${next.blurb}” ${price}`, `Buy ${next.name.toLowerCase()}`, (yes) => {
       this.pause(false);
       if (!yes) return;
@@ -1679,6 +1693,7 @@ export class RoomScene extends Phaser.Scene {
         },
         onCharacter: (character) => this.applyCharacter(character),
         plantIcon: (id) => (id === 'none' ? null : this.textures.get(`plant_${id}`).getSourceImage().toDataURL()),
+        columns: !!this.g.columns?.length,
         characterPreview: () => this.characterPreview(),
         janitor: { hired: covered(this.rooms, this.roomIndex), cost: janitorCost(), free: FREE },
         onHireJanitor: () => {
@@ -1797,7 +1812,7 @@ export class RoomScene extends Phaser.Scene {
           const gold = claim(id);
           addCoins(gold);
           sfx('coin');
-          celebrate(`+${gold.toLocaleString()} gold`, 'Goal complete');
+          celebrate(`+${gold.toLocaleString()} gold`, 'Goal complete', 'coin');
           this.checkQuests();
         },
         hungIn: () => hungAnywhere(this.rooms),
@@ -1805,7 +1820,7 @@ export class RoomScene extends Phaser.Scene {
         onClaimSet: (set, gold) => {
           addCoins(gold);
           sfx('coin');
-          celebrate(`+${gold.toLocaleString()} gold`, set.name);
+          celebrate(`+${gold.toLocaleString()} gold`, set.name, 'trophy');
         },
         met: () => metList(),
         portraitCanvas: (id) => {
@@ -2024,7 +2039,7 @@ export class RoomScene extends Phaser.Scene {
     const name = atrium ? 'atrium' : 'main hall';
     const blurb = atrium ? 'A grand atrium with a waterfall, statues and archways to new wings.' : 'A grand open hall with a balcony and room for big exhibits.';
     this.pause(true);
-    const price = FREE ? `free while testing (${cost} gold)` : `${cost} gold`;
+    const price = FREE ? `free for now (${cost} gold)` : `${cost} gold`;
     ask(`Open the ${name}?`, `${blurb} ${price}.`, 'Open it', (yes) => {
       this.pause(false);
       if (!yes) return;
@@ -2032,7 +2047,7 @@ export class RoomScene extends Phaser.Scene {
       updateRoom(i, { locked: false });
       sfx('unlock');
       this.rooms = loadRooms();
-      celebrate(`The ${name} is open!`, atrium ? 'A waterfall, statues, and the way to new wings' : 'A grand hall with a balcony, and famous faces');
+      celebrate(`The ${name} is open!`, atrium ? 'A waterfall, statues, and the way to new wings' : 'A grand hall with a balcony, and famous faces', 'house');
       this.travel(i, 'entrance');
     });
   }
@@ -2045,7 +2060,7 @@ export class RoomScene extends Phaser.Scene {
       onBuild: (room) => {
         addRoom(room);
         sfx('unlock');
-        celebrate('New room built!', `${ORIENT_LABELS[room.orient]} · ${SIZE_LABELS[room.orient][room.size]}`);
+        celebrate('New room built!', `${ORIENT_LABELS[room.orient]} · ${SIZE_LABELS[room.orient][room.size]}`, 'house');
         this.travel(this.roomIndex + 1, 'entrance');
       },
       onCancel: () => this.pause(false),
@@ -2078,11 +2093,7 @@ export class RoomScene extends Phaser.Scene {
 
   toast(text) {
     if (/^(Need|Only|Unlocks|Upgrade|Not enough)/.test(text)) sfx('nope');
-    const el = document.getElementById('toast');
-    el.textContent = text;
-    el.classList.remove('hidden');
-    clearTimeout(this.toastTimer);
-    this.toastTimer = setTimeout(() => el.classList.add('hidden'), 1600);
+    say(text, 1600); // (src/ui/toast.js: one at a time, never a pile)
   }
 
   // Load saved items, nudging ones that no longer fit (after a resize) back inside.
@@ -2361,7 +2372,7 @@ export class RoomScene extends Phaser.Scene {
         if (lvl >= MAX_LEVEL || !spend(LEVELS[lvl + 1].cost)) return lvl;
         setOfficeLevel(lvl + 1);
         sfx('levelup');
-        celebrate(`Office level ${lvl + 1}!`, LEVELS[lvl + 1].unlocks || 'More rooms unlocked');
+        celebrate(`Office level ${lvl + 1}!`, LEVELS[lvl + 1].unlocks || 'More rooms unlocked', 'star');
         this.updateHud();
         return lvl + 1;
       },

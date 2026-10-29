@@ -5,13 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
     <meta name="theme-color" content="#1d1714" />
     <title>Curation</title>
+    <style>
+      /* The title card, drawn before anything else has loaded. */
+      html,
+      body { background: #1d1714; }
+      #boot { position: fixed; inset: 0; z-index: 90; display: grid; place-content: center; justify-items: center; gap: 22px; background: #1d1714; color: #f2d36b; font: 600 36px/1 'Pixelify Sans', ui-monospace, 'Courier New', monospace; letter-spacing: 0.06em; transition: opacity 0.3s; }
+      #boot.gone { opacity: 0; pointer-events: none; }
+      #boot small { font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #b9a98f; }
+      .boot-bar { position: relative; width: 132px; height: 14px; overflow: hidden; background: #120d0b; border: 3px solid #5b4216; }
+      .boot-bar i { position: absolute; top: 0; bottom: 0; left: -40px; width: 40px; background: #c9a23f; animation: boot-run 1s steps(9) infinite; }
+      @keyframes boot-run { to { left: 132px; } }
+      @media (prefers-reduced-motion: reduce) { .boot-bar i { animation: none; left: 46px; } }
+    </style>
     <link rel="stylesheet" href="./src/style.css" />
     <link rel="stylesheet" href="./src/ui/tokens.css" />
     <link rel="stylesheet" href="./src/ui/ui.css" />
     <link rel="stylesheet" href="./src/ui/hud.css" />
     <link rel="stylesheet" href="./src/ui/journal.css" />
+    <link rel="stylesheet" href="./src/ui/skin.css" />
   </head>
   <body>
+    <div id="boot" role="status" aria-label="Loading Curation"><b>Curation</b><span class="boot-bar"><i></i></span><small>Opening the museum</small></div>
     <div id="game"></div>
 
     <button id="hud" aria-label="Museum stats: tap for income per room">
@@ -42,7 +56,7 @@
       <svg viewBox="0 0 16 11" width="24" height="18" shape-rendering="crispEdges" aria-hidden="true"><g fill="currentColor"><rect x="6" y="0" width="5" height="1" /><rect x="5" y="1" width="7" height="1" /><rect x="5" y="2" width="7" height="1" /><rect x="6" y="3" width="5" height="1" /><rect x="8" y="4" width="2" height="7" /></g></svg>
     </button>
 
-    <div id="hub" class="overlay hidden" role="dialog" aria-label="Menu">
+    <div id="hub" class="overlay hidden" role="dialog" aria-modal="true" aria-label="Menu">
       <div class="decor-sheet sheet">
         <div class="ui-head"><h2 class="ui-title">Menu</h2><button class="hub-close ui-btn ui-close" aria-label="Close"></button></div>
         <div class="hub-grid"></div>
@@ -55,7 +69,7 @@
           <h2>Toolkit</h2>
           <button class="toolkit-done pixel-btn">Done</button>
         </div>
-        <p class="toolkit-note">Pick an item, then drag it into place. Tap an item in the room to move or sell it (half price back).</p>
+        <p class="toolkit-note">Drag an item into place. Tap one in the room to move or sell it (half back).</p>
         <div class="choices toolkit-cats"></div>
         <div class="toolkit-grid"></div>
       </div>
@@ -68,7 +82,7 @@
 
     <button id="interact" class="pixel-btn hidden"><span class="bang"></span><span class="label">Interact</span></button>
 
-    <div id="decor" class="overlay hidden" role="dialog" aria-label="Customize">
+    <div id="decor" class="overlay hidden" role="dialog" aria-modal="true" aria-label="Customize">
       <div class="decor-sheet sheet">
         <div class="decor-head">
           <h2>Customize</h2>
@@ -91,7 +105,7 @@
       </div>
     </div>
 
-    <div id="build" class="overlay hidden" role="dialog" aria-label="Build a room">
+    <div id="build" class="overlay hidden" role="dialog" aria-modal="true" aria-label="Build a room">
       <div class="build-sheet sheet">
         <div class="decor-head">
           <h2>New room</h2>
@@ -122,7 +136,7 @@
       </div>
     </div>
 
-    <div id="slotmenu" class="overlay hidden" role="dialog" aria-label="Wall spot">
+    <div id="slotmenu" class="overlay hidden" role="dialog" aria-modal="true" aria-label="Wall spot">
       <div class="decor-sheet sheet">
         <div class="decor-head">
           <h2>Wall spot</h2>
@@ -137,7 +151,7 @@
       </div>
     </div>
 
-    <div id="displaymenu" class="overlay hidden" role="dialog" aria-label="Display">
+    <div id="displaymenu" class="overlay hidden" role="dialog" aria-modal="true" aria-label="Display">
       <div class="decor-sheet sheet">
         <div class="decor-head">
           <h2 class="display-title">Display</h2>
@@ -147,7 +161,7 @@
       </div>
     </div>
 
-    <div id="office" class="overlay hidden" role="dialog" aria-label="Curator's Office">
+    <div id="office" class="overlay hidden" role="dialog" aria-modal="true" aria-label="Curator's Office">
       <div class="decor-sheet sheet">
         <div class="decor-head">
           <h2>Curator’s Office</h2>
@@ -160,7 +174,7 @@
       </div>
     </div>
 
-    <div id="staffmenu" class="overlay hidden" role="dialog" aria-label="Staff board">
+    <div id="staffmenu" class="overlay hidden" role="dialog" aria-modal="true" aria-label="Staff board">
       <div class="decor-sheet sheet">
         <div class="decor-head">
           <h2>Staff board</h2>
@@ -171,9 +185,9 @@
       </div>
     </div>
 
-    <div id="ask" class="overlay hidden" role="dialog">
+    <div id="ask" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="ask-title">
       <div class="decor-sheet sheet">
-        <h2 class="ask-title"></h2>
+        <h2 class="ask-title" id="ask-title"></h2>
         <p class="ask-text"></p>
         <div class="ask-buttons">
           <button class="ask-no pixel-btn">Not now</button>
@@ -189,7 +203,7 @@
       <div class="ad-bar"><i></i></div>
     </div>
 
-    <div id="settings" class="overlay hidden" role="dialog" aria-label="Settings">
+    <div id="settings" class="overlay hidden" role="dialog" aria-modal="true" aria-label="Settings">
       <div class="decor-sheet sheet">
         <div class="decor-head">
           <h2>Settings</h2>
@@ -199,7 +213,7 @@
       </div>
     </div>
 
-    <div id="income" class="overlay hidden" role="dialog" aria-label="Income">
+    <div id="income" class="overlay hidden" role="dialog" aria-modal="true" aria-label="Income">
       <div class="decor-sheet sheet">
         <div class="decor-head">
           <h2>Your museum</h2>
@@ -209,7 +223,7 @@
       </div>
     </div>
 
-    <div id="journal" class="overlay hidden" role="dialog" aria-label="Journal">
+    <div id="journal" class="overlay hidden" role="dialog" aria-modal="true" aria-label="Journal">
       <div class="decor-sheet sheet">
         <div class="decor-head">
           <h2>Journal</h2>
@@ -221,13 +235,13 @@
     </div>
 
     <div id="catch" class="hidden" role="dialog" aria-label="Your catch"><div class="catch-card"><div class="catch-pic"></div><b class="catch-title"></b><span class="catch-meta"></span><p class="catch-note"></p><small class="catch-hint">Tap to continue</small></div></div>
-    <div id="celebrate" class="hidden" aria-live="polite"><div class="celebrate-card"><b class="celebrate-title"></b><span class="celebrate-sub"></span></div></div>
+    <div id="celebrate" class="hidden" aria-live="polite"><div class="celebrate-card"><span class="celebrate-icon" aria-hidden="true"></span><b class="celebrate-title"></b><span class="celebrate-sub"></span><small class="celebrate-more"></small></div></div>
 
-    <div id="toast" class="hidden"></div>
+    <div id="toast" class="hidden" role="status" aria-live="polite"></div>
 
     <div id="stick"><div class="knob"></div></div>
 
-    <div id="rotate">Turn your phone upright to keep curating.</div>
+    <div id="rotate"><span class="rotate-phone" aria-hidden="true"></span><p>Turn your phone upright to keep curating.</p></div>
 
     <div id="viewer" class="hidden" aria-hidden="true">
       <button class="viewer-close" aria-label="Close">✕</button>
@@ -239,7 +253,7 @@
           <p class="info-meta"></p>
           <p class="info-blurb"></p>
           <div class="info-rating" role="radiogroup" aria-label="Your rating"></div>
-          <textarea class="info-note" rows="3" placeholder="Your journal note…"></textarea>
+          <textarea class="info-note" rows="3" placeholder="Your journal note…" aria-label="Your journal note"></textarea>
           <button class="viewer-change">Change this wall spot</button>
         </div>
       </div>
@@ -251,13 +265,28 @@
         if (document.getElementById('crash')) return;
         const d = document.createElement('div');
         d.id = 'crash';
-        d.style.cssText = 'position:fixed;inset:0;z-index:99;display:grid;place-content:center;gap:12px;padding:24px;background:#1d1512;color:#f4ead8;font:15px sans-serif;text-align:center';
-        d.innerHTML = '<b>Something broke.</b><small style="opacity:.6;word-break:break-word"></small><button style="padding:12px;font:inherit">Reset save &amp; reload</button>';
+        d.style.cssText = "position:fixed;inset:0;z-index:99;display:grid;align-content:center;justify-items:center;gap:14px;padding:24px;background:#1d1714;color:#f4ead6;font:600 17px/1.3 'Pixelify Sans',ui-monospace,monospace;text-align:center";
+        const btn = 'min-height:48px;padding:0 20px;font:inherit;border:3px solid #120d0b;';
+        d.innerHTML =
+          '<b style="font-size:24px;color:#f2d36b">Something broke</b>' +
+          '<span style="color:#b9a98f;font-weight:400;max-width:320px">Your museum is safe. Try again first.</span>' +
+          '<small style="color:#b9a98f;font:400 13px/1.35 ui-monospace,monospace;word-break:break-word;max-width:320px"></small>' +
+          '<button class="crash-retry" style="' + btn + 'background:#e8c867;color:#2a1a12">Try again</button>' +
+          '<button class="crash-reset" style="' + btn + 'background:#362a22;color:#f4ead6;border-color:#5b4216;font-weight:400;font-size:15px">Erase my save and start over</button>';
         d.querySelector('small').textContent = e.message || 'Unknown error';
-        d.querySelector('button').onclick = () => {
+        d.querySelector('.crash-retry').onclick = () => location.reload();
+        const reset = d.querySelector('.crash-reset');
+        reset.onclick = () => {
+          if (!reset.dataset.sure) {
+            reset.dataset.sure = '1';
+            reset.textContent = 'Really erase everything? Tap again';
+            reset.style.borderColor = '#e0705c';
+            return;
+          }
           Object.keys(localStorage).filter((k) => k.startsWith('curation.')).forEach((k) => localStorage.removeItem(k));
           location.reload();
         };
+        document.getElementById('boot')?.remove();
         document.body.appendChild(d);
       });
     </script>

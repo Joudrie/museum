@@ -7,6 +7,7 @@ import { openSettings } from '../settingsmenu.js';
 import { addCoins } from '../wallet.js';
 import { collectEverything } from '../collections/codex.js';
 import { sfx } from '../music.js';
+import { hint } from './hint.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -106,10 +107,21 @@ function init() {
   grid.addEventListener('click', (e) => e.target.closest('.hub-tile') && close(), true);
 
   // the Menu button shows the daily dot
-  const mirror = () => dot.classList.toggle('hidden', !!today?.querySelector('.badge')?.classList.contains('hidden'));
+  const mirror = () => {
+    const none = !!today?.querySelector('.badge')?.classList.contains('hidden');
+    dot.classList.toggle('hidden', none);
+    if (!none) hint('menu-gift', 'A gift is waiting. Open the Menu, then Today.', '#menu-btn');
+  };
   if (today) {
     new MutationObserver(mirror).observe(today.querySelector('.badge'), { attributes: true, attributeFilter: ['class'] });
     mirror();
+  }
+  // a goal to claim: the Journal button's dot
+  const jdot = $('journal-btn')?.querySelector('.badge');
+  if (jdot) {
+    const watch = () => !jdot.classList.contains('hidden') && hint('journal-claim', 'A goal is done. Open the Journal to claim its gold.', '#journal-btn', { side: 'right' });
+    new MutationObserver(watch).observe(jdot, { attributes: true, attributeFilter: ['class'] });
+    watch();
   }
 }
 

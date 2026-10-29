@@ -21,7 +21,7 @@ function render() {
   if (!next) return;
   const cost = next.cost.toLocaleString();
   up.disabled = !canAfford(next.cost);
-  up.textContent = free ? `Upgrade · free while testing (${cost} gold)` : up.disabled ? `Need ${cost} gold` : `Upgrade · ${cost} gold`;
+  up.textContent = free ? `Upgrade · Free (${cost} gold)` : up.disabled ? `Need ${cost} gold` : `Upgrade · ${cost} gold`;
 }
 
 up.addEventListener('click', () => {

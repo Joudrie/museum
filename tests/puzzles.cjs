@@ -121,6 +121,8 @@ const check = (c, good, bad) => (c ? console.log('  ✓ ' + good) : (problems.pu
   await page.waitForTimeout(300);
   const fx = await scene((s) => s.focus && s.focus.kind);
   check(fx === 'x', 'standing on the X offers a dig', 'X not focusable: ' + fx);
+  const lbl = await S(() => document.querySelector('#interact .label').textContent);
+  check(lbl === 'Dig', 'the button says Dig on the X', 'button label on the X: ' + lbl);
   await scene((s) => s.interact());
   await page.waitForTimeout(200);
   await clearDig();
@@ -152,6 +154,8 @@ const check = (c, good, bad) => (c ? console.log('  ✓ ' + good) : (problems.pu
   const dn = await scene((s) => s.puzzles.hunts.targets.filter((t) => t.done).length);
   const daily = await S(() => JSON.parse(localStorage.getItem('curation.digdaily') || '{}'));
   check(dn === 1 && daily.n >= 1, 'a dug buried thing is done for the day and counts toward the daily goal', `buried/daily wrong: ${dn} ${JSON.stringify(daily)}`);
+  const fogKeys = await S(() => Object.keys(JSON.parse(localStorage.getItem('curation.fog') || '{}')));
+  check(fogKeys.length === 0 || fogKeys.every((k) => k.startsWith('isle:Puzzle yard:')), 'builder islands keep their own fog and dig keys (by name)', 'keys: ' + fogKeys.slice(0, 3));
   check(!errors.length, 'no page errors', 'page errors: ' + errors.join(' | '));
   await browser.close();
   console.log(problems.length ? `\n${problems.length} problem(s)` : '\nAll good');

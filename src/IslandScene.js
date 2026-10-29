@@ -21,7 +21,8 @@ import { settings, hourNow } from './settings.js';
 import { animateWalker, footstep, dust } from './motion.js';
 import { Pet } from './pets.js';
 import { Fishing, catchOpen } from './fishing.js';
-import { startDig, readyIn, DIG_TILES, siteOf, siteKey, siteBonusReady, bonusEntry } from './dig.js';
+import { say } from './ui/toast.js';
+import { startDig, readyIn, DIG_TILES, siteOf, siteKey, siteBonusReady, bonusEntry, mapKey } from './dig.js';
 import { Puzzles } from './puzzles.js';
 import { openJournal } from './journal.js';
 import isle1 from './maps/isle-1.json';
@@ -34,6 +35,7 @@ import { openSail, builderIslands, friendIslands } from './sailmenu.js';
 import { EXPEDITION_MAPS, expeditionOf, expeditionFor, expeditionOptions, expeditionTitles, EXPEDITIONS, boatScene } from './expedition.js';
 import { openLeads, grantStartLeads, foundLeads } from './leads.js';
 import { visitorLook, KINDS } from './RoomScene.js';
+import { personOfTile, personFor } from './people/index.js';
 import { PERSONALITIES, QUIPS } from './lines.js';
 import { blendAt } from './groundblend.js';
 import { IslandLife } from './progression/ui/islandlife.js';
@@ -521,7 +523,7 @@ export class IslandScene extends Phaser.Scene {
     this.place('dock_post', 11, 38);
     this.place('dock_post', 13, 38);
     this.place('rowboat', 13, 39, { solid: false });
-    this.thing('sign', 13, 35, 'Expeditions leave from this dock. Pirate islands, shipwrecks, lost temples… coming soon!');
+    this.thing('sign', 13, 35, 'Expeditions leave from this dock: pirate islands, shipwrecks, lost temples. Use the rowboat to sail.');
     this.thing('sign', 13, 9, 'Welcome to the island! The museum is right behind you. Walk up into the doors to go back in.');
   }
 
@@ -816,7 +818,7 @@ export class IslandScene extends Phaser.Scene {
 
   // A spot to brush open (src/dig.js). It rests, shown as a flattened patch, after it has been dug.
   addDig(x, y, kind = 'mineral') {
-    const key = `${this.mapId || 'one'}:${x},${y}`;
+    const key = `${mapKey(this)}:${x},${y}`;
     const d = { key, kind, x: (x + 0.5) * T, y: (y + 0.5) * T, gx: x, gy: y };
     d.img = this.place(readyIn(key) > 0 ? 'dig_spot@dug' : kind === 'mineral' ? 'dig_spot' : `dig_${kind === 'fossil' ? 'fossil' : kind}`, x, y, { flat: true });
     this.digs.push(d);
@@ -977,6 +979,7 @@ export class IslandScene extends Phaser.Scene {
       if (x < 0 || y < 0 || x >= W || y >= H) return;
       if (name.startsWith('animal_') && ANIMALS[name.slice(7)]) return this.islanders.push(this.animal(name.slice(7), o.x + T / 2, o.y + t.h - 3, this.islanders.length));
       if (PEOPLE[name] !== undefined) return this.islanders.push(this.islander(o.x + T / 2, o.y + t.h - 4, PEOPLE[name], this.islanders.length));
+      if (personOfTile(name)) return this.islanders.push(this.islander(o.x + T / 2, o.y + t.h - 4, 0, this.islanders.length, personOfTile(name).id, o.flip));
       if (name === 'museum') return this.mapMuseum(x, y, t);
       if (DIG_TILES[name]) return this.addDig(x, y, DIG_TILES[name]);
       if (this.puzzles.piece(name, x, y)) return;
@@ -1087,12 +1090,21 @@ export class IslandScene extends Phaser.Scene {
 
   // Someone who lives on the island: walks Pokémon-style, a tile or two at a
   // time, never further than `range` tiles from home. Tap to chat.
-  islander(x, y, range, i, forced) {
+  islander(x, y, range, i, id, flip, forced) {
     const seed = 700 + i * 7 + Math.round(x + y);
     const r = (k) => {
       const v = Math.sin(seed * 12.9898 + k * 78.233) * 43758.5453;
       return v - Math.floor(v);
     };
+    // someone with a job (people/classes.js): works in their pose or wanders with their things
+    const p = id && personFor(id, r);
+    if (p) {
+      const prefix = `islander${seed}`;
+      if (!this.textures.exists(`${prefix}_down`)) makeCharacter(this, prefix, p.colors, p.look);
+      const s = this.add.sprite(x, y, p.pose ? `${prefix}_pose_0` : `${prefix}_down`).setOrigin(0.5, 1).setScale(p.scale).setDepth(y).setFlipX(!!(p.pose && flip));
+      if (p.alpha) s.setAlpha(p.alpha);
+      return { s, prefix, kind: 'casual', home: { x, y }, range: p.range * T, name: p.name, title: p.title, lines: p.lines, pose: p.pose, rate: p.rate, flip: !!flip, wait: 500 + r(3) * 2500, target: null };
+    }
     const kind = forced?.kind || KINDS[Math.floor(r(1) * KINDS.length)];
     const { colors, look, scale } = visitorLook(kind, r);
     const prefix = `islander${seed}${forced ? forced.id : ''}`;
@@ -1110,6 +1122,19 @@ export class IslandScene extends Phaser.Scene {
       if (!n.target && (s.x < v.x - 160 || s.x > v.right + 160 || s.y < v.y - 160 || s.y > v.bottom + 160)) return;
       if (this.focus?.npc === n && talking()) n.target = null; // stops to chat
       const a = n.animal;
+      if (n.pose && !n.target) {
+        // at work, two frames on a loop; they look up at you while you chat
+        if (this.focus?.npc === n && talking()) {
+          const dx = this.player.x - s.x;
+          const dy = this.player.y - s.y;
+          if (Math.abs(dx) > Math.abs(dy)) s.setTexture(`${n.prefix}_side`).setFlipX(dx < 0);
+          else s.setTexture(dy < 0 ? `${n.prefix}_up` : `${n.prefix}_down`).setFlipX(false);
+        } else {
+          n.poseT = (n.poseT || 0) + dt;
+          s.setTexture(`${n.prefix}_pose_${Math.floor(n.poseT * n.rate) % 2}`).setFlipX(n.flip);
+        }
+        return;
+      }
       if (!n.target) {
         if (a) s.setTexture(a.pet ? (s.texture.key.includes('_side') ? `${n.prefix}_side` : `${n.prefix}_down`) : `${n.prefix}_${a.critter === 'duck' ? this.frame % 2 : 0}`);
         else animateWalker(this, s, false, dt);
@@ -1155,12 +1180,12 @@ export class IslandScene extends Phaser.Scene {
   talkTo(n) {
     sfx('talk');
     if (this.life?.talk(n)) return; // a named person: a real conversation (src/progression/ui/talkflow.js)
-    const lines = QUIPS?.island || ['Lovely day for it.', 'Have you been to the museum yet?', 'I come out here to think.', 'The fish are biting by the dock, they say.', 'Every rock on this island has a story.'];
+    const lines = n.lines || QUIPS?.island || ['Lovely day for it.', 'Have you been to the museum yet?', 'I come out here to think.', 'The fish are biting by the dock, they say.', 'Every rock on this island has a story.'];
     const line = lines[Math.floor(Math.random() * lines.length)];
     const r = this.game.canvas.getBoundingClientRect();
     const cam = this.cameras.main;
     const k = r.width / this.scale.gameSize.width;
-    showTalk(n.name, 'Islander', line, { x: r.left + (n.s.x - cam.worldView.x) * cam.zoom * k, y: r.top + (n.s.y - 40 - cam.worldView.y) * cam.zoom * k });
+    showTalk(n.name, n.title || 'Islander', line, { x: r.left + (n.s.x - cam.worldView.x) * cam.zoom * k, y: r.top + (n.s.y - 40 - cam.worldView.y) * cam.zoom * k });
   }
 
   // where you step off the boat: the nearest walkable spot to the first boat
@@ -1422,11 +1447,7 @@ export class IslandScene extends Phaser.Scene {
   }
 
   toast(text) {
-    const el = document.getElementById('toast');
-    el.textContent = text;
-    el.classList.remove('hidden');
-    clearTimeout(this.toastTimer);
-    this.toastTimer = setTimeout(() => el.classList.add('hidden'), 2600);
+    say(text, 2600);
   }
 
   update(_, dtMs) {
@@ -1504,7 +1525,7 @@ export class IslandScene extends Phaser.Scene {
     if (!this.fishing.busy) this.focus = this.findFocus();
     this.interactBtn.classList.toggle('hidden', !this.focus || (this.fishing.busy && this.fishing.state === 'reel'));
     if (this.focus && this.focus.icon !== prev) this.interactBtn.querySelector('.bang').innerHTML = iconSvg(this.focus.icon);
-    if (!this.fishing.busy) this.interactBtn.querySelector('.label').textContent = this.focus?.fish ? 'Fish' : this.focus?.dig ? 'Dig' : this.focus?.exp ? this.focus.exp.label : this.focus?.boat ? 'Sail' : 'Interact';
+    if (!this.fishing.busy) this.interactBtn.querySelector('.label').textContent = this.focus?.fish ? 'Fish' : this.focus?.dig ? 'Dig' : this.focus?.exp ? this.focus.exp.label : this.focus?.boat ? 'Sail' : this.focus?.label || 'Interact';
     if (this.focus && (Phaser.Input.Keyboard.JustDown(k.SPACE) || Phaser.Input.Keyboard.JustDown(k.ENTER))) this.interact();
   }
 }

@@ -1,0 +1,503 @@
+/* The design system applied to the older menus (loaded after style.css, tokens.css and ui.css).
+   One button language, one header, one card, one set of text sizes. New menus should use the ui-* classes instead;
+   this file exists so the menus built before the system get the same look without being rewritten.
+   Selectors start with `body` to win over the earlier rules. */
+
+/* ---- type: Pixelify Sans for chrome, Georgia stays for museum prose ---- */
+body .sheet,
+body .overlay,
+body #toolkit,
+body #placebar,
+body #ask,
+body #catch,
+body #celebrate,
+body #toast,
+body #dig,
+body #daily,
+body #studio {
+  font-family: var(--ui-font);
+}
+body .info-blurb,
+body .daily-note.b,
+body .catch-note,
+body .talk-text,
+body .chat-text,
+body .viewer-info p {
+  font-family: var(--ui-prose);
+}
+body .decor-head h2,
+body .ask-title,
+body .ui-title {
+  font: 600 var(--fs-title) / 1.1 var(--ui-font);
+  letter-spacing: 0.01em;
+}
+body .decor-body h3,
+body .settings-body h3,
+body .income-body h3,
+body .journal-body h3 {
+  font: 600 var(--fs-small) / 1.2 var(--ui-font);
+  letter-spacing: 0.12em;
+}
+body .toolkit-note,
+body .ask-text,
+body .office-line,
+body .office-level {
+  font: 400 var(--fs-body) / 1.4 var(--ui-font);
+}
+
+/* ---- buttons: one bevel language ---- */
+body .pixel-btn,
+body .wide-btn,
+body .decor-tabs button,
+body .choices button,
+body .build-row button,
+body .ask-buttons button,
+body #dig button,
+body .ui-btn {
+  font-family: var(--ui-font);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  touch-action: manipulation;
+}
+/* primary: the gold bevel the game already had */
+body .pixel-btn {
+  min-height: var(--ui-hit);
+  font-size: var(--fs-body);
+}
+/* secondary: brown bevel, replaces dashed outlines and plain tabs */
+body .wide-btn,
+body .decor-tabs button,
+body .choices button,
+body .build-row button,
+body #dig .dig-tools button {
+  min-height: var(--ui-hit);
+  padding: 8px 12px;
+  font-size: var(--fs-body);
+  color: var(--ui-ink);
+  background: var(--ui-panel-2);
+  border: 3px solid var(--ui-shadow);
+  border-radius: 0;
+  box-shadow: inset 2px 2px 0 rgba(255, 240, 200, 0.16), inset -2px -2px 0 rgba(0, 0, 0, 0.4), 0 3px 0 var(--ui-shadow);
+  cursor: pointer;
+  transition: transform 0.08s, filter 0.15s;
+}
+body .wide-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  border-style: solid;
+}
+body .wide-btn:active,
+body .decor-tabs button:active,
+body .choices button:active,
+body .build-row button:active,
+body #dig .dig-tools button:active {
+  transform: translateY(2px);
+  box-shadow: inset 2px 2px 0 rgba(255, 240, 200, 0.16), inset -2px -2px 0 rgba(0, 0, 0, 0.4), 0 1px 0 var(--ui-shadow);
+}
+/* selected: the gold bevel */
+body .decor-tabs button.on,
+body .choices button.on,
+body .build-row button.on,
+body #dig .dig-tools button.on {
+  color: var(--ui-on-gold);
+  background: #e8c867;
+  border-color: var(--ui-shadow);
+  box-shadow: inset 2px 2px 0 #fff0b0, inset -2px -2px 0 #a87f2c, 0 3px 0 var(--ui-shadow);
+}
+body .wide-btn.danger {
+  color: #fff0e8;
+  background: #b4503f;
+  box-shadow: inset 2px 2px 0 #f0a090, inset -2px -2px 0 #6a2418, 0 3px 0 var(--ui-shadow);
+}
+body .wide-btn:disabled,
+body .choices button:disabled,
+body .build-row button:disabled,
+body .pixel-btn:disabled {
+  filter: grayscale(0.7) brightness(0.8);
+  opacity: 1;
+}
+/* the dig overlay's own close was a bare browser button */
+body #dig .dig-close {
+  min-height: var(--ui-hit);
+  padding: 8px 18px;
+  font-size: var(--fs-body);
+  color: var(--ui-on-gold);
+  background: #e8c867;
+  border: 3px solid var(--ui-shadow);
+  border-radius: 0;
+  box-shadow: inset 2px 2px 0 #fff0b0, inset -2px -2px 0 #a87f2c, 0 3px 0 var(--ui-shadow);
+  cursor: pointer;
+}
+
+/* ---- the standard close button on every older menu ---- */
+body .ui-close {
+  flex: none;
+  width: var(--ui-hit);
+  height: var(--ui-hit);
+  min-width: var(--ui-hit);
+  padding: 0;
+  display: grid;
+  place-items: center;
+}
+body .viewer-close.ui-close {
+  position: absolute;
+  top: max(12px, env(safe-area-inset-top));
+  right: 12px;
+  border-radius: 0;
+  background: var(--ui-panel-2);
+  color: var(--ui-ink);
+}
+
+/* ---- chips (journal filters) ---- */
+body .journal-chips .chip {
+  min-height: var(--ui-hit);
+  padding: 6px 14px;
+  font: 600 var(--fs-small) / 1.1 var(--ui-font);
+  border: 2px solid var(--ui-line);
+}
+body .journal-chips .chip.on {
+  color: var(--ui-gold-hi);
+  border-color: var(--ui-gold);
+}
+body .journal-search {
+  min-height: var(--ui-hit);
+  font-family: var(--ui-font);
+  border-radius: var(--ui-r);
+}
+
+/* ---- cards and rows ---- */
+body .tool-item,
+body .slot-painting,
+body .staff-row,
+body .room-row,
+body .office-cols div,
+body .income-room,
+body .income-top div,
+body .quest,
+body .set-row,
+body .daily-card {
+  border: 2px solid var(--ui-line);
+  border-radius: var(--ui-r);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
+}
+body .quest-reward,
+body .quest-claim {
+  font-family: var(--ui-font);
+}
+
+/* ---- toasts and cards ---- */
+body #toast {
+  font: 600 var(--fs-body) / 1.25 var(--ui-font);
+  border-radius: 0;
+  border: 3px solid var(--ui-shadow);
+  box-shadow: inset 2px 2px 0 rgba(255, 240, 200, 0.12), 0 3px 0 var(--ui-shadow);
+}
+
+/* ---- the boat: islands as rows, "Stay here" as a quiet action ---- */
+body .sail-dest {
+  display: grid;
+  justify-items: start;
+  gap: 2px;
+  width: 100%;
+  min-height: 56px;
+  padding: 8px 14px;
+  text-align: left;
+  color: var(--ui-ink);
+  background: var(--ui-panel-2);
+  box-shadow: inset 2px 2px 0 rgba(255, 240, 200, 0.16), inset -2px -2px 0 rgba(0, 0, 0, 0.4), 0 3px 0 var(--ui-shadow);
+}
+body .sail-dest b { font: 600 var(--fs-body) / 1.15 var(--ui-font); }
+body .sail-dest small { font: 400 var(--fs-small) / 1.25 var(--ui-font); color: var(--ui-muted); }
+body .sail-stay {
+  min-height: var(--ui-hit);
+  margin-top: var(--sp-2);
+  color: var(--ui-gold-hi);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+/* the conversation box (src/dialogue.js) */
+body #chat .chat-name { font: 600 var(--fs-lead) / 1.1 var(--ui-font); }
+body #chat .chat-label { font: 400 var(--fs-small) / 1.2 var(--ui-font); }
+body #chat .chat-choices button { font-family: var(--ui-font); font-weight: 600; min-height: var(--ui-hit); }
+
+/* ---- inputs and small controls reach the 44 px minimum ---- */
+body input:not([type='range']):not([type='checkbox']):not([type='radio']),
+body textarea,
+body select {
+  min-height: var(--ui-hit);
+  font-family: var(--ui-font);
+  font-size: 16px; /* 16 px so iOS never zooms the page */
+}
+body input[type='range'] { height: var(--ui-hit); }
+body .info-rating button {
+  min-width: var(--ui-hit);
+  min-height: var(--ui-hit);
+}
+body .quest-reward { font: 600 var(--fs-small) / 1.2 var(--ui-font); color: var(--ui-muted); white-space: nowrap; }
+
+/* ---- collapsible groups (Customize → This room) ---- */
+body .ui-group {
+  margin-top: var(--sp-3);
+  background: var(--ui-fill);
+  border: 2px solid var(--ui-line);
+  border-radius: var(--ui-r);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
+}
+body .ui-group > summary {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  min-height: 52px;
+  padding: 8px 14px;
+  list-style: none;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+body .ui-group > summary::-webkit-details-marker { display: none; }
+body .ui-group > summary b { font: 600 var(--fs-lead) / 1.1 var(--ui-font); }
+body .ui-group > summary span {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: 400 var(--fs-small) / 1.2 var(--ui-font);
+  color: var(--ui-muted);
+}
+body .ui-group > summary::after {
+  content: '';
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-right: 3px solid var(--ui-gold);
+  border-bottom: 3px solid var(--ui-gold);
+  transform: rotate(45deg) translate(-2px, -2px);
+  transition: transform var(--ui-t);
+}
+body .ui-group[open] > summary::after { transform: rotate(225deg) translate(-2px, -2px); }
+body .ui-group-body { padding: 0 14px 14px; }
+body .ui-group-body > section:first-child h3 { margin-top: 4px; }
+
+/* ---- Toolkit: one row of categories, so the items get the room ---- */
+body #toolkit .toolkit-sheet.sheet { max-height: 58dvh; }
+body #toolkit .toolkit-cats.choices {
+  flex-wrap: nowrap;
+  gap: var(--sp-2);
+  margin: 0 calc(var(--sp-4) * -1);
+  padding: 4px var(--sp-4) 8px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  touch-action: pan-x;
+}
+body #toolkit .toolkit-cats.choices::-webkit-scrollbar { display: none; }
+body #toolkit .toolkit-cats.choices button {
+  position: relative;
+  flex: none;
+  min-width: 0;
+  padding: 4px 14px;
+  scroll-snap-align: start;
+  white-space: nowrap;
+}
+body #toolkit .toolkit-note { margin: 4px 0 6px; font-size: var(--fs-small); color: var(--ui-muted); }
+body #toolkit .toolkit-done { min-width: 88px; }
+body #toolkit .tool-item { font-family: var(--ui-font); }
+body #toolkit .tool-item b { font: 600 var(--fs-body) / 1.15 var(--ui-font); }
+body #toolkit .ti-meta,
+body #toolkit .ti-size { font: 400 var(--fs-small) / 1.2 var(--ui-font); }
+
+/* ---- Settings ---- */
+body .settings-group { margin-bottom: var(--sp-2); }
+body .settings-group > .ui-label { margin: var(--sp-5) 0 var(--sp-2); }
+body .settings-group .wide-btn { margin-top: var(--sp-2); }
+body .settings-group section h3 { margin: var(--sp-3) 0 var(--sp-2); }
+body .settings-body .slider { display: flex; align-items: center; gap: var(--sp-3); }
+body .settings-body .slider b { min-width: 3.2em; text-align: right; font: 600 var(--fs-body) / 1 var(--ui-font); }
+body .settings-group .ui-toggle { margin-top: var(--sp-2); }
+
+/* ---- Wall spot: the era filters become one scrolling row, so paintings get the room ---- */
+body .gallery-eras.choices {
+  flex-wrap: nowrap;
+  gap: var(--sp-2);
+  margin: var(--sp-2) calc(var(--sp-4) * -1) var(--sp-3);
+  padding: 4px var(--sp-4) 8px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  touch-action: pan-x;
+}
+body .gallery-eras.choices::-webkit-scrollbar { display: none; }
+body .gallery-eras.choices button {
+  flex: none;
+  min-width: 0;
+  padding: 4px 14px;
+  white-space: nowrap;
+  scroll-snap-align: start;
+}
+body .gallery-search { margin-top: var(--sp-3); width: 100%; }
+
+/* ---- reward cards: the catch card and the celebration card are one family ---- */
+body .catch-card,
+body .celebrate-card {
+  min-width: 232px;
+  max-width: min(320px, calc(100vw - 32px));
+  padding: var(--sp-5) var(--sp-6) var(--sp-4);
+  background: var(--ui-panel);
+  border: 3px solid var(--ui-shadow);
+  border-radius: var(--ui-r);
+  box-shadow: inset 0 0 0 2px var(--ui-gold), 0 8px 30px rgba(0, 0, 0, 0.6);
+  font-family: var(--ui-font);
+}
+body .celebrate-card {
+  gap: var(--sp-1);
+  justify-items: center;
+}
+body .celebrate-icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: var(--sp-1);
+  color: var(--ui-gold-hi);
+  background: var(--ui-gold-lo);
+  border: 2px solid var(--ui-shadow);
+  border-radius: var(--ui-r);
+}
+body .celebrate-icon .ui-ic { width: 26px; height: 26px; }
+body .celebrate-title,
+body .catch-title {
+  font: 600 var(--fs-title) / 1.1 var(--ui-font);
+  color: var(--ui-gold-hi);
+}
+body .catch-title { font-size: var(--fs-lead); line-height: 1.2; }
+body .celebrate-sub,
+body .catch-meta {
+  font: 400 var(--fs-body) / 1.35 var(--ui-font);
+  color: var(--ui-muted);
+}
+body .celebrate-more {
+  font: 400 var(--fs-small) / 1 var(--ui-font);
+  color: var(--ui-muted);
+}
+body .celebrate-more:empty { display: none; }
+body .catch-card .catch-pic {
+  padding: var(--sp-2);
+  background: var(--ui-bg);
+  border: 2px solid var(--ui-line);
+  border-radius: var(--ui-r);
+}
+body .catch-hint {
+  margin-top: var(--sp-2);
+  padding: var(--sp-2) var(--sp-4);
+  font: 600 var(--fs-small) / 1 var(--ui-font);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ui-on-gold);
+  background: var(--ui-gold);
+  border-radius: var(--ui-r);
+}
+body .catch-new { color: var(--ui-good); }
+
+/* ---- staff board: title and state on one line, the text full width, the action underneath ---- */
+body .staff-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--sp-1);
+  padding: var(--sp-3) var(--sp-4);
+}
+body .staff-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-2);
+}
+body .staff-head b { font: 600 var(--fs-lead) / 1.2 var(--ui-font); }
+body .staff-row small {
+  font: 400 var(--fs-small) / 1.35 var(--ui-font);
+  color: var(--ui-muted);
+}
+body .staff-row button {
+  width: 100%;
+  min-height: var(--ui-hit);
+  margin-top: var(--sp-2);
+  font-size: var(--fs-body);
+}
+body .staff-done { color: var(--ui-good); background: transparent; border-color: var(--ui-good); }
+
+/* ---- "turn your phone upright": a phone that turns, in the UI font ---- */
+@media (orientation: landscape) and (max-height: 520px) {
+  body #rotate {
+    align-content: center;
+    justify-items: center;
+    gap: var(--sp-4);
+    background: var(--ui-bg);
+    font: 600 var(--fs-lead) / 1.3 var(--ui-font);
+    color: var(--ui-ink);
+  }
+  body #rotate p { margin: 0; max-width: 320px; }
+  .rotate-phone {
+    display: block;
+    width: 28px;
+    height: 48px;
+    border: 4px solid var(--ui-gold-hi);
+    border-radius: 6px;
+    box-shadow: inset 0 -6px 0 var(--ui-gold-lo);
+    animation: rotate-hint 2.4s var(--ui-ease) infinite;
+  }
+}
+@keyframes rotate-hint {
+  0%, 25% { transform: rotate(-90deg); }
+  55%, 100% { transform: rotate(0deg); }
+}
+.rotate-phone { display: none; }
+@media (orientation: landscape) and (max-height: 520px) { .rotate-phone { display: block; } }
+
+/* ---- viewer: the plaque and the actions under the painting ---- */
+body .viewer-change {
+  min-height: var(--ui-hit);
+  font: 600 var(--fs-body) / 1 var(--ui-font);
+  color: var(--ui-ink);
+  background: var(--ui-fill);
+  border: 2px solid var(--ui-line);
+  border-radius: var(--ui-r);
+}
+body .info-meta { font-size: var(--fs-body); }
+
+/* the one thing to do on a screen is gold (daily gift, spin) */
+body .wide-btn.primary:not(:disabled) {
+  color: var(--ui-on-gold);
+  background: #e8c867;
+  box-shadow: inset 2px 2px 0 #fff0b0, inset -2px -2px 0 #a87f2c, 0 3px 0 var(--ui-shadow);
+}
+
+/* confirm dialogs: the answer you're asked for is gold, "Not now" is the quiet brown one */
+body .ask-buttons .ask-no {
+  color: var(--ui-ink);
+  background: var(--ui-panel-2);
+  box-shadow: inset 2px 2px 0 rgba(255, 240, 200, 0.16), inset -2px -2px 0 rgba(0, 0, 0, 0.4), 0 3px 0 var(--ui-shadow);
+}
+
+/* ---- conversation box: choices are the secondary bevel buttons, the "more" chevron is a pixel icon ---- */
+body #chat .chat-choices button {
+  color: var(--ui-ink);
+  text-align: left;
+  font-size: var(--fs-body);
+  background: var(--ui-panel-2);
+  border: 3px solid var(--ui-shadow);
+  border-radius: 0;
+  box-shadow: inset 2px 2px 0 rgba(255, 240, 200, 0.16), inset -2px -2px 0 rgba(0, 0, 0, 0.4), 0 3px 0 var(--ui-shadow);
+}
+body #chat .chat-choices button:active { transform: translateY(2px); }
+body #chat .chat-box {
+  border-radius: var(--ui-r);
+  box-shadow: inset 0 0 0 2px var(--ui-gold-lo), 0 4px 0 rgba(0, 0, 0, 0.35);
+}
+body #chat .chat-more { color: var(--ui-gold-hi); line-height: 0; }
+body #chat .chat-more .ui-ic { width: 14px; height: 14px; }
