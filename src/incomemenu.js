@@ -24,7 +24,7 @@ function render() {
     const b = document.createElement('button');
     b.className = 'income-room' + (r.here ? ' on' : '') + (r.locked ? ' locked' : '');
     b.disabled = r.locked;
-    b.innerHTML = `<span class="ir-name"><b></b><i>${r.stars}</i></span><span class="ir-gold">${r.locked ? 'Locked' : `+${r.income}/hr`}<small>${r.locked ? '' : r.waiting ? `${r.waiting.toLocaleString()} waiting` : `${r.paintings} paintings`}</small></span>`;
+    b.innerHTML = `<span class="ir-name"><b></b><i>${r.stars}</i></span><span class="ir-gold">${r.locked ? 'Locked' : `+${r.income}/hr`}<small>${r.locked ? '' : r.full ? `${r.waiting.toLocaleString()} · FULL, collect!` : r.waiting ? `${r.waiting.toLocaleString()} waiting` : `${r.paintings} paintings`}</small></span>`;
     b.querySelector('b').textContent = r.name;
     b.onclick = () => {
       if (r.here) return;
@@ -37,7 +37,10 @@ function render() {
   h.textContent = 'Rooms (tap to go)';
   const hb = document.createElement('h3');
   hb.textContent = 'Boosts';
-  body.replaceChildren(top, hb, boosts, h, list);
+  const note = document.createElement('p');
+  note.className = 'income-note';
+  note.textContent = d.note || '';
+  body.replaceChildren(top, hb, boosts, h, list, note);
 }
 
 function close() {
