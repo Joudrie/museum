@@ -10,7 +10,7 @@ import { DEFAULT_CHARACTER } from './decor.js';
 import { showTalk, hideTalk, talking } from './talk.js';
 import { iconSvg } from './icons.js';
 import { sfx, setTrack, setAmbience } from './music.js';
-import { Weather, weatherToday, season } from './weather.js';
+import { Weather, weatherToday, season, holiday } from './weather.js';
 import { ambientAt, makeTextures as lightTextures } from './lighting.js';
 import { Critters } from './critters.js';
 import { Ambient } from './ambient.js';
@@ -174,6 +174,7 @@ export class IslandScene extends Phaser.Scene {
       { night: this.dark > 0.45, dusk: this.dark <= 0.45 && (hour > 17.5 && hour < 21), weather: this.weatherKind, season: this.season },
     );
 
+    this.holidayDecor();
     this.seasonal();
     this.setupCamera();
     this.weather = new Weather(this, this.weatherKind);
@@ -650,6 +651,14 @@ export class IslandScene extends Phaser.Scene {
       return this.add.image(l.x, l.y, 'lt_beam').setOrigin(0, 0.5).setScale(2.6, 1.6).setBlendMode(Phaser.BlendModes.ADD).setAlpha(0.45 * this.dark).setDepth(5002);
     });
     if (this.dark > 0.2) this.playerGlow = this.add.image(0, 0, 'lt_glow').setDisplaySize(90, 70).setBlendMode(Phaser.BlendModes.ADD).setTint(0xffd8a8).setAlpha(0.12 * this.dark).setDepth(5001);
+  }
+
+  // Holiday decor by the museum's front doors (never on the doorway itself).
+  holidayDecor() {
+    if (holiday() !== 'halloween' || !this.door) return;
+    const dx = Math.round(this.door.x / T);
+    const dy = Math.round(this.door.y / T);
+    [-3, -2, 2, 3].forEach((o) => this.place('pumpkins', dx + o, dy, { solid: false, depth: (dy + 1) * T - 2 }));
   }
 
   // The season shows on the land: snow on the grass in winter, orange trees
