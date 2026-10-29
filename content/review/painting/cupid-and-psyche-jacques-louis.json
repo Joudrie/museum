@@ -1,0 +1,106 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "cupid-and-psyche-jacques-louis",
+  "notes": "region: France, 1817",
+  "entry": {
+    "id": "painting:cupid-and-psyche-jacques-louis",
+    "collection": "painting",
+    "title": "Cupid and Psyche",
+    "by": "Jacques-Louis David",
+    "year": "1817",
+    "era": "romantic",
+    "ratio": 1.3116,
+    "blurb": "Jacques-Louis David included two butterflies in this painting: one above the slumbering Psyche and the other on the base of the couple's bed frame.",
+    "rarity": 1,
+    "tags": [
+      "france",
+      "oil"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1962.37/1962.37_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Leonard C. Hanna Jr. Fund",
+      "url": "https://clevelandart.org/art/1962.37"
+    },
+    "value": 5,
+    "facts": [
+      "David used the story of Cupid and Psyche to explore the conflict between idealized love and physical reality.",
+      "Cupid was usually depicted as an ideal adolescent, but here David presents him as an ungainly teenager smirking at his sexual conquest."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "138464",
+    "title": "Cupid and Psyche",
+    "maker": "Jacques-Louis David",
+    "year": "1817",
+    "medium": "oil on canvas",
+    "dimensions": "Framed: 221 x 282 x 10 cm (87 x 111 x 3 15/16 in.); Unframed: 184.2 x 241.6 cm (72 1/2 x 95 1/8 in.)",
+    "widthCm": 241.6,
+    "heightCm": 184.2,
+    "ratio": 1.3116,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1962.37/1962.37_web.jpg",
+    "imageWidth": 1180,
+    "imageHeight": 893,
+    "pageUrl": "https://clevelandart.org/art/1962.37",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Leonard C. Hanna Jr. Fund",
+    "description": "David used the story of Cupid and Psyche to explore the conflict between idealized love and physical reality. Cupid, lover of the beautiful mortal Psyche, visited her nightly on the condition that she not know his identity. Cupid was usually depicted as an ideal adolescent, but here David presents him as an ungainly teenager smirking at his sexual conquest. David took inspiration from a number of ancient texts, including an obscure, recently published Greek poem by Moschus that describes Cupid as a mean-spirited brat with flashing eyes and curly hair. Jacques-Louis David included two butterflies in this painting: one above the slumbering Psyche and the other on the base of the couple's bed frame.",
+    "culture": "France, 19th century",
+    "classification": "Painting",
+    "tags": [
+      "Modern European Painting and Sculpture"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Cupid and Psyche",
+      "maker": "Jacques-Louis David",
+      "year": "1817",
+      "medium": "oil on canvas",
+      "dimensions": "Framed: 221 x 282 x 10 cm (87 x 111 x 3 15/16 in.); Unframed: 184.2 x 241.6 cm (72 1/2 x 95 1/8 in.)",
+      "culture": "France, 19th century",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Leonard C. Hanna Jr. Fund",
+      "description": "David used the story of Cupid and Psyche to explore the conflict between idealized love and physical reality. Cupid, lover of the beautiful mortal Psyche, visited her nightly on the condition that she not know his identity. Cupid was usually depicted as an ideal adolescent, but here David presents him as an ungainly teenager smirking at his sexual conquest. David took inspiration from a number of ancient texts, including an obscure, recently published Greek poem by Moschus that describes Cupid as a mean-spirited brat with flashing eyes and curly hair. Jacques-Louis David included two butterflies in this painting: one above the slumbering Psyche and the other on the base of the couple's bed frame.",
+      "tombstone": "Cupid and Psyche, 1817. Jacques-Louis David (French, 1748–1825). Oil on canvas; framed: 221 x 282 x 10 cm (87 x 111 x 3 15/16 in.); unframed: 184.2 x 241.6 cm (72 1/2 x 95 1/8 in.). The Cleveland Museum of Art, Leonard C. Hanna Jr. Fund, 1962.37",
+      "funFact": "",
+      "didYouKnow": "Jacques-Louis David included two butterflies in this painting: one above the slumbering Psyche and the other on the base of the couple's bed frame.",
+      "creators": "Jacques-Louis David (French, 1748–1825)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "Jacques-Louis David included two butterflies in this painting: one above the slumbering Psyche and the other on the base of the couple's bed frame.",
+      "quote": "Jacques-Louis David included two butterflies in this painting: one above the slumbering Psyche and the other on the base of the couple's bed frame.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "David used the story of Cupid and Psyche to explore the conflict between idealized love and physical reality.",
+      "quote": "David used the story of Cupid and Psyche to explore the conflict between idealized love and physical reality.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Cupid was usually depicted as an ideal adolescent, but here David presents him as an ungainly teenager smirking at his sexual conquest.",
+      "quote": "Cupid was usually depicted as an ideal adolescent, but here David presents him as an ungainly teenager smirking at his sexual conquest.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

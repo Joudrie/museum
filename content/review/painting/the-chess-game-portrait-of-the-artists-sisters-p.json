@@ -1,0 +1,91 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "the-chess-game-portrait-of-the-artists-sisters-p",
+  "notes": "region: Italy (woman artist). Commons has no museum sentence: needs a real hook",
+  "entry": {
+    "id": "painting:the-chess-game-portrait-of-the-artists-sisters-p",
+    "collection": "painting",
+    "title": "The Chess Game (Portrait of the artist's sisters playing chess).",
+    "by": "Sofonisba Anguissola",
+    "year": "1555",
+    "era": "renaissance",
+    "ratio": 1.2661,
+    "blurb": "Lucia (left), Minerva (right) and Europa (middle) Anguissola playing chess.",
+    "rarity": 1,
+    "tags": [
+      "portrait"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://upload.wikimedia.org/wikipedia/commons/b/b3/The_Chess_Game_-_Sofonisba_Anguissola.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "Public domain",
+      "credit": "Sofonisba Anguissola; Poster.us.com; via Wikimedia Commons",
+      "url": "https://commons.wikimedia.org/wiki/File:The_Chess_Game_-_Sofonisba_Anguissola.jpg"
+    },
+    "value": 5
+  },
+  "candidate": {
+    "source": "commons",
+    "sourceId": "File:The Chess Game - Sofonisba Anguissola.jpg",
+    "title": "The Chess Game (Portrait of the artist's sisters playing chess).",
+    "maker": "Sofonisba Anguissola",
+    "year": "1555",
+    "medium": "",
+    "dimensions": "",
+    "ratio": 1.2661,
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/b/b3/The_Chess_Game_-_Sofonisba_Anguissola.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+    "imageWidth": 1280,
+    "imageHeight": 1011,
+    "pageUrl": "https://commons.wikimedia.org/wiki/File:The_Chess_Game_-_Sofonisba_Anguissola.jpg",
+    "license": "Public domain",
+    "credit": "Sofonisba Anguissola; Poster.us.com; via Wikimedia Commons",
+    "description": "Lucia (left), Minerva (right) and Europa (middle) Anguissola playing chess.",
+    "culture": "",
+    "classification": "",
+    "tags": [
+      "The Chess Game by Sofonisba Anguissola",
+      "PD-old-100-expired",
+      "PD-Art (PD-old-auto-expired)",
+      "Artworks with Wikidata item",
+      "Artworks with known accession number",
+      "CC-PD-Mark",
+      "PD-Art missing SDC copyright status",
+      "PD-old missing SDC copyright status",
+      "Artworks digital representation of 2D work"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "The Chess Game (Portrait of the artist's sisters playing chess).",
+      "maker": "Sofonisba Anguissola",
+      "year": "1555",
+      "medium": "",
+      "dimensions": "",
+      "culture": "",
+      "classification": "",
+      "credit": "Sofonisba Anguissola; Poster.us.com; via Wikimedia Commons",
+      "description": "Lucia (left), Minerva (right) and Europa (middle) Anguissola playing chess."
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "Lucia (left), Minerva (right) and Europa (middle) Anguissola playing chess.",
+      "quote": "Lucia (left), Minerva (right) and Europa (middle) Anguissola playing chess.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

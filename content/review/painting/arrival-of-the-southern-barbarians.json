@@ -1,0 +1,112 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "arrival-of-the-southern-barbarians",
+  "notes": "region: Japan. the title is the museum's; a reviewer should look at it (CONTENT-STYLE sensitive subjects)",
+  "entry": {
+    "id": "painting:arrival-of-the-southern-barbarians",
+    "collection": "painting",
+    "title": "Arrival of the \"Southern Barbarians\"",
+    "year": "c. 1600",
+    "era": "baroque",
+    "ratio": 2.2986,
+    "blurb": "Early in the 1600s the Portuguese were forced out of Japan, chiefly because of internal difficulties caused by their missionaries.",
+    "rarity": 1,
+    "tags": [
+      "japan",
+      "ink"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1960.193/1960.193_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Leonard C. Hanna Jr. Fund",
+      "url": "https://clevelandart.org/art/1960.193"
+    },
+    "value": 5,
+    "facts": [
+      "Later, between 1641 and 1853, the Dutch were the only Europeans permitted to trade with Japan but their presence was restricted to a port town in far western Japan, near present-day Nagasaki.",
+      "Europeans were called \"Southern Barbarians\" because their ships arrived in Japan from the south.",
+      "Almost certainly the persons represented are Portuguese, since they are accompanied by Roman Catholic priests."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "136311",
+    "title": "Arrival of the \"Southern Barbarians\"",
+    "maker": "",
+    "year": "c. 1600",
+    "medium": "Pair of six-panel folding screens; ink, color, and gold on paper",
+    "dimensions": "Overall: 146.7 x 337.2 cm (57 3/4 x 132 3/4 in.)",
+    "widthCm": 337.2,
+    "heightCm": 146.7,
+    "ratio": 2.2986,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1960.193/1960.193_web.jpg",
+    "imageWidth": 900,
+    "imageHeight": 820,
+    "pageUrl": "https://clevelandart.org/art/1960.193",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Leonard C. Hanna Jr. Fund",
+    "description": "These screens show European merchants arriving in Japan. Almost certainly the persons represented are Portuguese, since they are accompanied by Roman Catholic priests. Early in the 1600s the Portuguese were forced out of Japan, chiefly because of internal difficulties caused by their missionaries. Later, between 1641 and 1853, the Dutch were the only Europeans permitted to trade with Japan but their presence was restricted to a port town in far western Japan, near present-day Nagasaki. Europeans were called \"Southern Barbarians\" because their ships arrived in Japan from the south.",
+    "culture": "Japan, Momoyama period (1573–1615)",
+    "classification": "Painting",
+    "tags": [
+      "Japanese Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Arrival of the \"Southern Barbarians\"",
+      "maker": "",
+      "year": "c. 1600",
+      "medium": "Pair of six-panel folding screens; ink, color, and gold on paper",
+      "dimensions": "Overall: 146.7 x 337.2 cm (57 3/4 x 132 3/4 in.)",
+      "culture": "Japan, Momoyama period (1573–1615)",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Leonard C. Hanna Jr. Fund",
+      "description": "These screens show European merchants arriving in Japan. Almost certainly the persons represented are Portuguese, since they are accompanied by Roman Catholic priests. Early in the 1600s the Portuguese were forced out of Japan, chiefly because of internal difficulties caused by their missionaries. Later, between 1641 and 1853, the Dutch were the only Europeans permitted to trade with Japan but their presence was restricted to a port town in far western Japan, near present-day Nagasaki. Europeans were called \"Southern Barbarians\" because their ships arrived in Japan from the south.",
+      "tombstone": "Arrival of the \"Southern Barbarians\" (南蛮図屏風), c. 1600. Japan, Momoyama period (1573–1615). Pair of six-panel folding screens; ink, color, and gold on paper; overall: 146.7 x 337.2 cm (57 3/4 x 132 3/4 in.). The Cleveland Museum of Art, Leonard C. Hanna Jr. Fund, 1960.193",
+      "funFact": "",
+      "didYouKnow": "Europeans were called \"Southern Barbarians\" because their ships arrived in Japan from the south.",
+      "creators": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "Early in the 1600s the Portuguese were forced out of Japan, chiefly because of internal difficulties caused by their missionaries.",
+      "quote": "Early in the 1600s the Portuguese were forced out of Japan, chiefly because of internal difficulties caused by their missionaries.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Later, between 1641 and 1853, the Dutch were the only Europeans permitted to trade with Japan but their presence was restricted to a port town in far western Japan, near present-day Nagasaki.",
+      "quote": "Later, between 1641 and 1853, the Dutch were the only Europeans permitted to trade with Japan but their presence was restricted to a port town in far western Japan, near present-day Nagasaki.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Europeans were called \"Southern Barbarians\" because their ships arrived in Japan from the south.",
+      "quote": "Europeans were called \"Southern Barbarians\" because their ships arrived in Japan from the south.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Almost certainly the persons represented are Portuguese, since they are accompanied by Roman Catholic priests.",
+      "quote": "Almost certainly the persons represented are Portuguese, since they are accompanied by Roman Catholic priests.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

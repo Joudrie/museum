@@ -1,0 +1,113 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "paulownias-and-chrysanthemums-sakai",
+  "notes": "region: Japan",
+  "entry": {
+    "id": "painting:paulownias-and-chrysanthemums-sakai",
+    "collection": "painting",
+    "title": "Paulownias and Chrysanthemums",
+    "by": "Sakai Hōitsu",
+    "year": "early 1800s",
+    "era": "romantic",
+    "ratio": 1.0144,
+    "blurb": "Hōitsu often painted two-panel folding screens for urban clients residing in smaller spaces.",
+    "rarity": 1,
+    "tags": [
+      "japan",
+      "ink"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1964.386/1964.386_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Gift of the American Foundation for the Maud E. and Warren H. Corning Botanical Collection",
+      "url": "https://clevelandart.org/art/1964.386"
+    },
+    "value": 5,
+    "facts": [
+      "A painting after this one in the Itabashi Museum in Tokyo shows an extended composition across a pair of two-panel screens.",
+      "In this screen, Sakai Hōitsu expertly deployed a painting technique called “dripping-in” ( tarashikomi ).",
+      "Ink and color dripped on the surface, and allowed to pool there, created the illusionistic effect of lichen-dotted tree bark and twisted chrysanthemum leaves."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "140476",
+    "title": "Paulownias and Chrysanthemums",
+    "maker": "Sakai Hōitsu",
+    "year": "early 1800s",
+    "medium": "Two-panel folding screen; ink and color on gilded paper",
+    "dimensions": "Image: 152.7 x 154.9 cm (60 1/8 x 61 in.); Overall: 157.5 x 158.5 cm (62 x 62 3/8 in.)",
+    "widthCm": 154.9,
+    "heightCm": 152.7,
+    "ratio": 1.0144,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1964.386/1964.386_web.jpg",
+    "imageWidth": 900,
+    "imageHeight": 864,
+    "pageUrl": "https://clevelandart.org/art/1964.386",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Gift of the American Foundation for the Maud E. and Warren H. Corning Botanical Collection",
+    "description": "In this screen, Sakai Hōitsu expertly deployed a painting technique called “dripping-in” ( tarashikomi ). Ink and color dripped on the surface, and allowed to pool there, created the illusionistic effect of lichen-dotted tree bark and twisted chrysanthemum leaves. Paulownia and chrysanthemum are signifiers of late spring and early autumn as well as emblems of the Japanese imperial house. Paulownia also has medicinal properties and associations with fortitude, while chrysanthemum symbolizes good government. Hōitsu often painted two-panel folding screens for urban clients residing in smaller spaces. A painting after this one in the Itabashi Museum in Tokyo shows an extended composition across a pair of two-panel screens.",
+    "culture": "Japan, Edo period (1615–1868)",
+    "classification": "Painting",
+    "tags": [
+      "Japanese Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Paulownias and Chrysanthemums",
+      "maker": "Sakai Hōitsu",
+      "year": "early 1800s",
+      "medium": "Two-panel folding screen; ink and color on gilded paper",
+      "dimensions": "Image: 152.7 x 154.9 cm (60 1/8 x 61 in.); Overall: 157.5 x 158.5 cm (62 x 62 3/8 in.)",
+      "culture": "Japan, Edo period (1615–1868)",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Gift of the American Foundation for the Maud E. and Warren H. Corning Botanical Collection",
+      "description": "In this screen, Sakai Hōitsu expertly deployed a painting technique called “dripping-in” ( tarashikomi ). Ink and color dripped on the surface, and allowed to pool there, created the illusionistic effect of lichen-dotted tree bark and twisted chrysanthemum leaves. Paulownia and chrysanthemum are signifiers of late spring and early autumn as well as emblems of the Japanese imperial house. Paulownia also has medicinal properties and associations with fortitude, while chrysanthemum symbolizes good government. Hōitsu often painted two-panel folding screens for urban clients residing in smaller spaces. A painting after this one in the Itabashi Museum in Tokyo shows an extended composition across a pair of two-panel screens.",
+      "tombstone": "Paulownias and Chrysanthemums (桐菊流水図屏風), early 1800s. Sakai Hōitsu (Japanese, 1761–1828). Two-panel folding screen; ink and color on gilded paper; image: 152.7 x 154.9 cm (60 1/8 x 61 in.); overall: 157.5 x 158.5 cm (62 x 62 3/8 in.). The Cleveland Museum of Art, Gift of the American Foundation for the Maud E. and Warren H. Corning Botanical Collection, 1964.386",
+      "funFact": "",
+      "didYouKnow": "Hōitsu often painted two-panel folding screens for urban clients residing in smaller spaces. A painting after this one in the Itabashi Museum in Tokyo shows an extended composition across a pair of two-panel screens.",
+      "creators": "Sakai Hōitsu (Japanese, 1761–1828)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "Hōitsu often painted two-panel folding screens for urban clients residing in smaller spaces.",
+      "quote": "Hōitsu often painted two-panel folding screens for urban clients residing in smaller spaces.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "A painting after this one in the Itabashi Museum in Tokyo shows an extended composition across a pair of two-panel screens.",
+      "quote": "A painting after this one in the Itabashi Museum in Tokyo shows an extended composition across a pair of two-panel screens.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "In this screen, Sakai Hōitsu expertly deployed a painting technique called “dripping-in” ( tarashikomi ).",
+      "quote": "In this screen, Sakai Hōitsu expertly deployed a painting technique called “dripping-in” ( tarashikomi ).",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Ink and color dripped on the surface, and allowed to pool there, created the illusionistic effect of lichen-dotted tree bark and twisted chrysanthemum leaves.",
+      "quote": "Ink and color dripped on the surface, and allowed to pool there, created the illusionistic effect of lichen-dotted tree bark and twisted chrysanthemum leaves.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

@@ -1,0 +1,113 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "the-circus-suzanne",
+  "notes": "region: France (woman artist)",
+  "entry": {
+    "id": "painting:the-circus-suzanne",
+    "collection": "painting",
+    "title": "The Circus",
+    "by": "Suzanne Valadon",
+    "year": "1889",
+    "era": "impressionist",
+    "ratio": 1.2295,
+    "blurb": "Others support the attribution, arguing that the painting is merely atypical because it is an early work, signed and dated 1889.",
+    "rarity": 1,
+    "tags": [
+      "france",
+      "oil"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1958.56/1958.56_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Bequest of Leonard C. Hanna Jr.",
+      "url": "https://clevelandart.org/art/1958.56"
+    },
+    "value": 5,
+    "facts": [
+      "Valadon did not begin to develop her mature style until 1891.She was the mother of artist Maurice Utrillo and a prolific painter herself, although she never received any formal artistic training.",
+      "The attribution of this painting to Suzanne Valadon has been rejected by several authorities.",
+      "Besides being a prolific painter, Suzanne Valdon served as the model for Pierre-Auguste Renoir and Henri de Toulouse-Lautrec."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "135517",
+    "title": "The Circus",
+    "maker": "Suzanne Valadon",
+    "year": "1889",
+    "medium": "oil on fabric",
+    "dimensions": "Unframed: 48.8 x 60 cm (19 3/16 x 23 5/8 in.)",
+    "widthCm": 60,
+    "heightCm": 48.8,
+    "ratio": 1.2295,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1958.56/1958.56_web.jpg",
+    "imageWidth": 1102,
+    "imageHeight": 893,
+    "pageUrl": "https://clevelandart.org/art/1958.56",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Bequest of Leonard C. Hanna Jr.",
+    "description": "The attribution of this painting to Suzanne Valadon has been rejected by several authorities. Others support the attribution, arguing that the painting is merely atypical because it is an early work, signed and dated 1889. Valadon did not begin to develop her mature style until 1891.She was the mother of artist Maurice Utrillo and a prolific painter herself, although she never received any formal artistic training. Besides being a prolific painter, Suzanne Valdon served as the model for Pierre-Auguste Renoir and Henri de Toulouse-Lautrec.",
+    "culture": "France, 19th century",
+    "classification": "Painting",
+    "tags": [
+      "Modern European Painting and Sculpture"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "The Circus",
+      "maker": "Suzanne Valadon",
+      "year": "1889",
+      "medium": "oil on fabric",
+      "dimensions": "Unframed: 48.8 x 60 cm (19 3/16 x 23 5/8 in.)",
+      "culture": "France, 19th century",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Bequest of Leonard C. Hanna Jr.",
+      "description": "The attribution of this painting to Suzanne Valadon has been rejected by several authorities. Others support the attribution, arguing that the painting is merely atypical because it is an early work, signed and dated 1889. Valadon did not begin to develop her mature style until 1891.She was the mother of artist Maurice Utrillo and a prolific painter herself, although she never received any formal artistic training. Besides being a prolific painter, Suzanne Valdon served as the model for Pierre-Auguste Renoir and Henri de Toulouse-Lautrec.",
+      "tombstone": "The Circus, 1889. Attributed to Suzanne Valadon (French, 1865–1938). Oil on fabric; unframed: 48.8 x 60 cm (19 3/16 x 23 5/8 in.). The Cleveland Museum of Art, Bequest of Leonard C. Hanna Jr., 1958.56",
+      "funFact": "",
+      "didYouKnow": "Besides being a prolific painter, Suzanne Valdon served as the model for Pierre-Auguste Renoir and Henri de Toulouse-Lautrec.",
+      "creators": "Suzanne Valadon (French, 1865–1938)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "Others support the attribution, arguing that the painting is merely atypical because it is an early work, signed and dated 1889.",
+      "quote": "Others support the attribution, arguing that the painting is merely atypical because it is an early work, signed and dated 1889.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Valadon did not begin to develop her mature style until 1891.She was the mother of artist Maurice Utrillo and a prolific painter herself, although she never received any formal artistic training.",
+      "quote": "Valadon did not begin to develop her mature style until 1891.She was the mother of artist Maurice Utrillo and a prolific painter herself, although she never received any formal artistic training.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The attribution of this painting to Suzanne Valadon has been rejected by several authorities.",
+      "quote": "The attribution of this painting to Suzanne Valadon has been rejected by several authorities.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Besides being a prolific painter, Suzanne Valdon served as the model for Pierre-Auguste Renoir and Henri de Toulouse-Lautrec.",
+      "quote": "Besides being a prolific painter, Suzanne Valdon served as the model for Pierre-Auguste Renoir and Henri de Toulouse-Lautrec.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

@@ -2682,6 +2682,48 @@ export function bakeItem(scene, key, type, def, rot) {
       [10, 52].forEach((x) => [0, 1, 2, 3].forEach((k) => R(x + (k % 2), gy - 16 - k * 4, 2, 4, '#3f8f4a')));
       R(4, gy - 38, 56, 2, '#1e1a20');
       break;
+    case 'plinth':
+      // a marble pedestal; the exhibit stands on top
+      shadow(16, gy, 11, 3);
+      box(8, gy - 24, 16, 23, MARBLE, OUT);
+      R(9, gy - 22, 3, 20, MARBLE_D);
+      box(6, gy - 28, 20, 5, MARBLE, OUT);
+      R(7, gy - 27, 18, 1, '#ffffff');
+      break;
+    case 'glass_case':
+      // a long glass case on a dark wood stand, red velvet inside
+      shadow(32, gy, 28, 4);
+      box(4, gy - 14, 56, 13, WOOD_D, OUT);
+      R(5, gy - 12, 54, 2, WOOD);
+      box(3, gy - 36, 58, 22, 'rgba(200,230,245,0.35)', OUT);
+      R(4, gy - 35, 56, 2, 'rgba(255,255,255,0.55)');
+      R(5, gy - 18, 54, 4, '#7a2232');
+      R(3, gy - 38, 58, 2, BRASS);
+      break;
+    case 'specimen_shelf':
+      // a tall cabinet of two open shelves for small finds
+      shadow(32, gy, 28, 4);
+      box(4, gy - 46, 56, 45, WOOD_D, OUT);
+      R(6, gy - 44, 52, 41, '#2f2018');
+      R(5, gy - 26, 54, 3, WOOD_L);
+      R(5, gy - 6, 54, 3, WOOD_L);
+      R(3, gy - 48, 58, 3, WOOD);
+      break;
+    case 'big_tank':
+      // a giant tank: wide glass over a cabinet, sand and weed
+      shadow(48, gy, 44, 5);
+      box(4, gy - 18, 88, 17, WOOD_D, OUT);
+      box(4, gy - 84, 88, 66, 'rgba(70,150,200,0.78)', OUT);
+      R(5, gy - 83, 86, 4, 'rgba(200,240,255,0.55)');
+      R(5, gy - 24, 86, 5, '#d8c89a');
+      for (let i = 0; i < 6; i++) {
+        const x = 10 + i * 15;
+        for (let k = 0; k < 5; k++) R(x + (k % 2), gy - 28 - k * 4, 2, 4, '#3f8f4a');
+      }
+      E(30, gy - 29, 5, 3, '#8a8a92');
+      E(68, gy - 29, 6, 3, '#6a6a72');
+      R(4, gy - 86, 88, 3, '#1e1a20');
+      break;
     case 'birdcage':
       shadow(16, gy, 8, 3);
       R(10, gy - 4, 12, 3, BRASS);

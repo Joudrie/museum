@@ -1,0 +1,90 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "the-maid-in-the-kitchen-anna",
+  "notes": "region: Denmark (woman artist). Commons has no museum sentence: needs a real hook",
+  "entry": {
+    "id": "painting:the-maid-in-the-kitchen-anna",
+    "collection": "painting",
+    "title": "The maid in the kitchen",
+    "by": "Anna Ancher",
+    "year": "1883 and 1886",
+    "era": "impressionist",
+    "ratio": 0.772,
+    "blurb": "By Anna Ancher, 1883 and 1886.",
+    "rarity": 1,
+    "tags": [],
+    "image": {
+      "kind": "url",
+      "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8a/Girl_in_the_Kitchen_%28Anna_Ancher%29.jpg/1280px-Girl_in_the_Kitchen_%28Anna_Ancher%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "Public domain",
+      "credit": "Anna Ancher; www.kulturarv.dk and www.hirschsprung.dk; via Wikimedia Commons",
+      "url": "https://commons.wikimedia.org/wiki/File:Girl_in_the_Kitchen_(Anna_Ancher).jpg"
+    },
+    "value": 5
+  },
+  "candidate": {
+    "source": "commons",
+    "sourceId": "File:Girl in the Kitchen (Anna Ancher).jpg",
+    "title": "The maid in the kitchen",
+    "maker": "Anna Ancher",
+    "year": "1883 and 1886",
+    "medium": "",
+    "dimensions": "",
+    "ratio": 0.772,
+    "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8a/Girl_in_the_Kitchen_%28Anna_Ancher%29.jpg/1280px-Girl_in_the_Kitchen_%28Anna_Ancher%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "imageWidth": 1280,
+    "imageHeight": 1658,
+    "pageUrl": "https://commons.wikimedia.org/wiki/File:Girl_in_the_Kitchen_(Anna_Ancher).jpg",
+    "license": "Public domain",
+    "credit": "Anna Ancher; www.kulturarv.dk and www.hirschsprung.dk; via Wikimedia Commons",
+    "description": "",
+    "culture": "",
+    "classification": "",
+    "tags": [
+      "Girl in the Kitchen (Anna Ancher)",
+      "PD-Art (PD-old-auto-expired)",
+      "Artworks with Wikidata item",
+      "Artworks with known accession number",
+      "PD-old-80-expired",
+      "CC-PD-Mark",
+      "Images released by the Hirschsprung Collection in highresolution",
+      "Artworks digital representation of 2D work"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "The maid in the kitchen",
+      "maker": "Anna Ancher",
+      "year": "1883 and 1886",
+      "medium": "",
+      "dimensions": "",
+      "culture": "",
+      "classification": "",
+      "credit": "Anna Ancher; www.kulturarv.dk and www.hirschsprung.dk; via Wikimedia Commons",
+      "description": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "By Anna Ancher, 1883 and 1886.",
+      "quote": "By Anna Ancher, 1883 and 1886",
+      "source": "record",
+      "placeholderFor": "needs a real hook"
+    }
+  ],
+  "problems": [
+    "claim 1: needs a real hook; it only restates the record's own details (maker, date, medium)",
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

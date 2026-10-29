@@ -1,0 +1,106 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "river-village-fishermans-joy-zhao",
+  "notes": "region: China",
+  "entry": {
+    "id": "painting:river-village-fishermans-joy-zhao",
+    "collection": "painting",
+    "title": "River Village: Fisherman's Joy",
+    "by": "Zhao Mengfu",
+    "year": "c. 1302–3",
+    "era": "renaissance",
+    "ratio": 1.049,
+    "blurb": "A princeling of the defeated Southern Song dynasty, he was nevertheless successfully recruited by Khubilai Khan to the Mongol court in the new capital, Dadu (modern Beijing), in 1286.",
+    "rarity": 1,
+    "tags": [
+      "china",
+      "ink"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1978.66/1978.66_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Leonard C. Hanna Jr. Fund",
+      "url": "https://clevelandart.org/art/1978.66"
+    },
+    "value": 5,
+    "facts": [
+      "The artist of this blue-green–style landscape, Zhao Mengfu, was a southerner, versed in all fields of literati pursuits, such as calligraphy and connoisseurship.",
+      "Various human elements can be found in the painting: two fishermen, an individual with a donkey, and someone in the house."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "149413",
+    "title": "River Village: Fisherman's Joy",
+    "maker": "Zhao Mengfu",
+    "year": "c. 1302–3",
+    "medium": "Fan painting mounted as album leaf; ink and color on silk",
+    "dimensions": "Overall: 28.6 x 30 cm (11 1/4 x 11 13/16 in.)",
+    "widthCm": 30,
+    "heightCm": 28.6,
+    "ratio": 1.049,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1978.66/1978.66_web.jpg",
+    "imageWidth": 932,
+    "imageHeight": 893,
+    "pageUrl": "https://clevelandart.org/art/1978.66",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Leonard C. Hanna Jr. Fund",
+    "description": "The artist of this blue-green–style landscape, Zhao Mengfu, was a southerner, versed in all fields of literati pursuits, such as calligraphy and connoisseurship. A princeling of the defeated Southern Song dynasty, he was nevertheless successfully recruited by Khubilai Khan to the Mongol court in the new capital, Dadu (modern Beijing), in 1286. This painting combines a distinctively southern flat watery landscape combined with features of the northern landscape tradition, notably the spiky trees, branches, and rough-surfaced rocks. Various human elements can be found in the painting: two fishermen, an individual with a donkey, and someone in the house.",
+    "culture": "China, Yuan dynasty (1271-1368)",
+    "classification": "Painting",
+    "tags": [
+      "Chinese Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "River Village: Fisherman's Joy",
+      "maker": "Zhao Mengfu",
+      "year": "c. 1302–3",
+      "medium": "Fan painting mounted as album leaf; ink and color on silk",
+      "dimensions": "Overall: 28.6 x 30 cm (11 1/4 x 11 13/16 in.)",
+      "culture": "China, Yuan dynasty (1271-1368)",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Leonard C. Hanna Jr. Fund",
+      "description": "The artist of this blue-green–style landscape, Zhao Mengfu, was a southerner, versed in all fields of literati pursuits, such as calligraphy and connoisseurship. A princeling of the defeated Southern Song dynasty, he was nevertheless successfully recruited by Khubilai Khan to the Mongol court in the new capital, Dadu (modern Beijing), in 1286. This painting combines a distinctively southern flat watery landscape combined with features of the northern landscape tradition, notably the spiky trees, branches, and rough-surfaced rocks. Various human elements can be found in the painting: two fishermen, an individual with a donkey, and someone in the house.",
+      "tombstone": "River Village: Fisherman's Joy (江村漁樂圖), c. 1302–3. Zhao Mengfu (Chinese, 1254–1322). Fan painting mounted as album leaf; ink and color on silk; overall: 28.6 x 30 cm (11 1/4 x 11 13/16 in.). The Cleveland Museum of Art, Leonard C. Hanna Jr. Fund, 1978.66",
+      "funFact": "",
+      "didYouKnow": "Various human elements can be found in the painting: two fishermen, an individual with a donkey, and someone in the house.",
+      "creators": "Zhao Mengfu (Chinese, 1254–1322)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "A princeling of the defeated Southern Song dynasty, he was nevertheless successfully recruited by Khubilai Khan to the Mongol court in the new capital, Dadu (modern Beijing), in 1286.",
+      "quote": "A princeling of the defeated Southern Song dynasty, he was nevertheless successfully recruited by Khubilai Khan to the Mongol court in the new capital, Dadu (modern Beijing), in 1286.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The artist of this blue-green–style landscape, Zhao Mengfu, was a southerner, versed in all fields of literati pursuits, such as calligraphy and connoisseurship.",
+      "quote": "The artist of this blue-green–style landscape, Zhao Mengfu, was a southerner, versed in all fields of literati pursuits, such as calligraphy and connoisseurship.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Various human elements can be found in the painting: two fishermen, an individual with a donkey, and someone in the house.",
+      "quote": "Various human elements can be found in the painting: two fishermen, an individual with a donkey, and someone in the house.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

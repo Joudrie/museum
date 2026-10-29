@@ -1,0 +1,113 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "george-washington-at-princeton-charles",
+  "notes": "region: United States, 1779",
+  "entry": {
+    "id": "painting:george-washington-at-princeton-charles",
+    "collection": "painting",
+    "title": "George Washington at Princeton",
+    "by": "Charles Willson Peale",
+    "year": "c. 1779",
+    "era": "romantic",
+    "ratio": 0.9282,
+    "blurb": "Because Peale served under General Washington and befriended him during the Revolutionary War, he was an ideal candidate to commemorate Washington's important early victory at Princeton, NJ.",
+    "rarity": 1,
+    "tags": [
+      "united states",
+      "oil"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1917.946/1917.946_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Membership Income Fund",
+      "url": "https://clevelandart.org/art/1917.946"
+    },
+    "value": 5,
+    "facts": [
+      "Whereas some were commissioned by American colonists—as in the case here—others were ordered by Washington's admirers in France, Spain, Holland, Cuba, and even England.",
+      "Artist and scientist Peale directed the first dig of a mastodon skeleton in the US.",
+      "Also present is a line of captured British redcoat soldiers that animates the background at left."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "98268",
+    "title": "George Washington at Princeton",
+    "maker": "Charles Willson Peale",
+    "year": "c. 1779",
+    "medium": "oil on canvas",
+    "dimensions": "Framed: 153 x 144 x 7 cm (60 1/4 x 56 11/16 x 2 3/4 in.); Unframed: 131 x 121.6 cm (51 9/16 x 47 7/8 in.)",
+    "widthCm": 121.6,
+    "heightCm": 131,
+    "ratio": 0.9282,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1917.946/1917.946_web.jpg",
+    "imageWidth": 823,
+    "imageHeight": 893,
+    "pageUrl": "https://clevelandart.org/art/1917.946",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Membership Income Fund",
+    "description": "Because Peale served under General Washington and befriended him during the Revolutionary War, he was an ideal candidate to commemorate Washington's important early victory at Princeton, NJ. Here, in the quiet aftermath of battle, the general is accompanied by his horse and a groomsman, identified by some scholars as William Lee, a mixed-race enslaved man Washington forced to work as his personal assistant. Also present is a line of captured British redcoat soldiers that animates the background at left. Peale produced several versions of this composition amid a rally of enthusiasm for the American cause. Whereas some were commissioned by American colonists—as in the case here—others were ordered by Washington's admirers in France, Spain, Holland, Cuba, and even England. Artist and scientist Peale directed the first dig of a mastodon skeleton in the US.",
+    "culture": "United States",
+    "classification": "Painting",
+    "tags": [
+      "American Painting and Sculpture"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "George Washington at Princeton",
+      "maker": "Charles Willson Peale",
+      "year": "c. 1779",
+      "medium": "oil on canvas",
+      "dimensions": "Framed: 153 x 144 x 7 cm (60 1/4 x 56 11/16 x 2 3/4 in.); Unframed: 131 x 121.6 cm (51 9/16 x 47 7/8 in.)",
+      "culture": "United States",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Membership Income Fund",
+      "description": "Because Peale served under General Washington and befriended him during the Revolutionary War, he was an ideal candidate to commemorate Washington's important early victory at Princeton, NJ. Here, in the quiet aftermath of battle, the general is accompanied by his horse and a groomsman, identified by some scholars as William Lee, a mixed-race enslaved man Washington forced to work as his personal assistant. Also present is a line of captured British redcoat soldiers that animates the background at left. Peale produced several versions of this composition amid a rally of enthusiasm for the American cause. Whereas some were commissioned by American colonists—as in the case here—others were ordered by Washington's admirers in France, Spain, Holland, Cuba, and even England. Artist and scientist Peale directed the first dig of a mastodon skeleton in the US.",
+      "tombstone": "George Washington at Princeton, c. 1779. Charles Willson Peale (American, born The Thirteen Colonies, 1741–1827), and Workshop. Oil on canvas; framed: 153 x 144 x 7 cm (60 1/4 x 56 11/16 x 2 3/4 in.); unframed: 131 x 121.6 cm (51 9/16 x 47 7/8 in.). The Cleveland Museum of Art, Membership Income Fund, 1917.946",
+      "funFact": "",
+      "didYouKnow": "Artist and scientist Peale directed the first dig of a mastodon skeleton in the US.",
+      "creators": "Charles Willson Peale (American, born The Thirteen Colonies, 1741–1827); Workshop"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "Because Peale served under General Washington and befriended him during the Revolutionary War, he was an ideal candidate to commemorate Washington's important early victory at Princeton, NJ.",
+      "quote": "Because Peale served under General Washington and befriended him during the Revolutionary War, he was an ideal candidate to commemorate Washington's important early victory at Princeton, NJ.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Whereas some were commissioned by American colonists—as in the case here—others were ordered by Washington's admirers in France, Spain, Holland, Cuba, and even England.",
+      "quote": "Whereas some were commissioned by American colonists—as in the case here—others were ordered by Washington's admirers in France, Spain, Holland, Cuba, and even England.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Artist and scientist Peale directed the first dig of a mastodon skeleton in the US.",
+      "quote": "Artist and scientist Peale directed the first dig of a mastodon skeleton in the US.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Also present is a line of captured British redcoat soldiers that animates the background at left.",
+      "quote": "Also present is a line of captured British redcoat soldiers that animates the background at left.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}
