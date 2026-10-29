@@ -431,7 +431,9 @@ def finish(raw, proj, parking_world=()):
     streets, lots, walks, road_union = raw
 
     def parts(g):
-        return [h for h in (g.geoms if g.geom_type in ('MultiPolygon', 'GeometryCollection') else [g]) if h.geom_type == 'Polygon' and not h.is_empty]
+        polys = [h for h in (g.geoms if g.geom_type in ('MultiPolygon', 'GeometryCollection') else [g]) if h.geom_type == 'Polygon' and not h.is_empty]
+        # a hole smaller than about 19 m2 is a car or a manhole, not a gap
+        return [Polygon(h.exterior, [r for r in h.interiors if Polygon(r).area >= 400]) for h in polys]
 
     def close(shapes):
         """Join pieces (the tile seams leave a pixel between them) and bridge any crack to the street beside them."""
