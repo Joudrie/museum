@@ -51,6 +51,7 @@ export const META_FIELDS = ['by', 'year', 'rarity', 'where'];
  * @property {Provenance} [provenance]
  * @property {Source} source
  * @property {number} [value]      income hint, gold per hour on display
+ * @property {number} [parts]     a big find that takes this many dig spots to complete (src/dig.js counts the pieces)
  * @property {boolean} [dirty]    true: finds of this entry arrive dirty and wait for the restoration desk
  * @property {boolean} [collectable]  false for junk that is never kept (default true)
  * @property {Object} [acquire]    rules for whatever hands these out (fishing: water, time, weather, size, junk)
@@ -96,6 +97,7 @@ export function validateEntry(e, collection) {
   if (e.ratio !== undefined && !(typeof e.ratio === 'number' && e.ratio > 0 && Number.isFinite(e.ratio))) say('ratio must be a positive number');
   if (e.facts !== undefined && !(Array.isArray(e.facts) && e.facts.every(isStr))) say('facts must be a list of strings');
   if (e.tags !== undefined && !(Array.isArray(e.tags) && e.tags.every(isStr))) say('tags must be a list of strings');
+  if (e.parts !== undefined && !(Number.isInteger(e.parts) && e.parts >= 2)) say('parts must be a whole number, 2 or more');
   if (e.dirty !== undefined && typeof e.dirty !== 'boolean') say('dirty must be true or false');
   if (e.value !== undefined && !(typeof e.value === 'number' && e.value >= 0)) say('value must be a number');
   if (collection?.eras && e.era !== undefined && !(e.era in collection.eras)) say(`era "${e.era}" is not one of the collection's eras`);

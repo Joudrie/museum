@@ -2430,3 +2430,29 @@ body.outside #hud {
   opacity: 0.75;
   line-height: 1.35;
 }
+
+.dig-tools {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin: 8px 0 2px;
+}
+.dig-tools[hidden] {
+  display: none;
+}
+.dig-tools button {
+  padding: 6px 10px;
+  border: 2px solid var(--gold-dark);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+}
+.dig-tools button.on {
+  border-color: var(--gold);
+  background: rgba(201, 162, 63, 0.18);
+}
+.dig-tools button:disabled {
+  opacity: 0.55;
+}

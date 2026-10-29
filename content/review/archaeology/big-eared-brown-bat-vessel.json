@@ -1,0 +1,104 @@
+{
+  "status": "draft",
+  "collection": "archaeology",
+  "slug": "big-eared-brown-bat-vessel",
+  "notes": "region: Peru. era removed: the paintings date buckets do not fit antiquity; Chat 8 defines this collection",
+  "entry": {
+    "id": "archaeology:big-eared-brown-bat-vessel",
+    "collection": "archaeology",
+    "title": "Big-Eared Brown Bat Vessel",
+    "year": "200–850 CE",
+    "ratio": 0.8927,
+    "blurb": "The vessel depicts a member of the Histiotus mochica species , a big-eared brown bat that researchers described in 2021 and, due to this vessel, named in honor of the Moche, also known as the Mochica.",
+    "rarity": 1,
+    "tags": [
+      "central andes"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/2005.6/2005.6_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. John L. Severance Fund",
+      "url": "https://clevelandart.org/art/2005.6"
+    },
+    "value": 5,
+    "facts": [
+      "Moche bat symbolism may be linked to the animal’s paradoxical traits—for instance, bats fly but have fur rather than feathers.",
+      "Such traits may have caused the Moche to link bats with transitional states, such as the passage between life and death."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "164437",
+    "title": "Big-Eared Brown Bat Vessel",
+    "maker": "",
+    "year": "200–850 CE",
+    "medium": "ceramic, slip",
+    "dimensions": "Overall: 18.4 x 17.7 x 15.8 cm (7 1/4 x 6 15/16 x 6 1/4 in.)",
+    "widthCm": 15.8,
+    "heightCm": 17.7,
+    "ratio": 0.8927,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/2005.6/2005.6_web.jpg",
+    "imageWidth": 755,
+    "imageHeight": 893,
+    "pageUrl": "https://clevelandart.org/art/2005.6",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. John L. Severance Fund",
+    "description": "This bat, perhaps shown opening its wings before taking flight, illustrates Moche artists’ keen interest in realism and in capturing activity at its peak. Moche bat symbolism may be linked to the animal’s paradoxical traits—for instance, bats fly but have fur rather than feathers. Such traits may have caused the Moche to link bats with transitional states, such as the passage between life and death. The vessel depicts a member of the Histiotus mochica species , a big-eared brown bat that researchers described in 2021 and, due to this vessel, named in honor of the Moche, also known as the Mochica. This vessel depicts a big-eared brown bat.",
+    "culture": "Central Andes, North Coast, Moche people",
+    "classification": "Ceramic",
+    "tags": [
+      "Art of the Americas"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Big-Eared Brown Bat Vessel",
+      "maker": "",
+      "year": "200–850 CE",
+      "medium": "ceramic, slip",
+      "dimensions": "Overall: 18.4 x 17.7 x 15.8 cm (7 1/4 x 6 15/16 x 6 1/4 in.)",
+      "culture": "Central Andes, North Coast, Moche people",
+      "classification": "Ceramic",
+      "credit": "The Cleveland Museum of Art. John L. Severance Fund",
+      "description": "This bat, perhaps shown opening its wings before taking flight, illustrates Moche artists’ keen interest in realism and in capturing activity at its peak. Moche bat symbolism may be linked to the animal’s paradoxical traits—for instance, bats fly but have fur rather than feathers. Such traits may have caused the Moche to link bats with transitional states, such as the passage between life and death. The vessel depicts a member of the Histiotus mochica species , a big-eared brown bat that researchers described in 2021 and, due to this vessel, named in honor of the Moche, also known as the Mochica. This vessel depicts a big-eared brown bat.",
+      "tombstone": "Big-Eared Brown Bat Vessel, 200–850 CE. Central Andes, North Coast, Moche people. Ceramic, slip; overall: 18.4 x 17.7 x 15.8 cm (7 1/4 x 6 15/16 x 6 1/4 in.). The Cleveland Museum of Art, John L. Severance Fund, 2005.6",
+      "funFact": "",
+      "didYouKnow": "This vessel depicts a big-eared brown bat.",
+      "creators": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "The vessel depicts a member of the Histiotus mochica species , a big-eared brown bat that researchers described in 2021 and, due to this vessel, named in honor of the Moche, also known as the Mochica.",
+      "quote": "The vessel depicts a member of the Histiotus mochica species , a big-eared brown bat that researchers described in 2021 and, due to this vessel, named in honor of the Moche, also known as the Mochica.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Moche bat symbolism may be linked to the animal’s paradoxical traits—for instance, bats fly but have fur rather than feathers.",
+      "quote": "Moche bat symbolism may be linked to the animal’s paradoxical traits—for instance, bats fly but have fur rather than feathers.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Such traits may have caused the Moche to link bats with transitional states, such as the passage between life and death.",
+      "quote": "Such traits may have caused the Moche to link bats with transitional states, such as the passage between life and death.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "unknown collection \"archaeology\"",
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

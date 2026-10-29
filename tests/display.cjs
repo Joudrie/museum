@@ -92,6 +92,19 @@ const check = (c, good, bad) => (c ? ok(good) : fail(bad));
   const swim = await room(() => { const s = __game.scene.getScene('room'); const f = s.displayObjs.filter((o) => o.getData && o.getData('entry')?.collection === 'fish'); const x0 = f.map((o) => o.x); return new Promise((r) => setTimeout(() => r(f.length && f.some((o, i) => o.x !== x0[i])), 900)); });
   check(swim, 'fish swim in the tank', 'fish are not moving');
 
+  // tapping a fish opens its card
+  const tapped = await room(() => {
+    const s = __game.scene.getScene('room');
+    const f = s.displayObjs.find((o) => o.getData && o.getData('entry')?.collection === 'fish');
+    const b = f.getBounds();
+    s.press = { x: 0, y: 0 };
+    s.dragging = false;
+    s.tapDisplayed(b.centerX, b.centerY);
+    return new Promise((r) => setTimeout(() => r(!document.querySelector('#viewer').classList.contains('hidden') && document.querySelector('#viewer .info-title').textContent), 500));
+  });
+  check(/Koi|Minnow/.test(tapped), `tapping a fish opens its card (${tapped})`, 'tap on a fish did nothing: ' + tapped);
+  await room(() => { document.querySelector('#viewer .viewer-close').click(); });
+
   // moving keeps the contents; selling empties them
   await room(() => { const s = __game.scene.getScene('room'); const it = s.items.find((i) => i.type === 'plinth'); s.items = s.items.filter((o) => o !== it); s.startPlacing({ ...it, c: 4, r: 4 }, it); s.confirmPlacing(); });
   await p.waitForTimeout(300);

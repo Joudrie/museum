@@ -2822,6 +2822,62 @@ export function bakeItem(scene, key, type, def, rot) {
       });
       break;
     }
+    case 'giftshop': {
+      shadow(48, gy, 46, 4);
+      box(3, gy - 24, 90, 23, WOOD_D, OUT);
+      for (let x = 8; x < 90; x += 14) R(x, gy - 20, 10, 15, WOOD);
+      box(1, gy - 29, 94, 6, MARBLE, OUT);
+      // Shelf of prints, tote bags and postcards.
+      box(6, gy - 52, 84, 22, '#e8dcc0', OUT);
+      [['#c0392b', 8], ['#2f6a9a', 22], ['#e0bc55', 36], ['#4f9a64', 50]].forEach(([c, x]) => {
+        box(x, gy - 49, 10, 12, c, OUT);
+        R(x + 2, gy - 46, 6, 4, '#f4f0e8');
+      });
+      box(66, gy - 48, 14, 16, '#f4f0e8', OUT); // tote
+      R(69, gy - 52, 2, 5, '#3a2a20');
+      R(75, gy - 52, 2, 5, '#3a2a20');
+      R(68, gy - 44, 10, 3, '#c0392b');
+      break;
+    }
+    case 'foodcourt': {
+      shadow(48, gy, 46, 4);
+      box(3, gy - 24, 90, 23, '#8a3a2a', OUT);
+      for (let x = 8; x < 90; x += 14) R(x, gy - 20, 10, 15, '#b8523a');
+      box(1, gy - 29, 94, 6, MARBLE, OUT);
+      // Striped awning and a menu board.
+      for (let x = 0; x < 96; x += 12) {
+        R(x, gy - 62, 6, 14, '#c0392b');
+        R(x + 6, gy - 62, 6, 14, '#f4f0e8');
+      }
+      R(0, gy - 48, 96, 2, '#7a2232');
+      box(36, gy - 44, 24, 12, '#2a2a30', OUT);
+      [0, 4, 8].forEach((y) => R(39, gy - 42 + y, 18, 1, '#e8e4d8'));
+      E(14, gy - 33, 5, 3, '#e0a850'); // burger
+      E(82, gy - 33, 5, 3, '#e8c070'); // fries
+      break;
+    }
+    case 'discovery': {
+      shadow(32, gy, 30, 4);
+      R(6, gy - 12, 4, 11, WOOD_D);
+      R(54, gy - 12, 4, 11, WOOD_D);
+      box(2, gy - 17, 60, 6, '#4a8ac4', OUT);
+      [['#e05a40', 8, 0], ['#e0bc55', 18, 3], ['#4f9a64', 28, 0], ['#9a5ac4', 38, 4]].forEach(([c, x, y]) => box(x, gy - 27 - y, 8, 8, c, OUT));
+      E(52, gy - 25, 5, 5, 'rgba(200,230,240,0.7)'); // magnifier glass
+      R(55, gy - 21, 2, 6, BRASS);
+      break;
+    }
+    case 'lectern': {
+      shadow(32, gy, 30, 4);
+      box(2, gy - 10, 60, 9, WOOD_D, OUT); // stage
+      R(2, gy - 10, 60, 2, WOOD_L);
+      box(22, gy - 36, 20, 26, WOOD, OUT); // lectern
+      R(24, gy - 34, 16, 3, WOOD_L);
+      R(31, gy - 46, 2, 10, '#3a3a40'); // microphone
+      E(32, gy - 48, 3, 3, '#6a6a72');
+      box(8, gy - 30, 8, 20, '#7a2232', OUT); // curtain
+      box(48, gy - 30, 8, 20, '#7a2232', OUT);
+      break;
+    }
     case 'desk':
       shadow(32, gy, 30, 4);
       box(3, gy - 22, 58, 21, WOOD_D, OUT); // front

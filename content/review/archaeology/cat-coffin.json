@@ -1,0 +1,111 @@
+{
+  "status": "draft",
+  "collection": "archaeology",
+  "slug": "cat-coffin",
+  "notes": "region: Egypt. era removed: the paintings date buckets do not fit antiquity; Chat 8 defines this collection",
+  "entry": {
+    "id": "archaeology:cat-coffin",
+    "collection": "archaeology",
+    "title": "Cat Coffin",
+    "year": "305–30 BCE",
+    "ratio": 1.7021,
+    "blurb": "Although the cat is considered the most Egyptian of animals, as an object of worship the cat does not appear until late in Egyptian history.",
+    "rarity": 1,
+    "tags": [
+      "egypt"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1917.998/1917.998_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Gift of the John Huntington Art and Polytechnic Trust",
+      "url": "https://clevelandart.org/art/1917.998"
+    },
+    "value": 5,
+    "facts": [
+      "The coffin is, of course, hollow, with an open bottom.",
+      "As usual, the animal’s tail is curled around its right side.",
+      "A necklace appears to have been incised or scratched into the finished bronze; faint traces are visible on the chest."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "98363",
+    "title": "Cat Coffin",
+    "maker": "",
+    "year": "305–30 BCE",
+    "medium": "bronze, hollow cast",
+    "dimensions": "Overall: 51 x 14.1 x 24 cm (20 1/16 x 5 9/16 x 9 7/16 in.)",
+    "widthCm": 24,
+    "heightCm": 14.1,
+    "ratio": 1.7021,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1917.998/1917.998_web.jpg",
+    "imageWidth": 630,
+    "imageHeight": 893,
+    "pageUrl": "https://clevelandart.org/art/1917.998",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Gift of the John Huntington Art and Polytechnic Trust",
+    "description": "Although the cat is considered the most Egyptian of animals, as an object of worship the cat does not appear until late in Egyptian history. This unusually large statue of a cat was made to hold the mummified remains of a sacred cat. The coffin is, of course, hollow, with an open bottom. As usual, the animal’s tail is curled around its right side. A necklace appears to have been incised or scratched into the finished bronze; faint traces are visible on the chest.",
+    "culture": "Egypt, Greco-Roman period (332 BCE–395 CE), Ptolemaic dynasty (305–30 BCE)",
+    "classification": "Funerary Equipment",
+    "tags": [
+      "Egyptian and Ancient Near Eastern Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Cat Coffin",
+      "maker": "",
+      "year": "305–30 BCE",
+      "medium": "bronze, hollow cast",
+      "dimensions": "Overall: 51 x 14.1 x 24 cm (20 1/16 x 5 9/16 x 9 7/16 in.)",
+      "culture": "Egypt, Greco-Roman period (332 BCE–395 CE), Ptolemaic dynasty (305–30 BCE)",
+      "classification": "Funerary Equipment",
+      "credit": "The Cleveland Museum of Art. Gift of the John Huntington Art and Polytechnic Trust",
+      "description": "Although the cat is considered the most Egyptian of animals, as an object of worship the cat does not appear until late in Egyptian history. This unusually large statue of a cat was made to hold the mummified remains of a sacred cat. The coffin is, of course, hollow, with an open bottom. As usual, the animal’s tail is curled around its right side. A necklace appears to have been incised or scratched into the finished bronze; faint traces are visible on the chest.",
+      "tombstone": "Cat Coffin, 305–30 BCE. Egypt, Greco-Roman period (332 BCE–395 CE), Ptolemaic dynasty (305–30 BCE). Bronze, hollow cast; overall: 51 x 14.1 x 24 cm (20 1/16 x 5 9/16 x 9 7/16 in.). The Cleveland Museum of Art, Gift of the John Huntington Art and Polytechnic Trust, 1917.998",
+      "funFact": "",
+      "didYouKnow": "A necklace appears to have been incised or scratched into the finished bronze; faint traces are visible on the chest.",
+      "creators": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "Although the cat is considered the most Egyptian of animals, as an object of worship the cat does not appear until late in Egyptian history.",
+      "quote": "Although the cat is considered the most Egyptian of animals, as an object of worship the cat does not appear until late in Egyptian history.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The coffin is, of course, hollow, with an open bottom.",
+      "quote": "The coffin is, of course, hollow, with an open bottom.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "As usual, the animal’s tail is curled around its right side.",
+      "quote": "As usual, the animal’s tail is curled around its right side.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "A necklace appears to have been incised or scratched into the finished bronze; faint traces are visible on the chest.",
+      "quote": "A necklace appears to have been incised or scratched into the finished bronze; faint traces are visible on the chest.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "unknown collection \"archaeology\"",
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

@@ -4,10 +4,10 @@ import { load, save } from './storage.js';
 import { paintingsFor } from './rooms.js';
 import { ITEMS, loadItems } from './items.js';
 import { dirtCount, DIRT_PENALTY, guides, guideBoost, hasCarpenter, upgradeValue } from './staff.js';
-import { OFFLINE_CAP_H as CAP, PAINTING_INCOME as PAINT, VISITORS, COFFEE_VISITORS_PER_GOLD, COLLECT_ALL_FEE } from './economy.js';
+import { OFFLINE_CAP_H as CAP, PAINTING_INCOME as PAINT, VISITORS, COFFEE_VISITORS_PER_GOLD, COLLECT_ALL_FEE, SERVICES } from './economy.js';
 import { museumRating } from './rating.js';
 import { displayIncome } from './display.js';
-import { famousBoost } from './famous.js';
+import { famousBoost, metList } from './famous.js';
 import { loveBoost } from './love.js';
 
 const COINS_KEY = 'curation.coins';
@@ -57,20 +57,41 @@ export function museumVisitors(rooms) {
 }
 
 // A coffee counter earns 1 gold an hour per 100 monthly visitors.
-export const coffeeIncome = (rooms) => Math.round(museumVisitors(rooms) / COFFEE_VISITORS_PER_GOLD);
+export const coffeeIncome = (rooms) => Math.round((museumVisitors(rooms) / COFFEE_VISITORS_PER_GOLD) * upgradeValue('beans'));
+
+// Gold per hour from a visitor service item (gift shop, food court, discovery table, lecture stage).
+export function serviceGold(rooms, type) {
+  const s = SERVICES[type];
+  if (!s) return 0;
+  let gold = s.flat || 0;
+  if (s.visitorsPerGold) gold += museumVisitors(rooms) / s.visitorsPerGold;
+  if (s.perFamousMet) gold += s.perFamousMet * metList().length;
+  if (s.perPainting) rooms.forEach((_, i) => paintingsFor(rooms, i).forEach((p) => (gold += s.perPainting * 2 ** ((p.entry?.rarity ?? 1) - 1))));
+  return Math.round(gold);
+}
 
 // What a room's income is multiplied by: dirt cuts it, famous visitors raise it.
 // Tour guides raise it too, and so does visitor love.
 const roomMult = (rooms, i) => (1 - DIRT_PENALTY * dirtCount(rooms, i)) * famousBoost() * (1 + guideBoost() * guides()) * loveBoost(i);
 
+// A themed room: three or more paintings, all from one era (Baroque,
+// Impressionist...), earn 1.5x. Returns that era, or null.
+export const THEME_MIN = 3;
+export const THEME_BONUS = 1.5;
+export function roomTheme(rooms, i) {
+  const eras = paintingsFor(rooms, i).map((p) => p.entry?.era);
+  return eras.length >= THEME_MIN && eras[0] && eras.every((e) => e === eras[0]) ? eras[0] : null;
+}
+
 // Gold per hour from one painting, and from a room's decor (items + coffee).
-const artRate = (rooms, i) => PAINTING_INCOME * roomMult(rooms, i);
+const artRate = (rooms, i) => PAINTING_INCOME * roomMult(rooms, i) * (roomTheme(rooms, i) ? THEME_BONUS : 1);
 function decorRate(rooms, i) {
   const items = loadItems(i);
   let gold = 0;
   items.forEach((it) => (gold += ITEMS[it.type]?.income || 0));
   gold += displayIncome(i); // pieces on display earn too
   if (items.some((it) => it.type === 'counter')) gold += coffeeIncome(rooms);
+  items.forEach((it) => (gold += serviceGold(rooms, it.type)));
   return gold * roomMult(rooms, i);
 }
 

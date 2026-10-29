@@ -1,0 +1,210 @@
+{
+  "collection": "archaeology",
+  "name": "archaeology-batch",
+  "about": "Archaeology imagery for a future collection (Egypt, Mesopotamia and Iran, Greece and Rome, the ancient Americas): 25 objects pinned by Cleveland id, each with a published description to quote. Chat 8 defines the `archaeology` collection (its eras, display and sets); until then each draft carries an 'unknown collection' note, and `era` is blank because the paintings' date buckets do not fit antiquity. Nothing reaches the game until a person approves a draft.",
+  "items": [
+    {
+      "region": "Egypt",
+      "title": "Paint Box of Vizier Amenemope",
+      "id": "94136",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "Egypt",
+      "title": "Apis Bull",
+      "id": "144280",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "Egypt",
+      "title": "Coffin of Bakenmut",
+      "id": "93984",
+      "sources": [
+        "cleveland"
+      ],
+      "note": "a coffin made for a person who died: state the purpose and stop"
+    },
+    {
+      "region": "Egypt",
+      "title": "Head of Sekhmet",
+      "id": "96303",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "Egypt",
+      "title": "Talatat: Portrait of Nefertiti",
+      "id": "148794",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "Egypt",
+      "title": "Canopic Jar with Falcon's Head",
+      "id": "102366",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "Egypt",
+      "title": "Cat Coffin",
+      "id": "98363",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "Roman Egypt",
+      "title": "Funerary Portrait of a Young Girl",
+      "id": "145925",
+      "sources": [
+        "cleveland"
+      ],
+      "note": "a portrait made for a burial: describe plainly"
+    },
+    {
+      "region": "Egypt",
+      "title": "Statue of Heqat, the Frog Goddess",
+      "id": "148796",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "Egypt",
+      "title": "Palette in the Form of a Fish",
+      "id": "154738",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "Mesopotamia",
+      "title": "Statue of Gudea",
+      "id": "138765",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "Iran (Sasanian)",
+      "title": "Dish with King Hormizd II or Hormizd III Hunting Lions",
+      "id": "137194",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "Iran (Luristan)",
+      "title": "Master of Animals Cheekpiece",
+      "id": "136839",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "Greece",
+      "title": "Torso of a Kouros",
+      "id": "130360",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "Greek South Italy",
+      "title": "Red-Figure Calyx-Krater (Mixing Vessel): Medea in the Chariot of the Sun",
+      "id": "155665",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "Greece",
+      "title": "Black-Figure Dinos (Mixing Vessel): Warships",
+      "id": "146147",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "Greece (Hellenistic)",
+      "title": "Head of Alexander the Great",
+      "id": "109043",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "Rome",
+      "title": "Portrait Head of Emperor Vespasian, Recut from Head of Nero",
+      "id": "111518",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "Eastern Roman Empire",
+      "title": "Mosaic of Tigress and Cubs",
+      "id": "153768",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "Maya (Guatemala)",
+      "title": "Front Face of a Stela (Free-standing Stone with Relief)",
+      "id": "143381",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "Mexico (Gulf Coast)",
+      "title": "Ballgame Hip Protector (Yoke)",
+      "id": "147480",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "Aztec (Central Mexico)",
+      "title": "Seated Male Carrying Maize",
+      "id": "127239",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "Peru (Wari)",
+      "title": "Sacrificer Container",
+      "id": "165256",
+      "sources": [
+        "cleveland"
+      ],
+      "note": "religious object: say what it was for"
+    },
+    {
+      "region": "Peru",
+      "title": "Big-Eared Brown Bat Vessel",
+      "id": "164437",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "Panama",
+      "title": "Animal-Headed Figure Pendant",
+      "id": "160142",
+      "sources": [
+        "cleveland"
+      ]
+    }
+  ]
+}

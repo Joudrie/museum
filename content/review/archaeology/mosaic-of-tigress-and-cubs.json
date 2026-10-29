@@ -1,0 +1,104 @@
+{
+  "status": "draft",
+  "collection": "archaeology",
+  "slug": "mosaic-of-tigress-and-cubs",
+  "notes": "region: Eastern Roman Empire. era removed: the paintings date buckets do not fit antiquity; Chat 8 defines this collection",
+  "entry": {
+    "id": "archaeology:mosaic-of-tigress-and-cubs",
+    "collection": "archaeology",
+    "title": "Mosaic of Tigress and Cubs",
+    "year": "300s CE",
+    "ratio": 0.9475,
+    "blurb": "Despite its rectangular shape and creation from mostly square tesserae, this mosaic incorporates many curves in its composition, particularly for the tails of the tigers.",
+    "rarity": 1,
+    "tags": [
+      "eastern roman empire"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1987.65/1987.65_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. John L. Severance Fund",
+      "url": "https://clevelandart.org/art/1987.65"
+    },
+    "value": 5,
+    "facts": [
+      "With one cub on her back and two before her, the mother tiger reaches out with one paw and an open mouth, whether to scold or to play.",
+      "Unlike lions, leopards, and bears, tigers appear relatively rarely in Roman art, with the tigress seen more frequently than her male counterpart."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "153768",
+    "title": "Mosaic of Tigress and Cubs",
+    "maker": "",
+    "year": "300s CE",
+    "medium": "tesserae",
+    "dimensions": "Overall: 142.9 x 135.4 cm (56 1/4 x 53 5/16 in.)",
+    "widthCm": 135.4,
+    "heightCm": 142.9,
+    "ratio": 0.9475,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1987.65/1987.65_web.jpg",
+    "imageWidth": 817,
+    "imageHeight": 893,
+    "pageUrl": "https://clevelandart.org/art/1987.65",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. John L. Severance Fund",
+    "description": "Despite its rectangular shape and creation from mostly square tesserae, this mosaic incorporates many curves in its composition, particularly for the tails of the tigers. With one cub on her back and two before her, the mother tiger reaches out with one paw and an open mouth, whether to scold or to play. Unlike lions, leopards, and bears, tigers appear relatively rarely in Roman art, with the tigress seen more frequently than her male counterpart. This mosaic includes over ten thousand tesserae, or small cut-stone tiles.",
+    "culture": "Eastern Roman Empire",
+    "classification": "Mosaic",
+    "tags": [
+      "Greek and Roman Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Mosaic of Tigress and Cubs",
+      "maker": "",
+      "year": "300s CE",
+      "medium": "tesserae",
+      "dimensions": "Overall: 142.9 x 135.4 cm (56 1/4 x 53 5/16 in.)",
+      "culture": "Eastern Roman Empire",
+      "classification": "Mosaic",
+      "credit": "The Cleveland Museum of Art. John L. Severance Fund",
+      "description": "Despite its rectangular shape and creation from mostly square tesserae, this mosaic incorporates many curves in its composition, particularly for the tails of the tigers. With one cub on her back and two before her, the mother tiger reaches out with one paw and an open mouth, whether to scold or to play. Unlike lions, leopards, and bears, tigers appear relatively rarely in Roman art, with the tigress seen more frequently than her male counterpart. This mosaic includes over ten thousand tesserae, or small cut-stone tiles.",
+      "tombstone": "Mosaic of Tigress and Cubs, 300s CE. Eastern Roman Empire. Tesserae; overall: 142.9 x 135.4 cm (56 1/4 x 53 5/16 in.). The Cleveland Museum of Art, John L. Severance Fund, 1987.65",
+      "funFact": "",
+      "didYouKnow": "This mosaic includes over ten thousand tesserae, or small cut-stone tiles.",
+      "creators": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "Despite its rectangular shape and creation from mostly square tesserae, this mosaic incorporates many curves in its composition, particularly for the tails of the tigers.",
+      "quote": "Despite its rectangular shape and creation from mostly square tesserae, this mosaic incorporates many curves in its composition, particularly for the tails of the tigers.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "With one cub on her back and two before her, the mother tiger reaches out with one paw and an open mouth, whether to scold or to play.",
+      "quote": "With one cub on her back and two before her, the mother tiger reaches out with one paw and an open mouth, whether to scold or to play.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Unlike lions, leopards, and bears, tigers appear relatively rarely in Roman art, with the tigress seen more frequently than her male counterpart.",
+      "quote": "Unlike lions, leopards, and bears, tigers appear relatively rarely in Roman art, with the tigress seen more frequently than her male counterpart.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "unknown collection \"archaeology\"",
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

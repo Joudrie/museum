@@ -4,6 +4,7 @@
 // with stairs, tall grass, palms and a dock where expeditions will leave from.
 import Phaser from 'phaser';
 import { buildTiles, T } from './tiles.js';
+import { patchSheet } from './swap.js';
 import { makeCharacter } from './art.js';
 import { load } from './storage.js';
 import { DEFAULT_CHARACTER } from './decor.js';
@@ -20,7 +21,7 @@ import { settings, hourNow } from './settings.js';
 import { animateWalker, footstep, dust } from './motion.js';
 import { Pet } from './pets.js';
 import { Fishing, catchOpen } from './fishing.js';
-import { startDig, readyIn, DIG_TILES } from './dig.js';
+import { startDig, readyIn, DIG_TILES, siteOf, siteKey, siteBonusReady, bonusEntry } from './dig.js';
 import { openJournal } from './journal.js';
 import isle1 from './maps/isle-1.json';
 import mainIsland from './maps/main-island.json';
@@ -783,8 +784,19 @@ export class IslandScene extends Phaser.Scene {
         if (!found) return;
         d.img.setVisible(false); // (kept, not destroyed: the season code re-textures every placed image)
         d.img = this.place('dig_spot@dug', d.gx, d.gy, { flat: true });
+        const site = siteOf(d, this.digs);
+        if (siteBonusReady(site)) {
+          this.toast('The whole site is worked. Something deeper turns up!');
+          this.time.delayedCall(900, () => this.bonusDig(site, d.kind));
+        }
       },
     });
+  }
+
+  // The bonus for finishing a trench or cliff face (several touching spots of one kind)
+  bonusDig(site, kind) {
+    this.paused = true;
+    startDig(siteKey(site), { collection: kind, entry: bonusEntry(kind), onClose: () => (this.paused = false) });
   }
 
   thing(name, x, y, text) {
@@ -945,6 +957,17 @@ export class IslandScene extends Phaser.Scene {
       sheets.forEach((sh) => !this.textures.exists(`bp_${sh}`) && this.load.image(`bp_${sh}`, `./${sh}`));
       const put = () => {
         if (!this.sys.isActive()) return;
+        sheets.forEach((sh) => {
+          // art dropped in public/swap/pieces is painted over its cells in the sheet
+          const key = `bp_${sh}`;
+          if (!this.textures.exists(key) || this.textures.get(key).swapped) return;
+          const src = this.textures.get(key).getSourceImage();
+          const patched = patchSheet(src, ROOM.groups.find((g) => g.sheet === sh));
+          if (patched !== src) {
+            this.textures.remove(key);
+            this.textures.addCanvas(key, patched).swapped = true;
+          }
+        });
         wanted.forEach((o) => {
           const p = byId[o.ref.slice(2)];
           if (!p || !this.textures.exists(`bp_${p.sheet}`)) return;

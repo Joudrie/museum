@@ -1,0 +1,86 @@
+{
+  "status": "draft",
+  "collection": "archaeology",
+  "slug": "canopic-jar-with-falcons-head",
+  "notes": "region: Egypt. era removed: the paintings date buckets do not fit antiquity; Chat 8 defines this collection",
+  "entry": {
+    "id": "archaeology:canopic-jar-with-falcons-head",
+    "collection": "archaeology",
+    "title": "Canopic Jar with Falcon's Head",
+    "year": "664–525 BCE",
+    "ratio": 0.6833,
+    "blurb": "The falcon-headed deity Qebehsenuef protected the contents of this canopic jar.",
+    "rarity": 1,
+    "tags": [
+      "egypt"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1921.1018/1921.1018_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. The Charles W. Harkness Endowment Fund",
+      "url": "https://clevelandart.org/art/1921.1018"
+    },
+    "value": 5
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "102366",
+    "title": "Canopic Jar with Falcon's Head",
+    "maker": "",
+    "year": "664–525 BCE",
+    "medium": "travertine",
+    "dimensions": "Diameter: 18.6 cm (7 5/16 in.); Diameter of mouth: 10.5 cm (4 1/8 in.); Overall: 45.3 cm (17 13/16 in.)",
+    "ratio": 0.6833,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1921.1018/1921.1018_web.jpg",
+    "imageWidth": 615,
+    "imageHeight": 900,
+    "pageUrl": "https://clevelandart.org/art/1921.1018",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. The Charles W. Harkness Endowment Fund",
+    "description": "In the process of mummification, the liver, lungs, stomach, and intestines were removed, separately embalmed, and stored in specialized jars known as canopic jars (after a sailor in Greek mythology, who died at the town of Canopus in the Nile Delta and was worshipped there in the form of a human-headed jar). Each organ was identified with one of four funerary deities collectively known as the Sons of Horus: the liver with Imsety (man's head), the lungs with Hapy (baboon's head), the stomach with Duamutef (jackal's head), and the intestines with Qebehsenuef (falcon's head). It was their duty to protect the deceased and restore to him his body parts in the hereafter. The falcon-headed deity Qebehsenuef protected the contents of this canopic jar. It contained the remains of the deceased's intestines, which were kept safe for the afterlife.",
+    "culture": "Egypt, Late period (715–332 BCE), Dynasty 26",
+    "classification": "Funerary Equipment",
+    "tags": [
+      "Egyptian and Ancient Near Eastern Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Canopic Jar with Falcon's Head",
+      "maker": "",
+      "year": "664–525 BCE",
+      "medium": "travertine",
+      "dimensions": "Diameter: 18.6 cm (7 5/16 in.); Diameter of mouth: 10.5 cm (4 1/8 in.); Overall: 45.3 cm (17 13/16 in.)",
+      "culture": "Egypt, Late period (715–332 BCE), Dynasty 26",
+      "classification": "Funerary Equipment",
+      "credit": "The Cleveland Museum of Art. The Charles W. Harkness Endowment Fund",
+      "description": "In the process of mummification, the liver, lungs, stomach, and intestines were removed, separately embalmed, and stored in specialized jars known as canopic jars (after a sailor in Greek mythology, who died at the town of Canopus in the Nile Delta and was worshipped there in the form of a human-headed jar). Each organ was identified with one of four funerary deities collectively known as the Sons of Horus: the liver with Imsety (man's head), the lungs with Hapy (baboon's head), the stomach with Duamutef (jackal's head), and the intestines with Qebehsenuef (falcon's head). It was their duty to protect the deceased and restore to him his body parts in the hereafter. The falcon-headed deity Qebehsenuef protected the contents of this canopic jar. It contained the remains of the deceased's intestines, which were kept safe for the afterlife.",
+      "tombstone": "Canopic Jar with Falcon's Head, 664–525 BCE. Egypt, Late period (715–332 BCE), Dynasty 26. Travertine; diameter: 18.6 cm (7 5/16 in.); diameter of mouth: 10.5 cm (4 1/8 in.); overall: 45.3 cm (17 13/16 in.). The Cleveland Museum of Art, The Charles W. Harkness Endowment Fund, 1921.1018",
+      "funFact": "",
+      "didYouKnow": "The falcon-headed deity Qebehsenuef protected the contents of this canopic jar. It contained the remains of the deceased's intestines, which were kept safe for the afterlife.",
+      "creators": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "The falcon-headed deity Qebehsenuef protected the contents of this canopic jar.",
+      "quote": "The falcon-headed deity Qebehsenuef protected the contents of this canopic jar.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "unknown collection \"archaeology\"",
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}
