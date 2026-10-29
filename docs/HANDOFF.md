@@ -1,5 +1,7 @@
 # Handoff: where Curation stands (read this first)
 
+> **Many chats work in parallel: read `docs/TODO.md` (the master board), claim a stream there, and keep to its files.**
+
 For a Claude session that only knows the repo. Read `CLAUDE.md` (the rules) and
 `docs/VISION.md` (the north star) first, then this file.
 
