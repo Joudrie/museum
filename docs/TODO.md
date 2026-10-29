@@ -194,7 +194,7 @@ Owns: new `src/people/`, the character section of `src/art.js` (looks, `makeChar
 - [x] (this PR) Tier 0: parts (builds, hats, hair, facial hair, glasses, outfits, accessories, held props, poses), all recoloured through the palette letters.
 - [x] (this PR) Tier 1: janitors and grounds, construction and trades, fishermen, sailors and shore (sections A, B, D of `docs/PEOPLE-SPRITES.md`): 54 classes, 137 variants.
 - [x] (this PR) Classes placeable in the builder's People lists and living on islands (work poses, chat with their job title); a People tab in `art.html`. Not yet: spawning them in museum rooms or on the expedition maps.
-- [ ] Tier 2: dig, field and expedition; museum professions (sections E, G).
+- [x] (this PR) Tier 2: dig, field and expedition; museum professions (sections E, G): 44 more classes, 98 in all, 227 variants.
 - [ ] Tier 3: visitors and townspeople; food and market (sections J, H).
 - [ ] Tier 4: arts and performance; science and medicine; artisans (sections I, F, C).
 - [ ] Tier 5: history; fantasy and seasonal; crews (sections K, L, M).

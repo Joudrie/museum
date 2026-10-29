@@ -13,7 +13,7 @@ export const MORE_HATS = {
   bucket: 'Bucket hat', souwester: 'Sou’wester', captain: 'Captain’s cap', sailor: 'Sailor cap', bandana: 'Bandana', flatcap: 'Flat cap',
   fedora: 'Fedora', pith: 'Pith helmet', pompom: 'Pom-pom hat', visor: 'Visor', fur: 'Fur hat', hood: 'Hood up', miner: 'Miner’s helmet',
   welder: 'Welding mask', chef: 'Chef’s hat', hairnet: 'Hairnet', pirate: 'Pirate hat', cowboy: 'Cowboy hat', headband: 'Headband', headphones: 'Headphones',
-  swimcap: 'Swim cap',
+  swimcap: 'Swim cap', campaign: 'Ranger hat', wrap: 'Head wrap',
 };
 export const MORE_HAIR = {
   pompadour: 'Pompadour', slick: 'Slicked back', spiky: 'Spiky', horseshoe: 'Balding', mullet: 'Mullet', bowl: 'Bowl cut', pixie: 'Pixie',
@@ -27,6 +27,7 @@ export const MORE_GLASSES = { square: 'Square glasses', goggles: 'Safety goggles
 export const MORE_OUTFITS = {
   coveralls: 'Coveralls', overalls: 'Overalls', hivis: 'Hi-vis vest', oilskins: 'Oilskins', waders: 'Waders', wetsuit: 'Wetsuit', sailor: 'Sailor top',
   captain: 'Captain’s coat', striped: 'Striped shirt', flannel: 'Flannel shirt', fieldvest: 'Field vest', trunks: 'Swim trunks', swimsuit: 'Swimsuit',
+  labcoat: 'Lab coat', blazer: 'Blazer', cardigan: 'Cardigan', turtleneck: 'Turtleneck', parka: 'Parka', uniform: 'Uniform shirt', robe: 'Robe', mummy: 'Mummy wrap',
 };
 export const MORE_ACCESSORIES = {
   toolbelt: 'Tool belt', keyring: 'Key ring', lanyard: 'Lanyard', backpack: 'Backpack', whistle: 'Whistle', lifejacket: 'Life jacket', radio: 'Radio',
@@ -180,7 +181,7 @@ export function moreOutfit(out, view, look) {
   const body = (r, fn) => out[r]?.forEach((c, i) => c !== 'o' && !isSkin(c) && c !== '.' && fn(c, i));
   const arms = (rows, ch) => !side && rows.forEach((r) => [1, len(r) - 2].forEach((i) => out[r][i] !== 's' && set(r, i, ch)));
   const mid = (r) => Math.floor(len(r) / 2);
-  const tails = () => [21, 22].forEach((r) => [1, 2, len(r) - 3, len(r) - 2].forEach((i, k) => set(r, i, k === 0 ? 'C' : k === 3 ? 'd' : 'c')));
+  const tails = (rows = [21, 22]) => rows.forEach((r) => [1, 2, len(r) - 3, len(r) - 2].forEach((i, k) => set(r, i, k === 0 ? 'C' : k === 3 ? 'd' : 'c')));
   if (MORE_OUTFITS[style]) {
     if (style === 'coveralls') {
       swap(torso, ['w', 'g'], 'c');
@@ -311,6 +312,58 @@ export function moreOutfit(out, view, look) {
       swap([22, 23, 24], ['p'], 's');
       swap([25], ['b'], 's');
     }
+  }
+  if (style === 'labcoat') {
+    // a long white coat over the shirt and tie, with pockets
+    if (front) [3, 4].forEach((i) => {
+      set(18, i, 'd');
+      set(18, len(18) - 1 - i, 'd');
+    });
+    if (side) set(18, len(18) - 3, 'd');
+    tails([21, 22, 23]);
+  }
+  if (style === 'blazer') swap([12, 13, 14, 15, 16, 17], ['g'], 'w');
+  if (style === 'cardigan') {
+    swap(torso, ['w', 'g'], 'c');
+    if (front) {
+      torso.slice(0, 8).forEach((r) => [mid(r) - 1, mid(r)].forEach((i) => set(r, i, 'w')));
+      [13, 15, 17].forEach((r) => set(r, mid(r) - 2, 'Y'));
+    } else if (side) torso.slice(0, 8).forEach((r) => set(r, len(r) - 2, 'w'));
+  }
+  if (style === 'turtleneck') {
+    swap(torso, ['w', 'g'], 'c');
+    swap([11], ['w'], 'c');
+  }
+  if (style === 'parka') {
+    swap(torso, ['w', 'g'], 'c');
+    swap([11], ['w', 'c'], 'r');
+    [14, 17].forEach((r) => body(r, (c, i) => (side || (i > 1 && i < len(r) - 2)) && (out[r][i] = 'd')));
+    tails();
+  }
+  if (style === 'uniform') {
+    swap(torso, ['w', 'g'], 'c');
+    swap([11], ['w'], 'c');
+    if (front) {
+      [[14, [3, 4]], [14, [len(14) - 5, len(14) - 4]]].forEach(([r, is]) => is.forEach((i) => set(r, i, 'd')));
+      set(15, 3, 'Y');
+      set(12, mid(12) - 2, 'd');
+      set(12, mid(12) + 1, 'd');
+    }
+    if (side) set(14, len(14) - 4, 'd');
+    out[20].forEach((c, i) => c !== 'o' && !isSkin(c) && (out[20][i] = 'N'));
+    if (front) set(20, mid(20), 'Y');
+  }
+  if (style === 'robe') {
+    swap(torso, ['w', 'g'], 'c');
+    swap([11], ['w'], 'c');
+    [21, 22, 23, 24].forEach((r) => {
+      for (let i = 1; i < len(r) - 1; i++) out[r][i] = r === 24 ? 'd' : 'c';
+    });
+    body(18, (c, i) => (side || (i > 1 && i < len(18) - 2)) && (out[18][i] = 'r'));
+  }
+  if (style === 'mummy') {
+    // wrapped from head to toe; only the eyes show
+    out.forEach((row, r) => row.forEach((c, i) => c !== 'o' && c !== 'e' && c !== '.' && (row[i] = (r + Math.floor(i / 3)) % 3 === 0 ? 'a' : 'r')));
   }
   // legs and feet
   const L = look.legs;
@@ -772,6 +825,14 @@ const HAT_ROWS = {
   headband: {
     down: { rows: { 3: 'oTTTTTTTTTTo' } },
   },
+  campaign: {
+    down: { pre: ['oooo', 'oTTTTo'], rows: { 0: 'oTTTTTTo', 1: 'oUUUUUUUUo', 2: 'oTTTTTTTTTTTTTTTTo' } },
+  },
+  wrap: {
+    down: { pre: ['oooooo'], rows: { 0: 'oTTTTTTo', 1: 'oTTTTTTTTo', 2: 'oTUUUUUUUUTo', 3: 'oTTTTTTTTTTo' }, flaps: [[4, 5, 6, 7, 8, 9], 'T'] },
+    up: { pre: ['oooooo'], rows: { 0: 'oTTTTTTo', 1: 'oTTTTTTTTo', 2: 'oTUUUUUUUUTo', 3: 'oTTTTTTTTTTo' }, cover: [[4, 5, 6, 7, 8, 9, 10], ['h', 'H', 'S'], 'T'], flaps: [[4, 5, 6, 7, 8, 9], 'T'] },
+    side: { pre: ['oooooo'], rows: { 0: 'oTTTTTTo', 1: 'oTTTTTTTTo', 2: 'oTUUUUUUUUTo', 3: 'oTTTTTTTTTTo' }, cover: [[4, 5, 6, 7, 8, 9], ['h', 'H'], 'T'], paint: { 5: [8, 'oT'], 6: [7, 'oTT'], 7: [7, 'oTT'], 8: [7, 'oTT'], 9: [8, 'oo'] } },
+  },
   swimcap: {
     down: { rows: { 0: 'oooooooo', 1: 'oTTTTTTTTo', 2: 'oTTUTTTTTTTo', 3: 'oTTTTTTTTTTo' }, paint: { 4: [10, 'oTTTTTTTTTTo'] }, cover: [[5, 6], ['h', 'H'], 'T'] },
     up: { rows: { 0: 'oooooooo', 1: 'oTTTTTTTTo', 2: 'oTTUTTTTTTTo', 3: 'oTTTTTTTTTTo' }, cover: [[4, 5, 6, 7, 8, 9], ['h', 'H'], 'T'] },
@@ -898,6 +959,9 @@ export const CARRY = {
   fish: 'A fish', lifebuoy: 'Life ring', rope: 'Coil of rope', crate: 'Crate', box: 'Box', parcel: 'Parcel', spool: 'Cable spool', plunger: 'Plunger',
   pane: 'Pane of glass', tiles: 'Tiles', ladder: 'Ladder', polesaw: 'Pole saw', blueprint: 'Blueprint', sword: 'Cutlass', pan: 'Frying pan', sack: 'Sack',
   bottle: 'Message in a bottle', detector: 'Metal detector', jar: 'Sample jar', map: 'Map', bricks: 'Bricks', paint: 'Paint can', wateringcan: 'Watering can',
+  trowel: 'Trowel', finebrush: 'Fine brush', stick: 'Walking stick', iceaxe: 'Ice axe', pickaxe: 'Pickaxe', machete: 'Machete', flask: 'Water skin', torch: 'Torch',
+  tablet: 'Tablet', frame: 'Picture frame', scroll: 'Scroll', books: 'Books', kit: 'Workshop kit', umbrella: 'Umbrella', flashlight: 'Flashlight', giftbag: 'Gift bag',
+  hanger: 'Coat on a hanger', mic: 'Microphone', cane: 'Cane', notebook: 'Notebook', cheque: 'Big cheque',
 };
 
 // a pole down the outside of the hand, with a head at the bottom (mop, broom, shovel...)
@@ -1107,6 +1171,71 @@ const CARRY_DRAW = {
     if (m.view === 'side') d.pic(m.hx + 2, m.hy - 4, ['r', 'P', 'r', 'r']);
     else d.pic(12 - m.wide, m.hy - 4, ['rrPrrr', 'rxrrPr', 'rrrPrr', 'rPrrrx']);
   },
+  trowel: (d, m) => hang(d, m, ['n', 'n', 'AA', 'AA', 'A ']),
+  finebrush: (d, m) => hang(d, m, ['n', 'n', 'n', 'k']),
+  machete: (d, m) => hang(d, m, ['n', 'n', 'a', 'a', 'a', ' a']),
+  flask: (d, m) => hang(d, m, [' k ', 'nnn', 'nnn', 'nnn', ' n ']),
+  kit: (d, m) => hang(d, m, ['  kk  ', 'PPPPPP', 'PxPBPP', 'PPPPPP']),
+  flashlight: (d, m) => hang(d, m, ['kk', 'kk', 'aa', 'jj']),
+  giftbag: (d, m) => hang(d, m, [' k k ', 'xxxxx', 'xYxxx', 'xxxxx', 'xxxxx']),
+  hanger: (d, m) => hang(d, m, [' k ', 'kAk', 'BBB', 'BBB', 'BBB', 'B B']),
+  mic: (d, m) => hang(d, m, ['AA', 'Ak', 'k ', 'k ']),
+  stick: (d, m) => pole(d, m, ['N'], { stick: 'n', up: 7 }),
+  cane: (d, m) => pole(d, m, ['N'], { stick: 'N', up: 2, grip: ['NN'] }),
+  iceaxe: (d, m) => {
+    const { hx, hy, view } = m;
+    const x = view === 'down' ? hx - 2 : hx + 2;
+    d.line(x, hy + 4, x, hy - 6, 'A');
+    d.pic(x - 2, hy - 8, ['AAAAa', '  A  ']);
+    hand(d, m, x);
+  },
+  pickaxe: (d, m) => {
+    const { hx, hy, view } = m;
+    const x = view === 'down' ? hx - 2 : hx + 2;
+    d.line(x, hy + 3, x, hy - 8, 'n');
+    d.pic(x - 2, hy - 10, [' AAA ', 'A   A']);
+    hand(d, m, x);
+  },
+  torch: (d, m) => {
+    const { hx, hy, view } = m;
+    const x = view === 'down' ? hx - 2 : hx + 2;
+    d.line(x, hy + 2, x, hy - 5, 'n');
+    d.pic(x - 1, hy - 9, [' j ', 'jYj', 'VYV', ' V '], null);
+    hand(d, m, x);
+  },
+  umbrella: (d, m) => {
+    const { hx, hy, view, top } = m;
+    const x = view === 'down' ? hx - 2 : hx + 2;
+    d.line(x, hy + 2, x, top - 2, 'k');
+    d.pic(x - 4, top - 5, ['   PPP   ', ' PPPPPPP ', 'PBPPBPPBP']);
+    hand(d, m, x);
+  },
+  frame: (d, m) => beside(d, m, ['YYYYYY', 'Y    Y', 'Y    Y', 'Y    Y', 'Y    Y', 'Y    Y', 'Y    Y', 'YYYYYY']),
+  tablet: (d, m) => {
+    if (m.view === 'up') return;
+    if (m.view === 'side') d.pic(m.hx + 2, m.hy - 4, ['k', 'v', 'v', 'k']);
+    else d.pic(12 - m.wide, m.hy - 4, ['kkkk', 'kvvk', 'kvvk', 'kkkk']);
+  },
+  scroll: (d, m) => {
+    if (m.view === 'up') return;
+    if (m.view === 'side') d.pic(m.hx + 2, m.hy - 3, ['N', 'r', 'r', 'N']);
+    else d.pic(12 - m.wide, m.hy - 3, ['NrrrrrN', 'NrPrrrN']);
+  },
+  books: (d, m) => {
+    if (m.view === 'up') return;
+    if (m.view === 'side') d.pic(m.hx + 2, m.hy - 4, ['xx', 'BB', 'GG', 'PP']);
+    else d.pic(12 - m.wide, m.hy - 4, ['xxxxxx', 'BBBBBB', 'GGGGGG', 'PPPPPP']);
+  },
+  notebook: (d, m) => {
+    if (m.view === 'up') return;
+    if (m.view === 'side') d.pic(m.hx + 2, m.hy - 3, ['r', 'k', 'r']);
+    else d.pic(m.hx - 3, m.hy - 2, ['rrrr', 'rkkr', 'rrrr']);
+  },
+  cheque: (d, m) => {
+    if (m.view === 'up') return;
+    if (m.view === 'side') d.pic(m.hx + 2, m.hy - 7, Array(6).fill('Q'));
+    else d.pic(8 - m.wide, m.hy - 6, ['QQQQQQQQQQQQQQQQ', 'QkkQQQQQQQQxxxxQ', 'QQQQQQQQQQQQQQQQ', 'QkkkkkkkQQQQQQQQ', 'QQQQQQQQQQQkkkQQ', 'QQQQQQQQQQQQQQQQ']);
+  },
   blueprint: (d, m) => {
     const { hx, hy, view } = m;
     if (view === 'side') d.pic(hx - 1, hy - 1, ['BBBBBB']);
@@ -1125,7 +1254,7 @@ export function drawCarry(rows, view, look) {
 export const GROUND = {
   bucket: 'Mop bucket', wetsign: 'Wet floor sign', cone: 'Traffic cone', toolbox: 'Toolbox', crate: 'Crate', cooler: 'Cooler', tacklebox: 'Tackle box',
   trap: 'Lobster trap', fishbucket: 'Bucket of fish', bricks: 'Stack of bricks', paint: 'Paint cans', cart: 'Cleaning cart', barrow: 'Wheelbarrow',
-  bin: 'Wheelie bin', pot: 'Flower pot', barrel: 'Barrel', buoy: 'Buoy', fishcrate: 'Crate of fish', plants: 'Seedlings', block: 'Stone block',
+  bin: 'Wheelie bin', pot: 'Flower pot', barrel: 'Barrel', buoy: 'Buoy', fishcrate: 'Crate of fish', plants: 'Seedlings', block: 'Stone block', bones: 'Fossil bones', campfire: 'Campfire', tent: 'Tent', sled: 'Sled', dog: 'A dog', tripod: 'Camera on a tripod',
 };
 const GROUND_PICS = {
   bucket: [' kkkk ', 'AAAAAA', 'PPPPPP', 'PvvvvP', 'PPPPPP', ' PPPP '],
@@ -1148,6 +1277,12 @@ const GROUND_PICS = {
   fishcrate: ['nnnnnnn', 'nfffffn', 'nfBfBfn', 'nnnnnnn'],
   plants: ['G L G L', 'GLGLGLG', 'NNNNNNN', 'NnNnNnN'],
   block: ['aaaaaa', 'aAaaaa', 'aaaaAa', 'aaaaaa', 'AAAAAA'],
+  bones: ['r   r ', 'rrrrr ', ' r  rr', 'rrrrrr', 'r  r  '],
+  campfire: ['  j  ', ' jVj ', 'jVxVj', 'VxYxV', 'NnNnN'],
+  tent: ['   B    ', '  BBB   ', ' BBkBB  ', ' BBkkBB ', 'BBBkkBBB', 'BBkkkkBB'],
+  sled: ['N      ', 'NnnnnnN', 'NnnnnnN', ' N   N ', 'AAAAAAA'],
+  dog: ['N    N', 'NnnnnN', 'nknnkn', 'nnkknn', ' nnnn ', 'nnnnnn', 'nn  nn'],
+  tripod: ['kkkk', 'kQAk', 'kkkk', ' NN ', ' NN ', 'N  N', 'N  N', 'N  N'],
 };
 export function drawGround(rows, view, look) {
   const pic = GROUND_PICS[look.ground];
@@ -1187,9 +1322,11 @@ export const POSES = {
   weld: 'Welding', flag: 'Flagging traffic', roll: 'Painting a wall', plaster: 'Plastering', point: 'Pointing', survey: 'Surveying', brick: 'Laying bricks',
   chisel: 'Carving stone', fish: 'Fishing', castnet: 'Casting a net', net: 'Skimming with a net', telescope: 'Telescope', wave: 'Waving', swim: 'Swimming',
   lounge: 'Sunbathing', detect: 'Metal detecting', snow: 'Shovelling snow', read: 'Reading a map',
+  brush: 'Brushing a find', pick: 'Pickaxe', sift: 'Sieving', pan: 'Panning for gold', binoculars: 'Binoculars', chop: 'Clearing the path', lurch: 'Lurching',
+  inspect: 'Inspecting', shush: 'Shushing', present: 'Leading a tour', photo: 'Taking a photo', gavel: 'Gavel', type: 'Typing',
 };
-export const POSE_VIEW = { dust: 'down', wipe: 'up', polish: 'down', jackhammer: 'down', flag: 'down', roll: 'up', plaster: 'up', wave: 'down', swim: 'down', lounge: 'down', read: 'down' };
-export const POSE_RATE = { flag: 0.5, survey: 0.7, telescope: 0.6, lounge: 0.3, read: 0.4, point: 1.2, fish: 0.9, wave: 2.5, jackhammer: 10, polish: 5, weld: 7, swim: 2 };
+export const POSE_VIEW = { dust: 'down', wipe: 'up', polish: 'down', jackhammer: 'down', flag: 'down', roll: 'up', plaster: 'up', wave: 'down', swim: 'down', lounge: 'down', read: 'down', sift: 'down', shush: 'down', present: 'down', type: 'down' };
+export const POSE_RATE = { flag: 0.5, survey: 0.7, telescope: 0.6, lounge: 0.3, read: 0.4, point: 1.2, fish: 0.9, wave: 2.5, jackhammer: 10, polish: 5, weld: 7, swim: 2, binoculars: 0.5, inspect: 0.6, shush: 0.5, present: 1.5, photo: 0.4, type: 3, sift: 5, lurch: 1.5, gavel: 1.5 };
 
 // the hand at the side is painted over with the clothes next to it
 function tuck(g, m) {
@@ -1212,9 +1349,9 @@ function arm(d, from, to, sleeve = 'c') {
   d.px(to[0] + 1, to[1], 's');
 }
 // a sleeve and hand that leave the body: outlined
-function armOut(d, cells, handAt) {
-  cells.forEach(([x, y]) => d.px(x, y, 'c'));
-  d.pic(handAt[0], handAt[1], ['ss', 'ss']);
+function armOut(d, cells, handAt, sleeve = 'c', skin = 's') {
+  cells.forEach(([x, y]) => d.px(x, y, sleeve));
+  d.pic(handAt[0], handAt[1], [skin + skin, skin + skin]);
   cells.forEach(([x, y]) => [[1, 0], [-1, 0], [0, -1], [0, 1]].forEach(([dx, dy]) => d.get(x + dx, y + dy) === '.' && d.px(x + dx, y + dy, 'o')));
 }
 
@@ -1430,6 +1567,113 @@ const POSE_DRAW = {
     const { hy } = m;
     d.pic(12 - m.wide, hy - 4, f ? ['rrrPrrrr', 'rxrrrPrr', 'rrPrrrrr', 'rrrrrxrr'] : ['rrPrrrrr', 'rrrrxrPr', 'rPrrrrrr', 'rrrxrrrr']);
   },
+  brush: (d, m, f, g) => {
+    // kneeling: the legs fold under and the body drops two rows
+    const k = kneel(g, m);
+    const { top } = k;
+    const gy = m.gy;
+    arm(d, [16, top + 14], [19, gy - 4]);
+    d.pic(21, gy - 4, ['nn', ' P']);
+    d.pic(21 + (f ? 1 : 0), gy - 1, ['rrrrr', 'r r r']);
+    if (f) d.px(27, gy - 3, 'j');
+  },
+  pick: (d, m, f, g) => {
+    tuck(g, m);
+    const { top, gy } = m;
+    d.pic(22, gy - 4, ['aaaaa', 'aAaaa', 'aaaAa', 'AAAAA']);
+    if (!f) {
+      armOut(d, [[17, top + 12], [18, top + 11]], [19, top + 9]);
+      d.line(20, top + 9, 21, top + 4, 'n');
+      d.pic(19, top + 2, [' AAA ', 'A   A']);
+    } else {
+      arm(d, [16, top + 14], [19, top + 16]);
+      d.line(21, top + 16, 23, gy - 6, 'n');
+      d.pic(22, gy - 6, ['AA', ' A']);
+      d.px(26, gy - 6, 'j');
+      d.px(25, gy - 7, 'Y');
+    }
+  },
+  sift: (d, m, f) => {
+    const { hy } = m;
+    const x = 9 - m.wide + (f ? 1 : 0);
+    d.pic(x, hy - 1, ['n'.repeat(14 + m.wide * 2), 'na'.repeat(7 + m.wide)]);
+    if (f) [[12, hy + 2], [16, hy + 3], [19, hy + 2], [14, hy + 5]].forEach(([px, py]) => d.px(px, py, 'N'));
+  },
+  pan: (d, m, f, g) => {
+    tuck(g, m);
+    const { top } = m;
+    arm(d, [16, top + 15], [19, top + 18]);
+    d.pic(20, top + 18, f ? ['AAAAAA', 'AvvYNA', ' AAAA '] : ['AAAAAA', 'ANNvvA', ' AAAA ']);
+  },
+  binoculars: (d, m, f, g) => {
+    tuck(g, m);
+    const { top } = m;
+    const y = top + 5 + (f ? 1 : 0);
+    d.pic(19, y, ['kkk', 'kAk', 'kkk']);
+    arm(d, [16, top + 13], [19, y + 3]);
+  },
+  chop: (d, m, f, g) => {
+    tuck(g, m);
+    const { top, gy } = m;
+    if (!f) {
+      armOut(d, [[17, top + 12], [18, top + 11]], [19, top + 9]);
+      d.pic(20, top + 4, [' a', ' a', 'a ', 'n ', 'n ']);
+    } else {
+      arm(d, [16, top + 14], [20, top + 16]);
+      d.pic(22, top + 16, ['aaa', '  a']);
+      [[25, gy - 9], [27, gy - 6], [24, gy - 4]].forEach(([x, y]) => d.px(x, y, 'G'));
+    }
+    d.pic(26, gy - 8, [' GG', 'GLG', 'GGL', ' G ', ' G ', ' N ', ' N ', ' N ']);
+  },
+  lurch: (d, m, f, g) => {
+    tuck(g, m);
+    const { top } = m;
+    const y = top + 13 - (f ? 1 : 0);
+    armOut(d, [[18, y], [19, y], [20, y], [21, y]], [22, y - 1], 'r', 'r');
+  },
+  inspect: (d, m, f, g) => {
+    tuck(g, m);
+    const { top } = m;
+    arm(d, [16, top + 14], [19, top + 12]);
+    d.pic(21, top + 9, f ? [' x ', 'xYx', 'xxx', ' x '] : [' x ', 'xxx', 'xYx', ' x ']);
+  },
+  shush: (d, m, f) => {
+    const { top } = m;
+    d.line(11, top + 14, 14, top + 11, 'c');
+    d.pic(15, top + 9 + (f ? 1 : 0), ['S', 's', 's'], null);
+  },
+  present: (d, m, f, g) => {
+    tuck(g, { ...m, hx: 21 + m.wide, view: 'down' });
+    const { top } = m;
+    const w = m.wide;
+    armOut(d, [[22 + w, top + 12], [22 + w, top + 11], [23 + w, top + 10]], [23 + w, top + 8]);
+    d.line(24 + w, top + 9, 24 + w, top - 4, 'k');
+    d.pic(25 + w, top - 4, f ? ['PPP ', 'PPPP', 'PPP '] : ['PPPP', 'PPP ', 'PPPP']);
+  },
+  photo: (d, m, f, g) => {
+    tuck(g, m);
+    const { top } = m;
+    d.pic(19, top + 5, ['kkkk', 'kQAk', 'kkkk']);
+    arm(d, [16, top + 13], [19, top + 8]);
+    if (f) d.pic(24, top + 4, ['Q Q', ' Q ', 'Q Q'], null);
+  },
+  gavel: (d, m, f, g) => {
+    tuck(g, m);
+    const { top, gy } = m;
+    d.pic(21, gy - 10, ['nnnnnn', 'NNNNNN', ' nnnn ', ' nnnn ', ' nnnn ', ' nnnn ', ' nnnn ', ' nnnn ', ' nnnn ', 'NNNNNN']);
+    if (!f) {
+      armOut(d, [[17, top + 12], [18, top + 11]], [19, top + 9]);
+      d.pic(20, top + 6, ['NN', 'n ']);
+    } else {
+      arm(d, [16, top + 14], [20, gy - 12]);
+      d.pic(22, gy - 12, ['NN']);
+      d.px(25, gy - 12, 'j');
+    }
+  },
+  type: (d, m, f) => {
+    const { hy } = m;
+    d.pic(10 - m.wide, hy - 3, ['kkkkkkkkkkkk'.slice(0, 12 + m.wide * 2), ('k' + (f ? 'vBvvBvvBvv' : 'vvBvvvBvvv') + 'k').slice(0, 12 + m.wide * 2), 'aaaaaaaaaaaa'.slice(0, 12 + m.wide * 2)]);
+  },
   detect: (d, m, f, g) => {
     tuck(g, m);
     const { top, gy } = m;
@@ -1440,6 +1684,17 @@ const POSE_DRAW = {
     hands(d, [[17, top + 16]]);
   },
 };
+// Kneeling (side view): drops the body two rows and folds the back leg along the ground.
+// Returns where things now are.
+function kneel(g, m) {
+  tuck(g, m);
+  const at = m.Y(22);
+  g.splice(at, 2);
+  g.unshift(Array(T).fill('.'), Array(T).fill('.'));
+  const d = draw(g);
+  d.pic(5, m.gy - 1, ['bbpppp']);
+  return { ...m, top: m.top + 2, hy: m.hy + 2 };
+}
 function hands(d, list) {
   list.forEach(([x, y]) => {
     d.px(x, y, 's');
