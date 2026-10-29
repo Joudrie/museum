@@ -2273,8 +2273,10 @@ body.outside #hud {
 /* ---------- Collections ---------- */
 .journal-tabs {
   gap: 6px;
+  flex-wrap: wrap;
 }
 .journal-tabs button {
+  flex: 1 1 22%;
   min-width: 0;
   padding-inline: 2px;
   font-size: 13px;

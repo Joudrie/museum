@@ -99,14 +99,14 @@ async function dataChecks() {
   const imp = await import(path.join(__dirname, '..', 'tools', 'import_collection.mjs'));
   const rows = imp.parseCsv('slug,title,blurb,license,credit,image_src\nmoth,Moth,"Wings, ""dusty"" ones",CC0,Someone,/m.png\nbeetle,Beetle,,,,/b.png\n');
   check(rows.length === 2 && rows[0].blurb === 'Wings, "dusty" ones', 'importer reads quoted CSV', 'csv parse wrong: ' + JSON.stringify(rows));
-  const def = { collection: 'insect', name: 'Insects', icon: '🐛', noun: 'insects' };
-  const bad2 = imp.buildPack(rows, { ...def, collection: 'insect' }).problems.join(' ');
+  const def = { collection: 'bug', name: 'Bugs', icon: '🐛', noun: 'bugs' };
+  const bad2 = imp.buildPack(rows, { ...def, collection: 'bug' }).problems.join(' ');
   check(/license/.test(bad2) && /credit/.test(bad2), 'importer stops on a missing license and credit', 'importer let a row through: ' + bad2);
   const built = imp.buildPack(rows.slice(0, 1).map((r) => ({ ...r, image_kind: 'sprite' })), def);
-  check(!built.problems.length && built.pack.entries[0].id === 'insect:moth', 'importer builds a valid pack from good rows', 'importer pack invalid: ' + built.problems.join(' | '));
+  check(!built.problems.length && built.pack.entries[0].id === 'bug:moth', 'importer builds a valid pack from good rows', 'importer pack invalid: ' + built.problems.join(' | '));
   const before = reg.list().length;
   reg.register(built.pack);
-  check(reg.list().length === before + 1 && reg.get('insect:moth'), 'a pack from the importer registers with no code changes', 'imported pack did not register');
+  check(reg.list().length === before + 1 && reg.get('bug:moth'), 'a pack from the importer registers with no code changes', 'imported pack did not register');
 }
 
 (async () => {
@@ -180,7 +180,7 @@ async function dataChecks() {
   await boot({});
   await openJournal();
   const tabs = await S(() => [...document.querySelectorAll('.journal-tabs button')].map((b) => b.textContent));
-  check(tabs.join() === 'Goals,Paintings,Visitors,Fish,Minerals,Fossils', `tabs: ${tabs.join(', ')}`, `unexpected tabs: ${tabs.join(', ')}`);
+  check(tabs.join() === 'Goals,Paintings,Visitors,Fish,Minerals,Fossils,Treasures,Nature,Makers', `tabs: ${tabs.join(', ')}`, `unexpected tabs: ${tabs.join(', ')}`);
   const tabFits = await S(() => [...document.querySelectorAll('.journal-tabs button')].every((b) => b.scrollWidth <= b.clientWidth + 1));
   check(tabFits, 'tab labels fit on one line', 'a tab label is clipped');
   await shot('journal-goals');
@@ -227,7 +227,7 @@ async function dataChecks() {
   await p.click('text=Collect one of everything');
   await wait(300);
   const msg = await S(() => [...document.querySelectorAll('#settings button')].find((b) => /^Added/.test(b.textContent))?.textContent);
-  check(/Added 37/.test(msg || ''), `testing button: ${msg}`, `testing button said: ${msg}`); // 18 fish + 3 finds + 8 minerals + 8 fossils
+  check(/Added 77/.test(msg || ''), `testing button: ${msg}`, `testing button said: ${msg}`); // 18 fish + 3 finds + 8 minerals + 8 fossils + 40 treasures
   await p.click('.settings-close');
   await wait(300);
   await openJournal('minerals');
