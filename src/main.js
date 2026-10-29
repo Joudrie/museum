@@ -55,3 +55,5 @@ window.addEventListener('resize', () => {
   game.scale.refresh();
 });
 import './ui/hud.js'; // the labelled HUD and the Menu hub (after daily.js, whose button it adopts)
+import './ui/chrome.js'; // the one close button on every older menu
+import './ui/prefs.js'; // text size and reduced motion from Settings

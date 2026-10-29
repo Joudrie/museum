@@ -43,7 +43,7 @@
   width: calc(50% - 5px);
   display: grid;
   gap: 4px;
-  font-size: 12px;
+  font-size: 13px;
 }
 .visit-img {
   height: 110px;
