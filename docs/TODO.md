@@ -90,7 +90,7 @@ Owns: `src/dig.js`, `src/puzzles*.js`, `src/collections/data/{minerals,fossils}.
 - [ ] Finds arrive dirty where Chat 4 expects them (`dirty: true` on a stack).
 
 ## CHAT 7: Expeditions, leads and expedition islands
-Owns: new `src/expedition*.js`, `src/leads.js`, `src/maps/` (new islands). Claim: `open`
+Owns: new `src/expedition*.js`, `src/leads.js`, `src/maps/` (new islands). Claim: `claimed: 2026-10-29`
 - [ ] **Leads:** a letter, a torn map, a pirate's note, a rumour from a famous visitor sends you to an island.
 - [ ] Boat flow to expedition islands (the boat menu lists every island); a short boat scene.
 - [ ] Levels as playable island maps: pirate island (jungle maze, traps, captain's map, chest), shipwreck dive (water-damaged crates), desert tomb (sliding stones), dinosaur badlands (fossil cliff), lost temple (plates, hidden rooms), heist hideout (stealth), frozen north (ice cave, mammoth).
