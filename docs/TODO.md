@@ -50,7 +50,7 @@ Owns: `src/builder/`, `builder.html`, `public/builder/`, `tools/build_palette.py
 
 ## CHAT 3: Quality, performance and polish
 Owns: `tests/`, `.github/`, `vite.config.js`, `src/settings*.js`, `src/ui.js`. Claim: `claimed: 2026-10-29`
-- [ ] **Stabilise the flaky tests** (playtest, smoke "cottage door"). Find the real race; don't just retry.
+- [x] **Stabilise the flaky tests** (playtest, smoke "cottage door"). Real causes: walking took one big step per slow frame and jumped over the strip in front of the door (now sub-steps of 3 px), and the ambient life probed `isPond` past the island edge and crashed (now bounds-checked). (#170)
 - [ ] Phone performance: measure FPS on huge islands, many NPCs and lighting (today's numbers are the busiest room only). Set budgets and fix.
 - [ ] Tests for dig, fossils, turn families and the content pipeline; CI that runs content, collections and gaps on every PR.
 - [ ] Save safety: versioned saves and corrupt-save recovery for every store (`curation.digs`, codex, builder).

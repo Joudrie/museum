@@ -193,6 +193,9 @@ A separate personal project (the user's hometown, for friends) that only shares 
 game: the builder cap is 700 (New map boxes stay 300), big builder maps save their tiles packed (`src/mapformat.js`), and the
 island scene streams ground chunks around the player.
 
+### Why the tests used to be flaky (fixed, #170)
+- Island walking moved one step of `SPEED*dt` per frame (dt capped at 50 ms). On a slow or loaded machine (21 fps in CI) the step is ~8 px and hopped over the 6 px strip in front of a door, so the "cottage door" check failed; steps are now at most 3 px, so slow phones behave like fast ones.
+- `Ambient` probes `isPond` up to 40 px away, past the island edge, and `key()` read a missing corner row and threw; `isPond` is now bounds-checked. If a smoke run fails, first check that no other test is running at the same time (CPU load changes frame rate).
 ### Economy and staff (Chat 12)
 - **Every economy number lives in `src/economy.js`** (office level costs, janitor/guide prices, upgrades, offline cap, visitor formula, camera price, robbery odds). Change a default there only.
 - Break-room staff board has three upgrades (`UPGRADES`): Better mops (slower mess), Guide training (more % per guide), Carpenter's toolbox (cheaper rooms). Levels saved in `curation.upgrades`; read with `upgradeValue(id)` in `src/staff.js`.
