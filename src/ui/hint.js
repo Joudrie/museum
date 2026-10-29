@@ -33,7 +33,8 @@ export function hint(id, text, anchor, { ms = 8000, tries = 8, side = 'below' } 
     tip.setAttribute('role', 'status');
     tip.textContent = text;
     document.body.appendChild(tip);
-    const w = Math.min(230, innerWidth - 24);
+    // beside a left-column button the tip must stop short of the Menu button on the right (60 px wide plus its gap)
+    const w = side === 'right' ? Math.max(150, Math.min(230, innerWidth - r.right - 12 - 76)) : Math.min(230, innerWidth - 24);
     tip.style.width = `${w}px`;
     tip.dataset.side = side;
     if (side === 'right') {

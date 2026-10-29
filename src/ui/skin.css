@@ -501,3 +501,15 @@ body #chat .chat-box {
 }
 body #chat .chat-more { color: var(--ui-gold-hi); line-height: 0; }
 body #chat .chat-more .ui-ic { width: 14px; height: 14px; }
+
+/* ---- the sheet's grip: invisible, sits over the handle bar, takes the swipe-down ---- */
+.sheet-grip {
+  position: sticky;
+  top: -22px; /* the sheet's own top padding, so it stays at the very top edge */
+  z-index: 3;
+  display: block;
+  height: 28px;
+  margin: -22px 25% -6px;
+  touch-action: none;
+  cursor: grab;
+}
