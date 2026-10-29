@@ -1,0 +1,113 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "royal-women-shooting-from-a-pavilion",
+  "notes": "region: Rajasthan, India",
+  "entry": {
+    "id": "painting:royal-women-shooting-from-a-pavilion",
+    "collection": "painting",
+    "title": "Royal women shooting from a pavilion",
+    "year": "c. 1810",
+    "era": "romantic",
+    "ratio": 0.7959,
+    "blurb": "From a hunting lodge, a princess aims her musket in their direction.",
+    "rarity": 1,
+    "tags": [
+      "northwestern india",
+      "tempera",
+      "ink"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1955.48/1955.48_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Purchase from the J. H. Wade Fund",
+      "url": "https://clevelandart.org/art/1955.48"
+    },
+    "value": 5,
+    "facts": [
+      "On the far banks of the pond is an abstract phallic sculpture (linga) on a spouted pedestal, indicating the sacred presence of the Hindu god Shiva.",
+      "In front of the linga is an image of Shiva’s mount, the bull Nandi.",
+      "The linga and bull bear traces of worship: horizontal marks in saffron, turmeric, and gold that communicate the worshiper’s religious affiliation and an inverted lotus flower."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "133057",
+    "title": "Royal women shooting from a pavilion",
+    "maker": "",
+    "year": "c. 1810",
+    "medium": "Gum tempera, ink, and gold on paper",
+    "dimensions": "Sheet: 34.3 x 27.3 cm (13 1/2 x 10 3/4 in.); Sheet with border: 38.1 x 31.1 cm (15 x 12 1/4 in.)",
+    "widthCm": 27.3,
+    "heightCm": 34.3,
+    "ratio": 0.7959,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1955.48/1955.48_web.jpg",
+    "imageWidth": 736,
+    "imageHeight": 900,
+    "pageUrl": "https://clevelandart.org/art/1955.48",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Purchase from the J. H. Wade Fund",
+    "description": "Two magnificent lions arrived at a pond, and the male turns back, sensing that something has alerted the deer. From a hunting lodge, a princess aims her musket in their direction. On the far banks of the pond is an abstract phallic sculpture (linga) on a spouted pedestal, indicating the sacred presence of the Hindu god Shiva. In front of the linga is an image of Shiva’s mount, the bull Nandi. The linga and bull bear traces of worship: horizontal marks in saffron, turmeric, and gold that communicate the worshiper’s religious affiliation and an inverted lotus flower. Devotion to Shiva is a prerequisite for the abundance of the land. On the distant horizon a European rides an elephant, while a dog runs alongside.",
+    "culture": "Northwestern India, Rajasthan, Rajput Kingdom of Kota",
+    "classification": "Painting",
+    "tags": [
+      "Indian and Southeast Asian Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Royal women shooting from a pavilion",
+      "maker": "",
+      "year": "c. 1810",
+      "medium": "Gum tempera, ink, and gold on paper",
+      "dimensions": "Sheet: 34.3 x 27.3 cm (13 1/2 x 10 3/4 in.); Sheet with border: 38.1 x 31.1 cm (15 x 12 1/4 in.)",
+      "culture": "Northwestern India, Rajasthan, Rajput Kingdom of Kota",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Purchase from the J. H. Wade Fund",
+      "description": "Two magnificent lions arrived at a pond, and the male turns back, sensing that something has alerted the deer. From a hunting lodge, a princess aims her musket in their direction. On the far banks of the pond is an abstract phallic sculpture (linga) on a spouted pedestal, indicating the sacred presence of the Hindu god Shiva. In front of the linga is an image of Shiva’s mount, the bull Nandi. The linga and bull bear traces of worship: horizontal marks in saffron, turmeric, and gold that communicate the worshiper’s religious affiliation and an inverted lotus flower. Devotion to Shiva is a prerequisite for the abundance of the land. On the distant horizon a European rides an elephant, while a dog runs alongside.",
+      "tombstone": "Royal women shooting from a pavilion, c. 1810. Northwestern India, Rajasthan, Rajput Kingdom of Kota. Gum tempera, ink, and gold on paper; sheet: 34.3 x 27.3 cm (13 1/2 x 10 3/4 in.); sheet with border: 38.1 x 31.1 cm (15 x 12 1/4 in.). The Cleveland Museum of Art, Purchase from the J. H. Wade Fund, 1955.48",
+      "funFact": "",
+      "didYouKnow": "On the distant horizon a European rides an elephant, while a dog runs alongside.",
+      "creators": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "From a hunting lodge, a princess aims her musket in their direction.",
+      "quote": "From a hunting lodge, a princess aims her musket in their direction.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "On the far banks of the pond is an abstract phallic sculpture (linga) on a spouted pedestal, indicating the sacred presence of the Hindu god Shiva.",
+      "quote": "On the far banks of the pond is an abstract phallic sculpture (linga) on a spouted pedestal, indicating the sacred presence of the Hindu god Shiva.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "In front of the linga is an image of Shiva’s mount, the bull Nandi.",
+      "quote": "In front of the linga is an image of Shiva’s mount, the bull Nandi.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The linga and bull bear traces of worship: horizontal marks in saffron, turmeric, and gold that communicate the worshiper’s religious affiliation and an inverted lotus flower.",
+      "quote": "The linga and bull bear traces of worship: horizontal marks in saffron, turmeric, and gold that communicate the worshiper’s religious affiliation and an inverted lotus flower.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

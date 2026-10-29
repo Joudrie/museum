@@ -1,0 +1,113 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "memento-mori-to-this-favour-william",
+  "notes": "region: United States, 1879",
+  "entry": {
+    "id": "painting:memento-mori-to-this-favour-william",
+    "collection": "painting",
+    "title": "Memento Mori, \"To This Favour\"",
+    "by": "William Michael Harnett",
+    "year": "1879",
+    "era": "impressionist",
+    "ratio": 1.3295,
+    "blurb": "The \"paint\" in the quote not only refers to Ophelia’s makeup, but also wittily evokes the artifice of Harnett’s picture.",
+    "rarity": 1,
+    "tags": [
+      "united states",
+      "oil"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1965.235/1965.235_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Mr. and Mrs. William H. Marlatt Fund",
+      "url": "https://clevelandart.org/art/1965.235"
+    },
+    "value": 5,
+    "facts": [
+      "A quote from William Shakespeare’s Hamlet , inscribed on the inside cover of a tattered book, reinforces the theme.",
+      "Harnett’s family left Ireland during the potato famine and emigrated to the United States.",
+      "The Latin term memento mori describes a traditional subject in art that addresses mortality."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "141641",
+    "title": "Memento Mori, \"To This Favour\"",
+    "maker": "William Michael Harnett",
+    "year": "1879",
+    "medium": "oil on canvas",
+    "dimensions": "Framed: 77.9 x 98.4 x 8.6 cm (30 11/16 x 38 3/4 x 3 3/8 in.); Unframed: 61.3 x 81.5 cm (24 1/8 x 32 1/16 in.)",
+    "widthCm": 81.5,
+    "heightCm": 61.3,
+    "ratio": 1.3295,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1965.235/1965.235_web.jpg",
+    "imageWidth": 1201,
+    "imageHeight": 893,
+    "pageUrl": "https://clevelandart.org/art/1965.235",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Mr. and Mrs. William H. Marlatt Fund",
+    "description": "The Latin term memento mori describes a traditional subject in art that addresses mortality. In Harnett’s example, the extinguished candle, spent hourglass, and skull symbolize death. A quote from William Shakespeare’s Hamlet , inscribed on the inside cover of a tattered book, reinforces the theme. It comes from the play’s famed graveyard scene where Hamlet discovers a skull and grimly ponders his beloved Ophelia, ironically unaware that she is already dead. The \"paint\" in the quote not only refers to Ophelia’s makeup, but also wittily evokes the artifice of Harnett’s picture. Harnett’s family left Ireland during the potato famine and emigrated to the United States.",
+    "culture": "United States",
+    "classification": "Painting",
+    "tags": [
+      "American Painting and Sculpture"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Memento Mori, \"To This Favour\"",
+      "maker": "William Michael Harnett",
+      "year": "1879",
+      "medium": "oil on canvas",
+      "dimensions": "Framed: 77.9 x 98.4 x 8.6 cm (30 11/16 x 38 3/4 x 3 3/8 in.); Unframed: 61.3 x 81.5 cm (24 1/8 x 32 1/16 in.)",
+      "culture": "United States",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Mr. and Mrs. William H. Marlatt Fund",
+      "description": "The Latin term memento mori describes a traditional subject in art that addresses mortality. In Harnett’s example, the extinguished candle, spent hourglass, and skull symbolize death. A quote from William Shakespeare’s Hamlet , inscribed on the inside cover of a tattered book, reinforces the theme. It comes from the play’s famed graveyard scene where Hamlet discovers a skull and grimly ponders his beloved Ophelia, ironically unaware that she is already dead. The \"paint\" in the quote not only refers to Ophelia’s makeup, but also wittily evokes the artifice of Harnett’s picture. Harnett’s family left Ireland during the potato famine and emigrated to the United States.",
+      "tombstone": "Memento Mori, \"To This Favour\", 1879. William Michael Harnett (American, 1848–1892). Oil on canvas; framed: 77.9 x 98.4 x 8.6 cm (30 11/16 x 38 3/4 x 3 3/8 in.); unframed: 61.3 x 81.5 cm (24 1/8 x 32 1/16 in.). The Cleveland Museum of Art, Mr. and Mrs. William H. Marlatt Fund, 1965.235",
+      "funFact": "",
+      "didYouKnow": "Harnett’s family left Ireland during the potato famine and emigrated to the United States.",
+      "creators": "William Michael Harnett (American, 1848–1892)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "The \"paint\" in the quote not only refers to Ophelia’s makeup, but also wittily evokes the artifice of Harnett’s picture.",
+      "quote": "The \"paint\" in the quote not only refers to Ophelia’s makeup, but also wittily evokes the artifice of Harnett’s picture.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "A quote from William Shakespeare’s Hamlet , inscribed on the inside cover of a tattered book, reinforces the theme.",
+      "quote": "A quote from William Shakespeare’s Hamlet , inscribed on the inside cover of a tattered book, reinforces the theme.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Harnett’s family left Ireland during the potato famine and emigrated to the United States.",
+      "quote": "Harnett’s family left Ireland during the potato famine and emigrated to the United States.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The Latin term memento mori describes a traditional subject in art that addresses mortality.",
+      "quote": "The Latin term memento mori describes a traditional subject in art that addresses mortality.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}
