@@ -126,7 +126,10 @@ function renderPresets() {
     savePreset(nm.value, state.index);
     render();
   };
-  box.append(nm, save);
+  const saveRow = document.createElement('div');
+  saveRow.className = 'choices';
+  saveRow.appendChild(save);
+  box.append(nm, saveRow);
   listPresets().forEach((p) => {
     const cost = presetCost(p.id, state.index);
     const r = document.createElement('div');
@@ -141,6 +144,7 @@ function renderPresets() {
       deletePreset(p.id);
       render();
     };
+    del.style.flex = '0 0 56px';
     r.append(load, del);
     box.appendChild(r);
   });
