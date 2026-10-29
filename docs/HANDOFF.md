@@ -206,6 +206,11 @@ island scene streams ground chunks around the player.
 
 - Services items (toolkit → Services, max 1 each): gift shop (gold per hung painting, doubled per rarity step), food court and discovery table (scale with visitors), lecture stage (per famous visitor met). Earnings logic: `serviceGold()` in `src/wallet.js`, numbers in `SERVICES`. Their art is placeholder, in `bakeItem` in `src/art.js`.
 
+### Phone performance: numbers and budgets (Chat 3, #173)
+- `node tests/perf.cjs` (preview server running) slows the CPU 4x (about a mid-range phone) in a 390x844 browser, walks, and prints JS ms per frame (sampled time that is not native/GPU; headless has only software GL, so FPS and GPU time are not phone numbers). Env: `SLOW`, `SECS`, `ONLY`, `STRICT=1` (exit 1 over budget).
+- **Budgets (JS ms/frame at 4x):** rooms 18, islands up to ~1,000 objects 24, huge islands (300x300 and up) 45. At 4x, 33 ms is a 30 fps frame and the GPU still needs its share.
+- **Before** (ms/frame): entrance 6, main hall 11 to 14 (night, lights high 13.7), main hall + 40 extra visitors 14, Main Island 25 to 33, 300x300 island with 60 people 61, with 300 people 84, 700x700 with 4,900 trees 64.
+- **Fixes:** off-screen placed pieces are hidden (`cullPlaced`: Phaser sorts and culls every object every frame), and idle islanders far off screen stand still. **After:** Main Island 19 to 23, 300x300 25 (60 people) and 32 (300 people), 700x700 31 to 41. Lights High / Low / Off cost about the same in rooms (6 to 7 ms; the lamp work is small next to drawing). Remaining cost is Phaser's per-frame depth sort and drawing the visible objects; the next step would be chunked ground objects, not more culling.
 ### Guest conversations (`src/chatter.js`, `src/chatter_lines.js`, `src/dialogue.js`)
 - Tapping Interact on an ordinary visitor now opens a **conversation box** (portrait, typed-out text, choices; tap to go on) instead of a one-line bubble. Staff, famous visitors and the caretaker keep their own flows.
 - Topics, each offered once: **About this painting** (the museum's own blurb, a sentence at a time), **Something funny** (2 jokes per visitor kind), **Heard anything?** (true tips about digging, the boat, fish, restoration), and **What are you looking for?** (they ask for an artist; hang one and they're pleased and give more).
