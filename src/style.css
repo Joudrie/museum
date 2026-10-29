@@ -315,7 +315,19 @@ body {
   transition: opacity 0.12s, transform 0.12s;
 }
 #interact2 {
-  bottom: calc(max(20px, calc(env(safe-area-inset-bottom) + 12px)) + 62px);
+  bottom: calc(max(20px, calc(env(safe-area-inset-bottom) + 12px)) + 66px);
+}
+/* the second button (Boat / Hop out) looks like Interact, and mirrors with it in the left-handed layout (src/ui/hud.css) */
+body #interact2 {
+  min-height: 52px;
+  padding: 10px 18px 10px 14px;
+  font: 600 var(--fs-lead, 16px) / 1 var(--ui-font, inherit);
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+html[data-hand='left'] body #interact2 {
+  right: auto;
+  left: max(16px, calc((100vw - min(100vw, 100dvh * 9 / 16)) / 2 + 16px));
 }
 #interact.hidden,
 #interact2.hidden {
