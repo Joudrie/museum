@@ -423,16 +423,16 @@ async function shopChecks() {
     check(await shown('#catch'), 'catch card shows', 'no catch card');
     await shot('catch-card');
     const c3 = await codexNow();
-    const got = Object.keys(c3?.seen || {}).filter((k) => /^(fish|find):/.test(k));
+    const got = Object.keys(c3?.seen || {}).filter((k) => /^(fish|find):/.test(k) && k !== 'fish:minnow'); // (Edmund's minnow is already in the codex)
     const caught = await S(() => JSON.parse(localStorage.getItem('curation.fishing') || '{}'));
-    check(got.length === 1 && c3.owned[got[0]] === 1 && caught.total >= 0, `catch recorded in the codex (${got[0]})`, 'catch not in the codex: ' + JSON.stringify(c3));
+    check(got.length === 1 && c3.owned[got[0]] === 1, `catch recorded in the codex (${got[0]})`, 'catch not in the codex: ' + JSON.stringify(c3));
     await p.click('#catch');
     await wait(500);
     // the island's journal shows only the fish tab, with the catch in it
     await S(() => document.getElementById('journal-btn')?.click());
     await wait(500);
     const islandTabs = await S(() => ({ hidden: getComputedStyle(document.querySelector('.journal-tabs')).display, known: document.querySelectorAll('.fish-cell:not(.unknown)').length }));
-    if (await shown('#journal')) check(islandTabs.known === 1, 'island journal shows the catch', 'island journal missing the catch: ' + JSON.stringify(islandTabs));
+    if (await shown('#journal')) check(islandTabs.known === 2, 'island journal shows the catch (and Edmund\'s minnow)', 'island journal missing the catch: ' + JSON.stringify(islandTabs));
     else ok('(no journal button outdoors; skipped)');
   } else fail('could not find a pond spot to fish from');
 

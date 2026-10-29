@@ -15,7 +15,7 @@ const el = (tag, cls, text) => {
   if (text !== undefined) n.textContent = text;
   return n;
 };
-const EMOTE_GLYPH = { heart: '♥', star: '★', note: '♪', zzz: 'Zzz', sweat: '💧', dots: '…', bang: '!', question: '?' };
+const EMOTE_GLYPH = { heart: '♥', star: '★', note: '♪', zzz: 'Zzz', sweat: '💧', dots: '…', bang: '!', q: '?' };
 const sizeText = (cm) => (cm >= 100 ? `${(cm / 100).toFixed(2)} m` : `${cm} cm`);
 const fmtTime = (ms) => {
   const m = Math.round(ms / 60000);

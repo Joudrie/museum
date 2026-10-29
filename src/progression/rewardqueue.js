@@ -9,7 +9,7 @@
 export const KINDS = ['xp', 'species', 'variant', 'skill', 'rank', 'task', 'heart', 'request', 'milestone', 'gold', 'item', 'streak', 'unlock', 'note'];
 
 // bigger moments go first when several are waiting (stable otherwise)
-const WEIGHT = { rank: 5, milestone: 4, species: 3, variant: 3, skill: 2, heart: 2, task: 2, request: 2, streak: 2, unlock: 2, item: 1, gold: 1, xp: 0, note: 0 };
+
 
 export function createRewardQueue({ present, gate = () => true, setTimer = (fn, ms) => setTimeout(fn, ms), gapMs = 260, clearTimer = (t) => clearTimeout(t) } = {}) {
   let items = [];
@@ -67,11 +67,8 @@ export function createRewardQueue({ present, gate = () => true, setTimer = (fn, 
   function pump() {
     if (busy || !items.length) return;
     if (!gate()) return schedule(400); // something else owns the screen: try again soon
-    // pick the heaviest waiting item that is first of its weight class (keeps order inside a class)
-    let best = 0;
-    for (let i = 1; i < items.length; i++) if ((WEIGHT[items[i].kind] || 0) > (WEIGHT[items[best].kind] || 0) && items[i].step === undefined) best = i;
-    if (items[0].step !== undefined) best = 0; // never split a chain
-    const item = items.splice(best, 1)[0];
+    // first in, first out: a catch plays its chain in order (XP, new entry, skill level, rank), never reshuffled
+    const item = items.shift();
     busy = true;
     listeners.forEach((fn) => fn(q));
     let finished = false;

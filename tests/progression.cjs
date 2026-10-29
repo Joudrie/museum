@@ -32,7 +32,7 @@ const check = (c, good, bad) => (c ? ok(good) : fail(bad));
   const mk = (seed = 5, t0 = Date.UTC(2026, 5, 10, 12)) => {
     const box = { t: t0 };
     const clock = clk.createClock({ now: () => box.t });
-    const p = svc.createProgression({ clock, rng: rngm.createRng(seed), modules: mods.standardModules() });
+    const p = svc.createProgression({ store: st.createStore(st.memoryAdapter(), { now: t0 }), clock, rng: rngm.createRng(seed), modules: mods.standardModules() });
     p.start();
     return { p, box };
   };
@@ -153,7 +153,7 @@ const check = (c, good, bad) => (c ? ok(good) : fail(bad));
     dones.shift()();
     pump();
     dones.shift()?.();
-    check(shown.length === 2 && shown[0] === 'species', 'a bigger moment jumps ahead of an XP tick', 'order: ' + shown);
+    check(shown.length === 2 && shown[0] === 'xp' && shown[1] === 'species', 'rewards play in the order they happened', 'order: ' + shown);
     shown.length = 0;
     q.pushChain([{ kind: 'xp' }, { kind: 'species' }, { kind: 'skill' }, { kind: 'xp' }]);
     q.push({ kind: 'rank' });
@@ -354,6 +354,102 @@ const check = (c, good, bad) => (c ? ok(good) : fail(bad));
     ang.equipBait(p.state, 'worm');
     ang.prepareCast(p, { mapId: 'main', water: 'pond', weather: 'clear', hour: 10, season: 'summer' });
     check(p.state.fish.baits.worm === 1, 'a cast uses one bait', 'bait not spent');
+  }
+
+  console.log('Friendship');
+  {
+    const { p, box } = mk(31);
+    const wen = 'wen';
+    p.bus.emit('NPC_TALKED', { npcId: wen });
+    const f = p.state.friends[wen];
+    check(f && f.points === TUNING.friendship.firstTalkPoints && jr.isStamped(p.state, 'people', wen), 'the first talk of the day is worth a few points and meets them', 'first talk wrong');
+    p.bus.emit('NPC_TALKED', { npcId: wen });
+    check(p.state.friends[wen].points === TUNING.friendship.firstTalkPoints, 'talking again the same day adds nothing', 'second talk paid');
+    box.t += 864e5;
+    p.bus.emit('NPC_TALKED', { npcId: wen });
+    check(p.state.friends[wen].points === 2 * TUNING.friendship.firstTalkPoints, 'it pays again the next day', 'next-day talk did not pay');
+    // gifts: loved, liked, disliked, neutral, one a day
+    p.state.gifts.stock.bread = 3;
+    p.state.gifts.stock.boot = 3;
+    p.state.gifts.stock.tea = 3;
+    const r1 = p.friendship.give(wen, 'gift:bread');
+    check(r1.ok && r1.reaction === 'love' && r1.emote === 'heart', 'a loved gift shows a heart', 'loved gift: ' + JSON.stringify(r1));
+    check(!p.friendship.give(wen, 'gift:tea').ok, 'one gift per person per day', 'gave two gifts in a day');
+    box.t += 864e5;
+    const before = p.state.friends[wen].points;
+    const r2 = p.friendship.give(wen, 'gift:boot');
+    check(r2.reaction === 'hate' && r2.emote === 'sweat' && p.state.friends[wen].points < before, 'a disliked gift shows a sweat drop and costs points', 'hate gift: ' + JSON.stringify(r2));
+    box.t += 864e5;
+    check(p.friendship.give(wen, 'gift:tea').reaction === 'neutral' && p.friendship.give(wen, 'gift:tea').ok === false, 'a neutral gift shows dots', 'neutral gift wrong');
+    check(jr.isStamped(p.state, 'emotes', 'heart') && jr.isStamped(p.state, 'emotes', 'sweat'), 'emotes seen are logged in the journal', 'emotes not logged');
+    // hearts never decay
+    p.friendship.addPoints(wen, 100);
+    const h = p.state.friends[wen].hearts;
+    for (let i = 0; i < 10; i++) p.friendship.addPoints(wen, -500);
+    check(h >= 1 && p.state.friends[wen].hearts === h, 'a heart is never lost, however badly it goes', 'a heart decayed');
+    p.friendship.addPoints(wen, 5000);
+    check(p.state.friends[wen].hearts === 10 && p.state.friends[wen].quest && p.queue.log.some((i) => i.kind === 'heart'), 'ten hearts opens a personal questline', 'no questline at ten hearts');
+    check(p.friendship.greeting(wen) === 'Feed the pond and the pond feeds you back.', 'ten hearts shows their rare line', 'rare line missing: ' + p.friendship.greeting(wen));
+    check(p.state.unlocks['recipe:berrypaste'] && p.state.journal.leads['legend:goldkoi']?.stage === 'rumor', 'hearts open a recipe and the legend rumour', 'heart unlocks missing');
+  }
+
+  console.log('Tasks and requests');
+  {
+    const { p, box } = mk(44);
+    const t = p.tasks.today();
+    check(t.length === 3 && new Set(t.map((x) => x.id)).size === 3, 'three different daily tasks', 'tasks: ' + t.map((x) => x.id));
+    check(p.tasks.reroll(0) && !p.tasks.reroll(1), 'one free reroll a day', 'reroll limit wrong');
+    const day1 = p.tasks.today().map((x) => x.id).join();
+    box.t += 864e5;
+    p.bus.emit('SESSION_TICK', { dtMs: 1000 });
+    check(p.tasks.today().map((x) => x.id).join() !== day1 || p.state.tasks.day !== 0, 'a new day brings new tasks (the day turns at 4:00)', 'tasks did not roll');
+    // finish them all: every task completes from the events it listens to
+    for (let g = 0; g < 4000 && !p.state.tasks.allDone; g++) {
+      p.state.tasks.list.forEach((tk) => {
+        if (tk.done) return;
+        const ev = { FISH_CAUGHT: { speciesId: 'carp', size: 50, sizeClass: 'XL', rarity: 4, variant: '', spotId: 'x', perfect: true, water: tk.match?.water?.[0] || 'sea', fresh: true, weather: tk.ctx?.weather || 'clear', night: true, region: 'main' }, NPC_TALKED: { npcId: 'wen' }, GIFT_GIVEN: { npcId: 'wen', itemId: 'gift:tea' }, SECRET_FOUND: { region: 'main', secretId: `s${g}` }, TILE_REVEALED: { region: 'main', count: 20 }, ITEM_FORAGED: { itemId: 'shell', region: 'main' }, TRAVERSAL_USED: { kind: 'boat', region: 'one' }, REQUEST_DONE: { npcId: 'wen' } }[tk.event];
+        if (tk.event === 'GIFT_GIVEN') {
+          p.state.gifts.stock.tea = 5;
+          box.t += 864e5 * 0;
+        }
+        p.bus.emit(tk.event, ev);
+      });
+      if (g % 50 === 49) p.state.friends.wen && (p.state.friends.wen.giftDay = 0);
+    }
+    check(p.state.tasks.allDone && p.state.tasks.chest && p.queue.log.some((i) => i.kind === 'item' && i.title === 'Bonus chest'), 'clearing all three pays a bonus chest', 'no chest');
+    check(p.queue.log.filter((i) => i.kind === 'task').length >= 3, 'each task announces itself', 'task rewards missing');
+    const b = p.requests.board();
+    check(b.length === 3 && new Set(b.map((x) => x.npc)).size >= 2, 'three requests on the board, from different people', 'board: ' + b.length);
+    const undiscovered = b.filter((x) => x.type === 'fish').every((x) => !p.state.fish.species[x.speciesId]);
+    check(undiscovered, 'requests ask for fish you have not collected', 'a request asked for a known fish');
+    const rq = b.find((x) => x.type === 'fish');
+    if (rq) {
+      p.state.fish.bag.push({ id: rq.speciesId, size: 20, sizeClass: 'M', variant: '', value: 5, at: 0 });
+      const gold = p.gold.get();
+      const res = p.requests.deliver(rq.id);
+      check(res.ok && p.gold.get() > gold && p.state.friends[rq.npc].points > 0, 'handing it over pays gold, XP and friendship', 'delivery failed ' + JSON.stringify(res));
+      check(!p.requests.deliver(rq.id).ok, 'a request is done once', 'request paid twice');
+    }
+  }
+
+  console.log('Goals');
+  {
+    const { p } = mk(51);
+    const g = p.goals.pinnedOrAuto();
+    check(g && g.title && g.pct >= 0, 'with nothing pinned a goal is chosen for you', 'no auto goal');
+    p.goals.pin('rank');
+    check(p.goals.pinnedOrAuto().id === 'rank' && !p.goals.pinnedOrAuto().auto, 'a pinned goal stays pinned', 'pin lost');
+    p.goals.pin(null);
+    const groups = new Set(p.goals.all().map((x) => x.group));
+    check(['today', 'week', 'long'].every((x) => groups.has(x)), 'goals fall into today, this week and long-term', 'groups: ' + [...groups]);
+    check(p.goals.nextTime().length >= 1 && p.goals.nextTime().length <= 3, 'the "next time" card always has an open loop and never more than three', 'next-time card: ' + p.goals.nextTime().length);
+    let nudged = 0;
+    p.hooks.nudge = () => nudged++;
+    for (let i = 0; i < 301; i++) p.tick(1000);
+    check(nudged === 1, 'five quiet minutes trigger one nudge', 'nudges: ' + nudged);
+    p.xp(5, 'x');
+    for (let i = 0; i < 200; i++) p.tick(1000);
+    check(nudged === 1, 'progress resets the stuck timer', 'nudged too early');
   }
 
   console.log('Content validator');

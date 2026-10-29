@@ -179,7 +179,7 @@ function speciesCard(item, done) {
     pic.appendChild(c);
   }
   const html = `<span class="stamp">NEW</span><div class="pc-kicker">Journal · Fish</div><b class="pc-title ${rarityClass(item.rarity)}">${esc(item.name)}</b><div class="pc-sub">Stamped${item.where ? ` at ${esc(item.where)}` : ''} · ${new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</div>`;
-  const close = cardShow(html, item.rarity, 1900, done);
+  const close = cardShow(html, item.rarity, 1500, done);
   card.insertBefore(pic, card.querySelector('.pc-title'));
   setTimeout(() => {
     sfx('stamp');
@@ -233,7 +233,7 @@ export function present(item, done) {
   switch (item.kind) {
     case 'xp':
       popXp(item);
-      return setTimeout(done, 520);
+      return setTimeout(done, 420);
     case 'skill':
       skillBarShow(item);
       sfx(item.up ? 'unlock' : 'tickup', step);

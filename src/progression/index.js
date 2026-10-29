@@ -6,6 +6,7 @@ import { load, save } from '../storage.js';
 import { coins, addCoins } from '../wallet.js';
 import { collect, snapshot } from '../collections/codex.js';
 import { hourNow } from '../settings.js';
+import { weatherToday } from '../weather.js';
 import { createStore, SAVE_KEY } from './store.js';
 import { createClock } from './clock.js';
 import { createProgression } from './service.js';
@@ -43,6 +44,8 @@ export function progression() {
       gold: { get: coins, add: addCoins },
       collect: (id, o) => collect(id, o),
       hourNow,
+      weatherToday,
+      nudge: (o) => window.dispatchEvent(new CustomEvent('prog-nudge', { detail: o })),
       toast: (m) => window.__game?.scene.getScenes(true)[0]?.toast?.(m),
     },
     modules: standardModules(),

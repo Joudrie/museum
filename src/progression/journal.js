@@ -20,7 +20,7 @@ export const PAGES = [
   { id: 'records', name: 'Records', icon: 'trophy', blurb: 'Your story so far.' },
 ];
 
-export const EMOTES = ['heart', 'star', 'note', 'zzz', 'sweat', 'dots', 'bang', 'question'];
+export const EMOTES = ['heart', 'star', 'note', 'zzz', 'sweat', 'dots', 'bang', 'q'];
 const MILESTONES = [25, 50, 75, 100];
 const MILESTONE_REWARD = {
   25: [{ gold: 150 }],

@@ -140,7 +140,7 @@ export function validate({ extra = [], perkUses = [], mapIds = null, busWired = 
 
   // ---- events on the bus have somewhere to go ----
   // events that gameplay raises and the layer must route; grown phase by phase until every one is on the list
-  const REQUIRED = ['FISH_CAUGHT', 'FISH_ESCAPED'];
+  const REQUIRED = ['FISH_CAUGHT', 'FISH_ESCAPED', 'JUNK_CAUGHT', 'NPC_TALKED', 'GIFT_GIVEN', 'TILE_REVEALED', 'LOCATION_DISCOVERED', 'SECRET_FOUND', 'ITEM_FORAGED', 'TRAVERSAL_USED', 'PURCHASE', 'SESSION_START', 'SESSION_TICK', 'REQUEST_DONE', 'EMOTE_SEEN', 'VIEWPOINT'];
   if (busWired) Object.keys(EVENTS).filter((t) => REQUIRED.includes(t)).forEach((t) => !busWired.has(t) && add(`bus event ${t} has no subscriber (a dead end in the loop map)`));
 
   extra.forEach((fn) => fn(add));

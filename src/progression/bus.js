@@ -26,6 +26,7 @@ export const EVENTS = {
   VIEWPOINT: ['region', 'id'],
   EMOTE_SEEN: ['emoteId'],
   SESSION_TICK: [],
+  DAY_ROLLED: ['day'],
   WEATHER_SEEN: ['weather'],
 };
 

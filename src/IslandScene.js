@@ -36,6 +36,9 @@ import { openLeads, grantStartLeads, foundLeads } from './leads.js';
 import { visitorLook, KINDS } from './RoomScene.js';
 import { PERSONALITIES, QUIPS } from './lines.js';
 import { blendAt } from './groundblend.js';
+import { IslandLife } from './progression/ui/islandlife.js';
+import { progression } from './progression/index.js';
+import { regionOfMap, REGIONS } from './progression/species.js';
 
 // Islands drawn in the map builder (builder.html), reached by boat from the
 // main island's dock. Each is a 'curation-map' file (see src/builder/main.js).
@@ -198,6 +201,7 @@ export class IslandScene extends Phaser.Scene {
     stormRumble(this, this.weatherKind);
     if (this.weatherKind === 'rain') this.makePuddles();
     this.setupInput();
+    this.life = new IslandLife(this); // named people, emotes and the stuck nudge (src/progression/)
     this.time.addEvent({ delay: STEP_MS, loop: true, callback: () => this.tick() });
     this.cameras.main.fadeIn(300, 29, 21, 18);
     if (this.map && this.door && this.spawnAt !== 'dock') this.toast(`${this.mapName()} · walk back into the doors to go inside`);
@@ -1074,19 +1078,19 @@ export class IslandScene extends Phaser.Scene {
 
   // Someone who lives on the island: walks Pokémon-style, a tile or two at a
   // time, never further than `range` tiles from home. Tap to chat.
-  islander(x, y, range, i) {
+  islander(x, y, range, i, forced) {
     const seed = 700 + i * 7 + Math.round(x + y);
     const r = (k) => {
       const v = Math.sin(seed * 12.9898 + k * 78.233) * 43758.5453;
       return v - Math.floor(v);
     };
-    const kind = KINDS[Math.floor(r(1) * KINDS.length)];
+    const kind = forced?.kind || KINDS[Math.floor(r(1) * KINDS.length)];
     const { colors, look, scale } = visitorLook(kind, r);
-    const prefix = `islander${seed}`;
+    const prefix = `islander${seed}${forced ? forced.id : ''}`;
     if (!this.textures.exists(`${prefix}_down`)) makeCharacter(this, prefix, colors, look);
     const s = this.add.sprite(x, y, `${prefix}_down`).setOrigin(0.5, 1).setScale(scale).setDepth(y);
     const names = PERSONALITIES[kind].names;
-    return { s, prefix, kind, home: { x, y }, range: range * T, name: names[Math.floor(r(2) * names.length)], wait: 500 + r(3) * 2500, target: null };
+    return { s, prefix, kind, npcId: forced?.id, home: { x, y }, range: range * T, name: forced?.name || names[Math.floor(r(2) * names.length)], wait: 500 + r(3) * 2500, target: null };
   }
 
   moveIslanders(dt) {
@@ -1141,6 +1145,7 @@ export class IslandScene extends Phaser.Scene {
 
   talkTo(n) {
     sfx('talk');
+    if (this.life?.talk(n)) return; // a named person: a real conversation (src/progression/ui/talkflow.js)
     const lines = QUIPS?.island || ['Lovely day for it.', 'Have you been to the museum yet?', 'I come out here to think.', 'The fish are biting by the dock, they say.', 'Every rock on this island has a story.'];
     const line = lines[Math.floor(Math.random() * lines.length)];
     const r = this.game.canvas.getBoundingClientRect();
@@ -1216,6 +1221,7 @@ export class IslandScene extends Phaser.Scene {
   sailTo(go) {
     if (this.leaving) return;
     this.leaving = true;
+    progression().bus.emit('TRAVERSAL_USED', { kind: 'boat', region: regionOfMap(go.map || go.expedition && 'exp-' + go.expedition || 'main') });
     hideTalk();
     this.interactBtn.classList.add('hidden');
     sfx('door');
@@ -1398,6 +1404,7 @@ export class IslandScene extends Phaser.Scene {
     if (this.leaving) return;
     const dt = Math.min(dtMs, 50) / 1000;
     this.fishing.update(dt);
+    this.life?.update(dt);
     this.moveIslanders(dt);
     if (this.paused) return;
     const k = this.keys;
