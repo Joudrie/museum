@@ -8,7 +8,8 @@
     "build": "vite build",
     "preview": "vite preview --host",
     "smoke": "node tests/smoke.cjs",
-    "gaps": "node tests/gaps.cjs"
+    "gaps": "node tests/gaps.cjs",
+    "test": "node tests/run-all.mjs"
   },
   "dependencies": {
     "phaser": "^3.90.0"
