@@ -38,6 +38,18 @@ const check = (c, good, bad) => (c ? ok(good) : fail(bad));
   check(D.accepts('aquarium', fish) && !D.accepts('aquarium', fossil), 'tanks take fish only', 'tank acceptance wrong');
   check(D.accepts('glass_case', fossil) && !D.accepts('glass_case', fish) && D.accepts('easel', painting), 'cases take finds, easels take paintings', 'case or easel acceptance wrong');
 
+  // a whole set on display earns double
+  const drawer = reg.getSet('fossil-drawer');
+  const ids = drawer.entries;
+  check(D.setsShown(ids.slice(0, 3), 'fossil')[0].have === 3 && !D.bonusIds(ids.slice(0, 3)).size, 'a part-filled set earns no bonus', 'part set got a bonus');
+  check(D.bonusIds(ids).size === ids.length, 'a whole set on display doubles its pieces', 'complete set got no bonus');
+
+  // the T. rex is built from dug bones
+  const empty = { v: 1, seen: {}, owned: {}, claimed: {} };
+  const enough = { ...empty, owned: { 'fossil:dinosaur-bone': 6, 'fossil:trex-tooth': 1 } };
+  check(/dinosaur bone/.test(D.missingFor('trex', empty) || '') && D.missingFor('trex', enough) === null, 'the T. rex needs 6 bones and a tooth, then it can be built', 'T. rex requirement wrong: ' + D.missingFor('trex', empty));
+  check(D.missingFor('plinth', empty) === null, 'ordinary decor has no requirement', 'plinth has a requirement');
+
   console.log('Browser');
   const b = await chromium.launch();
   const p = await b.newPage({ viewport: { width: 390, height: 844 } });

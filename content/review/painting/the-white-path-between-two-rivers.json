@@ -1,0 +1,113 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "the-white-path-between-two-rivers",
+  "notes": "region: Japan. a religious painting: say what it is for",
+  "entry": {
+    "id": "painting:the-white-path-between-two-rivers",
+    "collection": "painting",
+    "title": "The White Path Between Two Rivers",
+    "year": "1200s",
+    "era": "renaissance",
+    "ratio": 0.4074,
+    "blurb": "This painting is a visual presentation of a teaching ascribed to the Chinese Buddhist monk Shandao (善導) (613–681).",
+    "rarity": 1,
+    "tags": [
+      "japan",
+      "scroll",
+      "ink"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1955.44/1955.44_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Gift of The Norweb Foundation",
+      "url": "https://clevelandart.org/art/1955.44"
+    },
+    "value": 5,
+    "facts": [
+      "The Buddha Amida appears at the top in his Pure Land, or Western Paradise.",
+      "The Six Realms of Transmigration are the: heavenly realm, hells, human realm, animal realm, realm of hungry ghosts, and realm of fierce beings.",
+      "It describes a challenging journey to the land of the Buddha Amida along a narrow path between a river of fire and a river of water."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "133012",
+    "title": "The White Path Between Two Rivers",
+    "maker": "",
+    "year": "1200s",
+    "medium": "hanging scroll; ink, color, gold, silver, and cut gold on silk",
+    "dimensions": "Painting: 124.7 x 50.8 cm (49 1/8 x 20 in.); Mounted: 215.1 x 67.7 cm (84 11/16 x 26 5/8 in.)",
+    "widthCm": 50.8,
+    "heightCm": 124.7,
+    "ratio": 0.4074,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1955.44/1955.44_web.jpg",
+    "imageWidth": 342,
+    "imageHeight": 893,
+    "pageUrl": "https://clevelandart.org/art/1955.44",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Gift of The Norweb Foundation",
+    "description": "This painting is a visual presentation of a teaching ascribed to the Chinese Buddhist monk Shandao (善導) (613–681). It describes a challenging journey to the land of the Buddha Amida along a narrow path between a river of fire and a river of water. The story is about escaping the six paths of reincarnation—the heavens and hells, as well as the realms of humans, animals, hungry ghosts, and fierce beings. The Buddha Amida appears at the top in his Pure Land, or Western Paradise. The Six Realms of Transmigration are the: heavenly realm, hells, human realm, animal realm, realm of hungry ghosts, and realm of fierce beings.",
+    "culture": "Japan, Kamakura period (1185–1333)",
+    "classification": "Painting",
+    "tags": [
+      "Japanese Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "The White Path Between Two Rivers",
+      "maker": "",
+      "year": "1200s",
+      "medium": "hanging scroll; ink, color, gold, silver, and cut gold on silk",
+      "dimensions": "Painting: 124.7 x 50.8 cm (49 1/8 x 20 in.); Mounted: 215.1 x 67.7 cm (84 11/16 x 26 5/8 in.)",
+      "culture": "Japan, Kamakura period (1185–1333)",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Gift of The Norweb Foundation",
+      "description": "This painting is a visual presentation of a teaching ascribed to the Chinese Buddhist monk Shandao (善導) (613–681). It describes a challenging journey to the land of the Buddha Amida along a narrow path between a river of fire and a river of water. The story is about escaping the six paths of reincarnation—the heavens and hells, as well as the realms of humans, animals, hungry ghosts, and fierce beings. The Buddha Amida appears at the top in his Pure Land, or Western Paradise. The Six Realms of Transmigration are the: heavenly realm, hells, human realm, animal realm, realm of hungry ghosts, and realm of fierce beings.",
+      "tombstone": "The White Path Between Two Rivers (二河白道図), 1200s. Japan, Kamakura period (1185–1333). Hanging scroll; ink, color, gold, silver, and cut gold on silk; painting: 124.7 x 50.8 cm (49 1/8 x 20 in.); mounted: 215.1 x 67.7 cm (84 11/16 x 26 5/8 in.). The Cleveland Museum of Art, Gift of The Norweb Foundation, 1955.44",
+      "funFact": "",
+      "didYouKnow": "The Six Realms of Transmigration are the: heavenly realm, hells, human realm, animal realm, realm of hungry ghosts, and realm of fierce beings.",
+      "creators": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "This painting is a visual presentation of a teaching ascribed to the Chinese Buddhist monk Shandao (善導) (613–681).",
+      "quote": "This painting is a visual presentation of a teaching ascribed to the Chinese Buddhist monk Shandao (善導) (613–681).",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The Buddha Amida appears at the top in his Pure Land, or Western Paradise.",
+      "quote": "The Buddha Amida appears at the top in his Pure Land, or Western Paradise.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The Six Realms of Transmigration are the: heavenly realm, hells, human realm, animal realm, realm of hungry ghosts, and realm of fierce beings.",
+      "quote": "The Six Realms of Transmigration are the: heavenly realm, hells, human realm, animal realm, realm of hungry ghosts, and realm of fierce beings.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "It describes a challenging journey to the land of the Buddha Amida along a narrow path between a river of fire and a river of water.",
+      "quote": "It describes a challenging journey to the land of the Buddha Amida along a narrow path between a river of fire and a river of water.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

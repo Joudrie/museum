@@ -13,6 +13,19 @@ export function season(date = new Date()) {
   return m === 11 || m <= 1 ? 'winter' : m <= 4 ? 'spring' : m <= 7 ? 'summer' : 'autumn';
 }
 
+// A holiday on the real calendar, or null. ?holiday=halloween|winter pins it for testing.
+//   halloween: Oct 24-31 (trick-or-treaters, jack-o'-lanterns)
+//   winter:    Dec 18-26 (woolly hats and a few lights)
+export function holiday(date = new Date()) {
+  const pinned = /[?&]holiday=(\w+)/.exec(location.search);
+  if (pinned) return pinned[1] === 'none' ? null : pinned[1];
+  const m = date.getMonth();
+  const d = date.getDate();
+  if (m === 9 && d >= 24) return 'halloween';
+  if (m === 11 && d >= 18 && d <= 26) return 'winter';
+  return null;
+}
+
 export function weatherToday(date = new Date()) {
   const pinned = /[?&]weather=(\w+)/.exec(location.search);
   if (pinned) return pinned[1];

@@ -1,0 +1,114 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "the-poet-lin-bu-wandering-in-the-moonlight-du",
+  "notes": "region: China",
+  "entry": {
+    "id": "painting:the-poet-lin-bu-wandering-in-the-moonlight-du",
+    "collection": "painting",
+    "title": "The Poet Lin Bu Wandering in the Moonlight",
+    "by": "Du Jin",
+    "year": "late 1400s",
+    "era": "renaissance",
+    "ratio": 0.4629,
+    "blurb": "Lin Bu (967–1028), a Northern Song (960–1127) poet and hermit who lived at the West Lake in Hangzhou, was known for having plum trees for his female companions and cranes for his children.",
+    "rarity": 1,
+    "tags": [
+      "china",
+      "scroll",
+      "ink"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1954.582/1954.582_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. John L. Severance Fund",
+      "url": "https://clevelandart.org/art/1954.582"
+    },
+    "value": 5,
+    "facts": [
+      "Surviving works signed by Du Jin are rare and this painting is one of them.",
+      "Lin Bu withdrew from prestigious government service and lived as a hermit by the West Lake in Hangzhou.",
+      "Here, the artist used lively brushwork to depict the plum tree and rocks, exemplified in varying dots and strokes, and sweeps in different shades of ink."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "132015",
+    "title": "The Poet Lin Bu Wandering in the Moonlight",
+    "maker": "Du Jin",
+    "year": "late 1400s",
+    "medium": "Hanging scroll; ink and color on paper",
+    "dimensions": "Image: 156.4 x 72.4 cm (61 9/16 x 28 1/2 in.); Overall with knobs: 286.4 x 99 cm (112 3/4 x 39 in.)",
+    "widthCm": 72.4,
+    "heightCm": 156.4,
+    "ratio": 0.4629,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1954.582/1954.582_web.jpg",
+    "imageWidth": 422,
+    "imageHeight": 893,
+    "pageUrl": "https://clevelandart.org/art/1954.582",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. John L. Severance Fund",
+    "description": "Lin Bu (967–1028), a Northern Song (960–1127) poet and hermit who lived at the West Lake in Hangzhou, was known for having plum trees for his female companions and cranes for his children. This hanging scroll depicts the poet walking in the moonlight and looking at the plum tree, a scene described in his most well-known poem on plum blossoms. Surviving works signed by Du Jin are rare and this painting is one of them. Here, the artist used lively brushwork to depict the plum tree and rocks, exemplified in varying dots and strokes, and sweeps in different shades of ink. Lin Bu withdrew from prestigious government service and lived as a hermit by the West Lake in Hangzhou.",
+    "culture": "China, Ming dynasty (1368–1644)",
+    "classification": "Painting",
+    "tags": [
+      "Chinese Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "The Poet Lin Bu Wandering in the Moonlight",
+      "maker": "Du Jin",
+      "year": "late 1400s",
+      "medium": "Hanging scroll; ink and color on paper",
+      "dimensions": "Image: 156.4 x 72.4 cm (61 9/16 x 28 1/2 in.); Overall with knobs: 286.4 x 99 cm (112 3/4 x 39 in.)",
+      "culture": "China, Ming dynasty (1368–1644)",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. John L. Severance Fund",
+      "description": "Lin Bu (967–1028), a Northern Song (960–1127) poet and hermit who lived at the West Lake in Hangzhou, was known for having plum trees for his female companions and cranes for his children. This hanging scroll depicts the poet walking in the moonlight and looking at the plum tree, a scene described in his most well-known poem on plum blossoms. Surviving works signed by Du Jin are rare and this painting is one of them. Here, the artist used lively brushwork to depict the plum tree and rocks, exemplified in varying dots and strokes, and sweeps in different shades of ink. Lin Bu withdrew from prestigious government service and lived as a hermit by the West Lake in Hangzhou.",
+      "tombstone": "The Poet Lin Bu Wandering in the Moonlight (陪月閒行圖), late 1400s. Du Jin (Chinese, 1446–c. 1519). Hanging scroll; ink and color on paper; image: 156.4 x 72.4 cm (61 9/16 x 28 1/2 in.); overall with knobs: 286.4 x 99 cm (112 3/4 x 39 in.). The Cleveland Museum of Art, John L. Severance Fund, 1954.582",
+      "funFact": "",
+      "didYouKnow": "Lin Bu withdrew from prestigious government service and lived as a hermit by the West Lake in Hangzhou.",
+      "creators": "Du Jin (Chinese, 1446–c. 1519)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "Lin Bu (967–1028), a Northern Song (960–1127) poet and hermit who lived at the West Lake in Hangzhou, was known for having plum trees for his female companions and cranes for his children.",
+      "quote": "Lin Bu (967–1028), a Northern Song (960–1127) poet and hermit who lived at the West Lake in Hangzhou, was known for having plum trees for his female companions and cranes for his children.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Surviving works signed by Du Jin are rare and this painting is one of them.",
+      "quote": "Surviving works signed by Du Jin are rare and this painting is one of them.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Lin Bu withdrew from prestigious government service and lived as a hermit by the West Lake in Hangzhou.",
+      "quote": "Lin Bu withdrew from prestigious government service and lived as a hermit by the West Lake in Hangzhou.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Here, the artist used lively brushwork to depict the plum tree and rocks, exemplified in varying dots and strokes, and sweeps in different shades of ink.",
+      "quote": "Here, the artist used lively brushwork to depict the plum tree and rocks, exemplified in varying dots and strokes, and sweeps in different shades of ink.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

@@ -1,0 +1,113 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "winding-yarn-interior-of-a-nantucket-kitchen-eas",
+  "notes": "region: United States, 1872",
+  "entry": {
+    "id": "painting:winding-yarn-interior-of-a-nantucket-kitchen-eas",
+    "collection": "painting",
+    "title": "Winding Yarn (Interior of a Nantucket Kitchen)",
+    "by": "Eastman Johnson",
+    "year": "1872",
+    "era": "impressionist",
+    "ratio": 1.456,
+    "blurb": "Eastman Johnson was a cofounder of the Metropolitan Museum of Art in New York.",
+    "rarity": 1,
+    "tags": [
+      "united states",
+      "oil"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1915.682/1915.682_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Hinman B. Hurlbut Collection",
+      "url": "https://clevelandart.org/art/1915.682"
+    },
+    "value": 5,
+    "facts": [
+      "At the time, winding yarn was a common symbol of courtship that carried humorous overtones of a woman ensnaring her suitor.",
+      "The second woman in the composition is likely a chaperone.",
+      "The suitor’s unrefined, open-legged pose, coupled with his rude action of placing his hat on the floor, adds further comic elements that contemporary audiences would have appreciated."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "173167",
+    "title": "Winding Yarn (Interior of a Nantucket Kitchen)",
+    "maker": "Eastman Johnson",
+    "year": "1872",
+    "medium": "oil on board",
+    "dimensions": "Framed: 70.2 x 85.4 x 10.2 cm (27 5/8 x 33 5/8 x 4 in.); Unframed: 37.5 x 54.6 cm (14 3/4 x 21 1/2 in.)",
+    "widthCm": 54.6,
+    "heightCm": 37.5,
+    "ratio": 1.456,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1915.682/1915.682_web.jpg",
+    "imageWidth": 900,
+    "imageHeight": 612,
+    "pageUrl": "https://clevelandart.org/art/1915.682",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Hinman B. Hurlbut Collection",
+    "description": "Set in a rustic kitchen on Nantucket Island, Massachusetts, this painting depicts a woman who winds a ball of yarn from a coil looped in the hands of a man sitting across from her at a respectable distance. At the time, winding yarn was a common symbol of courtship that carried humorous overtones of a woman ensnaring her suitor. The second woman in the composition is likely a chaperone. The suitor’s unrefined, open-legged pose, coupled with his rude action of placing his hat on the floor, adds further comic elements that contemporary audiences would have appreciated. Eastman Johnson was a cofounder of the Metropolitan Museum of Art in New York.",
+    "culture": "United States",
+    "classification": "Painting",
+    "tags": [
+      "American Painting and Sculpture"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Winding Yarn (Interior of a Nantucket Kitchen)",
+      "maker": "Eastman Johnson",
+      "year": "1872",
+      "medium": "oil on board",
+      "dimensions": "Framed: 70.2 x 85.4 x 10.2 cm (27 5/8 x 33 5/8 x 4 in.); Unframed: 37.5 x 54.6 cm (14 3/4 x 21 1/2 in.)",
+      "culture": "United States",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Hinman B. Hurlbut Collection",
+      "description": "Set in a rustic kitchen on Nantucket Island, Massachusetts, this painting depicts a woman who winds a ball of yarn from a coil looped in the hands of a man sitting across from her at a respectable distance. At the time, winding yarn was a common symbol of courtship that carried humorous overtones of a woman ensnaring her suitor. The second woman in the composition is likely a chaperone. The suitor’s unrefined, open-legged pose, coupled with his rude action of placing his hat on the floor, adds further comic elements that contemporary audiences would have appreciated. Eastman Johnson was a cofounder of the Metropolitan Museum of Art in New York.",
+      "tombstone": "Winding Yarn (Interior of a Nantucket Kitchen), 1872. Eastman Johnson (American, 1824–1906). Oil on board; framed: 70.2 x 85.4 x 10.2 cm (27 5/8 x 33 5/8 x 4 in.); unframed: 37.5 x 54.6 cm (14 3/4 x 21 1/2 in.). The Cleveland Museum of Art, Hinman B. Hurlbut Collection, 1915.682",
+      "funFact": "",
+      "didYouKnow": "Eastman Johnson was a cofounder of the Metropolitan Museum of Art in New York.",
+      "creators": "Eastman Johnson (American, 1824–1906)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "Eastman Johnson was a cofounder of the Metropolitan Museum of Art in New York.",
+      "quote": "Eastman Johnson was a cofounder of the Metropolitan Museum of Art in New York.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "At the time, winding yarn was a common symbol of courtship that carried humorous overtones of a woman ensnaring her suitor.",
+      "quote": "At the time, winding yarn was a common symbol of courtship that carried humorous overtones of a woman ensnaring her suitor.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The second woman in the composition is likely a chaperone.",
+      "quote": "The second woman in the composition is likely a chaperone.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The suitor’s unrefined, open-legged pose, coupled with his rude action of placing his hat on the floor, adds further comic elements that contemporary audiences would have appreciated.",
+      "quote": "The suitor’s unrefined, open-legged pose, coupled with his rude action of placing his hat on the floor, adds further comic elements that contemporary audiences would have appreciated.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

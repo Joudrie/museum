@@ -4,6 +4,7 @@
 import { FAMOUS } from './famous.js';
 import { QUESTS, activeQuests, claimedCount } from './quests.js';
 import { collectionTab, collectionTabs } from './collections/tab.js';
+import { storageTab } from './storage_room.js';
 import './fishing.js'; // (adds the bobber list to the Fish tab)
 
 const el = document.getElementById('journal');
@@ -14,7 +15,7 @@ let tab = 'goals';
 
 // Goals first, then each collection by its order, with the visitors in third place.
 function tabList() {
-  const all = [{ id: 'goals', label: 'Goals', order: 0 }, { id: 'visitors', label: 'Visitors', order: 2 }, ...collectionTabs()];
+  const all = [{ id: 'goals', label: 'Goals', order: 0 }, { id: 'visitors', label: 'Visitors', order: 2 }, { id: 'storage', label: 'Storage', order: 90 }, ...collectionTabs()];
   return all.sort((a, b) => a.order - b.order);
 }
 
@@ -95,7 +96,7 @@ function render() {
       return b;
     }),
   );
-  body.replaceChildren(...(tab === 'goals' ? goals() : tab === 'visitors' ? visitors() : collectionTab(tab, state, render)));
+  body.replaceChildren(...(tab === 'goals' ? goals() : tab === 'visitors' ? visitors() : tab === 'storage' ? storageTab(state, render) : collectionTab(tab, state, render)));
 }
 
 el.querySelector('.journal-close').addEventListener('click', () => {

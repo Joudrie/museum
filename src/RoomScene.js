@@ -31,17 +31,20 @@ import {
   LIGHT_TINTS,
 } from './art.js';
 import { setTrack, sfx, setAmbience } from './music.js';
-import { weatherToday, season } from './weather.js';
+import { weatherToday, season, holiday } from './weather.js';
 import { ORIENT_LABELS, SIZE_LABELS, BREAK, roomAt, MAIN_HALL_PRICE, ATRIUM_PRICE, isFixed, seedEntry, loadRooms, addRoom, resetRooms, updateRoom, swapRooms, roomName, layout, paintingsFor, slotStates, setSlot, hungAnywhere, placeArt, wallItems, plantSpots, carpetRect } from './rooms.js';
 import { openSlotMenu } from './slotmenu.js';
+import { applyPreset, presetCost } from './presets.js';
 import { ITEMS, loadItems, saveItems, resetItems, footprint, countPlaced } from './items.js';
 import { roomDirt, removeDirt, resetDirt, dirtCount, covered, janitors, janitorCost, hireJanitor, resetJanitors, guides, guideBoost, maxGuides, guideCost, hireGuide, upgradeLevel, upgradeValue, upgradeCost, buyUpgrade, hasCarpenter, hireCarpenter, CARPENTER_COST, staffCount } from './staff.js';
 import { openStaffMenu } from './staffmenu.js';
 import { UPGRADES, OFFLINE_CAP_H, COLLECT_ALL_FEE } from './economy.js';
-import { hasCameras, buyCameras, resetSecurity, CAMERA_COST, trackSeen, maybeRob, awayFor } from './security.js';
+import { hasCameras, buyCameras, resetSecurity, CAMERA_COST, trackSeen, maybeRob, awayFor, nextSecurity, securityTier } from './security.js';
 import { officeLevel, setOfficeLevel, resetOffice, perks, itemLevel, LEVELS, MAX_LEVEL } from './office.js';
 import { openOffice } from './officemenu.js';
 import { ask } from './ask.js';
+import { heistBeat, chainStep, chainAsk, complete as completeBeat } from './story.js';
+import { PAINTINGS } from './paintings.js';
 import { roomRating, museumRating, starText } from './rating.js';
 import { FAMOUS, meet, resetMet, metList, famousBoost } from './famous.js';
 import { FREE, coins, canAfford, addCoins, spend, resetWallet, museumIncome, museumVisitors, coffeeIncome, roomIncome, settle, sellPrice, artPile, decorPile, collectArt, collectDecor, collectAll, pile, pileFull } from './wallet.js';
@@ -51,7 +54,7 @@ import { PERSONALITIES, lineFor, QUIPS, CONTEXT } from './lines.js';
 import { iconSvg } from './icons.js';
 import { bakeFountain, bakeSideStairs, FOUNTAIN } from './atrium.js';
 import { openViewer } from './viewer.js';
-import { isFixture, newId, clear as clearDisplay } from './display.js';
+import { isFixture, newId, clear as clearDisplay, missingFor } from './display.js';
 import { showDisplays } from './displayart.js';
 import { openDisplay } from './displaymenu.js';
 import { openDecor, closeDecor, load, save, DEFAULT_CHARACTER } from './decor.js';
@@ -172,6 +175,19 @@ export function visitorLook(kind, r) {
     colors.U = '#c99a1a';
     colors.c = '#e8762c'; // safety orange
     colors.p = '#3c4a63';
+  }
+  // seasonal visitors: kids trick-or-treat in costume near Halloween, and woolly hats come out in winter
+  const day = holiday();
+  if (day === 'halloween' && (kind === 'kid' || (kind === 'student' && r(20) < 0.3))) {
+    const costume = Math.floor(r(21) * 3);
+    look.hat = costume === 2 ? 'beanie' : 'top';
+    if (costume === 0) Object.assign(colors, { c: '#3a2a52', p: '#2a1e3a', T: '#2a1a3a', U: '#6a3a9a' }); // witch
+    else if (costume === 1) Object.assign(colors, { c: '#f4f4f4', p: '#e0e0e8', T: '#f4f4f4', U: '#c8c8d8' }); // ghost
+    else Object.assign(colors, { c: '#e8762c', p: '#6a4a1a', T: '#e8762c', U: '#4f8a4a' }); // pumpkin
+  } else if (day === 'winter' && !['barista', 'caretaker', 'guard', 'guide', 'carpenter', 'janitor'].includes(kind) && !look.hat && !look.bald && r(22) < 0.5) {
+    look.hat = 'beanie';
+    colors.T = pick(['#c0392b', '#2e5a8a', '#f4f0e6', '#2e7d7a'], 23);
+    colors.U = '#f4f0e6';
   }
   if (kind === 'guard') {
     colors.c = '#1e1e22';
@@ -389,7 +405,13 @@ export class RoomScene extends Phaser.Scene {
       const stolen = maybeRob(this.rooms, /[?&]rob\b/.test(location.search));
       trackSeen();
       if (away > 20 * 60000 && !stolen) this.time.delayedCall(900, () => this.welcomeBack());
-      if (stolen) {
+      if (stolen?.caught) {
+        this.time.delayedCall(900, () => {
+          addCoins(stolen.bounty);
+          sfx('coin');
+          this.toast(`Your security caught a thief overnight! Reward: ${stolen.bounty} gold`);
+        });
+      } else if (stolen) {
         this.time.delayedCall(700, () => {
           this.pause(true);
           sfx('nope');
@@ -1259,7 +1281,8 @@ export class RoomScene extends Phaser.Scene {
       line = `There ${j === 1 ? 'is 1 of us' : `are ${j} of us`}. One janitor per room keeps the whole place spotless.`;
     }
     if (!n.staff && Math.random() < 0.3) line = this.contextLine() || line;
-    if (n.kind === 'guard' && !hasCameras()) return this.offerCameras(n, line);
+    if (n.kind === 'guard' && nextSecurity()) return this.offerCameras(n, line);
+    if (n.kind === 'caretaker' && this.tellStory(n, heistBeat(this.storyContext()), 'The Empty Frames')) return;
     n.talking = true;
     n.target = null;
     n.path = null;
@@ -1269,6 +1292,33 @@ export class RoomScene extends Phaser.Scene {
     sfx('talk');
     const at = this.screenAt(n.s.x, n.s.y - 34);
     showTalk(n.name, PERSONALITIES[n.kind].label, line, at);
+  }
+
+  // What the story chapters ask about: who you've met and whose paintings are hung.
+  storyContext() {
+    const met = metList();
+    const hungIds = new Set(hungAnywhere(this.rooms).keys());
+    return { met: met.length, metIds: met, hungBy: [...new Set(PAINTINGS.filter((p) => hungIds.has(p.id)).map((p) => p.artist))] };
+  }
+
+  // Tell the next chapter (a modal so long lines are easy to read). Returns true if one was told.
+  tellStory(n, beat, title) {
+    if (!beat) return false;
+    this.faceSprite(n.s, n.prefix, this.player.x - n.s.x, this.player.y - n.s.y);
+    sfx('talk');
+    this.pause(true);
+    ask(`${n.name} · ${title}`, `“${beat.line}”`, 'Go on', () => {
+      this.pause(false);
+      const gold = completeBeat(beat, n.famous || n.kind);
+      if (gold) {
+        addCoins(gold);
+        sfx('coin');
+        this.updateHud();
+      }
+      if (beat.lead) this.toast(beat.lead.text);
+      else if (gold) this.toast(`+${gold} gold`);
+    }, null);
+    return true;
   }
 
   // Something about this room right now: mess, rating, time of day.
@@ -1293,14 +1343,15 @@ export class RoomScene extends Phaser.Scene {
     this.faceSprite(n.s, n.prefix, this.player.x - n.s.x, this.player.y - n.s.y);
     sfx('talk');
     this.pause(true);
-    const price = FREE ? `Free while testing (${CAMERA_COST} gold).` : `${CAMERA_COST} gold.`;
-    ask(`${n.name} · Security`, `“${line} Want me to put up security cameras? Thieves hate cameras.” ${price}`, 'Install cameras', (yes) => {
+    const next = nextSecurity();
+    const price = FREE ? `Free while testing (${next.cost} gold).` : `${next.cost} gold.`;
+    ask(`${n.name} · Security`, `“${line} ${securityTier() ? 'Want to upgrade?' : 'Thieves are a real risk when you’re away.'} ${next.name}: ${next.blurb}” ${price}`, `Buy ${next.name.toLowerCase()}`, (yes) => {
       this.pause(false);
       if (!yes) return;
-      if (!spend(CAMERA_COST)) return this.toast(`Need ${CAMERA_COST} gold`);
+      if (!spend(next.cost)) return this.toast(`Need ${next.cost} gold`);
       buyCameras();
       sfx('build');
-      this.toast('Cameras installed: no more robberies');
+      this.toast(`${next.name} installed`);
       this.updateHud();
     });
   }
@@ -1311,6 +1362,8 @@ export class RoomScene extends Phaser.Scene {
     const near = this.paintingNear(n.s.x, n.s.y);
     let line = def.lines[Math.floor(Math.random() * def.lines.length)];
     if (first) line = def.hello;
+    else if (this.tellStory(n, chainStep(n.famous, this.storyContext()), def.name)) return;
+    else if (chainAsk(n.famous) && Math.random() < 0.4) line = chainAsk(n.famous);
     else if (near?.artist === n.famous && Math.random() < 0.7) line = def.own.replace('{title}', near.title);
     n.talking = true;
     n.target = null;
@@ -1541,6 +1594,16 @@ export class RoomScene extends Phaser.Scene {
           this.travel(i, 'entrance');
         },
         onDecor: (decor) => this.applyDecor(decor),
+        onPreset: (id) => {
+          const cost = presetCost(id, this.roomIndex);
+          if (cost > 0 && !canAfford(cost)) return this.toast(`Need ${cost} gold`);
+          this.settleAll();
+          if (cost > 0) spend(cost);
+          else if (cost < 0) addCoins(-cost);
+          applyPreset(id, this.roomIndex);
+          closeDecor();
+          this.rebuild();
+        },
         onCharacter: (character) => this.applyCharacter(character),
         plantIcon: (id) => (id === 'none' ? null : this.textures.get(`plant_${id}`).getSourceImage().toDataURL()),
         characterPreview: () => this.characterPreview(),
@@ -2417,9 +2480,12 @@ export class RoomScene extends Phaser.Scene {
       icon: (type) => this.textures.get(this.itemKey(type, 0)).getSourceImage().toDataURL(),
       canAfford,
       level: () => officeLevel(),
+      blocked: (type) => missingFor(type),
       onPick: (type) => {
         if (ITEMS[type].season && ITEMS[type].season !== season()) return this.toast(`Only for sale in ${ITEMS[type].season}`);
         if (itemLevel(type) > officeLevel()) return this.toast(`Unlocks at Curator’s Office level ${itemLevel(type)}`);
+        const missing = missingFor(type);
+        if (missing) return this.toast(missing);
         const max = ITEMS[type].max;
         if (max && countPlaced(type, this.rooms.length) >= max) return this.toast(`Only ${max} allowed in the museum`);
         if (!canAfford(ITEMS[type].price)) return this.toast(`Need ${(ITEMS[type].price - coins()).toLocaleString()} more gold`);

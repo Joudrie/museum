@@ -1,0 +1,99 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "the-power-of-music-william",
+  "notes": "region: United States, 1847",
+  "entry": {
+    "id": "painting:the-power-of-music-william",
+    "collection": "painting",
+    "title": "The Power of Music",
+    "by": "William Sidney Mount",
+    "year": "1847",
+    "era": "romantic",
+    "ratio": 1.2327,
+    "blurb": "Set in rural Long Island before the Civil War, Mount's complex painting presents an African American laborer listening intently to a fiddle tune enjoyed by white men.",
+    "rarity": 1,
+    "tags": [
+      "united states",
+      "oil"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1991.110/1991.110_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Leonard C. Hanna Jr. Fund",
+      "url": "https://clevelandart.org/art/1991.110"
+    },
+    "value": 5,
+    "facts": [
+      "Mount was an accomplished fiddle player and even patented a new design for the instrument."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "155783",
+    "title": "The Power of Music",
+    "maker": "William Sidney Mount",
+    "year": "1847",
+    "medium": "oil on canvas",
+    "dimensions": "Framed: 67 x 78 x 7.5 cm (26 3/8 x 30 11/16 x 2 15/16 in.); Unframed: 43.4 x 53.5 cm (17 1/16 x 21 1/16 in.)",
+    "widthCm": 53.5,
+    "heightCm": 43.4,
+    "ratio": 1.2327,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1991.110/1991.110_web.jpg",
+    "imageWidth": 1106,
+    "imageHeight": 893,
+    "pageUrl": "https://clevelandart.org/art/1991.110",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Leonard C. Hanna Jr. Fund",
+    "description": "Set in rural Long Island before the Civil War, Mount's complex painting presents an African American laborer listening intently to a fiddle tune enjoyed by white men. While a love of music unites the figures in a bond of shared humanity, the two races occupy different spaces--one inside, one outside, both separated by a barn door--effectively symbolizing the pronounced divisions in America at the time. Mount was an accomplished fiddle player and even patented a new design for the instrument.",
+    "culture": "United States",
+    "classification": "Painting",
+    "tags": [
+      "American Painting and Sculpture"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "The Power of Music",
+      "maker": "William Sidney Mount",
+      "year": "1847",
+      "medium": "oil on canvas",
+      "dimensions": "Framed: 67 x 78 x 7.5 cm (26 3/8 x 30 11/16 x 2 15/16 in.); Unframed: 43.4 x 53.5 cm (17 1/16 x 21 1/16 in.)",
+      "culture": "United States",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Leonard C. Hanna Jr. Fund",
+      "description": "Set in rural Long Island before the Civil War, Mount's complex painting presents an African American laborer listening intently to a fiddle tune enjoyed by white men. While a love of music unites the figures in a bond of shared humanity, the two races occupy different spaces--one inside, one outside, both separated by a barn door--effectively symbolizing the pronounced divisions in America at the time. Mount was an accomplished fiddle player and even patented a new design for the instrument.",
+      "tombstone": "The Power of Music, 1847. William Sidney Mount (American, 1807–1868). Oil on canvas; framed: 67 x 78 x 7.5 cm (26 3/8 x 30 11/16 x 2 15/16 in.); unframed: 43.4 x 53.5 cm (17 1/16 x 21 1/16 in.). The Cleveland Museum of Art, Leonard C. Hanna Jr. Fund, 1991.110",
+      "funFact": "",
+      "didYouKnow": "Mount was an accomplished fiddle player and even patented a new design for the instrument.",
+      "creators": "William Sidney Mount (American, 1807–1868)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "Set in rural Long Island before the Civil War, Mount's complex painting presents an African American laborer listening intently to a fiddle tune enjoyed by white men.",
+      "quote": "Set in rural Long Island before the Civil War, Mount's complex painting presents an African American laborer listening intently to a fiddle tune enjoyed by white men.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Mount was an accomplished fiddle player and even patented a new design for the instrument.",
+      "quote": "Mount was an accomplished fiddle player and even patented a new design for the instrument.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

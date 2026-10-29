@@ -1,0 +1,99 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "tantric-buddha-vairochana-as-vajrasattva",
+  "notes": "region: Tibet. a sacred image: say what the painting is for, not that it is exotic",
+  "entry": {
+    "id": "painting:tantric-buddha-vairochana-as-vajrasattva",
+    "collection": "painting",
+    "title": "Tantric Buddha Vairochana as Vajrasattva",
+    "year": "c. 1150–1200",
+    "era": "renaissance",
+    "ratio": 0.6577,
+    "blurb": "In his crown is the image of a monk, who is probably the guru of the donor, the small monastic figure at the lower right next to the lotus pedestal.",
+    "rarity": 1,
+    "tags": [
+      "central tibet",
+      "tempera",
+      "ink"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1989.104/1989.104_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Mr. and Mrs. William H. Marlatt Fund",
+      "url": "https://clevelandart.org/art/1989.104"
+    },
+    "value": 5,
+    "facts": [
+      "A mantra written behind the figures invokes their living presence in the thangka painting."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "154338",
+    "title": "Tantric Buddha Vairochana as Vajrasattva",
+    "maker": "",
+    "year": "c. 1150–1200",
+    "medium": "gum tempera, ink, and gold on cloth",
+    "dimensions": "Overall: 111 x 73 cm (43 11/16 x 28 3/4 in.)",
+    "widthCm": 73,
+    "heightCm": 111,
+    "ratio": 0.6577,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1989.104/1989.104_web.jpg",
+    "imageWidth": 583,
+    "imageHeight": 893,
+    "pageUrl": "https://clevelandart.org/art/1989.104",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Mr. and Mrs. William H. Marlatt Fund",
+    "description": "The seated Buddha dominating the composition is identified as Vairochana because of his hand gesture, the mudra communicating supreme enlightenment in which the index finger of one hand is grasped by the fingers of the opposite hand. His golden color and the tiny vajra —a six-pronged ritual object representing a thunderbolt—balanced on top of his finger suggest that he is in the guise of Vajrasattva, the summation of all enlightened beings. In his crown is the image of a monk, who is probably the guru of the donor, the small monastic figure at the lower right next to the lotus pedestal. A mantra written behind the figures invokes their living presence in the thangka painting.",
+    "culture": "Central Tibet",
+    "classification": "Painting",
+    "tags": [
+      "Indian and Southeast Asian Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Tantric Buddha Vairochana as Vajrasattva",
+      "maker": "",
+      "year": "c. 1150–1200",
+      "medium": "gum tempera, ink, and gold on cloth",
+      "dimensions": "Overall: 111 x 73 cm (43 11/16 x 28 3/4 in.)",
+      "culture": "Central Tibet",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Mr. and Mrs. William H. Marlatt Fund",
+      "description": "The seated Buddha dominating the composition is identified as Vairochana because of his hand gesture, the mudra communicating supreme enlightenment in which the index finger of one hand is grasped by the fingers of the opposite hand. His golden color and the tiny vajra —a six-pronged ritual object representing a thunderbolt—balanced on top of his finger suggest that he is in the guise of Vajrasattva, the summation of all enlightened beings. In his crown is the image of a monk, who is probably the guru of the donor, the small monastic figure at the lower right next to the lotus pedestal. A mantra written behind the figures invokes their living presence in the thangka painting.",
+      "tombstone": "Tantric Buddha Vairochana as Vajrasattva, c. 1150–1200. Central Tibet. Gum tempera, ink, and gold on cloth; overall: 111 x 73 cm (43 11/16 x 28 3/4 in.). The Cleveland Museum of Art, Mr. and Mrs. William H. Marlatt Fund, 1989.104",
+      "funFact": "",
+      "didYouKnow": "A mantra written behind the figures invokes their living presence in the thangka painting.",
+      "creators": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "In his crown is the image of a monk, who is probably the guru of the donor, the small monastic figure at the lower right next to the lotus pedestal.",
+      "quote": "In his crown is the image of a monk, who is probably the guru of the donor, the small monastic figure at the lower right next to the lotus pedestal.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "A mantra written behind the figures invokes their living presence in the thangka painting.",
+      "quote": "A mantra written behind the figures invokes their living presence in the thangka painting.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}
