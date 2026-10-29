@@ -165,6 +165,8 @@ island scene streams ground chunks around the player.
 
 - Security is a tier (`curation.cameras`, old `true` = tier 2). The guard sells the next tier; each tier has a `stop` chance for the rare robbery, and camera tiers turn a stopped robbery into a "thief caught" bounty.
 
+- Services items (toolkit → Services, max 1 each): gift shop (gold per hung painting, doubled per rarity step), food court and discovery table (scale with visitors), lecture stage (per famous visitor met). Earnings logic: `serviceGold()` in `src/wallet.js`, numbers in `SERVICES`. Their art is placeholder, in `bakeItem` in `src/art.js`.
+
 ### Gotchas we hit
 - **Phaser reuses the previous scene data** if you call `scene.start('island')` with no data.
   Always pass data explicitly, e.g. `{ map: 'main' }`. Leaving the museum once dropped you on
