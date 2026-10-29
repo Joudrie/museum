@@ -56,7 +56,7 @@ Owns: `tests/`, `.github/`, `vite.config.js`, `src/settings*.js`, `src/ui.js`. C
 - [x] Save safety: `tests/saves.cjs` breaks every save key 7 ways and the game still opens (it already did); an unreadable save is kept under `curation.bak.<key>`; Reset museum takes two taps and keeps the old save (`curation.bak.reset`) (#175)
 - [x] Bundle size: Phaser is already its own cached chunk (332 KB gzip) and the builder and Wakefield are separate pages; the warning is silenced and `tests/bundle.cjs` holds gzip budgets (phaser 360, main 230, total 760 KB). Splitting scenes is not worth the risk across 14 chats' shared files (#175)
 - [x] Accessibility and settings polish (no look change): reduced-motion media query for the menus, two-tap Reset. Menu and collection-screen **redesign waits for the user's direction.** (#175)
-- [ ] A bug sweep with a repeatable full-flow test after each big merge.
+- [x] Repeatable full-flow test after each big merge: `ALL=1 npm test` (adds the playtest and perf); the default set runs in CI on every PR (#176)
 
 ## CHAT 4: Restoration and provenance (loop step 4)
 Owns: new `src/restore.js`, `src/restorestudio.js`, `src/storage_room.js`. Claim: `claimed: 2026-10-29`
