@@ -149,6 +149,7 @@ const fail = (s, n) => log(s, '❌', n);
     if (!h) return false;
     const st = s.standFor(h);
     s.player.setPosition(st.x, st.y);
+    s.faceSprite(s.player, 'player', st.fx, st.fy); // (you act on what you face)
     return true;
   });
   await wait(300);

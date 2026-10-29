@@ -1497,7 +1497,7 @@ export class IslandScene extends Phaser.Scene {
       // by a boat, or back where you stepped off
       // (a boat is long: face its nearest point, so standing alongside it counts)
       this.boats.forEach((b) => consider(64, Math.hypot(x - b.x, y - b.y), { boat: true, icon: 'door' }, Math.min(Math.max(x, b.x - 20), b.x + 20), b.y));
-      if (this.landingSpot) consider(36, Math.hypot(x - this.landingSpot.x, y - this.landingSpot.y), { boat: true, icon: 'door' }, this.landingSpot.x, this.landingSpot.y);
+      if (this.landingSpot) consider(36, Math.hypot(x - this.landingSpot.x, y - this.landingSpot.y), { boat: true, icon: 'door' }); // (where you stepped off: an area, no facing needed)
       if (this.door) consider(30, Math.hypot(x - this.door.x, y - (this.door.y + 4)), { door: true, icon: 'door' }, this.door.x, this.door.y);
       this.islanders.forEach((n) => consider(26, Math.hypot(x - n.s.x, y - n.s.y), n.animal ? { animal: n, icon: 'talk' } : { npc: n, icon: 'talk' }, n.s.x, n.s.y - 8));
     } else {
@@ -1827,6 +1827,10 @@ export class IslandScene extends Phaser.Scene {
     this.tells.update(dt, this.islanders, this.cameras.main.worldView);
     this.socializeIslanders(dt);
     if (this.paused) {
+      if (this.waterMode) {
+        this.waterMode = null; // (no Boat button hanging over a menu)
+        this.waterBtn.classList.add('hidden');
+      }
       // (a conversation or a panel took over mid-drag: let go of the stick so you don't walk off afterwards)
       if (this.dragging) {
         this.dragging = false;

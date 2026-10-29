@@ -232,6 +232,19 @@ const check = (cond, good, bad) => (cond ? ok(good) : fail(bad));
   check(/keeper/.test(scenes.ids) && /kid0/.test(scenes.ids), `the lawn has its little scenes (${scenes.ids})`, `no little scenes: ${scenes.ids}`);
   check(scenes.keeper && ['work', 'rest'].includes(scenes.keeper.state) && scenes.keeper.pile >= 0.85, 'the groundskeeper works and rests', `keeper ${JSON.stringify(scenes.keeper)}`);
   check(scenes.kids && new Set(scenes.kids).size === scenes.kids.length, 'the kids run their circle, each in a different place', `kids ${JSON.stringify(scenes.kids)}`);
+  const life = await p.evaluate(() => {
+    const s = __game.scene.getScene('island');
+    const keeper = s.islanders.find((n) => n.vignette === 'keeper');
+    if (keeper) s.player.setPosition(keeper.home.x, keeper.home.y + 70);
+    let blinks = 0;
+    for (let i = 0; i < 600; i++) {
+      s.tells.update(0.05, s.islanders, s.cameras.main.worldView);
+      blinks = Math.max(blinks, s.tells.blinks.length);
+    }
+    const breathing = s.islanders.some((n) => !n.animal && n.baseScale !== undefined && n.s.scaleY !== n.baseScale);
+    return { blinks, breathing, smoke: s.wind.spots.length };
+  });
+  check(life.blinks > 0 && life.breathing, 'people blink and breathe', `blink/breath ${JSON.stringify(life)}`);
 
   console.log('Targeting, dialogue and details');
   await open('?season=summer&weather=clear&holiday=none');
@@ -307,18 +320,6 @@ const check = (cond, good, bad) => (cond ? ok(good) : fail(bad));
   check(gone.shown && gone.hidden, 'a bubble is gone the moment you walk away', `bubble ${JSON.stringify(gone)}`);
   const em = await p.evaluate(() => ['heart', 'star', 'clover', 'note', 'bang', 'q', 'dots', 'sweat'].filter((k) => !__game.textures.exists(`emote_${k}`)));
   check(em.length === 0, 'the emote set is all there (heart, star, shamrock, note, !, ?, ..., sweat)', `missing emotes: ${em.join(', ')}`);
-  const life = await p.evaluate(() => {
-    const s = __game.scene.getScene('island');
-    s.player.setPosition(s.door.x, s.door.y + 100);
-    let blinks = 0;
-    for (let i = 0; i < 400; i++) {
-      s.tells.update(0.05, s.islanders, s.cameras.main.worldView);
-      blinks = Math.max(blinks, s.tells.blinks.length);
-    }
-    const breathing = s.islanders.some((n) => !n.animal && n.baseScale !== undefined && n.s.scaleY !== n.baseScale);
-    return { blinks, breathing, smoke: s.wind.spots.length };
-  });
-  check(life.blinks > 0 && life.breathing, 'people blink and breathe', `blink/breath ${JSON.stringify(life)}`);
 
   console.log('Weather details');
   await open('?season=winter&weather=snow&holiday=none');
