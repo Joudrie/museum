@@ -81,7 +81,7 @@ function build() {
  * Opens the digging patch. onClose({ found }) fires when it closes.
  * Pass `entry` to fix what is underneath; otherwise the tool you pick helps decide (until your first stroke).
  */
-export function startDig(key, { onClose, collection = 'mineral', entry } = {}) {
+export function startDig(key, { onClose, onFound, collection = 'mineral', entry } = {}) {
   if (!el) build();
   let tool = 'brush';
   let handle;
@@ -101,7 +101,7 @@ export function startDig(key, { onClose, collection = 'mineral', entry } = {}) {
         b.onclick = () => {
           if (handle.started() || tool === id) return;
           tool = id;
-          handle = setup(key, { onClose, entry: roll(), tool });
+          handle = setup(key, { onClose, onFound, entry: roll(), tool });
           draw();
         };
         return b;
@@ -109,12 +109,12 @@ export function startDig(key, { onClose, collection = 'mineral', entry } = {}) {
     );
     tools.hidden = fixed || found < TOOLS.trowel.need; // nothing to choose until a second tool is earned
   };
-  handle = setup(key, { onClose, entry: roll(), tool });
+  handle = setup(key, { onClose, onFound, entry: roll(), tool });
   draw();
   return handle;
 }
 
-function setup(key, { onClose, entry, tool }) {
+function setup(key, { onClose, onFound, entry, tool }) {
   const q = (s) => el.querySelector(s);
   const cv = q('.dig-canvas');
   const dpr = Math.min(2, window.devicePixelRatio || 1);
@@ -177,7 +177,7 @@ function setup(key, { onClose, entry, tool }) {
         got = collect(entry.id);
       }
       save(PARTS, p);
-    } else got = collect(entry.id);
+    } else got = onFound ? onFound(entry) : collect(entry.id); // (expeditions bring finds home dirty instead)
     const whole = !entry.parts || part >= entry.parts;
     sfx('unlock');
     haptic?.();
@@ -185,7 +185,7 @@ function setup(key, { onClose, entry, tool }) {
     q('.dig-title').textContent = whole ? `You found ${a} ${entry.title}!` : `Part of ${a} ${entry.title}!`;
     q('.dig-meta').innerHTML = `<span class="r${entry.rarity}">${RARITY[entry.rarity]}</span>${whole ? (!got || got.fresh ? ' · <b class="catch-new">New!</b>' : '') : ` · piece ${part} of ${entry.parts}`}`;
     q('.dig-note').textContent = whole
-      ? (entry.blurb || '') + (entry.dirty ? ' It is filthy: it will need cleaning before it can go on display.' : '')
+      ? got?.note || (entry.blurb || '') + (entry.dirty ? ' It is filthy: it will need cleaning before it can go on display.' : '')
       : `${entry.parts - part} more to find. Keep digging at fossil spots: the rest is out there.`;
     q('.dig-close').textContent = 'Nice';
     const t = load(KEY, {});

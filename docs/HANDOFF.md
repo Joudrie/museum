@@ -179,6 +179,12 @@ Scenes (`src/main.js`):
 - A set with every piece on display (any rooms) earns double for those pieces; the panel shows each started set's progress and plaque. Items can
   carry `needs: { entryId: count }` (the T-rex skeleton: 6 dinosaur bones + a T. rex tooth); `missingFor()` blocks buying and the toolkit says what is missing.
 
+### Expeditions (chat 7): leads, boat scene, seven islands
+- **Leads** (`src/leads.js`): letters, torn maps, notes and rumours, kept in `curation.leads`. The first (a bottle note) turns up when you first open the boat menu; finishing an island hands out the next (`then`). The boat menu only lists an expedition island once a lead points at it, and has a **Letters & leads** entry with a "Set sail" button per lead. Add a lead = one entry in `LEADS`.
+- **Islands** are `src/maps/exp-<id>.json` (builder format) with an `expedition` block: `spots` (note, dig, chest, crate, plate, gate, lever), `patrols`, `clock`, `goals`. `src/expedition.js` runs it (auto-loads every `exp-*.json`). `tools/gen_expeditions.mjs` drew the seven first drafts (Skull Isle, Drowned Reef, Sandstone Tomb, Red Badlands, Lost Temple, Thieves' Rock, Frozen North); repaint them in the builder but keep the block. Failing is gentle: caught or washed out puts you back at the boat, finds and flags stay.
+- **Finds come home dirty** with chat 4's contract: `collect(id, { dirty: true })`, so they are in your bag and the Restoration Studio cleans them. `foundAt(id)` (`src/foundat.js`) remembers the island and `provenanceLine` shows "Recovered from Skull Isle". Leads offered by chat 10's story chapters (`curation.leads_offered`: `heist-hideout`, `sphinx-letter`, `studio-chest`, `last-scrolls`) open Thieves' Rock, the Tomb, the Reef and the Temple.
+- Test: `PW=... OUT=<dir> node tests/expedition.cjs` (a whole trip on Skull Isle, and every island's spots are reachable from the boat; run it alone, not next to another browser test).
+
 ### Wakefield, MA is NOT part of the game
 A separate personal project (the user's hometown, for friends) that only shares the engine. Its page is `wakefield.html`, its code
 `src/wakefield/`, its notes `docs/WAKEFIELD.md`. Never add it to the game. Engine improvements made along the way and kept in the
@@ -262,6 +268,7 @@ See `docs/ASSET-HUNT.md` (the "super dig" prompt plus the to-do list) and `docs/
 
 - `holiday()` in `src/weather.js` (real calendar; `?holiday=halloween|winter|none` pins it). Halloween: pumpkins by the museum doors (`holidayDecor` in IslandScene), kids and some students in witch / ghost / pumpkin costumes (`visitorLook`). Winter: woolly hats.
 - Room presets (`src/presets.js`, `tests/presets.cjs`): Customize > This room > Saved layouts saves a room's decor and items under a name and loads them into any room. Loading sells what is there and buys the preset's items at normal prices, so layouts are not free items.
+- Weather shades the light: `overcast()` in `src/lighting.js` (rain greyer, snow brighter), used by rooms and islands. `stormRumble(scene, kind)` in `src/weather.js` = thunder (`sfx('thunder')`, generated noise) plus a faint flash on some rainy days.
 - Themed rooms (`roomTheme` in `src/wallet.js`): 3+ paintings all from one era earn 1.5x; Customize > Rating says so. "Section" is read as the painting's `era`.
 
 ## Digging v2 (Chat 6)
