@@ -59,7 +59,7 @@ import { collect as collectEntry } from './collections/codex.js';
 import { addCoins } from './wallet.js';
 import { IslandLife } from './progression/ui/islandlife.js';
 import { PlayerLook, wornLooks } from './progression/ui/lookfx.js';
-import { curatorLook } from './people/wardrobe.js';
+import { dressCurator } from './people/wardrobe.js';
 import { progression } from './progression/index.js';
 import { regionOfMap, REGIONS, speciesOfRegion } from './progression/species.js';
 import { regionAccess } from './progression/access.js';
@@ -1170,9 +1170,7 @@ export class IslandScene extends Phaser.Scene {
   // The curator: their character, the cosmetics they wear and any costume (people/wardrobe.js).
   // PlayerLook calls this again when what they wear changes.
   dressPlayer(ch = { ...DEFAULT_CHARACTER, ...load('curation.character', {}) }) {
-    const { colors, look } = curatorLook(ch, wornLooks());
-    makeCharacter(this, 'player', colors, look);
-    if (this.player?.active) this.player.setTexture(this.player.texture.key); // (not the last visit's sprite, gone with it)
+    dressCurator(this, ch, wornLooks());
   }
 
   // Someone who lives on the island: walks Pokémon-style, a tile or two at a

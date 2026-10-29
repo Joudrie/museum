@@ -6,6 +6,7 @@
 import { CLASSES } from './classes.js';
 import { CARRY, BUDDIES } from './parts.js';
 import { load, save } from '../storage.js';
+import { makeCharacter } from '../art.js';
 
 export const COSTUME_GROUPS = { spooky: 'Spooky', fantasy: 'Myth & fantasy', seasonal: 'Holidays', history: 'Through history', jobs: 'Jobs & play' };
 // [id, name, the class variant it is taken from, group]
@@ -145,4 +146,17 @@ export function curatorLook(ch = {}, worn = []) {
   if (open('hold', ch.hold) && CARRY[ch.hold]) look.carry = ch.hold;
   if (open('shoulder', ch.shoulder) && BUDDIES[ch.shoulder]) look.buddy = ch.shoulder;
   return { colors, look };
+}
+
+// Draws the curator's pictures (`player_*`) for this look, only when it changed. Every sprite still
+// showing the old pictures, in any scene, picks up the new ones (a removed picture can't be drawn).
+let drawn = '';
+export function dressCurator(scene, ch, worn = []) {
+  const { colors, look } = curatorLook(ch, worn);
+  const sig = JSON.stringify([colors, look]);
+  if (sig === drawn && scene.textures.exists('player_down')) return false;
+  drawn = sig;
+  makeCharacter(scene, 'player', colors, look);
+  scene.game.scene.scenes.forEach((s) => s.sys.displayList?.list.forEach((o) => o.active && o.texture?.key?.startsWith('player_') && o.setTexture(o.texture.key)));
+  return true;
 }

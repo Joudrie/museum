@@ -50,7 +50,7 @@ import { say } from './ui/toast.js';
 import { runDialogue } from './dialogue.js';
 import { progression } from './progression/index.js';
 import { wornLooks } from './progression/ui/lookfx.js';
-import { curatorLook } from './people/wardrobe.js';
+import { dressCurator } from './people/wardrobe.js';
 import { list as listEntries } from './collections/index.js';
 import { collect as collectEntry } from './collections/codex.js';
 import { load as loadStore, save as saveStore } from './storage.js';
@@ -1973,8 +1973,7 @@ export class RoomScene extends Phaser.Scene {
 
   // The curator's sprite: their character, the cosmetics they wear and any costume (people/wardrobe.js).
   dressPlayer() {
-    const { colors, look } = curatorLook(this.character, wornLooks());
-    makeCharacter(this, 'player', colors, look);
+    dressCurator(this, this.character, wornLooks());
   }
 
   // Big front/side/back views of the curator for the Character tab.
