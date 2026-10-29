@@ -35,8 +35,9 @@ import { weatherToday, season } from './weather.js';
 import { ORIENT_LABELS, SIZE_LABELS, BREAK, roomAt, MAIN_HALL_PRICE, ATRIUM_PRICE, isFixed, seedEntry, loadRooms, addRoom, resetRooms, updateRoom, swapRooms, roomName, layout, paintingsFor, slotStates, setSlot, hungAnywhere, placeArt, wallItems, plantSpots, carpetRect } from './rooms.js';
 import { openSlotMenu } from './slotmenu.js';
 import { ITEMS, loadItems, saveItems, resetItems, footprint, countPlaced } from './items.js';
-import { roomDirt, removeDirt, resetDirt, dirtCount, covered, janitors, janitorCost, hireJanitor, resetJanitors, guides, maxGuides, guideCost, hireGuide, hasCarpenter, hireCarpenter, CARPENTER_COST, staffCount } from './staff.js';
+import { roomDirt, removeDirt, resetDirt, dirtCount, covered, janitors, janitorCost, hireJanitor, resetJanitors, guides, guideBoost, maxGuides, guideCost, hireGuide, upgradeLevel, upgradeValue, upgradeCost, buyUpgrade, hasCarpenter, hireCarpenter, CARPENTER_COST, staffCount } from './staff.js';
 import { openStaffMenu } from './staffmenu.js';
+import { UPGRADES } from './economy.js';
 import { hasCameras, buyCameras, resetSecurity, CAMERA_COST, trackSeen, maybeRob } from './security.js';
 import { officeLevel, setOfficeLevel, resetOffice, perks, itemLevel, LEVELS, MAX_LEVEL } from './office.js';
 import { openOffice } from './officemenu.js';
@@ -1581,7 +1582,7 @@ export class RoomScene extends Phaser.Scene {
     const boosts = [];
     if (met) boosts.push(`Famous visitors met: ${met} of ${Object.keys(FAMOUS).length} · +${Math.round((famousBoost() - 1) * 100)}% income`);
     else boosts.push('Meet famous visitors in the main hall: +5% income each');
-    if (guides()) boosts.push(`Tour guides: ${guides()} · +${guides() * 10}% income`);
+    if (guides()) boosts.push(`Tour guides: ${guides()} · +${Math.round(guides() * guideBoost() * 100)}% income`);
     this.rooms.forEach((room, i) => {
       const love = loveOf(i);
       if (love >= 2) boosts.push(`Visitors love ${roomName(room, i)}: +${(Math.min(20, love) * 0.5).toFixed(1)}%`);
@@ -2107,16 +2108,42 @@ export class RoomScene extends Phaser.Scene {
     save(BREAK_SEEDED_KEY, true);
   }
 
+  // Break-room upgrades for the staff board (data in economy.js).
+  upgradeRows() {
+    return Object.entries(UPGRADES).map(([id, u]) => {
+      const lvl = upgradeLevel(id);
+      return {
+        id,
+        name: u.name,
+        blurb: u.blurb,
+        level: lvl,
+        cost: upgradeCost(id),
+        now: u.show(upgradeValue(id)),
+        next: lvl < u.cost.length ? u.show(u.effect[lvl]) : null,
+        locked: id === 'toolbox' && !hasCarpenter() ? 'Hire the carpenter' : id === 'training' && !guides() ? 'Hire a guide' : null,
+      };
+    });
+  }
+
   openStaff() {
     this.pause(true);
     openStaffMenu({
-      info: () => ({ free: FREE, janitors: janitors(), guides: guides(), maxGuides: maxGuides(this.rooms.length), guideCost: guideCost(), carpenter: hasCarpenter(), carpenterCost: CARPENTER_COST }),
+      info: () => ({ free: FREE, janitors: janitors(), guides: guides(), maxGuides: maxGuides(this.rooms.length), guideCost: guideCost(), carpenter: hasCarpenter(), carpenterCost: CARPENTER_COST, guideBoost: guideBoost(), upgrades: this.upgradeRows() }),
+      onUpgrade: (id) => {
+        const cost = upgradeCost(id);
+        if (cost === null || !spend(cost)) return this.toast(`Need ${cost} gold`);
+        this.settleAll();
+        buyUpgrade(id);
+        sfx('build');
+        this.toast(`${UPGRADES[id].name} upgraded`);
+        this.updateHud();
+      },
       onHireGuide: () => {
         if (!spend(guideCost())) return this.toast(`Need ${guideCost()} gold`);
         this.settleAll();
         hireGuide();
         sfx('build');
-        this.toast('Tour guide hired: +10% income');
+        this.toast(`Tour guide hired: +${Math.round(guideBoost() * 100)}% income`);
         this.refreshStaff();
         this.updateHud();
       },
