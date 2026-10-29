@@ -145,7 +145,7 @@ Owns: `src/weather.js`, `src/lighting.js`, `src/ambient.js`, `src/music.js`, `sr
 
 ## CHAT 12: Economy, staff and services
 Owns: `src/staffmenu.js`, `src/officemenu.js`, `src/office.js`, `src/incomemenu.js`, `src/wallet.js`, `src/rating.js`. Claim: `claimed: 2026-10-29`
-- [x] Break-room upgrade menu (slower mess, guide training, carpenter toolbox); Curator's Office level costs and unlocks now in `src/economy.js` (#113).
+- [x] Break-room upgrade menu (slower mess, guide training, carpenter toolbox); Curator's Office level costs and unlocks now in `src/economy.js` (#126).
 - [ ] Gift shop (merch of your best paintings), food court, kids' discovery room, lecture hall (a famous visitor gives a talk), library and archive where the stored collection lives, coffee shop depth.
 - [ ] Income formula: popularity x decor x visitors; the 8-hour offline cap messaging; coin pads and "collect all" cost.
 - [ ] Security: more camera types, the thief events.
