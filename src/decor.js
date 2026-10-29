@@ -26,11 +26,13 @@ export const CHARACTER_PALETTES = {
 };
 // What the main color is called for each outfit (the rows shown follow what the outfit draws).
 const MAIN_LABEL = { suit: 'Jacket', vest: 'Waistcoat', sweater: 'Sweater', tee: 'T-shirt', hoodie: 'Hoodie', coat: 'Coat', apron: 'Shirt', dress: 'Dress', gown: 'Gown', toga: 'Toga',
-  coveralls: 'Coveralls', overalls: 'Overalls', hivis: 'Vest', oilskins: 'Oilskins', waders: 'Waders', wetsuit: 'Wetsuit', sailor: 'Top', captain: 'Coat', striped: 'Shirt', flannel: 'Shirt', fieldvest: 'Vest', trunks: 'Trunks', swimsuit: 'Swimsuit' };
-const W_LABEL = { striped: 'Stripes', sweater: 'Collar', hoodie: 'Strings', dress: 'Collar', gown: 'Trim', toga: 'Trim', coveralls: 'Patch', tracksuit: 'Stripes', clown: 'Spots', varsity: 'Sleeves', doublet: 'Sleeves', hivis: 'Shirt' };
+  coveralls: 'Coveralls', overalls: 'Overalls', hivis: 'Vest', oilskins: 'Oilskins', waders: 'Waders', wetsuit: 'Wetsuit', sailor: 'Top', captain: 'Coat', striped: 'Shirt', flannel: 'Shirt', fieldvest: 'Vest', trunks: 'Trunks', swimsuit: 'Swimsuit',
+  kilt: 'Kilt', tunic: 'Tunic', armour: 'Armour', jester: 'Motley', bustle: 'Gown', flapper: 'Dress', leather: 'Jacket', tiedye: 'Shirt', disco: 'Suit', sheet: 'Sheet', skeleton: 'Suit', santa: 'Suit', snowman: 'Snow', onesie: 'Onesie' };
+const W_LABEL = { striped: 'Stripes', sweater: 'Collar', hoodie: 'Strings', dress: 'Collar', gown: 'Trim', toga: 'Trim', coveralls: 'Patch', tracksuit: 'Stripes', clown: 'Spots', varsity: 'Sleeves', doublet: 'Sleeves', hivis: 'Shirt',
+  kilt: 'Front panel', jester: 'Second colour', bustle: 'Buttons', leather: 'T-shirt', disco: 'Collar', santa: 'Fur trim' };
 // the optional second color (outfits with no shirt or trim of their own; see ACCENT_OUTFITS)
 const SECOND_COLORS = ['#efe6d4', '#ffffff', '#2a2a2e', '#c9a23f', '#b0413e', '#3d6fb6', '#4f7a3a', '#6a4c93', '#e8c8d0', '#c27a2c', '#2e7d7a'];
-const G_LABEL = { toga: 'Sash', apron: 'Apron', wetsuit: 'Stripe', sailor: 'Collar' };
+const G_LABEL = { toga: 'Sash', apron: 'Apron', wetsuit: 'Stripe', sailor: 'Collar', kilt: 'Belt' };
 const ACC_COLORS = ['#c0392b', '#2e7d7a', '#c9a23f', '#3d6fb6', '#e8e2d4', '#1e1e22', '#6a4c93'];
 export const DEFAULT_CHARACTER = { h: '#4a2e20', s: '#f2c6a0', c: '#7a2e3a', p: '#2f2b3d', b: '#1a1418', w: '#efe6d4', g: '#c9a23f', hair: 'short', outfit: 'suit' };
 

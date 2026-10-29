@@ -31,12 +31,33 @@ const swapIndex = () => {
   };
 };
 
+// The game's code and Phaser load through a small boot script, after swap/index.json has been fetched.
+// Tell the browser about them up front, so they download while that small file is fetched
+// (one round trip fewer before anything runs).
+const preloadGame = () => ({
+  name: 'preload-game',
+  transformIndexHtml: {
+    order: 'post',
+    handler(html, ctx) {
+      if (!ctx.bundle || ctx.path !== '/index.html') return;
+      const files = new Set();
+      const add = (c) => {
+        if (!c || files.has(c.fileName)) return;
+        files.add(c.fileName);
+        c.imports.forEach((i) => add(ctx.bundle[i]));
+      };
+      add(Object.values(ctx.bundle).find((c) => c.type === 'chunk' && c.facadeModuleId?.endsWith('/src/main.js')));
+      return [...files].map((f) => ({ tag: 'link', attrs: { rel: 'modulepreload', crossorigin: '', href: `./${f}` }, injectTo: 'head' }));
+    },
+  },
+});
+
 // Relative base so the build works on GitHub Pages (/museum/) and locally.
 // tiles.html and art.html are dev pages showing the tileset and every sprite.
 // wakefield.html is a separate personal project (the user's hometown), not part of the game.
 export default defineConfig({
   base: './',
-  plugins: [swapIndex()],
+  plugins: [swapIndex(), preloadGame()],
   build: {
     chunkSizeWarningLimit: 1600, // Phaser alone is ~1.5 MB (330 KB gzip, its own cached chunk); tests/bundle.cjs holds the real budget
     rollupOptions: {

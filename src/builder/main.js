@@ -7,6 +7,7 @@
 // cut from the free packs (public/builder, tools/build_palette.py).
 import { buildTiles, T } from '../tiles.js';
 import { CLIFF_GROUPS } from '../cliffkit.js';
+import { islandShelf, ISLAND_ORDER, HEAD_ORDER, roomShelf, ROOM_ORDER, roomLabels } from './sorting.js';
 import { swapReady, patchSheet } from '../swap.js';
 import { backup, backupsFor, latestBackup, keepStorage } from './vault.js';
 import recovered from './recovered.json';
@@ -29,8 +30,6 @@ const MATS = [
   { m: 4, name: 'Dirt path', color: '#b08458' },
 ];
 const FLAT_GROUPS = ['Ground', 'Paths', 'Water', 'Cliffs & ledges', ...CLIFF_GROUPS];
-// palette lists that are really one: shown together under the first name
-const MERGE = { Plants: 'Flowers & plants', 'Grounds & garden': 'Garden & park' };
 const SKIP_GROUP = /on |bank|Shoreline/; // the corner pieces terrain picks for you
 
 let TILES = null;
@@ -121,6 +120,9 @@ async function loadPieces() {
       /* no what's new row */
     }
     ROOM = await (await fetch('./builder/pieces.json')).json();
+    // each piece named for what it is ('Curtain 3'), numbered in palette order (src/builder/sorting.js)
+    const ids = ROOM.groups.flatMap((g) => g.pieces.map((p) => p.id));
+    const names = roomLabels(ROOM_ORDER.flatMap((list) => ids.filter((id) => roomShelf(id) === list)).concat(ids.filter((id) => !ROOM_ORDER.includes(roomShelf(id)))));
     await Promise.all(
       ROOM.groups.map(
         (g) =>
@@ -134,7 +136,7 @@ async function loadPieces() {
             img.onerror = res;
             img.src = `./${g.sheet}`;
             g.pieces.forEach((p) => {
-              PIECES[`p:${p.id}`] = { img, sx: p.x, sy: p.y, w: p.w, h: p.h, layer: g.kind === 'tile' || g.kind === 'wall' ? 'tile' : 'object', label: `${g.name} ${p.id.split('/')[1]}`, src: p.pack, flat: g.kind === 'flat' };
+              PIECES[`p:${p.id}`] = { img, sx: p.x, sy: p.y, w: p.w, h: p.h, layer: g.kind === 'tile' || g.kind === 'wall' ? 'tile' : 'object', label: names[p.id] || `${g.name} ${p.id.split('/')[1]}`, src: p.pack, flat: g.kind === 'flat' };
             });
           }),
       ),
@@ -248,20 +250,27 @@ function buildPalette() {
   NEW = NEW.filter((r) => PIECES[r]);
   if (NEW.length) lists.push({ name: "What's new", refs: NEW });
   lists.push({ name: 'Terrain', refs: MATS.map((m) => `m:${m.m}`) });
-  const byGroup = {};
+  // every piece in its list (src/builder/sorting.js), long lists split by small headings
+  const byList = {};
   Object.entries(PIECES).forEach(([ref, p]) => {
     if (!ref.startsWith('t:') || p.skip || ref === 't:tall_grass_front') return; // (tall grass draws its own front)
-    const name = p.layer === 'tile' ? `Ground: ${p.group}` : MERGE[p.group] || p.group || 'Other';
-    (byGroup[name] ||= []).push(ref);
+    const { list, head } = islandShelf(ref.slice(2), p.group || '');
+    const heads = (byList[list] ||= new Map());
+    (heads.get(head) || heads.set(head, []).get(head)).push(ref);
   });
-  const order = ['Ground: Ground', 'Ground: Paths', 'Ground: Water', 'Buildings', 'People', 'Animals', 'Trees', 'Plants', 'Flowers & plants', 'Rocks', 'Buildings', 'Garden & park', 'Grounds & garden', 'Props', 'Dig sites', 'Puzzles', 'Ground: Cliffs & ledges', ...CLIFF_GROUPS.map((g) => `Ground: ${g}`), 'Cliffs & ledges'];
-  Object.keys(byGroup)
-    .sort((a, b) => (order.indexOf(a.startsWith('People') ? 'People' : a) + 1 || 99) - (order.indexOf(b.startsWith('People') ? 'People' : b) + 1 || 99)) // the People: lists sit with People
-    .forEach((name) => lists.push({ name: name.replace('Ground: Ground', 'Ground tiles').replace('Ground: Cliffs & ledges', 'Cliff ground pieces').replace('Ground: ', ''), refs: byGroup[name] }));
-  (ROOM?.groups || []).forEach((g) => lists.push({ name: `Room: ${g.name}`, refs: g.pieces.map((p) => `p:${p.id}`) }));
+  const rank = (name) => (ISLAND_ORDER.indexOf(name.startsWith('People') ? 'People' : name) + 1 || 99);
+  Object.keys(byList)
+    .sort((a, b) => rank(a) - rank(b)) // the People: lists sit with People
+    .forEach((name) => {
+      const heads = [...byList[name].entries()].sort(([a], [b]) => (HEAD_ORDER.indexOf(a) + 1 || 99) - (HEAD_ORDER.indexOf(b) + 1 || 99));
+      lists.push({ name, refs: heads.flatMap(([head, refs]) => (head ? [`#${head}`, ...refs] : refs)) });
+    });
+  const rooms = {};
+  (ROOM?.groups || []).forEach((g) => g.pieces.forEach((p) => (rooms[roomShelf(p.id)] ||= []).push(`p:${p.id}`)));
+  [...ROOM_ORDER, ...Object.keys(rooms).filter((n) => !ROOM_ORDER.includes(n))].forEach((n) => rooms[n] && lists.push({ name: `Room: ${n}`, refs: rooms[n] }));
   lists.forEach((list, li) => {
     const det = document.createElement('details');
-    det.innerHTML = `<summary>${list.name}<small>${list.refs.filter((r) => !FAMILY[r] || FAMILY[r][0] === r).length}</small></summary><div class="pieces"></div>`;
+    det.innerHTML = `<summary>${list.name}<small>${list.refs.filter((r) => !r.startsWith('#') && (!FAMILY[r] || FAMILY[r][0] === r)).length}</small></summary><div class="pieces"></div>`;
     const grid = det.querySelector('.pieces');
     let built = false;
     det.addEventListener('toggle', () => {
@@ -270,6 +279,12 @@ function buildPalette() {
       if (!built) {
         built = true;
         list.refs.forEach((ref) => {
+          if (ref.startsWith('#')) {
+            const h = document.createElement('h4');
+            h.className = 'shelf-head';
+            h.textContent = ref.slice(1);
+            return grid.appendChild(h);
+          }
           if (FAMILY[ref] && FAMILY[ref][0] !== ref) return; // a family is one entry; Turn shows the other sides
           grid.appendChild(pieceButton(ref));
         });

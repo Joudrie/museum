@@ -83,6 +83,15 @@ const FILLER = /masterpiece|iconic|famous|renowned|stunning|breathtaking|beautif
   check(typeof hi === 'string' && R.isRegular('Dennis', 'nerd'), 'third chat: they know you', 'no recognition on the third chat');
   check(!R.isRegular('Dennis', 'kid') && R.talks('Dennis', 'kid') === 0, 'same name, other type is a different person', 'people mixed up');
   check(typeof R.remember('Dennis', 'nerd', 0.9) === 'string' && R.regularCount() === 1, 'regulars keep talking and are counted', 'regular lost');
+  // after very many talks something rare is said, once: the 10th, 25th and 50th
+  global.localStorage._d = {};
+  const rares = [];
+  for (let i = 1; i <= 50; i++) {
+    R.remember('Dennis', 'nerd');
+    const r = R.rareFor('Dennis', 'nerd');
+    if (r) rares.push(i);
+  }
+  check(rares.join(',') === '10,25,50', 'a rare line comes only on the 10th, 25th and 50th talk', `rare lines came at ${rares.join(',')}`);
   global.localStorage._d['curation.regulars'] = '[1,2';
   check(R.remember('Max', 'kid') === null, 'corrupt save falls back', 'corrupt regulars save crashed');
 

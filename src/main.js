@@ -3,6 +3,7 @@ import { RoomScene } from './RoomScene.js';
 import { IslandScene } from './IslandScene.js';
 import { IsoScene } from './IsoScene.js';
 import { makeCharacter } from './art.js';
+import { warmTiles } from './tiles.js';
 import './ui.js';
 import './daily.css';
 import './daily.js';
@@ -22,6 +23,7 @@ const game = new Phaser.Game({
   height,
   backgroundColor: '#1d1512',
   pixelArt: true,
+  audio: { noAudio: true }, // (every sound is made by src/music.js, which starts on the first tap; Phaser's own audio is never used)
   scale: { mode: Phaser.Scale.NONE },
   scene: [RoomScene, IslandScene, IsoScene],
 });
@@ -57,6 +59,7 @@ if (boot) {
     });
   game.events.once('postrender', hide); // the first frame is drawn, so the scene's create() has run and the HUD has its numbers
 }
+game.events.once('ready', () => setTimeout(warmTiles, 2500)); // the island's tiles, drawn in idle moments while you look round the museum
 
 window.__game = game; // handy for debugging in the console
 window.__makeCharacter = makeCharacter; // (and for sprite contact sheets in tests)

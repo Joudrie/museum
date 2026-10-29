@@ -172,6 +172,10 @@ const SFX = {
   bite: (t) => [1047, 1397].forEach((f, i) => tone(f, t + i * 0.06, 0.14, { wave: 'square', gain: 0.1 })),
   reel: (t) => [0, 1, 2, 3, 4].forEach((i) => tone(1200 + i * 90, t + i * 0.035, 0.03, { wave: 'square', gain: 0.05 })),
   quest: (t) => [659, 880, 1319].forEach((f, i) => tone(f, t + i * 0.09, 0.28, { gain: 0.24 })),
+  chirp: (t) => [0, 1, 2].forEach((i) => tone(2500 + i * 420 + Math.random() * 200, t + i * 0.06, 0.07, { wave: 'sine', gain: 0.05, to: 3300 })), // sparrows going up
+  emote: (t) => tone(880, t, 0.09, { wave: 'sine', gain: 0.07, to: 1320 }), // an emote bubble
+  scrape: (t) => tone(760, t, 0.13, { wave: 'sawtooth', gain: 0.022, to: 360 }), // a rake on the ground
+  stepSnow: (t) => tone(1700 + Math.random() * 500, t, 0.06, { wave: 'sawtooth', gain: 0.02, to: 650 }),
   // progression layer: each step of a chain rings a little higher
   tickup: (t, step = 0) => tone(660 * Math.pow(1.122, Math.min(12, step)), t, 0.09, { wave: 'square', gain: 0.07 }),
   pop: (t, step = 0) => [0, 0.05].forEach((d, i) => tone(784 * Math.pow(1.122, Math.min(12, step)) * (i ? 1.5 : 1), t + d, 0.14, { wave: 'sine', gain: 0.2 })),
