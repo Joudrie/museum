@@ -148,6 +148,10 @@ for in the museum sources and the matching candidates are listed in the fixes fi
 | `tools/build_batch.mjs`, `content/batches/` | batches of wanted works |
 | `tools/review_report.mjs` | the review report (text or HTML) |
 | `tools/publish_content.mjs` | approved drafts → data file + `CREDITS.md` |
+| `tools/host_paintings.mjs` | hosts our own 1280px copies in `public/paintings/` (`content/hosted-images.json` keeps the original URLs) |
+| `tools/potd.mjs`, `content/potd/` | Painting of the Day lines: one quoted sentence per painting, a date-based rotation, `status` draft/approved |
+| `tools/apply_rarity.mjs`, `content/rarity-proposals.json` | rarity by fame, applied only after the user sets `status` to approved |
+| `content/image-proposals.md` | replacement images for the broken or wrong-shaped paintings (proposals, never applied) |
 | `tools/import_collection.mjs` | CSV → data file (also refuses missing license / credit / ratio) |
 | `tools/record_fixtures.mjs` | save a live response as a test fixture |
 | `content/review/<collection>/` | draft and approved entries |
