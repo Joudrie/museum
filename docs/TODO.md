@@ -144,7 +144,7 @@ Owns: `src/weather.js`, `src/lighting.js`, `src/ambient.js`, `src/music.js`, `sr
 - [ ] Waterfalls, fountains, swans, fireflies and other life.
 
 ## CHAT 12: Economy, staff and services
-Owns: `src/staffmenu.js`, `src/officemenu.js`, `src/office.js`, `src/incomemenu.js`, `src/wallet.js`, `src/rating.js`. Claim: `open`
+Owns: `src/staffmenu.js`, `src/officemenu.js`, `src/office.js`, `src/incomemenu.js`, `src/wallet.js`, `src/rating.js`. Claim: `claimed: 2026-10-29`
 - [ ] Break-room upgrade menu (faster janitors, guide bonus, carpenter speed); Curator's Office level costs and unlocks.
 - [ ] Gift shop (merch of your best paintings), food court, kids' discovery room, lecture hall (a famous visitor gives a talk), library and archive where the stored collection lives, coffee shop depth.
 - [ ] Income formula: popularity x decor x visitors; the 8-hour offline cap messaging; coin pads and "collect all" cost.
