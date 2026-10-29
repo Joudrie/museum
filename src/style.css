@@ -2892,3 +2892,45 @@ body.outside #hud {
     scroll-behavior: auto !important;
   }
 }
+
+/* Customize → Columns: a grid of tall column cards (vertical scroll only) */
+.column-pick {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+.column-pick button {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 2px;
+  min-width: 0;
+  padding: 6px 2px;
+  border: 2px solid var(--gold-dark);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--ink);
+  font: inherit;
+}
+.column-pick button.on {
+  border-color: var(--gold);
+  background: rgba(201, 162, 63, 0.18);
+}
+.column-pick img {
+  width: 42px;
+  height: 109px;
+  image-rendering: pixelated;
+}
+.column-pick b {
+  font-size: 12px;
+  line-height: 1.15;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+.column-pick i {
+  font-size: 10px;
+  font-style: normal;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.1;
+}
