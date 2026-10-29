@@ -91,11 +91,11 @@ Owns: `src/dig.js`, `src/puzzles*.js`, `src/collections/data/{minerals,fossils}.
 
 ## CHAT 7: Expeditions, leads and expedition islands
 Owns: new `src/expedition*.js`, `src/leads.js`, `src/maps/` (new islands). Claim: `claimed: 2026-10-29`
-- [x] **Leads:** a letter, a torn map, a pirate's note, a rumour from a famous visitor sends you to an island. (#108: `src/leads.js`, Letters at the boat)
-- [x] Boat flow to expedition islands (the boat menu lists every island); a short boat scene. (#108)
-- [x] Levels as playable island maps (#108: all seven, `src/maps/exp-*.json`, drawn by `tools/gen_expeditions.mjs`): pirate island (jungle maze, traps, captain's map, chest), shipwreck dive (water-damaged crates), desert tomb (sliding stones), dinosaur badlands (fossil cliff), lost temple (plates, hidden rooms), heist hideout (stealth), frozen north (ice cave, mammoth).
-- [x] Each level can be slow puzzle, chase with light parkour, a dig, or a mix; failing is gentle (caught by pirates, tide comes in: retry). (#108; the "parkour" is dodging patrols through long grass, there is no jump yet)
-- [x] Come home with finds that need restoring (Chat 4), then display (Chat 5); the plaque says where. (#108: `collect(id, {dirty:true})` and `foundAt()`, see HANDOFF)
+- [x] **Leads:** a letter, a torn map, a pirate's note, a rumour from a famous visitor sends you to an island. (#152: `src/leads.js`, Letters at the boat)
+- [x] Boat flow to expedition islands (the boat menu lists every island); a short boat scene. (#152)
+- [x] Levels as playable island maps (#152: all seven, `src/maps/exp-*.json`, drawn by `tools/gen_expeditions.mjs`): pirate island (jungle maze, traps, captain's map, chest), shipwreck dive (water-damaged crates), desert tomb (sliding stones), dinosaur badlands (fossil cliff), lost temple (plates, hidden rooms), heist hideout (stealth), frozen north (ice cave, mammoth).
+- [x] Each level can be slow puzzle, chase with light parkour, a dig, or a mix; failing is gentle (caught by pirates, tide comes in: retry). (#152; the "parkour" is dodging patrols through long grass, there is no jump yet)
+- [x] Come home with finds that need restoring (Chat 4), then display (Chat 5); the plaque says where. (#152: `collect(id, {dirty:true})` and `foundAt()`, see HANDOFF)
 - [ ] More island buildings and props, island seasons and weather, animals and people to meet.
 - [x] The user's builder-made island as the default spawn (Main Island is already home; nothing to do).
 - [ ] Rule: **earned, not bought, no throwaway mini-games.**
