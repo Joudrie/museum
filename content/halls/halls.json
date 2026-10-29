@@ -434,8 +434,7 @@
       "sky-stones"
      ]
     }
-   ],
-   "planned": []
+   ]
   },
   {
    "id": "minerals",
@@ -518,9 +517,19 @@
      "y": 0.75
     }
    ],
-   "collections": [],
-   "planned": [
-    "flower"
+   "collections": [
+    {
+     "id": "glassflower",
+     "sets": [
+      "glass-garden"
+     ]
+    },
+    {
+     "id": "insect",
+     "sets": [
+      "wing-case"
+     ]
+    }
    ]
   },
   {
@@ -669,9 +678,14 @@
      "sets": [
       "potters-shelf"
      ]
+    },
+    {
+     "id": "coin",
+     "sets": [
+      "coin-tray"
+     ]
     }
-   ],
-   "planned": []
+   ]
   },
   {
    "id": "maritime",
@@ -708,9 +722,13 @@
      "y": 0.8
     }
    ],
-   "collections": [],
-   "planned": [
-    "ship-model"
+   "collections": [
+    {
+     "id": "ship",
+     "sets": [
+      "harbour-shelf"
+     ]
+    }
    ]
   },
   {
@@ -755,9 +773,13 @@
      "y": 0.8
     }
    ],
-   "collections": [],
-   "planned": [
-    "armor"
+   "collections": [
+    {
+     "id": "armour",
+     "sets": [
+      "helmet-rack"
+     ]
+    }
    ]
   },
   {
@@ -797,10 +819,19 @@
      "y": 0.8
     }
    ],
-   "collections": [],
-   "planned": [
-    "clock",
-    "invention"
+   "collections": [
+    {
+     "id": "clock",
+     "sets": [
+      "clock-wall"
+     ]
+    },
+    {
+     "id": "invention",
+     "sets": [
+      "inventors-bench"
+     ]
+    }
    ]
   },
   {

@@ -34,6 +34,13 @@ globalThis.localStorage = { getItem: (k) => mem[k] ?? null, setItem: (k, v) => (
   check(P.validateHall({ ...halls[0], facts: ['x'] }).length > 0, 'unsourced facts on a hall are refused', 'facts not refused');
   check(P.validateHall({ ...halls[0], collections: [{ id: 'no-such-collection' }] }).length > 0, 'an unregistered collection is caught', 'unregistered collection not caught');
 
+  const reg = await import(path.join(src, 'collections', 'index.js'));
+  halls.forEach((h) => {
+    const ids = P.hallEntries(h);
+    check(ids.every((id) => reg.get(id)), `${h.id}: ${ids.length} entries resolve`, `${h.id} lists a missing entry`);
+    check(h.blurb && h.blurb.length < 140, `${h.id}: has a short blurb`, `${h.id} blurb missing or long`);
+  });
+
   console.log('Fit in every room shape');
   for (const orient of ['vertical', 'horizontal', 'square']) {
     for (const size of Object.keys(SIZES[orient])) {
