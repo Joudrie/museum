@@ -1,0 +1,114 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "calligraphy-and-painting-party-kawanabe",
+  "notes": "region: Japan",
+  "entry": {
+    "id": "painting:calligraphy-and-painting-party-kawanabe",
+    "collection": "painting",
+    "title": "Calligraphy and Painting Party",
+    "by": "Kawanabe Kyōsai",
+    "year": "1880",
+    "era": "impressionist",
+    "ratio": 0.4964,
+    "blurb": "Kawanabe Kyōsai painted the figures and outlines of the screens and scrolls, and 10 bunjin completed them.",
+    "rarity": 1,
+    "tags": [
+      "japan",
+      "scroll",
+      "ink"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1983.88/1983.88_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Purchase from the J. H. Wade Fund",
+      "url": "https://clevelandart.org/art/1983.88"
+    },
+    "value": 5,
+    "facts": [
+      "Physician and calligrapher Nakane Hanrei (中根半嶺) (1831–1914) wrote “longevity” (壽) with an enormous ink-filled brush.",
+      "In this collaborative painting, artists create works in response to patrons’ requests.",
+      "One participant in this gathering appears to be taking a nap."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "151543",
+    "title": "Calligraphy and Painting Party",
+    "maker": "Kawanabe Kyōsai",
+    "year": "1880",
+    "medium": "hanging scroll; ink and color on paper",
+    "dimensions": "Painting only: 139 x 69 cm (54 3/4 x 27 3/16 in.); Including mounting: 221 x 97.5 cm (87 x 38 3/8 in.)",
+    "widthCm": 69,
+    "heightCm": 139,
+    "ratio": 0.4964,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1983.88/1983.88_web.jpg",
+    "imageWidth": 452,
+    "imageHeight": 893,
+    "pageUrl": "https://clevelandart.org/art/1983.88",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Purchase from the J. H. Wade Fund",
+    "description": "In this collaborative painting, artists create works in response to patrons’ requests. Kawanabe Kyōsai painted the figures and outlines of the screens and scrolls, and 10 bunjin completed them. Each calligraphy and painting has a signature. Physician and calligrapher Nakane Hanrei (中根半嶺) (1831–1914) wrote “longevity” (壽) with an enormous ink-filled brush. Painter Fukushima Ryūho (福島柳圃) (1820–1889) did the plum on the folding screen, while Matsuoka Kansui (松岡環翠) (1818–1887) did the lotus; the two seem to be standing nearby, pointing others toward their accomplishment. One participant in this gathering appears to be taking a nap.",
+    "culture": "Japan, Meiji period (1868–1912)",
+    "classification": "Painting",
+    "tags": [
+      "Japanese Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Calligraphy and Painting Party",
+      "maker": "Kawanabe Kyōsai",
+      "year": "1880",
+      "medium": "hanging scroll; ink and color on paper",
+      "dimensions": "Painting only: 139 x 69 cm (54 3/4 x 27 3/16 in.); Including mounting: 221 x 97.5 cm (87 x 38 3/8 in.)",
+      "culture": "Japan, Meiji period (1868–1912)",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Purchase from the J. H. Wade Fund",
+      "description": "In this collaborative painting, artists create works in response to patrons’ requests. Kawanabe Kyōsai painted the figures and outlines of the screens and scrolls, and 10 bunjin completed them. Each calligraphy and painting has a signature. Physician and calligrapher Nakane Hanrei (中根半嶺) (1831–1914) wrote “longevity” (壽) with an enormous ink-filled brush. Painter Fukushima Ryūho (福島柳圃) (1820–1889) did the plum on the folding screen, while Matsuoka Kansui (松岡環翠) (1818–1887) did the lotus; the two seem to be standing nearby, pointing others toward their accomplishment. One participant in this gathering appears to be taking a nap.",
+      "tombstone": "Calligraphy and Painting Party (書画会), 1880. Kawanabe Kyōsai (Japanese, 1831–1889), and Others (Japanese). Hanging scroll; ink and color on paper; painting only: 139 x 69 cm (54 3/4 x 27 3/16 in.); including mounting: 221 x 97.5 cm (87 x 38 3/8 in.). The Cleveland Museum of Art, Purchase from the J. H. Wade Fund, 1983.88",
+      "funFact": "",
+      "didYouKnow": "One participant in this gathering appears to be taking a nap.",
+      "creators": "Kawanabe Kyōsai (Japanese, 1831–1889); Others (Japanese)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "Kawanabe Kyōsai painted the figures and outlines of the screens and scrolls, and 10 bunjin completed them.",
+      "quote": "Kawanabe Kyōsai painted the figures and outlines of the screens and scrolls, and 10 bunjin completed them.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Physician and calligrapher Nakane Hanrei (中根半嶺) (1831–1914) wrote “longevity” (壽) with an enormous ink-filled brush.",
+      "quote": "Physician and calligrapher Nakane Hanrei (中根半嶺) (1831–1914) wrote “longevity” (壽) with an enormous ink-filled brush.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "In this collaborative painting, artists create works in response to patrons’ requests.",
+      "quote": "In this collaborative painting, artists create works in response to patrons’ requests.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "One participant in this gathering appears to be taking a nap.",
+      "quote": "One participant in this gathering appears to be taking a nap.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

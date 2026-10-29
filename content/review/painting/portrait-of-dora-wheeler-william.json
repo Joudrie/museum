@@ -1,0 +1,114 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "portrait-of-dora-wheeler-william",
+  "notes": "region: United States",
+  "entry": {
+    "id": "painting:portrait-of-dora-wheeler-william",
+    "collection": "painting",
+    "title": "Portrait of Dora Wheeler",
+    "by": "William Merritt Chase",
+    "year": "1882–83",
+    "era": "impressionist",
+    "ratio": 1.0413,
+    "blurb": "Dora Wheeler became Chase's first student when he returned from overseas study in Munich and set up a teaching studio in New York.",
+    "rarity": 1,
+    "tags": [
+      "united states",
+      "oil",
+      "portrait"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1921.1239/1921.1239_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Gift of Mrs. Boudinot Keith in memory of Mr. and Mrs. J. H. Wade",
+      "url": "https://clevelandart.org/art/1921.1239"
+    },
+    "value": 5,
+    "facts": [
+      "After her course of study, Wheeler joined her mother in launching a successful decorating firm, one of the first businesses in the country to be operated entirely by women.",
+      "Chase's portrait was awarded a gold medal at an international exhibition of contemporary art in Munich in 1883, and later that year was also shown in Paris.",
+      "At the time, few American artists accepted women as private pupils."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "102578",
+    "title": "Portrait of Dora Wheeler",
+    "maker": "William Merritt Chase",
+    "year": "1882–83",
+    "medium": "oil on canvas",
+    "dimensions": "Framed: 180.6 x 188.6 x 11 cm (71 1/8 x 74 1/4 x 4 5/16 in.); Unframed: 159.8 x 166.4 cm (62 15/16 x 65 1/2 in.)",
+    "widthCm": 166.4,
+    "heightCm": 159.8,
+    "ratio": 1.0413,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1921.1239/1921.1239_web.jpg",
+    "imageWidth": 939,
+    "imageHeight": 893,
+    "pageUrl": "https://clevelandart.org/art/1921.1239",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Gift of Mrs. Boudinot Keith in memory of Mr. and Mrs. J. H. Wade",
+    "description": "Dora Wheeler became Chase's first student when he returned from overseas study in Munich and set up a teaching studio in New York. At the time, few American artists accepted women as private pupils. After her course of study, Wheeler joined her mother in launching a successful decorating firm, one of the first businesses in the country to be operated entirely by women. For the firm, she designed luxurious textiles, and the embroidered silk tapestry that fills the background in her portrait references her occupational interest. Chase's portrait was awarded a gold medal at an international exhibition of contemporary art in Munich in 1883, and later that year was also shown in Paris. At some later point, the painting was acquired by the sitter, who subsequently donated it to the museum. Chase and Wheeler worked together to raise money for constructing the Statue of Liberty's pedestal.",
+    "culture": "United States",
+    "classification": "Painting",
+    "tags": [
+      "American Painting and Sculpture"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Portrait of Dora Wheeler",
+      "maker": "William Merritt Chase",
+      "year": "1882–83",
+      "medium": "oil on canvas",
+      "dimensions": "Framed: 180.6 x 188.6 x 11 cm (71 1/8 x 74 1/4 x 4 5/16 in.); Unframed: 159.8 x 166.4 cm (62 15/16 x 65 1/2 in.)",
+      "culture": "United States",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Gift of Mrs. Boudinot Keith in memory of Mr. and Mrs. J. H. Wade",
+      "description": "Dora Wheeler became Chase's first student when he returned from overseas study in Munich and set up a teaching studio in New York. At the time, few American artists accepted women as private pupils. After her course of study, Wheeler joined her mother in launching a successful decorating firm, one of the first businesses in the country to be operated entirely by women. For the firm, she designed luxurious textiles, and the embroidered silk tapestry that fills the background in her portrait references her occupational interest. Chase's portrait was awarded a gold medal at an international exhibition of contemporary art in Munich in 1883, and later that year was also shown in Paris. At some later point, the painting was acquired by the sitter, who subsequently donated it to the museum. Chase and Wheeler worked together to raise money for constructing the Statue of Liberty's pedestal.",
+      "tombstone": "Portrait of Dora Wheeler, 1882–83. William Merritt Chase (American, 1849–1916). Oil on canvas; framed: 180.6 x 188.6 x 11 cm (71 1/8 x 74 1/4 x 4 5/16 in.); unframed: 159.8 x 166.4 cm (62 15/16 x 65 1/2 in.). The Cleveland Museum of Art, Gift of Mrs. Boudinot Keith in memory of Mr. and Mrs. J. H. Wade, 1921.1239",
+      "funFact": "",
+      "didYouKnow": "Chase and Wheeler worked together to raise money for constructing the Statue of Liberty's pedestal.",
+      "creators": "William Merritt Chase (American, 1849–1916)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "Dora Wheeler became Chase's first student when he returned from overseas study in Munich and set up a teaching studio in New York.",
+      "quote": "Dora Wheeler became Chase's first student when he returned from overseas study in Munich and set up a teaching studio in New York.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "After her course of study, Wheeler joined her mother in launching a successful decorating firm, one of the first businesses in the country to be operated entirely by women.",
+      "quote": "After her course of study, Wheeler joined her mother in launching a successful decorating firm, one of the first businesses in the country to be operated entirely by women.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Chase's portrait was awarded a gold medal at an international exhibition of contemporary art in Munich in 1883, and later that year was also shown in Paris.",
+      "quote": "Chase's portrait was awarded a gold medal at an international exhibition of contemporary art in Munich in 1883, and later that year was also shown in Paris.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "At the time, few American artists accepted women as private pupils.",
+      "quote": "At the time, few American artists accepted women as private pupils.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

@@ -1,0 +1,114 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "farmer-returning-home-in-autumn-yosa",
+  "notes": "region: Japan",
+  "entry": {
+    "id": "painting:farmer-returning-home-in-autumn-yosa",
+    "collection": "painting",
+    "title": "Farmer Returning Home in Autumn",
+    "by": "Yosa Buson",
+    "year": "1781",
+    "era": "romantic",
+    "ratio": 0.2913,
+    "blurb": "He later traveled around northeastern Japan, following in the footsteps of poet Matsuo Bashō (松尾芭蕉) (1644–1694), and then taught poetry in Kyoto.",
+    "rarity": 1,
+    "tags": [
+      "japan",
+      "scroll",
+      "ink"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1970.77/1970.77_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. John L. Severance Fund",
+      "url": "https://clevelandart.org/art/1970.77"
+    },
+    "value": 5,
+    "facts": [
+      "He painted professionally, a skill he learned by using wood-block–printed Chinese painting manuals.",
+      "Here, Yosa Buson’s farmer playfully chastises a crow who has come to dine on his grain while his water buffalo earnestly negotiates a swift stream.",
+      "Raised in what is now Osaka, Buson went to Edo (now Tokyo) to study poetry composition."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "145427",
+    "title": "Farmer Returning Home in Autumn",
+    "maker": "Yosa Buson",
+    "year": "1781",
+    "medium": "Hanging scroll; ink and light color on silk",
+    "dimensions": "Overall: 203.2 x 59.2 cm (80 x 23 5/16 in.); Painting only: 130.8 x 46.2 cm (51 1/2 x 18 3/16 in.)",
+    "widthCm": 59.2,
+    "heightCm": 203.2,
+    "ratio": 0.2913,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1970.77/1970.77_web.jpg",
+    "imageWidth": 329,
+    "imageHeight": 900,
+    "pageUrl": "https://clevelandart.org/art/1970.77",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. John L. Severance Fund",
+    "description": "Here, Yosa Buson’s farmer playfully chastises a crow who has come to dine on his grain while his water buffalo earnestly negotiates a swift stream. Raised in what is now Osaka, Buson went to Edo (now Tokyo) to study poetry composition. He later traveled around northeastern Japan, following in the footsteps of poet Matsuo Bashō (松尾芭蕉) (1644–1694), and then taught poetry in Kyoto. He painted professionally, a skill he learned by using wood-block–printed Chinese painting manuals. The man keeps his feet dry by crossing over the bridge while the water buffalo pulls the cart through the stream.",
+    "culture": "Japan, Edo period (1615–1868)",
+    "classification": "Painting",
+    "tags": [
+      "Japanese Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Farmer Returning Home in Autumn",
+      "maker": "Yosa Buson",
+      "year": "1781",
+      "medium": "Hanging scroll; ink and light color on silk",
+      "dimensions": "Overall: 203.2 x 59.2 cm (80 x 23 5/16 in.); Painting only: 130.8 x 46.2 cm (51 1/2 x 18 3/16 in.)",
+      "culture": "Japan, Edo period (1615–1868)",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. John L. Severance Fund",
+      "description": "Here, Yosa Buson’s farmer playfully chastises a crow who has come to dine on his grain while his water buffalo earnestly negotiates a swift stream. Raised in what is now Osaka, Buson went to Edo (now Tokyo) to study poetry composition. He later traveled around northeastern Japan, following in the footsteps of poet Matsuo Bashō (松尾芭蕉) (1644–1694), and then taught poetry in Kyoto. He painted professionally, a skill he learned by using wood-block–printed Chinese painting manuals. The man keeps his feet dry by crossing over the bridge while the water buffalo pulls the cart through the stream.",
+      "tombstone": "Farmer Returning Home in Autumn (秋景色帰農夫図), 1781. Yosa Buson (Japanese, 1716–1783). Hanging scroll; ink and light color on silk; overall: 203.2 x 59.2 cm (80 x 23 5/16 in.); painting only: 130.8 x 46.2 cm (51 1/2 x 18 3/16 in.). The Cleveland Museum of Art, John L. Severance Fund, 1970.77",
+      "funFact": "",
+      "didYouKnow": "The man keeps his feet dry by crossing over the bridge while the water buffalo pulls the cart through the stream.",
+      "creators": "Yosa Buson (Japanese, 1716–1783)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "He later traveled around northeastern Japan, following in the footsteps of poet Matsuo Bashō (松尾芭蕉) (1644–1694), and then taught poetry in Kyoto.",
+      "quote": "He later traveled around northeastern Japan, following in the footsteps of poet Matsuo Bashō (松尾芭蕉) (1644–1694), and then taught poetry in Kyoto.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "He painted professionally, a skill he learned by using wood-block–printed Chinese painting manuals.",
+      "quote": "He painted professionally, a skill he learned by using wood-block–printed Chinese painting manuals.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Here, Yosa Buson’s farmer playfully chastises a crow who has come to dine on his grain while his water buffalo earnestly negotiates a swift stream.",
+      "quote": "Here, Yosa Buson’s farmer playfully chastises a crow who has come to dine on his grain while his water buffalo earnestly negotiates a swift stream.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Raised in what is now Osaka, Buson went to Edo (now Tokyo) to study poetry composition.",
+      "quote": "Raised in what is now Osaka, Buson went to Edo (now Tokyo) to study poetry composition.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

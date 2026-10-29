@@ -1,0 +1,114 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "green-tara-aniko",
+  "notes": "region: Tibet. a sacred image: say what the painting is for, not that it is exotic",
+  "entry": {
+    "id": "painting:green-tara-aniko",
+    "collection": "painting",
+    "title": "Green Tara",
+    "by": "Aniko",
+    "year": "c. 1260s, mounted 2020",
+    "era": "renaissance",
+    "ratio": 0.8244,
+    "blurb": "The tiny monastic figure under Green Tara's right hand commissioned the painting.",
+    "rarity": 1,
+    "tags": [
+      "central tibet",
+      "tempera",
+      "ink"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1970.156/1970.156_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Purchase from the J. H. Wade Fund by exchange",
+      "url": "https://clevelandart.org/art/1970.156"
+    },
+    "value": 5,
+    "facts": [
+      "Most scholars agree that this work was painted by the celebrated Nepalese artist known as Aniko.",
+      "For Tibetans, Green Tara is one of the preeminent figures of their Buddhist faith, a radiant savioress who embodies the female form of the perfect, enlightened mind.",
+      "The Green Tara in the Cleveland thangka— a Tibetan devotional painting on cloth—specifically dispels fear and provides protection, just like her mantra inscribed on the back side of the painting."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "144961",
+    "title": "Green Tara",
+    "maker": "Aniko",
+    "year": "c. 1260s, mounted 2020",
+    "medium": "thangka; gum tempera, ink, and gold on sized cotton; mount: silk",
+    "dimensions": "Painting: 52.4 x 43.2 cm (20 5/8 x 17 in.); Overall: 107 x 65 cm (42 1/8 x 25 9/16 in.)",
+    "widthCm": 43.2,
+    "heightCm": 52.4,
+    "ratio": 0.8244,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1970.156/1970.156_web.jpg",
+    "imageWidth": 762,
+    "imageHeight": 900,
+    "pageUrl": "https://clevelandart.org/art/1970.156",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Purchase from the J. H. Wade Fund by exchange",
+    "description": "For Tibetans, Green Tara is one of the preeminent figures of their Buddhist faith, a radiant savioress who embodies the female form of the perfect, enlightened mind. The Green Tara in the Cleveland thangka— a Tibetan devotional painting on cloth—specifically dispels fear and provides protection, just like her mantra inscribed on the back side of the painting. Her green color and fear-not gesture link her to the cosmic Buddha of the North, enshrined above her head. Most scholars agree that this work was painted by the celebrated Nepalese artist known as Aniko. The tiny monastic figure under Green Tara's right hand commissioned the painting.",
+    "culture": "Central Tibet",
+    "classification": "Painting",
+    "tags": [
+      "Indian and Southeast Asian Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Green Tara",
+      "maker": "Aniko",
+      "year": "c. 1260s, mounted 2020",
+      "medium": "thangka; gum tempera, ink, and gold on sized cotton; mount: silk",
+      "dimensions": "Painting: 52.4 x 43.2 cm (20 5/8 x 17 in.); Overall: 107 x 65 cm (42 1/8 x 25 9/16 in.)",
+      "culture": "Central Tibet",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Purchase from the J. H. Wade Fund by exchange",
+      "description": "For Tibetans, Green Tara is one of the preeminent figures of their Buddhist faith, a radiant savioress who embodies the female form of the perfect, enlightened mind. The Green Tara in the Cleveland thangka— a Tibetan devotional painting on cloth—specifically dispels fear and provides protection, just like her mantra inscribed on the back side of the painting. Her green color and fear-not gesture link her to the cosmic Buddha of the North, enshrined above her head. Most scholars agree that this work was painted by the celebrated Nepalese artist known as Aniko. The tiny monastic figure under Green Tara's right hand commissioned the painting.",
+      "tombstone": "Green Tara, c. 1260s, mounted 2020. Attributed to Aniko (Nepalese, active in Tibet mid- to late 1200s). Thangka; gum tempera, ink, and gold on sized cotton; mount: silk; painting: 52.4 x 43.2 cm (20 5/8 x 17 in.); overall: 107 x 65 cm (42 1/8 x 25 9/16 in.). The Cleveland Museum of Art, Purchase from the J. H. Wade Fund by exchange, 1970.156",
+      "funFact": "",
+      "didYouKnow": "The tiny monastic figure under Green Tara's right hand commissioned the painting.",
+      "creators": "Aniko (Nepalese, active in Tibet mid- to late 1200s)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "The tiny monastic figure under Green Tara's right hand commissioned the painting.",
+      "quote": "The tiny monastic figure under Green Tara's right hand commissioned the painting.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Most scholars agree that this work was painted by the celebrated Nepalese artist known as Aniko.",
+      "quote": "Most scholars agree that this work was painted by the celebrated Nepalese artist known as Aniko.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "For Tibetans, Green Tara is one of the preeminent figures of their Buddhist faith, a radiant savioress who embodies the female form of the perfect, enlightened mind.",
+      "quote": "For Tibetans, Green Tara is one of the preeminent figures of their Buddhist faith, a radiant savioress who embodies the female form of the perfect, enlightened mind.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The Green Tara in the Cleveland thangka— a Tibetan devotional painting on cloth—specifically dispels fear and provides protection, just like her mantra inscribed on the back side of the painting.",
+      "quote": "The Green Tara in the Cleveland thangka— a Tibetan devotional painting on cloth—specifically dispels fear and provides protection, just like her mantra inscribed on the back side of the painting.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

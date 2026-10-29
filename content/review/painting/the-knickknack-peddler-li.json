@@ -1,0 +1,113 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "the-knickknack-peddler-li",
+  "notes": "region: China",
+  "entry": {
+    "id": "painting:the-knickknack-peddler-li",
+    "collection": "painting",
+    "title": "The Knickknack Peddler",
+    "by": "Li Song",
+    "year": "1212",
+    "era": "renaissance",
+    "ratio": 1.0788,
+    "blurb": "Painted during the reign of emperor Ningzong, the drama unfolding around vulnerable children may allude to Ningzong’s nine sons who died young, leaving him without a direct male descendant.",
+    "rarity": 1,
+    "tags": [
+      "china",
+      "ink"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1963.582/1963.582_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Andrew R. and Martha Holden Jennings Fund",
+      "url": "https://clevelandart.org/art/1963.582"
+    },
+    "value": 5,
+    "facts": [
+      "The court artist Li Song from Hangzhou excelled in meticulous depictions of children, peddlers, and their various goods.",
+      "Here, he captures a dramatic scene of children attacking a snake with a stick and stone.",
+      "The peddler rushes toward the children, leaving his merchandise unattended."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "139824",
+    "title": "The Knickknack Peddler",
+    "maker": "Li Song",
+    "year": "1212",
+    "medium": "Album leaf; ink and color on silk",
+    "dimensions": "Image: 24.1 x 26 cm (9 1/2 x 10 1/4 in.); with mat: 33.3 x 40.5 cm (13 1/8 x 15 15/16 in.)",
+    "widthCm": 26,
+    "heightCm": 24.1,
+    "ratio": 1.0788,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1963.582/1963.582_web.jpg",
+    "imageWidth": 900,
+    "imageHeight": 850,
+    "pageUrl": "https://clevelandart.org/art/1963.582",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Andrew R. and Martha Holden Jennings Fund",
+    "description": "The court artist Li Song from Hangzhou excelled in meticulous depictions of children, peddlers, and their various goods. Here, he captures a dramatic scene of children attacking a snake with a stick and stone. The peddler rushes toward the children, leaving his merchandise unattended. Painted during the reign of emperor Ningzong, the drama unfolding around vulnerable children may allude to Ningzong’s nine sons who died young, leaving him without a direct male descendant. There is a skull, upside down, near the top of the left basket.",
+    "culture": "China, Southern Song dynasty (1127-1279)",
+    "classification": "Painting",
+    "tags": [
+      "Chinese Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "The Knickknack Peddler",
+      "maker": "Li Song",
+      "year": "1212",
+      "medium": "Album leaf; ink and color on silk",
+      "dimensions": "Image: 24.1 x 26 cm (9 1/2 x 10 1/4 in.); with mat: 33.3 x 40.5 cm (13 1/8 x 15 15/16 in.)",
+      "culture": "China, Southern Song dynasty (1127-1279)",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Andrew R. and Martha Holden Jennings Fund",
+      "description": "The court artist Li Song from Hangzhou excelled in meticulous depictions of children, peddlers, and their various goods. Here, he captures a dramatic scene of children attacking a snake with a stick and stone. The peddler rushes toward the children, leaving his merchandise unattended. Painted during the reign of emperor Ningzong, the drama unfolding around vulnerable children may allude to Ningzong’s nine sons who died young, leaving him without a direct male descendant. There is a skull, upside down, near the top of the left basket.",
+      "tombstone": "The Knickknack Peddler (嬰戲貨郎圖), 1212. Li Song (Chinese, active c. 1190–c. 1230). Album leaf; ink and color on silk; image: 24.1 x 26 cm (9 1/2 x 10 1/4 in.); with mat: 33.3 x 40.5 cm (13 1/8 x 15 15/16 in.). The Cleveland Museum of Art, Andrew R. and Martha Holden Jennings Fund, 1963.582",
+      "funFact": "",
+      "didYouKnow": "There is a skull, upside down, near the top of the left basket.",
+      "creators": "Li Song (Chinese, active c. 1190–c. 1230)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "Painted during the reign of emperor Ningzong, the drama unfolding around vulnerable children may allude to Ningzong’s nine sons who died young, leaving him without a direct male descendant.",
+      "quote": "Painted during the reign of emperor Ningzong, the drama unfolding around vulnerable children may allude to Ningzong’s nine sons who died young, leaving him without a direct male descendant.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The court artist Li Song from Hangzhou excelled in meticulous depictions of children, peddlers, and their various goods.",
+      "quote": "The court artist Li Song from Hangzhou excelled in meticulous depictions of children, peddlers, and their various goods.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Here, he captures a dramatic scene of children attacking a snake with a stick and stone.",
+      "quote": "Here, he captures a dramatic scene of children attacking a snake with a stick and stone.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The peddler rushes toward the children, leaving his merchandise unattended.",
+      "quote": "The peddler rushes toward the children, leaving his merchandise unattended.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

@@ -125,7 +125,8 @@ for in the museum sources and the matching candidates are listed in the fixes fi
 ## Known limits
 
 - **AIC, Smithsonian and Rijksmuseum have never run live** (Cloudflare challenge, no key, no key).
-- **First batch, live:** 11 of 12 found (the casta paintings had only non-public-domain matches). All 14 drafts in `content/review/painting/` are still `draft`: each needs a rarity decision, nine Met ones need a real hook (the Met has no description text), and a few matched the wrong work ("Deer in a Landscape" for the Bodmer Mandan search; a pendant for the Ethiopian icon search). Three batch items have both a Met and a Cleveland draft; the Cleveland ones are the better texts.
+- **Second batch** (`content/batches/second-batch.json`): 17 works pinned by Cleveland id, all with real museum description text, so the blurbs are quoted sentences. Together with the first batch there are 27 drafts, none approved.
+- **First batch, live:** 11 of 12 found (the casta paintings had only non-public-domain matches). All 14 drafts in `content/review/painting/` are still `draft`: each needs a rarity decision, nine Met ones need a real hook (the Met has no description text), and a few matched the wrong work ("Deer in a Landscape" for the Bodmer Mandan search; a pendant for the Ethiopian icon search). The first batch now tries Cleveland first, so the Met and Cleveland duplicates are gone. Four Met drafts still need a hook (Night-Shining White, Esther, The Gulf Stream, The Drawing Lesson, which is a print, not a painting). The Bodmer Mandan item waits for a Smithsonian key: the Met and Cleveland only have his animal studies.
 - **The Met serves originals** (often several MB). The checker will flag them `huge`; pick another source or
   use `primaryImageSmall` (smaller than HD) until we have somewhere to host resized copies.
 - **The blurb writer picks sentences; it doesn't write.** It scores the museum's own sentences (a date, a "first"

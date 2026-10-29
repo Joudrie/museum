@@ -1,0 +1,107 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "landscape-of-the-four-seasons-yi",
+  "notes": "region: Korea",
+  "entry": {
+    "id": "painting:landscape-of-the-four-seasons-yi",
+    "collection": "painting",
+    "title": "Landscape of the Four Seasons",
+    "by": "Yi Sumun",
+    "year": "late 1400s",
+    "era": "renaissance",
+    "ratio": 3.7616,
+    "blurb": "Yi Sumun is believed to have been a Korean painter who migrated to Japan in 1424 at the age of 20.",
+    "rarity": 1,
+    "tags": [
+      "korea",
+      "ink",
+      "landscape"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1976.92/1976.92_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. John L. Severance Fund",
+      "url": "https://clevelandart.org/art/1976.92"
+    },
+    "value": 5,
+    "facts": [
+      "Yi Sumun is believed to have been a Korean man who moved to Japan in 1424 and became an influential landscape painter in Japan.",
+      "Viewed from right to left, the screens show the passage of the four seasons, a popular theme in medieval Japanese ink painting."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "148853",
+    "title": "Landscape of the Four Seasons",
+    "maker": "Yi Sumun",
+    "year": "late 1400s",
+    "medium": "Pair of six-panel screens; ink and slight color on paper",
+    "dimensions": "Overall: 92.7 x 348.7 cm (36 1/2 x 137 5/16 in.); Painting only: 93 x 57.1 cm (36 5/8 x 22 1/2 in.)",
+    "widthCm": 348.7,
+    "heightCm": 92.7,
+    "ratio": 3.7616,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1976.92/1976.92_web.jpg",
+    "imageWidth": 900,
+    "imageHeight": 536,
+    "pageUrl": "https://clevelandart.org/art/1976.92",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. John L. Severance Fund",
+    "description": "Yi Sumun is believed to have been a Korean painter who migrated to Japan in 1424 at the age of 20. This pair of screens is the artist’s most important composition in this format. Viewed from right to left, the screens show the passage of the four seasons, a popular theme in medieval Japanese ink painting. Yi Sumun is believed to have been a Korean man who moved to Japan in 1424 and became an influential landscape painter in Japan.",
+    "culture": "Korea, Joseon dynasty (1392–1910)",
+    "classification": "Painting",
+    "tags": [
+      "Korean Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Landscape of the Four Seasons",
+      "maker": "Yi Sumun",
+      "year": "late 1400s",
+      "medium": "Pair of six-panel screens; ink and slight color on paper",
+      "dimensions": "Overall: 92.7 x 348.7 cm (36 1/2 x 137 5/16 in.); Painting only: 93 x 57.1 cm (36 5/8 x 22 1/2 in.)",
+      "culture": "Korea, Joseon dynasty (1392–1910)",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. John L. Severance Fund",
+      "description": "Yi Sumun is believed to have been a Korean painter who migrated to Japan in 1424 at the age of 20. This pair of screens is the artist’s most important composition in this format. Viewed from right to left, the screens show the passage of the four seasons, a popular theme in medieval Japanese ink painting. Yi Sumun is believed to have been a Korean man who moved to Japan in 1424 and became an influential landscape painter in Japan.",
+      "tombstone": "Landscape of the Four Seasons (사계산수도 [四季山水圖]), late 1400s. Yi Sumun (Korean, b. c. 1404). Pair of six-panel screens; ink and slight color on paper; overall: 92.7 x 348.7 cm (36 1/2 x 137 5/16 in.); painting only: 93 x 57.1 cm (36 5/8 x 22 1/2 in.). The Cleveland Museum of Art, John L. Severance Fund, 1976.92",
+      "funFact": "",
+      "didYouKnow": "Yi Sumun is believed to have been a Korean man who moved to Japan in 1424 and became an influential landscape painter in Japan.",
+      "creators": "Yi Sumun (Korean, b. c. 1404)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "Yi Sumun is believed to have been a Korean painter who migrated to Japan in 1424 at the age of 20.",
+      "quote": "Yi Sumun is believed to have been a Korean painter who migrated to Japan in 1424 at the age of 20.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Yi Sumun is believed to have been a Korean man who moved to Japan in 1424 and became an influential landscape painter in Japan.",
+      "quote": "Yi Sumun is believed to have been a Korean man who moved to Japan in 1424 and became an influential landscape painter in Japan.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Viewed from right to left, the screens show the passage of the four seasons, a popular theme in medieval Japanese ink painting.",
+      "quote": "Viewed from right to left, the screens show the passage of the four seasons, a popular theme in medieval Japanese ink painting.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

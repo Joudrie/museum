@@ -1,0 +1,145 @@
+{
+  "collection": "painting",
+  "name": "second-batch",
+  "about": "Seventeen works pinned by Cleveland Museum of Art id (it publishes a real description for each, so the blurbs have sentences to quote). Aims: Persia, Tibet, Korea, Japan, China, India, the US and Indigenous Australia. Nothing reaches the game until a person approves a draft.",
+  "items": [
+    {
+      "region": "Persia",
+      "title": "Royal Reception in a Landscape",
+      "id": "133448",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "Persia",
+      "title": "Rustam's seventh course: He kills the White Div",
+      "id": "154289",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "Tibet",
+      "title": "Green Tara",
+      "id": "144961",
+      "sources": [
+        "cleveland"
+      ],
+      "note": "a sacred image: say what the painting is for, not that it is exotic"
+    },
+    {
+      "region": "Korea",
+      "title": "Orchids and Rocks",
+      "id": "86399",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "Korea",
+      "title": "Munja-Chaekgeori Screen",
+      "id": "294203",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "Korea",
+      "title": "Landscape of the Four Seasons",
+      "id": "148853",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "Japan",
+      "title": "Farmer Returning Home in Autumn",
+      "id": "145427",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "Japan",
+      "title": "Calligraphy and Painting Party",
+      "id": "151543",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "China",
+      "title": "The Knickknack Peddler",
+      "id": "139824",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "China",
+      "title": "Mountain Market, Clear with Rising Mist",
+      "id": "90249",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "India",
+      "title": "Nur Jahan holding a portrait of Emperor Jahangir",
+      "id": "170835",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "India",
+      "title": "The Parrot Addresses Khujasta",
+      "id": "137890",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "United States",
+      "title": "Twilight in the Wilderness",
+      "id": "141639",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "United States",
+      "title": "The Biglin Brothers Turning the Stake",
+      "id": "151904",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "United States",
+      "title": "Peregrine Falcons (Duck Hawks)",
+      "id": "140408",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "United States",
+      "title": "Portrait of Dora Wheeler",
+      "id": "102578",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "Indigenous Australia",
+      "title": "Kangaroo",
+      "id": "150680",
+      "sources": [
+        "cleveland"
+      ],
+      "note": "a work from Indigenous Australian makers: use the community's own names where the record gives them; the museum text is short, so a hook may need a better source"
+    }
+  ]
+}

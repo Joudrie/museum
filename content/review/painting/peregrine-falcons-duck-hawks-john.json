@@ -1,0 +1,113 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "peregrine-falcons-duck-hawks-john",
+  "notes": "region: United States",
+  "entry": {
+    "id": "painting:peregrine-falcons-duck-hawks-john",
+    "collection": "painting",
+    "title": "Peregrine Falcons (Duck Hawks)",
+    "by": "John James Audubon",
+    "year": "c. 1827",
+    "era": "romantic",
+    "ratio": 1.4186,
+    "blurb": "Clocked at speeds more than 240 mph, peregrine falcons are the world's fastest animals.",
+    "rarity": 1,
+    "tags": [
+      "united states",
+      "oil"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1964.351/1964.351_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Gift of the American Foundation for the Maud E. and Warren H. Corning Botanical Collection",
+      "url": "https://clevelandart.org/art/1964.351"
+    },
+    "value": 5,
+    "facts": [
+      "Based on his artistic and scientific successes, Audubon became the premier naturalist in the United States.",
+      "After his death, he continued to be associated with bird and nature conservation, and several organizations devoted to such causes were named in his honor.",
+      "However, in recent years, as Audubon's slaveholding and looting of Indigenous graves has become more widely acknowledged, an increasing number of these groups are changing their names."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "140408",
+    "title": "Peregrine Falcons (Duck Hawks)",
+    "maker": "John James Audubon",
+    "year": "c. 1827",
+    "medium": "oil on canvas",
+    "dimensions": "Framed: 74.9 x 101 x 10.2 cm (29 1/2 x 39 3/4 x 4 in.); Unframed: 64.5 x 91.5 cm (25 3/8 x 36 in.)",
+    "widthCm": 91.5,
+    "heightCm": 64.5,
+    "ratio": 1.4186,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1964.351/1964.351_web.jpg",
+    "imageWidth": 1263,
+    "imageHeight": 892,
+    "pageUrl": "https://clevelandart.org/art/1964.351",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Gift of the American Foundation for the Maud E. and Warren H. Corning Botanical Collection",
+    "description": "A vigorous portrayal of two peregrine falcons with their fresh duck prey, John James Audubon's painting relates to his groundbreaking Birds of America publication that sought to depict every species of native North American bird posed in action with elements of their habitats. Based on his artistic and scientific successes, Audubon became the premier naturalist in the United States. After his death, he continued to be associated with bird and nature conservation, and several organizations devoted to such causes were named in his honor. However, in recent years, as Audubon's slaveholding and looting of Indigenous graves has become more widely acknowledged, an increasing number of these groups are changing their names. Clocked at speeds more than 240 mph, peregrine falcons are the world's fastest animals.",
+    "culture": "United States",
+    "classification": "Painting",
+    "tags": [
+      "American Painting and Sculpture"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Peregrine Falcons (Duck Hawks)",
+      "maker": "John James Audubon",
+      "year": "c. 1827",
+      "medium": "oil on canvas",
+      "dimensions": "Framed: 74.9 x 101 x 10.2 cm (29 1/2 x 39 3/4 x 4 in.); Unframed: 64.5 x 91.5 cm (25 3/8 x 36 in.)",
+      "culture": "United States",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Gift of the American Foundation for the Maud E. and Warren H. Corning Botanical Collection",
+      "description": "A vigorous portrayal of two peregrine falcons with their fresh duck prey, John James Audubon's painting relates to his groundbreaking Birds of America publication that sought to depict every species of native North American bird posed in action with elements of their habitats. Based on his artistic and scientific successes, Audubon became the premier naturalist in the United States. After his death, he continued to be associated with bird and nature conservation, and several organizations devoted to such causes were named in his honor. However, in recent years, as Audubon's slaveholding and looting of Indigenous graves has become more widely acknowledged, an increasing number of these groups are changing their names. Clocked at speeds more than 240 mph, peregrine falcons are the world's fastest animals.",
+      "tombstone": "Peregrine Falcons (Duck Hawks), c. 1827. John James Audubon (American, born Haiti, 1785–1851). Oil on canvas; framed: 74.9 x 101 x 10.2 cm (29 1/2 x 39 3/4 x 4 in.); unframed: 64.5 x 91.5 cm (25 3/8 x 36 in.). The Cleveland Museum of Art, Gift of the American Foundation for the Maud E. and Warren H. Corning Botanical Collection, 1964.351",
+      "funFact": "",
+      "didYouKnow": "Clocked at speeds more than 240 mph, peregrine falcons are the world's fastest animals.",
+      "creators": "John James Audubon (American, born Haiti, 1785–1851)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "Clocked at speeds more than 240 mph, peregrine falcons are the world's fastest animals.",
+      "quote": "Clocked at speeds more than 240 mph, peregrine falcons are the world's fastest animals.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Based on his artistic and scientific successes, Audubon became the premier naturalist in the United States.",
+      "quote": "Based on his artistic and scientific successes, Audubon became the premier naturalist in the United States.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "After his death, he continued to be associated with bird and nature conservation, and several organizations devoted to such causes were named in his honor.",
+      "quote": "After his death, he continued to be associated with bird and nature conservation, and several organizations devoted to such causes were named in his honor.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "However, in recent years, as Audubon's slaveholding and looting of Indigenous graves has become more widely acknowledged, an increasing number of these groups are changing their names.",
+      "quote": "However, in recent years, as Audubon's slaveholding and looting of Indigenous graves has become more widely acknowledged, an increasing number of these groups are changing their names.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

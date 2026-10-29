@@ -1,0 +1,113 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "mountain-market-clear-with-rising-mist",
+  "notes": "region: China",
+  "entry": {
+    "id": "painting:mountain-market-clear-with-rising-mist",
+    "collection": "painting",
+    "title": "Mountain Market, Clear with Rising Mist",
+    "year": "early 1500s",
+    "era": "renaissance",
+    "ratio": 0.5204,
+    "blurb": "Due to its stylistic features, this painting has long been believed to be a Chinese painting of the Northern Song period, dated to the 12th century.",
+    "rarity": 1,
+    "tags": [
+      "korea",
+      "scroll",
+      "ink"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/2015.517/2015.517_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Gift from the Collection of George Gund III",
+      "url": "https://clevelandart.org/art/2015.517"
+    },
+    "value": 5,
+    "facts": [
+      "In the lower left corner, the scholar-hermit is portrayed welcoming his guest in the courtyard.",
+      "In the middle section on the lower bottom, the scholar and his guest are shown encountering another traveler on the bridge and exchanging their greetings.",
+      "After crossing the bridge, the scholar visits a friend who lives in a compound of multiple buildings."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "90249",
+    "title": "Mountain Market, Clear with Rising Mist",
+    "maker": "",
+    "year": "early 1500s",
+    "medium": "Hanging scroll; ink on silk",
+    "dimensions": "Painting: 115.3 x 60 cm (45 3/8 x 23 5/8 in.); Overall: 179 x 70.7 cm (70 1/2 x 27 13/16 in.); Overall with knobs and cord: 181.8 x 77 cm (71 9/16 x 30 5/16 in.)",
+    "widthCm": 60,
+    "heightCm": 115.3,
+    "ratio": 0.5204,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/2015.517/2015.517_web.jpg",
+    "imageWidth": 475,
+    "imageHeight": 900,
+    "pageUrl": "https://clevelandart.org/art/2015.517",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Gift from the Collection of George Gund III",
+    "description": "This painting depicts several vignettes of the scholar-hermit’s various activities. In the lower left corner, the scholar-hermit is portrayed welcoming his guest in the courtyard. In the middle section on the lower bottom, the scholar and his guest are shown encountering another traveler on the bridge and exchanging their greetings. After crossing the bridge, the scholar visits a friend who lives in a compound of multiple buildings. The two friends decide to take a short walk. Both appear in a terraced cliff, enjoying a mountain vista and the fragrance of an old pine tree carried by the gentle wind. The scholar continues his journey with his two servants. They are portrayed crossing a winding wooden bridge. Right beyond the colossal rocky mountain, a panoramic view to a bustling market place unfolds, suggesting that it may be the place where the scholar-hermit’s entourage would visit. Perhaps the scholar need to buy items such as books, rolls of papers, and brushes, all essential to scholarly life. Toward the upper left corner, another group of travelers is landing on the river bank that leads to the city gate; they may be headed to the multistoried Buddhist stupa nestled on the top of the mountains. Due to its stylistic features, this painting has long been believed to be a Chinese painting of the Northern Song period, dated to the 12th century.",
+    "culture": "Korea, Joseon dynasty (1392–1910)",
+    "classification": "Painting",
+    "tags": [
+      "Korean Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Mountain Market, Clear with Rising Mist",
+      "maker": "",
+      "year": "early 1500s",
+      "medium": "Hanging scroll; ink on silk",
+      "dimensions": "Painting: 115.3 x 60 cm (45 3/8 x 23 5/8 in.); Overall: 179 x 70.7 cm (70 1/2 x 27 13/16 in.); Overall with knobs and cord: 181.8 x 77 cm (71 9/16 x 30 5/16 in.)",
+      "culture": "Korea, Joseon dynasty (1392–1910)",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Gift from the Collection of George Gund III",
+      "description": "This painting depicts several vignettes of the scholar-hermit’s various activities. In the lower left corner, the scholar-hermit is portrayed welcoming his guest in the courtyard. In the middle section on the lower bottom, the scholar and his guest are shown encountering another traveler on the bridge and exchanging their greetings. After crossing the bridge, the scholar visits a friend who lives in a compound of multiple buildings. The two friends decide to take a short walk. Both appear in a terraced cliff, enjoying a mountain vista and the fragrance of an old pine tree carried by the gentle wind. The scholar continues his journey with his two servants. They are portrayed crossing a winding wooden bridge. Right beyond the colossal rocky mountain, a panoramic view to a bustling market place unfolds, suggesting that it may be the place where the scholar-hermit’s entourage would visit. Perhaps the scholar need to buy items such as books, rolls of papers, and brushes, all essential to scholarly life. Toward the upper left corner, another group of travelers is landing on the river bank that leads to the city gate; they may be headed to the multistoried Buddhist stupa nestled on the top of the mountains. Due to its stylistic features, this painting has long been believed to be a Chinese painting of the Northern Song period, dated to the 12th century.",
+      "tombstone": "Mountain Market, Clear with Rising Mist (산시청람도 [山市晴嵐圖]), early 1500s. Korea, Joseon dynasty (1392–1910). Hanging scroll; ink on silk; painting: 115.3 x 60 cm (45 3/8 x 23 5/8 in.); overall: 179 x 70.7 cm (70 1/2 x 27 13/16 in.); overall with knobs and cord: 181.8 x 77 cm (71 9/16 x 30 5/16 in.). The Cleveland Museum of Art, Gift from the Collection of George Gund III, 2015.517",
+      "funFact": "",
+      "didYouKnow": "Due to its stylistic features, this painting has long been believed to be a Chinese painting of the Northern Song period, dated to the 12th century.",
+      "creators": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "Due to its stylistic features, this painting has long been believed to be a Chinese painting of the Northern Song period, dated to the 12th century.",
+      "quote": "Due to its stylistic features, this painting has long been believed to be a Chinese painting of the Northern Song period, dated to the 12th century.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "In the lower left corner, the scholar-hermit is portrayed welcoming his guest in the courtyard.",
+      "quote": "In the lower left corner, the scholar-hermit is portrayed welcoming his guest in the courtyard.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "In the middle section on the lower bottom, the scholar and his guest are shown encountering another traveler on the bridge and exchanging their greetings.",
+      "quote": "In the middle section on the lower bottom, the scholar and his guest are shown encountering another traveler on the bridge and exchanging their greetings.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "After crossing the bridge, the scholar visits a friend who lives in a compound of multiple buildings.",
+      "quote": "After crossing the bridge, the scholar visits a friend who lives in a compound of multiple buildings.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

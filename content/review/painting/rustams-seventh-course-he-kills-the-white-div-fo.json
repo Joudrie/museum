@@ -1,0 +1,114 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "rustams-seventh-course-he-kills-the-white-div-fo",
+  "notes": "region: Persia",
+  "entry": {
+    "id": "painting:rustams-seventh-course-he-kills-the-white-div-fo",
+    "collection": "painting",
+    "title": "Rustam's seventh course: He kills the White Div, folio 124 from a Shah-nama (Book of Kings) of Firdausi (Persian, about 934–1020)",
+    "by": "Abd al-Vahhab",
+    "year": "1522–37",
+    "era": "renaissance",
+    "ratio": 0.6779,
+    "blurb": "Paintings from the Shah-nama made for the Persian ruler Shah Tahmasp (reigned 1524–76) were acclaimed in their day for their brilliant coloring and refinement.",
+    "rarity": 1,
+    "tags": [
+      "iran",
+      "tempera",
+      "ink"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1988.96.a/1988.96.a_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Leonard C. Hanna Jr. Fund",
+      "url": "https://clevelandart.org/art/1988.96.a"
+    },
+    "value": 5,
+    "facts": [
+      "Seven of the artists who contributed to this book moved to India to lead the new Mughal painting workshop in the 1550s.",
+      "Devils in the details: three peer into the White Div’s lair by the Caspian Sea.",
+      "They introduced to the Indian artists a more complex color sensibility and preference for presenting faces in three-quarter view, as opposed to in profile."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "154289",
+    "title": "Rustam's seventh course: He kills the White Div, folio 124 from a Shah-nama (Book of Kings) of Firdausi (Persian, about 934–1020)",
+    "maker": "Abd al-Vahhab",
+    "year": "1522–37",
+    "medium": "Gum tempera, ink, gold, and silver on paper",
+    "dimensions": "Sheet: 47.5 x 32.2 cm (18 11/16 x 12 11/16 in.); Image: 28.4 x 18.5 cm (11 3/16 x 7 5/16 in.)",
+    "widthCm": 32.2,
+    "heightCm": 47.5,
+    "ratio": 0.6779,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1988.96.a/1988.96.a_web.jpg",
+    "imageWidth": 609,
+    "imageHeight": 893,
+    "pageUrl": "https://clevelandart.org/art/1988.96.a",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Leonard C. Hanna Jr. Fund",
+    "description": "The legendary hero Rustam brutally takes the demon chief’s liver blood, needed to cure his king of blindness. Paintings from the Shah-nama made for the Persian ruler Shah Tahmasp (reigned 1524–76) were acclaimed in their day for their brilliant coloring and refinement. Seven of the artists who contributed to this book moved to India to lead the new Mughal painting workshop in the 1550s. They introduced to the Indian artists a more complex color sensibility and preference for presenting faces in three-quarter view, as opposed to in profile. Devils in the details: three peer into the White Div’s lair by the Caspian Sea.",
+    "culture": "Iran, Tabriz, Safavid period (1501-1722)",
+    "classification": "Manuscript",
+    "tags": [
+      "Islamic Art"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Rustam's seventh course: He kills the White Div, folio 124 from a Shah-nama (Book of Kings) of Firdausi (Persian, about 934–1020)",
+      "maker": "Abd al-Vahhab",
+      "year": "1522–37",
+      "medium": "Gum tempera, ink, gold, and silver on paper",
+      "dimensions": "Sheet: 47.5 x 32.2 cm (18 11/16 x 12 11/16 in.); Image: 28.4 x 18.5 cm (11 3/16 x 7 5/16 in.)",
+      "culture": "Iran, Tabriz, Safavid period (1501-1722)",
+      "classification": "Manuscript",
+      "credit": "The Cleveland Museum of Art. Leonard C. Hanna Jr. Fund",
+      "description": "The legendary hero Rustam brutally takes the demon chief’s liver blood, needed to cure his king of blindness. Paintings from the Shah-nama made for the Persian ruler Shah Tahmasp (reigned 1524–76) were acclaimed in their day for their brilliant coloring and refinement. Seven of the artists who contributed to this book moved to India to lead the new Mughal painting workshop in the 1550s. They introduced to the Indian artists a more complex color sensibility and preference for presenting faces in three-quarter view, as opposed to in profile. Devils in the details: three peer into the White Div’s lair by the Caspian Sea.",
+      "tombstone": "Rustam's seventh course: He kills the White Div, folio 124 from a Shah-nama (Book of Kings) of Firdausi (Persian, about 934–1020), 1522–37. Attributed to Abd al-Vahhab (Persian, active about 1516), attributed to Mir Musavvir (Iranian, c. 1510–1555). Gum tempera, ink, gold, and silver on paper; sheet: 47.5 x 32.2 cm (18 11/16 x 12 11/16 in.); image: 28.4 x 18.5 cm (11 3/16 x 7 5/16 in.). The Cleveland Museum of Art, Leonard C. Hanna Jr. Fund, 1988.96.a",
+      "funFact": "",
+      "didYouKnow": "Devils in the details: three peer into the White Div’s lair by the Caspian Sea.",
+      "creators": "Abd al-Vahhab (Persian, active about 1516); Mir Musavvir (Iranian, c. 1510–1555)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "Paintings from the Shah-nama made for the Persian ruler Shah Tahmasp (reigned 1524–76) were acclaimed in their day for their brilliant coloring and refinement.",
+      "quote": "Paintings from the Shah-nama made for the Persian ruler Shah Tahmasp (reigned 1524–76) were acclaimed in their day for their brilliant coloring and refinement.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Seven of the artists who contributed to this book moved to India to lead the new Mughal painting workshop in the 1550s.",
+      "quote": "Seven of the artists who contributed to this book moved to India to lead the new Mughal painting workshop in the 1550s.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Devils in the details: three peer into the White Div’s lair by the Caspian Sea.",
+      "quote": "Devils in the details: three peer into the White Div’s lair by the Caspian Sea.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "They introduced to the Indian artists a more complex color sensibility and preference for presenting faces in three-quarter view, as opposed to in profile.",
+      "quote": "They introduced to the Indian artists a more complex color sensibility and preference for presenting faces in three-quarter view, as opposed to in profile.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}
