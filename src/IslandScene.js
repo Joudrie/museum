@@ -116,7 +116,9 @@ export class IslandScene extends Phaser.Scene {
     const climate = expeditionOf(this.mapId)?.climate; // an expedition island has its own weather
     this.weatherKind = climate?.weather || weatherToday();
     this.season = climate?.season || season();
-    setAmbience(this.weatherKind === 'rain' ? ['waves', 'rain'] : ['waves']);
+    const h = hourNow();
+    const calls = h < 5.5 || h >= 20.5 ? ['crickets'] : this.weatherKind === 'clear' || this.weatherKind === 'leaves' || this.weatherKind === 'petals' ? ['birds'] : [];
+    setAmbience(this.weatherKind === 'rain' ? ['waves', 'rain'] : ['waves', ...calls]);
     this.events.once('shutdown', () => setAmbience([]));
     this.frame = 0;
     this.solid = Array.from({ length: H }, () => Array(W).fill(false));
