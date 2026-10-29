@@ -99,7 +99,7 @@ function render() {
       section('Text size', choices({ normal: 'Normal', large: 'Large' }, s.text, (v) => (setSetting('text', v), render()))),
       toggle('Reduce motion', s.reduceMotion, (v) => setSetting('reduceMotion', v)),
     ),
-    group('Play', toggle('Vibration', s.haptics, (v) => setSetting('haptics', v)), toggle('Left-handed layout', s.leftHanded, (v) => setSetting('leftHanded', v))),
+    group('Play', toggle('Vibration', s.haptics, (v) => setSetting('haptics', v)), toggle('Left-handed layout', s.leftHanded, (v) => setSetting('leftHanded', v)), toggle('Tips', s.tips, (v) => setSetting('tips', v))),
     group(
       'Friends & data',
       button('Share & visit friends', () => openShare()),

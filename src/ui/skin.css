@@ -320,3 +320,25 @@ body .settings-group .wide-btn { margin-top: var(--sp-2); }
 body .settings-group section h3 { margin: var(--sp-3) 0 var(--sp-2); }
 body .settings-body .slider { display: flex; align-items: center; gap: var(--sp-3); }
 body .settings-body .slider b { min-width: 3.2em; text-align: right; font: 600 var(--fs-body) / 1 var(--ui-font); }
+body .settings-group .ui-toggle { margin-top: var(--sp-2); }
+
+/* ---- Wall spot: the era filters become one scrolling row, so paintings get the room ---- */
+body .gallery-eras.choices {
+  flex-wrap: nowrap;
+  gap: var(--sp-2);
+  margin: var(--sp-2) calc(var(--sp-4) * -1) var(--sp-3);
+  padding: 4px var(--sp-4) 8px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  touch-action: pan-x;
+}
+body .gallery-eras.choices::-webkit-scrollbar { display: none; }
+body .gallery-eras.choices button {
+  flex: none;
+  min-width: 0;
+  padding: 4px 14px;
+  white-space: nowrap;
+  scroll-snap-align: start;
+}
+body .gallery-search { margin-top: var(--sp-3); width: 100%; }

@@ -27,7 +27,7 @@ Metric key: S = interactive elements under 44 px on screen, F = smallest font.
 
 | # | Screen | Problems | S | F |
 |---|---|---|---|---|
-| 01 | World + HUD | Icon-only buttons with no labels, split left/right; "Collect all" tiny (a placeholder-ad gate too); stats pill is also a button but looks like a label; badges are small red dots with no meaning; HUD differs between museum and island scenes | 1 | 11 |
+| 01 | World + HUD | Icon-only buttons with no labels, split left/right; "Collect all" tiny; stats pill is also a button but looks like a label; badges are small red dots with no meaning; HUD differs between museum and island scenes | 1 | 11 |
 | 02 | Income | Good tiles at the top, but the room list is long and undifferentiated; "Boosts" header 11 px; tapping a room silently travels (no affordance) | 2 | 11 |
 | 03 | Journal (all) | 17-tab grid on every tab; no overview; Shop and Storage are tabs; chips and search on each tab add another 2 rows before content; text 11 px; Codex milestones push content below the fold | 2 to 4 | 11 |
 | 04 | Toolkit | 12 category chips (many small); long instruction paragraph; "Done" instead of the standard close; item cards cut by the sheet edge; income and price in tiny text | 12 | 11 |
