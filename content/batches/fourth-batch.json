@@ -1,0 +1,170 @@
+{
+  "collection": "painting",
+  "name": "fourth-batch",
+  "about": "Twenty works from the 1700s to the 1900s, pinned by Cleveland id (each has a published description to quote): American painting (including Robert S. Duncanson, a Black landscape painter) and French, British, Dutch, Swiss, German and Italian modern work. Nothing reaches the game until a person approves a draft.",
+  "items": [
+    {
+      "region": "United States, 1765",
+      "title": "Nathaniel Hurd",
+      "id": "94979",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "United States, 1779",
+      "title": "George Washington at Princeton",
+      "id": "98268",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "United States, 1838",
+      "title": "View of Schroon Mountain, Essex County, New York, After a Storm",
+      "id": "93014",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "United States, 1866",
+      "title": "Mount Starr King, Yosemite",
+      "id": "172815",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "United States, 1867",
+      "title": "Vale of Kashmir",
+      "id": "171296",
+      "sources": [
+        "cleveland"
+      ],
+      "note": "by Robert S. Duncanson; say what the museum says about him and stop"
+    },
+    {
+      "region": "United States, 1847",
+      "title": "The Power of Music",
+      "id": "155783",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "United States, 1900-03",
+      "title": "Early Morning After a Storm at Sea",
+      "id": "106088",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "United States, 1879",
+      "title": "Memento Mori, \"To This Favour\"",
+      "id": "141641",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "United States, 1872",
+      "title": "Winding Yarn (Interior of a Nantucket Kitchen)",
+      "id": "173167",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "United States, 1909",
+      "title": "Stag at Sharkey's",
+      "id": "92937",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "United States, 1896-1908",
+      "title": "The Race Track (Death on a Pale Horse)",
+      "id": "110180",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "France, 1817",
+      "title": "Cupid and Psyche",
+      "id": "138464",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "England, 1835",
+      "title": "The Burning of the Houses of Lords and Commons",
+      "id": "122351",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "England, 1828",
+      "title": "Branch Hill Pond, Hampstead",
+      "id": "147017",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "Netherlands/France, 1890",
+      "title": "Adeline Ravoux",
+      "id": "135299",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "France, c. 1904",
+      "title": "Mount Sainte-Victoire",
+      "id": "135185",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "France, c. 1915-26",
+      "title": "Water Lilies (Agapanthus)",
+      "id": "136510",
+      "sources": [
+        "cleveland"
+      ],
+      "note": "a different painting from the 1906 Water Lilies already in the game"
+    },
+    {
+      "region": "France, 1908",
+      "title": "Fight Between a Tiger and a Buffalo",
+      "id": "126769",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "Germany, 1909",
+      "title": "Wrestlers in a Circus",
+      "id": "142792",
+      "sources": [
+        "cleveland"
+      ]
+    },
+    {
+      "region": "Netherlands, 1927",
+      "title": "Composition with Red, Yellow, and Blue",
+      "id": "143278",
+      "sources": [
+        "cleveland"
+      ],
+      "note": "artist died 1944: check public-domain status by eye"
+    }
+  ]
+}

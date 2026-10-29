@@ -1,0 +1,106 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "branch-hill-pond-hampstead-john",
+  "notes": "region: England, 1828",
+  "entry": {
+    "id": "painting:branch-hill-pond-hampstead-john",
+    "collection": "painting",
+    "title": "Branch Hill Pond, Hampstead",
+    "by": "John Constable",
+    "year": "1828",
+    "era": "romantic",
+    "ratio": 1.2888,
+    "blurb": "In 1820, Constable found a retreat in Hampstead where he completed 100 studies of cloud formations, referring to the process as \"skying.\"",
+    "rarity": 1,
+    "tags": [
+      "england",
+      "oil"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1972.48/1972.48_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Leonard C. Hanna Jr. Fund",
+      "url": "https://clevelandart.org/art/1972.48"
+    },
+    "value": 5,
+    "facts": [
+      "An amateur meteorologist, John Constable was most at home painting meticulously observed cloud formations, weather conditions, and natural light effects.",
+      "He believed an accurate rendering of these constantly shifting elements could convey his vision of the vitality and magnificence of the English countryside."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "147017",
+    "title": "Branch Hill Pond, Hampstead",
+    "maker": "John Constable",
+    "year": "1828",
+    "medium": "oil on canvas",
+    "dimensions": "Framed: 89 x 105.5 x 11.5 cm (35 1/16 x 41 9/16 x 4 1/2 in.); Unframed: 60.6 x 78.1 cm (23 7/8 x 30 3/4 in.)",
+    "widthCm": 78.1,
+    "heightCm": 60.6,
+    "ratio": 1.2888,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1972.48/1972.48_web.jpg",
+    "imageWidth": 1155,
+    "imageHeight": 893,
+    "pageUrl": "https://clevelandart.org/art/1972.48",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Leonard C. Hanna Jr. Fund",
+    "description": "An amateur meteorologist, John Constable was most at home painting meticulously observed cloud formations, weather conditions, and natural light effects. He believed an accurate rendering of these constantly shifting elements could convey his vision of the vitality and magnificence of the English countryside. Working from the summerhouse he rented at Hampstead from 1819–26, Constable painted a landscape focusing more on the dark rain clouds than on the laborers in the foreground, keeping the details of their backbreaking work at a picturesque distance. In 1820, Constable found a retreat in Hampstead where he completed 100 studies of cloud formations, referring to the process as \"skying.\"",
+    "culture": "England, 19th century",
+    "classification": "Painting",
+    "tags": [
+      "Modern European Painting and Sculpture"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Branch Hill Pond, Hampstead",
+      "maker": "John Constable",
+      "year": "1828",
+      "medium": "oil on canvas",
+      "dimensions": "Framed: 89 x 105.5 x 11.5 cm (35 1/16 x 41 9/16 x 4 1/2 in.); Unframed: 60.6 x 78.1 cm (23 7/8 x 30 3/4 in.)",
+      "culture": "England, 19th century",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Leonard C. Hanna Jr. Fund",
+      "description": "An amateur meteorologist, John Constable was most at home painting meticulously observed cloud formations, weather conditions, and natural light effects. He believed an accurate rendering of these constantly shifting elements could convey his vision of the vitality and magnificence of the English countryside. Working from the summerhouse he rented at Hampstead from 1819–26, Constable painted a landscape focusing more on the dark rain clouds than on the laborers in the foreground, keeping the details of their backbreaking work at a picturesque distance. In 1820, Constable found a retreat in Hampstead where he completed 100 studies of cloud formations, referring to the process as \"skying.\"",
+      "tombstone": "Branch Hill Pond, Hampstead, 1828. John Constable (British, 1776–1837). Oil on canvas; framed: 89 x 105.5 x 11.5 cm (35 1/16 x 41 9/16 x 4 1/2 in.); unframed: 60.6 x 78.1 cm (23 7/8 x 30 3/4 in.). The Cleveland Museum of Art, Leonard C. Hanna Jr. Fund, 1972.48",
+      "funFact": "",
+      "didYouKnow": "In 1820, Constable found a retreat in Hampstead where he completed 100 studies of cloud formations, referring to the process as \"skying.\"",
+      "creators": "John Constable (British, 1776–1837)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "In 1820, Constable found a retreat in Hampstead where he completed 100 studies of cloud formations, referring to the process as \"skying.\"",
+      "quote": "In 1820, Constable found a retreat in Hampstead where he completed 100 studies of cloud formations, referring to the process as \"skying.\"",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "An amateur meteorologist, John Constable was most at home painting meticulously observed cloud formations, weather conditions, and natural light effects.",
+      "quote": "An amateur meteorologist, John Constable was most at home painting meticulously observed cloud formations, weather conditions, and natural light effects.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "He believed an accurate rendering of these constantly shifting elements could convey his vision of the vitality and magnificence of the English countryside.",
+      "quote": "He believed an accurate rendering of these constantly shifting elements could convey his vision of the vitality and magnificence of the English countryside.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

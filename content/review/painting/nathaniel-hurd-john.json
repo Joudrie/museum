@@ -1,0 +1,99 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "nathaniel-hurd-john",
+  "notes": "region: United States, 1765",
+  "entry": {
+    "id": "painting:nathaniel-hurd-john",
+    "collection": "painting",
+    "title": "Nathaniel Hurd",
+    "by": "John Singleton Copley",
+    "year": "c. 1765",
+    "era": "romantic",
+    "ratio": 0.8504,
+    "blurb": "The artist Copley’s in-laws were consignees for the cargo dumped during the Boston Tea Party.",
+    "rarity": 1,
+    "tags": [
+      "united states",
+      "oil"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1915.534/1915.534_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Gift of the John Huntington Art and Polytechnic Trust",
+      "url": "https://clevelandart.org/art/1915.534"
+    },
+    "value": 5,
+    "facts": [
+      "Hurd was a prominent silversmith and engraver in Boston, and the warm gaze and unforced smile in his portrait by Copley suggest the friendship between the two artists."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "94979",
+    "title": "Nathaniel Hurd",
+    "maker": "John Singleton Copley",
+    "year": "c. 1765",
+    "medium": "oil on canvas",
+    "dimensions": "Framed: 90.5 x 78 x 6.5 cm (35 5/8 x 30 11/16 x 2 9/16 in.); Unframed: 76.2 x 64.8 cm (30 x 25 1/2 in.)",
+    "widthCm": 64.8,
+    "heightCm": 76.2,
+    "ratio": 0.8504,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1915.534/1915.534_web.jpg",
+    "imageWidth": 748,
+    "imageHeight": 893,
+    "pageUrl": "https://clevelandart.org/art/1915.534",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Gift of the John Huntington Art and Polytechnic Trust",
+    "description": "Hurd was a prominent silversmith and engraver in Boston, and the warm gaze and unforced smile in his portrait by Copley suggest the friendship between the two artists. Hurd's open-collared shirt, as well as the rakishly tilted turban that covers his shaved head in place of a ceremonial powdered wig, create an air of informality that is unusual for a portrait of this time. The artist Copley’s in-laws were consignees for the cargo dumped during the Boston Tea Party.",
+    "culture": "United States",
+    "classification": "Painting",
+    "tags": [
+      "American Painting and Sculpture"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Nathaniel Hurd",
+      "maker": "John Singleton Copley",
+      "year": "c. 1765",
+      "medium": "oil on canvas",
+      "dimensions": "Framed: 90.5 x 78 x 6.5 cm (35 5/8 x 30 11/16 x 2 9/16 in.); Unframed: 76.2 x 64.8 cm (30 x 25 1/2 in.)",
+      "culture": "United States",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Gift of the John Huntington Art and Polytechnic Trust",
+      "description": "Hurd was a prominent silversmith and engraver in Boston, and the warm gaze and unforced smile in his portrait by Copley suggest the friendship between the two artists. Hurd's open-collared shirt, as well as the rakishly tilted turban that covers his shaved head in place of a ceremonial powdered wig, create an air of informality that is unusual for a portrait of this time. The artist Copley’s in-laws were consignees for the cargo dumped during the Boston Tea Party.",
+      "tombstone": "Nathaniel Hurd, c. 1765. John Singleton Copley (American, born The Thirteen Colonies, 1738–1815). Oil on canvas; framed: 90.5 x 78 x 6.5 cm (35 5/8 x 30 11/16 x 2 9/16 in.); unframed: 76.2 x 64.8 cm (30 x 25 1/2 in.). The Cleveland Museum of Art, Gift of the John Huntington Art and Polytechnic Trust, 1915.534",
+      "funFact": "",
+      "didYouKnow": "The artist Copley’s in-laws were consignees for the cargo dumped during the Boston Tea Party.",
+      "creators": "John Singleton Copley (American, born The Thirteen Colonies, 1738–1815)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "The artist Copley’s in-laws were consignees for the cargo dumped during the Boston Tea Party.",
+      "quote": "The artist Copley’s in-laws were consignees for the cargo dumped during the Boston Tea Party.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Hurd was a prominent silversmith and engraver in Boston, and the warm gaze and unforced smile in his portrait by Copley suggest the friendship between the two artists.",
+      "quote": "Hurd was a prominent silversmith and engraver in Boston, and the warm gaze and unforced smile in his portrait by Copley suggest the friendship between the two artists.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

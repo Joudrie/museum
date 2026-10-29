@@ -1,0 +1,106 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "vale-of-kashmir-robert",
+  "notes": "region: United States, 1867. by Robert S. Duncanson; say what the museum says about him and stop",
+  "entry": {
+    "id": "painting:vale-of-kashmir-robert",
+    "collection": "painting",
+    "title": "Vale of Kashmir",
+    "by": "Robert S. Duncanson",
+    "year": "1867",
+    "era": "impressionist",
+    "ratio": 1.8137,
+    "blurb": "Cincinnati-based Duncanson was the first African American artist to achieve recognition both nationally and abroad.",
+    "rarity": 1,
+    "tags": [
+      "united states",
+      "oil"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/2014.12/2014.12_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. Sundry Purchase Fund",
+      "url": "https://clevelandart.org/art/2014.12"
+    },
+    "value": 5,
+    "facts": [
+      "During the Civil War, Duncanson relocated to Montreal, where he inspired several Canadian landscape painters.",
+      "Despite these substantial storytelling details, the human elements remain subordinate to the overwhelming splendor of the natural landscape in and of itself."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "171296",
+    "title": "Vale of Kashmir",
+    "maker": "Robert S. Duncanson",
+    "year": "1867",
+    "medium": "oil on canvas",
+    "dimensions": "Framed: 94.9 x 154.6 x 12.1 cm (37 3/8 x 60 7/8 x 4 3/4 in.); Unframed: 73 x 132.4 cm (28 3/4 x 52 1/8 in.)",
+    "widthCm": 132.4,
+    "heightCm": 73,
+    "ratio": 1.8137,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/2014.12/2014.12_web.jpg",
+    "imageWidth": 900,
+    "imageHeight": 492,
+    "pageUrl": "https://clevelandart.org/art/2014.12",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. Sundry Purchase Fund",
+    "description": "Cincinnati-based Duncanson was the first African American artist to achieve recognition both nationally and abroad. This panoramic painting, one of his grandest, was inspired by an episode in Thomas Moore’s then-popular epic poem, Lalla-Rookh (1817), which describes a Persian princess’s journey to the Indian subcontinent to be married. In Duncanson’s conception, members of a courtly entourage depart a quasi-Islamic palace, arriving by boat onto a scrim of land where they ascend a monumental staircase to a plaza with a fountain spraying an impressive plume of water. Despite these substantial storytelling details, the human elements remain subordinate to the overwhelming splendor of the natural landscape in and of itself. During the Civil War, Duncanson relocated to Montreal, where he inspired several Canadian landscape painters.",
+    "culture": "United States",
+    "classification": "Painting",
+    "tags": [
+      "American Painting and Sculpture"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Vale of Kashmir",
+      "maker": "Robert S. Duncanson",
+      "year": "1867",
+      "medium": "oil on canvas",
+      "dimensions": "Framed: 94.9 x 154.6 x 12.1 cm (37 3/8 x 60 7/8 x 4 3/4 in.); Unframed: 73 x 132.4 cm (28 3/4 x 52 1/8 in.)",
+      "culture": "United States",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. Sundry Purchase Fund",
+      "description": "Cincinnati-based Duncanson was the first African American artist to achieve recognition both nationally and abroad. This panoramic painting, one of his grandest, was inspired by an episode in Thomas Moore’s then-popular epic poem, Lalla-Rookh (1817), which describes a Persian princess’s journey to the Indian subcontinent to be married. In Duncanson’s conception, members of a courtly entourage depart a quasi-Islamic palace, arriving by boat onto a scrim of land where they ascend a monumental staircase to a plaza with a fountain spraying an impressive plume of water. Despite these substantial storytelling details, the human elements remain subordinate to the overwhelming splendor of the natural landscape in and of itself. During the Civil War, Duncanson relocated to Montreal, where he inspired several Canadian landscape painters.",
+      "tombstone": "Vale of Kashmir, 1867. Robert S. Duncanson (American, 1821–1872). Oil on canvas; framed: 94.9 x 154.6 x 12.1 cm (37 3/8 x 60 7/8 x 4 3/4 in.); unframed: 73 x 132.4 cm (28 3/4 x 52 1/8 in.). The Cleveland Museum of Art, Sundry Purchase Fund, 2014.12",
+      "funFact": "",
+      "didYouKnow": "During the Civil War, Duncanson relocated to Montreal, where he inspired several Canadian landscape painters.",
+      "creators": "Robert S. Duncanson (American, 1821–1872)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "Cincinnati-based Duncanson was the first African American artist to achieve recognition both nationally and abroad.",
+      "quote": "Cincinnati-based Duncanson was the first African American artist to achieve recognition both nationally and abroad.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "During the Civil War, Duncanson relocated to Montreal, where he inspired several Canadian landscape painters.",
+      "quote": "During the Civil War, Duncanson relocated to Montreal, where he inspired several Canadian landscape painters.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Despite these substantial storytelling details, the human elements remain subordinate to the overwhelming splendor of the natural landscape in and of itself.",
+      "quote": "Despite these substantial storytelling details, the human elements remain subordinate to the overwhelming splendor of the natural landscape in and of itself.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

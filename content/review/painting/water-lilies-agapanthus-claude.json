@@ -1,0 +1,113 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "water-lilies-agapanthus-claude",
+  "notes": "region: France, c. 1915-26. a different painting from the 1906 Water Lilies already in the game",
+  "entry": {
+    "id": "painting:water-lilies-agapanthus-claude",
+    "collection": "painting",
+    "title": "Water Lilies (Agapanthus)",
+    "by": "Claude Monet",
+    "year": "c. 1915–26",
+    "era": "modern",
+    "ratio": 2.1143,
+    "blurb": "A skilled horticulturalist as well as an artist, Claude Monet spent the last 30 years of his life painting the private garden he designed and helped cultivate at his home in Giverny in northern France.",
+    "rarity": 1,
+    "tags": [
+      "france",
+      "oil"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://openaccess-cdn.clevelandart.org/1960.81/1960.81_web.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Cleveland Museum of Art. John L. Severance Fund and an anonymous gift",
+      "url": "https://clevelandart.org/art/1960.81"
+    },
+    "value": 5,
+    "facts": [
+      "Water lilies were a recurring theme in Monet's work; he painted around 250 water lily compositions.",
+      "The resultant canvases are notable for their varied motifs, formats, and sizes.",
+      "Monumental in scale, this rendering of his water lily pond focuses on the momentary effects of sunlight as it both penetrates and reflects off its shimmering surface."
+    ]
+  },
+  "candidate": {
+    "source": "cleveland",
+    "sourceId": "136510",
+    "title": "Water Lilies (Agapanthus)",
+    "maker": "Claude Monet",
+    "year": "c. 1915–26",
+    "medium": "oil on canvas",
+    "dimensions": "Framed: 204.9 x 430.3 x 6 cm (80 11/16 x 169 7/16 x 2 3/8 in.); Unframed: 201.3 x 425.6 cm (79 1/4 x 167 9/16 in.)",
+    "widthCm": 425.6,
+    "heightCm": 201.3,
+    "ratio": 2.1143,
+    "imageUrl": "https://openaccess-cdn.clevelandart.org/1960.81/1960.81_web.jpg",
+    "imageWidth": 900,
+    "imageHeight": 419,
+    "pageUrl": "https://clevelandart.org/art/1960.81",
+    "license": "CC0",
+    "credit": "The Cleveland Museum of Art. John L. Severance Fund and an anonymous gift",
+    "description": "A skilled horticulturalist as well as an artist, Claude Monet spent the last 30 years of his life painting the private garden he designed and helped cultivate at his home in Giverny in northern France. The resultant canvases are notable for their varied motifs, formats, and sizes. Monumental in scale, this rendering of his water lily pond focuses on the momentary effects of sunlight as it both penetrates and reflects off its shimmering surface. By zeroing in on the water and omitting its horizon and surrounding banks, Monet infers a limitless expanse—a perception amplified by the painting’s vast horizontal format that fills the viewer’s field of vision. Water lilies were a recurring theme in Monet's work; he painted around 250 water lily compositions.",
+    "culture": "France, late 19th century-early 20th century",
+    "classification": "Painting",
+    "tags": [
+      "Modern European Painting and Sculpture"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Water Lilies (Agapanthus)",
+      "maker": "Claude Monet",
+      "year": "c. 1915–26",
+      "medium": "oil on canvas",
+      "dimensions": "Framed: 204.9 x 430.3 x 6 cm (80 11/16 x 169 7/16 x 2 3/8 in.); Unframed: 201.3 x 425.6 cm (79 1/4 x 167 9/16 in.)",
+      "culture": "France, late 19th century-early 20th century",
+      "classification": "Painting",
+      "credit": "The Cleveland Museum of Art. John L. Severance Fund and an anonymous gift",
+      "description": "A skilled horticulturalist as well as an artist, Claude Monet spent the last 30 years of his life painting the private garden he designed and helped cultivate at his home in Giverny in northern France. The resultant canvases are notable for their varied motifs, formats, and sizes. Monumental in scale, this rendering of his water lily pond focuses on the momentary effects of sunlight as it both penetrates and reflects off its shimmering surface. By zeroing in on the water and omitting its horizon and surrounding banks, Monet infers a limitless expanse—a perception amplified by the painting’s vast horizontal format that fills the viewer’s field of vision. Water lilies were a recurring theme in Monet's work; he painted around 250 water lily compositions.",
+      "tombstone": "Water Lilies (Agapanthus), c. 1915–26. Claude Monet (French, 1840–1926). Oil on canvas; framed: 204.9 x 430.3 x 6 cm (80 11/16 x 169 7/16 x 2 3/8 in.); unframed: 201.3 x 425.6 cm (79 1/4 x 167 9/16 in.). The Cleveland Museum of Art, John L. Severance Fund and an anonymous gift, 1960.81",
+      "funFact": "",
+      "didYouKnow": "Water lilies were a recurring theme in Monet's work; he painted around 250 water lily compositions.",
+      "creators": "Claude Monet (French, 1840–1926)"
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "A skilled horticulturalist as well as an artist, Claude Monet spent the last 30 years of his life painting the private garden he designed and helped cultivate at his home in Giverny in northern France.",
+      "quote": "A skilled horticulturalist as well as an artist, Claude Monet spent the last 30 years of his life painting the private garden he designed and helped cultivate at his home in Giverny in northern France.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Water lilies were a recurring theme in Monet's work; he painted around 250 water lily compositions.",
+      "quote": "Water lilies were a recurring theme in Monet's work; he painted around 250 water lily compositions.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "The resultant canvases are notable for their varied motifs, formats, and sizes.",
+      "quote": "The resultant canvases are notable for their varied motifs, formats, and sizes.",
+      "source": "description"
+    },
+    {
+      "kind": "fact",
+      "text": "Monumental in scale, this rendering of his water lily pond focuses on the momentary effects of sunlight as it both penetrates and reflects off its shimmering surface.",
+      "quote": "Monumental in scale, this rendering of his water lily pond focuses on the momentary effects of sunlight as it both penetrates and reflects off its shimmering surface.",
+      "source": "description"
+    }
+  ],
+  "problems": [
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

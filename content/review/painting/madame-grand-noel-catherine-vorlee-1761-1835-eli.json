@@ -1,0 +1,93 @@
+{
+  "status": "draft",
+  "collection": "painting",
+  "slug": "madame-grand-noel-catherine-vorlee-1761-1835-eli",
+  "notes": "region: France (woman artist). the Met has no description text: needs a real hook",
+  "entry": {
+    "id": "painting:madame-grand-noel-catherine-vorlee-1761-1835-eli",
+    "collection": "painting",
+    "title": "Madame Grand (Noël Catherine Vorlée, 1761–1835)",
+    "by": "Elisabeth Louise Vigée Le Brun",
+    "year": "1783",
+    "era": "romantic",
+    "ratio": 0.7861,
+    "blurb": "By Elisabeth Louise Vigée Le Brun, 1783, Oil on canvas.",
+    "rarity": 1,
+    "tags": [
+      "oil",
+      "portrait"
+    ],
+    "image": {
+      "kind": "url",
+      "src": "https://images.metmuseum.org/CRDImages/ep/original/DP320094.jpg",
+      "placeholder": "#6a6458"
+    },
+    "display": [
+      "wall"
+    ],
+    "provenance": {
+      "how": "gift"
+    },
+    "source": {
+      "license": "CC0",
+      "credit": "The Metropolitan Museum of Art, New York. Bequest of Edward S. Harkness, 1940",
+      "url": "https://www.metmuseum.org/art/collection/search/437898"
+    },
+    "value": 5
+  },
+  "candidate": {
+    "source": "met",
+    "sourceId": "437898",
+    "title": "Madame Grand (Noël Catherine Vorlée, 1761–1835)",
+    "maker": "Elisabeth Louise Vigée Le Brun",
+    "year": "1783",
+    "medium": "Oil on canvas",
+    "dimensions": "Oval, 36 1/4 x 28 1/2 in. (92.1 x 72.4 cm)",
+    "widthCm": 72.4,
+    "heightCm": 92.1,
+    "ratio": 0.7861,
+    "imageUrl": "https://images.metmuseum.org/CRDImages/ep/original/DP320094.jpg",
+    "pageUrl": "https://www.metmuseum.org/art/collection/search/437898",
+    "license": "CC0",
+    "credit": "The Metropolitan Museum of Art, New York. Bequest of Edward S. Harkness, 1940",
+    "description": "",
+    "culture": "",
+    "classification": "Paintings",
+    "tags": [
+      "Portraits",
+      "Women"
+    ],
+    "publicDomain": true,
+    "rejected": "",
+    "texts": {
+      "title": "Madame Grand (Noël Catherine Vorlée, 1761–1835)",
+      "maker": "Elisabeth Louise Vigée Le Brun",
+      "year": "1783",
+      "medium": "Oil on canvas",
+      "dimensions": "Oval, 36 1/4 x 28 1/2 in. (92.1 x 72.4 cm)",
+      "culture": "",
+      "classification": "Paintings",
+      "credit": "The Metropolitan Museum of Art, New York. Bequest of Edward S. Harkness, 1940",
+      "description": "",
+      "objectName": "Painting",
+      "department": "European Paintings",
+      "period": "",
+      "dynasty": "",
+      "artistBio": "French, Paris 1755–1842 Paris",
+      "region": ""
+    }
+  },
+  "claims": [
+    {
+      "kind": "blurb",
+      "text": "By Elisabeth Louise Vigée Le Brun, 1783, Oil on canvas.",
+      "quote": "By Elisabeth Louise Vigée Le Brun, 1783, Oil on canvas",
+      "source": "record",
+      "placeholderFor": "needs a real hook"
+    }
+  ],
+  "problems": [
+    "claim 1: needs a real hook; it only restates the record's own details (maker, date, medium)",
+    "rarity is the default (1): set it, or add \"rarity ok\" to notes"
+  ]
+}

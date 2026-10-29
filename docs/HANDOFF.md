@@ -131,9 +131,17 @@ Scenes (`src/main.js`):
 - **Hosted paintings (Chat 1, #113/#118):** 46 of the 49 paintings are our own 1280px JPEGs in `public/paintings/` (same pictures; `tools/host_paintings.mjs`
   re-makes them, `content/hosted-images.json` records each original URL). The 3 broken ones (horse-fair, temeraire, crossing-delaware) keep their dead
   link until the user approves a file in `content/image-proposals.md` (all 11 flagged images have a proposal there; nothing applied).
+- **Batches 3 to 5 (Chat 1, #130):** `content/batches/{third,fourth,fifth}-batch.json` built 55 more drafts (82 in all, none approved). Cleveland ids carry a
+  quotable description; Met and Commons ones are flagged "needs a real hook". Live APIs: the Met rate-limits (HTML block page) and Cleveland's `fields=` param 500s.
 - `check_images.mjs` flags broken, tiny, heavy and wrong-shaped images for every painting. **Not run yet on the
   49 paintings** (no network here); `content/batches/first-batch.json` (12 works, 9+ regions) is waiting to be built.
 - Test: `node tests/content.cjs` (no browser, no network).
+
+### Story and leads (Chat 10)
+- `src/story.js` tells the next chapter of an arc or a famous visitor's chain when its condition is met; data is in `src/stories/` (`heist.js`, `chains.js`). State: `curation.story` `{done:{beatId:true}}`.
+- **The Empty Frames** (heist arc): Edmund tells 5 chapters of the real 1990 Gardner theft. Every line has the museum's quoted sentence; `node tests/people.cjs --live` checks each quote is still on its source page.
+- **Chains** for Vermeer, Rembrandt, Hokusai: talk to them again after each ask is met (hang their painting, meet more visitors). Add a visitor = add an entry in `chains.js`.
+- **Hook for expeditions (Chat 7):** finished beats with a `lead` append `{id, text, from, at}` to `curation.leads_offered` (`leadsOffered()` in `story.js`). Chat 7 reads that list and starts the trip. Ids so far: `heist-hideout`, `sphinx-letter`, `studio-chest`, `last-scrolls`.
 
 ### Display: fixtures that hold collection entries (Chat 5)
 - A fixture is a decor item with a `fixture` block in `src/items.js` (kind, `accepts` display tags, `slots`). Today: easel, plinth, glass case,
@@ -219,3 +227,4 @@ See `docs/ASSET-HUNT.md` (the "super dig" prompt plus the to-do list) and `docs/
 - **Dig kinds** live in `src/dig.js` (`DIG_KINDS`, `DIG_TILES`): a builder tile maps to a kind, a kind maps to collections. mineral, fossil, ruin (pottery, coins, stone tools), shore (shells), crater (meteorites). To add a kind: a data collection, one line in `DIG_KINDS`, one tile in `src/tiles.js` (group "Dig sites"), one line in `DIG_TILES`.
 - **`dirty: true` on an entry** means finds of it arrive dirty (pottery, coins, stone tools, meteorites). `collect(id, { dirty })` records `codex.dirty[id]` (a count, never more than you own). Chat 4 owns what cleaning does; it should lower that count. Until then dirty finds display as normal.
 - Journal tabs now wrap to two rows (12 tabs). `tests/dig.cjs` needs the dev server (`npx vite --port 5173`, `URL=http://localhost:5173/`).
+- Room presets (`src/presets.js`, `tests/presets.cjs`): Customize > This room > Saved layouts saves a room's decor and items under a name and loads them into any room. Loading sells what is there and buys the preset's items at normal prices, so layouts are not free items.
