@@ -6,7 +6,7 @@
 //     (ruin dig spots turn them up). Dig the X for a treasure; the pieces are used up.
 //   Rest labels: a dug spot nearby shows how long until it can be dug again.
 import { load, save } from './storage.js';
-import { startDig, readyIn, foundCount, bonusEntry, entriesFor } from './dig.js';
+import { startDig, readyIn, foundCount, bonusEntry, entriesFor, mapKey } from './dig.js';
 import { ownedCount, dispose } from './collections/codex.js';
 import { dayNum } from './daily.js';
 
@@ -43,6 +43,8 @@ export class Hunts {
     this.hide = false;
     this.on = !!scene.map && foundCount() >= DETECTOR_NEED;
     this.restT = 0;
+    this.mapT = 1; // seconds since the map pieces were last counted (the codex is read from storage, so not every frame)
+    this.whole = false;
   }
 
   get any() {
@@ -52,7 +54,7 @@ export class Hunts {
   piece(name, x, y) {
     if (name !== 'x_mark') return false;
     const img = this.s.place(name, x, y, { flat: true }).setVisible(false);
-    this.xs.push({ x, y, cx: (x + 0.5) * T, cy: (y + 0.5) * T, img, shown: false, key: `${this.s.mapId || 'one'}:x:${x},${y}` });
+    this.xs.push({ x, y, cx: (x + 0.5) * T, cy: (y + 0.5) * T, img, shown: false, key: `${mapKey(this.s)}:x:${x},${y}` });
     return true;
   }
 
@@ -66,7 +68,7 @@ export class Hunts {
     const day = dayNum();
     const done = load(HUNT, {});
     const left = done.day === day ? done.done || {} : {};
-    const r = rng(seedOf(`${day}:${s.mapId || 'one'}`));
+    const r = rng(seedOf(`${day}:${mapKey(s)}`));
     const H = s.solid.length;
     const W = s.solid[0].length;
     const out = [];
@@ -77,7 +79,7 @@ export class Hunts {
       const py = (y + 0.5) * T;
       if (!s.free(px, py) || s.ground_(px, py) === 'water') continue;
       if (Math.hypot(px - s.player.x, py - s.player.y) < 160 || out.some((o) => Math.hypot(o.x - px, o.y - py) < 200)) continue;
-      const key = `${s.mapId || 'one'}:buried:${out.length}`;
+      const key = `${mapKey(s)}:buried:${out.length}`;
       out.push({ x: px, y: py, key, done: !!left[key] });
     }
     this.targets = out;
@@ -98,9 +100,10 @@ export class Hunts {
   paint(h) {
     if (!this.badge) return;
     this.last = h;
+    this.shown = `${h ? h[1] : 'none'}|${this.hide}`;
     this.badge.classList.toggle('mini', this.hide);
     this.badge.dataset.heat = h ? h[2] : 0;
-    this.badge.textContent = this.hide ? '📡' : `📡 ${h ? h[1] : '…'}`;
+    this.badge.textContent = this.hide ? '📡' : `📡 ${h ? h[1] : 'All found today'}`;
   }
 
   near(max = Infinity) {
@@ -118,9 +121,11 @@ export class Hunts {
     const s = this.s;
     this.t += dt;
     this.restT += dt;
-    // the X appears once the map is whole
-    if (this.xs.length && this.t > 0.5) {
-      const whole = this.maps();
+    this.mapT += dt;
+    // the X appears once the map is whole (counted once a second)
+    if (this.xs.length && this.t > 0.5 && this.mapT >= 1) {
+      this.mapT = 0;
+      const whole = (this.whole = this.maps());
       this.xs.forEach((x) => {
         if (whole === x.shown) return;
         x.shown = whole;
@@ -148,7 +153,7 @@ export class Hunts {
     const n = this.near();
     this.badgeEl();
     const h = n ? heatFor(n.d) : null;
-    if (!this.last || h?.[1] !== this.last[1] || (!h && this.last)) this.paint(h);
+    if (`${h ? h[1] : 'none'}|${this.hide}` !== this.shown) this.paint(h);
   }
 
   focusAt(x, y) {
@@ -156,10 +161,10 @@ export class Hunts {
     let bd = 34;
     this.xs.forEach((o) => {
       const d = Math.hypot(x - o.cx, y - o.cy);
-      if (o.shown && d < bd) (bd = d), (best = { puzzle: o, kind: 'x', icon: 'look' });
+      if (o.shown && d < bd) (bd = d), (best = { puzzle: o, kind: 'x', icon: 'look', label: 'Dig' });
     });
     const n = this.on && this.near(28);
-    if (n && n.d < bd) best = { puzzle: { cx: n.tg.x, cy: n.tg.y, tg: n.tg }, kind: 'buried', icon: 'look' };
+    if (n && n.d < bd) best = { puzzle: { cx: n.tg.x, cy: n.tg.y, tg: n.tg }, kind: 'buried', icon: 'look', label: 'Dig' };
     return best;
   }
 
@@ -175,6 +180,7 @@ export class Hunts {
           s.paused = false;
           if (!found) return;
           entriesFor('map').forEach((e) => dispose(e.id));
+          this.mapT = 0;
           o.shown = false;
           o.img.setVisible(false);
           s.toast('Treasure! The map pieces crumble to dust.');

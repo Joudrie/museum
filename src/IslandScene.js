@@ -22,7 +22,7 @@ import { animateWalker, footstep, dust } from './motion.js';
 import { Pet } from './pets.js';
 import { Fishing, catchOpen } from './fishing.js';
 import { say } from './ui/toast.js';
-import { startDig, readyIn, DIG_TILES, siteOf, siteKey, siteBonusReady, bonusEntry } from './dig.js';
+import { startDig, readyIn, DIG_TILES, siteOf, siteKey, siteBonusReady, bonusEntry, mapKey } from './dig.js';
 import { Puzzles } from './puzzles.js';
 import { openJournal } from './journal.js';
 import isle1 from './maps/isle-1.json';
@@ -801,7 +801,7 @@ export class IslandScene extends Phaser.Scene {
 
   // A spot to brush open (src/dig.js). It rests, shown as a flattened patch, after it has been dug.
   addDig(x, y, kind = 'mineral') {
-    const key = `${this.mapId || 'one'}:${x},${y}`;
+    const key = `${mapKey(this)}:${x},${y}`;
     const d = { key, kind, x: (x + 0.5) * T, y: (y + 0.5) * T, gx: x, gy: y };
     d.img = this.place(readyIn(key) > 0 ? 'dig_spot@dug' : kind === 'mineral' ? 'dig_spot' : `dig_${kind === 'fossil' ? 'fossil' : kind}`, x, y, { flat: true });
     this.digs.push(d);
@@ -1460,7 +1460,7 @@ export class IslandScene extends Phaser.Scene {
     if (!this.fishing.busy) this.focus = this.findFocus();
     this.interactBtn.classList.toggle('hidden', !this.focus || (this.fishing.busy && this.fishing.state === 'reel'));
     if (this.focus && this.focus.icon !== prev) this.interactBtn.querySelector('.bang').innerHTML = iconSvg(this.focus.icon);
-    if (!this.fishing.busy) this.interactBtn.querySelector('.label').textContent = this.focus?.fish ? 'Fish' : this.focus?.dig ? 'Dig' : this.focus?.exp ? this.focus.exp.label : this.focus?.boat ? 'Sail' : 'Interact';
+    if (!this.fishing.busy) this.interactBtn.querySelector('.label').textContent = this.focus?.fish ? 'Fish' : this.focus?.dig ? 'Dig' : this.focus?.exp ? this.focus.exp.label : this.focus?.boat ? 'Sail' : this.focus?.label || 'Interact';
     if (this.focus && (Phaser.Input.Keyboard.JustDown(k.SPACE) || Phaser.Input.Keyboard.JustDown(k.ENTER))) this.interact();
   }
 }

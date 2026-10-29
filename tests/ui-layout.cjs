@@ -31,6 +31,7 @@ const fail = (m) => (problems.push(m), console.log('  ✗ ' + m));
         const bad = [];
         if (m.docOverflow) bad.push('the page scrolls sideways');
         if (m.badText) bad.push('"undefined" or "NaN" text on screen');
+        if (m.unlabelled?.length) bad.push(`controls with no name for a screen reader: ${m.unlabelled.join(', ')}`);
         if (bad.length) return fail(`${name}: ${bad.join(', ')}`);
         const b = budget.screens[key];
         if (run.size[0] === 390 && b) {

@@ -81,3 +81,9 @@
 #visit {
   z-index: 25;
 }
+button.visit-img {
+  width: 100%;
+  padding: 0;
+  font: inherit;
+  cursor: zoom-in;
+}

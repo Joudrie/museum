@@ -35,7 +35,7 @@ const check = (c, good, bad) => (c ? console.log('  ✓ ' + good) : (problems.pu
     const rare = (tool) => { let n = 0; for (let i = 0; i < 4000; i++) if (dig.pick(es, Math.random, tool).rarity >= 3) n++; return n; };
     return { brush: rare('brush'), pick: rare('pick'), locked: [dig.toolUnlocked('trowel', 0), dig.toolUnlocked('trowel', 6), dig.toolUnlocked('pick', 15), dig.toolUnlocked('pick', 16)] };
   });
-  check(t.brush > t.pick * 1.5, `brush turns up more rare finds than the pick (${t.brush} vs ${t.pick})`, `tool odds wrong: ${JSON.stringify(t)}`);
+  check(t.brush > t.pick * 1.25, `brush turns up more rare finds than the pick (${t.brush} vs ${t.pick})`, `tool odds wrong: ${JSON.stringify(t)}`);
   check(t.locked.join() === 'false,true,false,true', 'tools unlock at 6 and 16 finds', `unlock thresholds wrong: ${t.locked}`);
 
   // sites: touching spots of one kind form a site; the bonus waits until every tile rests

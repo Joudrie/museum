@@ -217,7 +217,7 @@ function pieceButton(ref) {
 function buildPalette() {
   const pal = $('palette');
   const lists = [];
-  pal.innerHTML = '<input id="search" type="search" placeholder="Search pieces…" autocomplete="off" /><div id="results" class="pieces" hidden></div><div id="quick"></div>';
+  pal.innerHTML = '<input id="search" type="search" placeholder="Search pieces…" aria-label="Search pieces" autocomplete="off" /><div id="results" class="pieces" hidden></div><div id="quick"></div>';
   const search = $('search');
   search.oninput = () => {
     const q = search.value.trim().toLowerCase();

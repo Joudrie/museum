@@ -4,6 +4,8 @@
 import { load, save } from './storage.js';
 import { addCoins } from './wallet.js';
 import { PAINTINGS } from './paintings.js';
+import { openViewer } from './viewer.js';
+import { celebrate } from './ui.js';
 
 const KEY = 'curation.daily'; // { last, streak, best, gift, wheel, prize }
 
@@ -121,7 +123,7 @@ if (typeof document !== 'undefined') {
     gift.querySelector('.daily-note').textContent =
       s.streak > 1 ? `You've visited ${s.streak} days running. Take your time; missing a day never costs you anything.` : 'Good to see you. Drop in whenever you like.';
     const g = document.createElement('button');
-    g.className = 'wide-btn';
+    g.className = 'wide-btn' + (s.giftReady ? ' primary' : '');
     if (s.giftReady) {
       g.textContent = `Collect ${s.giftAmount} gold${isMilestone(s.streak) ? ' (week bonus!)' : ''}`;
       g.onclick = () => {
@@ -141,7 +143,7 @@ if (typeof document !== 'undefined') {
     const { w, wheel } = wheelEl();
     spin.appendChild(w);
     const go = document.createElement('button');
-    go.className = 'wide-btn';
+    go.className = 'wide-btn' + (s.wheelReady && !spinning ? ' primary' : '');
     const msg = document.createElement('p');
     msg.className = 'daily-note';
     if (landed) {
@@ -163,6 +165,7 @@ if (typeof document !== 'undefined') {
         setTimeout(() => {
           spinning = false;
           msg.textContent = `You won ${r.gold} gold!`;
+          if (r.gold === Math.max(...WHEEL)) celebrate(`${r.gold} gold!`, 'The best slice on the wheel');
           go.textContent = 'See you tomorrow ✓';
           refreshBadge();
         }, 3300);
@@ -179,11 +182,13 @@ if (typeof document !== 'undefined') {
     if (poty) {
       const p = document.createElement('section');
       p.className = 'daily-card daily-poty';
-      p.innerHTML = `<h3>Painting of the day</h3><div class="daily-art"><img alt="" /></div><b class="t"></b><i class="a"></i><p class="daily-note b"></p>`;
+      p.innerHTML = `<h3>Painting of the day</h3><button class="daily-art" aria-label="Look closer"><img alt="" /><span class="daily-zoom">Tap to look closer</span></button><b class="t"></b><i class="a"></i><p class="daily-note b"></p>`;
       const img = p.querySelector('img');
       img.src = poty.src;
       img.onerror = () => img.remove();
-      p.querySelector('.daily-art').style.background = poty.placeholder || '#2a1f18';
+      const art = p.querySelector('.daily-art');
+      art.style.background = poty.placeholder || '#2a1f18';
+      art.onclick = () => openViewer([poty], 0, null, null, { over: true });
       p.querySelector('.t').textContent = poty.title;
       p.querySelector('.a').textContent = `${poty.by} · ${poty.year}`;
       p.querySelector('.b').textContent = poty.blurb || '';

@@ -8,11 +8,12 @@ const el = document.getElementById('settings');
 const body = el.querySelector('.settings-body');
 let state = null;
 
-function slider(value, onInput) {
+function slider(value, onInput, label) {
   const wrap = document.createElement('div');
   wrap.className = 'slider';
   const input = document.createElement('input');
   input.type = 'range';
+  input.setAttribute('aria-label', label);
   input.min = '0';
   input.max = '100';
   input.value = String(Math.round(value * 100));
@@ -91,7 +92,7 @@ function group(title, ...children) {
 function render() {
   const s = settings();
   body.replaceChildren(
-    group('Sound', toggle('Sound on', !isMuted(), (v) => setMuted(!v)), section('Music volume', slider(s.music, (v) => setSetting('music', v))), section('Sound effects', slider(s.sfx, (v) => setSetting('sfx', v)))),
+    group('Sound', toggle('Sound on', !isMuted(), (v) => setMuted(!v)), section('Music volume', slider(s.music, (v) => setSetting('music', v), 'Music volume')), section('Sound effects', slider(s.sfx, (v) => setSetting('sfx', v), 'Sound effects volume'))),
     group(
       'Look',
       section('Lighting', choices(LIGHT_QUALITY, s.lights, (v) => (setSetting('lights', v), render()))),

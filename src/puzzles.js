@@ -10,7 +10,7 @@
 // Wiring is by nearness: a gate belongs to the plates, levers and riddlers within CLUSTER tiles of it
 // (chained: a plate near a plate near the gate counts). Nothing is lost or punished; reload and it resets.
 import { load, save } from './storage.js';
-import { startDig, readyIn, toolUnlocked, pick, entriesFor, TOOLS } from './dig.js';
+import { startDig, readyIn, toolUnlocked, pick, entriesFor, TOOLS, mapKey } from './dig.js';
 import { collect } from './collections/codex.js';
 import { RIDDLES } from './puzzles-data.js';
 import { Hunts } from './puzzles-hunt.js';
@@ -82,13 +82,13 @@ export class Puzzles {
     } else if (name === 'rock_crack') {
       this.rocks.push({ ...base, img: s.place(name, x, y) });
     } else if (name === 'fog') {
-      const key = `${s.mapId || 'one'}:${x},${y}`;
+      const key = `${mapKey(s)}:${x},${y}`;
       if (this.fogSeen[key]) return true; // already walked through: nothing to draw
       const img = s.place(name, x, y).setDepth(900000).setAlpha(0.96);
       this.fogs.push({ ...base, key, img, gone: false });
     } else if (name === 'riddler') {
       const img = s.place(name, x, y);
-      this.riddlers.push({ ...base, img, key: `${s.mapId || 'one'}:riddle:${x},${y}`, solved: false });
+      this.riddlers.push({ ...base, img, key: `${mapKey(s)}:riddle:${x},${y}`, solved: false });
     } else return this.hunts.piece(name, x, y);
     return true;
   }
@@ -217,10 +217,19 @@ export class Puzzles {
       const d = Math.hypot(x - o.cx, y - o.cy);
       if (d < bd) {
         bd = d;
-        best = { puzzle: o, kind: k, icon: 'look' };
+        best = { puzzle: o, kind: k, icon: k === 'riddler' ? 'talk' : 'look', label: this.label(k, o) };
       }
     });
     return best;
+  }
+
+  // what the Interact button says
+  label(k, o) {
+    if (k === 'lever') return 'Pull';
+    if (k === 'riddler') return 'Talk';
+    if (k === 'rock') return toolUnlocked('pick') ? 'Smash' : 'Look';
+    if (k === 'boulder') return o.x === o.home[0] && o.y === o.home[1] ? 'Look' : 'Reset';
+    return 'Look';
   }
 
   interact(f) {
@@ -256,7 +265,7 @@ export class Puzzles {
     if (!toolUnlocked('pick')) return s.toast(`Too hard to move by hand. A ${TOOLS.pick.name.toLowerCase()} would crack it: find ${TOOLS.pick.need} different things to earn one.`);
     s.solid[r.y][r.x] = false;
     this.rocks = this.rocks.filter((o) => o !== r);
-    s.tweens.add({ targets: r.img, alpha: 0, scale: 1.3, duration: 350, onComplete: () => r.img.destroy() });
+    s.tweens.add({ targets: r.img, alpha: 0, scale: 1.3, duration: 350, onComplete: () => r.img.setVisible(false) }); // (kept: the season and culling code hold every placed image)
     if (Math.random() < 0.5) {
       const e = pick(entriesFor('mineral'));
       const got = collect(e.id);

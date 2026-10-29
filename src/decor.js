@@ -139,6 +139,7 @@ function renderRoomSettings() {
   const { room, index } = state;
   const name = document.createElement('input');
   name.className = 'room-name';
+  name.setAttribute('aria-label', 'Room name');
   name.value = roomName(room, index);
   name.maxLength = 24;
   name.addEventListener('change', () => state.onRoom({ name: name.value.trim() || undefined }));
@@ -160,6 +161,7 @@ function renderPresets() {
   const nm = document.createElement('input');
   nm.className = 'room-name';
   nm.placeholder = 'Name this layout (Winter...)';
+  nm.setAttribute('aria-label', 'Layout name');
   nm.maxLength = 24;
   const save = document.createElement('button');
   save.textContent = 'Save layout';
