@@ -35,6 +35,7 @@ import { openSail, builderIslands, friendIslands } from './sailmenu.js';
 import { EXPEDITION_MAPS, expeditionOf, expeditionFor, expeditionOptions, expeditionTitles, EXPEDITIONS, boatScene } from './expedition.js';
 import { openLeads, grantStartLeads, foundLeads } from './leads.js';
 import { visitorLook, KINDS } from './RoomScene.js';
+import { personOfTile, personFor } from './people/index.js';
 import { PERSONALITIES, QUIPS } from './lines.js';
 import { blendAt } from './groundblend.js';
 import { resolver, headY } from './focus.js';
@@ -551,7 +552,7 @@ export class IslandScene extends Phaser.Scene {
     this.place('dock_post', 11, 38);
     this.place('dock_post', 13, 38);
     this.place('rowboat', 13, 39, { solid: false });
-    this.thing('sign', 13, 35, 'Expeditions leave from this dock. Pirate islands, shipwrecks, lost temples… coming soon!');
+    this.thing('sign', 13, 35, 'Expeditions leave from this dock: pirate islands, shipwrecks, lost temples. Use the rowboat to sail.');
     this.thing('sign', 13, 9, 'Welcome to the island! The museum is right behind you. Walk up into the doors to go back in.');
   }
 
@@ -1013,6 +1014,7 @@ export class IslandScene extends Phaser.Scene {
       if (x < 0 || y < 0 || x >= W || y >= H) return;
       if (name.startsWith('animal_') && ANIMALS[name.slice(7)]) return this.islanders.push(this.animal(name.slice(7), o.x + T / 2, o.y + t.h - 3, this.islanders.length));
       if (PEOPLE[name] !== undefined) return this.islanders.push(this.islander(o.x + T / 2, o.y + t.h - 4, PEOPLE[name], this.islanders.length));
+      if (personOfTile(name)) return this.islanders.push(this.islander(o.x + T / 2, o.y + t.h - 4, 0, this.islanders.length, personOfTile(name).id, o.flip));
       if (name === 'museum') return this.mapMuseum(x, y, t);
       if (DIG_TILES[name]) return this.addDig(x, y, DIG_TILES[name]);
       if (this.puzzles.piece(name, x, y)) return;
@@ -1125,12 +1127,21 @@ export class IslandScene extends Phaser.Scene {
 
   // Someone who lives on the island: walks Pokémon-style, a tile or two at a
   // time, never further than `range` tiles from home. Tap to chat.
-  islander(x, y, range, i) {
+  islander(x, y, range, i, id, flip) {
     const seed = 700 + i * 7 + Math.round(x + y);
     const r = (k) => {
       const v = Math.sin(seed * 12.9898 + k * 78.233) * 43758.5453;
       return v - Math.floor(v);
     };
+    // someone with a job (people/classes.js): works in their pose or wanders with their things
+    const p = id && personFor(id, r);
+    if (p) {
+      const prefix = `islander${seed}`;
+      if (!this.textures.exists(`${prefix}_down`)) makeCharacter(this, prefix, p.colors, p.look);
+      const s = this.add.sprite(x, y, p.pose ? `${prefix}_pose_0` : `${prefix}_down`).setOrigin(0.5, 1).setScale(p.scale).setDepth(y).setFlipX(!!(p.pose && flip));
+      if (p.alpha) s.setAlpha(p.alpha);
+      return { s, prefix, kind: 'casual', home: { x, y }, range: p.range * T, name: p.name, title: p.title, lines: p.lines, pose: p.pose, rate: p.rate, flip: !!flip, wait: 500 + r(3) * 2500, target: null };
+    }
     const kind = KINDS[Math.floor(r(1) * KINDS.length)];
     const { colors, look, scale } = visitorLook(kind, r);
     const prefix = `islander${seed}`;
@@ -1154,6 +1165,19 @@ export class IslandScene extends Phaser.Scene {
       }
       if (n.script) return n.script.update(dt); // a one-trick character (src/vignettes.js)
       const a = n.animal;
+      if (n.pose && !n.target) {
+        // at work, two frames on a loop; they look up at you while you chat
+        if (this.focus?.npc === n && talking()) {
+          const dx = this.player.x - s.x;
+          const dy = this.player.y - s.y;
+          if (Math.abs(dx) > Math.abs(dy)) s.setTexture(`${n.prefix}_side`).setFlipX(dx < 0);
+          else s.setTexture(dy < 0 ? `${n.prefix}_up` : `${n.prefix}_down`).setFlipX(false);
+        } else {
+          n.poseT = (n.poseT || 0) + dt;
+          s.setTexture(`${n.prefix}_pose_${Math.floor(n.poseT * n.rate) % 2}`).setFlipX(n.flip);
+        }
+        return;
+      }
       if (!n.target) {
         if (a) s.setTexture(a.pet ? (s.texture.key.includes('_side') ? `${n.prefix}_side` : `${n.prefix}_down`) : `${n.prefix}_${a.critter === 'duck' ? this.frame % 2 : 0}`);
         else {
@@ -1227,7 +1251,7 @@ export class IslandScene extends Phaser.Scene {
   // Neighbours stop and chat, wordlessly, in pictures; someone idle strolls over to a friend nearby;
   // and people notice you walking by and look round. All of it only where you can see it.
   canChat(n) {
-    return !n.animal && !n.script && n.s.active && !n.talking && !n.chatting && !n.target && !n.after && (!n.chatAt || this.time.now - n.chatAt > 20000);
+    return !n.animal && !n.script && !n.pose && n.s.active && !n.talking && !n.chatting && !n.target && !n.after && (!n.chatAt || this.time.now - n.chatAt > 20000);
   }
 
   chatBetween(a, b) {
@@ -1353,7 +1377,8 @@ export class IslandScene extends Phaser.Scene {
     // people who know you say so (src/regulars.js), and after very many talks something only they say
     const knows = n.animal ? null : remember(n.name, n.kind);
     const rare = n.animal ? null : rareFor(n.name, n.kind);
-    const opener = rare?.line || knows || n.opener?.() || islandLine({ season: this.season, weather: this.weatherKind, night: this.dark > 0.45, holiday: holiday() });
+    const own = n.lines ? n.lines[Math.floor(Math.random() * n.lines.length)] : null; // named townsfolk have their own things to say
+    const opener = rare?.line || knows || n.opener?.() || own || islandLine({ season: this.season, weather: this.weatherKind, night: this.dark > 0.45, holiday: holiday() });
     this.paused = true;
     this.interactBtn.classList.add('hidden');
     n.talking = true;
@@ -1367,7 +1392,7 @@ export class IslandScene extends Phaser.Scene {
     const tex = this.textures.get(`${n.prefix}_down`)?.getSourceImage?.();
     this.chatHandle = runDialogue(gen, {
       name: n.name,
-      label: n.label || PERSONALITIES[n.kind]?.label || 'Islander',
+      label: n.label || n.title || PERSONALITIES[n.kind]?.label || 'Islander',
       portrait: tex,
       onMood: (m) => popEmote(this, n, m),
       onGift: (gift) => {

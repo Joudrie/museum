@@ -260,6 +260,16 @@ island scene streams ground chunks around the player.
   ERR_STRING_TOO_LONG. Wrap calls in `{ ...; }`.
 - **iOS Safari ignores `user-scalable=no`.** Use `touch-action` instead.
 
+### Columns from around the world (`src/columns.js`)
+- 31 designs drawn in code (Greek, Roman, Egyptian, Persian, Minoan, Indian, Khmer, Chinese, Japanese, Maya, Toltec, Yoruba, Haida, Norse, Byzantine, Gothic, Nasrid, Baroque, Art Deco...), each with a short true fact. `paintColumn(id, W, H)` gives RGBA at any size; no Phaser, so Node can call it.
+- Customize → **Columns** (rooms with columns: main hall, atrium, shaped rooms) picks the design per room (`decor.column`, default Corinthian); themes set one too. The toolkit has a **Columns** tab with each as a 1×1 free-standing item (`column_<id>`). Dev preview: art.html → Columns.
+- Main hall columns are 34 px wide (were 22) and still end under the railing; the newels keep the old small post.
+
+### People sprites (Chat 17: `src/people/`, plan in `docs/PEOPLE-SPRITES.md`)
+- **Parts** (`src/people/parts.js`, merged into the menus in `art.js`): 29 more hats, 16 hairstyles, 7 facial hair, 6 glasses, 24 outfits, 14 accessories, legs (shorts, rolled, tall boots, peg leg), bare feet, 4 builds, 84 things to carry, 33 things to set down, a parrot or gull on the shoulder, and 63 two-frame work poses (`<prefix>_pose_0/1`; kneeling ones too). They draw after the first looks, so **old looks are pixel-identical**; `personRows(view, look, frame)` and `poseRows(look)` in `art.js` give the rows. The creator offers them too (Build, Legs, Feet, Hat trim).
+- **Classes** (`src/people/classes.js`, data): 137 jobs in 312 variants so far (cleaning & grounds, builders & trades, sea & shore, dig & expedition, museum jobs, visitors & townsfolk, food & market), each a builder piece `t:npc_<class>_<variant>` in the People lists. `personFor(id, seed)` rolls skin, hair, build and the class colors per person; a variant with a pose or a thing set down stays put and works, the rest wander. On islands they loop their pose, look up at you to chat, and talk with their job title and own lines. Previews draw one frame lazily (the game never builds them; the builder reads a piece's picture only when it draws it, so its start time is unchanged).
+- Gallery: `art.html` → People. Test: `node tests/people-sprites.cjs` (in `npm test`). The builder hides groups with "on " in the name, so group labels must avoid it.
+
 ### Art swap and placeholder list (Chat 15)
 - **Drop-in swap:** a PNG with the same name as a placeholder, put in `public/swap/` (`tiles/<name>.png`, `sprites/<name>.png`, `pieces/<group>/<n>.png`), overrides it with no code change. See `public/swap/README.md`. Code: `src/swap.js`; `vite.config.js` writes `swap/index.json`; `src/boot.js` waits for it before the game starts. A wrong-size file is ignored with a console warning.
 - **Placeholder list:** `node tools/list_placeholders.mjs` (add `--md` to rewrite `docs/PLACEHOLDERS.md`) lists every tile, room sprite and builder piece by name, size and where it's used, and marks swapped ones. Needs playwright (`PW=` path).

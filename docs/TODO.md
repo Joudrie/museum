@@ -192,11 +192,11 @@ Owns: new `src/ui/`, `ui.html`, `docs/UI*.md`, `docs/ui/`, `tests/ui-*.cjs`; res
 
 ## CHAT 17: People sprites (classes the Pokémon way)
 Owns: new `src/people/`, the character section of `src/art.js` (looks, `makeCharacter`), `src/library.js` and `art.html` (people gallery), `docs/PEOPLE-SPRITES.md`, new `tests/people-sprites.cjs`. Small additive edits only in `src/IslandScene.js`, `src/RoomScene.js` and the builder palette. Claim: `claimed: 2026-10-29`
-- [ ] Tier 0: parts (builds, hats, hair, facial hair, glasses, outfits, accessories, held props, poses), all recoloured through the palette letters.
-- [ ] Tier 1: janitors and grounds, construction and trades, fishermen, sailors and shore (sections A, B, D of `docs/PEOPLE-SPRITES.md`).
-- [ ] Classes placeable in the builder's People list and spawned on islands; a people gallery in `art.html`.
-- [ ] Tier 2: dig, field and expedition; museum professions (sections E, G).
-- [ ] Tier 3: visitors and townspeople; food and market (sections J, H).
+- [x] (this PR) Tier 0: parts (builds, hats, hair, facial hair, glasses, outfits, accessories, held props, poses), all recoloured through the palette letters.
+- [x] (this PR) Tier 1: janitors and grounds, construction and trades, fishermen, sailors and shore (sections A, B, D of `docs/PEOPLE-SPRITES.md`): 54 classes, 137 variants.
+- [x] (this PR) Classes placeable in the builder's People lists and living on islands (work poses, chat with their job title); a People tab in `art.html`. Not yet: spawning them in museum rooms or on the expedition maps.
+- [x] (this PR) Tier 2: dig, field and expedition; museum professions (sections E, G): 44 more classes, 98 in all, 227 variants.
+- [x] (this PR) Tier 3: visitors and townspeople; food and market (sections J, H): 39 more classes, 137 in all, 312 variants.
 - [ ] Tier 4: arts and performance; science and medicine; artisans (sections I, F, C).
 - [ ] Tier 5: history; fantasy and seasonal; crews (sections K, L, M).
 

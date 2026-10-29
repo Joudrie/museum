@@ -140,6 +140,10 @@
   "25-celebrate": {
    "smallTargets": 0,
    "minFont": 13
+  },
+  "17b-conversation-choices": {
+   "smallTargets": 0,
+   "minFont": 13
   }
  }
 }

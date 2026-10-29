@@ -36,6 +36,7 @@ import { ORIENT_LABELS, SIZE_LABELS, BREAK, roomAt, MAIN_HALL_PRICE, ATRIUM_PRIC
 import { openSlotMenu } from './slotmenu.js';
 import { applyPreset, presetCost } from './presets.js';
 import { ITEMS, loadItems, saveItems, resetItems, footprint, countPlaced } from './items.js';
+import { COLUMNS, DEFAULT_COLUMN } from './columns.js';
 import { roomDirt, removeDirt, resetDirt, dirtCount, covered, janitors, janitorCost, hireJanitor, resetJanitors, guides, guideBoost, maxGuides, guideCost, hireGuide, upgradeLevel, upgradeValue, upgradeCost, buyUpgrade, hasCarpenter, hireCarpenter, CARPENTER_COST, staffCount } from './staff.js';
 import { openStaffMenu } from './staffmenu.js';
 import { UPGRADES, OFFLINE_CAP_H, COLLECT_ALL_FEE } from './economy.js';
@@ -108,6 +109,9 @@ const lookOf = (ch) => ({
   freckles: !!ch.freckles,
   blush: !!ch.blush,
   earrings: !!ch.earrings,
+  build: ch.build,
+  legs: ch.legs,
+  feet: ch.feet,
 });
 const TUTORIAL_KEY = 'curation.tutorial'; // how far the first-time walkthrough has got
 const BREAK_SEEDED_KEY = 'curation.breakSeeded';
@@ -470,6 +474,12 @@ export class RoomScene extends Phaser.Scene {
     return (this.g.main ? bakeMainWalls : this.g.shaped ? bakeShapedWalls : bakeWalls)(this, 'walls', this.g, this.wallItems, decor).key;
   }
 
+  // This room's column design (Customize → Columns; see columns.js).
+  columnStyle() {
+    const id = this.decor?.column;
+    return COLUMNS[id] ? id : DEFAULT_COLUMN;
+  }
+
   // Main hall: stairs standing out from the balcony, columns one tile in front of
   // the wall holding up the railing, and what you can't walk through.
   placeHall() {
@@ -489,10 +499,11 @@ export class RoomScene extends Phaser.Scene {
     }
     // Columns: from the floor up to the underside of the railing's beam.
     const colH = g.columns[0].foot - (top + 8);
-    bakeColumn(this, 'hall_column', colH);
+    const style = this.columnStyle();
+    bakeColumn(this, `hall_column_${style}`, colH, style, 34);
     g.columns.forEach((col) => {
-      this.hallParts.push(this.add.image(col.x, col.foot, 'hall_column').setOrigin(0.5, 1).setDepth(col.foot));
-      this.blocks.push({ hall: true, x0: col.x - 6, x1: col.x + 6, y0: col.foot - 9, y1: col.foot - 8 });
+      this.hallParts.push(this.add.image(col.x, col.foot, `hall_column_${style}`).setOrigin(0.5, 1).setDepth(col.foot));
+      this.blocks.push({ hall: true, x0: col.x - 8, x1: col.x + 8, y0: col.foot - 9, y1: col.foot - 8 });
     });
     // Stairs: their top meets the balcony edge, their foot sits out on the floor.
     bakeHallStairs(this, 'hall_stairs', this.decor, g.stairRun);
@@ -525,9 +536,10 @@ export class RoomScene extends Phaser.Scene {
     this.blocks = this.blocks.filter((b) => !b.atrium);
     const parts = this.atriumParts;
     const block = (x0, x1, y0, y1) => this.blocks.push({ atrium: true, x0, x1, y0, y1 });
-    bakeColumn(this, 'atrium_column', g.D + 6);
+    const style = this.columnStyle();
+    bakeColumn(this, `atrium_column_${style}`, g.D + 6, style, 34);
     g.columns.forEach((col) => {
-      parts.push(this.add.image(col.x, col.foot, 'atrium_column').setOrigin(0.5, 1).setDepth(col.foot));
+      parts.push(this.add.image(col.x, col.foot, `atrium_column_${style}`).setOrigin(0.5, 1).setDepth(col.foot));
       block(col.x - 8, col.x + 8, col.foot - 12, col.foot - 8);
     });
     if (!this.textures.exists('atrium_statue')) bakeItem(this, 'atrium_statue', 'statue', ITEMS.statue, 0);
@@ -607,10 +619,11 @@ export class RoomScene extends Phaser.Scene {
       });
     });
     // columns
-    bakeColumn(this, 'shaped_column', 72);
+    const style = this.columnStyle();
+    bakeColumn(this, `shaped_column_${style}`, 88, style, 32);
     g.columns.forEach((c) => {
-      parts.push(this.add.image(c.x, c.y + 8, 'shaped_column').setOrigin(0.5, 1).setDepth(c.y + 8));
-      block(c.x - 7, c.x + 7, c.y - 2, c.y);
+      parts.push(this.add.image(c.x, c.y + 8, `shaped_column_${style}`).setOrigin(0.5, 1).setDepth(c.y + 8));
+      block(c.x - 8, c.x + 8, c.y - 2, c.y);
     });
     // the sunken pit: its far wall, a stone floor below, railings round it
     if (g.pit) {
@@ -1762,6 +1775,7 @@ export class RoomScene extends Phaser.Scene {
         },
         onCharacter: (character) => this.applyCharacter(character),
         plantIcon: (id) => (id === 'none' ? null : this.textures.get(`plant_${id}`).getSourceImage().toDataURL()),
+        columns: !!this.g.columns?.length,
         characterPreview: () => this.characterPreview(),
         janitor: { hired: covered(this.rooms, this.roomIndex), cost: janitorCost(), free: FREE },
         onHireJanitor: () => {

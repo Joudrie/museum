@@ -41,7 +41,7 @@ function render() {
       `${s.guides} of ${s.maxGuides} · one per 3 rooms · each +${Math.round(s.guideBoost * 100)}% income`,
       s.guides < s.maxGuides ? { label: `Hire · ${price(s.guideCost)}`, onClick: state.onHireGuide } : { label: s.maxGuides ? 'All hired' : 'Need 3 rooms', disabled: true },
     ),
-    row('Carpenter', 'Fixes cracks and builds new rooms (instantly, for now)', s.carpenter ? { label: 'Hired', disabled: true } : { label: `Hire · ${price(s.carpenterCost)}`, onClick: state.onHireCarpenter }),
+    row('Carpenter', 'Fixes cracks and builds new rooms on the spot', s.carpenter ? { label: 'Hired', disabled: true } : { label: `Hire · ${price(s.carpenterCost)}`, onClick: state.onHireCarpenter }),
     ...s.upgrades.map((u) =>
       row(
         `${u.name}${u.level ? ` · level ${u.level}` : ''}`,

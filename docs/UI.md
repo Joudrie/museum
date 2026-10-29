@@ -59,7 +59,7 @@ Fill the close button with `uiIcon('close')`. Buttons say what they do, in sente
 - **Staff board rows:** title and state on one line (a finished state such as Hired or Maxed is a badge, not a dead button), the text under it at full width, one full-width action button under that.
 - **Primary and quiet buttons in dialogs:** the answer you're asked for is gold, "Not now" is the brown one; the one thing to do on a screen (daily Collect, Spin) is gold.
 - **Accessibility:** `tests/ui-layout.cjs` fails any visible control with no name for a screen reader (no text, `aria-label`, `title` or `<label>`); overlays are `role="dialog" aria-modal="true"`; toasts are a polite live region; *Escape* closes the panel on top (`chrome.js`).
-- **The digit 5:** the bundled Pixelify Sans has its numeral 5 redrawn with a flat top, because the original reads as the letter S at small sizes ("3,500" looked like "3,S00"). Nothing else in the font changed; the note is in `src/ui/fonts/PixelifySans-OFL.txt`.
+- **Two fixes to the bundled Pixelify Sans:** the numeral 5 is redrawn with a flat top (the original reads as the letter S at small sizes: "3,500" looked like "3,S00"), and its ligatures are removed (the original draws "fi" like an A, so "fish" read "Ash"). Nothing else changed; the note is in `src/ui/fonts/PixelifySans-OFL.txt`. If you ever swap the font file, check both (`ui.html` shows a sample line).
 - **Prices** never say "testing" in the UI: a free price reads "Free (500 gold)" or "Free for now (500 gold)".
 - **Tests:** `tests/nav.cjs` has `openHub`, `jtab` and `openGroup`; `tests/ui-flows.cjs` holds tap budgets for the key journeys; `tests/ui-layout.cjs` guards layout; `tests/ui-shots.cjs` takes the screenshots.
 
