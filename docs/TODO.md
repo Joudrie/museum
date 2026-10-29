@@ -146,7 +146,7 @@ Owns: `src/weather.js`, `src/lighting.js`, `src/ambient.js`, `src/music.js`, `sr
 ## CHAT 12: Economy, staff and services
 Owns: `src/staffmenu.js`, `src/officemenu.js`, `src/office.js`, `src/incomemenu.js`, `src/wallet.js`, `src/rating.js`. Claim: `claimed: 2026-10-29`
 - [x] Break-room upgrade menu (slower mess, guide training, carpenter toolbox); Curator's Office level costs and unlocks now in `src/economy.js` (#126).
-- [x] Gift shop, food court stall, kids' discovery table and lecture stage as Services items (max 1 each, rules in `SERVICES` in `src/economy.js`); coffee depth via the Better beans upgrade (#136). Not done: library and archive (the Library room exists; where the stored collection lives belongs with Chats 5 and 8); the lecture stage pays per famous visitor met but has no live talk event yet.
+- [x] Gift shop, food court stall, kids' discovery table and lecture stage as Services items (max 1 each, rules in `SERVICES` in `src/economy.js`); coffee depth via the Better beans upgrade (#144). Not done: library and archive (the Library room exists; where the stored collection lives belongs with Chats 5 and 8); the lecture stage pays per famous visitor met but has no live talk event yet.
 - [x] Income formula numbers in `src/economy.js`; 8-hour cap messaging (welcome-back toast, FULL flag, income-menu note); "Collect all" is now free of ads and keeps a 15% fee (#128).
 - [x] Security: four tiers (none, dummy cameras, cameras, alarm) in `src/economy.js`; stopped thieves at camera tiers are caught for a gold bounty (#135).
 - [ ] Late-game sink: frame your own artwork (very expensive).
