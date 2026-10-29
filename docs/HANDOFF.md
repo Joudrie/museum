@@ -180,3 +180,6 @@ See `docs/ASSET-HUNT.md` (the "super dig" prompt plus the to-do list) and `docs/
    No silly mini-games; real discovery and preservation.
 7. Seasonal recolouring turns the user's cherry trees orange in autumn. This is expected, but
    be ready to exempt cherry trees if they ask.
+
+### Chat 11 (atmosphere, seasons, audio)
+- Seasons already existed (`src/weather.js`, `seasonFrames` in `src/scenery.js`). Cherry trees now stay pink in autumn: no recolour and no swap to the maple tile.
