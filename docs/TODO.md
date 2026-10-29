@@ -60,13 +60,13 @@ Owns: `tests/`, `.github/`, `vite.config.js`, `src/settings*.js`, `src/ui.js`. C
 
 ## CHAT 4: Restoration and provenance (loop step 4)
 Owns: new `src/restore.js`, `src/restorestudio.js`, `src/storage_room.js`. Claim: `claimed: 2026-10-29`
-- [ ] Finds and paintings arrive **dirty or damaged**; a Restoration Studio (a room or a desk like the Curator's Office) where you clean them.
-- [ ] Painting cleaning: rub grime off the **real HD image** with a before / after reveal (the real paintings stay perfect everywhere else).
-- [ ] Fossil prep (brush stone off bone), pottery reassembly (drag pieces), bone assembly.
-- [ ] Restored items go to storage, then onto display. Unrestored items can't be displayed.
-- [ ] Provenance on the plaque: "Recovered from <place>" in the viewer (the `provenance` field exists).
-- [ ] Inventory vs codex: storage list of what you own now vs everything you've ever collected.
-- [ ] Hand-offs: Chat 6 and 7 deliver dirty finds; Chat 5 displays restored ones.
+- [x] (PR #112) Finds and paintings arrive **dirty or damaged**; a Restoration Studio (a room or a desk like the Curator's Office) where you clean them.
+- [x] (PR #112) Painting cleaning: rub grime off the **real HD image** with a before / after reveal (the real paintings stay perfect everywhere else).
+- [x] (PR #112) Fossil prep (brush stone off bone), pottery reassembly (drag pieces), bone assembly.
+- [x] (PR #112) Restored items go to storage, then onto display. Unrestored items can't be displayed.
+- [x] (PR #112) Provenance on the plaque: "Recovered from <place>" in the viewer (the `provenance` field exists).
+- [x] (PR #112) Inventory vs codex: storage list of what you own now vs everything you've ever collected.
+- [x] (PR #112) Hand-offs: Chat 6 and 7 deliver dirty finds; Chat 5 displays restored ones.
 
 ## CHAT 5: Display, exhibits and the aquarium
 Owns: `src/showcase.js`, `src/viewer.js`, `src/collections/render.js`, new `src/display*.js`. Claim: `claimed: 2026-10-29`
