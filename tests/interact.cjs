@@ -74,10 +74,25 @@ const check = (cond, good, bad) => (cond ? ok(good) : fail(bad));
   });
   await wait(900);
   const chat = await p.evaluate(() => ({ open: (!!document.querySelector('#chat') && !document.querySelector('#chat').classList.contains('hidden')), text: document.querySelector('.chat-text').textContent.length > 0, paused: __game.scene.getScene('island').paused }));
-  check(chat.open && chat.text && chat.paused, 'talking to an islander opens the conversation box', `chat ${JSON.stringify(chat)}`);
+  check(chat.open && chat.text && !chat.paused, 'talking to an islander opens the conversation box (the game keeps running)', `chat ${JSON.stringify(chat)}`);
+  const hidesButtons = await p.evaluate(() => { const s = __game.scene.getScene('island'); s.update(0, 16); return s.interactBtn.classList.contains('hidden'); });
+  check(hidesButtons, 'the Interact button is put away while the box is up', 'Interact still showing over the conversation');
   await p.evaluate(() => __game.scene.getScene('island').endTalk());
   const after = await p.evaluate(() => ({ open: (!!document.querySelector('#chat') && !document.querySelector('#chat').classList.contains('hidden')), paused: __game.scene.getScene('island').paused }));
   check(!after.open && !after.paused, 'ending the talk lets you walk again', `still open/paused: ${JSON.stringify(after)}`);
+  // walking off ends it by itself
+  await p.evaluate(() => {
+    const s = __game.scene.getScene('island');
+    const n = s.islanders.find((o) => !o.animal);
+    s.player.setPosition(n.s.x, n.s.y - 24);
+    s.facing = 'down';
+    s.talkTo(n);
+  });
+  await wait(400);
+  await p.evaluate(() => { const s = __game.scene.getScene('island'); s.player.setPosition(s.player.x, s.player.y - 120); });
+  await wait(400);
+  const left = await p.evaluate(() => ({ open: !document.querySelector('#chat').classList.contains('hidden'), handle: !!__game.scene.getScene('island').chatHandle, talkingTo: !!__game.scene.getScene('island').talkingTo }));
+  check(!left.open && !left.handle && !left.talkingTo, 'walking away ends the conversation', `still up after walking off: ${JSON.stringify(left)}`);
 
   console.log('People chat with each other');
   const chatting = await p.evaluate(() => {
@@ -290,11 +305,14 @@ const check = (cond, good, bad) => (cond ? ok(good) : fail(bad));
     const prior = n.s.texture.key + '|' + n.s.flipX;
     s.talkTo(n);
     out.turned = n.s.texture.key === `${n.prefix}_down` || n.s.texture.key.endsWith('_down');
-    // mid-drag when the talk opened: no walking away afterwards
+    // (a talk doesn't pause the game: a drag in progress goes on, and walking off ends the talk)
     s.dragging = true;
     s.dragVec = { x: 1, y: 0 };
     s.update(0, 16);
-    out.dragCleared = !s.dragging;
+    out.dragKept = s.dragging;
+    s.dragging = false;
+    s.dragVec = null;
+    s.stick.classList.remove('active');
     s.endTalk();
     out.prior = prior;
     return out;
@@ -303,7 +321,7 @@ const check = (cond, good, bad) => (cond ? ok(good) : fail(bad));
   check(t2.faced === 'npc', 'turn toward them and they are', `facing them gave ${t2.faced}`);
   check(t2.nothing === 'none' && t2.noop, 'facing nothing, Interact does nothing', `nothing: ${JSON.stringify(t2)}`);
   check(t2.turned, 'the person turns to face you when you talk', 'they did not turn');
-  check(t2.dragCleared, 'a drag in progress is let go when a talk opens', 'the stick stayed down (you would walk off afterwards)');
+  check(t2.dragKept, 'a talk does not take the stick from you (the game keeps running)', 'the drag was let go when the talk opened');
   let back = false;
   for (let i = 0; i < 20 && !back; i++) {
     await wait(300);
