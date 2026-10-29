@@ -60,24 +60,24 @@ Owns: `tests/`, `.github/`, `vite.config.js`, `src/settings*.js`, `src/ui.js`. C
 
 ## CHAT 4: Restoration and provenance (loop step 4)
 Owns: new `src/restore.js`, `src/restorestudio.js`, `src/storage_room.js`. Claim: `claimed: 2026-10-29`
-- [ ] Finds and paintings arrive **dirty or damaged**; a Restoration Studio (a room or a desk like the Curator's Office) where you clean them.
-- [ ] Painting cleaning: rub grime off the **real HD image** with a before / after reveal (the real paintings stay perfect everywhere else).
-- [ ] Fossil prep (brush stone off bone), pottery reassembly (drag pieces), bone assembly.
-- [ ] Restored items go to storage, then onto display. Unrestored items can't be displayed.
-- [ ] Provenance on the plaque: "Recovered from <place>" in the viewer (the `provenance` field exists).
-- [ ] Inventory vs codex: storage list of what you own now vs everything you've ever collected.
-- [ ] Hand-offs: Chat 6 and 7 deliver dirty finds; Chat 5 displays restored ones.
+- [x] (PR #123) Finds and paintings arrive **dirty or damaged**; a Restoration Studio (a room or a desk like the Curator's Office) where you clean them.
+- [x] (PR #123) Painting cleaning: rub grime off the **real HD image** with a before / after reveal (the real paintings stay perfect everywhere else).
+- [x] (PR #123) Fossil prep (brush stone off bone), pottery reassembly (drag pieces), bone assembly.
+- [x] (PR #123) Restored items go to storage, then onto display. Unrestored items can't be displayed.
+- [x] (PR #123) Provenance on the plaque: "Recovered from <place>" in the viewer (the `provenance` field exists).
+- [x] (PR #123) Inventory vs codex: storage list of what you own now vs everything you've ever collected.
+- [x] (PR #123) Hand-offs: Chat 6 and 7 deliver dirty finds; Chat 5 displays restored ones.
 
 ## CHAT 5: Display, exhibits and the aquarium
 Owns: `src/showcase.js`, `src/viewer.js`, `src/collections/render.js`, new `src/display*.js`. Claim: `claimed: 2026-10-29`
-- [x] Display cases, plinths, specimen shelves, easels and tanks that **place collection entries in rooms** (entries already say how they display: wall, case, plinth). (PR below)
-- [x] **Aquarium** for caught fish: tanks in a room, fish swim, tap for the card; a giant tank wing. (tanks + giant tank done; PR below)
-- [ ] Dinosaur skeleton assembled from dug bones; the big T. rex as a goal.
+- [x] Display cases, plinths, specimen shelves, easels and tanks that **place collection entries in rooms** (entries already say how they display: wall, case, plinth). (#127)
+- [x] **Aquarium** for caught fish: tanks in a room, fish swim, tap for the card; a giant tank wing. (tanks, giant tank, swimming fish: #127; tap-a-fish card still to do)
+- [x] Dinosaur skeleton assembled from dug bones; the big T. rex as a goal. (the T-rex skeleton item needs 6 dinosaur bones and a T. rex tooth in the codex; the toolkit shows what is missing)
 - [ ] Specimen shelves for everything with the HD viewer; rarity frames and special cases for rare items.
-- [ ] Set completion plaques and rewards on display ("Fossil drawer", "Crystal cabinet").
-- [x] Every displayed piece earns and counts toward room rating. (PR below)
+- [x] Set completion plaques and rewards on display ("Fossil drawer", "Crystal cabinet"). (a set fully on display earns double; shown in the display panel)
+- [x] Every displayed piece earns and counts toward room rating. (#127)
 - [ ] Viewer polish: swipe along a wall of cases, notes, your rating and journal note.
-- [ ] Rope barriers, stanchions and signage as placeable decor.
+- [x] Rope barriers, stanchions and signage as placeable decor. (Display tab: rope, stanchion, exhibit sign)
 
 ## CHAT 6: Digging v2 and puzzle mechanics
 Owns: `src/dig.js`, `src/puzzles*.js`, `src/collections/data/{minerals,fossils}.js`. Claim: `claimed: 2026-10-29`
@@ -136,7 +136,7 @@ Owns: `src/famous.js`, `src/lines.js`, `src/quests.js`, `src/talk.js`, `src/staf
 
 ## CHAT 11: Atmosphere, seasons and audio
 Owns: `src/weather.js`, `src/lighting.js`, `src/ambient.js`, `src/music.js`, `src/foliage.js`, `src/critters.js`. Claim: `claimed: 2026-10-29`
-- [ ] Seasons on the real calendar (snow on the lawn, fall leaves, holiday decor, seasonal visitors like trick-or-treaters). Snow, fall leaves and recoloured trees already exist; **cherry trees stay pink in autumn (done, this PR)**. Still to do: holiday decor, seasonal visitors.
+- [ ] Seasons on the real calendar (snow on the lawn, fall leaves, holiday decor, seasonal visitors like trick-or-treaters). Snow, fall leaves and recoloured trees already exist; **cherry trees stay pink in autumn (done, this PR)**. **Halloween (Oct 24-31): jack-o'-lanterns at the museum doors and costumed trick-or-treat kids; winter (Dec 18-26): woolly hats (done, this PR; `holiday()` in weather.js, `?holiday=halloween|winter`).** Still to do: winter lights, other holidays.
 - [ ] Daily rhythm (Animal Crossing / Stardew feel); weather effects inside and outside; day / night polish.
 - [ ] Per-room music and ambience; sound effects pass; a mute and volume mix.
 - [ ] Lighting performance on phones (High / Low / Off already exist).

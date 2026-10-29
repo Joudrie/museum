@@ -119,6 +119,17 @@ Scenes (`src/main.js`):
 - `tools/import_collection.mjs` turns a CSV into a data file and refuses rows with no license/credit.
 - Test: `PW=/opt/node-tools/node_modules/playwright OUT=<dir> node tests/collections.cjs`.
 
+### Restoration and provenance (Chat 4: `src/restore.js`, `src/restorestudio.js`, `src/storage_room.js`)
+- **The `dirty` contract** (for chats 6 and 7 to hand over, chat 5 to display): `collect(id, { dirty: true })` hands over a dirty find
+  (or put `dirty: true` on an entry; `dirty: false` forces a clean one); `makeDirty(id)` grimes something already held (even a painting);
+  **before displaying anything ask `displayCount(id) > 0`, never `ownedCount`**. All in `collections/codex.js`, re-exported by `restore.js`;
+  the codex keeps `dirty: { id: n }` and a `restored` count on `seen`. Optional `entry.restore: 'clean' | 'prep' | 'assemble'`
+  (default: pictures clean, `fossil` prep, tags pottery/bone/vase assemble).
+- **Restoration Studio** (`openStudio()`; opened from Journal → Storage): rub grime off the real HD image with a before/after slider;
+  brush stone off a fossil; drag 9 pieces back together. Leaving costs nothing. Real paintings are never altered, only a grime layer over them.
+- **Storage tab** in the Journal: held now (ready vs needs restoring) against the codex (ever collected). Viewer shows "Recovered from <place>".
+- Test: `PW=/opt/node-tools/node_modules/playwright OUT=<dir> node tests/restore.cjs`. A physical studio desk in a room is not built (the entry is the Journal tab).
+
 ### Content pipeline (`docs/CONTENT.md`, `docs/CONTENT-STYLE.md`): real art in, with a person approving
 - `tools/sources/` has one adapter per museum (Met, AIC, Cleveland, Smithsonian, Rijksmuseum, Commons):
   public-domain / CC0 only, cached, rate-limited. **They have never run against a live API**: the build
@@ -163,6 +174,8 @@ Scenes (`src/main.js`):
   picture opens its card in the viewer. `src/displayart.js` draws the pieces over the sprite (fish swim); rare and legendary pieces get a glow.
 - Pieces on display earn `value` (or 2 x rarity) gold/hr (`wallet.js`) and count as decor in the room rating (`rating.js`). Moving a fixture keeps its
   pieces; selling empties it. Test: `node tests/display.cjs`.
+- A set with every piece on display (any rooms) earns double for those pieces; the panel shows each started set's progress and plaque. Items can
+  carry `needs: { entryId: count }` (the T-rex skeleton: 6 dinosaur bones + a T. rex tooth); `missingFor()` blocks buying and the toolkit says what is missing.
 
 ### Wakefield, MA is NOT part of the game
 A separate personal project (the user's hometown, for friends) that only shares the engine. Its page is `wakefield.html`, its code
@@ -240,4 +253,5 @@ See `docs/ASSET-HUNT.md` (the "super dig" prompt plus the to-do list) and `docs/
 - **Dig kinds** live in `src/dig.js` (`DIG_KINDS`, `DIG_TILES`): a builder tile maps to a kind, a kind maps to collections. mineral, fossil, ruin (pottery, coins, stone tools), shore (shells), crater (meteorites). To add a kind: a data collection, one line in `DIG_KINDS`, one tile in `src/tiles.js` (group "Dig sites"), one line in `DIG_TILES`.
 - **`dirty: true` on an entry** means finds of it arrive dirty (pottery, coins, stone tools, meteorites). `collect(id, { dirty })` records `codex.dirty[id]` (a count, never more than you own). Chat 4 owns what cleaning does; it should lower that count. Until then dirty finds display as normal.
 - Journal tabs now wrap to two rows (12 tabs). `tests/dig.cjs` needs the dev server (`npx vite --port 5173`, `URL=http://localhost:5173/`).
+- `holiday()` in `src/weather.js` (real calendar; `?holiday=halloween|winter|none` pins it). Halloween: pumpkins by the museum doors (`holidayDecor` in IslandScene), kids and some students in witch / ghost / pumpkin costumes (`visitorLook`). Winter: woolly hats.
 - Room presets (`src/presets.js`, `tests/presets.cjs`): Customize > This room > Saved layouts saves a room's decor and items under a name and loads them into any room. Loading sells what is there and buys the preset's items at normal prices, so layouts are not free items.
