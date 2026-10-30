@@ -114,3 +114,10 @@ body #toast { font: 600 var(--fs-body) / 1.25 var(--ui-font); border: 3px solid 
 
 /* <small> defaults to "smaller" (12.5 px): hold the 13 px floor */
 body small { font-size: var(--fs-small); }
+
+/* keyboard focus: a clear gold ring (touch users never see it) */
+body button:focus-visible,
+body [role='button']:focus-visible,
+body summary:focus-visible,
+body input:focus-visible,
+body select:focus-visible { outline: 3px solid var(--ui-gold-hi); outline-offset: 2px; }
