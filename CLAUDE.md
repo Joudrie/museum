@@ -25,7 +25,7 @@ Read docs/VISION.md first: every feature should serve it. Then docs/HANDOFF.md f
 ## Islands
 - **Main Island** (src/maps/main-island.json, drawn by the user in the builder) is home: the museum
   is there and you come out of its doors. **Island One** is the old code-drawn island; its museum
-  doors are locked. The boat lists every island, including ones built in the builder on the phone.
+  doors are locked. **Skulldug Island** (src/maps/skulldug.json) is another user-drawn island. The boat lists every island, including ones built in the builder on the phone.
 
 ## Starting rooms (from the user's sketch)
 - Room 0 is the **entrance**: you come in at the bottom, ticket desk on the right with

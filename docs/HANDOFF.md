@@ -94,8 +94,9 @@ Scenes (`src/main.js`):
   - Its museum doors are **locked**: walking in only shows a toast.
   - Its cottage still opens the angled room.
 - **The far isle** = `src/maps/isle-1.json`.
+- **Skulldug Island** = `src/maps/skulldug.json` (the user's builder map, backup in `docs/maps/`). In `MAPS`, so the boat lists it; no region entry yet, so it is open to everyone (region `wild`).
 - **The boat** ("Sail" at a rowboat) opens a "Where to?" picker (`src/sailmenu.js`). It lists
-  Main Island, Island One, the far isle, and every island saved in the builder on this phone.
+  Main Island, Island One, the far isle, Skulldug Island, and every island saved in the builder on this phone.
   Same origin, so the game reads the builder's localStorage.
 - **Builder islands in the game support:**
   - the museum (doors work, front two rows solid)
