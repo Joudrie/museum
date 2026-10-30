@@ -96,7 +96,10 @@ Scenes (`src/main.js`):
 - **The far isle** = `src/maps/isle-1.json`.
 - **Skulldug Island** = `src/maps/skulldug.json` (the user's builder map, backup in `docs/maps/`). In `MAPS`, so the boat lists it; no region entry yet, so it is open to everyone (region `wild`).
 - **The boat** ("Sail" at a rowboat) opens a "Where to?" picker (`src/sailmenu.js`). Its first line is always
-  **Take the boat out** (row about this island: `Rowing.launch()`; the user wants this kept, it was lost once). It lists
+  **Take the boat out** (row about this island: `Rowing.launch()`; the user wants this kept, it was lost once).
+  **Row at any water** (the user's rule, see CLAUDE.md): a Row button (`#rowbtn`, `Rowing.button()`) shows whenever
+  there is water within reach, even a puddle, sitting just above Interact/Fish. Walking speed uses the real frame
+  time (`src/frametime.js`), so the first steps out of the museum aren't slow. It lists
   Main Island, Island One, the far isle, Skulldug Island, and every island saved in the builder on this phone.
   Same origin, so the game reads the builder's localStorage.
 - **Builder islands in the game support:**

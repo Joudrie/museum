@@ -375,6 +375,30 @@ const check = (cond, good, bad) => (cond ? ok(good) : fail(bad));
   });
   check(gust.leaves >= 5, 'a gust blows leaves along the ground in autumn', `no gust leaves (${gust.leaves})`);
 
+  console.log('Row at any water, like Surf');
+  await open('?season=summer&weather=clear&holiday=none');
+  await island({ map: 'main' });
+  const rowVis = () => p.evaluate(() => { const r = document.querySelector('#rowbtn'); return !!r && !r.classList.contains('hidden'); });
+  check(!(await rowVis()), 'no Row button on dry land (at the museum doors)', 'Row shows away from the water');
+  const shore = await p.evaluate(() => {
+    const s = __game.scene.getScene('island');
+    for (let y = 5; y < 70; y++) for (let x = 2; x < 70; x++) {
+      const px = x * 32 + 16, py = y * 32 + 16;
+      if (s.walkFree(px, py) && !s.walkFree(px - 32, py) && s.row.wet(px - 40, py - 4) && !s.boats.some((b) => Math.hypot(b.x - px, b.y - py) < 300)) {
+        s.player.setPosition(px, py);
+        s.facing = 'left';
+        return true;
+      }
+    }
+    return false;
+  });
+  await wait(600);
+  check(shore && (await rowVis()), 'a Row button at the water\'s edge, beside Fish', 'no Row button at the shore');
+  await p.click('#rowbtn');
+  await wait(900);
+  const rowOn = await p.evaluate(() => !!__game.scene.getScene('island').row?.on);
+  check(rowOn && !(await rowVis()), 'Row puts you in your boat on the water', 'Row did not put you in the boat');
+
   check(errs.length === 0, 'no page errors', `page errors: ${errs.slice(0, 2).join(' | ')}`);
   await b.close();
   console.log(problems.length ? `\n${problems.length} problem(s)` : '\nAll good');

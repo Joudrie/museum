@@ -52,3 +52,32 @@
 body:has(#rowask:not(.hidden)) #prog-pill {
   visibility: hidden;
 }
+
+/* Row (src/rowing.js): at any water, beside Interact; it sits just above Interact while that is up. */
+#rowbtn {
+  position: fixed;
+  bottom: max(20px, calc(env(safe-area-inset-bottom) + 12px));
+  right: max(16px, calc((100vw - min(100vw, 100dvh * 9 / 16)) / 2 + 16px));
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px 10px 12px;
+  font-size: calc(16px * var(--ui-text-scale, 1));
+  transition: opacity 0.12s, transform 0.12s;
+}
+#rowbtn.stacked {
+  bottom: calc(max(20px, calc(env(safe-area-inset-bottom) + 12px)) + 62px);
+}
+#rowbtn.hidden {
+  opacity: 0;
+  transform: scale(0.85);
+  pointer-events: none;
+}
+#rowbtn .bang {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  background: #fff3c4;
+  border: 2px solid #1d1714;
+}

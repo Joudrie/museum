@@ -90,6 +90,23 @@ function ask(text, yes, no) {
     no();
   };
 }
+// ---------- the Row button: at any water at all, put your boat in (like Surf) ----------
+let btn = null;
+function rowButton() {
+  if (!btn) {
+    btn = document.createElement('button');
+    btn.id = 'rowbtn';
+    btn.type = 'button';
+    btn.className = 'pixel-btn hidden';
+    btn.innerHTML = `<span class="bang">${uiIcon('boat')}</span><span class="label">Row</span>`;
+    document.body.appendChild(btn);
+  }
+  return btn;
+}
+export function hideRowButton() {
+  btn?.classList.add('hidden');
+}
+
 export const rowAskOpen = () => !!card && !card.classList.contains('hidden');
 export function closeRowAsk() {
   card?.classList.add('hidden');
@@ -252,7 +269,43 @@ export class Rowing {
           return true;
         }
       }
-    return false;
+    const w = this.waterNear(); // (only a puddle about: in you get all the same)
+    if (w) this.board(w.x, w.y);
+    return !!w;
+  }
+
+  /** Water within reach of where you stand, nearest first and the way you face first: a spot the boat
+   *  fits, or failing that any water at all (a puddle still takes the boat). Null on dry land. */
+  waterNear() {
+    const p = this.s.player;
+    const [fx, fy] = DIRS[this.s.facing] || [0, 1];
+    const face = Math.atan2(fy, fx);
+    let any = null;
+    for (const r of [22, 30, 38, 48, 58])
+      for (let a = 0; a < 16; a++) {
+        const ang = face + (a % 2 ? 1 : -1) * Math.ceil(a / 2) * (Math.PI / 8);
+        const x = p.x + Math.cos(ang) * r;
+        const y = p.y + Math.sin(ang) * r;
+        if (!this.wet(x, y - 4)) continue;
+        if (this.free(x, y)) return { x, y };
+        any ||= { x, y };
+      }
+    return any;
+  }
+
+  /** Each frame from IslandScene: show Row while there is water in reach (`can`: nothing else has the
+   *  screen); `stacked` when the Interact button is up, so Row sits just above it. */
+  button(dt, can, stacked) {
+    this.btnT = (this.btnT || 0) - dt;
+    if (!can || this.on || this.busy || !this.allowed()) this.near = null;
+    else if (this.btnT <= 0) {
+      this.btnT = 0.12; // (a look around about eight times a second is plenty)
+      this.near = this.waterNear();
+    }
+    const b = rowButton();
+    b.onclick = () => this.near && !this.on && !this.busy && !this.s.paused && this.board(this.near.x, this.near.y);
+    b.classList.toggle('hidden', !this.near);
+    b.classList.toggle('stacked', stacked);
   }
 
   /** Interact with your own boat: hop in where it is. */
@@ -455,6 +508,7 @@ export class Rowing {
     this.destroyBoat();
     this.unmoor();
     closeRowAsk();
+    hideRowButton();
     this.on = false;
   }
 }
