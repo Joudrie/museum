@@ -93,6 +93,12 @@ const fail = (m) => (problems.push(m), console.log('  ✗ ' + m));
   }], async () => p.isVisible('#settings:not(.hidden)'));
   await journey('Tap the Menu, then close it', 2, [() => tap('#menu-btn'), () => tap('.hub-close')], async () => !(await p.isVisible('#hub:not(.hidden)')));
 
+  // reduced motion must never hide a reward: the celebration card fades, it does not vanish
+  await p.evaluate(() => { localStorage.setItem('curation.settings', JSON.stringify({ reduceMotion: true })); window.dispatchEvent(new CustomEvent('settings', { detail: { key: 'reduceMotion', value: true } })); window.__celebrate('+200 gold', 'Goal complete', 'coin'); });
+  await p.waitForTimeout(500);
+  const seen = await p.evaluate(() => getComputedStyle(document.querySelector('.celebrate-card')).opacity);
+  if (Number(seen) > 0.9) ok('Reduce motion: the reward card is still seen'); else fail(`Reduce motion hides the reward card (opacity ${seen})`);
+
   if (errs.length) fail('page errors: ' + errs.slice(0, 2).join(' | '));
   await b.close();
   console.log(problems.length ? `\n${problems.length} problem(s)` : '\nAll good');

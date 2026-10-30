@@ -7,7 +7,7 @@ const html = `
   <div class="swatches">
     ${sw('bg', '#1d1714')}${sw('panel', '#2a211d')}${sw('panel-2', '#362a22')}${sw('raised', '#43342a')}
     ${sw('gold', '#c9a23f')}${sw('gold-hi', '#f2d36b')}${sw('line', '#5b4216')}${sw('ink', '#f4ead6')}
-    ${sw('muted', '#b9a98f')}${sw('good', '#6fd07a')}${sw('danger', '#e0705c')}${sw('info', '#7ac8e0')}
+    ${sw('muted', '#b9a98f')}${sw('good', '#6fd07a')}${sw('danger', '#ee8a76')}${sw('info', '#7ac8e0')}
   </div>
 </section>
 <section class="scale"><h2 class="ui-label">Type</h2>

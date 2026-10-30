@@ -27,6 +27,7 @@ import { startDig, readyIn, DIG_TILES, siteOf, siteKey, siteBonusReady, bonusEnt
 import { Puzzles } from './puzzles.js';
 import { openJournal } from './journal.js';
 import isle1 from './maps/isle-1.json';
+import skulldug from './maps/skulldug.json';
 import mainIsland from './maps/main-island.json';
 import { withTiles } from './mapformat.js';
 import { PEOPLE, ANIMALS } from './landmarks.js';
@@ -74,7 +75,7 @@ function lockedPreview(reg, prog) {
   const left = list.filter((s) => !prog.state.fish.species[s.id]?.n).length;
   return list.length ? `${left} fish you have not found live here: ${list.filter((s) => s.rarity >= 3).slice(0, 4).map(() => '???').join(' ')}` : '';
 }
-const MAPS = { main: mainIsland, 'isle-1': isle1, ...EXPEDITION_MAPS };
+const MAPS = { main: mainIsland, 'isle-1': isle1, skulldug, ...EXPEDITION_MAPS };
 
 // The main island is 24×40 tiles; the tile garden (see showcase.js) lies
 // east of it, joined by a path, and sets the full map size.

@@ -562,3 +562,22 @@ body .pg-tabs button {
 body .pg-row button { min-height: var(--ui-hit); min-width: var(--ui-hit); padding: 6px 12px; }
 body .pg-cell { font-size: var(--fs-small); }
 body #talk .talk-who { font-size: var(--fs-small); }
+
+/* ---- reduced motion: a card that ends hidden must still be seen. Fade only, no scale or movement. ---- */
+@keyframes fade-through {
+  0% { opacity: 0; }
+  8% { opacity: 1; }
+  82% { opacity: 1; }
+  100% { opacity: 0; }
+}
+html[data-motion='reduce'] .celebrate-card {
+  transform: none;
+  animation: fade-through 2.4s linear forwards !important;
+  animation-duration: 2.4s !important;
+}
+html[data-motion='reduce'] .prog-pop {
+  transform: translate(-50%, 0);
+  animation: fade-through 1.1s linear forwards !important;
+  animation-duration: 1.1s !important;
+}
+html[data-motion='reduce'] .confetti { display: none; }
