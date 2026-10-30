@@ -23,6 +23,7 @@ import { animateWalker, footstep, dust } from './motion.js';
 import { Pet } from './pets.js';
 import { Fishing, catchOpen } from './fishing.js';
 import { say } from './ui/toast.js';
+import { islandLook, pieceLook, lookLine } from './examine.js';
 import { startDig, readyIn, DIG_TILES, siteOf, siteKey, siteBonusReady, bonusEntry, mapKey } from './dig.js';
 import { Puzzles } from './puzzles.js';
 import { openJournal } from './journal.js';
@@ -173,6 +174,8 @@ export class IslandScene extends Phaser.Scene {
     this.dockCells = new Set();
     this.animated = []; // images whose texture changes every frame
     this.things = []; // signs and chests you can interact with
+    this.looks = new Map(); // things you can walk up to and look at (or sit on), by tile: 'x,y' -> [look] (src/examine.js)
+    this.seated = null;
     this.digs = []; // dig spots (src/dig.js)
     this.exp = expeditionFor(this); // an expedition island's spots, patrols and clock (src/expedition.js)
     this.puzzles = new Puzzles(this, TILES); // push boulders, plates, levers, gates, ice, fog, riddles (src/puzzles.js)
@@ -488,6 +491,7 @@ export class IslandScene extends Phaser.Scene {
     if (keys.length > 1) this.animated.push({ img, keys });
     (this.placed ||= []).push({ img, name, flat: opts.flat });
     if (name === 'campfire') this.smokeSpots.push({ x: x * T + t.w / 2, y: (y + 1) * T - 10 });
+    if (!opts.noLook && !(name === 'cottage' && !this.map)) this.addLook(islandLook(name), x * T, (y + 1) * T, t.w); // (Island One's cottage is a door)
     (TILE_LIGHTS[name] || []).forEach(([lx, ly, r, color, a, extra]) => this.light(x * T + lx, (y + 1) * T + ly, r, color, a, { ...extra, gy: (y + 1) * T + ly }));
     const trunk = TRUNKS[name] || (/tree|palm|pine|willow/.test(name) && t.h >= 2 * T ? [14, 8] : null);
     if (opts.solid !== false && trunk) {
@@ -935,7 +939,7 @@ export class IslandScene extends Phaser.Scene {
   }
 
   thing(name, x, y, text) {
-    this.place(name, x, y);
+    this.place(name, x, y, { noLook: true });
     this.things.push({ x: (x + 0.5) * T, y: (y + 1) * T + 10, text, name });
   }
 
@@ -1140,6 +1144,7 @@ export class IslandScene extends Phaser.Scene {
           const by = o.y + p.h;
           const flat = p.kind === 'tile' || p.kind === 'flat' || p.h <= 20; // rugs and mats you walk over
           this.add.image(o.x, by, `bp_${p.sheet}`, p.id).setOrigin(0, 1).setFlipX(!!o.flip).setDepth(flat ? 1 : by - 2);
+          if (!flat) this.addLook(pieceLook(p.id), o.x, by, p.w);
           const row = Math.floor((by - 4) / T);
           const D = this.door;
           // its foot is solid (but nothing may block the way into the museum)
@@ -1638,6 +1643,47 @@ export class IslandScene extends Phaser.Scene {
     this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start('island', go));
   }
 
+  // Something you can walk up to and look at: left edge x0, foot y, width w (px).
+  addLook(look, x0, y, w) {
+    if (!look) return;
+    const k = `${Math.floor(x0 / T)},${Math.floor((y - 1) / T)}`;
+    if (!this.looks.has(k)) this.looks.set(k, []);
+    this.looks.get(k).push({ look, x0, x1: x0 + w, y });
+  }
+
+  // The looks near (x, y): a few tiles round it (wide things are filed under their left tile).
+  looksNear(x, y) {
+    const cx = Math.floor(x / T);
+    const cy = Math.floor(y / T);
+    const out = [];
+    for (let j = cy - 1; j <= cy + 2; j++) for (let i = cx - 4; i <= cx + 1; i++) out.push(...(this.looks.get(`${i},${j}`) || []));
+    return out;
+  }
+
+  lookAt(l) {
+    const cx = (l.x0 + l.x1) / 2;
+    sfx('talk');
+    showTalk(l.look.name, '', lookLine(l.look), () => (this.sys.isActive() ? this.screenAt(cx, l.y - 34) : null), 6000, () => Math.hypot(this.player.x - cx, this.player.y - l.y) > 80);
+  }
+
+  // Sit on a bench, a stump, a log... Walk (or press Stand) to get up.
+  sitOn(l) {
+    const p = this.player;
+    const x = Phaser.Math.Clamp(p.x, l.x0 + 10, l.x1 - 10);
+    this.seated = { x: p.x, y: p.y };
+    p.setTexture('player_sit').setFlipX(false).setPosition(x, l.y - 4);
+    sfx('tap');
+    showTalk(l.look.name, '', lookLine(l.look), () => (this.sys.isActive() ? this.screenAt(x, l.y - 40) : null), 5000, () => !this.seated);
+  }
+
+  standUp() {
+    const st = this.seated;
+    if (!st) return;
+    this.seated = null;
+    this.player.setTexture('player_down').setPosition(st.x, st.y);
+    this.facing = 'down';
+  }
+
   // What you're facing and within reach (see src/focus.js): a person standing behind you
   // while you face the museum doors is not who you mean. Things underfoot (dig spots) need no facing.
   findFocus() {
@@ -1645,6 +1691,12 @@ export class IslandScene extends Phaser.Scene {
     const r = resolver(x, y, this.facing);
     // reach: how close it has to be; d: how close it is; (tx, ty): where it is, for the facing test
     const consider = (reach, d, focus, tx, ty) => r.consider(reach, d, focus, tx, ty);
+    if (this.seated) {
+      // sitting: get up, or talk to whoever's in front of you
+      this.islanders.forEach((n) => !n.animal && consider(26, Math.hypot(x - n.s.x, y - n.s.y), { npc: n, icon: 'talk' }, n.s.x, n.s.y - 8));
+      consider(26, 25, { stand: true, icon: 'sit' });
+      return r.best;
+    }
     this.things.forEach((t) => consider(26, Math.hypot(x - t.x, y - t.y), { thing: t, icon: 'look' }, t.x, t.y));
     this.digs.forEach((d) => consider(30, Math.hypot(x - d.x, y - d.y), { dig: d, icon: 'look' }));
     // (digging is done standing on the spot: no facing needed)
@@ -1670,7 +1722,16 @@ export class IslandScene extends Phaser.Scene {
       consider(22, Math.hypot(x - COTTAGE.x, y - (COTTAGE.y + 8)), { cottage: true, icon: 'door' }, COTTAGE.x, COTTAGE.y);
       consider(56, Math.hypot(x - 14 * T, y - 39.4 * T), { boat: true, icon: 'door' }, 14 * T, 39.4 * T); // the rowboat at the dock
     }
-    if (!r.best) {
+    // anything else you can look at or sit on (src/examine.js), a little behind real actions
+    if (!this.row?.on)
+      this.looksNear(x, y).forEach((l) => {
+        const nx = Phaser.Math.Clamp(x, l.x0 + 4, l.x1 - 4);
+        const ny = Math.min(Math.max(y, l.y - 12), l.y + 6);
+        const sit = !!l.look.sit;
+        consider(24, Math.hypot(x - nx, y - ny) + 6, { look: l, sit, icon: sit ? 'sit' : 'look' }, nx, l.y - 8);
+      });
+    if (!r.best || (r.best.look && !r.best.sit)) {
+      // (fishing beats looking at a rock by the water)
       const spot = this.waterAhead();
       if (spot) return { fish: spot, icon: 'fish' };
     }
@@ -1705,6 +1766,8 @@ export class IslandScene extends Phaser.Scene {
     if (f.exp) return f.exp.label;
     if (f.puzzle) return { lever: 'Pull', rock: 'Smash', riddler: 'Ask', boulder: 'Reset', x: 'Dig', buried: 'Dig' }[f.kind] || 'Look';
     if (f.thing) return f.thing.name === 'chest' ? 'Open' : 'Read';
+    if (f.stand) return 'Stand';
+    if (f.look) return f.sit ? 'Sit' : 'Look';
     if (f.dig) return 'Dig';
     if (f.npc) return this.talkingTo === f.npc || (talking() && this.bubbleNpc === f.npc) ? 'Bye' : 'Talk';
     if (f.animal || f.pet) return 'Pet';
@@ -1757,6 +1820,8 @@ export class IslandScene extends Phaser.Scene {
     if (f.pet) return this.pet.pet();
     if (f.buddy) return this.buddy?.talk();
     if (f.npc) return this.talkingTo === f.npc ? this.endTalk() : this.talkTo(f.npc);
+    if (f.stand) return this.standUp();
+    if (f.look) return f.sit ? this.sitOn(f.look) : this.lookAt(f.look);
     if (talking()) return hideTalk();
     sfx('talk');
     const t = f.thing;
@@ -1971,6 +2036,7 @@ export class IslandScene extends Phaser.Scene {
     if (this.puzzles.sliding) vx = vy = 0; // sliding on ice: no steering
     const len = Math.hypot(vx, vy);
     const p = this.player;
+    if (len && this.seated) this.standUp(); // (walking off gets you up)
     this.running = len > 0 && pace === 1;
     const was = { x: p.x, y: p.y };
     const ok = this.row?.on ? (x, y) => this.row.free(x, y) : (x, y) => this.free(x, y); // afloat, the boat decides
@@ -2014,7 +2080,7 @@ export class IslandScene extends Phaser.Scene {
     this.weather.update(dt);
     this.wind.update(dt, this.cameras.main.worldView);
     this.playerGlow?.setPosition(p.x, p.y - 12);
-    p.setDepth(p.y);
+    p.setDepth(p.y + (this.seated ? 5 : 0)); // (sitting: drawn over the seat)
     this.shadow.setPosition(p.x, p.y - 1);
     // Walk up into the doors to go back inside (main island only).
     const D = this.door;
