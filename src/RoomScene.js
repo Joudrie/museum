@@ -61,6 +61,7 @@ import { heistBeat, chainStep, chainAsk, complete as completeBeat } from './stor
 import { PAINTINGS } from './paintings.js';
 import { roomRating, museumRating, starText } from './rating.js';
 import { FAMOUS, meet, resetMet, metList, famousBoost } from './famous.js';
+import { SAM, samLine } from './sam.js';
 import { FREE, coins, canAfford, addCoins, spend, resetWallet, museumIncome, museumVisitors, coffeeIncome, serviceGold, roomIncome, settle, sellPrice, artPile, decorPile, collectArt, collectDecor, collectAll, pile, pileFull } from './wallet.js';
 import { openToolkit, hideToolkit, showBar, hideBar } from './toolkit.js';
 import { artBounds, paintArt, wallRef } from './walldraw.js';
@@ -381,6 +382,7 @@ export class RoomScene extends Phaser.Scene {
     if (!this.isBreak && this.roomIndex >= 1 && Math.random() < 0.3) this.spawnSchoolTrip();
     this.spawnStaff();
     if (this.g.main) this.spawnFamous();
+    if (this.roomIndex === 0) this.spawnSam();
     this.refreshDirt();
     this.bubble = this.add.image(0, 0, 'bubble').setOrigin(0.5, 1).setDepth(5000).setVisible(false);
     this.mark = new FocusMark(this);
@@ -1022,6 +1024,31 @@ export class RoomScene extends Phaser.Scene {
     this.npcs.push(n);
   }
 
+  // Uncle Sam, wandering the entrance (src/sam.js).
+  spawnSam() {
+    const { g } = this;
+    makeCharacter(this, 'sam', SAM.colors, SAM.look);
+    let x = g.xL + 2.5 * T;
+    let y = g.y0 + 3.5 * T;
+    for (let tries = 0; tries < 20 && this.blocked(x, y); tries++) {
+      x = g.xL + (1 + Math.floor(Math.random() * (g.fw - 2)) + 0.5) * T;
+      y = g.y0 + (2 + Math.floor(Math.random() * (g.fd - 3))) * T;
+    }
+    const s = this.add.sprite(x, y, 'sam_down').setOrigin(0.5, 1).setScale(PLAYER_SCALE);
+    this.npcs.push({ s, prefix: 'sam', kind: 'sam', sam: true, name: SAM.name, wait: 2500, target: null });
+  }
+
+  talkToSam(n) {
+    n.talking = true;
+    n.target = null;
+    n.path = null;
+    n.goal = null;
+    this.turnToPlayer(n);
+    this.talkingTo = n;
+    sfx('talk');
+    showTalk(SAM.name, SAM.label, samLine(), this.speakerAt(n.s), 8000, this.walkedAway(n.s, 90));
+  }
+
   // Services changed (counter or closet placed, moved or sold): respawn staff, recheck dirt.
   refreshStaff() {
     this.endTalk();
@@ -1203,7 +1230,7 @@ export class RoomScene extends Phaser.Scene {
   // Two visitors who end up side by side stop for a little chat (src/emotes.js): they turn to
   // each other and trade pictures, a heart, a star, a clover. Now and then one walks over to the other.
   canChat(n) {
-    return n.s.active && !n.staff && !n.famous && !n.follow && !n.partner && !n.trail && !n.seat && !n.talking && !n.chatting && !n.target && !n.goal && (!n.chatAt || this.time.now - n.chatAt > 22000);
+    return n.s.active && !n.staff && !n.famous && !n.sam && !n.follow && !n.partner && !n.trail && !n.seat && !n.talking && !n.chatting && !n.target && !n.goal && (!n.chatAt || this.time.now - n.chatAt > 22000);
   }
 
   chatBetween(a, b) {
@@ -1353,6 +1380,7 @@ export class RoomScene extends Phaser.Scene {
 
   talkTo(n) {
     if (n.famous) return this.talkToFamous(n);
+    if (n.sam) return this.talkToSam(n);
     let line = lineFor(n.kind, this.paintingNear(n.s.x, n.s.y));
     if (n.kind === 'barista' && Math.random() < 0.5) {
       line = `Coffee’s flowing! ${museumVisitors(this.rooms).toLocaleString()} visitors a month means ${coffeeIncome(this.rooms)} gold an hour from cups.`;
