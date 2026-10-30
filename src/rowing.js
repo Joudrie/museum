@@ -11,6 +11,7 @@ const T = 32;
 const BUMP = 0.28; // seconds of pushing into the water before the question
 const OUT = '#2a1a14';
 const DIRS = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
+const SEAT_CROP = 23; // rows of the 32px person left showing while you sit in the boat (the rest is legs)
 const LEFT = {}; // where you left your boat on each island (this session)
 const spot = (s) => s.mapId ?? s.map?.name ?? 'one';
 
@@ -117,6 +118,7 @@ export class Rowing {
     const cx = Math.floor(x / T);
     const cy = Math.floor(y / T);
     if (cx < 0 || cy < 0 || cx >= this.W || cy >= this.H) return false;
+    if (s.solid && !s.solid[cy]?.[cx]) return false; // ground you can walk on is never water (grass or sand painted over the sea)
     const top = s.paint?.[cy]?.[cx];
     const name = top?.[top.length - 1];
     const t = name ? s.tileInfo(name) : null;
@@ -147,11 +149,13 @@ export class Rowing {
     if (this.on) {
       // rowing into the shore: climb out onto the first spot you can stand on
       if (this.bump < 0.15) return;
-      for (const d of [20, 28, 36]) {
-        const lx = p.x + dx * d;
-        const ly = p.y + dy * d;
-        if (s.walkFree(lx, ly)) return this.leave(lx, ly);
-      }
+      // (the surf between the water and dry ground can be a tile or two wide: look past it, and a little to each side)
+      for (const d of [20, 28, 36, 44, 52, 60, 68, 76, 84, 92, 100])
+        for (const side of [0, -12, 12]) {
+          const lx = p.x + dx * d + dy * side;
+          const ly = p.y + dy * d + dx * side;
+          if (s.walkFree(lx, ly)) return this.leave(lx, ly);
+        }
       return;
     }
     if (this.bump < BUMP || this.declinedAt || !this.allowed()) return;
@@ -298,7 +302,7 @@ export class Rowing {
     const by = s.player.y;
     this.on = false;
     this.bump = 0;
-    s.player.setOrigin(0.5, 1);
+    s.player.setCrop().setOrigin(0.5, 1);
     // the boat stays where you left it, tied up by the shore, ready for next time
     this.destroyBoat();
     this.moorAt(bx, by, s.facing === 'left' || s.facing === 'right' ? 'left' : 'down');
@@ -363,7 +367,8 @@ export class Rowing {
     const top = Math.round(p.y - shape.seatY + 2 + bob); // the rower's feet sit just under the seat
     this.hull.setPosition(x, top).setDepth(p.y - 1);
     this.front.setPosition(x, top).setDepth(p.y + 1);
-    if (this.on && !at) p.setOrigin(0.5, 1 - bob / 32);
+    // seated: the legs are tucked out of sight and you sit low, the near side of the hull up to your waist
+    if (this.on && !at) p.setCrop(0, 0, 32, SEAT_CROP).setOrigin(0.5, (SEAT_CROP + 2 - bob) / 32);
     // oars: two sweeps from the rowlocks, back and forth as you row
     const a = Math.sin(this.stroke) * 0.55;
     const g1 = this.oarsBack.clear().setDepth(p.y - 2);

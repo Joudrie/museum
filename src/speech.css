@@ -12,7 +12,8 @@
   left: 0;
   transform: none;
   width: max-content;
-  max-width: min(236px, 70vw);
+  max-width: min(260px, 76vw); /* long lines wrap and the box grows down to fit them */
+  overflow-wrap: anywhere;
   padding: 7px 10px 8px;
   pointer-events: none;
 }

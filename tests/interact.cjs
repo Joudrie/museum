@@ -207,7 +207,7 @@ const check = (cond, good, bad) => (cond ? ok(good) : fail(bad));
   const aboard = await p.evaluate(() => { const s = __game.scene.getScene('island'); return { afloat: !!s.row?.on, paused: s.paused }; });
   check(aboard.afloat && !aboard.paused, 'you hop into the boat and can move', `not afloat ${JSON.stringify(aboard)}`);
   const from = await p.evaluate(() => { const s = __game.scene.getScene('island'); return [s.player.x, s.player.y]; });
-  await walkTo(0, 1, 90);
+  await walkTo(-1, 0, 90); // (left: open water; straight down runs into the lower pier, which you climb out onto)
   const rowed = await p.evaluate(([x0, y0]) => { const s = __game.scene.getScene('island'); return { moved: Math.hypot(s.player.x - x0, s.player.y - y0), onWater: s.row.wet(s.player.x, s.player.y - 4) }; }, from);
   check(rowed.moved > 40 && rowed.onWater, `you row across the water (${Math.round(rowed.moved)} px)`, `rowing broke ${JSON.stringify(rowed)}`);
   const fishFromBoat = await p.evaluate(() => {
