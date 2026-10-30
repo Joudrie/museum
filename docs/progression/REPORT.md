@@ -14,7 +14,7 @@ re-registered for it before any data. Rerun everything with `python3 docs/progre
 ### 1. Most of the layer's world never reaches the player, and four of its fish can never bite
 
 - **Off Main Island and Island One, the world layer can't find its islands.** The island scene names
-  itself by map id (`IslandScene.js:130`), and the world layer looks that up in files keyed by region
+  itself by map id (`IslandScene.js:154`), and the world layer looks that up in files keyed by region
   id. In the built game, checked in a browser (`data/world_by_island.json`): Main Island has its 12
   secrets, a legend's clue and Wen; Island One its 6, a clue and Mara; the Far Isle, Skull Isle and the
   Drowned Reef each get 3 secrets, **no clue and nobody**. So **8 of the 10 legendaries can never be
@@ -28,7 +28,7 @@ re-registered for it before any data. Rerun everything with `python3 docs/progre
   `fishing.js:90`; nothing in `fishroll.js` reads a rod's `rareMult`).
 - **What the fix is worth**, in the model: with the world as `regions.json` describes it, a regular
   player has 34 secrets, 11 named islanders and 5 legendaries by day
-  90, against 27, 3 and 2 as built; and the week ahead first averages under one new thing a session on day 22 instead of day 19.
+  90, against 26, 3 and 2 as built; and the week ahead first averages under one new thing a session on day 22 instead of day 19.
 - **Why the layer's own checks passed:** its simulator emits secrets with made-up ids and rolls its own
   weather, fog included (`sim.js:68`); it never plays the islands. A check that plays the real world (the
   browser probe, the Monte Carlo here) is what catches this.
@@ -41,12 +41,12 @@ layer's long tail.
 ### 2. Gold has no job: the wallet earns 2.6 times the top of the layer's target, rank gates everything, and the same fish sells twice
 
 - **The layer prices its market for 400 to 1,000 gold an active hour** (each rung 20 to 40 minutes of that).
-  A regular player earns **2,618 gold** an active hour in all: 1,086 from selling fish at the market, 519 from the layer's payouts, 677 from the museum's daily gift, wheel, dig goal and guests, 336 from the codex's milestone and set gold. The layer's sim
+  A regular player earns **2,619 gold** an active hour in all: 1,087 from selling fish at the market, 519 from the layer's payouts, 677 from the museum's daily gift, wheel, dig goal and guests, 336 from the codex's milestone and set gold. The layer's sim
   doesn't have the museum's daily gift, wheel and dig goal, the guests or the codex's milestone and set
   gold, all paying into the same wallet.
-- **Rank, not gold, decides what you can buy.** Every rung of the ladder costs 260 to 670 gold, 6 to 15 minutes of what a regular player earns, and the ladder and the 40 town projects together cost 29,020, against about 128,000 earned by day 90. The rest goes into the town fund (no end, a Renown token a level): the median regular player holds 493 gold on day 90.
+- **Rank, not gold, decides what you can buy.** Every rung of the ladder costs 260 to 670 gold, 6 to 15 minutes of what a regular player earns, and the ladder and the 40 town projects together cost 29,020, against about 128,000 earned by day 90. The rest goes into the town fund (no end, a Renown token a level): the median regular player holds 481 gold on day 90.
 - **The same fish sells twice:** its codex copy in the Gallery Shop (about 2 to 7 times the market's price,
-  by rarity and Fishing level) and its bag copy at the market. A regular player who sells both earns 3,468 gold more an hour.
+  by rarity and Fishing level) and its bag copy at the market. A regular player who sells both earns 3,474 gold more an hour.
 - **The museum's own money loop is unchanged and still broken if `FREE` goes off:** the first room you
   build is priced as the ninth (24,790 gold, 539 hours of museum income), and an hour of play
   outearns the museum 24 times over.
@@ -58,16 +58,16 @@ count (H1) before `FREE` goes off. H15 is the beta check.
 ### 3. The layer fills every minute with a meter; new things still thin out by week three
 
 - **Progress ticks are constant; new things are not.** The longest stretch with no progress tick at all
-  (an XP pop, a skill bar, a card) is 8 min at P99 for a regular player, which is what the layer's
+  (an XP pop, a skill bar, a card) is 2 min at P99 for a regular player, which is what the layer's
   acceptance test measures. The longest stretch with **nothing new** in the first 10 active hours is
-  34 min at the median and 60 min at P99, against a ceiling of 36 minutes.
+  34 min at the median and 59 min at P99, against a ceiling of 36 minutes.
 - **The layer's pity can't reach those droughts.** It raises the chance of a rare or epic tier, not of
-  something you lack: without it the regular player's worst droughts are 6% longer. **H8 fails** (pity has to shorten the P99 by 25%; it changes it by: casual 1% shorter, regular 6% shorter, heavy 3% shorter).
+  something you lack: with it the regular player's worst droughts are only 11% shorter than without. **H8 fails** (pity has to shorten the P99 by 25%; it changes it by: casual 1% shorter, regular 11% shorter, heavy 4% shorter).
 - **Opening everything changes little.** In the strip build (every boat, rod and perk from the start, no
-  payouts) a regular player has 50 species by day 90 against 50: what paces new
+  payouts) a regular player has 51 species by day 90 against 50: what paces new
   things is the conditions, the calendar and what is left to find, not the gates.
-- **New things per session** for a regular player: about 19 in the first session, 8.9 a session in week one, 0.95 by day 30 and 0.18 by day 60. The week ahead first averages under one new thing a session on day 19 (heavy day 16, casual day 51); **H3 is predicted to fail.** Before #195 it was day 12.
-- **What is left at day 60:** 0.18 new things a session, mostly unlocks (0.06), colour variants (0.06), trophy sizes (0.04).
+- **New things per session** for a regular player: about 19 in the first session, 8.9 a session in week one, 0.91 by day 30 and 0.19 by day 60. The week ahead first averages under one new thing a session on day 19 (heavy day 16, casual day 51); **H3 is predicted to fail.** Before #195 it was day 12.
+- **What is left at day 60:** 0.19 new things a session, mostly colour variants (0.06), unlocks (0.06), trophy sizes (0.05).
 - **Half the layer's rewards are the kind the research warns about.** 11 of the 22 reward kinds it added
   are expected payouts for showing up or for volume (XP, rested XP, the login calendar, the streak, the
   away letter, tasks, request gold, the event track, the town fund; rewards.md). In Deci, Koestner and
@@ -117,10 +117,10 @@ The other chat built the first, feature-led spec. Where the evidence points now 
 
 | Built in #195 | What the evidence says | So |
 |---|---|---|
-| Rank 1 to 50, XP for every action, rested XP | rank gates every purchase (gold is rarely short); XP pops keep the gap with no progress tick under 8 min while the drought of new things is 34 min at the median; expected, volume-contingent | test H14 (`?flags=-rank`) before adding ranks; if it fails, give the 13 rank unlocks to deeds |
+| Rank 1 to 50, XP for every action, rested XP | rank gates every purchase (gold is rarely short); XP pops keep the gap with no progress tick under 2 min while the drought of new things is 34 min at the median; expected, volume-contingent | test H14 (`?flags=-rank`) before adding ranks; if it fails, give the 13 rank unlocks to deeds |
 | 72 fish species with conditions, baits and hot spots | a regular player has 50 species by day 90; 4 can never bite | keep; fix the four |
 | The reel | a real skill gradient: an epic fish is landed 23% of the time at no skill and 98% at full skill | keep: fishing gained the depth diagnosis.md asked for |
-| Pity (rare and epic ramps, the legendary hazard) | without the ramps the worst droughts are 6% longer (H8) | harmless; not the answer to droughts |
+| Pity (rare and epic ramps, the legendary hazard) | with the ramps the worst droughts are only 11% shorter (H8) | harmless; not the answer to droughts |
 | Colour variants and trophy sizes | procedural: the part of the long tail nobody has to make more of | keep (H9, H10) |
 | Secrets, viewpoints, fog, legend trails, named islanders | off Main Island and Island One, the world layer finds nothing (finding 1) | fix the lookup |
 | The market: ladder, rods, boats, town fund | priced from a target the wallet beats 2.6 times over; the rod menu's odds aren't applied | one economy (finding 2); fix the rod text or the odds |

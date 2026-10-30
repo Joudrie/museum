@@ -64,7 +64,7 @@ need a public test with hundreds per arm. H1 and H8 are settled in the models be
 Model results only; no player data exists yet. Thresholds above are unchanged since the revision.
 
 - **2026-10-29, H8 (models.md section 10):** fails the bar. With the layer's rare and epic pity ramps the
-  drought P99 is 1% shorter for a casual player, 6% for a regular one and 3% for a heavy one than without
+  drought P99 is 1% shorter for a casual player, 11% for a regular one and 4% for a heavy one than without
   them (the bar is 25%). The ramps raise the odds of a rarity tier, not of something the player lacks.
   Decision: the pity can stay (it costs nothing), but it is not the answer to droughts; don't add more.
 - **2026-10-29, H1 (models.md section 9):** the H1 design passes in the model: first built room in
@@ -73,13 +73,13 @@ Model results only; no player data exists yet. Thresholds above are unchanged si
 - **2026-10-29, H3 (models.md section 11):** predicted to fail. A regular player's week ahead first
   averages under one new thing a session on day 19 (heavy day 16, casual day 51), against a bar of 1.0
   through day 30. Before #195 the first pass's model said day 12.
-- **2026-10-29, H15 (models.md section 9):** predicted to fail. A regular player earns 2,618 gold an
-  active hour from all sources (casual 3,138, heavy 2,205), against the layer's target of 400 to 1,000 for
+- **2026-10-29, H15 (models.md section 9):** predicted to fail. A regular player earns 2,619 gold an
+  active hour from all sources (casual 3,143, heavy 2,205), against the layer's target of 400 to 1,000 for
   the ranks they reach; the museum's daily payouts and the codex's milestone gold are the part the layer's
-  sim does not see. Selling codex copies in the Gallery Shop adds 3,468 more.
+  sim does not see. Selling codex copies in the Gallery Shop adds 3,474 more.
 - **2026-10-29, H5 (models.md section 10, the strip variant):** a prediction, not a result. With every
-  rod, boat, region and perk open from the start a regular player has the same number of species by day
-  90 (50) and the same median drought (34 minutes) as with the gating; what the gating changes is the
+  rod, boat, region and perk open from the start a regular player has about the same number of species by
+  day 90 (51 against 50) and the same median drought (33 minutes against 34) as with the gating; what the gating changes is the
   first days. The beta's D1 comparison decides H5.
 - **2026-10-29, the island lookup (diagnosis.md, fault 4):** not a hypothesis, a fault. Until it is fixed,
   H9, H11 and H13 run on a world where 8 of the 10 legendaries and 8 of the 11 named islanders can't be

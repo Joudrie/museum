@@ -62,7 +62,7 @@ count (H1) before `FREE` goes off. H15 is the beta check.
   acceptance test measures. The longest stretch with **nothing new** in the first 10 active hours is
   {{DR_P50}} at the median and {{DR_P99}} at P99, against a ceiling of 36 minutes.
 - **The layer's pity can't reach those droughts.** It raises the chance of a rare or epic tier, not of
-  something you lack: without it the regular player's worst droughts are {{PITY_REG}}. {{H8_LINE}}
+  something you lack: with it the regular player's worst droughts are {{PITY_REG}} than without. {{H8_LINE}}
 - **Opening everything changes little.** In the strip build (every boat, rod and perk from the start, no
   payouts) a regular player has {{STRIP_SPECIES}} species by day 90 against {{BASE_SPECIES}}: what paces new
   things is the conditions, the calendar and what is left to find, not the gates.

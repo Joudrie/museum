@@ -32,8 +32,8 @@ V['BASE_SPECIES'] = f"{run('regular')['fish_species_by_day90']['P50']:.0f}"
 V['TICK_P99'] = hm(run('regular')['longest_gap_without_any_progress_tick_first_10h_min']['P99'])
 V['DR_P50'] = hm(dr('regular')['P50'])
 V['DR_P99'] = hm(dr('regular')['P99'])
-c = change(dr('regular')['P99'], dr('regular', 'nopity')['P99'])
-V['PITY_REG'] = 'no different' if c == 'no change' else c
+c = change(dr('regular', 'nopity')['P99'], dr('regular')['P99'])
+V['PITY_REG'] = 'no different' if c == 'no change' else 'only ' + c
 V['H8_LINE'] = f"**H8 {'passes' if V['H8_PASS'] else 'fails'}** (pity has to shorten the P99 by 25%; it changes it by: {V['PITY_TEXT']})."
 pr = PACE['regular']['new_things_per_session']
 V['PACE_REG'] = f"about {pr['session 1']:.0f} in the first session, {pr['week 1']:.1f} a session in week one, {pr['day 30']:.2f} by day 30 and {pr['day 60']:.2f} by day 60"
@@ -49,7 +49,7 @@ V['BUILT_TABLE'] = table(['Built in #195', 'What the evidence says', 'So'], [
     ['Rank 1 to 50, XP for every action, rested XP', f"rank gates every purchase (gold is rarely short); XP pops keep the gap with no progress tick under {V['TICK_P99']} while the drought of new things is {V['DR_P50']} at the median; expected, volume-contingent", 'test H14 (`?flags=-rank`) before adding ranks; if it fails, give the 13 rank unlocks to deeds'],
     ['72 fish species with conditions, baits and hot spots', f"a regular player has {run('regular')['fish_species_by_day90']['P50']:.0f} species by day 90; 4 can never bite", 'keep; fix the four'],
     ['The reel', f"a real skill gradient: an epic fish is landed {100 * win(4, 0):.0f}% of the time at no skill and {100 * win(4, 1):.0f}% at full skill", 'keep: fishing gained the depth diagnosis.md asked for'],
-    ['Pity (rare and epic ramps, the legendary hazard)', f"without the ramps the worst droughts are {V['PITY_REG']} (H8)", 'harmless; not the answer to droughts'],
+    ['Pity (rare and epic ramps, the legendary hazard)', f"with the ramps the worst droughts are {V['PITY_REG']} (H8)", 'harmless; not the answer to droughts'],
     ['Colour variants and trophy sizes', 'procedural: the part of the long tail nobody has to make more of', 'keep (H9, H10)'],
     ['Secrets, viewpoints, fog, legend trails, named islanders', 'off Main Island and Island One, the world layer finds nothing (finding 1)', 'fix the lookup'],
     ['The market: ladder, rods, boats, town fund', f"priced from a target the wallet beats {V['GOLD_X']} times over; the rod menu's odds aren't applied", 'one economy (finding 2); fix the rod text or the odds'],

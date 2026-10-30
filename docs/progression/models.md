@@ -11,6 +11,8 @@ market and the login calendar all run as they do in the game. Around the layer, 
 (`tools/export_params.mjs`, the game's own code) gives the dig tables (`pick()`), the weather on the
 real calendar and each island's fixed climate, the Gallery Shop's real shelf, guests, leads and the
 museum's economy. `models/common.py` holds every assumption about players (`ASSUMPTIONS`, `PROFILES`).
+Day 0 is 29 October 2026 (the "autumn start (today)" runs), pinned in `params.json modelStart` so a rerun
+on another day gives the same numbers; the spring start begins 154 days later, on 1 April 2027.
 
 **Measured, not assumed** (the 40-minute real-time session, ground-truth.md): a cast takes the rod's
 bite wait, the reel's own length, and 4.5 s for the cast, the card and the recast; brushing a
@@ -48,22 +50,22 @@ and drawing, every month.
 
 | Source | week 1 | day 30 | day 60 | who has to make more of it |
 |---|---|---|---|---|
-| new fish species | 2.30 | 0.34 | 0.00 | a species: data the developer approves (and later a sprite) |
-| the Gallery Shop's shelf | 1.30 | 0.27 | 0.02 | a museum piece: data the developer approves |
-| trophy sizes | 0.30 | 0.14 | 0.04 | procedural: nobody (sizes roll on every catch) |
-| colour variants | 0.32 | 0.07 | 0.06 | procedural: nobody (a palette) |
-| unlocks | 0.63 | 0.05 | 0.06 | a rank reward: data |
+| new fish species | 2.32 | 0.33 | 0.00 | a species: data the developer approves (and later a sprite) |
+| the Gallery Shop's shelf | 1.30 | 0.26 | 0.02 | a museum piece: data the developer approves |
+| trophy sizes | 0.29 | 0.13 | 0.05 | procedural: nobody (sizes roll on every catch) |
+| colour variants | 0.33 | 0.07 | 0.06 | procedural: nobody (a palette) |
+| unlocks | 0.63 | 0.04 | 0.06 | a rank reward: data |
 | secrets | 1.08 | 0.04 | 0.00 | procedural placement: nobody (names from a list of 12) |
 | places and viewpoints | 0.45 | 0.02 | 0.00 | an island: painted by hand |
-| the metal detector | 0.75 | 0.02 | 0.00 | a museum piece: data the developer approves |
-| the X | 0.02 | 0.01 | 0.00 | other |
+| the metal detector | 0.75 | 0.01 | 0.00 | a museum piece: data the developer approves |
+| the X | 0.02 | 0.00 | 0.00 | other |
 | named islanders met | 0.24 | 0.00 | 0.00 | a named islander: written and approved |
 | digs | 0.32 | 0.00 | 0.00 | a museum piece: data the developer approves |
 | leads | 0.08 | 0.00 | 0.00 | other |
 | expedition finds | 0.91 | 0.00 | 0.00 | an island: painted by hand |
 | guests' gifts | 0.23 | 0.00 | 0.00 | other |
 
-By day 30 the most new things a session come from new fish species (0.34), the Gallery Shop's shelf (0.27), trophy sizes (0.14). Variants and trophy sizes, which the layer built, are procedural: nobody has to make more of them, so they are the part of the long tail that does not wait on the developer.
+By day 30 the most new things a session come from new fish species (0.33), the Gallery Shop's shelf (0.26), trophy sizes (0.13). Variants and trophy sizes, which the layer built, are procedural: nobody has to make more of them, so they are the part of the long tail that does not wait on the developer.
 
 ## 9. Economy
 
@@ -77,13 +79,13 @@ active hour, P50 player of each profile):
 
 | Profile | selling fish at the market | the layer's payouts | the old daily gift, wheel, dig goal, guests | codex milestones and sets | all | spent |
 |---|---|---|---|---|---|---|
-| casual | 200 | 837 | 1,486 | 615 | **3,138** | 3,119 |
-| regular | 1,086 | 519 | 677 | 336 | **2,618** | 2,615 |
-| heavy | 1,581 | 190 | 310 | 124 | **2,205** | 2,204 |
+| casual | 201 | 838 | 1,491 | 613 | **3,143** | 3,123 |
+| regular | 1,087 | 519 | 677 | 336 | **2,619** | 2,615 |
+| heavy | 1,579 | 191 | 311 | 124 | **2,205** | 2,203 |
 
 **Against the layer's own design.** The layer prices its ladder at 20 to 40 minutes of a target earn
 rate of 400 to 1,000 gold an hour (`market.js ladder()`, `config.js economy.goldPerHour`, measured by
-its own sim). A regular player earns 2,618 gold an active hour in all, 2.6 times the top of that range; the layer's own sources alone give 1,605. The rest comes from systems the layer's sim does not have: the museum's daily gift, wheel and dig goal, guests, and the codex's milestone and set gold. Gold is rarely what stops a purchase: every rung of the ladder costs 260 to 670 gold, 6 to 15 minutes of what a regular player earns, and the ladder and the 40 town projects together cost 29,020, against about 128,000 earned by day 90. The rest goes into the town fund (no end, a Renown token a level): the median regular player holds 493 gold on day 90.
+its own sim). A regular player earns 2,619 gold an active hour in all, 2.6 times the top of that range; the layer's own sources alone give 1,606. The rest comes from systems the layer's sim does not have: the museum's daily gift, wheel and dig goal, guests, and the codex's milestone and set gold. Gold is rarely what stops a purchase: every rung of the ladder costs 260 to 670 gold, 6 to 15 minutes of what a regular player earns, and the ladder and the 40 town projects together cost 29,020, against about 128,000 earned by day 90. The rest goes into the town fund (no end, a Renown token a level): the median regular player holds 481 gold on day 90.
 
 **The same fish sells twice.** Every catch is a codex copy (the Gallery Shop's Sell list) and a bag
 copy (the layer's market). One medium-size fish:
@@ -96,16 +98,16 @@ copy (the layer's market). One medium-size fish:
 | 4 | 450 | 72 / 112 | 6.2× / 4.0× |
 | 5 | 750 | 258 / 400 | 2.9× / 1.9× |
 
-A regular player who also sells their codex copies earns 3,468 gold more an active hour
+A regular player who also sells their codex copies earns 3,474 gold more an active hour
 (the `twoshops` run).
 
 **Sources and sinks** (the full table is `data/economy_sources_sinks.csv`):
 
 | Kind | What | Amount | Unit |
 |---|---|---|---|
-| source | selling fish at the market (the layer) | 1086 | gold per active hour, regular player (Monte Carlo; a fish sells for half its rarity x size x variant value) |
+| source | selling fish at the market (the layer) | 1087 | gold per active hour, regular player (Monte Carlo; a fish sells for half its rarity x size x variant value) |
 | source | the layer's payouts (ranks, tasks, requests, login calendar, journal) | 519 | gold per active hour, regular player (Monte Carlo) |
-| source | selling the same fish again in the Gallery Shop | 3468 | gold per active hour if a player also sells their codex copies (Monte Carlo, two shops) |
+| source | selling the same fish again in the Gallery Shop | 3474 | gold per active hour if a player also sells their codex copies (Monte Carlo, two shops) |
 | source | one rarity-1 fish, medium size: Gallery Shop / market | 20 / 4 | gold |
 | source | one rarity-2 fish, medium size: Gallery Shop / market | 60 / 11 | gold |
 | source | one rarity-3 fish, medium size: Gallery Shop / market | 200 / 29 | gold |
@@ -201,9 +203,9 @@ assumption: a mean of 12 minutes of walking an island per secret.
 
 | Profile | secrets found (as built / fixed) | named islanders met | legendaries caught | fish species | share of obtainable | drought P50 |
 |---|---|---|---|---|---|---|
-| casual | 17 / 25 | 3 / 10 | 0 / 0 | 30 / 31 | 72% / 72% | 37 min / 37 min |
-| regular | 27 / 34 | 3 / 11 | 2 / 5 | 50 / 53 | 86% / 88% | 34 min / 33 min |
-| heavy | 30 / 46 | 3 / 11 | 2 / 5 | 52 / 55 | 88% / 90% | 38 min / 31 min |
+| casual | 17 / 25 | 3 / 10 | 0 / 0 | 30 / 31 | 72% / 72% | 37 min / 38 min |
+| regular | 26 / 34 | 3 / 11 | 2 / 5 | 50 / 54 | 86% / 88% | 34 min / 33 min |
+| heavy | 29 / 46 | 3 / 11 | 2 / 5 | 52 / 55 | 88% / 90% | 41 min / 31 min |
 
 **Results** (active play P50 / P90 / P99, then the median calendar day; "never" means not within 90
 days):
@@ -211,27 +213,27 @@ days):
 | Milestone | casual | regular | heavy |
 |---|---|---|---|
 | first rare (rarity 3+) | 6 min / 6 min / 6 min (day 0) | 9 min / 9 min / 9 min (day 0) | 9 min / 10 min / 10 min (day 0) |
-| first epic or better (rarity 4+) | 2.1 h / 3.5 h / 3.7 h (day 13) | 14 min / 2.1 h / 2.7 h (day 0) | 14 min / 54 min / 1.8 h (day 0) |
-| first legendary (rarity 5) | – | 9.6 h / 15.5 h / 35.0 h (day 17) | 7.3 h / 16.3 h / 25.9 h (day 4) |
+| first epic or better (rarity 4+) | 2.1 h / 3.5 h / 3.7 h (day 13) | 14 min / 1.8 h / 3.1 h (day 0) | 14 min / 54 min / 1.8 h (day 0) |
+| first legendary (rarity 5) | – | 9.4 h / 15.5 h / 46.4 h (day 16) (99% by day 90) | 7.3 h / 14.8 h / 24.8 h (day 4) |
 | rank 5 | 24 min / 25 min / 25 min (day 1) | 17 min / 18 min / 18 min (day 0) | 17 min / 24 min / 25 min (day 0) |
-| rank 10 | 2.1 h / 2.4 h / 2.6 h (day 13) | 2.0 h / 2.1 h / 2.1 h (day 3) | 1.5 h / 1.9 h / 1.9 h (day 0) |
-| rank 20 | never / never / never (day never) (0% by day 90) | 9.7 h / 10.0 h / 10.3 h (day 17) | 9.5 h / 9.8 h / 10.0 h (day 6) |
-| rank 30 | – | 23.4 h / 24.2 h / 24.8 h (day 42) | 22.4 h / 22.8 h / 23.0 h (day 14) |
-| rank 50 | – | – | 67.0 h / 67.6 h / 68.0 h (day 44) |
+| rank 10 | 2.2 h / 2.4 h / 2.6 h (day 13) | 2.0 h / 2.1 h / 2.1 h (day 3) | 1.5 h / 1.9 h / 1.9 h (day 0) |
+| rank 20 | – | 9.7 h / 10.1 h / 10.3 h (day 17) | 9.5 h / 9.8 h / 10.4 h (day 6) |
+| rank 30 | – | 23.4 h / 24.2 h / 24.6 h (day 42) | 22.5 h / 22.9 h / 23.0 h (day 14) |
+| rank 50 | – | – | 67.1 h / 67.6 h / 68.1 h (day 44) |
 | unlock: boat:rowboat | 12 min / 13 min / 13 min (day 0) | 17 min / 17 min / 18 min (day 0) | 17 min / 18 min / 18 min (day 0) |
-| unlock: boat:sailboat | 2.1 h / 2.4 h / 2.6 h (day 13) | 2.0 h / 2.1 h / 2.1 h (day 3) | 1.5 h / 1.9 h / 1.9 h (day 0) |
-| unlock: boat:icehull | – | 23.4 h / 24.2 h / 24.8 h (day 42) | 22.4 h / 22.8 h / 23.0 h (day 14) |
+| unlock: boat:sailboat | 2.2 h / 2.4 h / 2.6 h (day 13) | 2.0 h / 2.1 h / 2.1 h (day 3) | 1.5 h / 1.9 h / 1.9 h (day 0) |
+| unlock: boat:icehull | – | 23.4 h / 24.2 h / 24.6 h (day 42) | 22.5 h / 22.9 h / 23.0 h (day 14) |
 | expedition done: pirate | 45 min / 46 min / 46 min (day 3) | 36 min / 37 min / 37 min (day 0) | 53 min / 53 min / 53 min (day 0) |
-| expedition done: north | – | 23.7 h / 24.9 h / 25.4 h (day 43) | 23.0 h / 23.4 h / 23.5 h (day 15) |
+| expedition done: north | – | 23.7 h / 24.8 h / 24.9 h (day 43) | 23.0 h / 23.4 h / 23.5 h (day 15) |
 | metal detector (10 finds) | 28 min / 46 min / 47 min (day 3) | 42 min / 42 min / 43 min (day 1) | 65 min / 66 min / 66 min (day 0) |
-| first colour variant | 21 min / 11.1 h / never (day 2) (92% by day 90) | 17 min / 1.5 h / 4.0 h (day 1) | 17 min / 57 min / 83 min (day 0) |
-| first trophy size | 24 min / 4.5 h / 9.6 h (day 3) | 52 min / 1.7 h / 4.0 h (day 1) | 17 min / 25 min / 78 min (day 0) |
-| 25 fish species | 7.5 h / 8.9 h / 11.1 h (day 45) | 2.1 h / 2.7 h / 3.4 h (day 3) | 73 min / 87 min / 1.8 h (day 0) |
-| 40 fish species | – | 18.5 h / 19.7 h / 20.4 h (day 33) | 23.0 h / 23.4 h / 23.5 h (day 15) |
+| first colour variant | 21 min / 12.3 h / never (day 2) (92% by day 90) | 17 min / 1.5 h / 3.3 h (day 1) | 17 min / 57 min / 83 min (day 0) |
+| first trophy size | 42 min / 4.7 h / 10.1 h (day 3) | 52 min / 1.5 h / 4.6 h (day 1) | 17 min / 25 min / 78 min (day 0) |
+| 25 fish species | 7.5 h / 8.9 h / 12.3 h (day 44) | 2.1 h / 2.7 h / 3.3 h (day 3) | 73 min / 87 min / 2.4 h (day 0) |
+| 40 fish species | – | 18.6 h / 19.7 h / 20.5 h (day 33) | 23.0 h / 23.5 h / 23.5 h (day 15) |
 | 60 fish species | – | – | – |
 | page complete: fish | – | – | – |
 | 50% of everything obtainable | 3.4 h / 3.8 h / 4.5 h (day 20) | 4.6 h / 5.2 h / 5.8 h (day 8) | 6.3 h / 7.8 h / 7.8 h (day 4) |
-| 75% of everything obtainable | never / never / never (day never) (2% by day 90) | 18.8 h / 19.9 h / 20.9 h (day 33) | 34.9 h / 36.4 h / 39.4 h (day 23) |
+| 75% of everything obtainable | never / never / never (day never) (1% by day 90) | 19.0 h / 20.0 h / 21.5 h (day 33) | 34.9 h / 36.4 h / 39.4 h (day 23) |
 | 100% of everything obtainable | – | – | – |
 
 **Rank against the layer's own targets** (its table in docs/PROGRESSION.md is for its own `casual`
@@ -241,31 +243,31 @@ profile, which plays at half efficiency, and `hardcore`):
 |---|---|---|---|---|---|
 | 2 | 3 min | 2 min / 2 min | 6 min | 9 min | 10 min |
 | 5 | 25 min | 26 min / 14 min | 24 min | 17 min | 17 min |
-| 10 | 3 h | 2.7 h / 2.1 h | 2.1 h | 2.0 h | 1.5 h |
+| 10 | 3 h | 2.7 h / 2.1 h | 2.2 h | 2.0 h | 1.5 h |
 | 20 | 15 h | 15.0 h / 10.2 h | never (0% by day 90) | 9.7 h | 9.5 h |
-| 30 | 40 h | 40.4 h / 22.6 h | never (0% by day 90) | 23.4 h | 22.4 h |
-| 50 | 140 h | 143.3 h / 65.5 h | never (0% by day 90) | never (0% by day 90) | 67.0 h |
+| 30 | 40 h | 40.4 h / 22.6 h | never (0% by day 90) | 23.4 h | 22.5 h |
+| 50 | 140 h | 143.3 h / 65.5 h | never (0% by day 90) | never (0% by day 90) | 67.1 h |
 
 **Droughts.** The longest stretch of active play with nothing new, in a player's first 10 active
 hours:
 
 | Profile | drought P50 | drought P99 | P99 without the rare and epic pity ramps | longest gap with no progress tick at all, P99 |
 |---|---|---|---|---|
-| casual | 37 min | 84 min | 84 min (1% shorter with pity) | 8 min |
-| regular | 34 min | 60 min | 64 min (6% shorter with pity) | 8 min |
-| heavy | 38 min | 80 min | 83 min (3% shorter with pity) | 8 min |
+| casual | 37 min | 83 min | 84 min (1% shorter with pity) | 2 min |
+| regular | 34 min | 59 min | 66 min (11% shorter with pity) | 2 min |
+| heavy | 41 min | 81 min | 84 min (4% shorter with pity) | 2 min |
 
-Against the 36-minute ceiling (hypotheses.md), the median drought is 37 min for a casual player, 34 min for a regular one and 38 min for a heavy one. With the layer's pity the worst droughts (P99) are: casual 1% shorter, regular 6% shorter, heavy 3% shorter. **H8: fails the 25% bar.** The pity ramps raise the chance of a rare or epic *tier*, not of something you lack, so they cannot reach droughts that come from having caught what bites here and now. The layer's own measure, the longest stretch with no progress tick at all, is 8 min at P99 for a regular player, because every catch pops XP: it measures volume, not novelty.
+Against the 36-minute ceiling (hypotheses.md), the median drought is 37 min for a casual player, 34 min for a regular one and 41 min for a heavy one. With the layer's pity the worst droughts (P99) are: casual 1% shorter, regular 11% shorter, heavy 4% shorter. **H8: fails the 25% bar.** The pity ramps raise the chance of a rare or epic *tier*, not of something you lack, so they cannot reach droughts that come from having caught what bites here and now. The layer's own measure, the longest stretch with no progress tick at all, is 2 min at P99 for a regular player, because every catch pops XP: it measures volume, not novelty.
 
 **The strip build** (`?progression=off`: everything open, nothing paid out), against the build as is:
 
 | Profile | fish species by day 90 (as is / strip) | share of obtainable by day 90 | drought P50 | active time to half of everything |
 |---|---|---|---|---|
-| casual | 30 / 33 | 72% / 74% | 37 min / 37 min | 3.4 h / 3.4 h |
-| regular | 50 / 50 | 86% / 86% | 34 min / 34 min | 4.6 h / 4.6 h |
-| heavy | 52 / 52 | 88% / 88% | 38 min / 37 min | 6.3 h / 5.0 h |
+| casual | 30 / 33 | 72% / 73% | 37 min / 37 min | 3.4 h / 3.3 h |
+| regular | 50 / 51 | 86% / 86% | 34 min / 33 min | 4.6 h / 4.6 h |
+| heavy | 52 / 52 | 88% / 88% | 41 min / 38 min | 6.3 h / 5.0 h |
 
-Opening every boat, rod, region and perk from the start, and paying nothing out, changes little in what a player finds: by day 90 casual 30 species as built and 33 stripped, regular 50 species as built and 50 stripped, heavy 52 species as built and 52 stripped. What paces new things is the calendar, the conditions and what is left to find, not the gates; the gates mostly decide *when in the first days* a place opens. The strip build earns less (174 an hour of layer payouts against 519), which is the point of the test: whether players notice (H0, H5, H6).
+Opening every boat, rod, region and perk from the start, and paying nothing out, changes little in what a player finds: by day 90 casual 30 species as built and 33 stripped, regular 50 species as built and 51 stripped, heavy 52 species as built and 52 stripped. What paces new things is the calendar, the conditions and what is left to find, not the gates; the gates mostly decide *when in the first days* a place opens. The strip build earns less (174 an hour of layer payouts against 519), which is the point of the test: whether players notice (H0, H5, H6).
 
 **What the fish page can't give.** 4 of the 72 fish can never bite (diagnosis.md), and 12 are festival fish that bite only in their festival's dates; so no profile completes the fish page within 90 days (casual 0%, regular 0%, heavy 0%). By day 90 the median regular player has 50 species, the heavy one 52.
 
@@ -273,22 +275,22 @@ All runs at a glance:
 
 | Run | drought P50 / P90 / P99 (first 10 active h) | longest gap with no progress tick at all, P99 | minutes since last new thing at day 90, P50 | share of obtainable collected by day 90, P50 | fish species by day 90, P50 | rank by day 90, P50 | active hours by day 90, P50 |
 |---|---|---|---|---|---|---|---|
-| casual, autumn start (today), base | 37 min / 60 min / 84 min | 8 min | 14 min | 72% | 30 of 72 | 18 | 14 |
-| casual, autumn start (today), nopity | 37 min / 61 min / 84 min | 8 min | 14 min | 72% | 31 of 72 | 18 | 14 |
-| casual, autumn start (today), strip | 37 min / 59 min / 85 min | 8 min | 36 min | 74% | 33 of 72 | 19 | 14 |
-| casual, autumn start (today), regionfix | 37 min / 60 min / 74 min | 8 min | 15 min | 72% | 31 of 72 | 19 | 14 |
-| regular, autumn start (today), base | 34 min / 39 min / 60 min | 8 min | 1.9 h | 86% | 50 of 72 | 40 | 49 |
-| regular, autumn start (today), nopity | 35 min / 37 min / 64 min | 8 min | 1.5 h | 86% | 50 of 72 | 40 | 49 |
-| regular, autumn start (today), strip | 34 min / 38 min / 58 min | 8 min | 1.9 h | 86% | 50 of 72 | 40 | 49 |
-| regular, autumn start (today), twoshops | 35 min / 37 min / 55 min | 8 min | 1.5 h | 86% | 50 of 72 | 40 | 49 |
-| regular, autumn start (today), regionfix | 33 min / 37 min / 50 min | 8 min | 1.9 h | 88% | 53 of 72 | 40 | 49 |
-| heavy, autumn start (today), base | 38 min / 59 min / 80 min | 8 min | 32.4 h | 88% | 52 of 72 | 72 | 135 |
-| heavy, autumn start (today), nopity | 40 min / 59 min / 83 min | 8 min | 26.4 h | 88% | 52 of 72 | 72 | 135 |
-| heavy, autumn start (today), strip | 37 min / 56 min / 84 min | 8 min | 24.8 h | 88% | 52 of 72 | 72 | 135 |
-| heavy, autumn start (today), regionfix | 31 min / 45 min / 77 min | 8 min | 25.1 h | 90% | 55 of 72 | 72 | 135 |
-| casual, spring start, base | 49 min / 83 min / 1.8 h | 8 min | 12 min | 67% | 24 of 72 | 18 | 14 |
-| regular, spring start, base | 35 min / 41 min / 59 min | 8 min | 76 min | 87% | 52 of 72 | 40 | 49 |
-| heavy, spring start, base | 47 min / 65 min / 1.5 h | 8 min | 17.1 h | 88% | 52 of 72 | 72 | 135 |
+| casual, autumn start (today), base | 37 min / 60 min / 83 min | 2 min | 14 min | 72% | 30 of 72 | 18 | 14 |
+| casual, autumn start (today), nopity | 37 min / 61 min / 84 min | 2 min | 14 min | 72% | 30 of 72 | 18 | 14 |
+| casual, autumn start (today), strip | 37 min / 59 min / 85 min | 2 min | 26 min | 73% | 33 of 72 | 19 | 14 |
+| casual, autumn start (today), regionfix | 38 min / 60 min / 87 min | 2 min | 25 min | 72% | 31 of 72 | 19 | 14 |
+| regular, autumn start (today), base | 34 min / 37 min / 59 min | 2 min | 1.6 h | 86% | 50 of 72 | 40 | 49 |
+| regular, autumn start (today), nopity | 35 min / 36 min / 66 min | 2 min | 1.8 h | 86% | 50 of 72 | 40 | 49 |
+| regular, autumn start (today), strip | 33 min / 39 min / 58 min | 2 min | 1.6 h | 86% | 51 of 72 | 40 | 49 |
+| regular, autumn start (today), twoshops | 34 min / 37 min / 56 min | 2 min | 1.6 h | 86% | 50 of 72 | 40 | 49 |
+| regular, autumn start (today), regionfix | 33 min / 37 min / 50 min | 2 min | 1.9 h | 88% | 54 of 72 | 40 | 49 |
+| heavy, autumn start (today), base | 41 min / 61 min / 81 min | 2 min | 27.4 h | 88% | 52 of 72 | 72 | 135 |
+| heavy, autumn start (today), nopity | 39 min / 58 min / 84 min | 2 min | 21.3 h | 88% | 52 of 72 | 72 | 135 |
+| heavy, autumn start (today), strip | 38 min / 57 min / 1.6 h | 2 min | 27.4 h | 88% | 52 of 72 | 72 | 135 |
+| heavy, autumn start (today), regionfix | 31 min / 50 min / 78 min | 2 min | 30.9 h | 90% | 55 of 72 | 72 | 135 |
+| casual, spring start, base | 49 min / 74 min / 1.6 h | 2 min | 12 min | 67% | 24 of 72 | 18 | 14 |
+| regular, spring start, base | 35 min / 44 min / 62 min | 2 min | 76 min | 87% | 52 of 72 | 40 | 49 |
+| heavy, spring start, base | 46 min / 61 min / 1.5 h | 2 min | 16.2 h | 88% | 52 of 72 | 72 | 135 |
 
 
 ## 11. Pacing at four horizons
@@ -298,9 +300,9 @@ Carlo, autumn start):
 
 |  | session 1 | week 1 | day 30 | day 60 | day 90 | the week ahead first averages under one new thing a session |
 |---|---|---|---|---|---|---|
-| casual | 18.90 | 12.22 | 2.29 | 0.51 | 0.38 | day 51 |
-| regular | 19.19 | 8.93 | 0.95 | 0.18 | 0.10 | day 19 |
-| heavy | 22.99 | 7.69 | 0.44 | 0.02 | 0.01 | day 16 |
+| casual | 18.90 | 12.25 | 2.31 | 0.51 | 0.39 | day 51 |
+| regular | 19.19 | 8.93 | 0.91 | 0.19 | 0.10 | day 19 |
+| heavy | 23.04 | 7.65 | 0.45 | 0.02 | 0.01 | day 16 |
 
 A regular player's week ahead first averages under one new thing a session on day 19 (casual day 51, heavy day 16). **H3 (at least one a session through day 30) is predicted to fail.** Before #195 the first pass's model put the regular player under one a session from day 12; the layer's species, secrets, variants and trophies bought a week.
 
@@ -327,13 +329,13 @@ rest, 3 trophy sizes and 2 ghost variants; the longest stretch with nothing new 
 
 | New things from | a session |
 |---|---|
-| unlocks | 0.06 |
 | colour variants | 0.06 |
-| trophy sizes | 0.04 |
+| unlocks | 0.06 |
+| trophy sizes | 0.05 |
 | the Gallery Shop's shelf | 0.02 |
-| **all** | **0.18** |
+| **all** | **0.19** |
 
-**Why that player still logs in.** At day 60 a session brings 0.18 new things, most of them unlocks, colour variants, trophy sizes. What the layer adds every session regardless is meters: XP, a skill bar, a task ticked, the login calendar, the event track (rewards.md). Whether those bring a player back is exactly what H2 and H14 test; the evidence so far is that they are expected, attendance- and volume-contingent rewards, the kind the meta-analysis warns about.
+**Why that player still logs in.** At day 60 a session brings 0.19 new things, most of them colour variants, unlocks, trophy sizes. What the layer adds every session regardless is meters: XP, a skill bar, a task ticked, the login calendar, the event track (rewards.md). Whether those bring a player back is exactly what H2 and H14 test; the evidence so far is that they are expected, attendance- and volume-contingent rewards, the kind the meta-analysis warns about.
 
 **The elder game to aim for** (a proposal; H3, H9, H10, H11 and H14 test its parts). A 20-minute day-60
 session:

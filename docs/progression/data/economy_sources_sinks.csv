@@ -2,9 +2,9 @@ kind,what,amount,unit
 source,"museum income (start, entrance open)",16,"gold/hour, passive, piles cap at 8 h"
 source,museum income (main hall + atrium open),46,"gold/hour, passive"
 source,each room you build (vertical medium),17.3,"gold/hour added, passive"
-source,selling fish at the market (the layer),1086,"gold per active hour, regular player (Monte Carlo; a fish sells for half its rarity x size x variant value)"
+source,selling fish at the market (the layer),1087,"gold per active hour, regular player (Monte Carlo; a fish sells for half its rarity x size x variant value)"
 source,"the layer's payouts (ranks, tasks, requests, login calendar, journal)",519,"gold per active hour, regular player (Monte Carlo)"
-source,selling the same fish again in the Gallery Shop,3468,"gold per active hour if a player also sells their codex copies (Monte Carlo, two shops)"
+source,selling the same fish again in the Gallery Shop,3474,"gold per active hour if a player also sells their codex copies (Monte Carlo, two shops)"
 source,"one rarity-1 fish, medium size: Gallery Shop / market",20 / 4,gold
 source,"one rarity-2 fish, medium size: Gallery Shop / market",60 / 11,gold
 source,"one rarity-3 fish, medium size: Gallery Shop / market",200 / 29,gold

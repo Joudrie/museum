@@ -26,7 +26,9 @@ const PARAMS = JSON.parse(readFileSync(join(DATA, 'params.json'), 'utf8'));
 const ASM = JSON.parse(readFileSync(join(DATA, 'assumptions.json'), 'utf8'));
 const A = ASM.assumptions;
 const DAYS = Number(process.env.DAYS || 90);
-const START_MS = new Date(new Date().toDateString()).getTime(); // today, midnight local
+// day 0 at local midnight: the export's pinned start (params.json modelStart), so a rerun on another day
+// gives the same numbers; run_all.py and check_repro.py run in New York time
+const START_MS = ((d) => new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime())(new Date(PARAMS.modelStart || Date.now()));
 
 // ---------- percentiles that treat 'never' as larger than anything (as common.py pct) ----------
 function pct(arr, qs = [10, 50, 90, 99]) {

@@ -1,5 +1,6 @@
 {
  "generated": "docs/progression/tools/export_params.mjs",
+ "modelStart": "2026-10-30T00:30:00.000Z",
  "notes": [
   "Room price counts every room in the list, and a new museum starts with 10 (entrance, main hall, atrium and 7 shaped rooms), so the first room you build is priced as the 9th."
  ],
