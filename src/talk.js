@@ -43,6 +43,9 @@ const readAt = () => {
 function place(a) {
   const vw = window.innerWidth;
   const vh = window.innerHeight;
+  // the box's own layout size (not getBoundingClientRect: that is shrunk while the pop-in
+  // animation scales it, which cut the words off), every frame so a late font still fits
+  size = { w: box.offsetWidth, h: box.offsetHeight };
   const { w, h } = size;
   const left = Math.min(Math.max(a.x - w / 2, 10), vw - w - 10);
   const topLimit = 74; // below the HUD buttons
@@ -96,8 +99,6 @@ export function showTalk(name, label, line, at, ms, away) {
   text.replaceChildren(on, off);
   typed = { on, off, line, n: 0, t: 0 };
   el.classList.remove('hidden');
-  const r = box.getBoundingClientRect();
-  size = { w: r.width, h: r.height };
   const a = readAt();
   if (a) place(a);
   if (!was) {

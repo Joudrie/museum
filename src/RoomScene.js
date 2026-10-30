@@ -944,10 +944,12 @@ export class RoomScene extends Phaser.Scene {
     }
   }
 
-  // Staff on their break: up to 6 of everyone you've hired.
+  // Staff on their break: up to 6 of everyone you've hired, and never an empty room
+  // (the guard, the barista and a janitor take their breaks here too).
   spawnWorkers() {
     const { g } = this;
-    const kinds = [...Array(Math.min(janitors(), 6)).fill('janitor'), ...(hasCarpenter() ? ['carpenter'] : []), ...Array(guides()).fill('guide')].slice(0, 6);
+    const hired = [...Array(Math.min(janitors(), 6)).fill('janitor'), ...(hasCarpenter() ? ['carpenter'] : []), ...Array(guides()).fill('guide')];
+    const kinds = [...hired, ...['guard', 'barista', 'janitor'].slice(0, Math.max(0, 3 - hired.length))].slice(0, 6);
     const spots = [[1.5, 2.5], [3.5, 3.6], [5.2, 3.2], [1.8, 4.6], [4.6, 4.8], [6.2, 2.2]];
     kinds.forEach((kind, k) => {
       const [c, r] = spots[k];
@@ -2279,14 +2281,14 @@ export class RoomScene extends Phaser.Scene {
     // (a locked room behind the arch has to be paid for first: Interact offers it)
     const exitArch = this.arches.exit && builtNext && !this.arches.exitClosed && exit?.rect;
     const entranceArch = this.arches.entrance;
-    // Out the entrance's front doors: onto the island.
-    const onMat = this.roomIndex === 0 && entrance.mat && x > entrance.x0 && x < entrance.x1 && y > this.g.y1 - 8;
+    // Out the entrance's front doors onto the island, or out of the break room's doorway: step on the mat and you're out.
+    const onMat = (this.roomIndex === 0 || this.isBreak) && entrance.mat && x > entrance.x0 && x < entrance.x1 && y > this.g.y1 - 8;
     const touching = (exitArch && (arch ? throughArch : near(exit))) || (entranceArch && near(entrance)) || onMat;
     if (this.archLock) {
       if (!touching) this.archLock = false;
       return;
     }
-    if (onMat) this.travel('island');
+    if (onMat) this.travel(this.isBreak ? 1 : 'island', this.isBreak ? 'breakdoor' : undefined);
     else if (exitArch && (arch ? throughArch : near(exit))) this.travel(this.roomIndex + 1, 'entrance', true);
     else if (entranceArch && near(entrance)) this.travel(this.roomIndex - 1, 'exit', true);
   }
