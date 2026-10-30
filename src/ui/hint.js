@@ -2,12 +2,13 @@
 // never while a panel is open or someone is talking, and Settings → Play → Tips turns them all off.
 import { load, save } from '../storage.js';
 import { settings } from '../settings.js';
+import { popupsShown } from './attention.js';
 
 const KEY = 'curation.hints';
 export const hinted = (id) => !!load(KEY, {})[id];
 const mark = (id) => save(KEY, { ...load(KEY, {}), [id]: Date.now() });
 
-const calm = () => !document.querySelector('.overlay:not(.hidden), #viewer:not(.hidden), #talk:not(.hidden), #chat:not(.hidden), #ask:not(.hidden), #dig:not(.hidden)');
+const calm = () => !popupsShown() && !document.querySelector('.overlay:not(.hidden), #viewer:not(.hidden), #talk:not(.hidden), #chat:not(.hidden), #ask:not(.hidden), #dig:not(.hidden)');
 const visible = (e) => {
   const r = e?.getBoundingClientRect();
   return !!r && r.width > 0 && r.height > 0 && getComputedStyle(e).display !== 'none';

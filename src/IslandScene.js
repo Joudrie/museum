@@ -269,7 +269,11 @@ export class IslandScene extends Phaser.Scene {
     this.time.addEvent({ delay: STEP_MS, loop: true, callback: () => this.tick() });
     this.cameras.main.fadeIn(300, 29, 21, 18);
     performance.mark('island:ready');
-    if (this.map && this.door && this.spawnAt !== 'dock') this.toast(`${this.mapName()} · walk back into the doors to go inside`);
+    // (how to get back inside, said once: after that you know)
+    if (this.map && this.door && this.spawnAt !== 'dock' && !load('curation.doorsTold', false)) {
+      save('curation.doorsTold', true);
+      this.toast(`${this.mapName()} · walk back into the doors to go inside`);
+    }
     else if (this.map) this.toast(`${this.mapName()} · sail on from the rowboat`);
     else if (this.spawnAt !== 'cottage') this.toast('Island One · the museum here is shut; sail home from the dock');
   }

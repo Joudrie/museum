@@ -21,6 +21,10 @@ Read docs/VISION.md first: every feature should serve it. Then docs/HANDOFF.md f
 - **Never use emojis anywhere in the game's UI.** Pixel icons (`src/ui/icons.js`) or words only.
 - **Popups stay small and in the top third of the screen** unless it is a very important moment (a rank-up).
   Speech bubbles never cover a character, follow the speaker, and close when you walk away.
+- **At most two popups on screen at once** (toasts, tips, cards, skill bars, the goal pill), and only when needed.
+  A third is dropped, not queued (`src/ui/attention.js`). **No always-on progress bars:** progress shows for a
+  moment when it is nearly done (the goal pill at three quarters, a skill near its level), then fades; every
+  goal is in the Journal. Small events (a berry collected) are a short toast at most.
 
 ## Islands
 - **Main Island** (src/maps/main-island.json, drawn by the user in the builder) is home: the museum

@@ -1,5 +1,7 @@
 // Toasts, one at a time. A new toast waits until the one on screen has been readable for a moment,
 // the same message twice in a row is shown once, and at most three wait their turn (the oldest drops).
+import { roomFor } from './attention.js';
+
 const MIN_MS = 900; // a toast is on screen at least this long before the next one replaces it
 
 let queue = [];
@@ -30,6 +32,7 @@ export function say(text, ms = 2200) {
   if (!text) return;
   const now = Date.now();
   if (text === lastText && now - lastAt < 1500) return; // the same message twice in a row
+  if (!roomFor('#toast:not(.hidden)')) return; // two popups up already: this one is dropped (ui/attention.js)
   lastText = text;
   lastAt = now;
   if (!current) return show({ text, ms });

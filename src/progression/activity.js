@@ -42,7 +42,8 @@ export function installActivity(p) {
     stamp(p, 'places', placeId, { region, name });
     const g = p.xp(T.xp.location * (has('exploring.pathfinder') ? 2 : 1), 'place', { silent: true });
     p.skillXp('exploring', T.skills.gain.location * (has('exploring.pathfinder') ? 2 : 1), { silent: true });
-    p.queue.pushChain([{ kind: 'xp', amount: g.gained, bonus: g.bonus, label: 'New place', xpAfter: g.totalAfter }, { kind: 'item', title: name || 'New place', sub: `${REGIONS[region]?.name || ''}. Added to Places.` }]);
+    const quiet = placeId.endsWith(':island'); // (you can see you've arrived)
+    p.queue.pushChain([{ kind: 'xp', amount: g.gained, bonus: g.bonus, label: 'New place', xpAfter: g.totalAfter }, ...(quiet ? [] : [{ kind: 'item', title: name || 'New place', sub: `${REGIONS[region]?.name || ''}. Added to Places.` }])]);
     p.flushSkillBars();
     p.flushRankUps();
     mile('places');

@@ -3,6 +3,7 @@
 // Magnitude hierarchy: an XP tick is small, a skill bar is smaller, a new
 // species is a stamp, a rank is a ceremony. If everything celebrates, nothing does.
 import { sfx, duckMusic } from '../../music.js';
+import { roomFor } from '../../ui/attention.js';
 import { haptic } from '../../ui.js';
 import { uiIcon } from '../../ui/icons.js';
 import { COSMETICS } from '../grants.js';
@@ -29,6 +30,8 @@ let shownLevel = 1;
 let progRef = null;
 let skillTimer = null;
 let cardTimer = null;
+let pillTimer = null;
+let pillGoal = '';
 
 export function mountLayer(p) {
   if (layer) return;
@@ -99,6 +102,17 @@ export function refreshPill(p = progRef, instant = false) {
   pill.title = p.market?.nameplate().title || '';
   pill.querySelector('.pp-goal-text').textContent = g ? g.title : 'Tap for your goals';
   pill.querySelector('.pp-n').textContent = g && g.n !== undefined ? `${g.n}/${g.of}` : '';
+  // The pill stays out of the way. It shows for a moment when the goal moves and is nearly done
+  // (three quarters there), then fades; the Journal has every goal.
+  const key = g && g.n !== undefined ? `${g.title}|${g.n}` : '';
+  if (key && key !== pillGoal && pillGoal && g.n > 0 && g.n / g.of >= 0.75) flashPill();
+  pillGoal = key;
+}
+function flashPill() {
+  if (!roomFor('#prog-pill.on')) return;
+  clearTimeout(pillTimer);
+  pill.classList.add('on');
+  pillTimer = setTimeout(() => pill.classList.remove('on'), 2600);
 }
 
 const countUp = (node, to, ms = 500) => {
@@ -115,22 +129,16 @@ const countUp = (node, to, ms = 500) => {
   requestAnimationFrame(tick);
 };
 
+// XP counts quietly (a tick); the Journal shows your rank. No floating numbers over the game.
 function popXp(item) {
-  const n = el('div', `prog-pop${item.bonus ? ' rested' : ''}`);
-  n.innerHTML = `+<span class="v">0</span> XP${item.bonus ? `<small>rested +${Math.round(item.bonus)}</small>` : ''}`;
-  pops.appendChild(n);
   if (item.xpAfter) dispXp = item.xpAfter;
-  countUp(n.querySelector('.v'), Math.round(item.amount), 420);
-  setTimeout(() => n.remove(), 1200);
   sfx('tickup', item.step || 0);
-  haptic(6);
   refreshPill();
-  pill.classList.remove('pulse');
-  void pill.offsetWidth;
-  pill.classList.add('pulse');
 }
 
 function skillBarShow(item) {
+  // a skill shows only when it levels up or is nearly there, and never as a third popup
+  if (!item.up && ((item.pct || 0) < 75 || !roomFor('#prog-skill:not(.hidden)'))) return;
   clearTimeout(skillTimer);
   skillBar.classList.remove('hidden');
   skillBar.querySelector('.sk-name').innerHTML = `${item.icon ? icon(item.icon, 's') + ' ' : ''}${esc(item.name)}`; // a pixel icon (skills.json names one), never an emoji
@@ -146,6 +154,11 @@ function skillBarShow(item) {
 }
 
 function cardShow(html, rarity, ms, onClose) {
+  // two popups up already: this card is dropped, not queued (ui/attention.js)
+  if (card.classList.contains('hidden') && !roomFor()) {
+    onClose?.();
+    return () => {};
+  }
   clearTimeout(cardTimer);
   card.className = rarity ? `rarity-${rarity}` : '';
   card.innerHTML = html;
