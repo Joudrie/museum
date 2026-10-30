@@ -305,6 +305,25 @@ island scene streams ground chunks around the player.
 - Customize → **Columns** (rooms with columns: main hall, atrium, shaped rooms) picks the design per room (`decor.column`, default Corinthian); themes set one too. The toolkit has a **Columns** tab with each as a 1×1 free-standing item (`column_<id>`). Dev preview: art.html → Columns.
 - Main hall columns are 34 px wide (were 22) and still end under the railing; the newels keep the old small post.
 
+### Friends you can call (companions: `src/progression/companions.js`, `src/companion.js`, `src/ui/phone.js`)
+- The user's idea: get close to a named friend, do their favour, and they become someone you can hang out with.
+  At **10 hearts with their favour done** (the existing `questItems` quest) a friend gives you their number (an
+  unlock card with their line). A **Phone** button then shows under the Journal on islands; the phone lists your friends.
+- **Call** one: a very quick blink to black and they're in front of you with a hello ("sorry I took so long" or
+  "nice to see you"). They follow a step and a half behind, ride in the back of your rowboat, tell a story, a true
+  fun fact or a saying while you wait for a bite (bubbles, which close on their own), say something now and then on
+  a walk, and you can tap them: a story, a fact, how long they can stay, or "See you later".
+- **Limits:** each friend comes once a game day for 30 minutes of play on islands (time in the museum doesn't count),
+  then says they have to go and see you tomorrow; after anyone leaves the phone rests 5 minutes.
+- **Help** (`companions.json` `boost`): Bram and Oda rarer fish, Wen quicker bites, Ines +25% Fishing XP, Mara Sailing,
+  Tal Foraging, Rook and Dune Exploring, Yuki Friendship, Sefu +10% XP. Edmund minds the museum, so he isn't one.
+- **Add a friend:** a named NPC in `npcs.json` (with `wears`, `questItems`) + an entry in `companions.json` (boost,
+  number) + their lines in `companion-lines.json` (loaded only when someone is with you). The plan is one per class
+  (pirate captain and deckhand are different people), to give you a reason to explore. Fishing competitions: later.
+- Named friends now look the same everywhere (`src/people/friendlook.js`, seeded by their id). NPC greetings doubled
+  (`dialogue.json`); at ten hearts a friend's rare line shows that day and then mixes in.
+- Dev: `?debug=1` → "friends: all numbers" and "phone: reset". Test: `tests/companions.cjs`.
+
 ### People sprites (Chat 17: `src/people/`, plan in `docs/PEOPLE-SPRITES.md`)
 - **Parts** (`src/people/parts.js`, merged into the menus in `art.js`): 49 more hats, 17 hairstyles, 7 facial hair, 6 glasses, 45 outfits, 18 accessories, legs (shorts, rolled, tall boots, peg leg), bare feet, 4 builds, 113 things to carry, 40 things to set down, a parrot, gull or wings on the shoulders, and 114 two-frame work poses (instruments, dance, crafts, magic too) (`<prefix>_pose_0/1`; kneeling ones too). They draw after the first looks, so **old looks are pixel-identical**; `personRows(view, look, frame)` and `poseRows(look)` in `art.js` give the rows. The creator offers them too (Build, Legs, Feet, Hat trim).
 - **Classes** (`src/people/classes.js`, data): 209 jobs in 471 variants (cleaning & grounds, builders & trades, sea & shore, dig & expedition, museum jobs, visitors & townsfolk, food & market, arts & performance, science & medicine, artisans & makers, through history, fantasy & seasonal), each a builder piece `t:npc_<class>_<variant>` in the People lists. `personFor(id, seed)` rolls skin, hair, build and the class colors per person; a variant with a pose or a thing set down stays put and works, the rest wander. On islands they loop their pose, look up at you to chat, and talk with their job title and own lines. Previews draw one frame lazily (the game never builds them; the builder reads a piece's picture only when it draws it, so its start time is unchanged).

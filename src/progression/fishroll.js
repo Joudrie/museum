@@ -57,6 +57,8 @@ export function makeContext(o) {
     perks: o.perks,
     events: o.events || [],
     rumor: o.rumor || null, // { speciesId } when casting at this week's rumor spot
+    luck: o.luck || 1, // rare-fish weight from a friend along
+    quick: o.quick || 1, // bite wait from a friend along
     ...o.extra,
   };
 }
@@ -83,6 +85,7 @@ export function tierWeights(pool, ctx, state, T = TUNING) {
     if (r >= 3) {
       if (ctx.hot) v *= T.fishing.hotspot.rareMult;
       if (bait?.rareMult && (!bait.nightOnly || ctx.time === 'night')) v *= bait.rareMult;
+      if (ctx.luck) v *= ctx.luck; // a fishing friend along (companions.js)
       v *= ramp;
     }
     if (r >= 4) {
@@ -183,6 +186,7 @@ export function biteWait(rod, ctx, rng, T = TUNING) {
   const [a, b] = rod.wait;
   let w = (a + rng() * (b - a)) * T.fishing.bobberWait;
   if (ctx.lure && LURES[ctx.lure]?.biteMult) w *= LURES[ctx.lure].biteMult;
+  if (ctx.quick) w *= ctx.quick; // a friend who knows the water (companions.js)
   return w;
 }
 

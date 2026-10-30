@@ -272,13 +272,16 @@ export function installFriendship(p) {
       bus.emit('GIFT_GIVEN', { npcId, itemId });
       return { ok: true, ...p.lastGift };
     },
-    /** What they say now, by hearts. The line changes each day, and the maxed rare line shows at ten hearts. */
+    /** What they say now, by hearts. The line changes each day; their rare line joins in at ten hearts. */
     greeting(npcId) {
       const npc = npcById(npcId);
       const h = heartsOf(p.state, npcId);
       const pool = DIALOGUE.kinds[npc?.kind]?.[tierOf(h)] || ['Hello.'];
-      if (h >= 10 && npc?.line) return npc.line;
-      return pickLine(pool, npcId + DAY(p) + h);
+      // at ten hearts: their own rare line that day, then it comes up among the rest (and a friend you can call says so)
+      const f = p.state.friends[npcId];
+      if (h >= 10 && npc?.line && f && (f.rareDay ||= DAY(p)) === DAY(p)) return npc.line;
+      const extra = h >= 10 ? [npc?.line, p.companions?.hasNumber(npcId) && 'Call me anytime. You have my number.'].filter(Boolean) : [];
+      return pickLine([...pool, ...extra], npcId + DAY(p) + h);
     },
     /** An unnamed reader on a bench trades a rumour: hint two for a fish nobody has told you about. */
     ambientRumor(region) {
