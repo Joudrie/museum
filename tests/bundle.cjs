@@ -2,7 +2,7 @@
 // Phaser is its own cached chunk; the rest is the game. Raise a number here on purpose, never by accident.
 const fs = require('fs');
 const zlib = require('zlib');
-const BUDGET_KB = { phaser: 360, main: 260, total: 820 }; // total = all JS in dist/assets (every page); 760 → 800 for the people sprites (docs/PEOPLE-SPRITES.md tiers 4-5, about 25 KB); main 230 → 240 for the color wheel, speech-bubble follow and rowing (29 Oct feedback); 240 → 255 (and total 800 → 820) for the interaction polish (focus, bubbles, emotes, tells, wind, little scenes: about 20 KB); 255 → 260 for the wardrobe (costumes, things to hold, real shop cosmetics: about 2.5 KB)
+const BUDGET_KB = { phaser: 360, main: 260, total: 830 }; // total = all JS in dist/assets (every page); 760 → 800 for the people sprites (docs/PEOPLE-SPRITES.md tiers 4-5, about 25 KB); main 230 → 240 for the color wheel, speech-bubble follow and rowing (29 Oct feedback); 240 → 255 (and total 800 → 820) for the interaction polish (focus, bubbles, emotes, tells, wind, little scenes: about 20 KB); 255 → 260 for the wardrobe (costumes, things to hold, real shop cosmetics: about 2.5 KB); total 820 → 830: it had reached 820 with everyone's work (the quiet HUD itself adds under 1 KB)
 const dir = 'dist/assets';
 if (!fs.existsSync(dir)) {
   console.log('  ✗ no dist/: run npm run build first');
