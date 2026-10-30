@@ -1046,7 +1046,8 @@ export class RoomScene extends Phaser.Scene {
     this.turnToPlayer(n);
     this.talkingTo = n;
     sfx('talk');
-    showTalk(SAM.name, SAM.label, samLine(), this.speakerAt(n.s), 8000, this.walkedAway(n.s, 90));
+    const line = samLine();
+    showTalk(SAM.name, SAM.label, line, this.speakerAt(n.s), Math.max(8000, line.length * 70), this.walkedAway(n.s, 90)); // (long lines stay up longer)
   }
 
   // Services changed (counter or closet placed, moved or sold): respawn staff, recheck dirt.
