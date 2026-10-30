@@ -33,7 +33,22 @@ export function openSail(options, cb) {
       // what is out there (silhouettes), so a locked dock shows concrete value
       const pv = document.createElement('small');
       pv.className = 'sail-preview';
-      pv.textContent = o.preview;
+      // "31 fish you have not found live here: ??? ??? ???" → the sentence, then one small "?" box per rare kind
+      const m = /^(.*?):\s*((?:\?\?\?\s*)+)$/.exec(o.preview);
+      if (m) {
+        pv.setAttribute('aria-label', o.preview);
+        pv.append(m[1]);
+        const row = document.createElement('span');
+        row.className = 'sail-qs';
+        row.setAttribute('aria-hidden', 'true');
+        (m[2].match(/\?\?\?/g) || []).forEach(() => {
+          const q = document.createElement('span');
+          q.className = 'sail-q';
+          q.textContent = '?';
+          row.appendChild(q);
+        });
+        pv.appendChild(row);
+      } else pv.textContent = o.preview;
       b.appendChild(pv);
     }
     b.setAttribute('aria-disabled', o.locked ? 'true' : 'false');

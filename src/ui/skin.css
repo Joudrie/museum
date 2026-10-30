@@ -614,3 +614,20 @@ body .leads-close {
   box-shadow: inset 2px 2px 0 rgba(255, 240, 200, 0.16), inset -2px -2px 0 rgba(0, 0, 0, 0.4), 0 3px 0 var(--ui-shadow);
 }
 body .exp-sub { font: 400 var(--fs-small) / 1.3 var(--ui-font); }
+
+/* the rare kinds still hidden on a locked island: one small "?" box each */
+body .sail-q {
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  font: 600 var(--fs-small) / 1 var(--ui-font);
+  color: var(--ui-gold-hi);
+  background: var(--ui-gold-lo);
+  border: 2px solid var(--ui-shadow);
+}
+body .sail-qs {
+  display: flex;
+  gap: var(--sp-1);
+  margin-top: var(--sp-1);
+}
