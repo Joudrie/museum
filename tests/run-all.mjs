@@ -11,7 +11,7 @@ const URL_ROOT = `http://localhost:${PORT}/`;
 const OUT = process.env.OUT || 'test-shots';
 fs.mkdirSync(OUT, { recursive: true });
 
-const FAST = ['bundle', 'content', 'gaps', 'collections', 'saves', 'smoke', 'builder', 'dig', 'puzzles', 'restore', 'display', 'expedition', 'halls', 'people', 'people-sprites', 'presets', 'share', 'chatter', 'interact', 'qa-interactions', 'progression', 'progression-content', 'progression-ui', 'ui-contrast'];
+const FAST = ['bundle', 'content', 'gaps', 'collections', 'saves', 'smoke', 'builder', 'dig', 'puzzles', 'restore', 'display', 'expedition', 'halls', 'people', 'people-sprites', 'wardrobe', 'presets', 'share', 'chatter', 'interact', 'qa-interactions', 'progression', 'progression-content', 'progression-ui', 'ui-contrast'];
 const SLOW = ['playtest', 'perf', 'ui-layout'];
 const names = process.env.ONLY ? process.env.ONLY.split(',') : process.env.ALL ? [...FAST, ...SLOW] : FAST;
 

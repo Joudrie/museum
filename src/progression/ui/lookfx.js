@@ -1,6 +1,7 @@
-// Cosmetics you can see: a hat on the player's head and an outfit tint, drawn over the placeholder
-// sprite (the sprites will be redrawn by hand later; this follows the same swap-friendly idea:
-// colours come from data/cosmetics.json). Rod skins colour the rod and line (see fishing.js).
+// Cosmetics you can see. A hat or outfit with a `look` in data/cosmetics.json is drawn into the
+// curator's own sprite (people/wardrobe.js curatorLook; the scene's dressPlayer rebuilds it when
+// what you wear changes). One without a look falls back to a flat hat and an outfit tint drawn over
+// the sprite. Rod skins colour the rod and line (see fishing.js).
 import { progression } from '../index.js';
 import { COSMETICS } from '../grants.js';
 
@@ -11,12 +12,18 @@ export const cosmeticColor = (slot) => {
   return id && COSMETICS[id]?.color ? hexNum(COSMETICS[id].color) : null;
 };
 
+// the worn hat and outfit that have a real look, for curatorLook: outfit first, the hat on top
+export function wornLooks() {
+  const m = progression().state.market.equipped;
+  return [m.outfit, m.hat].map((id) => id && COSMETICS[id]).filter((c) => c?.look).map((c) => ({ look: c.look, colors: c.colors || {} }));
+}
+
 export class PlayerLook {
   constructor(scene, player) {
     this.scene = scene;
     this.player = player;
     this.g = scene.add.graphics();
-    this.key = '';
+    this.key = null;
   }
 
   update() {
@@ -24,14 +31,15 @@ export class PlayerLook {
     const { player: pl, g } = this;
     const key = `${m.hat}|${m.outfit}`;
     if (key !== this.key) {
+      if (this.key !== null) this.scene.dressPlayer?.(); // (the scene dressed them when it started)
       this.key = key;
-      const o = m.outfit && COSMETICS[m.outfit]?.color;
-      if (o) pl.setTint(mix(0xffffff, hexNum(o), 0.45));
+      const o = m.outfit && COSMETICS[m.outfit];
+      if (o?.color && !o.look) pl.setTint(mix(0xffffff, hexNum(o.color), 0.45));
       else pl.clearTint();
     }
     g.clear();
     const hat = m.hat && COSMETICS[m.hat];
-    if (!hat) return;
+    if (!hat || hat.look) return;
     const c = hexNum(hat.color);
     const top = pl.y - pl.displayHeight + 3;
     g.setDepth(pl.depth + 1);
