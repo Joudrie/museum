@@ -56,7 +56,7 @@ export const SAM = {
       'Frank Herbert, the guy who wrote Dune, I think he was an ecologist? I don’t really know what an ecologist is.',
       'It’s something to do with nature. But now that I say that out loud, there’s not a whole lot of nature in the books. It’s mostly sand.',
       'What he’s really good at is making people and cultures feel real. Like you could move there. Well. You wouldn’t want to. Sandworms.',
-      'The planet’s called Arrakis. That’s gotta come from somewhere real, right? Arabic, maybe? I don’t know.',
+      'The planet’s called Arrakis. That’s gotta be inspired by Iraq, right?',
       'Just like the Fremen. Free men. I only got that one last week. I said it out loud on a train.',
       'A lot of sci-fi and fantasy pulls from real life. The Wall in Game of Thrones is Hadrian’s Wall. The Romans built a wall to keep out Scotland.',
       'Sorry for that ramble. You should really add a movie theater or something. Or a library. Maybe even a pool.',
