@@ -188,6 +188,22 @@ export class Rowing {
     );
   }
 
+  /** From the boat menu: get in on the nearest open water around you. False if there is none close by. */
+  launch() {
+    const p = this.s.player;
+    if (this.on || this.busy || !this.allowed()) return false;
+    for (let r = 20; r < 200; r += 6)
+      for (let a = 0; a < Math.PI * 2; a += Math.PI / 16) {
+        const wx = p.x + Math.cos(a) * r;
+        const wy = p.y + Math.sin(a) * r;
+        if (this.wet(wx, wy - 4) && this.free(wx, wy)) {
+          this.board(wx, wy);
+          return true;
+        }
+      }
+    return false;
+  }
+
   // ---------- getting in and out ----------
   hop(x, y, done, frame) {
     const s = this.s;
