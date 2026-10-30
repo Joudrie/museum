@@ -5,7 +5,7 @@
 import Phaser from 'phaser';
 import { buildTiles, T } from './tiles.js';
 import { patchSheet } from './swap.js';
-import { makeCharacter } from './art.js';
+import { makeCharacter, poseView } from './art.js';
 import { load, save } from './storage.js';
 import { DEFAULT_CHARACTER } from './decor.js';
 import { showTalk, hideTalk, talking } from './talk.js';
@@ -1228,12 +1228,8 @@ export class IslandScene extends Phaser.Scene {
       const a = n.animal;
       if (n.pose && !n.target) {
         // at work, two frames on a loop; they look up at you while you chat
-        if (this.focus?.npc === n && (talking() || chatOpen())) {
-          const dx = this.player.x - s.x;
-          const dy = this.player.y - s.y;
-          if (Math.abs(dx) > Math.abs(dy)) s.setTexture(`${n.prefix}_side`).setFlipX(dx < 0);
-          else s.setTexture(dy < 0 ? `${n.prefix}_up` : `${n.prefix}_down`).setFlipX(false);
-        } else {
+        if (this.focus?.npc === n && (talking() || chatOpen())) this.faceNpc(n, this.player.x, this.player.y);
+        else {
           n.poseT = (n.poseT || 0) + dt;
           s.setTexture(`${n.prefix}_pose_${Math.floor(n.poseT * n.rate) % 2}`).setFlipX(n.flip);
         }
@@ -1423,6 +1419,8 @@ export class IslandScene extends Phaser.Scene {
     if (n.animal) return;
     const dx = tx - n.s.x;
     const dy = ty - n.s.y;
+    // someone at work keeps their tools in hand: they pause on their first frame, turned your way
+    if (n.pose) return n.s.setTexture(`${n.prefix}_pose_0`).setFlipX(poseView(n.pose) === 'side' ? dx < 0 : n.flip);
     if (Math.abs(dx) > Math.abs(dy)) n.s.setTexture(`${n.prefix}_side`).setFlipX(dx < 0);
     else n.s.setTexture(dy < 0 ? `${n.prefix}_up` : `${n.prefix}_down`).setFlipX(false);
   }

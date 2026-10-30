@@ -973,17 +973,17 @@ export function moreHair(out, view, look, hatOn) {
     }
   }
   if (style === 'braids') {
-    const braid = (x) => {
-      for (let r = 8; r <= 14; r++) P(r, x, r % 2 ? 'ohHo' : 'oHho');
-      P(15, x, 'oUUo');
-      P(16, x, 'ohho');
-      P(17, x + 1, 'oo');
+    // plaited in segments, hanging by the face to the shoulder (longer ones read as a second pair of sleeves)
+    const braid = (x, end = 10) => {
+      for (let r = 7; r <= end; r++) P(r, x, r % 3 === 1 ? 'oHHo' : 'ohho');
+      P(end + 1, x, 'oUUo');
+      P(end + 2, x + 1, 'oo');
     };
     if (D || U) {
       braid(7);
       braid(21);
     }
-    if (S) braid(10);
+    if (S) braid(10, 13);
   }
   if (style === 'dreads') {
     const lock = (r, x, n) => P(r, x, [...'hHh'.repeat(4)].slice(0, n).join(''));
@@ -1102,7 +1102,7 @@ const HAT_ROWS = {
   },
   bandana: {
     down: { rows: { 0: 'oooooooo', 1: 'oTTTTTTTTo', 2: 'oTTUTTTTUTTo', 3: 'oTTTTUUTTTTo' } },
-    up: { rows: { 0: 'oooooooo', 1: 'oTTTTTTTTo', 2: 'oTTUTTTTUTTo', 3: 'oTTTTUUTTTTo' }, paint: { 4: [14, 'oUUo'], 5: [14, 'oTTo'], 6: [14, 'oTTo'], 7: [15, 'oo'] } },
+    up: { rows: { 0: 'oooooooo', 1: 'oTTTTTTTTo', 2: 'oTTTTTTTTTTo', 3: 'oTTTTTTTTTTo' }, cover: [[4, 5], ['h', 'H'], 'T'], paint: { 6: [17, 'oUUo'], 7: [18, 'oTTo'], 8: [19, 'oTo'], 9: [19, 'oTo'], 10: [20, 'o'] } },
     side: { rows: { 0: 'oooooooo', 1: 'oTTTTTTTTo', 2: 'oTTUTTTTUTTo', 3: 'oTTTTUUTTTTo' }, paint: { 2: [8, 'oo'], 3: [7, 'oTTU'], 4: [7, 'oTTo'], 5: [7, 'ooo'] } },
   },
   flatcap: {
@@ -1689,8 +1689,9 @@ const CARRY_DRAW = {
   net: (d, m) => {
     const { hx, hy, view, top } = m;
     const x = view === 'down' ? hx - 2 : view === 'up' ? hx + 2 : hx + 2;
-    d.line(x, hy + 3, x, top + 7, 'N');
-    d.pic(x - 2, top + 2, [' AAA ', 'AlllA', 'AlllA', 'AlllA', ' AAA ']);
+    const y = view === 'side' ? top - 6 : top + 2; // (from the side the hoop is held up past the head)
+    d.line(x, hy + 3, x, y + 5, 'N');
+    d.pic(x - 2, y, [' AAA ', 'AlllA', 'AlllA', 'AlllA', ' AAA ']);
     hand(d, m, x);
   },
   sign: (d, m) => {
@@ -1737,7 +1738,7 @@ const CARRY_DRAW = {
   },
   pane: (d, m) => {
     if (m.view === 'side') {
-      d.pic(m.hx + 2, m.top + 6, Array(14).fill('vl'));
+      d.pic(m.hx + 2, m.top + 11, Array(12).fill('vl')); // (held below the chin, edge on)
       hand(d, m);
       return;
     }
@@ -2042,7 +2043,13 @@ const CARRY_DRAW = {
 export function drawCarry(rows, view, look) {
   const fn = CARRY_DRAW[look.carry];
   if (!fn) return rows;
-  return withRoom(rows, (g) => fn(draw(g), metrics(g, view, look.build), g));
+  return withRoom(rows, (g) => {
+    const m = metrics(g, view, look.build);
+    // from the side, whatever they hold passes behind their head (a pole never crosses the face)
+    const head = view === 'side' ? g.slice(0, m.Y(11)).map((r) => [...r]) : null;
+    fn(draw(g), m, g);
+    head?.forEach((r, y) => r.forEach((c, x) => c !== '.' && (g[y][x] = c)));
+  });
 }
 
 // ---------- Things set down on the ground beside someone ----------
@@ -2379,8 +2386,10 @@ const POSE_DRAW = {
     arm(d, [16, top + 15], [18, top + 16]);
     d.line(19, top + 17, 29, top + 2, 'N');
     d.px(18, top + 18, 'A');
-    d.line(29, top + 3, 30, gy - 2, 'l');
-    d.pic(30, gy - (f ? 2 : 1), ['x', 'Q']);
+    for (let y = top + 3; y < gy - 3; y += 2) d.px(y < (top + gy) / 2 ? 29 : 30, y, 'f');
+    d.pic(30, gy - (f ? 3 : 2), ['x', 'Q'], null);
+    d.px(29, gy - 1, 'v');
+    d.px(31, gy - 1, 'v');
   },
   castnet: (d, m, f, g) => {
     tuck(g, m);
@@ -3147,8 +3156,23 @@ export function poseFrames(pose, base, look) {
       const d = draw(g);
       d.sleeve = sleeveOf(g, m);
       fn(d, m, f, g);
+      if (view === 'sit') chair(g, m);
     });
   });
+}
+// a wooden chair under someone sitting at work: its back posts and seat show either side of them
+// (drawn only where nothing else is, so it stays behind them)
+function chair(g, m) {
+  const d = draw(g);
+  const L = 8 - m.wide;
+  const R = 23 + m.wide;
+  const lap = m.gy - 3;
+  const cells = [];
+  for (let y = m.Y(12); y <= m.gy; y++) [L, R].forEach((x) => cells.push([x, y, y >= lap && y <= lap + 1 ? 'N' : 'n']));
+  for (let x = L - 1; x <= R + 1; x++) cells.push([x, lap, 'n'], [x, lap + 1, 'N']);
+  const put = cells.filter(([x, y]) => d.get(x, y) === '.');
+  put.forEach(([x, y, c]) => d.px(x, y, c));
+  put.forEach(([x, y]) => [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(([dx, dy]) => d.get(x + dx, y + dy) === '.' && d.px(x + dx, y + dy, 'o')));
 }
 // the colour of the arm just above the hanging hand, so a raised arm keeps its sleeve (or bare skin)
 function sleeveOf(g, m) {

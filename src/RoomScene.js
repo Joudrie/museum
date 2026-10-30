@@ -23,6 +23,7 @@ import {
   bakeMop,
   PLANTS,
   makeCharacter,
+  poseView,
   makeBubble,
   makeEmotes,
   DEFAULT_DECOR,
@@ -895,6 +896,7 @@ export class RoomScene extends Phaser.Scene {
     makeCharacter(this, prefix, colors, look);
     const names = PERSONALITIES[kind].names;
     const s = this.add.sprite(x, y, job?.pose ? `${prefix}_pose_0` : `${prefix}_down`).setOrigin(0.5, 1).setScale(scale);
+    if (job?.pose) s.setData('pose', job.pose);
     const n = { s, prefix, kind, staff: true, skin: colors.s, name: names[Math.floor(hash(seed, 6, 50) * names.length)], wait: 1000, target: null, pose: job?.pose || null, rate: job?.rate || 2 };
     this.npcs.push(n);
     return n;
@@ -2333,6 +2335,9 @@ export class RoomScene extends Phaser.Scene {
   }
 
   faceSprite(s, prefix, vx, vy) {
+    // staff at work keep their tools: they pause on their first frame, turned your way
+    const pose = s.getData?.('pose');
+    if (pose) return s.setTexture(`${prefix}_pose_0`).setFlipX(poseView(pose) === 'side' && vx < 0);
     if (Math.abs(vx) > Math.abs(vy)) s.setTexture(`${prefix}_side`).setFlipX(vx < 0);
     else if (vy !== 0) s.setTexture(vy < 0 ? `${prefix}_up` : `${prefix}_down`).setFlipX(false);
   }
