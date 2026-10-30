@@ -5,9 +5,10 @@
 // armchairs to turn them. Reached through the cottage door on the island.
 import { say } from './ui/toast.js';
 import Phaser from 'phaser';
-import { makeCharacter } from './art.js';
 import { load } from './storage.js';
 import { DEFAULT_CHARACTER } from './decor.js';
+import { dressCurator } from './people/wardrobe.js';
+import { wornLooks } from './progression/ui/lookfx.js';
 import { iconSvg } from './icons.js';
 import { sfx, setTrack } from './music.js';
 import { animateWalker, footstep } from './motion.js';
@@ -241,8 +242,7 @@ export class IsoScene extends Phaser.Scene {
     this.drawRoom();
     this.furnish();
 
-    const ch = { ...DEFAULT_CHARACTER, ...load('curation.character', {}) };
-    if (!this.textures.exists('player_down')) makeCharacter(this, 'player', ch, {});
+    dressCurator(this, { ...DEFAULT_CHARACTER, ...load('curation.character', {}) }, wornLooks()); // (people/wardrobe.js)
     this.pos = { gx: 1.0, gy: (DOOR.s0 + DOOR.s1) / 2 };
     this.player = this.add.sprite(0, 0, 'player_down').setOrigin(0.5, 1).setScale(PLAYER_SCALE);
     this.shadow = this.add.ellipse(0, 0, 16, 6, 0x000000, 0.25);

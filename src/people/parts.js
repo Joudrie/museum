@@ -17,7 +17,7 @@ export const MORE_HATS = {
   kingcrown: 'Crown', nemes: 'Pharaoh’s headcloth', greekhelm: 'Greek helmet', romanhelm: 'Roman helmet', knighthelm: 'Knight’s helmet', hennin: 'Hennin',
   jesterhat: 'Jester’s cap', tricorn: 'Tricorn', bonnet: 'Bonnet', bobby: 'Constable’s helmet', cloche: 'Cloche', norsehelm: 'Norse helmet',
   wizardhat: 'Wizard’s hat', witchhat: 'Witch’s hat', wingedhat: 'Winged hat', horns: 'Horns', santahat: 'Santa hat', elfhat: 'Elf hat',
-  bunnyears: 'Bunny ears', pumpkinhat: 'Pumpkin hat', mascothead: 'Mascot head',
+  bunnyears: 'Bunny ears', pumpkinhat: 'Pumpkin hat', mascothead: 'Mascot head', antlers: 'Antlers',
 };
 export const MORE_HAIR = {
   pompadour: 'Pompadour', slick: 'Slicked back', spiky: 'Spiky', horseshoe: 'Balding', mullet: 'Mullet', bowl: 'Bowl cut', pixie: 'Pixie',
@@ -1397,6 +1397,11 @@ const HAT_ROWS = {
       pre: [[8, 'oo'], [7, 'oQQo oooooooo'], [8, 'oQQooTTTTTTTTo']],
       rows: { 0: [8, 'oQQTTTTTTTTTTTo'], 1: 'oTTTTTTTTTTTTTTTTo' },
     },
+  },
+  // branched antlers (the Winter antlers cosmetic)
+  antlers: {
+    down: { pre: [[7, 'oTooTo      oTooTo'], [7, 'oTTTTo      oTTTTo'], [8, 'oTTo        oTTo'], [9, 'oTTo      oTTo']] },
+    side: { pre: [[12, 'oTooTo'], [12, 'oTTTTo'], [13, 'oTTo'], [14, 'oTTo']] },
   },
   // curved horns from the temples (the Minotaur)
   horns: {
