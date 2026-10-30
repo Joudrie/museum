@@ -74,7 +74,7 @@ const check = (c, good, bad) => (c ? ok(good) : fail(bad));
   check(!(await vis('#phone-btn')), 'no phone until a friend gives you their number', 'phone shows with no friends');
   await pg.evaluate(() => [...document.querySelectorAll('#debug-panel button')].find((x) => x.textContent === 'friends: all numbers').click());
   await pg.evaluate(() => (document.getElementById('debug-panel').style.display = 'none'));
-  await pg.waitForTimeout(1300);
+  await pg.waitForFunction(() => { const e = document.querySelector('#phone-btn'); return e && !e.classList.contains('hidden'); }, null, { timeout: 6000 }).catch(() => {});
   check(await vis('#phone-btn'), 'then a Phone button under the Journal', 'no phone button');
   await pg.click('#phone-btn');
   await pg.waitForTimeout(300);
