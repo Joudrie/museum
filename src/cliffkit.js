@@ -236,6 +236,16 @@ export function addCliffKits(add, { pixels, tnoise, hash, hex, T }) {
     };
     add(`${kit.id}_boulder_s`, boulder(T, T, 16, 20, 8, 6, 1), { group: 'Rocks', label: `${kit.name} stone`, walk: 'block' });
     add(`${kit.id}_boulder_m`, boulder(T, T, 16, 18, 13, 10, 2), { group: 'Rocks', label: `${kit.name} boulder`, walk: 'block' });
+    // a cave mouth in the same rock (2×2), the brown kit's is the older `cave` in tiles.js
+    if (kit.id === 'gcliff')
+      add(`${kit.id}_cave`, pixels(2 * T, 2 * T, (x, y) => {
+        const cx = x - 31.5;
+        const cy = y - 44;
+        const r = Math.hypot(cx / 22, cy / 26);
+        if (y > 44 && Math.abs(cx) < 22) return y > 58 ? hex('#141518') : hex('#0b0c0e');
+        if (r < 1) return r > 0.92 ? OUTC : r > 0.8 ? P[0] : hex('#0b0c0e');
+        return rock(x % T, y % T);
+      }), { group: kit.group, label: `${kit.name} cave (2×2)`, w: 2 * T, h: 2 * T, walk: 'walk' });
     add(`${kit.id}_boulder_l`, boulder(2 * T, 2 * T, 32, 36, 27, 21, 3), { group: 'Rocks', label: `${kit.name} boulder (2×2)`, w: 2 * T, h: 2 * T, walk: 'block' });
   });
 }

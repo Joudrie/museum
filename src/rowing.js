@@ -11,6 +11,8 @@ const T = 32;
 const BUMP = 0.28; // seconds of pushing into the water before the question
 const OUT = '#2a1a14';
 const DIRS = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
+const LEFT = {}; // where you left your boat on each island (this session)
+const spot = (s) => s.mapId ?? s.map?.name ?? 'one';
 
 // ---------- the boat, drawn once: a hull from the side (left/right) and end on (up/down) ----------
 function hullPixels(w, h, along) {
@@ -188,20 +190,56 @@ export class Rowing {
     );
   }
 
-  /** From the boat menu: get in on the nearest open water around you. False if there is none close by. */
-  launch() {
-    const p = this.s.player;
-    if (this.on || this.busy || !this.allowed()) return false;
-    for (let r = 20; r < 200; r += 6)
-      for (let a = 0; a < Math.PI * 2; a += Math.PI / 16) {
-        const wx = p.x + Math.cos(a) * r;
-        const wy = p.y + Math.sin(a) * r;
-        if (this.wet(wx, wy - 4) && this.free(wx, wy)) {
-          this.board(wx, wy);
-          return true;
-        }
+  // ---------- your own boat, tied up by the shore ----------
+  // Every island has one small boat that is yours from the start (the boats at the dock
+  // sail to other islands). It waits on the water by the shore near the dock (or where you
+  // come out), you hop in to row about, and when you climb out it stays where you left it.
+  moorAt(x, y, face = 'left') {
+    const s = this.s;
+    this.unmoor();
+    const sideways = face === 'left' || face === 'right';
+    const key = sideways ? 'row_side' : 'row_end';
+    const shape = sideways ? SHAPES.side : SHAPES.end;
+    const top = Math.round(y - shape.seatY + 2);
+    const img = s.add.image(Math.round(x), top, key).setOrigin(0.5, 0).setDepth(y);
+    this.moored = { x, y, top, img, face };
+    LEFT[spot(s)] = { x, y, face };
+  }
+
+  unmoor() {
+    this.moored?.img.destroy();
+    this.moored = null;
+  }
+
+  // the first time on an island: open water right by the shore, near the dock (or where you come out)
+  placeBoat() {
+    const s = this.s;
+    const saved = LEFT[spot(s)];
+    if (saved && this.free(saved.x, saved.y)) return this.moorAt(saved.x, saved.y, saved.face);
+    const docks = s.boats || [];
+    const dock = docks.find((b) => !b.virtual); // (beside the dock: it opens onto the sea)
+    const from = dock || (s.door ? { x: s.door.x, y: s.door.y + 22 } : { x: s.player.x, y: s.player.y });
+    let best = null;
+    for (let ty = 0; ty < this.H; ty++)
+      for (let tx = 0; tx < this.W; tx++) {
+        const x = tx * T + 16;
+        const y = ty * T + 20;
+        const d = Math.hypot(x - from.x, y - from.y);
+        if (best && d >= best.d) continue;
+        if (docks.some((b) => !b.virtual && Math.hypot(x - b.x, y - b.y) < 96)) continue; // (not in among the dock's boats)
+        if (!this.free(x, y)) continue;
+        // a shore you can step off from, beside it
+        const shore = Object.entries(DIRS).find(([, [dx, dy]]) => [24, 32].some((k) => s.walkFree(x + dx * k, y + dy * k)));
+        if (shore) best = { x, y, d, face: shore[0] === 'up' || shore[0] === 'down' ? 'left' : 'down' };
       }
-    return false;
+    if (best) this.moorAt(best.x, best.y, best.face);
+  }
+
+  /** Interact with your own boat: hop in where it is. */
+  boardMoored() {
+    const m = this.moored;
+    if (!m || this.on || this.busy || !this.allowed()) return;
+    this.board(m.x, m.y);
   }
 
   // ---------- getting in and out ----------
@@ -235,6 +273,7 @@ export class Rowing {
 
   board(wx, wy) {
     const s = this.s;
+    this.unmoor(); // (your boat comes to you)
     // the boat waits on the water where you'll land, then you hop in
     this.on = true;
     this.makeBoat(wx, wy);
@@ -260,10 +299,9 @@ export class Rowing {
     this.on = false;
     this.bump = 0;
     s.player.setOrigin(0.5, 1);
-    // the boat stays where it is, bobs a moment at the shore, then fades
-    const parts = [this.hull, this.front, this.oarsBack, this.oarsFront].filter(Boolean);
-    this.hull = this.front = this.oarsBack = this.oarsFront = null;
-    s.tweens.add({ targets: parts, alpha: 0, delay: 700, duration: 600, onComplete: () => parts.forEach((g) => g.destroy()) });
+    // the boat stays where you left it, tied up by the shore, ready for next time
+    this.destroyBoat();
+    this.moorAt(bx, by, s.facing === 'left' || s.facing === 'right' ? 'left' : 'down');
     this.hop(lx, ly, () => {
       s.shadow?.setVisible(true);
       if (s.pet) {
@@ -297,6 +335,10 @@ export class Rowing {
   // ---------- each frame while afloat ----------
   /** Draws the boat, oars, wake and the rower; returns true while rowing (IslandScene skips walking frames). */
   update(dt, moving) {
+    if (this.moored) {
+      this.t += dt;
+      this.moored.img.y = this.moored.top + Math.round(Math.sin(this.t * 2) * 1); // it bobs on its rope
+    }
     if (!this.hull) return false;
     this.t += dt;
     if (moving) this.stroke += dt * 7; // (when you stop, the oars stay where they are)
@@ -390,6 +432,7 @@ export class Rowing {
 
   destroy() {
     this.destroyBoat();
+    this.unmoor();
     closeRowAsk();
     this.on = false;
   }

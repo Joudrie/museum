@@ -207,7 +207,9 @@ export class IslandScene extends Phaser.Scene {
     this.row = null;
     const visit = (this.visit = (this.visit || 0) + 1);
     import('./rowing.js').then(({ Rowing }) => {
-      if (this.visit === visit) this.row = new Rowing(this, { W, H }); // walk into the water to row
+      if (this.visit !== visit) return;
+      this.row = new Rowing(this, { W, H }); // your own little boat by the shore (or walk into the water to row)
+      if (this.row.allowed()) this.row.placeBoat();
     });
     if (ch.pet && ch.pet !== 'none') this.pet = new Pet(this, ch.pet, ch.petColor, this.player);
     this.doorLock = this.spawnAt !== 'cottage' && this.spawnAt !== 'dock'; // don't walk straight back in
@@ -1548,8 +1550,6 @@ export class IslandScene extends Phaser.Scene {
     if (this.leaving) return;
     const here = this.map?.name;
     const options = [];
-    // your own rowboat, from the very start: hop in by the dock and row about this island's water
-    if (this.row?.allowed()) options.push({ label: 'Take the boat out', sub: 'Row anywhere on this island’s water', go: { row: true } });
     if (this.mapId !== 'main') options.push({ label: 'Main Island', sub: 'Home: the museum’s island', go: { map: 'main', spawn: 'dock' } });
     if (this.map) options.push({ label: 'Island One', sub: 'The first island (museum shut)', go: { map: 'one', spawn: 'dock' } });
     Object.entries(MAPS).forEach(([id, m]) => id !== 'main' && !id.startsWith('exp-') && id !== this.mapId && options.push({ label: m.name === 'Untitled island' ? 'The far isle' : m.name, sub: 'An island to explore', go: { map: id } }));
@@ -1579,7 +1579,6 @@ export class IslandScene extends Phaser.Scene {
       this.paused = false;
       if (!pick) return;
       if (pick.go.leads) return this.readLeads();
-      if (pick.go.row) return this.row?.launch() || this.toast('No open water near the boat.');
       this.setSail(pick.go);
     });
   }
@@ -1639,6 +1638,8 @@ export class IslandScene extends Phaser.Scene {
     if (this.map) {
       // by a boat, or back where you stepped off
       // (a boat is long: face its nearest point, so standing alongside it counts)
+      const m = !this.row?.on && this.row?.moored;
+      if (m) consider(44, Math.hypot(x - m.x, y - m.y), { skiff: true, icon: 'boat' }, Math.min(Math.max(x, m.x - 16), m.x + 16), m.y);
       this.boats.forEach((b) => consider(64, Math.hypot(x - b.x, y - b.y), { boat: true, icon: 'door' }, Math.min(Math.max(x, b.x - 20), b.x + 20), b.y));
       if (this.landingSpot) consider(36, Math.hypot(x - this.landingSpot.x, y - this.landingSpot.y), { boat: true, icon: 'door' }); // (where you stepped off: an area, no facing needed)
       if (this.door) consider(30, Math.hypot(x - this.door.x, y - (this.door.y + 4)), { door: true, icon: 'door' }, this.door.x, this.door.y);
@@ -1661,6 +1662,7 @@ export class IslandScene extends Phaser.Scene {
     const over = (s, n) => ({ x: s.x, y: headY(s) - (n?.emoteImg?.active ? 18 : 6) });
     if (f.npc || f.animal) return over((f.npc || f.animal).s, f.npc || f.animal);
     if (f.pet) return over(this.pet.s);
+    if (f.skiff) return this.row?.moored ? { x: this.row.moored.x, y: this.row.moored.top - 8 } : null;
     if (f.boat) {
       const { x, y } = this.player;
       const b = this.boats.reduce((m, o) => (!m || Math.hypot(x - o.x, y - o.y) < Math.hypot(x - m.x, y - m.y) ? o : m), null);
@@ -1684,6 +1686,7 @@ export class IslandScene extends Phaser.Scene {
     if (f.dig) return 'Dig';
     if (f.npc) return this.talkingTo === f.npc || (talking() && this.bubbleNpc === f.npc) ? 'Bye' : 'Talk';
     if (f.animal || f.pet) return 'Pet';
+    if (f.skiff) return 'Hop in';
     if (f.boat) return 'Sail';
     if (f.door || f.cottage) return 'Enter';
     if (f.locked) return 'Try door';
@@ -1713,6 +1716,7 @@ export class IslandScene extends Phaser.Scene {
     if (!f || this.leaving || this.paused) return; // (a panel or the hop into the rowboat is under way)
     if (chatOpen()) return; // a conversation is up (walk away or say bye to end it)
     if (this.fishing.busy) return this.fishing.tap();
+    if (f.skiff) return this.row?.boardMoored();
     if (f.boat) return this.sail();
     if (f.door) return this.goInside();
     if (f.locked) return this.toast('The doors are locked. The museum is on Main Island now.');

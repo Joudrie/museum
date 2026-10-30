@@ -27,6 +27,8 @@ const AMBIENT = [
   [24, 74, 70, 112],
 ];
 const DAY = [244, 240, 232]; // with day/night off: a bright museum afternoon
+// Indoors the ceiling lights are always on: after dark the rooms dim only a little (user, 30 Oct)
+const INDOOR = [226, 218, 206];
 const WARM = 0xffc888;
 const PICTURE = 0xffe2b0;
 const POLISHED = ['marble', 'tile', 'checker', 'checker-angled', 'terrazzo', 'slate', 'penny', 'hex', 'encaustic', 'mosaic', 'concrete'];
@@ -194,7 +196,7 @@ export class Lighting {
     this.glow = null;
     this.motes.forEach((m) => m.img.destroy());
     this.motes = [];
-    this.ambient = settings().dayNight ? overcast(ambientAt(hourNow())) : DAY;
+    this.ambient = settings().dayNight ? overcast(ambientAt(hourNow())).map((v, i) => Math.max(v, INDOOR[i])) : DAY;
     const dark = this.dark;
     const lights = [];
     const add = (l) => lights.push({ strength: 1, color: WARM, flicker: 0, ...l, strength: (l.strength ?? 1) * (0.45 + 0.55 * dark) });

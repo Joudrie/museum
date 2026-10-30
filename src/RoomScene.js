@@ -1467,7 +1467,7 @@ export class RoomScene extends Phaser.Scene {
       if (stars >= 4) pools.push(CONTEXT.great);
       if (stars <= 1.5) pools.push(CONTEXT.poor);
     }
-    if (this.lighting.dark > 0.6) pools.push(CONTEXT.night);
+    if (timeOfDay(hourNow()) === 'night') pools.push(CONTEXT.night);
     const h = hourNow();
     if (h >= 6 && h < 9.5) pools.push(CONTEXT.morning);
     if (!pools.length) return null;
