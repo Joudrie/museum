@@ -276,6 +276,12 @@ island scene streams ground chunks around the player.
 - **Caves**: brown `cave` (tiles.js) and grey `gcliff_cave` (cliffkit.js, the grey cliffs' rock), both under the Caves heading in the builder.
 - **Character:** color rows follow what the outfit draws (`personRows`); outfits with no shirt or trim get a second color (`ACCENT_OUTFITS`, letter `u`, drawn only when `look.second`); "pick your own" is the in-game wheel in `src/colorwheel.js`. Bubbles and lily pads can only sit on water (game and builder).
 
+### Progression evidence (Chat 18: `docs/progression/`, `src/measure/`)
+- **Read `docs/progression/REPORT.md` before building or tuning any progression feature.** It measures the build as it is (with the progression layer), models it by playing the layer's own code (`models/montecarlo.mjs`), and pre-registers the tests a design must pass (`hypotheses.md`).
+- **Every save and every bus event is logged:** `onSave` in `src/storage.js` feeds `src/measure/derive.js`; `src/measure/layer.js` copies the progression layer's bus events; both land in one log on the phone (`curation.evlog`, `src/measure/events.js`, each type with a kind: novelty, progress, meter, payout). New systems get measured for free; `?evlog` shows a panel to copy or share the log.
+- **Build flags:** `?progression=off` is the strip test (the layer's rank, goals, payouts, daily layer, unlock pacing and cards go quiet, and the older goals and dailies too; saved per phone, `?progression=on` clears); `?flags=-rank`, `-daily`, `-goals`, `-unlocks`, `-payouts`, `-fanfare`, `-variants` switch one system. The hooks are one guarded line each (listed in TODO.md under Chat 18) and do nothing without a link.
+- **Telemetry** (`src/measure/telemetry.js`) is off for everyone until a PostHog key is filled in, and then only for beta players who say yes (`?beta=1`). Models: `python3 docs/progression/run_all.py`. Test: `node tests/measure.cjs` (in `npm test`).
+
 ### Aesthetics audit (29 Oct 2026)
 - `docs/AESTHETICS-AUDIT.md`: 860 visual flaws found for the overhaul (none fixed; a second pass covered main up to #195), with the cross-cutting problems, quick bugs that look like art problems, and a redesign order. Per-area detail with code locations and screenshots in `docs/aesthetics/` (people, terrain/water, structures, interiors, creatures/items, ui). IDs P-, T-, S-, R-, C-, U-.
 - Read it before redrawing anything: it says what each sprite should become (e.g. P-23/P-24 glasses, S-45 scarecrow, S-51 fountain statues).

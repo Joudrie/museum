@@ -3,6 +3,7 @@
 // a perk that changes how the activity feels (data/skills.json).
 import { TUNING } from './config.js';
 import skillData from './data/skills.json' with { type: 'json' };
+import { unlockAll } from '../measure/flags.js';
 
 export const SKILLS = skillData;
 export const skillIds = () => Object.keys(SKILLS);
@@ -44,7 +45,7 @@ export function addSkillXp(state, id, amount, T = TUNING) {
 
 /** Every perk this skill has unlocked at its current level. */
 export function perksOf(state, id) {
-  const lv = levelFor(state, id);
+  const lv = unlockAll() ? Infinity : levelFor(state, id); // (unlockAll: the ?progression=off strip test)
   return SKILLS[id].levels.filter((l) => l.level <= lv && l.perk).map((l) => l.perk);
 }
 /** All perk ids held, as "skill.perk" strings. */

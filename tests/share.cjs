@@ -96,7 +96,7 @@ async function browserChecks() {
   check(!/coin|gold|character|name":"[^T]/i.test(JSON.stringify(snap).replace(/Test Museum/g, '')), 'snapshot holds nothing personal', 'snapshot leaks: ' + JSON.stringify(snap));
 
   // a friend's museum: visiting never touches our own save
-  const before = await ev(() => JSON.stringify(Object.keys(localStorage).filter((k) => k !== 'curation.friends' && k !== 'curation.daily').sort().map((k) => [k, localStorage.getItem(k)])));
+  const before = await ev(() => JSON.stringify(Object.keys(localStorage).filter((k) => k !== 'curation.friends' && k !== 'curation.daily' && k !== 'curation.evlog').sort().map((k) => [k, localStorage.getItem(k)])));
   const friend = { v: 1, n: 'Ada’s Gallery', s: 72, r: [{ n: 'Front room', p: ['harvesters', 'no-such-painting'], d: { bench: 2, tree: 1 } }] };
   await ev(async (f) => window.__share.receive(f), JSON.stringify(friend));
   await page.waitForTimeout(400);
@@ -109,7 +109,7 @@ async function browserChecks() {
   await page.click('#viewer .viewer-close');
   await page.waitForTimeout(300);
   await page.click('#visit .wide-btn');
-  const after = await ev(() => JSON.stringify(Object.keys(localStorage).filter((k) => k !== 'curation.friends' && k !== 'curation.daily').sort().map((k) => [k, localStorage.getItem(k)])));
+  const after = await ev(() => JSON.stringify(Object.keys(localStorage).filter((k) => k !== 'curation.friends' && k !== 'curation.daily' && k !== 'curation.evlog').sort().map((k) => [k, localStorage.getItem(k)])));
   check(before === after, 'visiting leaves your own save untouched', 'visit changed the save');
   check(await ev(() => JSON.parse(localStorage.getItem('curation.friends')).museums.length === 1), 'friend kept in the list', 'friend not kept');
 

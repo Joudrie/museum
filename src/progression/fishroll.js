@@ -4,6 +4,7 @@ import { TUNING } from './config.js';
 import { allSpecies, regionInfo } from './species.js';
 import BAITS from './data/baits.json' with { type: 'json' };
 import LURES from './data/lures.json' with { type: 'json' };
+import { flagOn } from '../measure/flags.js';
 
 export { BAITS, LURES };
 
@@ -152,6 +153,7 @@ function finish(state, s, o, T) {
 
 /** Variants roll on every catch, independent of the species. */
 export function rollVariant(rng, ctx, T = TUNING) {
+  if (!flagOn('variants')) return ''; // ?flags=-variants (H9 in docs/progression/hypotheses.md)
   const v = T.fishing.variants;
   if (rng.chance(v.golden)) return 'golden';
   if (rng.chance(v.albino)) return 'albino';

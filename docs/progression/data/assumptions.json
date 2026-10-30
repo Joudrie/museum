@@ -1,0 +1,130 @@
+{
+ "generated": "docs/progression/models/common.py",
+ "seed": 20261029,
+ "assumptions": {
+  "cast_overhead_s": 4.478999999999999,
+  "dig_s": 41.838499999999996,
+  "talk_s": 45.0,
+  "hunt_s": 90.0,
+  "expedition_min": 10.0,
+  "pleased_share": 0.3,
+  "gift_find_share": 0.5,
+  "start_offsets_days": {
+   "autumn start (today)": 0,
+   "spring start": 154
+  },
+  "sail_min": 1.0,
+  "named_talk_s": 30.0,
+  "explore_find_mean_min": 12.0,
+  "chunks_per_explore_min": 2,
+  "chunks_per_island": 30,
+  "forage_per_explore_min": 0.5
+ },
+ "profiles": {
+  "casual": {
+   "play_prob": 0.7,
+   "sessions": [
+    [
+     19,
+     23
+    ]
+   ],
+   "session_min": 12,
+   "talks": 2,
+   "expedition_every": 3,
+   "fail": 0.08,
+   "smart": false,
+   "islands": [
+    "main-island"
+   ],
+   "hunt_islands": [
+    "main-island"
+   ],
+   "opens_boat_session": 2,
+   "skill": 0.45,
+   "older_share": 0.4,
+   "explore_share": 0.1,
+   "hot_share": 0.12,
+   "roam": 0.3
+  },
+  "regular": {
+   "play_prob": 0.9,
+   "sessions": [
+    [
+     12,
+     14
+    ],
+    [
+     19,
+     23
+    ]
+   ],
+   "session_min": 18,
+   "talks": 3,
+   "expedition_every": 2,
+   "fail": 0.05,
+   "smart": true,
+   "islands": [
+    "main-island",
+    "one"
+   ],
+   "hunt_islands": [
+    "main-island"
+   ],
+   "opens_boat_session": 1,
+   "skill": 0.65,
+   "older_share": 0.35,
+   "explore_share": 0.1,
+   "hot_share": 0.5,
+   "roam": 1.0
+  },
+  "heavy": {
+   "play_prob": 1.0,
+   "sessions": [
+    [
+     7,
+     10
+    ],
+    [
+     13,
+     17
+    ],
+    [
+     21,
+     24
+    ]
+   ],
+   "session_min": 30,
+   "talks": 4,
+   "expedition_every": 1,
+   "fail": 0.03,
+   "smart": true,
+   "islands": [
+    "main-island",
+    "one",
+    "isle-1"
+   ],
+   "hunt_islands": [
+    "main-island",
+    "isle-1"
+   ],
+   "opens_boat_session": 1,
+   "skill": 0.85,
+   "older_share": 0.3,
+   "explore_share": 0.1,
+   "hot_share": 0.6,
+   "roam": 1.0
+  }
+ },
+ "measured": {
+  "source": "data/logs/scripted-session.json",
+  "when": "2026-10-29T22:40:20.391Z",
+  "casts": 123,
+  "digs": 4,
+  "cast_cycle_s": 18.674,
+  "reel_s": 7.769,
+  "cast_overhead_s": 4.478999999999999,
+  "escaped_share": 0.0,
+  "brush_s": 15.8385
+ }
+}

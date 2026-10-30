@@ -1,0 +1,217 @@
+{
+ "generated": "docs/progression/tools/reel_skill.mjs",
+ "fights_per_cell": 4000,
+ "zone": 0.26,
+ "cells": [
+  {
+   "rarity": 1,
+   "skill": 0,
+   "win": 0.964,
+   "perfect": 0.02,
+   "seconds": 13.4
+  },
+  {
+   "rarity": 1,
+   "skill": 0.25,
+   "win": 0.986,
+   "perfect": 0.03,
+   "seconds": 12.2
+  },
+  {
+   "rarity": 1,
+   "skill": 0.45,
+   "win": 0.999,
+   "perfect": 0.074,
+   "seconds": 10.5
+  },
+  {
+   "rarity": 1,
+   "skill": 0.65,
+   "win": 1,
+   "perfect": 0.186,
+   "seconds": 8.2
+  },
+  {
+   "rarity": 1,
+   "skill": 0.85,
+   "win": 1,
+   "perfect": 0.508,
+   "seconds": 6
+  },
+  {
+   "rarity": 1,
+   "skill": 1,
+   "win": 1,
+   "perfect": 0.714,
+   "seconds": 5.2
+  },
+  {
+   "rarity": 2,
+   "skill": 0,
+   "win": 0.813,
+   "perfect": 0.018,
+   "seconds": 15.3
+  },
+  {
+   "rarity": 2,
+   "skill": 0.25,
+   "win": 0.89,
+   "perfect": 0.026,
+   "seconds": 14.3
+  },
+  {
+   "rarity": 2,
+   "skill": 0.45,
+   "win": 0.967,
+   "perfect": 0.061,
+   "seconds": 12.6
+  },
+  {
+   "rarity": 2,
+   "skill": 0.65,
+   "win": 0.993,
+   "perfect": 0.149,
+   "seconds": 10.1
+  },
+  {
+   "rarity": 2,
+   "skill": 0.85,
+   "win": 1,
+   "perfect": 0.365,
+   "seconds": 7.4
+  },
+  {
+   "rarity": 2,
+   "skill": 1,
+   "win": 1,
+   "perfect": 0.55,
+   "seconds": 6.3
+  },
+  {
+   "rarity": 3,
+   "skill": 0,
+   "win": 0.527,
+   "perfect": 0.013,
+   "seconds": 16.4
+  },
+  {
+   "rarity": 3,
+   "skill": 0.25,
+   "win": 0.661,
+   "perfect": 0.022,
+   "seconds": 15.8
+  },
+  {
+   "rarity": 3,
+   "skill": 0.45,
+   "win": 0.819,
+   "perfect": 0.042,
+   "seconds": 14.8
+  },
+  {
+   "rarity": 3,
+   "skill": 0.65,
+   "win": 0.939,
+   "perfect": 0.089,
+   "seconds": 12.9
+  },
+  {
+   "rarity": 3,
+   "skill": 0.85,
+   "win": 0.995,
+   "perfect": 0.234,
+   "seconds": 9.6
+  },
+  {
+   "rarity": 3,
+   "skill": 1,
+   "win": 1,
+   "perfect": 0.388,
+   "seconds": 8.1
+  },
+  {
+   "rarity": 4,
+   "skill": 0,
+   "win": 0.234,
+   "perfect": 0.008,
+   "seconds": 15.2
+  },
+  {
+   "rarity": 4,
+   "skill": 0.25,
+   "win": 0.357,
+   "perfect": 0.013,
+   "seconds": 15.6
+  },
+  {
+   "rarity": 4,
+   "skill": 0.45,
+   "win": 0.502,
+   "perfect": 0.029,
+   "seconds": 15.7
+  },
+  {
+   "rarity": 4,
+   "skill": 0.65,
+   "win": 0.721,
+   "perfect": 0.048,
+   "seconds": 15.3
+  },
+  {
+   "rarity": 4,
+   "skill": 0.85,
+   "win": 0.942,
+   "perfect": 0.145,
+   "seconds": 12.7
+  },
+  {
+   "rarity": 4,
+   "skill": 1,
+   "win": 0.98,
+   "perfect": 0.225,
+   "seconds": 11
+  },
+  {
+   "rarity": 5,
+   "skill": 0,
+   "win": 0.052,
+   "perfect": 0.008,
+   "seconds": 11.2
+  },
+  {
+   "rarity": 5,
+   "skill": 0.25,
+   "win": 0.087,
+   "perfect": 0.01,
+   "seconds": 12.2
+  },
+  {
+   "rarity": 5,
+   "skill": 0.45,
+   "win": 0.142,
+   "perfect": 0.018,
+   "seconds": 13.2
+  },
+  {
+   "rarity": 5,
+   "skill": 0.65,
+   "win": 0.277,
+   "perfect": 0.032,
+   "seconds": 14.8
+  },
+  {
+   "rarity": 5,
+   "skill": 0.85,
+   "win": 0.558,
+   "perfect": 0.078,
+   "seconds": 15.2
+  },
+  {
+   "rarity": 5,
+   "skill": 1,
+   "win": 0.728,
+   "perfect": 0.114,
+   "seconds": 14.8
+  }
+ ]
+}

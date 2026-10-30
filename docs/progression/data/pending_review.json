@@ -1,0 +1,19 @@
+{
+ "span_days": 9,
+ "first_day": "2026-10-21",
+ "last_day": "2026-10-29",
+ "prs_merged": 184,
+ "totals_added": {
+  "collection entry": 115,
+  "dialogue line": 653,
+  "map file": 9,
+  "decor item": 88
+ },
+ "pending_review": {
+  "painting drafts": 82,
+  "archaeology drafts": 25,
+  "painting of the day lines": 69,
+  "rarity proposals (paintings)": 49,
+  "image proposals": 11
+ }
+}
