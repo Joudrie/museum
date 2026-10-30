@@ -14,6 +14,7 @@ import { animateWalker, dust } from './motion.js';
 import { sfx } from './music.js';
 import { T } from './tiles.js';
 import { Reader, TailDog, Dozer, Jogger } from './vignettes2.js';
+import { Bubbles, Picnic, Juggler, BirdFeeder, SkipRope, Catch, Butterfly, Guitarist, Snowman } from './vignettes3.js';
 
 const TAU = Math.PI * 2;
 const pickOf = (a, r) => a[Math.floor(r * a.length) % a.length];
@@ -573,5 +574,88 @@ export function buildVignettes(scene, { season, weather, night, day }) {
       }
     }
   }
+
+  // and a handful more each day, picked from whatever suits the weather (src/vignettes3.js)
+  const dry = !rain && weather !== 'snow';
+  const snowy = season === 'winter' || weather === 'snow';
+  const extra = [
+    dry && (() => {
+      const at = spot({ near: 5, far: 14, r: 24 });
+      if (!at) return;
+      const n = addPerson(scene, { id: 'bubbles', kind: 'kid', seed: 241, x: at.x, y: at.y, name: pickOf(['Poppy', 'Otis', 'Bea'], rnd()), label: 'Kid', lines: ['Bubbles! Catch one! No, don’t, it’ll pop.', 'The big ones are the best. They wobble.', 'I made one as big as my head once. Nobody saw.', 'Pop! That one was yours.'] });
+      n.script = new Bubbles(scene, n);
+      out.push(n);
+    }),
+    dry && !snowy && (() => {
+      const at = spot({ near: 5, far: 14, r: 34 });
+      if (!at) return;
+      const names = pickOf([['Ada', 'Bo'], ['June', 'Felix'], ['Rosa', 'Nell']], rnd());
+      const lines = ['Sandwich? We made too many. We always make too many.', 'Best spot on the whole island. Don’t tell anyone.', 'We do this every week. Rain or shine. Well. Shine.', 'Mind the ants. They were invited, apparently.'];
+      const a = addPerson(scene, { id: 'picnic0', kind: 'casual', seed: 260, x: at.x - 14, y: at.y, name: names[0], label: 'Picnicker', lines });
+      const b = addPerson(scene, { id: 'picnic1', kind: 'couple', seed: 271, x: at.x + 14, y: at.y, name: names[1], label: 'Picnicker', lines });
+      a.home = b.home = { x: at.x, y: at.y };
+      const pic = new Picnic(scene, a, b);
+      a.script = b.script = { update: (dt) => pic.update(dt) };
+      out.push(a, b);
+    }),
+    !rain && (() => {
+      const at = spot({ near: 5, far: 14, r: 26 });
+      if (!at) return;
+      const n = addPerson(scene, { id: 'juggler', kind: 'artist', seed: 288, x: at.x, y: at.y, name: pickOf(['Pierrot', 'Lulu', 'Marco'], rnd()), label: 'Juggler', lines: ['Three balls is easy. Four is where it gets personal.', 'I’m practising for the museum’s summer fair. They haven’t asked yet.', 'Don’t watch my hands. Watch the balls. Actually, don’t watch at all.', 'Dropping them is part of the act. Mostly.'], colors: { c: '#8a5aa8', p: '#2e3a4e' } });
+      n.script = new Juggler(scene, n);
+      out.push(n);
+    }),
+    !rain && (() => {
+      const at = spot({ near: 5, far: 14, r: 36 });
+      if (!at) return;
+      const n = addPerson(scene, { id: 'birds', kind: 'elder', seed: 301, x: at.x, y: at.y, name: pickOf(['Agnes', 'Clem', 'Ottilie'], rnd()), label: 'Bird lover', lines: ['Shh, slowly. They’re shy.', 'That one with the speckles is Gerald. He’s greedy.', 'Sparrows. Same three every morning. I think they know me.', 'Birds are the last dinosaurs, you know. Little feathery ones.'], colors: { c: '#7a8a5a', h: '#e8e4dc' } });
+      n.script = new BirdFeeder(scene, n, rnd() < 0.5 ? 1 : -1);
+      out.push(n);
+    }),
+    dry && (() => {
+      const at = spot({ near: 5, far: 14, r: 22 });
+      if (!at) return;
+      const n = addPerson(scene, { id: 'skipper', kind: 'kid', seed: 317, x: at.x, y: at.y, name: pickOf(['Hattie', 'Sol', 'Ines'], rnd()), label: 'Kid', lines: ['Eleven, twelve, thir-- aw.', 'My record’s fifty. Well. Twenty. It was windy.', 'Want a go? You have to jump when it’s at your feet.', 'Cinderella, dressed in yella...'] });
+      n.script = new SkipRope(scene, n);
+      out.push(n);
+    }),
+    !rain && (() => {
+      const at = spot({ near: 6, far: 14, r: 40 });
+      if (!at || !scene.lineFree(at.x - 34, at.y, at.x + 34, at.y)) return;
+      const lines = ['Over here! Over here!', 'Bet you can’t catch it one-handed.', 'We’ve been going for an hour. Nobody’s dropped it. Nobody.', 'Throw it higher!'];
+      const a = addPerson(scene, { id: 'catch0', kind: 'kid', seed: 333, x: at.x - 34, y: at.y, name: pickOf(['Max', 'Ivy'], rnd()), label: 'Kid', lines });
+      const b = addPerson(scene, { id: 'catch1', kind: 'kid', seed: 347, x: at.x + 34, y: at.y, name: pickOf(['Ned', 'Lou'], rnd()), label: 'Kid', lines });
+      const c = new Catch(scene, a, b);
+      a.script = b.script = { update: (dt) => c.update(dt) };
+      out.push(a, b);
+    }),
+    dry && (season === 'spring' || season === 'summer') && (() => {
+      const at = spot({ near: 6, far: 15, r: 46, apart: 130 });
+      if (!at) return;
+      const n = addPerson(scene, { id: 'chaser', kind: 'kid', seed: 359, x: at.x, y: at.y, name: pickOf(['Daisy', 'Arlo', 'Kiko'], rnd()), label: 'Kid', lines: ['It landed on my nose once! For one second!', 'I’m not catching it. Just following.', 'It’s yellow. No, it’s more like… sunshine.', 'Shh! You’ll scare it!'] });
+      n.script = new Butterfly(scene, n, 34);
+      out.push(n);
+    }),
+    !rain && (() => {
+      const at = spot({ near: 5, far: 14, r: 24 });
+      if (!at) return;
+      const n = addPerson(scene, { id: 'guitar', kind: 'student', seed: 373, x: at.x, y: at.y, name: pickOf(['Jules', 'Remy', 'Sage'], rnd()), label: 'Busker', lines: ['Any requests? I know four songs. Three, really.', 'This one’s about the sea. They’re all about the sea.', 'Tips go in the hat! Or compliments. Compliments are free.', 'I wrote this one in the museum café.'] });
+      n.script = new Guitarist(scene, n);
+      out.push(n);
+    }),
+    snowy && (() => {
+      const at = spot({ near: 5, far: 14, r: 30 });
+      if (!at) return;
+      const n = addPerson(scene, { id: 'snowman', kind: 'kid', seed: 389, x: at.x, y: at.y, name: pickOf(['Flynn', 'Edie', 'Pim'], rnd()), label: 'Kid', lines: ['His name is Mr Buttons. He has no buttons.', 'The carrot was my lunch. Worth it.', 'Bigger at the bottom. That’s the whole secret.', 'He’ll melt tomorrow. I’ll make another.'], look: { hat: 'beanie' } });
+      n.script = new Snowman(scene, n, rnd() < 0.5 ? 1 : -1);
+      out.push(n);
+    }),
+  ].filter(Boolean);
+  // a different few each day
+  for (let i = extra.length - 1; i > 0; i--) {
+    const j = Math.floor(rnd() * (i + 1));
+    [extra[i], extra[j]] = [extra[j], extra[i]];
+  }
+  extra.slice(0, 5).forEach((make) => make());
   return out;
 }

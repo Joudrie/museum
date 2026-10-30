@@ -20,6 +20,7 @@ Read docs/VISION.md first: every feature should serve it. Then docs/HANDOFF.md f
 - Movement is press-and-drag only (no tap-to-walk).
 - **Never use emojis anywhere in the game's UI.** Pixel icons (`src/ui/icons.js`) or words only.
 - **Popups stay small and in the top third of the screen** unless it is a very important moment (a rank-up).
+  The one exception: **conversation boxes (a guest's chat with choices) sit at the bottom of the screen** (the user's ask).
   Speech bubbles never cover a character, follow the speaker, and close when you walk away.
 - **At most two popups on screen at once** (toasts, tips, cards, skill bars, the goal pill), and only when needed.
   A third is dropped, not queued (`src/ui/attention.js`). **No always-on progress bars:** progress shows for a

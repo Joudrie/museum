@@ -1484,7 +1484,7 @@ export class IslandScene extends Phaser.Scene {
     if (this.chatHandle) return;
     if (n.lines && !n.animal && !n.npcId) return this.sayOwnLine(n);
     n.chat?.cancel();
-    // (the game keeps running: the box sits up top, and walking away ends the talk)
+    // (the game keeps running: the box sits at the bottom, and walking away ends the talk)
     n.talking = true;
     n.target = null;
     n.after = null;

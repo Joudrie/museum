@@ -1,6 +1,6 @@
 // The conversation box: a portrait, a name, text that types out, and choices.
 // Tap the box to finish a line (or move on). Drives a generator from src/chatter.js.
-// It sits in the top third and never pauses the game: walk away and it closes (opts.leave).
+// It sits at the bottom of the screen and never pauses the game: walk away and it closes (opts.leave).
 import { sfx } from './music.js';
 import { uiIcon } from './ui/icons.js';
 import './speech.css';

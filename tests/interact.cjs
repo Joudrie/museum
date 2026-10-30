@@ -295,6 +295,7 @@ const check = (cond, good, bad) => (cond ? ok(good) : fail(bad));
     // facing nothing: Interact does nothing (no panel, no talk)
     s.player.setPosition(n.s.x - 200, n.s.y - 200);
     s.facing = 'up';
+    s.looks.clear(); // (nothing to look at either: src/examine.js)
     out.nothing = kind();
     const chatHidden = () => !document.querySelector('#chat') || document.querySelector('#chat').classList.contains('hidden'); // (it is made the first time anyone talks)
     s.focus = s.findFocus();
