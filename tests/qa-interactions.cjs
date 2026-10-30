@@ -297,6 +297,8 @@ const check = (cond, good, bad) => (cond ? ok(good) : fail(bad));
     await wait(500);
     const menu = await p.evaluate(() => !!document.querySelector('.sail-dest'));
     check(menu, 'the boat asks where to', 'no destination list');
+    const rowOpt = await p.evaluate(() => [...document.querySelectorAll('.sail-dest')].some((d) => /Take the boat out/.test(d.textContent)));
+    check(rowOpt, '"Take the boat out" is on the boat menu', 'the boat menu lost "Take the boat out"');
     await p.keyboard.press('Escape');
     await p.evaluate(() => { const c = document.querySelector('.sail-close, .sail-cancel, #sail .ui-close, #sail button[aria-label="Close"]'); c?.click(); });
     await wait(400);

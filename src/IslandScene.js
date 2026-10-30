@@ -1554,6 +1554,8 @@ export class IslandScene extends Phaser.Scene {
     if (this.leaving) return;
     const here = this.map?.name;
     const options = [];
+    // your own rowboat: row about this island's water (it also waits tied up by the shore, and walking into the water asks too)
+    if (this.row?.allowed()) options.push({ label: 'Take the boat out', sub: 'Row anywhere on this island’s water', go: { row: true } });
     if (this.mapId !== 'main') options.push({ label: 'Main Island', sub: 'Home: the museum’s island', go: { map: 'main', spawn: 'dock' } });
     if (this.map) options.push({ label: 'Island One', sub: 'The first island (museum shut)', go: { map: 'one', spawn: 'dock' } });
     Object.entries(MAPS).forEach(([id, m]) => id !== 'main' && !id.startsWith('exp-') && id !== this.mapId && options.push({ label: m.name === 'Untitled island' ? 'The far isle' : m.name, sub: 'An island to explore', go: { map: id } }));
@@ -1583,6 +1585,7 @@ export class IslandScene extends Phaser.Scene {
       this.paused = false;
       if (!pick) return;
       if (pick.go.leads) return this.readLeads();
+      if (pick.go.row) return this.row?.launch() || this.toast('No open water near the boat.');
       this.setSail(pick.go);
     });
   }

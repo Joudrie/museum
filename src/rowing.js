@@ -239,6 +239,22 @@ export class Rowing {
     if (best) this.moorAt(best.x, best.y, best.face);
   }
 
+  /** From the boat menu: your boat comes round to the nearest open water and you get in. False if there is none close by. */
+  launch() {
+    const p = this.s.player;
+    if (this.on || this.busy || !this.allowed()) return false;
+    for (let r = 20; r < 200; r += 6)
+      for (let a = 0; a < Math.PI * 2; a += Math.PI / 16) {
+        const wx = p.x + Math.cos(a) * r;
+        const wy = p.y + Math.sin(a) * r;
+        if (this.wet(wx, wy - 4) && this.free(wx, wy)) {
+          this.board(wx, wy);
+          return true;
+        }
+      }
+    return false;
+  }
+
   /** Interact with your own boat: hop in where it is. */
   boardMoored() {
     const m = this.moored;
