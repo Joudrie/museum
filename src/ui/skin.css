@@ -642,3 +642,11 @@ body select:focus-visible {
   outline: 3px solid var(--ui-gold-hi);
   outline-offset: 2px;
 }
+
+/* ---- Customize: option buttons sit on an even grid (three across), however long the names ---- */
+body #decor .choices:not(.toolkit-cats) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+  gap: var(--sp-2);
+}
+body #decor .choices:not(.toolkit-cats) button { min-width: 0; width: 100%; }
