@@ -136,7 +136,7 @@ The other chat built the first, feature-led spec. Where the evidence points now 
   cannot drift from the game's.
 - **Reproducible:** `python3 docs/progression/run_all.py` reruns everything; every simulated player and
   the layer's own dice are seeded, and `tools/check_repro.py` reruns one Monte Carlo run and compares
-  it with `data/` (not run yet).
+  it with `data/` (run 2026-10-29: casual | autumn start (today) | base: 45 metrics and 3 summaries checked; all identical).
 - **An independent check:** a separate agent that had not seen this work checked 15 code claims against the source (`data/independent_check.md`): 10 true, 4 true with a caveat, 1 partly true, none false. Its corrections are folded in (the market's Fishing-level bonus, Skull Isle's secret count), and it found the island-lookup fault in finding 1, which a browser probe then confirmed.
 - **Tests:** `node tests/measure.cjs` (in `npm test`) checks that every watched save and the layer's bus
   events become the right log events, that the strip test's hooks in the layer do what they say and
