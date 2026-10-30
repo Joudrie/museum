@@ -631,3 +631,14 @@ body .sail-qs {
   gap: var(--sp-1);
   margin-top: var(--sp-1);
 }
+
+/* ---- keyboard focus: a clear gold ring on anything you can tab to (touch users never see it) ---- */
+body button:focus-visible,
+body [role='button']:focus-visible,
+body summary:focus-visible,
+body input:focus-visible,
+body textarea:focus-visible,
+body select:focus-visible {
+  outline: 3px solid var(--ui-gold-hi);
+  outline-offset: 2px;
+}
