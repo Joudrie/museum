@@ -14,7 +14,7 @@ re-registered for it before any data. Rerun everything with `python3 docs/progre
 ### 1. Most of the layer's world never reaches the player, and four of its fish can never bite
 
 - **Off Main Island and Island One, the world layer can't find its islands.** The island scene names
-  itself by map id (`IslandScene.js:154`), and the world layer looks that up in files keyed by region
+  itself by map id (`IslandScene.js:155`), and the world layer looks that up in files keyed by region
   id. In the built game, checked in a browser (`data/world_by_island.json`): Main Island has its 12
   secrets, a legend's clue and Wen; Island One its 6, a clue and Mara; the Far Isle, Skull Isle and the
   Drowned Reef each get 3 secrets, **no clue and nobody**. So **8 of the 10 legendaries can never be
@@ -55,12 +55,17 @@ layer's long tail.
 both), let one shop buy fish, count everything that pays into the wallet when pricing, and fix the room
 count (H1) before `FREE` goes off. H15 is the beta check.
 
-### 3. The layer fills every minute with a meter; new things still thin out by week three
+### 3. A meter ticks at least every two minutes; new things still thin out by week three
 
 - **Progress ticks are constant; new things are not.** The longest stretch with no progress tick at all
-  (an XP pop, a skill bar, a card) is 2 min at P99 for a regular player, which is what the layer's
+  (an XP tick, a skill bar, a card) is 2 min at P99 for a regular player, which is what the layer's
   acceptance test measures. The longest stretch with **nothing new** in the first 10 active hours is
   34 min at the median and 59 min at P99, against a ceiling of 36 minutes.
+- **The meters have already been turned down once.** #217 (merged at the end of this work, from the user's
+  rule of 30 October) took the floating XP numbers off the screen, shows the goal pill and a skill bar only
+  near a goal or a level, and allows two popups at most. The XP, ranks, tasks and login calendar still run
+  underneath (an XP tick is now a sound), so the numbers here stand; what #217 changed is how loudly the
+  meters speak, not what they pay or how often new things come.
 - **The layer's pity can't reach those droughts.** It raises the chance of a rare or epic tier, not of
   something you lack: with it the regular player's worst droughts are only 11% shorter than without. **H8 fails** (pity has to shorten the P99 by 25%; it changes it by: casual 1% shorter, regular 11% shorter, heavy 4% shorter).
 - **Opening everything changes little.** In the strip build (every boat, rod and perk from the start, no
@@ -117,7 +122,7 @@ The other chat built the first, feature-led spec. Where the evidence points now 
 
 | Built in #195 | What the evidence says | So |
 |---|---|---|
-| Rank 1 to 50, XP for every action, rested XP | rank gates every purchase (gold is rarely short); XP pops keep the gap with no progress tick under 2 min while the drought of new things is 34 min at the median; expected, volume-contingent | test H14 (`?flags=-rank`) before adding ranks; if it fails, give the 13 rank unlocks to deeds |
+| Rank 1 to 50, XP for every action, rested XP | rank gates every purchase (gold is rarely short); XP keeps the gap with no progress tick under 2 min while the drought of new things is 34 min at the median; expected, volume-contingent; #217 took the XP numbers off the screen | test H14 (`?flags=-rank`) before adding ranks; if it fails, give the 13 rank unlocks to deeds |
 | 72 fish species with conditions, baits and hot spots | a regular player has 50 species by day 90; 4 can never bite | keep; fix the four |
 | The reel | a real skill gradient: an epic fish is landed 23% of the time at no skill and 98% at full skill | keep: fishing gained the depth diagnosis.md asked for |
 | Pity (rare and epic ramps, the legendary hazard) | with the ramps the worst droughts are only 11% shorter (H8) | harmless; not the answer to droughts |

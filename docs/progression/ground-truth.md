@@ -69,7 +69,7 @@ and 4.5 s for the cast, the card and the recast. The bot lost none in the reel; 
 **22 new things**: 13 in the first 4 minutes (8 fish, 4 dug finds, the island itself), a rowboat
 and a rod from rank-ups, then 3 trophy sizes and 2 ghost variants (the Harvest festival makes ghosts
 1 in 40) spread over minutes 5 to 37. The longest stretch with nothing new was 11.6 minutes; there
-was never a stretch of 2 minutes with nothing at all (an XP pop comes with every catch).
+was never a stretch of 2 minutes with nothing at all (an XP pop came with every catch; since #217, merged after this session, it is a tick sound).
 
 **Before #195** the same bot fished an hour with the starter bobber: a cast every 12.3 seconds, 15
 new things, 14 of them in the first 5.5 minutes and the last at minute 12, then 48 minutes with

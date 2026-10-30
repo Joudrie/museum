@@ -52,7 +52,7 @@ built nearly all of them in one PR; these are the rewards as they now run (`src/
 
 | Reward | Where | Informational / controlling | Expected / unexpected | Contingency | Note |
 |---|---|---|---|---|---|
-| XP pop after every catch, junk, talk, chunk of fog, crossing | fishevents.js, activity.js, friendship.js | a number going up: feedback on volume, not on skill | expected | engagement (every action, even an old boot) | the layer's sim counts these as its "progress ticks"; they cannot show you anything new |
+| XP after every catch, junk, talk, chunk of fog, crossing (a floating number until #217, now a tick sound) | fishevents.js, activity.js, friendship.js | a number going up: feedback on volume, not on skill | expected | engagement (every action, even an old boot) | the layer's sim counts these as its "progress ticks"; they cannot show you anything new |
 | First catch of the day: XP ×2 | fishevents.js | controlling | expected | engagement (showing up) | |
 | Rested XP (a bonus pool after time away) | rank.js `creditAway` | controlling | expected | engagement (being away, then coming back) | |
 | Rank-up ceremony and its rewards | service.js, data/ranks.json | gold and cosmetics: controlling; a boat, rod or gear: informational (a new place or verb) | expected (the pill previews "Next") | engagement (ranks come from volume) | 13 of 50 ranks unlock something; the rest pay gold, bait or a cosmetic |

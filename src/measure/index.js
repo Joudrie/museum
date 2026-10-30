@@ -1,17 +1,16 @@
-// Progression measurement, booted once from main.js (see docs/progression/README.md).
+// Progression measurement, loaded once by boot.js just after the game starts (see docs/progression/README.md).
 //   - turns every save into a typed event (derive.js) and keeps a log on the phone (events.js)
 //   - copies the progression layer's bus events into the same log (layer.js)
 //   - tracks sessions: start, end, how long, how much of it was active
-//   - applies the build flags (?progression=off, ?flags=...) as body classes (flags.js, measure.css)
+//   (the build flags' body classes are applied earlier, by boot.js)
 //   - ?evlog shows a small panel to copy or share the log (how a phone-only player sends it)
 //   - forwards events to telemetry only when a key is set and the player opted in (telemetry.js)
 import { onSave } from '../storage.js';
 import { emit, flush, events, clearLog, session, on } from './events.js';
 import { startDeriving } from './derive.js';
-import { SYSTEMS, flagOn, buildLabel, progressionOff } from './flags.js';
+import { flagOn, buildLabel } from './flags.js';
 import { startTelemetry } from './telemetry.js';
 import { layerEvents } from './layer.js';
-import './measure.css';
 
 const IDLE_NEW_SESSION = 30 * 60 * 1000; // back after this long = a new session (the usual analytics rule)
 const ACTIVE_WINDOW = 10000; // a window with any touch counts as 10 s of active play
@@ -53,11 +52,6 @@ function boot() {
   layerEvents();
   startSession(sourceOf(location.search));
 
-  // the body classes measure.css keys off
-  const b = document.body.classList;
-  if (progressionOff()) b.add('progression-off');
-  Object.keys(SYSTEMS).forEach((k) => !flagOn(k) && b.add(`no-${k}`));
-
   const touch = () => active.add(Math.floor(Date.now() / ACTIVE_WINDOW));
   window.addEventListener('pointerdown', touch, { passive: true, capture: true });
   document.addEventListener('visibilitychange', () => {
@@ -84,7 +78,7 @@ function logPanel() {
   const el = document.createElement('div');
   el.className = 'prog-log';
   const n = () => events().length;
-  el.innerHTML = `<b>Event log</b><span class="prog-n"></span><div class="prog-row"><button class="pixel-btn" data-a="copy">Copy</button><button class="pixel-btn" data-a="share">Share file</button><button class="pixel-btn" data-a="clear">Clear</button><button class="pixel-btn" data-a="x">✕</button></div>`;
+  el.innerHTML = `<b>Event log</b><span class="prog-n"></span><div class="prog-row"><button class="pixel-btn" data-a="copy">Copy</button><button class="pixel-btn" data-a="share">Share file</button><button class="pixel-btn" data-a="clear">Clear</button><button class="pixel-btn" data-a="x">Close</button></div>`;
   const label = () => (el.querySelector('.prog-n').textContent = ` ${n()} events · build ${buildLabel()}`);
   label();
   const text = () => JSON.stringify({ format: 'curation-evlog', v: 1, exported: Date.now(), build: buildLabel(), events: events() });

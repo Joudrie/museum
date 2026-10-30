@@ -9,7 +9,7 @@
 | Saves into events | `src/measure/derive.js` | Compares each save of a watched key with what it replaced and emits what changed (digs, the codex, rooms, coins, leads…, and the layer's new unlocks). No other system had to change to be measured. |
 | The layer's bus into the log | `src/measure/layer.js` | Copies the progression layer's bus events (catches, escapes, talks, places, secrets, ranks, skills, hearts, tasks, requests, purchases) into the same log, kept small. |
 | Sessions | `src/measure/index.js` | `session_start` (source, hours since last play, count, build), `session_end` (length, active time, reason, last thing done), `session_resume` (back within 30 minutes). |
-| Feature flags | `src/measure/flags.js` | `?progression=off`, `?flags=-goals,…`; saved per phone; `buildLabel()` names the build in every log; the layer's reward queue, grants, rods, regions and perks read them (diagnosis.md, 5). |
+| Feature flags | `src/measure/flags.js`, `boot.js` | `?progression=off`, `?flags=-goals,…`; saved per phone; `buildLabel()` names the build in every log; the layer's reward queue, grants, rods, regions and perks read them (diagnosis.md, 5). `boot.js` (from `main.js`) puts the flags' body classes on at once and loads everything else in this table as its own small chunk a moment later, off the main bundle's budget; the few saves made while the game boots are not logged. |
 | Telemetry adapter | `src/measure/telemetry.js` | Forwards events to PostHog only if a project key is set **and** the player said yes on a beta link. Off for everyone today. |
 | Log export | `?evlog` | A small panel: copy the log, share it as a file, or clear it. How a phone-only player sends a log. |
 

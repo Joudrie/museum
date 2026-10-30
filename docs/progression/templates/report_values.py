@@ -46,7 +46,7 @@ V['DAY60_LINE'] = f"{sum(srcs.values()):.2f} new things a session, mostly " + ',
 rv = REEL['cells']
 win = lambda r, s: next(c['win'] for c in rv if c['rarity'] == r and c['skill'] == s)
 V['BUILT_TABLE'] = table(['Built in #195', 'What the evidence says', 'So'], [
-    ['Rank 1 to 50, XP for every action, rested XP', f"rank gates every purchase (gold is rarely short); XP pops keep the gap with no progress tick under {V['TICK_P99']} while the drought of new things is {V['DR_P50']} at the median; expected, volume-contingent", 'test H14 (`?flags=-rank`) before adding ranks; if it fails, give the 13 rank unlocks to deeds'],
+    ['Rank 1 to 50, XP for every action, rested XP', f"rank gates every purchase (gold is rarely short); XP keeps the gap with no progress tick under {V['TICK_P99']} while the drought of new things is {V['DR_P50']} at the median; expected, volume-contingent; #217 took the XP numbers off the screen", 'test H14 (`?flags=-rank`) before adding ranks; if it fails, give the 13 rank unlocks to deeds'],
     ['72 fish species with conditions, baits and hot spots', f"a regular player has {run('regular')['fish_species_by_day90']['P50']:.0f} species by day 90; 4 can never bite", 'keep; fix the four'],
     ['The reel', f"a real skill gradient: an epic fish is landed {100 * win(4, 0):.0f}% of the time at no skill and {100 * win(4, 1):.0f}% at full skill", 'keep: fishing gained the depth diagnosis.md asked for'],
     ['Pity (rare and epic ramps, the legendary hazard)', f"with the ramps the worst droughts are {V['PITY_REG']} (H8)", 'harmless; not the answer to droughts'],

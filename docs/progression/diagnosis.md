@@ -13,7 +13,7 @@ species, digging, talking, sailing, the museum):
 
 | System | Off means | How |
 |---|---|---|
-| rank | no rank pill, XP pops, skill bars or rank ceremonies (rank and skills still count, unseen, so the layer's code runs unchanged) | `queueShows()` in the layer's reward queue (src/progression/index.js); `body.no-rank` (measure.css) |
+| rank | no rank pill, XP ticks, skill bars or rank ceremonies (rank and skills still count, unseen, so the layer's code runs unchanged; since #217 nobody sees floating XP numbers) | `queueShows()` in the layer's reward queue (src/progression/index.js); `body.no-rank` (measure.css) |
 | goals | the goals list, the goal on the pill, the Goals tab, stuck nudges; the field journal opens on Fish | `body.no-goals`; one line each in index.js and ui/fieldoverlay.js |
 | payouts | nothing is handed out for goals, tasks, requests, ranks, skill levels, hearts, sets or milestones (unlocks still arrive) | `grant()` in src/progression/grants.js, the one path every layer payout takes; Claim buttons hidden (`body.no-payouts`) |
 | daily | no daily gift, wheel, task, streak, login calendar, away letter or event-track cards; no Events tab | `queueShows()`; `body.no-daily` |
@@ -97,10 +97,10 @@ Four things in the code work against it (the fourth, found by the independent ch
    never removes the other, so both can be sold; the Gallery Shop pays about 5 to 7 times more for
    rarity 1 to 4 and 3 times more for a legendary (2 to 4.5 times at Fishing 20).
 4. **Off Main Island and Island One, the world layer can't find its islands.** The island scene's
-   `regionKey` is the map id (`IslandScene.js:154`: `main`, `one`, `isle-1`, `exp-pirate`…), but the world
+   `regionKey` is the map id (`IslandScene.js:155`: `main`, `one`, `isle-1`, `exp-pirate`…), but the world
    layer looks it up in `regions.json` and `npcs.json`, which use region ids (`isle`, `pirate`…):
-   `REGIONS[scene.regionKey]` in `ui/worldlife.js:21` and `ui/islandlife.js:25`, and
-   `n.region === s.regionKey` in `ui/islandlife.js:37`. Only `main` and `one` match. So on the Far Isle and
+   `REGIONS[scene.regionKey]` in `ui/worldlife.js:22` and `ui/islandlife.js:26`, and
+   `n.region === s.regionKey` in `ui/islandlife.js:38`. Only `main` and `one` match. So on the Far Isle and
    all seven expedition islands: 3 secrets instead of 5 to 12, and **no legend clue**; **no named
    islanders** (8 of the 11 never appear, though their requests still go on the board); and no "new
    place" stamp for the island. A legendary only bites once its clue is found (`fishroll.js

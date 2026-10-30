@@ -31,8 +31,8 @@ are you thinking about?" Never point.
 | Time | What they did | What they said (verbatim) | Confused? | Delight? | Quit-ish? |
 |---|---|---|---|---|---|
 
-**What to watch for in the `on` group** (the progression layer): whether they look at the rank pill
-or the XP pops at all, whether a rank ceremony makes them stop or carry on, and whether they mention
+**What to watch for in the `on` group** (the progression layer): whether they open the Journal to
+see their rank or notice the XP tick at all (#217 took the numbers off the screen), whether a rank ceremony makes them stop or carry on, and whether they mention
 rank or a task when asked what's next. In both groups: how they play the reel (do they get better at
 it in 15 minutes?) and what they say when a fish escapes and its silhouette shows.
 

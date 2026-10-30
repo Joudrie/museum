@@ -84,3 +84,8 @@ Model results only; no player data exists yet. Thresholds above are unchanged si
 - **2026-10-29, the island lookup (diagnosis.md, fault 4):** not a hypothesis, a fault. Until it is fixed,
   H9, H11 and H13 run on a world where 8 of the 10 legendaries and 8 of the 11 named islanders can't be
   reached; write the fix's date here when it lands, and compare only arms that both had it.
+- **2026-10-29, H14 and H7 (#217, merged after the revision):** the quiet HUD took the floating XP numbers
+  off the screen and shows the goal pill and skill bars only near a goal or a level, with two popups at
+  most. Thresholds unchanged. H14's X is now what is left of the rank layer on screen (rank-up ceremonies,
+  skill bars near a level, the rank in the Journal) plus rank gating; the arm (`?flags=-rank`) is the same.
+  H7's `no-fanfare` arm now compares against a quieter control.
