@@ -232,6 +232,22 @@
   "49-large-conversation": {
    "smallTargets": 0,
    "minFont": 15
+  },
+  "04b-placing": {
+   "smallTargets": 0,
+   "minFont": 13
+  },
+  "12b-display": {
+   "smallTargets": 0,
+   "minFont": 13
+  },
+  "12c-studio": {
+   "smallTargets": 0,
+   "minFont": 13
+  },
+  "21b-leads": {
+   "smallTargets": 0,
+   "minFont": 13
   }
  }
 }
