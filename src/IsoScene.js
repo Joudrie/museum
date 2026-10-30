@@ -12,6 +12,7 @@ import { wornLooks } from './progression/ui/lookfx.js';
 import { iconSvg } from './icons.js';
 import { sfx, setTrack } from './music.js';
 import { animateWalker, footstep } from './motion.js';
+import { frameDt } from './frametime.js';
 
 const N = 8; // the room is N×N floor tiles
 const TW = 44; // a floor tile's width on screen
@@ -529,7 +530,7 @@ export class IsoScene extends Phaser.Scene {
 
   update(_, dtMs) {
     if (this.leaving) return;
-    const dt = Math.min(dtMs, 50) / 1000;
+    const dt = frameDt(this, dtMs);
     const k = this.keys;
     let vx = (k.D.isDown || k.RIGHT.isDown ? 1 : 0) - (k.A.isDown || k.LEFT.isDown ? 1 : 0);
     let vy = (k.S.isDown || k.DOWN.isDown ? 1 : 0) - (k.W.isDown || k.UP.isDown ? 1 : 0);

@@ -65,6 +65,7 @@ import { townsperson } from './people/placement.js';
 import { progression } from './progression/index.js';
 import { regionOfMap, REGIONS, speciesOfRegion } from './progression/species.js';
 import { regionAccess } from './progression/access.js';
+import { frameDt } from './frametime.js';
 
 // Islands drawn in the map builder (builder.html), reached by boat from the
 // main island's dock. Each is a 'curation-map' file (see src/builder/main.js).
@@ -211,6 +212,7 @@ export class IslandScene extends Phaser.Scene {
       this.row = new Rowing(this, { W, H }); // your own little boat by the shore (or walk into the water to row)
       if (this.row.allowed()) this.row.placeBoat();
     });
+    this.events.once('shutdown', () => document.getElementById('rowbtn')?.classList.add('hidden'));
     if (ch.pet && ch.pet !== 'none') this.pet = new Pet(this, ch.pet, ch.petColor, this.player);
     this.doorLock = this.spawnAt !== 'cottage' && this.spawnAt !== 'dock'; // don't walk straight back in
     this.cottageLock = this.spawnAt === 'cottage';
@@ -1881,7 +1883,7 @@ export class IslandScene extends Phaser.Scene {
 
   update(_, dtMs) {
     if (this.leaving) return;
-    const dt = Math.min(dtMs, 50) / 1000;
+    const dt = frameDt(this, dtMs, 100); // (walking takes small sub-steps, so a long frame is safe)
     this.fishing.update(dt);
     this.prints.update();
     if (this.bubbleNpc && !talking()) this.releaseBubbleNpc();
@@ -1980,6 +1982,8 @@ export class IslandScene extends Phaser.Scene {
       const label = this.focusLabel(this.focus);
       if (lab.textContent !== label) lab.textContent = label;
     }
+    // Row: at any water you can put your boat in, wherever you are, like Surf (src/rowing.js)
+    this.row?.button(dt, !this.paused && !chatOpen() && !this.fishing.busy && !this.focus?.skiff, !this.interactBtn.classList.contains('hidden'));
     this.mark.update(dt, this.fishing.busy ? null : this.focusPoint(this.focus));
     this.idleLife(dt, len > 0);
     if (this.focus && (Phaser.Input.Keyboard.JustDown(k.SPACE) || Phaser.Input.Keyboard.JustDown(k.ENTER))) this.interact();

@@ -93,6 +93,7 @@ import { addLove, loveOf, resetLove } from './love.js';
 import { hasCameras as camerasOn } from './security.js';
 import { hourNow, settings } from './settings.js';
 import { spriteUrl } from './swap.js';
+import { frameDt } from './frametime.js';
 
 const VIEW_TILES = 9; // the camera always shows 9 tiles across
 const SPEED = 176; // px per second
@@ -2879,7 +2880,7 @@ export class RoomScene extends Phaser.Scene {
   }
 
   update(_, dtMs) {
-    const dt = Math.min(dtMs, 50) / 1000;
+    const dt = frameDt(this, dtMs);
     this.lighting.update(dt);
     this.pet?.update(dt);
     // visitors love meeting your pet
