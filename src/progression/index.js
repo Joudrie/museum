@@ -14,6 +14,7 @@ import { createRewardQueue } from './rewardqueue.js';
 import { standardModules } from './modules.js';
 import { present, mountLayer, refreshPill, syncPill, pillState } from './ui/juice.js';
 import { bus } from './bus.js';
+import { queueShows, flagOn } from '../measure/flags.js';
 
 let P = null;
 const holds = new Set();
@@ -34,7 +35,8 @@ export function progression() {
   const adapter = { read: () => load(SAVE_KEY, null), write: (v) => save(SAVE_KEY, v) };
   const store = createStore(adapter, { now: Date.now() });
   const clock = createClock({ lastSeen: store.state.lastSeenAt });
-  const queue = createRewardQueue({ present, gate: gateOpen });
+  // a build flag can hide a kind of card (docs/progression/: the strip test); the reward itself is unchanged
+  const queue = createRewardQueue({ present: (it, done) => (queueShows(it.kind) ? present(it, done) : done()), gate: gateOpen });
   P = createProgression({
     store,
     clock,
@@ -46,7 +48,7 @@ export function progression() {
       hourNow,
       weatherToday,
       paywall: (o) => window.dispatchEvent(new CustomEvent('prog-paywall', { detail: o })),
-      nudge: (o) => window.dispatchEvent(new CustomEvent('prog-nudge', { detail: o })),
+      nudge: (o) => flagOn('goals') && window.dispatchEvent(new CustomEvent('prog-nudge', { detail: o })),
       toast: (m) => window.__game?.scene.getScenes(true)[0]?.toast?.(m),
     },
     modules: standardModules(),

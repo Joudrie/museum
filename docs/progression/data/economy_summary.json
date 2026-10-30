@@ -1,0 +1,65 @@
+{
+ "rates": {
+  "market_sales_per_active_hour": 1087.0,
+  "layer_payouts_per_active_hour": 519.0,
+  "gallery_sales_per_active_hour": 3474.0,
+  "wheel_ev": 52.14624999999955,
+  "gift_gold_per_talk": 10.686,
+  "dig_sale": 63.07333333333333
+ },
+ "runs": {
+  "as coded": {
+   "day90_gold": 84773,
+   "day90_income_per_hour": 129.0,
+   "rooms_built_by_day90": 3,
+   "day_first_room_built": 14,
+   "hours_of_income_to_next_room_at_day90": 1120.9,
+   "gold_unspent_share_day90": 0.305,
+   "sessions_to_first_room": 27,
+   "museum_income_share_week1": 0.314
+  },
+  "room fix": {
+   "day90_gold": 171103,
+   "day90_income_per_hour": 336.0,
+   "rooms_built_by_day90": 12,
+   "day_first_room_built": 0,
+   "hours_of_income_to_next_room_at_day90": 774.7,
+   "gold_unspent_share_day90": 0.337,
+   "sessions_to_first_room": 1,
+   "museum_income_share_week1": 0.538
+  },
+  "no selling": {
+   "day90_gold": 15786,
+   "day90_income_per_hour": 129.0,
+   "rooms_built_by_day90": 3,
+   "day_first_room_built": 22,
+   "hours_of_income_to_next_room_at_day90": 1120.9,
+   "gold_unspent_share_day90": 0.088,
+   "sessions_to_first_room": 42,
+   "museum_income_share_week1": 0.468
+  },
+  "two shops": {
+   "day90_gold": 127815,
+   "day90_income_per_hour": 150.0,
+   "rooms_built_by_day90": 4,
+   "day_first_room_built": 7,
+   "hours_of_income_to_next_room_at_day90": 1735.3,
+   "gold_unspent_share_day90": 0.275,
+   "sessions_to_first_room": 15,
+   "museum_income_share_week1": 0.188
+  },
+  "H1 design": {
+   "day90_gold": 96144,
+   "day90_income_per_hour": 336.0,
+   "rooms_built_by_day90": 12,
+   "day_first_room_built": 0,
+   "hours_of_income_to_next_room_at_day90": 774.7,
+   "gold_unspent_share_day90": 0.222,
+   "sessions_to_first_room": 2,
+   "museum_income_share_week1": 0.639
+  }
+ },
+ "first_room_hours_of_income_as_coded": 538.9,
+ "selling_vs_passive_ratio": 23.6,
+ "two_shops_vs_passive_ratio": 99.2
+}

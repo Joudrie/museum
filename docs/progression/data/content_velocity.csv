@@ -1,0 +1,5 @@
+what,profile,units,player_hours_per_unit,runway_days_P50,basis
+collection entries,casual,147,inf,inf,active hours to 75% of obtainable entries / entries (Monte Carlo P50)
+collection entries,regular,147,0.172,33,active hours to 75% of obtainable entries / entries (Monte Carlo P50)
+collection entries,heavy,147,0.316,23,active hours to 75% of obtainable entries / entries (Monte Carlo P50)
+"text (blurbs, dialogue, story)",any,11783,8.3e-05,,"200 words a minute, read once"

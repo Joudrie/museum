@@ -3,13 +3,14 @@
 import { TUNING } from './config.js';
 import { REGIONS } from './species.js';
 import { UNLOCK_NAMES } from './grants.js';
+import { unlockAll } from '../measure/flags.js';
 
 const BOAT_PRICED = true;
 
 /** { open, reason: 'ok'|'rank'|'buy'|'sub', need? } for a region. */
 export function regionAccess(state, id, T = TUNING) {
   const r = REGIONS[id];
-  if (!r) return { open: true, reason: 'ok' };
+  if (!r || unlockAll()) return { open: true, reason: 'ok' }; // (unlockAll: the ?progression=off strip test)
   if (r.tier === 'sub' && T.sub.enforce && !state.sub.active) return { open: false, reason: 'sub', need: 'Subscriber island' };
   if (!r.req) return { open: true, reason: 'ok' };
   if (!state.unlocks[r.req]) return { open: false, reason: 'rank', need: `Needs: ${UNLOCK_NAMES[r.req]?.split(':')[0] || r.req}` };

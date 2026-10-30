@@ -1,0 +1,2 @@
+game,platform,date,session,elapsed_mmss,kind,what_happened,felt_1to5,note
+EXAMPLE (delete this row),phone,2026-11-01,1,04:20,new mechanic,"First time a new tool or verb appears",4,"kind is one of: start, reward, unlock, new mechanic, new place, new character, goal shown, currency, quit"

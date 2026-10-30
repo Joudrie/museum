@@ -1,0 +1,5434 @@
+{
+ "format": "curation-scripted-session",
+ "minutes": 60,
+ "build": "on",
+ "when": "2026-10-29T19:49:03.139Z",
+ "actions": [
+  {
+   "kind": "dig",
+   "start": 1793299741008,
+   "brushMs": 14546,
+   "found": true
+  },
+  {
+   "kind": "fish",
+   "cast": 1793299757842,
+   "waitMs": 6382,
+   "cardMs": 932,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "dig",
+   "start": 1793299767653,
+   "brushMs": 14474,
+   "found": true
+  },
+  {
+   "kind": "fish",
+   "cast": 1793299784351,
+   "waitMs": 5086,
+   "cardMs": 998,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "dig",
+   "start": 1793299792836,
+   "brushMs": 12615,
+   "found": true
+  },
+  {
+   "kind": "fish",
+   "cast": 1793299807719,
+   "waitMs": 8858,
+   "cardMs": 842,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "dig",
+   "start": 1793299820012,
+   "brushMs": 17821,
+   "found": true
+  },
+  {
+   "kind": "fish",
+   "cast": 1793299840121,
+   "waitMs": 7425,
+   "cardMs": 877,
+   "title": "You caught a Rainbow trout!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793299850731,
+   "waitMs": 5167,
+   "cardMs": 919,
+   "title": "Rusty tin can"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793299859386,
+   "waitMs": 7142,
+   "cardMs": 908,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793299869796,
+   "waitMs": 6984,
+   "cardMs": 910,
+   "title": "You caught a Rainbow trout!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793299880054,
+   "waitMs": 5364,
+   "cardMs": 924,
+   "title": "Old boot"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793299888747,
+   "waitMs": 5524,
+   "cardMs": 927,
+   "title": "You caught a Rainbow trout!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793299897568,
+   "waitMs": 5876,
+   "cardMs": 784,
+   "title": "You caught an Ancient coin!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793299906616,
+   "waitMs": 8557,
+   "cardMs": 839,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793299918851,
+   "waitMs": 8634,
+   "cardMs": 978,
+   "title": "Rusty tin can"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793299930733,
+   "waitMs": 8402,
+   "cardMs": 892,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793299942712,
+   "waitMs": 7103,
+   "cardMs": 827,
+   "title": "Old boot"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793299953028,
+   "waitMs": 6764,
+   "cardMs": 897,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793299963064,
+   "waitMs": 8452,
+   "cardMs": 837,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793299974805,
+   "waitMs": 8916,
+   "cardMs": 946,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793299986986,
+   "waitMs": 7680,
+   "cardMs": 958,
+   "title": "Old boot"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793299997980,
+   "waitMs": 5798,
+   "cardMs": 800,
+   "title": "You caught an Ancient coin!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300006941,
+   "waitMs": 6145,
+   "cardMs": 824,
+   "title": "You caught a Rainbow trout!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300016244,
+   "waitMs": 7406,
+   "cardMs": 836,
+   "title": "You caught a Carp!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300026874,
+   "waitMs": 8177,
+   "cardMs": 958,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300038377,
+   "waitMs": 9490,
+   "cardMs": 917,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300051164,
+   "waitMs": 7674,
+   "cardMs": 949,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300062130,
+   "waitMs": 8869,
+   "cardMs": 924,
+   "title": "You caught a Rainbow trout!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300074270,
+   "waitMs": 9506,
+   "cardMs": 922,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300087031,
+   "waitMs": 7977,
+   "cardMs": 824,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300098173,
+   "waitMs": 7032,
+   "cardMs": 858,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300108430,
+   "waitMs": 7857,
+   "cardMs": 880,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300119555,
+   "waitMs": 6760,
+   "cardMs": 924,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300129581,
+   "waitMs": 9696,
+   "cardMs": 889,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300142560,
+   "waitMs": 8682,
+   "cardMs": 903,
+   "title": "Rusty tin can"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300154881,
+   "waitMs": 9760,
+   "cardMs": 849,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300167857,
+   "waitMs": 5292,
+   "cardMs": 937,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300176469,
+   "waitMs": 7639,
+   "cardMs": 935,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300187394,
+   "waitMs": 8290,
+   "cardMs": 840,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300198847,
+   "waitMs": 9333,
+   "cardMs": 954,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300211515,
+   "waitMs": 8731,
+   "cardMs": 815,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300223431,
+   "waitMs": 6504,
+   "cardMs": 906,
+   "title": "You caught a Rainbow trout!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300233173,
+   "waitMs": 9055,
+   "cardMs": 923,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300245552,
+   "waitMs": 9555,
+   "cardMs": 844,
+   "title": "Old boot"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300258265,
+   "waitMs": 11830,
+   "cardMs": 1006,
+   "title": "You caught a Rainbow trout!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300273921,
+   "waitMs": 11162,
+   "cardMs": 810,
+   "title": "You caught a Rainbow trout!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300288242,
+   "waitMs": 8303,
+   "cardMs": 825,
+   "title": "Old boot"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300299685,
+   "waitMs": 6231,
+   "cardMs": 811,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300308994,
+   "waitMs": 9744,
+   "cardMs": 863,
+   "title": "Rusty tin can"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300322418,
+   "waitMs": 11258,
+   "cardMs": 925,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300337326,
+   "waitMs": 10940,
+   "cardMs": 936,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300352019,
+   "waitMs": 8614,
+   "cardMs": 935,
+   "title": "Rusty tin can"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300364257,
+   "waitMs": 8334,
+   "cardMs": 1024,
+   "title": "You caught a Carp!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300376384,
+   "waitMs": 7468,
+   "cardMs": 875,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300387567,
+   "waitMs": 12900,
+   "cardMs": 856,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300403783,
+   "waitMs": 9355,
+   "cardMs": 837,
+   "title": "Old boot"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300416395,
+   "waitMs": 8573,
+   "cardMs": 887,
+   "title": "Rusty tin can"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300428308,
+   "waitMs": 5583,
+   "cardMs": 835,
+   "title": "You caught a Rainbow trout!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300437142,
+   "waitMs": 7380,
+   "cardMs": 944,
+   "title": "You caught a Koi!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300447822,
+   "waitMs": 6086,
+   "cardMs": 890,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300457222,
+   "waitMs": 8704,
+   "cardMs": 932,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300469196,
+   "waitMs": 7091,
+   "cardMs": 898,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300479591,
+   "waitMs": 8087,
+   "cardMs": 901,
+   "title": "You caught a Carp!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300490966,
+   "waitMs": 8598,
+   "cardMs": 842,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300502791,
+   "waitMs": 9069,
+   "cardMs": 844,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300515044,
+   "waitMs": 9450,
+   "cardMs": 878,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300527723,
+   "waitMs": 9727,
+   "cardMs": 989,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300540791,
+   "waitMs": 5164,
+   "cardMs": 894,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300549229,
+   "waitMs": 6250,
+   "cardMs": 829,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300558779,
+   "waitMs": 6928,
+   "cardMs": 889,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300568938,
+   "waitMs": 5149,
+   "cardMs": 889,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300577328,
+   "waitMs": 5702,
+   "cardMs": 821,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300586238,
+   "waitMs": 5756,
+   "cardMs": 908,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300595194,
+   "waitMs": 7231,
+   "cardMs": 833,
+   "title": "Rusty tin can"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300605676,
+   "waitMs": 8039,
+   "cardMs": 879,
+   "title": "Old boot"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300616938,
+   "waitMs": 5104,
+   "cardMs": 913,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300625271,
+   "waitMs": 5596,
+   "cardMs": 854,
+   "title": "Old boot"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300634216,
+   "waitMs": 8801,
+   "cardMs": 921,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300646450,
+   "waitMs": 6819,
+   "cardMs": 865,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300656564,
+   "waitMs": 7663,
+   "cardMs": 800,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300667372,
+   "waitMs": 8619,
+   "cardMs": 818,
+   "title": "Rusty tin can"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300679258,
+   "waitMs": 5435,
+   "cardMs": 958,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300688036,
+   "waitMs": 9825,
+   "cardMs": 914,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300701179,
+   "waitMs": 6930,
+   "cardMs": 899,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300711416,
+   "waitMs": 8040,
+   "cardMs": 786,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300722646,
+   "waitMs": 6432,
+   "cardMs": 969,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300732394,
+   "waitMs": 8784,
+   "cardMs": 862,
+   "title": "You caught a Rainbow trout!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300744514,
+   "waitMs": 7747,
+   "cardMs": 943,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300755548,
+   "waitMs": 4932,
+   "cardMs": 816,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300763753,
+   "waitMs": 9533,
+   "cardMs": 996,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300776681,
+   "waitMs": 8276,
+   "cardMs": 850,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300788315,
+   "waitMs": 9095,
+   "cardMs": 864,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300800688,
+   "waitMs": 7046,
+   "cardMs": 955,
+   "title": "You caught a Koi!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300811142,
+   "waitMs": 5734,
+   "cardMs": 921,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300820231,
+   "waitMs": 7095,
+   "cardMs": 849,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300830634,
+   "waitMs": 7083,
+   "cardMs": 836,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300840936,
+   "waitMs": 7809,
+   "cardMs": 798,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300851905,
+   "waitMs": 5026,
+   "cardMs": 799,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300860122,
+   "waitMs": 5331,
+   "cardMs": 944,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300868837,
+   "waitMs": 8484,
+   "cardMs": 907,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300880566,
+   "waitMs": 5839,
+   "cardMs": 940,
+   "title": "You caught a Carp!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300889753,
+   "waitMs": 6796,
+   "cardMs": 958,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300899851,
+   "waitMs": 8360,
+   "cardMs": 895,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300911517,
+   "waitMs": 5775,
+   "cardMs": 866,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300920556,
+   "waitMs": 5953,
+   "cardMs": 815,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300929862,
+   "waitMs": 5673,
+   "cardMs": 849,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300938793,
+   "waitMs": 8728,
+   "cardMs": 1003,
+   "title": "Old boot"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300950982,
+   "waitMs": 9394,
+   "cardMs": 836,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300963583,
+   "waitMs": 7322,
+   "cardMs": 810,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300974226,
+   "waitMs": 5246,
+   "cardMs": 877,
+   "title": "You caught a Rainbow trout!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300982663,
+   "waitMs": 7565,
+   "cardMs": 804,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793300993435,
+   "waitMs": 6472,
+   "cardMs": 784,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301003097,
+   "waitMs": 7820,
+   "cardMs": 968,
+   "title": "Old boot"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301014305,
+   "waitMs": 6882,
+   "cardMs": 874,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301024406,
+   "waitMs": 8292,
+   "cardMs": 861,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301035932,
+   "waitMs": 9497,
+   "cardMs": 825,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301048594,
+   "waitMs": 5645,
+   "cardMs": 808,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301057429,
+   "waitMs": 5334,
+   "cardMs": 942,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301066179,
+   "waitMs": 8318,
+   "cardMs": 911,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301077876,
+   "waitMs": 7312,
+   "cardMs": 825,
+   "title": "Old boot"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301088453,
+   "waitMs": 6689,
+   "cardMs": 814,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301098491,
+   "waitMs": 6235,
+   "cardMs": 805,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301107879,
+   "waitMs": 7258,
+   "cardMs": 815,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301118404,
+   "waitMs": 6340,
+   "cardMs": 854,
+   "title": "Rusty tin can"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301127952,
+   "waitMs": 7875,
+   "cardMs": 872,
+   "title": "You caught a Rainbow trout!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301139020,
+   "waitMs": 5246,
+   "cardMs": 918,
+   "title": "Old boot"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301147963,
+   "waitMs": 6846,
+   "cardMs": 899,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301158054,
+   "waitMs": 10803,
+   "cardMs": 934,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301172497,
+   "waitMs": 7104,
+   "cardMs": 888,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301183260,
+   "waitMs": 11972,
+   "cardMs": 981,
+   "title": "Old boot"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301199052,
+   "waitMs": 8593,
+   "cardMs": 852,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301211341,
+   "waitMs": 7197,
+   "cardMs": 852,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301222316,
+   "waitMs": 13989,
+   "cardMs": 940,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301240059,
+   "waitMs": 10584,
+   "cardMs": 946,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301254293,
+   "waitMs": 7335,
+   "cardMs": 981,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301265416,
+   "waitMs": 11215,
+   "cardMs": 927,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301280295,
+   "waitMs": 12730,
+   "cardMs": 845,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301296595,
+   "waitMs": 13480,
+   "cardMs": 1000,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301313933,
+   "waitMs": 7681,
+   "cardMs": 832,
+   "title": "You caught a Carp!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301325032,
+   "waitMs": 8550,
+   "cardMs": 849,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301337144,
+   "waitMs": 11475,
+   "cardMs": 957,
+   "title": "Old boot"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301352343,
+   "waitMs": 8362,
+   "cardMs": 905,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301364289,
+   "waitMs": 7052,
+   "cardMs": 972,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301374999,
+   "waitMs": 11601,
+   "cardMs": 922,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301390245,
+   "waitMs": 7482,
+   "cardMs": 857,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301401256,
+   "waitMs": 8117,
+   "cardMs": 974,
+   "title": "You caught a Rainbow trout!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301412991,
+   "waitMs": 8581,
+   "cardMs": 849,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301425289,
+   "waitMs": 10340,
+   "cardMs": 785,
+   "title": "You caught a Carp!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301439222,
+   "waitMs": 7490,
+   "cardMs": 995,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301450464,
+   "waitMs": 9494,
+   "cardMs": 942,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301463740,
+   "waitMs": 10897,
+   "cardMs": 956,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301478297,
+   "waitMs": 7286,
+   "cardMs": 973,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301489281,
+   "waitMs": 13095,
+   "cardMs": 888,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301506304,
+   "waitMs": 7354,
+   "cardMs": 937,
+   "title": "Rusty tin can"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301517275,
+   "waitMs": 10341,
+   "cardMs": 845,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301531164,
+   "waitMs": 9917,
+   "cardMs": 896,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301544713,
+   "waitMs": 13865,
+   "cardMs": 1039,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301562383,
+   "waitMs": 9061,
+   "cardMs": 834,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301575058,
+   "waitMs": 7210,
+   "cardMs": 871,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301585720,
+   "waitMs": 11242,
+   "cardMs": 914,
+   "title": "You caught a Koi!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301600424,
+   "waitMs": 11097,
+   "cardMs": 960,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301615259,
+   "waitMs": 13099,
+   "cardMs": 945,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301631894,
+   "waitMs": 11101,
+   "cardMs": 891,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301646736,
+   "waitMs": 8270,
+   "cardMs": 897,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301658732,
+   "waitMs": 11399,
+   "cardMs": 991,
+   "title": "You caught a Carp!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301674081,
+   "waitMs": 15049,
+   "cardMs": 1002,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301692959,
+   "waitMs": 10081,
+   "cardMs": 902,
+   "title": "Rusty tin can"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301706938,
+   "waitMs": 12917,
+   "cardMs": 994,
+   "title": "Rusty tin can"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301723769,
+   "waitMs": 11832,
+   "cardMs": 974,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301739389,
+   "waitMs": 9518,
+   "cardMs": 887,
+   "title": "You caught a Carp!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301752839,
+   "waitMs": 8405,
+   "cardMs": 901,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301764983,
+   "waitMs": 11466,
+   "cardMs": 882,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301780171,
+   "waitMs": 14035,
+   "cardMs": 914,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301797933,
+   "waitMs": 9113,
+   "cardMs": 920,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301810792,
+   "waitMs": 7531,
+   "cardMs": 881,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301822023,
+   "waitMs": 7353,
+   "cardMs": 824,
+   "title": "You caught a Carp!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301833023,
+   "waitMs": 10842,
+   "cardMs": 967,
+   "title": "You caught a Rainbow trout!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301847585,
+   "waitMs": 8938,
+   "cardMs": 949,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301860172,
+   "waitMs": 10025,
+   "cardMs": 907,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301873905,
+   "waitMs": 11947,
+   "cardMs": 952,
+   "title": "Old boot"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301889570,
+   "waitMs": 13122,
+   "cardMs": 840,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301906318,
+   "waitMs": 7429,
+   "cardMs": 939,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301917513,
+   "waitMs": 10234,
+   "cardMs": 935,
+   "title": "Old boot"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301931383,
+   "waitMs": 12678,
+   "cardMs": 973,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301947781,
+   "waitMs": 13121,
+   "cardMs": 1011,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301964643,
+   "waitMs": 10075,
+   "cardMs": 938,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301978355,
+   "waitMs": 9030,
+   "cardMs": 799,
+   "title": "Old boot"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793301990976,
+   "waitMs": 9597,
+   "cardMs": 890,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302004284,
+   "waitMs": 13943,
+   "cardMs": 982,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302022026,
+   "waitMs": 13505,
+   "cardMs": 933,
+   "title": "Rusty tin can"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302039239,
+   "waitMs": 13340,
+   "cardMs": 965,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302056353,
+   "waitMs": 10646,
+   "cardMs": 882,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302070872,
+   "waitMs": 7391,
+   "cardMs": 823,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302081934,
+   "waitMs": 10964,
+   "cardMs": 811,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302096624,
+   "waitMs": 13511,
+   "cardMs": 1024,
+   "title": "Rusty tin can"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302113878,
+   "waitMs": 10825,
+   "cardMs": 928,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302128379,
+   "waitMs": 7447,
+   "cardMs": 950,
+   "title": "Rusty tin can"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302139546,
+   "waitMs": 12339,
+   "cardMs": 923,
+   "title": "You caught a Carp!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302155574,
+   "waitMs": 11378,
+   "cardMs": 826,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302170681,
+   "waitMs": 8389,
+   "cardMs": 951,
+   "title": "You caught a Carp!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302182772,
+   "waitMs": 12677,
+   "cardMs": 1061,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302199515,
+   "waitMs": 9204,
+   "cardMs": 956,
+   "title": "You caught a Koi!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302212448,
+   "waitMs": 12697,
+   "cardMs": 916,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302228839,
+   "waitMs": 8663,
+   "cardMs": 955,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302241226,
+   "waitMs": 9357,
+   "cardMs": 885,
+   "title": "Rusty tin can"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302254296,
+   "waitMs": 11468,
+   "cardMs": 1096,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302269986,
+   "waitMs": 12299,
+   "cardMs": 1020,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302286223,
+   "waitMs": 11425,
+   "cardMs": 982,
+   "title": "You caught a Carp!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302301173,
+   "waitMs": 12886,
+   "cardMs": 954,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302317880,
+   "waitMs": 8364,
+   "cardMs": 951,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302329874,
+   "waitMs": 12547,
+   "cardMs": 920,
+   "title": "Old boot"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302346217,
+   "waitMs": 8600,
+   "cardMs": 959,
+   "title": "You caught a Rainbow trout!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302358510,
+   "waitMs": 7084,
+   "cardMs": 912,
+   "title": "You caught a Rainbow trout!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302369464,
+   "waitMs": 7532,
+   "cardMs": 935,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302380849,
+   "waitMs": 10142,
+   "cardMs": 936,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302394608,
+   "waitMs": 9758,
+   "cardMs": 910,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302408217,
+   "waitMs": 11955,
+   "cardMs": 881,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302424051,
+   "waitMs": 10048,
+   "cardMs": 813,
+   "title": "You caught a Carp!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302437588,
+   "waitMs": 6836,
+   "cardMs": 969,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302448104,
+   "waitMs": 10621,
+   "cardMs": 927,
+   "title": "You caught a Carp!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302462265,
+   "waitMs": 10675,
+   "cardMs": 921,
+   "title": "You caught an Ancient coin!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302476797,
+   "waitMs": 7941,
+   "cardMs": 834,
+   "title": "You caught a Carp!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302488332,
+   "waitMs": 7437,
+   "cardMs": 912,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302499480,
+   "waitMs": 13629,
+   "cardMs": 913,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302516833,
+   "waitMs": 7958,
+   "cardMs": 928,
+   "title": "You caught a Rainbow trout!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302528591,
+   "waitMs": 13387,
+   "cardMs": 901,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302545629,
+   "waitMs": 10495,
+   "cardMs": 885,
+   "title": "Old boot"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302559833,
+   "waitMs": 12707,
+   "cardMs": 878,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302576191,
+   "waitMs": 9964,
+   "cardMs": 914,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302589780,
+   "waitMs": 13550,
+   "cardMs": 866,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302607051,
+   "waitMs": 10518,
+   "cardMs": 862,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302621337,
+   "waitMs": 13153,
+   "cardMs": 931,
+   "title": "Old boot"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302638340,
+   "waitMs": 9789,
+   "cardMs": 875,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302651764,
+   "waitMs": 8674,
+   "cardMs": 1038,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302664511,
+   "waitMs": 14538,
+   "cardMs": 861,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302682951,
+   "waitMs": 10462,
+   "cardMs": 824,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302697038,
+   "waitMs": 9838,
+   "cardMs": 853,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302710657,
+   "waitMs": 13786,
+   "cardMs": 950,
+   "title": "You caught a Carp!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302728145,
+   "waitMs": 6801,
+   "cardMs": 906,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302738526,
+   "waitMs": 13898,
+   "cardMs": 884,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302756025,
+   "waitMs": 14101,
+   "cardMs": 923,
+   "title": "You caught a Rainbow trout!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302773798,
+   "waitMs": 7858,
+   "cardMs": 999,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302785601,
+   "waitMs": 8758,
+   "cardMs": 982,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302798062,
+   "waitMs": 10291,
+   "cardMs": 939,
+   "title": "You caught a Rainbow trout!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302812180,
+   "waitMs": 11642,
+   "cardMs": 905,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302827546,
+   "waitMs": 7936,
+   "cardMs": 862,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302839218,
+   "waitMs": 10367,
+   "cardMs": 807,
+   "title": "You caught an Ancient coin!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302853201,
+   "waitMs": 10671,
+   "cardMs": 986,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302867663,
+   "waitMs": 10849,
+   "cardMs": 827,
+   "title": "Old boot"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302881969,
+   "waitMs": 7819,
+   "cardMs": 824,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302893346,
+   "waitMs": 11281,
+   "cardMs": 897,
+   "title": "You caught a Rainbow trout!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302908322,
+   "waitMs": 10445,
+   "cardMs": 875,
+   "title": "Rusty tin can"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302922578,
+   "waitMs": 7980,
+   "cardMs": 894,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302934137,
+   "waitMs": 6875,
+   "cardMs": 955,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302944816,
+   "waitMs": 9678,
+   "cardMs": 934,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302958086,
+   "waitMs": 6848,
+   "cardMs": 982,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302968625,
+   "waitMs": 10729,
+   "cardMs": 938,
+   "title": "You caught a Rainbow trout!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302983063,
+   "waitMs": 11146,
+   "cardMs": 850,
+   "title": "You caught a Rainbow trout!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793302997824,
+   "waitMs": 13669,
+   "cardMs": 885,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793303015132,
+   "waitMs": 12531,
+   "cardMs": 963,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793303031431,
+   "waitMs": 9665,
+   "cardMs": 830,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793303044882,
+   "waitMs": 13206,
+   "cardMs": 925,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793303061809,
+   "waitMs": 12715,
+   "cardMs": 843,
+   "title": "You caught a Rainbow trout!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793303078261,
+   "waitMs": 9319,
+   "cardMs": 876,
+   "title": "Old boot"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793303091302,
+   "waitMs": 11536,
+   "cardMs": 987,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793303106618,
+   "waitMs": 8266,
+   "cardMs": 955,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793303118669,
+   "waitMs": 9207,
+   "cardMs": 938,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793303131493,
+   "waitMs": 12715,
+   "cardMs": 984,
+   "title": "You caught a Yellow perch!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793303147860,
+   "waitMs": 10574,
+   "cardMs": 893,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793303162073,
+   "waitMs": 10903,
+   "cardMs": 861,
+   "title": "You caught a Carp!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793303176550,
+   "waitMs": 8992,
+   "cardMs": 966,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793303189341,
+   "waitMs": 12008,
+   "cardMs": 954,
+   "title": "You caught a Koi!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793303205099,
+   "waitMs": 12653,
+   "cardMs": 918,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793303221444,
+   "waitMs": 8875,
+   "cardMs": 1017,
+   "title": "Old boot"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793303234086,
+   "waitMs": 13527,
+   "cardMs": 880,
+   "title": "Old boot"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793303251320,
+   "waitMs": 9714,
+   "cardMs": 993,
+   "title": "You caught a Rainbow trout!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793303264912,
+   "waitMs": 10112,
+   "cardMs": 921,
+   "title": "You caught a Rainbow trout!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793303278782,
+   "waitMs": 13887,
+   "cardMs": 1001,
+   "title": "You caught an Ancient coin!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793303296505,
+   "waitMs": 12464,
+   "cardMs": 969,
+   "title": "You caught a Minnow!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793303312672,
+   "waitMs": 13137,
+   "cardMs": 929,
+   "title": "You caught a Bluegill!"
+  },
+  {
+   "kind": "fish",
+   "cast": 1793303329368,
+   "waitMs": 9900,
+   "cardMs": 876,
+   "title": "You caught a Yellow perch!"
+  }
+ ],
+ "events": [
+  {
+   "t": 1793299720288,
+   "type": "session_start",
+   "source": "direct",
+   "gapH": null,
+   "n": 1,
+   "build": "on"
+  },
+  {
+   "t": 1793299720452,
+   "type": "room_built",
+   "rooms": 10
+  },
+  {
+   "t": 1793299720458,
+   "type": "item_placed",
+   "room": 0,
+   "n": 2
+  },
+  {
+   "t": 1793299720459,
+   "type": "collect",
+   "id": "painting:harvesters",
+   "collection": "painting",
+   "rarity": 1,
+   "fresh": true,
+   "n": 1
+  },
+  {
+   "t": 1793299720459,
+   "type": "collect",
+   "id": "painting:horse-fair",
+   "collection": "painting",
+   "rarity": 1,
+   "fresh": true,
+   "n": 1
+  },
+  {
+   "t": 1793299722749,
+   "type": "session_end",
+   "ms": 2461,
+   "activeMs": 0,
+   "reason": "pagehide",
+   "last": "collect"
+  },
+  {
+   "t": 1793299722749,
+   "type": "session_end",
+   "ms": 2461,
+   "activeMs": 0,
+   "reason": "hidden",
+   "last": "collect"
+  },
+  {
+   "t": 1793299722989,
+   "type": "session_start",
+   "source": "direct",
+   "gapH": 0,
+   "n": 2,
+   "build": "on"
+  },
+  {
+   "t": 1793299723045,
+   "type": "room_built",
+   "rooms": 10
+  },
+  {
+   "t": 1793299723045,
+   "type": "item_placed",
+   "room": 0,
+   "n": 2
+  },
+  {
+   "t": 1793299723045,
+   "type": "collect",
+   "id": "painting:harvesters",
+   "collection": "painting",
+   "rarity": 1,
+   "fresh": true,
+   "n": 1
+  },
+  {
+   "t": 1793299723045,
+   "type": "collect",
+   "id": "painting:horse-fair",
+   "collection": "painting",
+   "rarity": 1,
+   "fresh": true,
+   "n": 1
+  },
+  {
+   "t": 1793299755418,
+   "type": "collect",
+   "id": "mineral:halite",
+   "collection": "mineral",
+   "rarity": 1,
+   "fresh": true,
+   "n": 1
+  },
+  {
+   "t": 1793299755420,
+   "type": "dig",
+   "spot": "one:20,24"
+  },
+  {
+   "t": 1793299764658,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": true,
+   "n": 1
+  },
+  {
+   "t": 1793299764658,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793299781993,
+   "type": "collect",
+   "id": "mineral:malachite",
+   "collection": "mineral",
+   "rarity": 2,
+   "fresh": true,
+   "n": 1
+  },
+  {
+   "t": 1793299781994,
+   "type": "dig",
+   "spot": "one:12,24"
+  },
+  {
+   "t": 1793299789881,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": true,
+   "n": 1
+  },
+  {
+   "t": 1793299789881,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793299805331,
+   "type": "collect",
+   "id": "fossil:amber",
+   "collection": "fossil",
+   "rarity": 3,
+   "fresh": true,
+   "n": 1
+  },
+  {
+   "t": 1793299805332,
+   "type": "dig",
+   "spot": "one:16,23"
+  },
+  {
+   "t": 1793299805332,
+   "type": "daily_dig_goal"
+  },
+  {
+   "t": 1793299805332,
+   "type": "coins",
+   "delta": 120,
+   "balance": 420
+  },
+  {
+   "t": 1793299816884,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793299816884,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793299837330,
+   "type": "collect",
+   "id": "fossil:shark-tooth",
+   "collection": "fossil",
+   "rarity": 2,
+   "fresh": true,
+   "n": 1
+  },
+  {
+   "t": 1793299837330,
+   "type": "dig",
+   "spot": "one:21,23"
+  },
+  {
+   "t": 1793299847917,
+   "type": "collect",
+   "id": "fish:trout",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": true,
+   "n": 1
+  },
+  {
+   "t": 1793299847917,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793299866949,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793299866950,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793299877202,
+   "type": "collect",
+   "id": "fish:trout",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793299877202,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793299894669,
+   "type": "collect",
+   "id": "fish:trout",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793299894670,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793299903721,
+   "type": "collect",
+   "id": "find:coin",
+   "collection": "find",
+   "rarity": 3,
+   "fresh": true,
+   "n": 1
+  },
+  {
+   "t": 1793299915476,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793299915476,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793299939528,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793299939528,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793299960147,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793299960148,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793299971821,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793299971821,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793299984129,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793299984129,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300004092,
+   "type": "collect",
+   "id": "find:coin",
+   "collection": "find",
+   "rarity": 3,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300013392,
+   "type": "collect",
+   "id": "fish:trout",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300013392,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300023953,
+   "type": "collect",
+   "id": "fish:carp",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": true,
+   "n": 1
+  },
+  {
+   "t": 1793300023953,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300035468,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300035468,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300048227,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": true,
+   "n": 1
+  },
+  {
+   "t": 1793300048227,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300059258,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300059259,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300071446,
+   "type": "collect",
+   "id": "fish:trout",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300071446,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300084177,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300084177,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300095337,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300095338,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300105534,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300105534,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300116625,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300116626,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300126756,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300126756,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300139629,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300139629,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300164963,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300164963,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300173532,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300173533,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300184507,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300184507,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300196009,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300196009,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300208624,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300208624,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300220581,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300220581,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300230350,
+   "type": "collect",
+   "id": "fish:trout",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300230351,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300242641,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300242641,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300270522,
+   "type": "collect",
+   "id": "fish:trout",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300270522,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300285416,
+   "type": "collect",
+   "id": "fish:trout",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300285416,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300306193,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300306193,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300334065,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300334066,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300348642,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300348643,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300373037,
+   "type": "collect",
+   "id": "fish:carp",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300373037,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300384175,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300384175,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300400840,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300400840,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300434196,
+   "type": "collect",
+   "id": "fish:trout",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300434197,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300444926,
+   "type": "collect",
+   "id": "fish:koi",
+   "collection": "fish",
+   "rarity": 3,
+   "fresh": true,
+   "n": 1
+  },
+  {
+   "t": 1793300444927,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300454283,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300454283,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300466364,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300466364,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300476655,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300476655,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300488041,
+   "type": "collect",
+   "id": "fish:carp",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300488041,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300499927,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300499927,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300512181,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300512181,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300524862,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300524862,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300537890,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300537891,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300546355,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300546355,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300555762,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300555762,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300566079,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300566079,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300574471,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300574471,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300583374,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300583374,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300592377,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300592378,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300622421,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300622421,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300643402,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300643402,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300653634,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300653634,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300664532,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300664532,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300685116,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300685116,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300698226,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300698226,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300708541,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300708541,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300719752,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300719752,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300729531,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300729531,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300741538,
+   "type": "collect",
+   "id": "fish:trout",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300741538,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300752694,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300752694,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300760780,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300760780,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300773733,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300773733,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300785313,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300785313,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300797795,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300797795,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300808179,
+   "type": "collect",
+   "id": "fish:koi",
+   "collection": "fish",
+   "rarity": 3,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300808179,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300817261,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300817261,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300827707,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300827707,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300838056,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300838056,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300849050,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300849050,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300857216,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300857216,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300865908,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300865908,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300877724,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300877725,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300886837,
+   "type": "collect",
+   "id": "fish:carp",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300886837,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300896971,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300896971,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300908624,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300908624,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300917676,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300917676,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300926836,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300926836,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300935906,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300935906,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300960662,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300960663,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300971216,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300971216,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300979835,
+   "type": "collect",
+   "id": "fish:trout",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300979835,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793300990515,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793300990515,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301000197,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301000197,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301021565,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301021565,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301032993,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301032994,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301045744,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301045744,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301054527,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301054527,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301063163,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301063163,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301074925,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301074926,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301095420,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301095420,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301105056,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301105056,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301115406,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301115406,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301136222,
+   "type": "collect",
+   "id": "fish:trout",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301136222,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301155199,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301155199,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301169200,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301169200,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301179978,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301179978,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301207939,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301207939,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301218889,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301218889,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301236693,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301236693,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301251020,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301251020,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301262078,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301262078,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301277021,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301277021,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301293331,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301293331,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301310490,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301310490,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301321944,
+   "type": "collect",
+   "id": "fish:carp",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301321944,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301333896,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301333896,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301361085,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301361085,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301371683,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301371684,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301386989,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301386989,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301398039,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301398039,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301409782,
+   "type": "collect",
+   "id": "fish:trout",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301409782,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301421905,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301421905,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301435916,
+   "type": "collect",
+   "id": "fish:carp",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301435916,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301447153,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301447153,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301460374,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301460374,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301475033,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301475033,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301486027,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301486027,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301502735,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301502735,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301527956,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301527956,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301541469,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301541469,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301559048,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301559048,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301571771,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301571771,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301582609,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301582609,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301597340,
+   "type": "collect",
+   "id": "fish:koi",
+   "collection": "fish",
+   "rarity": 3,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301597340,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301611941,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301611941,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301628748,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301628748,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301643380,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301643380,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301655368,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301655369,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301670566,
+   "type": "collect",
+   "id": "fish:carp",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301670566,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301689597,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301689597,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301736002,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301736002,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301749257,
+   "type": "collect",
+   "id": "fish:carp",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301749257,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301761614,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301761614,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301776807,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301776807,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301794592,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301794592,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301807400,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301807400,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301818649,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301818649,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301829699,
+   "type": "collect",
+   "id": "fish:carp",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301829699,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301844249,
+   "type": "collect",
+   "id": "fish:trout",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301844249,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301856941,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301856942,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301870583,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301870583,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301903028,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301903028,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301914180,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301914180,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301944494,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301944495,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301961358,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301961359,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793301975147,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793301975147,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302000920,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302000920,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302018667,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302018667,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302053021,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302053021,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302067365,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302067365,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302078564,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302078565,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302093193,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302093193,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302125114,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302125114,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302152252,
+   "type": "collect",
+   "id": "fish:carp",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302152252,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302167265,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302167265,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302179486,
+   "type": "collect",
+   "id": "fish:carp",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302179486,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302195900,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302195901,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302209110,
+   "type": "collect",
+   "id": "fish:koi",
+   "collection": "fish",
+   "rarity": 3,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302209110,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302225496,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302225497,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302237937,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302237937,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302266214,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302266214,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302282762,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302282762,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302298064,
+   "type": "collect",
+   "id": "fish:carp",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302298064,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302314460,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302314460,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302326628,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302326628,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302355224,
+   "type": "collect",
+   "id": "fish:trout",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302355225,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302365966,
+   "type": "collect",
+   "id": "fish:trout",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302365966,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302377343,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302377343,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302391404,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302391404,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302404734,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302404734,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302420464,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302420465,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302434406,
+   "type": "collect",
+   "id": "fish:carp",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302434406,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302444798,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302444798,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302459131,
+   "type": "collect",
+   "id": "fish:carp",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302459131,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302473355,
+   "type": "collect",
+   "id": "find:coin",
+   "collection": "find",
+   "rarity": 3,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302485031,
+   "type": "collect",
+   "id": "fish:carp",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302485032,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302496100,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302496100,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302513506,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302513506,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302525165,
+   "type": "collect",
+   "id": "fish:trout",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302525165,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302542370,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302542370,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302572897,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302572897,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302586533,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302586533,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302603612,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302603612,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302617908,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302617908,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302648486,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302648486,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302660929,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302660930,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302679324,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302679324,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302693708,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302693709,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302707223,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302707223,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302724791,
+   "type": "collect",
+   "id": "fish:carp",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302724791,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302735287,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302735287,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302752753,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302752753,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302770504,
+   "type": "collect",
+   "id": "fish:trout",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302770504,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302782083,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302782083,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302794750,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302794750,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302808789,
+   "type": "collect",
+   "id": "fish:trout",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302808789,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302824196,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302824196,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302835808,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302835808,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302849875,
+   "type": "collect",
+   "id": "find:coin",
+   "collection": "find",
+   "rarity": 3,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302864321,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302864322,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302890108,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302890108,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302904995,
+   "type": "collect",
+   "id": "fish:trout",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302904995,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302930934,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302930935,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302941414,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302941414,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302954872,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302954873,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302965369,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302965369,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302979724,
+   "type": "collect",
+   "id": "fish:trout",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302979724,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793302994546,
+   "type": "collect",
+   "id": "fish:trout",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793302994546,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793303011833,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793303011833,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793303028094,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793303028094,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793303041428,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793303041428,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793303058481,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793303058482,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793303074832,
+   "type": "collect",
+   "id": "fish:trout",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793303074832,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793303103205,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793303103205,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793303115184,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793303115184,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793303128237,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793303128237,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793303144593,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793303144593,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793303158805,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793303158805,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793303173297,
+   "type": "collect",
+   "id": "fish:carp",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793303173297,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793303185986,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793303185986,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793303201702,
+   "type": "collect",
+   "id": "fish:koi",
+   "collection": "fish",
+   "rarity": 3,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793303201702,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793303218113,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793303218113,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793303261472,
+   "type": "collect",
+   "id": "fish:trout",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793303261472,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793303275414,
+   "type": "collect",
+   "id": "fish:trout",
+   "collection": "fish",
+   "rarity": 2,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793303275414,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793303293057,
+   "type": "collect",
+   "id": "find:coin",
+   "collection": "find",
+   "rarity": 3,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793303309383,
+   "type": "collect",
+   "id": "fish:minnow",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793303309384,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793303326195,
+   "type": "collect",
+   "id": "fish:bluegill",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793303326195,
+   "type": "catch",
+   "night": false
+  },
+  {
+   "t": 1793303339582,
+   "type": "collect",
+   "id": "fish:perch",
+   "collection": "fish",
+   "rarity": 1,
+   "fresh": false,
+   "n": 1
+  },
+  {
+   "t": 1793303339582,
+   "type": "catch",
+   "night": false
+  }
+ ],
+ "measured": {
+  "casts": 278,
+  "msPerCast": 12893.595667870037,
+  "digs": 4
+ }
+}

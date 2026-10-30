@@ -1,0 +1,43 @@
+/* Build flags (src/measure/flags.js). Default builds have none of these classes, so nothing changes.
+   The progression layer's reward cards are filtered in src/progression/index.js (queueShows); these hide the rest. */
+
+/* rank: the rank pill's rank and bar, and the skill bar */
+body.no-rank #prog-pill .pp-rank,
+body.no-rank #prog-pill .pp-bar,
+body.no-rank #prog-skill { display: none !important; }
+/* with neither rank nor goals there is nothing left in the pill */
+body.no-rank.no-goals #prog-pill { display: none !important; }
+
+/* goals: the list, its claim buttons, the Goals tab and the overview's "Next goals" heading */
+body.no-goals .quest-list,
+body.no-goals [data-jtab='goals'],
+body.no-goals .ui-label:has(+ .quest-list),
+body.no-goals .jmore,
+body.no-goals #prog-pill .pp-goal,
+body.no-goals #prog-pill .pp-fold,
+body.no-goals [data-fj='goals'] { display: none !important; }
+
+/* payouts: every Claim button and gold badge on sets, milestones and goals */
+body.no-payouts .quest-claim,
+body.no-payouts .quest-reward { display: none !important; }
+
+/* daily: the Today tile in the menu hub, and the field journal's Events tab (the event track) */
+body.no-daily #daily-btn,
+body.no-daily [data-fj='events'] { display: none !important; }
+
+/* fanfare: celebration cards, confetti and "New!" / "Biggest yet!" badges */
+body.no-fanfare #celebrate,
+body.no-fanfare .confetti,
+body.no-fanfare .catch-new { display: none !important; }
+
+/* the ?evlog panel and the beta consent card */
+.prog-log {
+  position: fixed; left: 8px; right: 8px; bottom: calc(8px + env(safe-area-inset-bottom)); z-index: 9999;
+  background: #1d1714ee; color: #f4f0e6; border: 2px solid #f2d36b; border-radius: 8px; padding: 8px 10px;
+  font: 14px/1.3 system-ui, sans-serif;
+}
+.prog-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+.prog-row .pixel-btn { min-height: var(--ui-hit, 44px); min-width: var(--ui-hit, 44px); padding: 0 12px; }
+.prog-consent { position: fixed; inset: 0; z-index: 9999; background: #0008; display: grid; place-items: start center; padding: max(16px, 12vh) 16px 16px; } /* top third, like every non-urgent card */
+.prog-card { max-width: 360px; background: #f4f0e6; color: #1d1714; border-radius: 10px; padding: 14px 16px; font: 15px/1.4 system-ui, sans-serif; }
+.prog-card p { margin: 8px 0; }

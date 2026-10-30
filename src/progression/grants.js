@@ -3,6 +3,7 @@
 import { TUNING } from './config.js';
 import { addXp } from './rank.js';
 import COSMETICS from './data/cosmetics.json' with { type: 'json' };
+import { flagOn } from '../measure/flags.js';
 
 export { COSMETICS };
 
@@ -37,6 +38,8 @@ export const UNLOCK_NAMES = {
 export function grant(p, rewards, T = TUNING) {
   const s = p.state;
   const out = [];
+  // the strip test (?progression=off, or ?flags=-payouts): unlocks still arrive, nothing else is handed out
+  if (!flagOn('payouts')) rewards = (rewards || []).filter((r) => r.unlock || r.recipe);
   (rewards || []).forEach((r) => {
     if (r.gold) p.gold.add(r.gold);
     if (r.bait) s.fish.baits[r.bait[0]] = (s.fish.baits[r.bait[0]] || 0) + r.bait[1];

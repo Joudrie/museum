@@ -1,0 +1,11 @@
+test,baseline (placeholder),effect,players_per_arm,players_total,note
+D1 retention,0.4,+5% points,1534,3068,"two proportions, 5% two-sided, 80% power"
+D1 retention,0.4,+10% points,388,776,"two proportions, 5% two-sided, 80% power"
+D7 retention,0.15,+3% points,2402,4804,"two proportions, 5% two-sided, 80% power"
+D7 retention,0.15,+5% points,906,1812,"two proportions, 5% two-sided, 80% power"
+D7 retention,0.15,+8% points,377,754,"two proportions, 5% two-sided, 80% power"
+D30 retention,0.06,+2% points,2554,5108,"two proportions, 5% two-sided, 80% power"
+D30 retention,0.06,+4% points,721,1442,"two proportions, 5% two-sided, 80% power"
+time to churn (log-rank),85% churn in window,hazard ratio 0.8,372,743,631 churn events needed (Schoenfeld)
+time to churn (log-rank),85% churn in window,hazard ratio 0.7,146,291,247 churn events needed (Schoenfeld)
+time to churn (log-rank),85% churn in window,hazard ratio 0.6,72,143,121 churn events needed (Schoenfeld)

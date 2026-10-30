@@ -7,13 +7,14 @@ import { regionOfMap, regionInfo, allSpecies, speciesById, REGIONS } from './spe
 import RODS from './data/rods.json' with { type: 'json' };
 import { levelFor, hasPerk, perkSet } from './skills.js';
 import { makeReel } from './reel.js';
+import { unlockAll } from '../measure/flags.js';
 
 export { RODS };
 
 export function rodUnlocked(state, id) {
   const r = RODS[id];
   if (!r) return false;
-  if (!r.unlock) return true;
+  if (!r.unlock || unlockAll()) return true; // (unlockAll: the ?progression=off strip test)
   const owned = !r.price || !!state.market.owned[`rod:${id}`];
   if (r.unlock === 'goal:night3') return (state.fish.nightCatches >= 3 || !!state.unlocks['rod:glow']) && owned;
   return !!state.unlocks[r.unlock] && owned;

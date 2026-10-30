@@ -1,0 +1,43 @@
+profile,source,week_1_per_session,day_30_per_session,day_60_per_session,who_makes_more
+regular,fishing,2.324,0.325,0.002,a species: data the developer approves (and later a sprite)
+regular,gallery shop,1.299,0.262,0.019,a museum piece: data the developer approves
+regular,fishing: trophy,0.29,0.133,0.047,procedural: nobody (sizes roll on every catch)
+regular,fishing: variant,0.327,0.074,0.059,procedural: nobody (a palette)
+regular,unlock,0.63,0.045,0.058,a rank reward: data
+regular,exploring: secret,1.076,0.039,0.0,procedural placement: nobody (names from a list of 12)
+regular,exploring: place,0.451,0.017,0.0,an island: painted by hand
+regular,metal detector,0.749,0.014,0.003,a museum piece: data the developer approves
+regular,the X,0.018,0.004,0.0,other
+regular,people,0.239,0.0,0.0,a named islander: written and approved
+regular,dig,0.321,0.0,0.0,a museum piece: data the developer approves
+regular,lead,0.08,0.0,0.0,other
+regular,expedition,0.913,0.0,0.0,an island: painted by hand
+regular,guest gift,0.234,0.0,0.0,other
+heavy,gallery shop,0.776,0.147,0.0,a museum piece: data the developer approves
+heavy,fishing,1.799,0.096,0.0,a species: data the developer approves (and later a sprite)
+heavy,fishing: trophy,0.673,0.071,0.0,procedural: nobody (sizes roll on every catch)
+heavy,fishing: variant,0.744,0.065,0.011,procedural: nobody (a palette)
+heavy,unlock,0.524,0.048,0.0,a rank reward: data
+heavy,metal detector,0.488,0.01,0.001,a museum piece: data the developer approves
+heavy,dig,0.296,0.007,0.008,a museum piece: data the developer approves
+heavy,exploring: secret,1.027,0.002,0.0,procedural placement: nobody (names from a list of 12)
+heavy,the X,0.01,0.002,0.0,other
+heavy,people,0.143,0.0,0.0,a named islander: written and approved
+heavy,exploring: place,0.418,0.0,0.0,an island: painted by hand
+heavy,lead,0.048,0.0,0.0,other
+heavy,guest gift,0.125,0.0,0.0,other
+heavy,expedition,0.583,0.0,0.0,an island: painted by hand
+casual,gallery shop,3.091,0.775,0.176,a museum piece: data the developer approves
+casual,exploring: secret,0.722,0.522,0.031,procedural placement: nobody (names from a list of 12)
+casual,expedition,0.754,0.308,0.0,an island: painted by hand
+casual,fishing,2.698,0.254,0.192,a species: data the developer approves (and later a sprite)
+casual,exploring: place,0.272,0.196,0.006,an island: painted by hand
+casual,metal detector,1.154,0.08,0.007,a museum piece: data the developer approves
+casual,fishing: trophy,0.175,0.08,0.079,procedural: nobody (sizes roll on every catch)
+casual,unlock,1.099,0.036,0.003,a rank reward: data
+casual,the X,0.011,0.028,0.001,other
+casual,fishing: variant,0.235,0.016,0.016,procedural: nobody (a palette)
+casual,people,0.479,0.008,0.005,a named islander: written and approved
+casual,guest gift,0.34,0.0,0.0,other
+casual,dig,0.975,0.0,0.0,a museum piece: data the developer approves
+casual,lead,0.201,0.0,0.0,other

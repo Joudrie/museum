@@ -1,0 +1,6 @@
+unit,exists_now,per_calendar_day,human_minutes_per_unit,human_part,assumption_if_blank
+species / collection entry,222,24.7,FILL_IN,"approve the sourced draft, set rarity, later redraw its sprite",10
+NPC with dialogue,32,3.6,FILL_IN,read and approve lines; true facts need the quoted source checked,20
+map screen (island),10,1.1,FILL_IN,paint it in the builder on the phone (Main Island was drawn by hand),90
+event (seasonal),0,0.0,FILL_IN,decide the theme and approve the decor; no event exists yet,240
+decor item,98,10.9,FILL_IN,redraw the placeholder sprite by hand (TODO rule 8),30

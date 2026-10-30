@@ -10,6 +10,7 @@ import { lodgeTab } from './lodgeui.js';
 import { eventsTab } from './eventsui.js';
 import { collectionTab } from '../../collections/tab.js';
 import { uiIcon } from '../../ui/icons.js';
+import { flagOn } from '../../measure/flags.js';
 
 let el = null;
 let tab = 'goals';
@@ -30,6 +31,7 @@ function build() {
 
 function render() {
   const p = progression();
+  if (tab === 'goals' && !flagOn('goals')) tab = 'fish'; // the strip test has no Goals tab
   const bar = el.querySelector('.pg-tabs');
   bar.replaceChildren();
   TABS.forEach((t) => {

@@ -1,0 +1,121 @@
+{
+ "casual": {
+  "new_things_per_session": {
+   "session 1": 18.9,
+   "week 1": 12.25,
+   "day 30": 2.31,
+   "day 60": 0.51,
+   "day 90": 0.39
+  },
+  "pages_done_by_day60_P50": [
+   "armour",
+   "arrowhead",
+   "coin",
+   "find",
+   "glassflower",
+   "insect",
+   "invention",
+   "map",
+   "meteorite",
+   "mineral",
+   "pottery",
+   "shell",
+   "ship",
+   "stamp"
+  ],
+  "pages_still_open_day60_P50": [],
+  "first_day_the_week_ahead_averages_under_one_new_thing_a_session": 51,
+  "share_of_obtainable_collected_by_day90": {
+   "P10": 0.7006802721088435,
+   "P50": 0.7210884353741497,
+   "P90": 0.7414965986394558,
+   "P99": 0.7551020408163265
+  },
+  "minutes_since_last_new_thing_at_day90": {
+   "P10": 0.8208359354556478,
+   "P50": 14.122662166700593,
+   "P90": 62.69841813676146,
+   "P99": 135.1245470883706
+  }
+ },
+ "regular": {
+  "new_things_per_session": {
+   "session 1": 19.19,
+   "week 1": 8.93,
+   "day 30": 0.91,
+   "day 60": 0.19,
+   "day 90": 0.1
+  },
+  "pages_done_by_day60_P50": [
+   "armour",
+   "arrowhead",
+   "coin",
+   "find",
+   "glassflower",
+   "insect",
+   "invention",
+   "map",
+   "meteorite",
+   "mineral",
+   "pottery",
+   "shell",
+   "ship",
+   "stamp"
+  ],
+  "pages_still_open_day60_P50": [],
+  "first_day_the_week_ahead_averages_under_one_new_thing_a_session": 19,
+  "share_of_obtainable_collected_by_day90": {
+   "P10": 0.8503401360544217,
+   "P50": 0.8571428571428571,
+   "P90": 0.8707482993197279,
+   "P99": 0.8707482993197279
+  },
+  "minutes_since_last_new_thing_at_day90": {
+   "P10": 4.91399731528918,
+   "P50": 94.45459611671458,
+   "P90": 439.40819464593505,
+   "P99": 780.1033855163087
+  }
+ },
+ "heavy": {
+  "new_things_per_session": {
+   "session 1": 23.04,
+   "week 1": 7.65,
+   "day 30": 0.45,
+   "day 60": 0.02,
+   "day 90": 0.01
+  },
+  "pages_done_by_day60_P50": [
+   "armour",
+   "arrowhead",
+   "coin",
+   "find",
+   "glassflower",
+   "insect",
+   "invention",
+   "map",
+   "meteorite",
+   "mineral",
+   "pottery",
+   "shell",
+   "ship",
+   "stamp"
+  ],
+  "pages_still_open_day60_P50": [
+   "fossil"
+  ],
+  "first_day_the_week_ahead_averages_under_one_new_thing_a_session": 16,
+  "share_of_obtainable_collected_by_day90": {
+   "P10": 0.8775510204081632,
+   "P50": 0.8843537414965986,
+   "P90": 0.891156462585034,
+   "P99": 0.891156462585034
+  },
+  "minutes_since_last_new_thing_at_day90": {
+   "P10": 291.59044518197607,
+   "P50": 1644.899706962232,
+   "P90": 3206.7767233481964,
+   "P99": 3321.8202854166375
+  }
+ }
+}

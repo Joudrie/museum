@@ -10,6 +10,7 @@ import './daily.css';
 import './daily.js';
 import './share.css';
 import './share.js';
+import './measure/boot.js'; // build flags now; the event log and sessions a moment later (docs/progression/)
 
 // Render at device resolution so pixel art stays sharp on phones.
 const parent = document.getElementById('game');

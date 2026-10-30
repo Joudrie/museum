@@ -1,0 +1,4 @@
+data/logs/synthetic/
+data/analysis/synthetic/
+figures/synthetic/
+__pycache__/

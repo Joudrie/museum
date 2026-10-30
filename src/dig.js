@@ -9,6 +9,7 @@ import { sfx } from './music.js';
 import { uiIcon } from './ui/icons.js';
 import { haptic } from './ui.js';
 import { addCoins } from './wallet.js';
+import { unlockAll } from './measure/flags.js';
 import { dayNum } from './daily.js';
 
 const KEY = 'curation.digs'; // { spotKey: readyAt (ms) }
@@ -28,7 +29,7 @@ export const TOOLS = {
 const DIG_COLLECTIONS = () => ['mineral', 'fossil', 'pottery', 'coin', 'arrowhead', 'shell', 'meteorite', 'map'];
 /** How many different dug things you have found so far (decides which tools you have). */
 export const foundCount = () => DIG_COLLECTIONS().reduce((n, c) => n + count(c), 0);
-export const toolUnlocked = (t, found = foundCount()) => found >= (TOOLS[t]?.need ?? Infinity);
+export const toolUnlocked = (t, found = foundCount()) => found >= (TOOLS[t]?.need ?? Infinity) || (!!TOOLS[t] && unlockAll()); // (unlockAll: the ?progression=off strip test)
 
 // Today's dig goal: gentle, a few coins for a few digs, no streak and nothing lost if you skip a day.
 const DAILY = 'curation.digdaily'; // { day, n, paid }
@@ -134,7 +135,7 @@ export function startDig(key, { onClose, onFound, collection = 'mineral', entry 
         return b;
       }),
     );
-    tools.hidden = fixed || found < TOOLS.trowel.need; // nothing to choose until a second tool is earned
+    tools.hidden = fixed || (found < TOOLS.trowel.need && !unlockAll()); // nothing to choose until a second tool is earned
   };
   handle = setup(key, { onClose, onFound, entry: roll(), tool });
   draw();

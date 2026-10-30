@@ -1,0 +1,46 @@
+{
+ "generated": "docs/progression/tools/islands_probe.cjs",
+ "when": "2026-10-29T22:57:06.055Z",
+ "note": "regions.json has 12/6/12/6/5 secrets and a clue on every island, and npcs.json a named islander on each",
+ "islands": [
+  {
+   "map": "main",
+   "regionKey": "main",
+   "secrets": 12,
+   "clue": true,
+   "named": [
+    "wen"
+   ]
+  },
+  {
+   "map": null,
+   "regionKey": "one",
+   "secrets": 6,
+   "clue": true,
+   "named": [
+    "mara"
+   ]
+  },
+  {
+   "map": "isle-1",
+   "regionKey": "isle-1",
+   "secrets": 3,
+   "clue": false,
+   "named": []
+  },
+  {
+   "map": "exp-pirate",
+   "regionKey": "exp-pirate",
+   "secrets": 3,
+   "clue": false,
+   "named": []
+  },
+  {
+   "map": "exp-wreck",
+   "regionKey": "exp-wreck",
+   "secrets": 3,
+   "clue": false,
+   "named": []
+  }
+ ]
+}

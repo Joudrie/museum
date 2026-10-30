@@ -1,0 +1,59 @@
+category,item,count,unit,words,read_minutes,obtainable_now,source,notes
+collection,painting,49,entries,945,4.7,yes,src/collections/data (all),rarity 1/2/3/4/5 = 49/0/0/0/0; sets 7; via: owned from the start
+collection,fish,72,entries,1111,5.6,yes,src/collections/data (earned),rarity 1/2/3/4/5 = 14/24/16/8/10; sets 10; via: fishing
+collection,find,3,entries,55,0.3,yes,src/collections/data (earned),"rarity 1/2/3/4/5 = 0/1/2/0/0; sets 0; via: fishing, Gallery Shop (3-5 random a day)"
+collection,mineral,8,entries,222,1.1,yes,src/collections/data (earned),"rarity 1/2/3/4/5 = 3/3/2/0/0; sets 1; via: home dig spots, expedition digs, visitor gifts, smashing cracked rock (pick), Gallery Shop (3-5 random a day)"
+collection,fossil,10,entries,318,1.6,yes,src/collections/data (earned),"rarity 1/2/3/4/5 = 3/2/2/3/0; sets 1; via: home dig spots, expedition digs, visitor gifts, Gallery Shop (3-5 random a day)"
+collection,pottery,6,entries,196,1,yes,src/collections/data (earned),"rarity 1/2/3/4/5 = 3/2/1/0/0; sets 1; via: hunts (metal detector at 10 finds, riddlers, the X), Gallery Shop (3-5 random a day)"
+collection,coin,6,entries,177,0.9,yes,src/collections/data (earned),"rarity 1/2/3/4/5 = 1/3/1/1/0; sets 1; via: hunts (metal detector at 10 finds, riddlers, the X), Gallery Shop (3-5 random a day)"
+collection,arrowhead,6,entries,158,0.8,yes,src/collections/data (earned),"rarity 1/2/3/4/5 = 2/2/2/0/0; sets 1; via: hunts (metal detector at 10 finds, riddlers, the X), Gallery Shop (3-5 random a day)"
+collection,shell,6,entries,178,0.9,shop only,src/collections/data (earned),rarity 1/2/3/4/5 = 2/2/2/0/0; sets 1; via: Gallery Shop (3-5 random a day)
+collection,meteorite,5,entries,147,0.7,partly,src/collections/data (earned),rarity 1/2/3/4/5 = 0/2/2/1/0; sets 1; via: Gallery Shop (3-5 random a day); 1 with no way to get them
+collection,map,4,entries,124,0.6,yes,src/collections/data (earned),"rarity 1/2/3/4/5 = 0/4/0/0/0; sets 0; via: hunts (metal detector at 10 finds, riddlers, the X), Gallery Shop (3-5 random a day)"
+collection,insect,4,entries,118,0.6,shop only,src/collections/data (earned),rarity 1/2/3/4/5 = 1/1/2/0/0; sets 1; via: Gallery Shop (3-5 random a day)
+collection,stamp,4,entries,122,0.6,partly,src/collections/data (earned),rarity 1/2/3/4/5 = 0/1/1/2/0; sets 1; via: Gallery Shop (3-5 random a day); 2 with no way to get them
+collection,ship,4,entries,131,0.7,shop only,src/collections/data (earned),rarity 1/2/3/4/5 = 1/2/1/0/0; sets 1; via: Gallery Shop (3-5 random a day)
+collection,glassflower,4,entries,130,0.7,shop only,src/collections/data (earned),rarity 1/2/3/4/5 = 2/2/0/0/0; sets 1; via: Gallery Shop (3-5 random a day)
+collection,armour,4,entries,137,0.7,shop only,src/collections/data (earned),rarity 1/2/3/4/5 = 1/2/1/0/0; sets 1; via: Gallery Shop (3-5 random a day)
+collection,clock,4,entries,117,0.6,shop only,src/collections/data (earned),rarity 1/2/3/4/5 = 2/1/1/0/0; sets 1; via: Gallery Shop (3-5 random a day)
+collection,invention,4,entries,129,0.6,shop only,src/collections/data (earned),rarity 1/2/3/4/5 = 1/1/2/0/0; sets 1; via: Gallery Shop (3-5 random a day)
+collection,visitor,19,entries,226,1.1,yes,src/collections/data (earned),rarity 1/2/3/4/5 = 0/11/7/1/0; sets 2; via: meeting them (all 19 stand in the main hall now)
+dialogue,guest conversations (chatter),13,visitor kinds,1187,5.9,yes,src/chatter_lines.js,"26 jokes, 7 tips, 13 asks; each topic offered once per visitor"
+dialogue,visitor one-liners (lines.js),20,personalities,1897,9.5,yes,src/lines.js,
+dialogue,famous visitors,19,people,1596,8,yes,src/famous.js,"all spawn in the main hall at once (""for now: all of them, all the time"", RoomScene)"
+story,heist arc (The Empty Frames),5,chapters,460,2.3,yes,src/stories/heist.js,
+story,famous visitor chains,3,visitors,663,3.3,yes,src/stories/chains.js,9 steps in all; 16 famous visitors have no chain
+story,leads,8,leads,337,1.7,yes,src/leads.js,
+puzzle,riddles,12,riddles,207,1,only where a riddler tile is placed,src/puzzles-data.js,
+expedition island,Red Badlands,1,38x32 map,57,0.3,after its lead,src/maps/exp-badlands.json,"2 goals, 5 spots (5 digs), finds: fossil, fossil, fossil, fossil, fossil; climate summer/clear; 1 people, 1 animals"
+expedition island,Thieves’ Rock,1,34x32 map,87,0.4,after its lead,src/maps/exp-heist.json,"3 goals, 6 spots (2 digs), finds: special, mineral, mineral; climate summer/clear; 0 people, 1 animals"
+expedition island,The Frozen North,1,36x34 map,56,0.3,after its lead,src/maps/exp-north.json,"2 goals, 5 spots (3 digs), finds: fossil, fossil, fossil, special; climate winter/snow; 1 people, 1 animals"
+expedition island,Skull Isle,1,36x38 map,108,0.5,after its lead,src/maps/exp-pirate.json,"3 goals, 5 spots (3 digs), finds: mineral, mineral, mineral, special; climate summer/clear; 1 people, 3 animals"
+expedition island,The Lost Temple,1,36x36 map,97,0.5,after its lead,src/maps/exp-temple.json,"4 goals, 14 spots (3 digs), finds: special, mineral, mineral, fossil; climate summer/rain; 0 people, 3 animals"
+expedition island,Sandstone Tomb,1,36x34 map,89,0.4,after its lead,src/maps/exp-tomb.json,"4 goals, 10 spots (3 digs), finds: special, mineral, mineral, mineral; climate summer/clear; 1 people, 1 animals"
+expedition island,The Drowned Reef,1,34x30 map,44,0.2,after its lead,src/maps/exp-wreck.json,"2 goals, 6 spots (2 digs), finds: special, special, special, mineral, mineral, special; climate summer/clear; 1 people, 2 animals"
+home island,Untitled island,1,80x80 map,0,0,yes,src/maps/isle-1.json,"2 dig spots, 1 X, 0 people, 0 animals, pond yes"
+home island,Main Island,1,80x80 map,0,0,yes,src/maps/main-island.json,"3 dig spots, 1 X, 46 people, 25 animals, pond yes"
+home island,Island One,1,code-drawn map,0,0,yes,src/IslandScene.js,"4 dig spots (mineral, mineral, fossil, fossil), a pond and a cottage; museum doors locked"
+build,decor items,98,items,0,0,yes (all free while testing),src/items.js,"seating 3, display 9, plants 8, lights 3, sculpture 3, relics 9, science 9, features 10, services 7, retired 2, seasonal 4, columns 31"
+build,Curator’s Office levels,5,levels,0,0,yes (free while testing),src/economy.js,0 / 500 / 2000 / 8000 / 30000 gold
+build,staff upgrades,12,upgrade levels,0,0,yes (free while testing),src/economy.js,
+build,security tiers,3,tiers,0,0,yes (free while testing),src/economy.js,
+build,services,4,services,0,0,yes (free while testing),src/economy.js,
+goal,goals (quests.js),19,goals,157,0,yes,src/quests.js,"4500 gold in all; 3 shown at a time; no repeat, no daily goals"
+goal,collection sets,33,sets,0,0,some,src/collections/data + artistsets.js,
+goal,codex milestones,5,milestones,0,0,yes,src/collections/milestones.js,10/25/50/75/100% of everything ever stamped
+layer,"fish species (conditions: water, time, weather, season, bait)",72,species,0,0,all but 4,"src/collections/data/fish*.js, src/progression/species.js","12 festival fish, 10 legendaries with trails; never bite on the game's weather and climates: sturgeon, anglerfish, coelacanth, oarfish"
+layer,regions (islands the boat reaches),10,regions,0,0,"by rank, then a boat bought",src/progression/data/regions.json,"main, one, isle (boat:rowboat), pirate (boat:rowboat), wreck (boat:sailboat), heist (boat:sailboat), tomb (boat:sailboat), badlands (boat:sailboat), temple (boat:sailboat), north (boat:icehull)"
+layer,secrets,66,secrets,0,0,yes (some need gear),src/progression/ui/worldlife.js,"in the data; about 42 are placed in play, because the world layer looks islands up by map id (IslandScene regionKey), so only Main Island and Island One get theirs and their legend clue and every other island gets 3 (diagnosis.md); names from a list of 12"
+layer,viewpoints and island places,30,places,0,0,yes,"src/progression/ui/worldlife.js, islandlife.js",two viewpoints an island (one needs gloves) and the island itself
+layer,named islanders,11,people,0,0,yes,src/progression/data/npcs.json,"10 hearts each, gifts, requests; only the 3 on Main Island and Island One appear in play (the same lookup)"
+layer,ranks,50,ranks,0,0,yes,src/progression/data/ranks.json,a reward every rank; Renown levels after 50
+layer,skill levels,100,levels,0,0,yes,src/progression/data/skills.json,5 skills; 50 perks
+layer,cosmetics,66,items,0,0,yes,src/progression/data/cosmetics.json,
+layer,market ladder and town projects,59,items,0,0,by rank,"src/progression/data/shop.json, projects.json",priced at 20 to 40 minutes of the target earn rate (market.js ladder)
+layer,"rods, baits, lures",18,items,0,0,by rank and gold,src/progression/data/,a rod changes the bite wait and the window only; its rareMult in rods.json is not read by fishroll.js
+layer,events,4,events a year,0,0,in their date windows,src/progression/data/events.json,"harvest 10/1–11/7, winter 12/10–1/5, bloom 3/20–4/30, regatta 6/15–8/15"
+unlock,dig tools,3,tools,0,0,yes,src/dig.js,"brush at 0 finds, trowel at 6 finds, pick at 16 finds; metal detector at 10"
+daily,daily wheel + gift,8,wheel slices,0,0,yes,src/daily.js,slices 25/40/60/40/100/25/75/250; streak forgives 3 missed days
+daily,Gallery Shop,5,pieces a day (max),0,0,yes,src/collections/shop.js,"75 entries eligible (earned, rarity 3 or less, not fish, not people)"

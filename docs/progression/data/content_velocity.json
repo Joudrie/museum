@@ -1,0 +1,407 @@
+{
+ "per_unit": [
+  {
+   "what": "collection entries",
+   "profile": "casual",
+   "units": 147,
+   "player_hours_per_unit": Infinity,
+   "runway_days_P50": Infinity,
+   "basis": "active hours to 75% of obtainable entries / entries (Monte Carlo P50)"
+  },
+  {
+   "what": "collection entries",
+   "profile": "regular",
+   "units": 147,
+   "player_hours_per_unit": 0.172,
+   "runway_days_P50": 33,
+   "basis": "active hours to 75% of obtainable entries / entries (Monte Carlo P50)"
+  },
+  {
+   "what": "collection entries",
+   "profile": "heavy",
+   "units": 147,
+   "player_hours_per_unit": 0.316,
+   "runway_days_P50": 23,
+   "basis": "active hours to 75% of obtainable entries / entries (Monte Carlo P50)"
+  },
+  {
+   "what": "text (blurbs, dialogue, story)",
+   "profile": "any",
+   "units": 11783,
+   "player_hours_per_unit": 8.3e-05,
+   "runway_days_P50": "",
+   "basis": "200 words a minute, read once"
+  }
+ ],
+ "subscription_need": [
+  {
+   "profile": "casual",
+   "sessions_per_month": 21.0,
+   "new_units_per_month": 21,
+   "human_hours_per_month": 3.5,
+   "human_minutes_per_unit": 10.0,
+   "source": "assumption (FILL_IN)"
+  },
+  {
+   "profile": "regular",
+   "sessions_per_month": 54.0,
+   "new_units_per_month": 54,
+   "human_hours_per_month": 9.0,
+   "human_minutes_per_unit": 10.0,
+   "source": "assumption (FILL_IN)"
+  },
+  {
+   "profile": "heavy",
+   "sessions_per_month": 90.0,
+   "new_units_per_month": 90,
+   "human_hours_per_month": 15.0,
+   "human_minutes_per_unit": 10.0,
+   "source": "assumption (FILL_IN)"
+  }
+ ],
+ "multipliers": [
+  {
+   "profile": "regular",
+   "source": "fishing",
+   "week_1_per_session": 2.324,
+   "day_30_per_session": 0.325,
+   "day_60_per_session": 0.002,
+   "who_makes_more": "a species: data the developer approves (and later a sprite)"
+  },
+  {
+   "profile": "regular",
+   "source": "gallery shop",
+   "week_1_per_session": 1.299,
+   "day_30_per_session": 0.262,
+   "day_60_per_session": 0.019,
+   "who_makes_more": "a museum piece: data the developer approves"
+  },
+  {
+   "profile": "regular",
+   "source": "fishing: trophy",
+   "week_1_per_session": 0.29,
+   "day_30_per_session": 0.133,
+   "day_60_per_session": 0.047,
+   "who_makes_more": "procedural: nobody (sizes roll on every catch)"
+  },
+  {
+   "profile": "regular",
+   "source": "fishing: variant",
+   "week_1_per_session": 0.327,
+   "day_30_per_session": 0.074,
+   "day_60_per_session": 0.059,
+   "who_makes_more": "procedural: nobody (a palette)"
+  },
+  {
+   "profile": "regular",
+   "source": "unlock",
+   "week_1_per_session": 0.63,
+   "day_30_per_session": 0.045,
+   "day_60_per_session": 0.058,
+   "who_makes_more": "a rank reward: data"
+  },
+  {
+   "profile": "regular",
+   "source": "exploring: secret",
+   "week_1_per_session": 1.076,
+   "day_30_per_session": 0.039,
+   "day_60_per_session": 0.0,
+   "who_makes_more": "procedural placement: nobody (names from a list of 12)"
+  },
+  {
+   "profile": "regular",
+   "source": "exploring: place",
+   "week_1_per_session": 0.451,
+   "day_30_per_session": 0.017,
+   "day_60_per_session": 0.0,
+   "who_makes_more": "an island: painted by hand"
+  },
+  {
+   "profile": "regular",
+   "source": "metal detector",
+   "week_1_per_session": 0.749,
+   "day_30_per_session": 0.014,
+   "day_60_per_session": 0.003,
+   "who_makes_more": "a museum piece: data the developer approves"
+  },
+  {
+   "profile": "regular",
+   "source": "the X",
+   "week_1_per_session": 0.018,
+   "day_30_per_session": 0.004,
+   "day_60_per_session": 0.0,
+   "who_makes_more": "other"
+  },
+  {
+   "profile": "regular",
+   "source": "people",
+   "week_1_per_session": 0.239,
+   "day_30_per_session": 0.0,
+   "day_60_per_session": 0.0,
+   "who_makes_more": "a named islander: written and approved"
+  },
+  {
+   "profile": "regular",
+   "source": "dig",
+   "week_1_per_session": 0.321,
+   "day_30_per_session": 0.0,
+   "day_60_per_session": 0.0,
+   "who_makes_more": "a museum piece: data the developer approves"
+  },
+  {
+   "profile": "regular",
+   "source": "lead",
+   "week_1_per_session": 0.08,
+   "day_30_per_session": 0.0,
+   "day_60_per_session": 0.0,
+   "who_makes_more": "other"
+  },
+  {
+   "profile": "regular",
+   "source": "expedition",
+   "week_1_per_session": 0.913,
+   "day_30_per_session": 0.0,
+   "day_60_per_session": 0.0,
+   "who_makes_more": "an island: painted by hand"
+  },
+  {
+   "profile": "regular",
+   "source": "guest gift",
+   "week_1_per_session": 0.234,
+   "day_30_per_session": 0.0,
+   "day_60_per_session": 0.0,
+   "who_makes_more": "other"
+  },
+  {
+   "profile": "heavy",
+   "source": "gallery shop",
+   "week_1_per_session": 0.776,
+   "day_30_per_session": 0.147,
+   "day_60_per_session": 0.0,
+   "who_makes_more": "a museum piece: data the developer approves"
+  },
+  {
+   "profile": "heavy",
+   "source": "fishing",
+   "week_1_per_session": 1.799,
+   "day_30_per_session": 0.096,
+   "day_60_per_session": 0.0,
+   "who_makes_more": "a species: data the developer approves (and later a sprite)"
+  },
+  {
+   "profile": "heavy",
+   "source": "fishing: trophy",
+   "week_1_per_session": 0.673,
+   "day_30_per_session": 0.071,
+   "day_60_per_session": 0.0,
+   "who_makes_more": "procedural: nobody (sizes roll on every catch)"
+  },
+  {
+   "profile": "heavy",
+   "source": "fishing: variant",
+   "week_1_per_session": 0.744,
+   "day_30_per_session": 0.065,
+   "day_60_per_session": 0.011,
+   "who_makes_more": "procedural: nobody (a palette)"
+  },
+  {
+   "profile": "heavy",
+   "source": "unlock",
+   "week_1_per_session": 0.524,
+   "day_30_per_session": 0.048,
+   "day_60_per_session": 0.0,
+   "who_makes_more": "a rank reward: data"
+  },
+  {
+   "profile": "heavy",
+   "source": "metal detector",
+   "week_1_per_session": 0.488,
+   "day_30_per_session": 0.01,
+   "day_60_per_session": 0.001,
+   "who_makes_more": "a museum piece: data the developer approves"
+  },
+  {
+   "profile": "heavy",
+   "source": "dig",
+   "week_1_per_session": 0.296,
+   "day_30_per_session": 0.007,
+   "day_60_per_session": 0.008,
+   "who_makes_more": "a museum piece: data the developer approves"
+  },
+  {
+   "profile": "heavy",
+   "source": "exploring: secret",
+   "week_1_per_session": 1.027,
+   "day_30_per_session": 0.002,
+   "day_60_per_session": 0.0,
+   "who_makes_more": "procedural placement: nobody (names from a list of 12)"
+  },
+  {
+   "profile": "heavy",
+   "source": "the X",
+   "week_1_per_session": 0.01,
+   "day_30_per_session": 0.002,
+   "day_60_per_session": 0.0,
+   "who_makes_more": "other"
+  },
+  {
+   "profile": "heavy",
+   "source": "people",
+   "week_1_per_session": 0.143,
+   "day_30_per_session": 0.0,
+   "day_60_per_session": 0.0,
+   "who_makes_more": "a named islander: written and approved"
+  },
+  {
+   "profile": "heavy",
+   "source": "exploring: place",
+   "week_1_per_session": 0.418,
+   "day_30_per_session": 0.0,
+   "day_60_per_session": 0.0,
+   "who_makes_more": "an island: painted by hand"
+  },
+  {
+   "profile": "heavy",
+   "source": "lead",
+   "week_1_per_session": 0.048,
+   "day_30_per_session": 0.0,
+   "day_60_per_session": 0.0,
+   "who_makes_more": "other"
+  },
+  {
+   "profile": "heavy",
+   "source": "guest gift",
+   "week_1_per_session": 0.125,
+   "day_30_per_session": 0.0,
+   "day_60_per_session": 0.0,
+   "who_makes_more": "other"
+  },
+  {
+   "profile": "heavy",
+   "source": "expedition",
+   "week_1_per_session": 0.583,
+   "day_30_per_session": 0.0,
+   "day_60_per_session": 0.0,
+   "who_makes_more": "an island: painted by hand"
+  },
+  {
+   "profile": "casual",
+   "source": "gallery shop",
+   "week_1_per_session": 3.091,
+   "day_30_per_session": 0.775,
+   "day_60_per_session": 0.176,
+   "who_makes_more": "a museum piece: data the developer approves"
+  },
+  {
+   "profile": "casual",
+   "source": "exploring: secret",
+   "week_1_per_session": 0.722,
+   "day_30_per_session": 0.522,
+   "day_60_per_session": 0.031,
+   "who_makes_more": "procedural placement: nobody (names from a list of 12)"
+  },
+  {
+   "profile": "casual",
+   "source": "expedition",
+   "week_1_per_session": 0.754,
+   "day_30_per_session": 0.308,
+   "day_60_per_session": 0.0,
+   "who_makes_more": "an island: painted by hand"
+  },
+  {
+   "profile": "casual",
+   "source": "fishing",
+   "week_1_per_session": 2.698,
+   "day_30_per_session": 0.254,
+   "day_60_per_session": 0.192,
+   "who_makes_more": "a species: data the developer approves (and later a sprite)"
+  },
+  {
+   "profile": "casual",
+   "source": "exploring: place",
+   "week_1_per_session": 0.272,
+   "day_30_per_session": 0.196,
+   "day_60_per_session": 0.006,
+   "who_makes_more": "an island: painted by hand"
+  },
+  {
+   "profile": "casual",
+   "source": "metal detector",
+   "week_1_per_session": 1.154,
+   "day_30_per_session": 0.08,
+   "day_60_per_session": 0.007,
+   "who_makes_more": "a museum piece: data the developer approves"
+  },
+  {
+   "profile": "casual",
+   "source": "fishing: trophy",
+   "week_1_per_session": 0.175,
+   "day_30_per_session": 0.08,
+   "day_60_per_session": 0.079,
+   "who_makes_more": "procedural: nobody (sizes roll on every catch)"
+  },
+  {
+   "profile": "casual",
+   "source": "unlock",
+   "week_1_per_session": 1.099,
+   "day_30_per_session": 0.036,
+   "day_60_per_session": 0.003,
+   "who_makes_more": "a rank reward: data"
+  },
+  {
+   "profile": "casual",
+   "source": "the X",
+   "week_1_per_session": 0.011,
+   "day_30_per_session": 0.028,
+   "day_60_per_session": 0.001,
+   "who_makes_more": "other"
+  },
+  {
+   "profile": "casual",
+   "source": "fishing: variant",
+   "week_1_per_session": 0.235,
+   "day_30_per_session": 0.016,
+   "day_60_per_session": 0.016,
+   "who_makes_more": "procedural: nobody (a palette)"
+  },
+  {
+   "profile": "casual",
+   "source": "people",
+   "week_1_per_session": 0.479,
+   "day_30_per_session": 0.008,
+   "day_60_per_session": 0.005,
+   "who_makes_more": "a named islander: written and approved"
+  },
+  {
+   "profile": "casual",
+   "source": "guest gift",
+   "week_1_per_session": 0.34,
+   "day_30_per_session": 0.0,
+   "day_60_per_session": 0.0,
+   "who_makes_more": "other"
+  },
+  {
+   "profile": "casual",
+   "source": "dig",
+   "week_1_per_session": 0.975,
+   "day_30_per_session": 0.0,
+   "day_60_per_session": 0.0,
+   "who_makes_more": "a museum piece: data the developer approves"
+  },
+  {
+   "profile": "casual",
+   "source": "lead",
+   "week_1_per_session": 0.201,
+   "day_30_per_session": 0.0,
+   "day_60_per_session": 0.0,
+   "who_makes_more": "other"
+  }
+ ],
+ "pending_review": {
+  "painting drafts": 82,
+  "archaeology drafts": 25,
+  "painting of the day lines": 69,
+  "rarity proposals (paintings)": 49,
+  "image proposals": 11
+ }
+}

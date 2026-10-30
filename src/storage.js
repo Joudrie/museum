@@ -27,10 +27,24 @@ export function load(key, fallback) {
   }
 }
 
+// Something that wants to know about every save (src/measure/derive.js turns them into events).
+// `fn(key, value, before)`: before is the old raw string, or null if the key was new.
+const listeners = [];
+export const onSave = (fn) => listeners.push(fn);
+
 export function save(key, value) {
+  let before = null;
   try {
+    if (listeners.length) before = localStorage.getItem(key);
     localStorage.setItem(key, JSON.stringify(value));
   } catch {
     // storage unavailable; changes last until reload
+  }
+  for (const fn of listeners) {
+    try {
+      fn(key, value, before);
+    } catch {
+      // a listener never breaks a save
+    }
   }
 }

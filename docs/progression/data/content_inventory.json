@@ -1,0 +1,1339 @@
+{
+ "wpm": 200,
+ "collections": [
+  {
+   "id": "painting",
+   "name": "Paintings",
+   "ownership": "all",
+   "entries": 49,
+   "rarity": [
+    49,
+    0,
+    0,
+    0,
+    0
+   ],
+   "sets": 7,
+   "words": 945,
+   "methods": [
+    "owned from the start"
+   ],
+   "unobtainable": [],
+   "shopOnly": []
+  },
+  {
+   "id": "fish",
+   "name": "Fish",
+   "ownership": "earned",
+   "entries": 72,
+   "rarity": [
+    14,
+    24,
+    16,
+    8,
+    10
+   ],
+   "sets": 10,
+   "words": 1111,
+   "methods": [
+    "fishing"
+   ],
+   "unobtainable": [],
+   "shopOnly": []
+  },
+  {
+   "id": "find",
+   "name": "Finds",
+   "ownership": "earned",
+   "entries": 3,
+   "rarity": [
+    0,
+    1,
+    2,
+    0,
+    0
+   ],
+   "sets": 0,
+   "words": 55,
+   "methods": [
+    "fishing",
+    "Gallery Shop (3-5 random a day)"
+   ],
+   "unobtainable": [],
+   "shopOnly": []
+  },
+  {
+   "id": "mineral",
+   "name": "Minerals",
+   "ownership": "earned",
+   "entries": 8,
+   "rarity": [
+    3,
+    3,
+    2,
+    0,
+    0
+   ],
+   "sets": 1,
+   "words": 222,
+   "methods": [
+    "home dig spots",
+    "expedition digs",
+    "visitor gifts",
+    "smashing cracked rock (pick)",
+    "Gallery Shop (3-5 random a day)"
+   ],
+   "unobtainable": [],
+   "shopOnly": []
+  },
+  {
+   "id": "fossil",
+   "name": "Fossils",
+   "ownership": "earned",
+   "entries": 10,
+   "rarity": [
+    3,
+    2,
+    2,
+    3,
+    0
+   ],
+   "sets": 1,
+   "words": 318,
+   "methods": [
+    "home dig spots",
+    "expedition digs",
+    "visitor gifts",
+    "Gallery Shop (3-5 random a day)"
+   ],
+   "unobtainable": [],
+   "shopOnly": []
+  },
+  {
+   "id": "pottery",
+   "name": "Pottery",
+   "ownership": "earned",
+   "entries": 6,
+   "rarity": [
+    3,
+    2,
+    1,
+    0,
+    0
+   ],
+   "sets": 1,
+   "words": 196,
+   "methods": [
+    "hunts (metal detector at 10 finds, riddlers, the X)",
+    "Gallery Shop (3-5 random a day)"
+   ],
+   "unobtainable": [],
+   "shopOnly": []
+  },
+  {
+   "id": "coin",
+   "name": "Coins",
+   "ownership": "earned",
+   "entries": 6,
+   "rarity": [
+    1,
+    3,
+    1,
+    1,
+    0
+   ],
+   "sets": 1,
+   "words": 177,
+   "methods": [
+    "hunts (metal detector at 10 finds, riddlers, the X)",
+    "Gallery Shop (3-5 random a day)"
+   ],
+   "unobtainable": [],
+   "shopOnly": []
+  },
+  {
+   "id": "arrowhead",
+   "name": "Stone tools",
+   "ownership": "earned",
+   "entries": 6,
+   "rarity": [
+    2,
+    2,
+    2,
+    0,
+    0
+   ],
+   "sets": 1,
+   "words": 158,
+   "methods": [
+    "hunts (metal detector at 10 finds, riddlers, the X)",
+    "Gallery Shop (3-5 random a day)"
+   ],
+   "unobtainable": [],
+   "shopOnly": []
+  },
+  {
+   "id": "shell",
+   "name": "Shells",
+   "ownership": "earned",
+   "entries": 6,
+   "rarity": [
+    2,
+    2,
+    2,
+    0,
+    0
+   ],
+   "sets": 1,
+   "words": 178,
+   "methods": [
+    "Gallery Shop (3-5 random a day)"
+   ],
+   "unobtainable": [],
+   "shopOnly": [
+    "shell:periwinkle",
+    "shell:scallop",
+    "shell:conch",
+    "shell:starfish",
+    "shell:nautilus",
+    "shell:sand-dollar"
+   ]
+  },
+  {
+   "id": "meteorite",
+   "name": "Meteorites",
+   "ownership": "earned",
+   "entries": 5,
+   "rarity": [
+    0,
+    2,
+    2,
+    1,
+    0
+   ],
+   "sets": 1,
+   "words": 147,
+   "methods": [
+    "Gallery Shop (3-5 random a day)"
+   ],
+   "unobtainable": [
+    "meteorite:widmanstatten"
+   ],
+   "shopOnly": [
+    "meteorite:stony",
+    "meteorite:iron",
+    "meteorite:chondrite",
+    "meteorite:tektite"
+   ]
+  },
+  {
+   "id": "map",
+   "name": "Map pieces",
+   "ownership": "earned",
+   "entries": 4,
+   "rarity": [
+    0,
+    4,
+    0,
+    0,
+    0
+   ],
+   "sets": 0,
+   "words": 124,
+   "methods": [
+    "hunts (metal detector at 10 finds, riddlers, the X)",
+    "Gallery Shop (3-5 random a day)"
+   ],
+   "unobtainable": [],
+   "shopOnly": []
+  },
+  {
+   "id": "insect",
+   "name": "Insects",
+   "ownership": "earned",
+   "entries": 4,
+   "rarity": [
+    1,
+    1,
+    2,
+    0,
+    0
+   ],
+   "sets": 1,
+   "words": 118,
+   "methods": [
+    "Gallery Shop (3-5 random a day)"
+   ],
+   "unobtainable": [],
+   "shopOnly": [
+    "insect:monarch",
+    "insect:blue-morpho",
+    "insect:luna-moth",
+    "insect:honeybee"
+   ]
+  },
+  {
+   "id": "stamp",
+   "name": "Stamps",
+   "ownership": "earned",
+   "entries": 4,
+   "rarity": [
+    0,
+    1,
+    1,
+    2,
+    0
+   ],
+   "sets": 1,
+   "words": 122,
+   "methods": [
+    "Gallery Shop (3-5 random a day)"
+   ],
+   "unobtainable": [
+    "stamp:inverted-jenny",
+    "stamp:treskilling-yellow"
+   ],
+   "shopOnly": [
+    "stamp:penny-black",
+    "stamp:blue-mauritius"
+   ]
+  },
+  {
+   "id": "ship",
+   "name": "Ship models",
+   "ownership": "earned",
+   "entries": 4,
+   "rarity": [
+    1,
+    2,
+    1,
+    0,
+    0
+   ],
+   "sets": 1,
+   "words": 131,
+   "methods": [
+    "Gallery Shop (3-5 random a day)"
+   ],
+   "unobtainable": [],
+   "shopOnly": [
+    "ship:longship",
+    "ship:santa-maria",
+    "ship:mayflower",
+    "ship:constitution"
+   ]
+  },
+  {
+   "id": "glassflower",
+   "name": "Glass flowers",
+   "ownership": "earned",
+   "entries": 4,
+   "rarity": [
+    2,
+    2,
+    0,
+    0,
+    0
+   ],
+   "sets": 1,
+   "words": 130,
+   "methods": [
+    "Gallery Shop (3-5 random a day)"
+   ],
+   "unobtainable": [],
+   "shopOnly": [
+    "glassflower:rose",
+    "glassflower:orchid",
+    "glassflower:poppy",
+    "glassflower:sunflower"
+   ]
+  },
+  {
+   "id": "armour",
+   "name": "Armour",
+   "ownership": "earned",
+   "entries": 4,
+   "rarity": [
+    1,
+    2,
+    1,
+    0,
+    0
+   ],
+   "sets": 1,
+   "words": 137,
+   "methods": [
+    "Gallery Shop (3-5 random a day)"
+   ],
+   "unobtainable": [],
+   "shopOnly": [
+    "armour:corinthian-helmet",
+    "armour:kabuto",
+    "armour:knights-helm",
+    "armour:legionary-helmet"
+   ]
+  },
+  {
+   "id": "clock",
+   "name": "Timekeepers",
+   "ownership": "earned",
+   "entries": 4,
+   "rarity": [
+    2,
+    1,
+    1,
+    0,
+    0
+   ],
+   "sets": 1,
+   "words": 117,
+   "methods": [
+    "Gallery Shop (3-5 random a day)"
+   ],
+   "unobtainable": [],
+   "shopOnly": [
+    "clock:sundial",
+    "clock:water-clock",
+    "clock:hourglass",
+    "clock:pendulum-clock"
+   ]
+  },
+  {
+   "id": "invention",
+   "name": "Inventions",
+   "ownership": "earned",
+   "entries": 4,
+   "rarity": [
+    1,
+    1,
+    2,
+    0,
+    0
+   ],
+   "sets": 1,
+   "words": 129,
+   "methods": [
+    "Gallery Shop (3-5 random a day)"
+   ],
+   "unobtainable": [],
+   "shopOnly": [
+    "invention:printing-press",
+    "invention:light-bulb",
+    "invention:telephone",
+    "invention:compass"
+   ]
+  },
+  {
+   "id": "visitor",
+   "name": "Famous visitors",
+   "ownership": "earned",
+   "entries": 19,
+   "rarity": [
+    0,
+    11,
+    7,
+    1,
+    0
+   ],
+   "sets": 2,
+   "words": 226,
+   "methods": [
+    "meeting them (all 19 stand in the main hall now)"
+   ],
+   "unobtainable": [],
+   "shopOnly": []
+  }
+ ],
+ "maps": [
+  {
+   "file": "exp-badlands.json",
+   "name": "Red Badlands",
+   "w": 38,
+   "h": 32,
+   "expedition": true,
+   "people": 1,
+   "animals": 1,
+   "digSpots": 0,
+   "xMarks": 0,
+   "puzzlePieces": 6,
+   "pondCorners": 0,
+   "seaCorners": 587,
+   "expSpots": 5,
+   "expDigs": 5,
+   "expFinds": [
+    "fossil",
+    "fossil",
+    "fossil",
+    "fossil",
+    "fossil"
+   ],
+   "expGoals": 2,
+   "expWords": 57,
+   "climate": {
+    "season": "summer",
+    "weather": "clear"
+   }
+  },
+  {
+   "file": "exp-heist.json",
+   "name": "Thieves’ Rock",
+   "w": 34,
+   "h": 32,
+   "expedition": true,
+   "people": 0,
+   "animals": 1,
+   "digSpots": 0,
+   "xMarks": 0,
+   "puzzlePieces": 0,
+   "pondCorners": 0,
+   "seaCorners": 537,
+   "expSpots": 6,
+   "expDigs": 2,
+   "expFinds": [
+    "special",
+    "mineral",
+    "mineral"
+   ],
+   "expGoals": 3,
+   "expWords": 87,
+   "climate": {
+    "season": "summer",
+    "weather": "clear"
+   }
+  },
+  {
+   "file": "exp-north.json",
+   "name": "The Frozen North",
+   "w": 36,
+   "h": 34,
+   "expedition": true,
+   "people": 1,
+   "animals": 1,
+   "digSpots": 0,
+   "xMarks": 0,
+   "puzzlePieces": 104,
+   "pondCorners": 0,
+   "seaCorners": 535,
+   "expSpots": 5,
+   "expDigs": 3,
+   "expFinds": [
+    "fossil",
+    "fossil",
+    "fossil",
+    "special"
+   ],
+   "expGoals": 2,
+   "expWords": 56,
+   "climate": {
+    "season": "winter",
+    "weather": "snow"
+   }
+  },
+  {
+   "file": "exp-pirate.json",
+   "name": "Skull Isle",
+   "w": 36,
+   "h": 38,
+   "expedition": true,
+   "people": 1,
+   "animals": 3,
+   "digSpots": 0,
+   "xMarks": 0,
+   "puzzlePieces": 0,
+   "pondCorners": 0,
+   "seaCorners": 642,
+   "expSpots": 5,
+   "expDigs": 3,
+   "expFinds": [
+    "mineral",
+    "mineral",
+    "mineral",
+    "special"
+   ],
+   "expGoals": 3,
+   "expWords": 108,
+   "climate": {
+    "season": "summer",
+    "weather": "clear"
+   }
+  },
+  {
+   "file": "exp-temple.json",
+   "name": "The Lost Temple",
+   "w": 36,
+   "h": 36,
+   "expedition": true,
+   "people": 0,
+   "animals": 3,
+   "digSpots": 0,
+   "xMarks": 0,
+   "puzzlePieces": 0,
+   "pondCorners": 0,
+   "seaCorners": 568,
+   "expSpots": 14,
+   "expDigs": 3,
+   "expFinds": [
+    "special",
+    "mineral",
+    "mineral",
+    "fossil"
+   ],
+   "expGoals": 4,
+   "expWords": 97,
+   "climate": {
+    "season": "summer",
+    "weather": "rain"
+   }
+  },
+  {
+   "file": "exp-tomb.json",
+   "name": "Sandstone Tomb",
+   "w": 36,
+   "h": 34,
+   "expedition": true,
+   "people": 1,
+   "animals": 1,
+   "digSpots": 0,
+   "xMarks": 0,
+   "puzzlePieces": 0,
+   "pondCorners": 0,
+   "seaCorners": 538,
+   "expSpots": 10,
+   "expDigs": 3,
+   "expFinds": [
+    "special",
+    "mineral",
+    "mineral",
+    "mineral"
+   ],
+   "expGoals": 4,
+   "expWords": 89,
+   "climate": {
+    "season": "summer",
+    "weather": "clear"
+   }
+  },
+  {
+   "file": "exp-wreck.json",
+   "name": "The Drowned Reef",
+   "w": 34,
+   "h": 30,
+   "expedition": true,
+   "people": 1,
+   "animals": 2,
+   "digSpots": 0,
+   "xMarks": 0,
+   "puzzlePieces": 0,
+   "pondCorners": 0,
+   "seaCorners": 561,
+   "expSpots": 6,
+   "expDigs": 2,
+   "expFinds": [
+    "special",
+    "special",
+    "special",
+    "mineral",
+    "mineral",
+    "special"
+   ],
+   "expGoals": 2,
+   "expWords": 44,
+   "climate": {
+    "season": "summer",
+    "weather": "clear"
+   }
+  },
+  {
+   "file": "isle-1.json",
+   "name": "Untitled island",
+   "w": 80,
+   "h": 80,
+   "expedition": false,
+   "people": 0,
+   "animals": 0,
+   "digSpots": 2,
+   "xMarks": 1,
+   "puzzlePieces": 0,
+   "pondCorners": 30,
+   "seaCorners": 3365,
+   "expSpots": 0,
+   "expDigs": 0,
+   "expFinds": [],
+   "expGoals": 0,
+   "expWords": 0,
+   "climate": null
+  },
+  {
+   "file": "main-island.json",
+   "name": "Main Island",
+   "w": 80,
+   "h": 80,
+   "expedition": false,
+   "people": 46,
+   "animals": 25,
+   "digSpots": 3,
+   "xMarks": 1,
+   "puzzlePieces": 2,
+   "pondCorners": 87,
+   "seaCorners": 2316,
+   "expSpots": 0,
+   "expDigs": 0,
+   "expFinds": [],
+   "expGoals": 0,
+   "expWords": 0,
+   "climate": null
+  },
+  {
+   "file": "(code) IslandScene.js",
+   "name": "Island One",
+   "digSpots": 4,
+   "digKinds": [
+    "mineral",
+    "mineral",
+    "fossil",
+    "fossil"
+   ],
+   "pond": true
+  }
+ ],
+ "rows": [
+  {
+   "notes": "rarity 1/2/3/4/5 = 49/0/0/0/0; sets 7; via: owned from the start",
+   "category": "collection",
+   "item": "painting",
+   "count": 49,
+   "unit": "entries",
+   "words": 945,
+   "read_minutes": 4.7,
+   "obtainable_now": "yes",
+   "source": "src/collections/data (all)"
+  },
+  {
+   "notes": "rarity 1/2/3/4/5 = 14/24/16/8/10; sets 10; via: fishing",
+   "category": "collection",
+   "item": "fish",
+   "count": 72,
+   "unit": "entries",
+   "words": 1111,
+   "read_minutes": 5.6,
+   "obtainable_now": "yes",
+   "source": "src/collections/data (earned)"
+  },
+  {
+   "notes": "rarity 1/2/3/4/5 = 0/1/2/0/0; sets 0; via: fishing, Gallery Shop (3-5 random a day)",
+   "category": "collection",
+   "item": "find",
+   "count": 3,
+   "unit": "entries",
+   "words": 55,
+   "read_minutes": 0.3,
+   "obtainable_now": "yes",
+   "source": "src/collections/data (earned)"
+  },
+  {
+   "notes": "rarity 1/2/3/4/5 = 3/3/2/0/0; sets 1; via: home dig spots, expedition digs, visitor gifts, smashing cracked rock (pick), Gallery Shop (3-5 random a day)",
+   "category": "collection",
+   "item": "mineral",
+   "count": 8,
+   "unit": "entries",
+   "words": 222,
+   "read_minutes": 1.1,
+   "obtainable_now": "yes",
+   "source": "src/collections/data (earned)"
+  },
+  {
+   "notes": "rarity 1/2/3/4/5 = 3/2/2/3/0; sets 1; via: home dig spots, expedition digs, visitor gifts, Gallery Shop (3-5 random a day)",
+   "category": "collection",
+   "item": "fossil",
+   "count": 10,
+   "unit": "entries",
+   "words": 318,
+   "read_minutes": 1.6,
+   "obtainable_now": "yes",
+   "source": "src/collections/data (earned)"
+  },
+  {
+   "notes": "rarity 1/2/3/4/5 = 3/2/1/0/0; sets 1; via: hunts (metal detector at 10 finds, riddlers, the X), Gallery Shop (3-5 random a day)",
+   "category": "collection",
+   "item": "pottery",
+   "count": 6,
+   "unit": "entries",
+   "words": 196,
+   "read_minutes": 1,
+   "obtainable_now": "yes",
+   "source": "src/collections/data (earned)"
+  },
+  {
+   "notes": "rarity 1/2/3/4/5 = 1/3/1/1/0; sets 1; via: hunts (metal detector at 10 finds, riddlers, the X), Gallery Shop (3-5 random a day)",
+   "category": "collection",
+   "item": "coin",
+   "count": 6,
+   "unit": "entries",
+   "words": 177,
+   "read_minutes": 0.9,
+   "obtainable_now": "yes",
+   "source": "src/collections/data (earned)"
+  },
+  {
+   "notes": "rarity 1/2/3/4/5 = 2/2/2/0/0; sets 1; via: hunts (metal detector at 10 finds, riddlers, the X), Gallery Shop (3-5 random a day)",
+   "category": "collection",
+   "item": "arrowhead",
+   "count": 6,
+   "unit": "entries",
+   "words": 158,
+   "read_minutes": 0.8,
+   "obtainable_now": "yes",
+   "source": "src/collections/data (earned)"
+  },
+  {
+   "notes": "rarity 1/2/3/4/5 = 2/2/2/0/0; sets 1; via: Gallery Shop (3-5 random a day)",
+   "category": "collection",
+   "item": "shell",
+   "count": 6,
+   "unit": "entries",
+   "words": 178,
+   "read_minutes": 0.9,
+   "obtainable_now": "shop only",
+   "source": "src/collections/data (earned)"
+  },
+  {
+   "notes": "rarity 1/2/3/4/5 = 0/2/2/1/0; sets 1; via: Gallery Shop (3-5 random a day); 1 with no way to get them",
+   "category": "collection",
+   "item": "meteorite",
+   "count": 5,
+   "unit": "entries",
+   "words": 147,
+   "read_minutes": 0.7,
+   "obtainable_now": "partly",
+   "source": "src/collections/data (earned)"
+  },
+  {
+   "notes": "rarity 1/2/3/4/5 = 0/4/0/0/0; sets 0; via: hunts (metal detector at 10 finds, riddlers, the X), Gallery Shop (3-5 random a day)",
+   "category": "collection",
+   "item": "map",
+   "count": 4,
+   "unit": "entries",
+   "words": 124,
+   "read_minutes": 0.6,
+   "obtainable_now": "yes",
+   "source": "src/collections/data (earned)"
+  },
+  {
+   "notes": "rarity 1/2/3/4/5 = 1/1/2/0/0; sets 1; via: Gallery Shop (3-5 random a day)",
+   "category": "collection",
+   "item": "insect",
+   "count": 4,
+   "unit": "entries",
+   "words": 118,
+   "read_minutes": 0.6,
+   "obtainable_now": "shop only",
+   "source": "src/collections/data (earned)"
+  },
+  {
+   "notes": "rarity 1/2/3/4/5 = 0/1/1/2/0; sets 1; via: Gallery Shop (3-5 random a day); 2 with no way to get them",
+   "category": "collection",
+   "item": "stamp",
+   "count": 4,
+   "unit": "entries",
+   "words": 122,
+   "read_minutes": 0.6,
+   "obtainable_now": "partly",
+   "source": "src/collections/data (earned)"
+  },
+  {
+   "notes": "rarity 1/2/3/4/5 = 1/2/1/0/0; sets 1; via: Gallery Shop (3-5 random a day)",
+   "category": "collection",
+   "item": "ship",
+   "count": 4,
+   "unit": "entries",
+   "words": 131,
+   "read_minutes": 0.7,
+   "obtainable_now": "shop only",
+   "source": "src/collections/data (earned)"
+  },
+  {
+   "notes": "rarity 1/2/3/4/5 = 2/2/0/0/0; sets 1; via: Gallery Shop (3-5 random a day)",
+   "category": "collection",
+   "item": "glassflower",
+   "count": 4,
+   "unit": "entries",
+   "words": 130,
+   "read_minutes": 0.7,
+   "obtainable_now": "shop only",
+   "source": "src/collections/data (earned)"
+  },
+  {
+   "notes": "rarity 1/2/3/4/5 = 1/2/1/0/0; sets 1; via: Gallery Shop (3-5 random a day)",
+   "category": "collection",
+   "item": "armour",
+   "count": 4,
+   "unit": "entries",
+   "words": 137,
+   "read_minutes": 0.7,
+   "obtainable_now": "shop only",
+   "source": "src/collections/data (earned)"
+  },
+  {
+   "notes": "rarity 1/2/3/4/5 = 2/1/1/0/0; sets 1; via: Gallery Shop (3-5 random a day)",
+   "category": "collection",
+   "item": "clock",
+   "count": 4,
+   "unit": "entries",
+   "words": 117,
+   "read_minutes": 0.6,
+   "obtainable_now": "shop only",
+   "source": "src/collections/data (earned)"
+  },
+  {
+   "notes": "rarity 1/2/3/4/5 = 1/1/2/0/0; sets 1; via: Gallery Shop (3-5 random a day)",
+   "category": "collection",
+   "item": "invention",
+   "count": 4,
+   "unit": "entries",
+   "words": 129,
+   "read_minutes": 0.6,
+   "obtainable_now": "shop only",
+   "source": "src/collections/data (earned)"
+  },
+  {
+   "notes": "rarity 1/2/3/4/5 = 0/11/7/1/0; sets 2; via: meeting them (all 19 stand in the main hall now)",
+   "category": "collection",
+   "item": "visitor",
+   "count": 19,
+   "unit": "entries",
+   "words": 226,
+   "read_minutes": 1.1,
+   "obtainable_now": "yes",
+   "source": "src/collections/data (earned)"
+  },
+  {
+   "notes": "26 jokes, 7 tips, 13 asks; each topic offered once per visitor",
+   "category": "dialogue",
+   "item": "guest conversations (chatter)",
+   "count": 13,
+   "unit": "visitor kinds",
+   "words": 1187,
+   "read_minutes": 5.9,
+   "obtainable_now": "yes",
+   "source": "src/chatter_lines.js"
+  },
+  {
+   "notes": "",
+   "category": "dialogue",
+   "item": "visitor one-liners (lines.js)",
+   "count": 20,
+   "unit": "personalities",
+   "words": 1897,
+   "read_minutes": 9.5,
+   "obtainable_now": "yes",
+   "source": "src/lines.js"
+  },
+  {
+   "notes": "all spawn in the main hall at once (\"for now: all of them, all the time\", RoomScene)",
+   "category": "dialogue",
+   "item": "famous visitors",
+   "count": 19,
+   "unit": "people",
+   "words": 1596,
+   "read_minutes": 8,
+   "obtainable_now": "yes",
+   "source": "src/famous.js"
+  },
+  {
+   "notes": "",
+   "category": "story",
+   "item": "heist arc (The Empty Frames)",
+   "count": 5,
+   "unit": "chapters",
+   "words": 460,
+   "read_minutes": 2.3,
+   "obtainable_now": "yes",
+   "source": "src/stories/heist.js"
+  },
+  {
+   "notes": "9 steps in all; 16 famous visitors have no chain",
+   "category": "story",
+   "item": "famous visitor chains",
+   "count": 3,
+   "unit": "visitors",
+   "words": 663,
+   "read_minutes": 3.3,
+   "obtainable_now": "yes",
+   "source": "src/stories/chains.js"
+  },
+  {
+   "notes": "",
+   "category": "story",
+   "item": "leads",
+   "count": 8,
+   "unit": "leads",
+   "words": 337,
+   "read_minutes": 1.7,
+   "obtainable_now": "yes",
+   "source": "src/leads.js"
+  },
+  {
+   "notes": "",
+   "category": "puzzle",
+   "item": "riddles",
+   "count": 12,
+   "unit": "riddles",
+   "words": 207,
+   "read_minutes": 1,
+   "obtainable_now": "only where a riddler tile is placed",
+   "source": "src/puzzles-data.js"
+  },
+  {
+   "notes": "2 goals, 5 spots (5 digs), finds: fossil, fossil, fossil, fossil, fossil; climate summer/clear; 1 people, 1 animals",
+   "category": "expedition island",
+   "item": "Red Badlands",
+   "count": 1,
+   "unit": "38x32 map",
+   "words": 57,
+   "read_minutes": 0.3,
+   "obtainable_now": "after its lead",
+   "source": "src/maps/exp-badlands.json"
+  },
+  {
+   "notes": "3 goals, 6 spots (2 digs), finds: special, mineral, mineral; climate summer/clear; 0 people, 1 animals",
+   "category": "expedition island",
+   "item": "Thieves’ Rock",
+   "count": 1,
+   "unit": "34x32 map",
+   "words": 87,
+   "read_minutes": 0.4,
+   "obtainable_now": "after its lead",
+   "source": "src/maps/exp-heist.json"
+  },
+  {
+   "notes": "2 goals, 5 spots (3 digs), finds: fossil, fossil, fossil, special; climate winter/snow; 1 people, 1 animals",
+   "category": "expedition island",
+   "item": "The Frozen North",
+   "count": 1,
+   "unit": "36x34 map",
+   "words": 56,
+   "read_minutes": 0.3,
+   "obtainable_now": "after its lead",
+   "source": "src/maps/exp-north.json"
+  },
+  {
+   "notes": "3 goals, 5 spots (3 digs), finds: mineral, mineral, mineral, special; climate summer/clear; 1 people, 3 animals",
+   "category": "expedition island",
+   "item": "Skull Isle",
+   "count": 1,
+   "unit": "36x38 map",
+   "words": 108,
+   "read_minutes": 0.5,
+   "obtainable_now": "after its lead",
+   "source": "src/maps/exp-pirate.json"
+  },
+  {
+   "notes": "4 goals, 14 spots (3 digs), finds: special, mineral, mineral, fossil; climate summer/rain; 0 people, 3 animals",
+   "category": "expedition island",
+   "item": "The Lost Temple",
+   "count": 1,
+   "unit": "36x36 map",
+   "words": 97,
+   "read_minutes": 0.5,
+   "obtainable_now": "after its lead",
+   "source": "src/maps/exp-temple.json"
+  },
+  {
+   "notes": "4 goals, 10 spots (3 digs), finds: special, mineral, mineral, mineral; climate summer/clear; 1 people, 1 animals",
+   "category": "expedition island",
+   "item": "Sandstone Tomb",
+   "count": 1,
+   "unit": "36x34 map",
+   "words": 89,
+   "read_minutes": 0.4,
+   "obtainable_now": "after its lead",
+   "source": "src/maps/exp-tomb.json"
+  },
+  {
+   "notes": "2 goals, 6 spots (2 digs), finds: special, special, special, mineral, mineral, special; climate summer/clear; 1 people, 2 animals",
+   "category": "expedition island",
+   "item": "The Drowned Reef",
+   "count": 1,
+   "unit": "34x30 map",
+   "words": 44,
+   "read_minutes": 0.2,
+   "obtainable_now": "after its lead",
+   "source": "src/maps/exp-wreck.json"
+  },
+  {
+   "notes": "2 dig spots, 1 X, 0 people, 0 animals, pond yes",
+   "category": "home island",
+   "item": "Untitled island",
+   "count": 1,
+   "unit": "80x80 map",
+   "words": 0,
+   "read_minutes": 0,
+   "obtainable_now": "yes",
+   "source": "src/maps/isle-1.json"
+  },
+  {
+   "notes": "3 dig spots, 1 X, 46 people, 25 animals, pond yes",
+   "category": "home island",
+   "item": "Main Island",
+   "count": 1,
+   "unit": "80x80 map",
+   "words": 0,
+   "read_minutes": 0,
+   "obtainable_now": "yes",
+   "source": "src/maps/main-island.json"
+  },
+  {
+   "notes": "4 dig spots (mineral, mineral, fossil, fossil), a pond and a cottage; museum doors locked",
+   "category": "home island",
+   "item": "Island One",
+   "count": 1,
+   "unit": "code-drawn map",
+   "words": 0,
+   "read_minutes": 0,
+   "obtainable_now": "yes",
+   "source": "src/IslandScene.js"
+  },
+  {
+   "notes": "seating 3, display 9, plants 8, lights 3, sculpture 3, relics 9, science 9, features 10, services 7, retired 2, seasonal 4, columns 31",
+   "category": "build",
+   "item": "decor items",
+   "count": 98,
+   "unit": "items",
+   "words": 0,
+   "read_minutes": 0,
+   "obtainable_now": "yes (all free while testing)",
+   "source": "src/items.js"
+  },
+  {
+   "notes": "0 / 500 / 2000 / 8000 / 30000 gold",
+   "category": "build",
+   "item": "Curator’s Office levels",
+   "count": 5,
+   "unit": "levels",
+   "words": 0,
+   "read_minutes": 0,
+   "obtainable_now": "yes (free while testing)",
+   "source": "src/economy.js"
+  },
+  {
+   "notes": "",
+   "category": "build",
+   "item": "staff upgrades",
+   "count": 12,
+   "unit": "upgrade levels",
+   "words": 0,
+   "read_minutes": 0,
+   "obtainable_now": "yes (free while testing)",
+   "source": "src/economy.js"
+  },
+  {
+   "notes": "",
+   "category": "build",
+   "item": "security tiers",
+   "count": 3,
+   "unit": "tiers",
+   "words": 0,
+   "read_minutes": 0,
+   "obtainable_now": "yes (free while testing)",
+   "source": "src/economy.js"
+  },
+  {
+   "notes": "",
+   "category": "build",
+   "item": "services",
+   "count": 4,
+   "unit": "services",
+   "words": 0,
+   "read_minutes": 0,
+   "obtainable_now": "yes (free while testing)",
+   "source": "src/economy.js"
+  },
+  {
+   "notes": "4500 gold in all; 3 shown at a time; no repeat, no daily goals",
+   "category": "goal",
+   "item": "goals (quests.js)",
+   "count": 19,
+   "unit": "goals",
+   "words": 157,
+   "read_minutes": 0,
+   "obtainable_now": "yes",
+   "source": "src/quests.js"
+  },
+  {
+   "notes": "",
+   "category": "goal",
+   "item": "collection sets",
+   "count": 33,
+   "unit": "sets",
+   "words": 0,
+   "read_minutes": 0,
+   "obtainable_now": "some",
+   "source": "src/collections/data + artistsets.js"
+  },
+  {
+   "notes": "10/25/50/75/100% of everything ever stamped",
+   "category": "goal",
+   "item": "codex milestones",
+   "count": 5,
+   "unit": "milestones",
+   "words": 0,
+   "read_minutes": 0,
+   "obtainable_now": "yes",
+   "source": "src/collections/milestones.js"
+  },
+  {
+   "notes": "12 festival fish, 10 legendaries with trails; never bite on the game's weather and climates: sturgeon, anglerfish, coelacanth, oarfish",
+   "category": "layer",
+   "item": "fish species (conditions: water, time, weather, season, bait)",
+   "count": 72,
+   "unit": "species",
+   "words": 0,
+   "read_minutes": 0,
+   "obtainable_now": "all but 4",
+   "source": "src/collections/data/fish*.js, src/progression/species.js"
+  },
+  {
+   "notes": "main, one, isle (boat:rowboat), pirate (boat:rowboat), wreck (boat:sailboat), heist (boat:sailboat), tomb (boat:sailboat), badlands (boat:sailboat), temple (boat:sailboat), north (boat:icehull)",
+   "category": "layer",
+   "item": "regions (islands the boat reaches)",
+   "count": 10,
+   "unit": "regions",
+   "words": 0,
+   "read_minutes": 0,
+   "obtainable_now": "by rank, then a boat bought",
+   "source": "src/progression/data/regions.json"
+  },
+  {
+   "notes": "in the data; about 42 are placed in play, because the world layer looks islands up by map id (IslandScene regionKey), so only Main Island and Island One get theirs and their legend clue and every other island gets 3 (diagnosis.md); names from a list of 12",
+   "category": "layer",
+   "item": "secrets",
+   "count": 66,
+   "unit": "secrets",
+   "words": 0,
+   "read_minutes": 0,
+   "obtainable_now": "yes (some need gear)",
+   "source": "src/progression/ui/worldlife.js"
+  },
+  {
+   "notes": "two viewpoints an island (one needs gloves) and the island itself",
+   "category": "layer",
+   "item": "viewpoints and island places",
+   "count": 30,
+   "unit": "places",
+   "words": 0,
+   "read_minutes": 0,
+   "obtainable_now": "yes",
+   "source": "src/progression/ui/worldlife.js, islandlife.js"
+  },
+  {
+   "notes": "10 hearts each, gifts, requests; only the 3 on Main Island and Island One appear in play (the same lookup)",
+   "category": "layer",
+   "item": "named islanders",
+   "count": 11,
+   "unit": "people",
+   "words": 0,
+   "read_minutes": 0,
+   "obtainable_now": "yes",
+   "source": "src/progression/data/npcs.json"
+  },
+  {
+   "notes": "a reward every rank; Renown levels after 50",
+   "category": "layer",
+   "item": "ranks",
+   "count": 50,
+   "unit": "ranks",
+   "words": 0,
+   "read_minutes": 0,
+   "obtainable_now": "yes",
+   "source": "src/progression/data/ranks.json"
+  },
+  {
+   "notes": "5 skills; 50 perks",
+   "category": "layer",
+   "item": "skill levels",
+   "count": 100,
+   "unit": "levels",
+   "words": 0,
+   "read_minutes": 0,
+   "obtainable_now": "yes",
+   "source": "src/progression/data/skills.json"
+  },
+  {
+   "notes": "",
+   "category": "layer",
+   "item": "cosmetics",
+   "count": 66,
+   "unit": "items",
+   "words": 0,
+   "read_minutes": 0,
+   "obtainable_now": "yes",
+   "source": "src/progression/data/cosmetics.json"
+  },
+  {
+   "notes": "priced at 20 to 40 minutes of the target earn rate (market.js ladder)",
+   "category": "layer",
+   "item": "market ladder and town projects",
+   "count": 59,
+   "unit": "items",
+   "words": 0,
+   "read_minutes": 0,
+   "obtainable_now": "by rank",
+   "source": "src/progression/data/shop.json, projects.json"
+  },
+  {
+   "notes": "a rod changes the bite wait and the window only; its rareMult in rods.json is not read by fishroll.js",
+   "category": "layer",
+   "item": "rods, baits, lures",
+   "count": 18,
+   "unit": "items",
+   "words": 0,
+   "read_minutes": 0,
+   "obtainable_now": "by rank and gold",
+   "source": "src/progression/data/"
+  },
+  {
+   "notes": "harvest 10/1–11/7, winter 12/10–1/5, bloom 3/20–4/30, regatta 6/15–8/15",
+   "category": "layer",
+   "item": "events",
+   "count": 4,
+   "unit": "events a year",
+   "words": 0,
+   "read_minutes": 0,
+   "obtainable_now": "in their date windows",
+   "source": "src/progression/data/events.json"
+  },
+  {
+   "notes": "brush at 0 finds, trowel at 6 finds, pick at 16 finds; metal detector at 10",
+   "category": "unlock",
+   "item": "dig tools",
+   "count": 3,
+   "unit": "tools",
+   "words": 0,
+   "read_minutes": 0,
+   "obtainable_now": "yes",
+   "source": "src/dig.js"
+  },
+  {
+   "notes": "slices 25/40/60/40/100/25/75/250; streak forgives 3 missed days",
+   "category": "daily",
+   "item": "daily wheel + gift",
+   "count": 8,
+   "unit": "wheel slices",
+   "words": 0,
+   "read_minutes": 0,
+   "obtainable_now": "yes",
+   "source": "src/daily.js"
+  },
+  {
+   "notes": "75 entries eligible (earned, rarity 3 or less, not fish, not people)",
+   "category": "daily",
+   "item": "Gallery Shop",
+   "count": 5,
+   "unit": "pieces a day (max)",
+   "words": 0,
+   "read_minutes": 0,
+   "obtainable_now": "yes",
+   "source": "src/collections/shop.js"
+  }
+ ]
+}

@@ -1,0 +1,33 @@
+kind,what,amount,unit
+source,"museum income (start, entrance open)",16,"gold/hour, passive, piles cap at 8 h"
+source,museum income (main hall + atrium open),46,"gold/hour, passive"
+source,each room you build (vertical medium),17.3,"gold/hour added, passive"
+source,selling fish at the market (the layer),1087,"gold per active hour, regular player (Monte Carlo; a fish sells for half its rarity x size x variant value)"
+source,"the layer's payouts (ranks, tasks, requests, login calendar, journal)",519,"gold per active hour, regular player (Monte Carlo)"
+source,selling the same fish again in the Gallery Shop,3474,"gold per active hour if a player also sells their codex copies (Monte Carlo, two shops)"
+source,"one rarity-1 fish, medium size: Gallery Shop / market",20 / 4,gold
+source,"one rarity-2 fish, medium size: Gallery Shop / market",60 / 11,gold
+source,"one rarity-3 fish, medium size: Gallery Shop / market",200 / 29,gold
+source,"one rarity-4 fish, medium size: Gallery Shop / market",450 / 72,gold
+source,"one rarity-5 fish, medium size: Gallery Shop / market",750 / 258,gold
+source,selling dug minerals,63,gold per dig (a spot rests 10 min)
+source,guest gifts (gold),10.7,"gold per conversation, expected"
+source,daily gift,50 to 210,"gold a day (grows with the streak, +100 every 7th day)"
+source,daily wheel,52.1,"gold a day, expected"
+source,daily dig goal,120,gold a day for 3 digs
+source,"goals (19, once each)",4500,gold in all
+source,codex milestones (once each),69000,gold in all
+source,set rewards (once each),22550,gold in all
+sink,open the main hall,500,"gold, once"
+sink,open the atrium,2000,"gold, once"
+sink,first room you build (medium),24790,gold (priced as room 9: a new museum already lists 10 rooms)
+sink,"first room you build, if priced as room 1",230,gold (what the formula was written for)
+sink,each next room,×1.8,price multiplier per room
+sink,Curator’s Office levels,500 / 2000 / 8000 / 30000,gold
+sink,staff upgrades (3 × 3 levels),13600,gold in all
+sink,security tiers,2050,gold in all
+sink,decor items,0 to 2500,gold each; most pay back their price in about 10 hours of income
+sink,Gallery Shop piece,60 to 600,gold (150% of the rarity price; free while FREE is on)
+sink,"the layer's ladder: boats, rods, lodge rooms, tanks, furniture","260 to 670; 9,590 in all","gold, 19 items, each unlocked by rank (always charged, FREE or not)"
+sink,the layer's town projects,"19,430 in all","gold, 40 projects"
+sink,the layer's town fund,450 at rank 5 / 500 at rank 10 / 480 at rank 20 / 480 at rank 30 / 500 at rank 50,"gold a level, without end (each pays a Renown token)"

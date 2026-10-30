@@ -9,6 +9,7 @@ import { load, save } from './storage.js';
 import { startDig, readyIn, foundCount, bonusEntry, entriesFor, mapKey } from './dig.js';
 import { ownedCount, dispose } from './collections/codex.js';
 import { dayNum } from './daily.js';
+import { unlockAll } from './measure/flags.js';
 
 const T = 32;
 export const DETECTOR_NEED = 10;
@@ -41,7 +42,7 @@ export class Hunts {
     this.t = 0;
     this.badge = null;
     this.hide = false;
-    this.on = !!scene.map && foundCount() >= DETECTOR_NEED;
+    this.on = !!scene.map && (foundCount() >= DETECTOR_NEED || unlockAll()); // (unlockAll: the ?progression=off strip test)
     this.restT = 0;
     this.mapT = 1; // seconds since the map pieces were last counted (the codex is read from storage, so not every frame)
     this.whole = false;
