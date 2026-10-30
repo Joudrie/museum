@@ -36,10 +36,11 @@ body #talk .talk-text {
   transform: translateY(3px);
 }
 
-/* the conversation box: top third, no dimmed screen, nothing under it is blocked */
+/* the conversation box: at the bottom of the screen (the user's ask), no dimmed screen, nothing
+   under it is blocked; the Interact button steps aside while it's up (the box has its own Bye) */
 html body #chat {
-  align-items: flex-start;
-  padding: calc(8px + env(safe-area-inset-top, 0px)) 8px 0;
+  align-items: flex-end;
+  padding: 0 8px max(14px, calc(env(safe-area-inset-bottom, 0px) + 8px));
   background: none;
   pointer-events: none;
 }
@@ -75,7 +76,8 @@ html body #chat .chat-choices button:only-child,
 html body #chat .chat-choices button:last-child:nth-child(odd) {
   grid-column: 1 / -1;
 }
-html body:has(#chat:not(.hidden)) #prog-pill {
+html body:has(#chat:not(.hidden)) #prog-pill,
+html body:has(#chat:not(.hidden)) #interact {
   visibility: hidden;
 }
 /* the bubble closes when you walk away (or after a few seconds), not on a tap */
