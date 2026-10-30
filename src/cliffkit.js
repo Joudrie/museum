@@ -64,6 +64,7 @@ export function addCliffKits(add, { pixels, tnoise, hash, hex, T }) {
         const [x, y] = along ? [q, a] : [a, q];
         tone[y * T + x] = t;
       }
+    const HIGH = [-1]; // (a piece's pixel on top of the ledge)
     const rock = (x, y, bias = 0) => P[Math.max(0, Math.min(5, tone[y * T + x] + (tone[y * T + x] ? bias : 0)))];
     // inside a cave the ground is always the cave's own floor: dusty, with pebbles and cracks. Its
     // pieces sit on it (a gap shows the floor, a shadow darkens it), so walls and floor always match.
@@ -76,11 +77,21 @@ export function addCliffKits(add, { pixels, tnoise, hash, hex, T }) {
       else if (hash(Math.floor(x / 3), Math.floor(y / 3), s + 98) > 0.95 && (x % 3) + (y % 3) < 2) c = (x % 3) === 0 ? P[4] : P[1]; // pebbles
       return c;
     };
+    // the top of a raised ledge (HIGH, from the pieces below): see-through on an island's cliffs, but in a
+    // cave it's its own upper floor, smoother and lighter than the floor below, so the levels read apart
+    const highPx = (x, y) => {
+      const h = hash(x >> 1, y >> 1, s + 99);
+      return h > 0.95 ? P[5] : h < 0.04 ? P[3] : P[4];
+    };
     const onFloor = (fn) =>
       !kit.ridges
-        ? fn
+        ? (x, y) => {
+            const c = fn(x, y);
+            return c === HIGH ? null : c;
+          }
         : (x, y) => {
             const c = fn(x, y);
+            if (c === HIGH) return highPx(x, y);
             if (!c) return floorPx(x, y);
             if (c[3] === 255 || c[3] === undefined) return c;
             const f = floorPx(x, y);
@@ -104,9 +115,23 @@ export function addCliffKits(add, { pixels, tnoise, hash, hex, T }) {
     const rimL = (x, y, d) => (d === 0 ? OUTC : d === wL(y) - 1 ? P[1] : d === 1 ? P[3] : d === 2 ? P[5] : rock(x, y, 2));
     const rimR = (x, y, d) => (d === 0 ? OUTC : d === wR(y) - 1 ? P[1] : d === 1 ? P[2] : d === 2 ? P[4] : rock(x, y, 1));
     const rimB = (x, y, d) => (d === 0 ? OUTC : d === wB(x) - 1 ? P[1] : d === 1 ? P[3] : d === 2 ? P[5] : rock(x, y, 2));
-    const RIM_L = { w: (x, y) => wL(y), c: rimL };
-    const RIM_R = { w: (x, y) => wR(y), c: rimR };
-    const RIM_B = { w: (x) => wB(x), c: rimB };
+    // in a cave the rim is a row of round rocks along the edge instead (like the ledges in Pokémon caves):
+    // `a` runs along the edge, `d` in from it; (sx, sy) turn those into screen directions for the light
+    const bead = (a, d, sx, sy) => {
+      const da = a - (Math.floor(a / 8) * 8 + 4) + 0.5;
+      const dd = d - 4.5;
+      const r = Math.hypot(da / 1.05, dd);
+      if (r > 4.6) return d < 4 ? null : HIGH; // between the rocks: the ground dips to the floor below
+      if (r > 3.7) return OUTC;
+      const lit = da * sy + dd * sx; // (light from the upper left)
+      return lit < -1.2 ? P[5] : lit > 1.6 ? P[1] : r < 1.6 && lit < 0 ? P[4] : P[3];
+    };
+    const caveRimL = (x, y, d) => bead(y, d, -1, -1);
+    const caveRimR = (x, y, d) => bead(y, d, 1, -1);
+    const caveRimB = (x, y, d) => bead(x, d, -1, -1);
+    const RIM_L = kit.ridges ? { w: () => 10, c: caveRimL } : { w: (x, y) => wL(y), c: rimL }; // (the cave's rocks need a wider band)
+    const RIM_R = kit.ridges ? { w: () => 10, c: caveRimR } : { w: (x, y) => wR(y), c: rimR };
+    const RIM_B = kit.ridges ? { w: () => 10, c: caveRimB } : { w: (x) => wB(x), c: rimB };
     const dL = (x, y) => x - eL(y);
     const dR = (x, y) => T - 1 - x - eR(y);
     const dB = (x, y) => y - bk(x);
@@ -160,22 +185,22 @@ export function addCliffKits(add, { pixels, tnoise, hash, hex, T }) {
         const dy = dB(x, y);
         if (dx < 0 && dy < 0) return null;
         const [d, rim] = dy < 0 ? [dx, rx] : dx < 0 ? [dy, RIM_B] : dx >= dy ? [dx, rx] : [dy, RIM_B];
-        return d < rim.w(x, y) ? rim.c(x, y, d) : null;
+        return d < rim.w(x, y) ? rim.c(x, y, d) : HIGH;
       }
-      if (!rims.length) return null;
+      if (!rims.length) return HIGH;
       if (rims.some(([d]) => d < 0)) return null;
       // the rim whose band this pixel is in (the nearer edge wins)
       const hit = rims.filter(([d, rim]) => d < rim.w(x, y)).sort((a, b) => a[0] - b[0])[0];
-      return hit ? hit[1].c(x, y, hit[0]) : null;
+      return hit ? hit[1].c(x, y, hit[0]) : HIGH;
     };
     // inner front corners: a lip set back on one side, the side rim of the part
     // that comes forward on the other (side 'r': the setback lip is to the right)
     const innerFront = (side, part) => (x, y) => {
       const d = side === 'r' ? dR(x, y) : dL(x, y);
       const rim = side === 'r' ? RIM_R : RIM_L;
-      if (part === 'top' && y < lip(x)) return null;
+      if (part === 'top' && y < lip(x)) return HIGH;
       if (d < 0) return part === 'top' ? front(x, y, {}) : part === 'face' ? wall(x, y, {}) : base(x, y, {});
-      return d < rim.w(x, y) ? rim.c(x, y, d) : null;
+      return d < rim.w(x, y) ? rim.c(x, y, d) : HIGH;
     };
     // stairs cut into the wall: treads lit, risers dark, a step every 8 px
     const STEP = [OUTC, P[5], P[4], P[4], P[2], P[2], P[2], P[1]];
@@ -186,7 +211,7 @@ export function addCliffKits(add, { pixels, tnoise, hash, hex, T }) {
       if (part === 'top') {
         // the first step nose at y 24, so the steps run on into the piece below
         if (y < lip(x) || !(inStairs || cheek)) return lipTop(x, y);
-        return cheek ? OUTC : y < 24 ? null : STEP[(y - 24) % 8];
+        return cheek ? OUTC : y < 24 ? HIGH : STEP[(y - 24) % 8];
       }
       if (part === 'foot') {
         if (inStairs) return y <= 24 ? STEP[y % 8] : null; // the last step ends on the ground
@@ -289,6 +314,7 @@ export function addCliffKits(add, { pixels, tnoise, hash, hex, T }) {
         add(`${kit.id}_wall${key ? '_' + key : ''}`, pixels(T, T, onFloor(ridge(c))), { group: kit.group, label: LABEL[key], walk: 'block' });
       }
       add(`${kit.id}_floor`, pixels(T, T, floorPx), { group: kit.group, label: `${kit.name} floor`, walk: 'walk' });
+      add(`${kit.id}_high`, pixels(T, T, highPx), { group: kit.group, label: 'High floor (top of a ledge)', walk: 'walk' });
     }
 
     // loose boulders of the same rock, for the foot of the cliffs and the beach
