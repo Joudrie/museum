@@ -16,6 +16,9 @@
 const KITS = [
   { id: 'gcliff', group: 'Dark grey cliffs', name: 'Grey', seed: 900, texture: 'columns', cuts: [0, 9, 14, 23, 27], out: '#181a1e', pal: ['#222429', '#33373d', '#454a51', '#585e66', '#757c85', '#99a0a8'] },
   { id: 'bcliff', group: 'Brown cliffs (any ground)', name: 'Brown', seed: 940, texture: 'layers', cuts: [0, 7, 16, 22], out: '#20201a', pal: ['#33241a', '#4a3424', '#644830', '#80603e', '#9c7a52', '#ba9a6c'] },
+  // inside caves (the walls and steps that make a cave a maze, like in Pokémon), with free-standing rock walls
+  { id: 'cwall', group: 'Cave walls (brown)', name: 'Cave', seed: 980, texture: 'layers', cuts: [0, 6, 13, 19, 26], out: '#1a120c', pal: ['#2e1d14', '#4a2e1e', '#6a4228', '#8a5a34', '#a87444', '#c69460'], ridges: true },
+  { id: 'dwall', group: 'Cave walls (dark)', name: 'Dark cave', seed: 1020, texture: 'columns', cuts: [0, 8, 15, 24], out: '#0e0d12', pal: ['#1c1a24', '#2a2734', '#3b3747', '#4f4a5c', '#686276', '#8a8498'], ridges: true },
 ];
 export const CLIFF_GROUPS = KITS.map((k) => k.group);
 
@@ -62,6 +65,28 @@ export function addCliffKits(add, { pixels, tnoise, hash, hex, T }) {
         tone[y * T + x] = t;
       }
     const rock = (x, y, bias = 0) => P[Math.max(0, Math.min(5, tone[y * T + x] + (tone[y * T + x] ? bias : 0)))];
+    // inside a cave the ground is always the cave's own floor: dusty, with pebbles and cracks. Its
+    // pieces sit on it (a gap shows the floor, a shadow darkens it), so walls and floor always match.
+    const FLOOR = [P[2], P[3], P[3], P[3]]; // (a step darker than the tops of the walls, so they stand up off it)
+    const floorPx = (x, y) => {
+      const n = tnoise(x, y, 8, s + 95) * 0.7 + tnoise(x, y, 4, s + 96) * 0.3;
+      let c = FLOOR[Math.min(3, Math.floor(n * 4))];
+      const crack = Math.abs(tnoise(x, y, 16, s + 97) - 0.5);
+      if (crack < 0.018) c = P[1];
+      else if (hash(Math.floor(x / 3), Math.floor(y / 3), s + 98) > 0.95 && (x % 3) + (y % 3) < 2) c = (x % 3) === 0 ? P[4] : P[1]; // pebbles
+      return c;
+    };
+    const onFloor = (fn) =>
+      !kit.ridges
+        ? fn
+        : (x, y) => {
+            const c = fn(x, y);
+            if (!c) return floorPx(x, y);
+            if (c[3] === 255 || c[3] === undefined) return c;
+            const f = floorPx(x, y);
+            const k = 1 - c[3] / 255;
+            return [Math.round(f[0] * k), Math.round(f[1] * k), Math.round(f[2] * k), 255];
+          };
 
     // the outline of the plateau wobbles a little, the same way on every piece,
     // so pieces always meet (each wobble repeats every tile)
@@ -199,7 +224,72 @@ export function addCliffKits(add, { pixels, tnoise, hash, hex, T }) {
       ['stairs', 'Stairs (stack)', stairs('mid'), 'walk'],
       ['stairs_foot', 'Stairs foot', stairs('foot'), 'walk'],
     ];
-    pieces.forEach(([name, label, fn, walk]) => add(`${kit.id}_${name}`, pixels(T, T, fn), { group: kit.group, label, walk }));
+    pieces.forEach(([name, label, fn, walk]) => add(`${kit.id}_${name}`, pixels(T, T, onFloor(fn)), { group: kit.group, label, walk }));
+
+    // free-standing rock walls, one tile thick: the maze walls inside a cave. Each piece says which
+    // sides it joins (north, east, south, west); a run ends in a rounded end, and wherever the wall
+    // stops going south its rock face shows, with a shadow at its foot.
+    if (kit.ridges) {
+      const X0 = 5; // the wall's sides, inside its tile
+      const X1 = 26;
+      const Y0 = 4; // its back edge when nothing joins to the north
+      const LIP = 15; // where the top ends and the face begins (when nothing joins to the south)
+      const FOOT = 26; // the bottom of the face
+      const ridge = (c) => {
+        // is (x, y) on the wall's top (1), its face (2), or neither (0)?
+        const part = (x, y) => {
+          if (x < 0 || y < 0 || x >= T || y >= T) {
+            // past the tile: whatever the next piece has there
+            if (x < 0) return c.w && y >= Y0 && y <= FOOT ? (y < LIP ? 1 : 2) : 0;
+            if (x >= T) return c.e && y >= Y0 && y <= FOOT ? (y < LIP ? 1 : 2) : 0;
+            if (y < 0) return c.n && x >= X0 && x <= X1 ? 1 : 0;
+            return c.s && x >= X0 && x <= X1 ? 1 : 0;
+          }
+          const mid = x >= X0 && x <= X1;
+          if (mid && y < Y0) return c.n ? 1 : 0;
+          if (mid && c.s) return 1; // the wall carries on south: all top
+          const arm = (x < X0 && c.w) || (x > X1 && c.e);
+          if (!mid && !arm) return 0;
+          if (y < Y0) return 0;
+          if (y < LIP) return 1;
+          if (y <= FOOT) return 2;
+          return 0;
+        };
+        return (x, y) => {
+          const k = part(x, y);
+          if (!k) {
+            // the shadow on the ground: below a face, and a little to the right
+            const above = part(x, y - 1) === 2 || part(x, y - 2) === 2 || part(x, y - 3) === 2;
+            if (above) return shade(part(x, y - 1) === 2 ? 110 : part(x, y - 2) === 2 ? 70 : 36);
+            if (part(x - 1, y) || part(x - 2, y)) return shade(46);
+            return null;
+          }
+          const edge = !part(x - 1, y) || !part(x + 1, y) || !part(x, y - 1) || (k === 2 && !part(x, y + 1));
+          // rounded ends: trim the outer corners of a run's end
+          const corner = (dx, dy) => !part(x + dx, y) && !part(x, y + dy);
+          if (k === 1 && ((corner(-1, -1) && !part(x - 1, y - 1)) || (corner(1, -1) && !part(x + 1, y - 1)))) return OUTC;
+          if (edge) return OUTC;
+          if (k === 1) {
+            // the top: lumpy rock, lit along its back and left, dark at the lip
+            if (part(x, y + 1) === 2) return P[2];
+            if (!part(x, y - 2) || !part(x - 2, y)) return P[5];
+            const h = hash(x >> 1, y >> 1, s + 90); // fine rocky speckle, in 2 px grains
+            return h > 0.84 ? P[5] : h < 0.12 ? P[3] : P[4];
+          }
+          // the face: the kit's rock, lit just under the lip, darker toward the foot
+          if (part(x, y - 1) === 1) return P[5];
+          if (part(x, y - 2) === 1) return P[4];
+          return rock(x, y, y > FOOT - 3 ? -1 : 0);
+        };
+      };
+      const LABEL = { e: 'Wall left end', w: 'Wall right end', ew: 'Wall across', s: 'Wall top end', n: 'Wall bottom end', ns: 'Wall up and down', '': 'Wall (lone rock)', es: 'Wall corner (top left)', sw: 'Wall corner (top right)', ne: 'Wall corner (bottom left)', nw: 'Wall corner (bottom right)', esw: 'Wall T (down)', new: 'Wall T (up)', nes: 'Wall T (right)', nsw: 'Wall T (left)', nesw: 'Wall crossing' };
+      for (let m = 0; m < 16; m++) {
+        const c = { n: !!(m & 1), e: !!(m & 2), s: !!(m & 4), w: !!(m & 8) };
+        const key = ['n', 'e', 's', 'w'].filter((d) => c[d]).join('');
+        add(`${kit.id}_wall${key ? '_' + key : ''}`, pixels(T, T, onFloor(ridge(c))), { group: kit.group, label: LABEL[key], walk: 'block' });
+      }
+      add(`${kit.id}_floor`, pixels(T, T, floorPx), { group: kit.group, label: `${kit.name} floor`, walk: 'walk' });
+    }
 
     // loose boulders of the same rock, for the foot of the cliffs and the beach
     const boulder = (w, h, cx, cy, rx, ry, k) => {
