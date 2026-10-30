@@ -1,36 +1,32 @@
-// Who the islands' plain "person" pieces turn into, who works in the museum, and how the named
-// friends dress (docs/PEOPLE-SPRITES.md, "In the game"). Everyone is a class variant (classes.js).
-// A piece keeps how far it wanders: one that stays put can be someone at work, the others carry
-// their things about. The pick is seeded by where the piece stands, so a spot keeps its person.
+// Who the islands' plain "person" pieces dress as, who works in the museum, and how the named friends
+// dress (docs/PEOPLE-SPRITES.md, "In the game"). Each is a class variant (classes.js) worn as a look:
+// the person keeps a visitor's way of talking and wandering. The pick is seeded by where the piece
+// stands, so a spot keeps its person.
 
-const pools = (still, walk) => ({ still, walk });
 // on the sand and on the grass (Main Island, Island One and your own islands)
-const BEACH = pools(
-  ['sunbather.lounge', 'beachcomber.detect', 'fisherman.surfcaster', 'lifeguard.watch', 'kid.kite', 'photographer.photo', 'yoga.tree', 'swimmer.beach'],
-  ['swimmer.beach', 'swimmer.trunks', 'surfer.board', 'surfer.shorts', 'beachcomber.bucket', 'beachcomber.detector', 'lifeguard.ring', 'kid.icecream', 'kid.balloon', 'traveller.backpacker'],
-);
-const TOWN = pools(
-  ['reader.book', 'grandparent.knit', 'grandparent.bench', 'artist.easel', 'sketcher.sketch', 'busker.guitar', 'birdwatcher.binoculars', 'gardener.water', 'groundskeeper.rake', 'photographer.photo', 'traveller.map', 'commuter.phone', 'yoga.tree', 'kid.kite', 'icecream.cart', 'florist.basket'],
-  ['commuter.coffee', 'commuter.briefcase', 'shopper.bags', 'parent.shopping', 'grandparent.cane', 'dogwalker.stroll', 'jogger.run', 'postal.letter', 'kid.balloon', 'kid.scooter', 'teen.skater', 'teen.headphones', 'toddler.balloon', 'traveller.suitcase', 'newlyweds.dress', 'mayor.stroll', 'tourguide.umbrella', 'gardener.can'],
-);
+const BEACH = ['swimmer.beach', 'swimmer.trunks', 'surfer.board', 'surfer.shorts', 'beachcomber.bucket', 'beachcomber.detector', 'lifeguard.ring', 'kid.icecream', 'kid.balloon', 'traveller.backpacker'];
+const TOWN = ['commuter.coffee', 'commuter.briefcase', 'shopper.bags', 'parent.shopping', 'grandparent.cane', 'dogwalker.stroll', 'jogger.run', 'postal.letter', 'kid.balloon', 'kid.scooter', 'teen.skater', 'teen.headphones', 'toddler.balloon', 'traveller.suitcase', 'gardener.can', 'tourguide.umbrella', 'artist.palette', 'birdwatcher.notebook', 'florist.bouquet', 'icecream.cone'];
 // the expedition islands have people of their own
 const REGION = {
-  pirate: pools(['piratecrew.lookout', 'treasurehunter.dig'], ['piratecrew.cutlass', 'piratecrew.patch', 'piratecrew.cook', 'smuggler.sack', 'treasurehunter.shovel']),
-  tomb: pools(['archaeologist.brush', 'archaeologist.sieve'], ['archaeologist.trowel', 'archaeologist.fedora', 'explorer.lantern', 'tombrobber.torch']),
-  north: pools(['arctictrapper.fish', 'fisherman.ice', 'sleddog.sled'], ['arctictrapper.lantern', 'mountaineer.iceaxe', 'mountaineer.rope']),
-  wreck: pools(['beachcomber.detect', 'fisherman.surfcaster'], ['diver.tank', 'marinebio.jar', 'marinebio.clipboard', 'castaway.bottle']),
-  badlands: pools(['prospector.pan', 'prospector.pick', 'geologist.pick', 'desertguide.point'], ['prospector.walk', 'desertguide.flask', 'geologist.walk', 'hiker.stick']),
-  temple: pools(['templekeeper.sweep', 'jungleguide.chop', 'explorer.binoculars'], ['templekeeper.lantern', 'jungleguide.machete', 'explorer.rope']),
-  heist: pools(['detective.magnify', 'guard.dog'], ['detective.notes', 'guard.night', 'police.patrol']),
+  pirate: ['piratecrew.cutlass', 'piratecrew.patch', 'piratecrew.cook', 'piratecrew.peg', 'piratecrew.hook', 'smuggler.sack', 'treasurehunter.shovel'],
+  tomb: ['archaeologist.trowel', 'archaeologist.fedora', 'explorer.lantern', 'explorer.rope', 'tombrobber.torch', 'tombrobber.sack'],
+  north: ['arctictrapper.lantern', 'mountaineer.iceaxe', 'mountaineer.rope', 'fisherman.walker'],
+  wreck: ['diver.tank', 'marinebio.jar', 'marinebio.clipboard', 'castaway.bottle', 'beachcomber.bucket'],
+  badlands: ['prospector.walk', 'desertguide.flask', 'geologist.walk', 'hiker.stick'],
+  temple: ['templekeeper.lantern', 'jungleguide.machete', 'explorer.rope'],
+  heist: ['detective.notes', 'guard.night', 'police.patrol'],
 };
+// how they talk: children like kids, teenagers like students, grandparents like elders, the rest a mix
+const TALK = { kid: 'kid', toddler: 'kid', teen: 'student', grandparent: 'elder' };
+const GROWN = ['casual', 'casual', 'tourist', 'couple', 'nerd', 'historian', 'artist', 'grump'];
 
-/** The class variant for a plain person piece: `ground` is 'sand' or 'grass', `region` the island's
- *  region (an expedition's own name, or anything else for the home islands), `still` whether it stays put. */
-export function townsperson(ground, region, still, seed) {
-  const pool = REGION[region] || (ground === 'sand' ? BEACH : TOWN);
-  const list = still ? pool.still : pool.walk;
-  const r = Math.abs(Math.sin(seed * 12.9898 + 4.1414) * 43758.5453) % 1;
-  return list[Math.floor(r * list.length) % list.length];
+/** What a plain person piece wears and how they talk: `ground` is 'sand' or 'grass', `region` the
+ *  island's (an expedition's own name, or anything else for the home islands). */
+export function townsperson(ground, region, seed) {
+  const list = REGION[region] || (ground === 'sand' ? BEACH : TOWN);
+  const r = (k) => Math.abs(Math.sin(seed * 12.9898 + k * 4.1414) * 43758.5453) % 1;
+  const wears = list[Math.floor(r(1) * list.length) % list.length];
+  return { wears, kind: TALK[wears.split('.')[0]] || GROWN[Math.floor(r(2) * GROWN.length) % GROWN.length] };
 }
 
 // The museum's staff wear their job (visitorLook still gives their name and way of talking)

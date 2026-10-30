@@ -1,6 +1,7 @@
 // The people classes in the shipped game (docs/PEOPLE-SPRITES.md, "In the game"): the islands' plain
-// person pieces become townsfolk with jobs, the museum's staff wear their job (the janitor mops), and
-// the named friends dress for their role. Every job named in src/people/placement.js and npcs.json exists.
+// person pieces dress for a job and still talk like visitors (a real conversation), the museum's staff
+// wear their job (the janitor mops), and the named friends dress for their role. Every job named in
+// src/people/placement.js and npcs.json exists.
 // Usage: npm run build && npx vite preview --port 4173 --base / &  then  node tests/people-in-game.cjs
 const { chromium } = require(process.env.PW || 'playwright');
 const fs = require('fs');
@@ -50,17 +51,17 @@ const src = (f) => import(pathToFileURL(path.join(__dirname, '..', 'src', f)).hr
   await page.waitForTimeout(4000);
   const isle = await page.evaluate(() => {
     const s = __game.scene.getScene('island');
-    const plain = s.islanders.filter((i) => !i.npcId && i.kind && i.kind !== 'animal');
-    return { plain: plain.length, jobs: plain.filter((i) => i.title).length, titles: [...new Set(plain.map((i) => i.title).filter(Boolean))].length, wen: (({ kind, name } = {}) => kind && { kind, name })(s.islanders.find((i) => i.npcId === 'wen')) };
+    const plain = s.islanders.filter((i) => !i.npcId && !i.animal && !i.title && i.wears !== undefined);
+    return { plain: plain.length, talk: plain.filter((i) => !i.lines).length, jobs: [...new Set(plain.map((i) => i.wears))].length, wen: (({ kind, name } = {}) => kind && { kind, name })(s.islanders.find((i) => i.npcId === 'wen')) };
   });
-  check(isle.jobs >= 40 && isle.jobs === isle.plain, `Main Island's ${isle.jobs} plain people all have a job (${isle.titles} different ones)`, `Main Island people: ${JSON.stringify(isle)}`);
+  check(isle.plain >= 40 && isle.talk === isle.plain, `Main Island's ${isle.plain} plain people are dressed for ${isle.jobs} different jobs and still have real conversations`, `Main Island people: ${JSON.stringify(isle)}`);
   check(isle.wen && isle.wen.kind === 'elder' && isle.wen.name === 'Wen', 'Wen the pond keeper is dressed for the job and keeps her name and way of talking', `Wen: ${JSON.stringify(isle.wen)}`);
   await page.screenshot({ path: `${OUT}/people-in-game-island.png` });
   // an expedition island has its own people
   await page.evaluate(() => __game.scene.getScene('island').scene.start('island', { map: 'exp-pirate', spawn: 'dock' }));
   await page.waitForTimeout(3500);
-  const pirates = await page.evaluate(() => __game.scene.getScene('island').islanders.filter((i) => i.title).map((i) => i.title));
-  check(pirates.length && pirates.every((t) => /Pirate|Smuggler|Treasure/.test(t)), `Skull Isle's people are pirates and treasure hunters (${pirates.join(', ')})`, `Skull Isle people: ${pirates.join(', ')}`);
+  const pirates = await page.evaluate(() => __game.scene.getScene('island').islanders.filter((i) => i.wears).map((i) => i.wears));
+  check(pirates.length && pirates.every((t) => /^(piratecrew|smuggler|treasurehunter)\./.test(t)), `Skull Isle's people dress as pirates and treasure hunters (${pirates.join(', ')})`, `Skull Isle people: ${pirates.join(', ')}`);
   check(!errors.length, 'no page errors', `page errors: ${errors.slice(0, 3).join(' | ')}`);
   await browser.close();
   console.log(problems.length ? `\n${problems.length} problem(s)` : '\nAll good');

@@ -1083,9 +1083,9 @@ export function moreHair(out, view, look, hatOn) {
 // `flaps` (the edge steps out), `cover` (hair under the hat).
 const HAT_ROWS = {
   bucket: {
-    down: { rows: { 0: 'oooooooo', 1: 'oTTTTTTTTo', 2: 'oTTTTTTTTTTo', 3: 'oUxUUUUUUUUo' }, paint: { 4: centred('oTTTTTTTTTTTTo') } },
+    down: { rows: { 0: 'oooooooo', 1: 'oTTTTTTTTo', 2: 'oTTTTTTTTTTo', 3: 'oUUUUUUUUUUo' }, paint: { 4: centred('oTTTTTTTTTTTTo') } },
     up: { rows: { 0: 'oooooooo', 1: 'oTTTTTTTTo', 2: 'oTTTTTTTTTTo', 3: 'oUUUUUUUUUUo' }, paint: { 4: centred('oTTTTTTTTTTTTo') } },
-    side: { rows: { 0: 'oooooooo', 1: 'oTTTTTTTTo', 2: 'oTTTTTTTTTTo', 3: 'oUUUUUUUUxUo' }, paint: { 4: centred('oTTTTTTTTTTTTo') } },
+    side: { rows: { 0: 'oooooooo', 1: 'oTTTTTTTTo', 2: 'oTTTTTTTTTTo', 3: 'oUUUUUUUUUUo' }, paint: { 4: centred('oTTTTTTTTTTTTo') } },
   },
   souwester: {
     down: { pre: ['oooooo'], rows: { 0: 'oTTTTTTo', 1: 'oTTTTTTTTo', 2: 'oTTTTTTTTTTo', 3: 'oTTTTTTTTTTTTo' }, flaps: [[4, 5, 6, 7, 8], 'T'] },
@@ -1153,9 +1153,9 @@ const HAT_ROWS = {
     down: { pre: ['oooooooo', 'oTTTTTTTTo', 'oTTTTTTTTTTo', 'oTTUTTTTUTTo'], rows: { 0: 'oTTUTTTTUTTo', 1: 'oTTUTTTTUTTo', 2: 'oUUUUUUUUUUo' } },
   },
   pirate: {
-    down: { pre: ['oooooooooooo'], rows: { 0: 'oTTTTTQQTTTTTo', 1: 'oTTTTTQQTTTTTo', 2: 'oYYYYYYYYYYYYo' } },
-    up: { pre: ['oooooooooooo'], rows: { 0: 'oTTTTTTTTTTTTo', 1: 'oTTTTTTTTTTTTo', 2: 'oYYYYYYYYYYYYo' } },
-    side: { pre: ['oooooooooooo'], rows: { 0: 'oTTTTTTTTTTTTo', 1: 'oTTTTTTTTTTTTo', 2: 'oYYYYYYYYYYYYYYo' } },
+    down: { pre: [[8, 'oo            oo'], [8, 'oYo  oooooo  oYo'], [8, 'oTYoTTTrrTTToYTo']], rows: { 0: 'oYTTTTTkkTTTTTYo', 1: 'ooYYYYYYYYYYoo', 2: 'ooooTTooo' } },
+    up: { pre: [[8, 'oo            oo'], [8, 'oYo  oooooo  oYo'], [8, 'oTYoTTTTTTTToYTo']], rows: { 0: 'oYTTTTTTTTTTTTYo', 1: 'ooYYYYYYYYYYoo' } },
+    side: { pre: [[8, 'oo        oo'], [8, 'oYoooooooYoYo'], [8, 'oTTTTTTrrTTTTo']], rows: { 0: [8, 'oYTTTTTkkTTTTYo'], 1: [9, 'ooYYYYYYYYYoo'] } },
   },
   cowboy: {
     down: { pre: ['oooooo'], rows: { 0: 'oTTUUTTo', 1: 'oTTTTTTTTo', 2: 'oUUUUUUUUUUo', 3: 'oTTTTTTTTTTTTTTTTo' }, paint: { 2: [6, 'oT'], 3: [6, 'o'] } },
@@ -1178,8 +1178,8 @@ const HAT_ROWS = {
     side: { rows: { 1: 'oUUUUUUUUo' }, cover: [[2, 3, 4, 5, 6, 7, 8], ['h', 'H'], 'T'], paint: { 6: [8, 'oT'], 7: [8, 'oT'], 8: [8, 'oTT'], 9: [8, 'oTT'], 10: [8, 'oTT'], 11: [8, 'oTT'], 12: [8, 'oTT'], 13: [9, 'ooo'] } },
   },
   helmet: {
-    down: { pre: ['oooooo'], rows: { 0: 'oTUTTUTo', 1: 'oTTTTTTTTo', 2: 'oTTUTTTTUTTo', 3: 'oUUUUUUUUUUo' } },
-    side: { pre: ['oooooo'], rows: { 0: 'oTUTTUTo', 1: 'oTTTTTTTTo', 2: 'oTTUTTTTUTTo', 3: 'oUUUUUUUUUUo' }, paint: { 2: [8, 'oT'], 3: [8, 'oo'] } },
+    down: { pre: ['oooooo'], rows: { 0: 'oTTUUTTo', 1: 'oTTTUUTTTo', 2: 'oTTTTUUTTTTo', 3: 'oUUUUUUUUUUo' } },
+    side: { pre: ['oooooo'], rows: { 0: 'oTTTTTTo', 1: 'oUUUUUUUUo', 2: 'oTTTTTTTTTTo', 3: 'oUUUUUUUUUUo' }, paint: { 2: [8, 'oT'], 3: [8, 'oo'] } },
   },
   police: {
     down: { pre: ['oooooooooooo'], rows: { 0: 'oTTTTTTTTTTTTo', 1: 'oTTTTTYYTTTTTo', 2: 'oUUUUUUUUUUo', 3: 'okkkkkkkkkko' } },
@@ -1485,7 +1485,39 @@ export function moreHats(out, view, look) {
     const [x, str] = typeof s === 'string' ? centred(s) : s;
     P(+r, x, str);
   });
-  return pre(v.pre || []);
+  const top = pre(v.pre || []).map((r) => [...r]);
+  shadeHat(top, out, view);
+  return top.map((r) => r.join(''));
+}
+// light along the hat's top edge on its lit side (left, or the front from the side), and its lowest
+// row of hat colour darker, like the underside of a brim (`W` and `D`, derived from the hat colour)
+function shadeHat(top, out, view) {
+  const rows = [...top, ...out.slice(0, 11).map((r) => (r.length === T ? r : wideRow(r)))];
+  const hatAt = (y, x) => rows[y]?.[x] === 'T';
+  const xs = [];
+  rows.forEach((r) => r.forEach((c, x) => c === 'T' && xs.push(x)));
+  if (!xs.length) return;
+  const [a, b] = [Math.min(...xs), Math.max(...xs)];
+  const lit = (x) => (view === 'side' ? x >= a + (b - a) * 0.45 : x <= a + (b - a) * 0.55);
+  const light = [];
+  const dark = [];
+  for (let x = a; x <= b; x++) {
+    const ys = rows.map((r, y) => (r[x] === 'T' ? y : -1)).filter((y) => y >= 0);
+    if (!ys.length) continue;
+    if (lit(x) && !hatAt(ys[0] - 1, x)) light.push([ys[0], x]);
+    const low = ys.at(-1);
+    if (low > ys[0] && !hatAt(low + 1, x) && rows[low + 1]?.[x] !== undefined) dark.push([low, x]);
+  }
+  const set = (y, x, c) => {
+    if (y < top.length) top[y][x] = c;
+    else {
+      const r = y - top.length;
+      out[r] = out[r].length === T ? out[r] : wideRow(out[r]);
+      out[r][x] = c;
+    }
+  };
+  dark.forEach(([y, x]) => set(y, x, 'D'));
+  light.forEach(([y, x]) => set(y, x, 'W'));
 }
 
 // ---------- The full 32-wide grid (builds, props, poses) ----------
@@ -1702,7 +1734,7 @@ const CARRY_DRAW = {
     hand(d, m, x);
   },
   bucket: (d, m) => hang(d, m, [' kkk ', 'k   k', 'AAAAA', 'PPPPP', 'PPPPP', ' PPP ']),
-  trashbag: (d, m) => hang(d, m, ['  k  ', ' BBB ', 'BBBBB', 'BBBBB', 'BBBBB', ' BBB ']),
+  trashbag: (d, m) => hang(d, m, ['  A  ', ' kkk ', 'kAkkk', 'kkkkk', 'kkkkk', ' kkk ']),
   toolbox: (d, m) => hang(d, m, ['  kk  ', ' k  k ', 'xxxxxx', 'xNNNNx', 'xxxxxx']),
   cooler: (d, m) => hang(d, m, ['  kk  ', 'QQQQQQ', 'BBBBBB', 'BBBBBB']),
   lantern: (d, m) => hang(d, m, [' k ', 'kAk', 'jYj', 'jYj', 'AAA']),
@@ -2614,9 +2646,9 @@ const POSE_DRAW = {
   tvcamera: (d, m, f, g) => {
     tuck(g, m);
     const { top } = m;
-    d.pic(12, top + 7, ['kkkkkkkkk', 'kkkkkkkAA', 'kkkkkkkAA', 'kkkkkkkkk']);
-    if (f) d.px(13, top + 6, 'x');
-    hands(d, [[18, top + 11]]);
+    d.pic(16, top + 9, ['AAAAAAA  ', 'AaAAAAAkk', 'AAAAAAA  ']);
+    if (f) d.px(17, top + 8, 'x');
+    hands(d, [[18, top + 12]]);
   },
   magnify: (d, m, f, g) => {
     tuck(g, m);
