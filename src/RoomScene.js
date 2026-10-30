@@ -62,6 +62,7 @@ import { PAINTINGS } from './paintings.js';
 import { roomRating, museumRating, starText } from './rating.js';
 import { FAMOUS, meet, resetMet, metList, famousBoost } from './famous.js';
 import { SAM, samLine } from './sam.js';
+import { roomLook, lookLine } from './examine.js';
 import { FREE, coins, canAfford, addCoins, spend, resetWallet, museumIncome, museumVisitors, coffeeIncome, serviceGold, roomIncome, settle, sellPrice, artPile, decorPile, collectArt, collectDecor, collectAll, pile, pileFull } from './wallet.js';
 import { openToolkit, hideToolkit, showBar, hideBar } from './toolkit.js';
 import { artBounds, paintArt, wallRef } from './walldraw.js';
@@ -369,6 +370,7 @@ export class RoomScene extends Phaser.Scene {
     this.overlay = this.add.graphics().setDepth(6000);
     this.mode = null; // toolkit: null | 'browse' | 'place' | 'edit'
 
+    this.seated = null; // (the player sitting down: see sitPlayer)
     this.mess = [];
     if (this.roomIndex === 0) this.spawnMess();
 
@@ -1024,6 +1026,41 @@ export class RoomScene extends Phaser.Scene {
     this.npcs.push(n);
   }
 
+  // Look at something in the room: a line about it in a bubble over it (src/examine.js).
+  lookAt(it, look) {
+    const { w } = footprint(it);
+    const x = this.g.xL + (it.c + w / 2) * T;
+    const y = this.g.y0 + it.r * T;
+    sfx('talk');
+    showTalk(look.name, '', lookLine(look), () => (this.sys.isActive() ? this.screenAt(x, y - 8) : null), 6000, () => Math.hypot(this.player.x - x, this.player.y - y) > 80);
+  }
+
+  // Sit down on a stool, bench or sofa: on the free spot of it nearest you. Walk (or press Stand) to get up.
+  sitPlayer(it, look) {
+    const { w, h } = footprint(it);
+    const bottom = this.g.y0 + (it.r + h) * T;
+    let best = null;
+    for (let k = 0; k < w; k++) {
+      const key = `${it.c + k},${it.r}`;
+      if (this.npcs.some((o) => o.seat?.key === key || o.goal?.key === key)) continue;
+      const x = this.g.xL + (it.c + k + 0.5) * T;
+      if (!best || Math.abs(x - this.player.x) < Math.abs(best - this.player.x)) best = x;
+    }
+    if (best === null) return this.toast('Someone’s already sitting there');
+    this.endTalk();
+    this.seated = { x: best, y: bottom + 10, key: `${Math.floor((best - this.g.xL) / T)},${it.r}` };
+    this.player.setTexture('player_sit').setFlipX(false).setPosition(best, bottom - 3);
+    sfx('tap');
+    showTalk(look.name, '', lookLine(look), () => (this.sys.isActive() ? this.screenAt(best, bottom - 40) : null), 5000, () => !this.seated);
+  }
+
+  standUpPlayer() {
+    const st = this.seated;
+    if (!st) return;
+    this.seated = null;
+    this.player.setTexture('player_down').setPosition(st.x, st.y);
+  }
+
   // Uncle Sam, wandering the entrance (src/sam.js).
   spawnSam() {
     const { g } = this;
@@ -1217,7 +1254,7 @@ export class RoomScene extends Phaser.Scene {
         const x = g.xL + (it.c + k + 0.5) * T;
         const bottom = g.y0 + (it.r + h) * T;
         const key = `${it.c + k},${it.r}`;
-        if (this.npcs.some((o) => o.seat?.key === key || o.goal?.key === key)) continue;
+        if (this.npcs.some((o) => o.seat?.key === key || o.goal?.key === key) || this.seated?.key === key) continue;
         seats.push({ kind: 'seat', key, x, frontY: bottom + 10, seatY: bottom - 3 });
       }
     });
@@ -2030,6 +2067,12 @@ export class RoomScene extends Phaser.Scene {
     const r = resolver(x, y, facingOf(this.player));
     // d: how far it is; (tx, ty): where it is, for the facing test (leave out for things underfoot)
     const consider = (d, focus, tx, ty) => r.consider(REACH, d, focus, tx, ty);
+    if (this.seated) {
+      // sitting: get up, or talk to whoever's in front of you
+      for (const n of this.npcs) consider(Math.hypot(x - n.s.x, y - n.s.y) - 2, { npc: n, icon: 'talk' }, n.s.x, n.s.y - 8);
+      consider(REACH - 1, { stand: true, icon: 'sit' });
+      return r.best;
+    }
     for (const p of this.hung) {
       const s = this.standFor(p);
       const half = (p.art.u1 - p.art.u0) / 2;
@@ -2074,6 +2117,21 @@ export class RoomScene extends Phaser.Scene {
       const fy = this.g.y0 + (it.r + h) * T + 8; // just in front
       consider(Math.hypot(x - fx, y - fy) - (w * T) / 3, { fixture: it, icon: 'look' }, fx, this.g.y0 + (it.r + h / 2) * T);
     });
+    // everything else: walk up and look at it (src/examine.js), or sit on it
+    this.items.forEach((it) => {
+        if (isFixture(it)) return;
+        const look = roomLook(it.type, ITEMS[it.type]?.name);
+        if (!look) return;
+        const { w, h } = footprint(it);
+        const cx = this.g.xL + (it.c + w / 2) * T;
+        const top = this.g.y0 + it.r * T;
+        const bottom = this.g.y0 + (it.r + h) * T;
+        // nearest point of its footprint (a long bench is in reach anywhere along it), a little behind real actions
+        const nx = Phaser.Math.Clamp(x, this.g.xL + it.c * T + 4, this.g.xL + (it.c + w) * T - 4);
+        const ny = Phaser.Math.Clamp(y, top + 4, bottom + 6);
+        const sit = SEATS.includes(it.type);
+        consider(Math.hypot(x - nx, y - ny) + 6, { look, item: it, sit, icon: sit ? 'sit' : 'look' }, sit ? nx : cx, (top + bottom) / 2);
+      });
     for (const n of this.npcs) consider(Math.hypot(x - n.s.x, y - n.s.y) - 2, { npc: n, icon: 'talk' }, n.s.x, n.s.y - 8);
     if (this.pet) consider(Math.hypot(x - this.pet.s.x, y - this.pet.s.y) + 4, { pet: true, icon: 'talk' }, this.pet.s.x, this.pet.s.y - 4);
     const { exit, entrance } = this.L;
@@ -2092,6 +2150,8 @@ export class RoomScene extends Phaser.Scene {
     if (f.painting) return 'Look';
     if (f.slot) return f.slot.kind === 'door' ? 'Open' : 'Hang';
     if (f.fixture) return 'Display';
+    if (f.stand) return 'Stand';
+    if (f.look) return f.sit ? 'Sit' : 'Look';
     if (f.mess) return { crack: 'Repair', stain: 'Clean', cobweb: 'Sweep', puddle: 'Mop', litter: 'Sweep' }[f.mess.kind] || 'Clean';
     if (f.office) return 'Office';
     if (f.board) return 'Staff';
@@ -2113,6 +2173,8 @@ export class RoomScene extends Phaser.Scene {
     if (f.painting) this.view(f.painting);
     else if (f.slot) this.editSlot(f.slot);
     else if (f.fixture) this.openFixture(f.fixture);
+    else if (f.stand) this.standUpPlayer();
+    else if (f.look) (f.sit ? this.sitPlayer(f.item, f.look) : this.lookAt(f.item, f.look));
     else if (f.mess) this.clean(f.mess);
     else if (f.office) this.openOfficePanel();
     else if (f.board) this.openStaff();
@@ -2980,6 +3042,7 @@ export class RoomScene extends Phaser.Scene {
 
     const len = Math.hypot(vx, vy);
     this.running = len > 0 && pace === 1;
+    if (len > 0 && this.seated) this.standUpPlayer(); // (walking off gets you up)
     if (len > 0) {
       const b = this.bounds();
       const arch = this.archOpening();
@@ -3013,7 +3076,7 @@ export class RoomScene extends Phaser.Scene {
       footstep();
       if (pace === 1) dust(this, this.player.x, this.player.y);
     }
-    this.player.setDepth(this.player.y);
+    this.player.setDepth(this.player.y + (this.seated ? 5 : 0)); // (sitting: drawn over the seat)
     this.checkArches();
     if (len > 0) this.checkCoins();
 
@@ -3036,7 +3099,7 @@ export class RoomScene extends Phaser.Scene {
     const f = this.focus;
     const target = f?.npc ? f.npc.s : f?.pet ? this.pet.s : null;
     this.mark.update(dt, target ? { x: target.x, y: headY(target) - (f.npc?.emoteImg?.active ? 18 : 6) } : null);
-    this.bubble.setVisible(!!f && !target);
+    this.bubble.setVisible(!!f && !target && !f.stand);
     if (this.focus) this.bubble.setPosition(Math.round(this.player.x), Math.round(this.player.y - 36));
     if (this.focus && (Phaser.Input.Keyboard.JustDown(k.SPACE) || Phaser.Input.Keyboard.JustDown(k.ENTER))) this.interact();
   }
