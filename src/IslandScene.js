@@ -5,7 +5,7 @@
 import Phaser from 'phaser';
 import { buildTiles, T } from './tiles.js';
 import { patchSheet } from './swap.js';
-import { makeCharacter } from './art.js';
+import { makeCharacter, poseView } from './art.js';
 import { load, save } from './storage.js';
 import { DEFAULT_CHARACTER } from './decor.js';
 import { showTalk, hideTalk, talking } from './talk.js';
@@ -61,6 +61,7 @@ import { addCoins } from './wallet.js';
 import { IslandLife } from './progression/ui/islandlife.js';
 import { PlayerLook, wornLooks } from './progression/ui/lookfx.js';
 import { dressCurator } from './people/wardrobe.js';
+import { townsperson } from './people/placement.js';
 import { progression } from './progression/index.js';
 import { regionOfMap, REGIONS, speciesOfRegion } from './progression/species.js';
 import { regionAccess } from './progression/access.js';
@@ -1050,7 +1051,14 @@ export class IslandScene extends Phaser.Scene {
       const y = Math.round((o.y + t.h) / T) - 1;
       if (x < 0 || y < 0 || x >= W || y >= H) return;
       if (name.startsWith('animal_') && ANIMALS[name.slice(7)]) return this.islanders.push(this.animal(name.slice(7), o.x + T / 2, o.y + t.h - 3, this.islanders.length));
-      if (PEOPLE[name] !== undefined) return this.islanders.push(this.islander(o.x + T / 2, o.y + t.h - 4, PEOPLE[name], this.islanders.length));
+      if (PEOPLE[name] !== undefined) {
+        // a plain person piece is someone who lives here, dressed for a job that fits the ground and the
+        // island (people/placement.js); they keep a visitor's way of talking, so conversations work as before
+        const px = o.x + T / 2;
+        const py = o.y + t.h - 4;
+        const who = townsperson(this.ground_(px, py - 4), String(this.mapId || '').replace(/^exp-/, ''), Math.round(px * 7 + py * 13));
+        return this.islanders.push(this.islander(px, py, PEOPLE[name], this.islanders.length, null, false, who));
+      }
       if (personOfTile(name)) return this.islanders.push(this.islander(o.x + T / 2, o.y + t.h - 4, 0, this.islanders.length, personOfTile(name).id, o.flip));
       const crew = crewOfTile(name);
       if (crew) {
@@ -1192,12 +1200,14 @@ export class IslandScene extends Phaser.Scene {
       return { s, prefix, kind: 'casual', home: { x, y }, range: p.range * T, name: p.name, title: p.title, lines: p.lines, pose: p.pose, rate: p.rate, flip: !!flip, wait: 500 + r(3) * 2500, target: null };
     }
     const kind = forced?.kind || KINDS[Math.floor(r(1) * KINDS.length)];
-    const { colors, look, scale } = visitorLook(kind, r);
-    const prefix = `islander${seed}${forced ? forced.id : ''}`;
+    // a named friend dresses for their job (npcs.json `wears`, a class variant); the rest by their kind
+    const dressed = forced?.wears && personFor(forced.wears, r);
+    const { colors, look, scale } = dressed ? { ...dressed, look: { ...dressed.look, pose: null, ground: null } } : visitorLook(kind, r);
+    const prefix = `islander${seed}${forced?.id || forced?.wears || ''}`;
     if (!this.textures.exists(`${prefix}_down`)) makeCharacter(this, prefix, colors, look);
     const s = this.add.sprite(x, y, `${prefix}_down`).setOrigin(0.5, 1).setScale(scale).setDepth(y);
     const names = PERSONALITIES[kind].names;
-    return { s, prefix, kind, npcId: forced?.id, skin: colors.s, home: { x, y }, range: range * T, name: forced?.name || names[Math.floor(r(2) * names.length)], wait: 500 + r(3) * 2500, target: null };
+    return { s, prefix, kind, npcId: forced?.id, wears: forced?.wears, skin: colors.s, home: { x, y }, range: range * T, name: forced?.name || names[Math.floor(r(2) * names.length)], wait: 500 + r(3) * 2500, target: null };
   }
 
   moveIslanders(dt) {
@@ -1216,12 +1226,8 @@ export class IslandScene extends Phaser.Scene {
       const a = n.animal;
       if (n.pose && !n.target) {
         // at work, two frames on a loop; they look up at you while you chat
-        if (this.focus?.npc === n && (talking() || chatOpen())) {
-          const dx = this.player.x - s.x;
-          const dy = this.player.y - s.y;
-          if (Math.abs(dx) > Math.abs(dy)) s.setTexture(`${n.prefix}_side`).setFlipX(dx < 0);
-          else s.setTexture(dy < 0 ? `${n.prefix}_up` : `${n.prefix}_down`).setFlipX(false);
-        } else {
+        if (this.focus?.npc === n && (talking() || chatOpen())) this.faceNpc(n, this.player.x, this.player.y);
+        else {
           n.poseT = (n.poseT || 0) + dt;
           s.setTexture(`${n.prefix}_pose_${Math.floor(n.poseT * n.rate) % 2}`).setFlipX(n.flip);
         }
@@ -1411,6 +1417,8 @@ export class IslandScene extends Phaser.Scene {
     if (n.animal) return;
     const dx = tx - n.s.x;
     const dy = ty - n.s.y;
+    // someone at work keeps their tools in hand: they pause on their first frame, turned your way
+    if (n.pose) return n.s.setTexture(`${n.prefix}_pose_0`).setFlipX(poseView(n.pose) === 'side' ? dx < 0 : n.flip);
     if (Math.abs(dx) > Math.abs(dy)) n.s.setTexture(`${n.prefix}_side`).setFlipX(dx < 0);
     else n.s.setTexture(dy < 0 ? `${n.prefix}_up` : `${n.prefix}_down`).setFlipX(false);
   }

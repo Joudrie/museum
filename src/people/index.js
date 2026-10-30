@@ -60,6 +60,8 @@ export function personFor(id, seed = Math.random) {
   const hair = pick(v.hair || cls.hair || ['short'], 2);
   if ((!kid && r(3) < 0.07 && !look.hat) || hair === 'bald' || look.bald) look.bald = true;
   else look.hair = v.look?.hair || hair;
+  // (hair that stands up would poke through the first caps, sun hats and wreaths)
+  if (['cap', 'sun', 'crown', 'laurel'].includes(look.hat)) look.hair = { bun: 'ponytail', afro: 'curly', mohawk: 'buzz', wild: 'short' }[look.hair] || look.hair;
   if (!colors.h) colors.h = !kid && r(4) < 0.15 ? pick(GREYS, 5) : pick(HAIR_COLORS, 5);
   // about half grow facial hair (if the class does); the others may wear earrings
   const smooth = kid || r(6) < 0.5;

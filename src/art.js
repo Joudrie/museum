@@ -1970,6 +1970,8 @@ export function personPalette(colors = {}) {
     pal.d = toHex(shade(hex(colors.c), 0.75));
   }
   if (colors.h && !colors.H) pal.H = toHex(mix(hex(colors.h), WHITE, 0.22));
+  pal.W = toHex(mix(hex(pal.T), WHITE, 0.35)); // a hat's lit rim and its shaded brim (people/parts.js shadeHat)
+  pal.D = toHex(shade(hex(pal.T), 0.7));
   if (colors.s && !colors.S) pal.S = toHex(shade(hex(colors.s), 0.85));
   pal.u = colors.u || pal.g; // the curator's second outfit color (see outfitAccent)
   pal.Z = toHex(shade(hex(pal.s), 0.72)); // freckles

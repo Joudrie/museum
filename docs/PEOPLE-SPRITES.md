@@ -11,6 +11,7 @@ The prompt to paste into a new chat is in section 7.
 - Tier 4 classes are in: I arts & performance (19 classes), F science & medicine (16), C artisans & makers (15). 187 classes, 402 variants in all.
 - Tier 5 is in: K through history (11 classes), L fantasy & seasonal (11), and the 10 crews of M (`src/people/crews.js`, builder pieces `t:crew_<id>`). 209 classes, 471 variants in all.
 - Parked for the user's OK (TODO → Needs Sean): East Asia, South Asia and Mesoamerica in K, and the genie in L.
+- In the game: the islands' plain people, the museum staff and the named friends now use the classes (`src/people/placement.js`, see HANDOFF → People sprites).
 - Wardrobe (after Tier 5): the curator can wear it all. Customize → Character → Costume has 51 whole costumes made from the classes, plus Hold and On the shoulder; any of it can be locked behind a challenge (`LOCKED` and `unlockLook` in `src/people/wardrobe.js`, see HANDOFF → People sprites).
 - Period dress references (one museum object per outfit, also in comments in `src/people/classes.js`):
   - Egypt: the Met, Nikare with his Wife and Daughter (52.19, kilt), Broad collar of Senebtisi (08.200.30), Sphinx of Hatshepsut (31.3.166, nemes headcloth).

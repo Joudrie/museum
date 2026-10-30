@@ -973,17 +973,17 @@ export function moreHair(out, view, look, hatOn) {
     }
   }
   if (style === 'braids') {
-    const braid = (x) => {
-      for (let r = 8; r <= 14; r++) P(r, x, r % 2 ? 'ohHo' : 'oHho');
-      P(15, x, 'oUUo');
-      P(16, x, 'ohho');
-      P(17, x + 1, 'oo');
+    // plaited in segments, hanging by the face to the shoulder (longer ones read as a second pair of sleeves)
+    const braid = (x, end = 10) => {
+      for (let r = 7; r <= end; r++) P(r, x, r % 3 === 1 ? 'oHHo' : 'ohho');
+      P(end + 1, x, 'oUUo');
+      P(end + 2, x + 1, 'oo');
     };
     if (D || U) {
       braid(7);
       braid(21);
     }
-    if (S) braid(10);
+    if (S) braid(10, 13);
   }
   if (style === 'dreads') {
     const lock = (r, x, n) => P(r, x, [...'hHh'.repeat(4)].slice(0, n).join(''));
@@ -1083,9 +1083,9 @@ export function moreHair(out, view, look, hatOn) {
 // `flaps` (the edge steps out), `cover` (hair under the hat).
 const HAT_ROWS = {
   bucket: {
-    down: { rows: { 0: 'oooooooo', 1: 'oTTTTTTTTo', 2: 'oTTTTTTTTTTo', 3: 'oUxUUUUUUUUo' }, paint: { 4: centred('oTTTTTTTTTTTTo') } },
+    down: { rows: { 0: 'oooooooo', 1: 'oTTTTTTTTo', 2: 'oTTTTTTTTTTo', 3: 'oUUUUUUUUUUo' }, paint: { 4: centred('oTTTTTTTTTTTTo') } },
     up: { rows: { 0: 'oooooooo', 1: 'oTTTTTTTTo', 2: 'oTTTTTTTTTTo', 3: 'oUUUUUUUUUUo' }, paint: { 4: centred('oTTTTTTTTTTTTo') } },
-    side: { rows: { 0: 'oooooooo', 1: 'oTTTTTTTTo', 2: 'oTTTTTTTTTTo', 3: 'oUUUUUUUUxUo' }, paint: { 4: centred('oTTTTTTTTTTTTo') } },
+    side: { rows: { 0: 'oooooooo', 1: 'oTTTTTTTTo', 2: 'oTTTTTTTTTTo', 3: 'oUUUUUUUUUUo' }, paint: { 4: centred('oTTTTTTTTTTTTo') } },
   },
   souwester: {
     down: { pre: ['oooooo'], rows: { 0: 'oTTTTTTo', 1: 'oTTTTTTTTo', 2: 'oTTTTTTTTTTo', 3: 'oTTTTTTTTTTTTo' }, flaps: [[4, 5, 6, 7, 8], 'T'] },
@@ -1102,7 +1102,7 @@ const HAT_ROWS = {
   },
   bandana: {
     down: { rows: { 0: 'oooooooo', 1: 'oTTTTTTTTo', 2: 'oTTUTTTTUTTo', 3: 'oTTTTUUTTTTo' } },
-    up: { rows: { 0: 'oooooooo', 1: 'oTTTTTTTTo', 2: 'oTTUTTTTUTTo', 3: 'oTTTTUUTTTTo' }, paint: { 4: [14, 'oUUo'], 5: [14, 'oTTo'], 6: [14, 'oTTo'], 7: [15, 'oo'] } },
+    up: { rows: { 0: 'oooooooo', 1: 'oTTTTTTTTo', 2: 'oTTTTTTTTTTo', 3: 'oTTTTTTTTTTo' }, cover: [[4, 5], ['h', 'H'], 'T'], paint: { 6: [17, 'oUUo'], 7: [18, 'oTTo'], 8: [19, 'oTo'], 9: [19, 'oTo'], 10: [20, 'o'] } },
     side: { rows: { 0: 'oooooooo', 1: 'oTTTTTTTTo', 2: 'oTTUTTTTUTTo', 3: 'oTTTTUUTTTTo' }, paint: { 2: [8, 'oo'], 3: [7, 'oTTU'], 4: [7, 'oTTo'], 5: [7, 'ooo'] } },
   },
   flatcap: {
@@ -1153,9 +1153,9 @@ const HAT_ROWS = {
     down: { pre: ['oooooooo', 'oTTTTTTTTo', 'oTTTTTTTTTTo', 'oTTUTTTTUTTo'], rows: { 0: 'oTTUTTTTUTTo', 1: 'oTTUTTTTUTTo', 2: 'oUUUUUUUUUUo' } },
   },
   pirate: {
-    down: { pre: ['oooooooooooo'], rows: { 0: 'oTTTTTQQTTTTTo', 1: 'oTTTTTQQTTTTTo', 2: 'oYYYYYYYYYYYYo' } },
-    up: { pre: ['oooooooooooo'], rows: { 0: 'oTTTTTTTTTTTTo', 1: 'oTTTTTTTTTTTTo', 2: 'oYYYYYYYYYYYYo' } },
-    side: { pre: ['oooooooooooo'], rows: { 0: 'oTTTTTTTTTTTTo', 1: 'oTTTTTTTTTTTTo', 2: 'oYYYYYYYYYYYYYYo' } },
+    down: { pre: [[8, 'oo            oo'], [8, 'oYo  oooooo  oYo'], [8, 'oTYoTTTrrTTToYTo']], rows: { 0: 'oYTTTTTkkTTTTTYo', 1: 'ooYYYYYYYYYYoo', 2: 'ooooTTooo' } },
+    up: { pre: [[8, 'oo            oo'], [8, 'oYo  oooooo  oYo'], [8, 'oTYoTTTTTTTToYTo']], rows: { 0: 'oYTTTTTTTTTTTTYo', 1: 'ooYYYYYYYYYYoo' } },
+    side: { pre: [[8, 'oo        oo'], [8, 'oYoooooooYoYo'], [8, 'oTTTTTTrrTTTTo']], rows: { 0: [8, 'oYTTTTTkkTTTTYo'], 1: [9, 'ooYYYYYYYYYoo'] } },
   },
   cowboy: {
     down: { pre: ['oooooo'], rows: { 0: 'oTTUUTTo', 1: 'oTTTTTTTTo', 2: 'oUUUUUUUUUUo', 3: 'oTTTTTTTTTTTTTTTTo' }, paint: { 2: [6, 'oT'], 3: [6, 'o'] } },
@@ -1178,8 +1178,8 @@ const HAT_ROWS = {
     side: { rows: { 1: 'oUUUUUUUUo' }, cover: [[2, 3, 4, 5, 6, 7, 8], ['h', 'H'], 'T'], paint: { 6: [8, 'oT'], 7: [8, 'oT'], 8: [8, 'oTT'], 9: [8, 'oTT'], 10: [8, 'oTT'], 11: [8, 'oTT'], 12: [8, 'oTT'], 13: [9, 'ooo'] } },
   },
   helmet: {
-    down: { pre: ['oooooo'], rows: { 0: 'oTUTTUTo', 1: 'oTTTTTTTTo', 2: 'oTTUTTTTUTTo', 3: 'oUUUUUUUUUUo' } },
-    side: { pre: ['oooooo'], rows: { 0: 'oTUTTUTo', 1: 'oTTTTTTTTo', 2: 'oTTUTTTTUTTo', 3: 'oUUUUUUUUUUo' }, paint: { 2: [8, 'oT'], 3: [8, 'oo'] } },
+    down: { pre: ['oooooo'], rows: { 0: 'oTTUUTTo', 1: 'oTTTUUTTTo', 2: 'oTTTTUUTTTTo', 3: 'oUUUUUUUUUUo' } },
+    side: { pre: ['oooooo'], rows: { 0: 'oTTTTTTo', 1: 'oUUUUUUUUo', 2: 'oTTTTTTTTTTo', 3: 'oUUUUUUUUUUo' }, paint: { 2: [8, 'oT'], 3: [8, 'oo'] } },
   },
   police: {
     down: { pre: ['oooooooooooo'], rows: { 0: 'oTTTTTTTTTTTTo', 1: 'oTTTTTYYTTTTTo', 2: 'oUUUUUUUUUUo', 3: 'okkkkkkkkkko' } },
@@ -1485,7 +1485,39 @@ export function moreHats(out, view, look) {
     const [x, str] = typeof s === 'string' ? centred(s) : s;
     P(+r, x, str);
   });
-  return pre(v.pre || []);
+  const top = pre(v.pre || []).map((r) => [...r]);
+  shadeHat(top, out, view);
+  return top.map((r) => r.join(''));
+}
+// light along the hat's top edge on its lit side (left, or the front from the side), and its lowest
+// row of hat colour darker, like the underside of a brim (`W` and `D`, derived from the hat colour)
+function shadeHat(top, out, view) {
+  const rows = [...top, ...out.slice(0, 11).map((r) => (r.length === T ? r : wideRow(r)))];
+  const hatAt = (y, x) => rows[y]?.[x] === 'T';
+  const xs = [];
+  rows.forEach((r) => r.forEach((c, x) => c === 'T' && xs.push(x)));
+  if (!xs.length) return;
+  const [a, b] = [Math.min(...xs), Math.max(...xs)];
+  const lit = (x) => (view === 'side' ? x >= a + (b - a) * 0.45 : x <= a + (b - a) * 0.55);
+  const light = [];
+  const dark = [];
+  for (let x = a; x <= b; x++) {
+    const ys = rows.map((r, y) => (r[x] === 'T' ? y : -1)).filter((y) => y >= 0);
+    if (!ys.length) continue;
+    if (lit(x) && !hatAt(ys[0] - 1, x)) light.push([ys[0], x]);
+    const low = ys.at(-1);
+    if (low > ys[0] && !hatAt(low + 1, x) && rows[low + 1]?.[x] !== undefined) dark.push([low, x]);
+  }
+  const set = (y, x, c) => {
+    if (y < top.length) top[y][x] = c;
+    else {
+      const r = y - top.length;
+      out[r] = out[r].length === T ? out[r] : wideRow(out[r]);
+      out[r][x] = c;
+    }
+  };
+  dark.forEach(([y, x]) => set(y, x, 'D'));
+  light.forEach(([y, x]) => set(y, x, 'W'));
 }
 
 // ---------- The full 32-wide grid (builds, props, poses) ----------
@@ -1689,8 +1721,9 @@ const CARRY_DRAW = {
   net: (d, m) => {
     const { hx, hy, view, top } = m;
     const x = view === 'down' ? hx - 2 : view === 'up' ? hx + 2 : hx + 2;
-    d.line(x, hy + 3, x, top + 7, 'N');
-    d.pic(x - 2, top + 2, [' AAA ', 'AlllA', 'AlllA', 'AlllA', ' AAA ']);
+    const y = view === 'side' ? top - 6 : top + 2; // (from the side the hoop is held up past the head)
+    d.line(x, hy + 3, x, y + 5, 'N');
+    d.pic(x - 2, y, [' AAA ', 'AlllA', 'AlllA', 'AlllA', ' AAA ']);
     hand(d, m, x);
   },
   sign: (d, m) => {
@@ -1701,7 +1734,7 @@ const CARRY_DRAW = {
     hand(d, m, x);
   },
   bucket: (d, m) => hang(d, m, [' kkk ', 'k   k', 'AAAAA', 'PPPPP', 'PPPPP', ' PPP ']),
-  trashbag: (d, m) => hang(d, m, ['  k  ', ' BBB ', 'BBBBB', 'BBBBB', 'BBBBB', ' BBB ']),
+  trashbag: (d, m) => hang(d, m, ['  A  ', ' kkk ', 'kAkkk', 'kkkkk', 'kkkkk', ' kkk ']),
   toolbox: (d, m) => hang(d, m, ['  kk  ', ' k  k ', 'xxxxxx', 'xNNNNx', 'xxxxxx']),
   cooler: (d, m) => hang(d, m, ['  kk  ', 'QQQQQQ', 'BBBBBB', 'BBBBBB']),
   lantern: (d, m) => hang(d, m, [' k ', 'kAk', 'jYj', 'jYj', 'AAA']),
@@ -1737,7 +1770,7 @@ const CARRY_DRAW = {
   },
   pane: (d, m) => {
     if (m.view === 'side') {
-      d.pic(m.hx + 2, m.top + 6, Array(14).fill('vl'));
+      d.pic(m.hx + 2, m.top + 11, Array(12).fill('vl')); // (held below the chin, edge on)
       hand(d, m);
       return;
     }
@@ -2042,7 +2075,13 @@ const CARRY_DRAW = {
 export function drawCarry(rows, view, look) {
   const fn = CARRY_DRAW[look.carry];
   if (!fn) return rows;
-  return withRoom(rows, (g) => fn(draw(g), metrics(g, view, look.build), g));
+  return withRoom(rows, (g) => {
+    const m = metrics(g, view, look.build);
+    // from the side, whatever they hold passes behind their head (a pole never crosses the face)
+    const head = view === 'side' ? g.slice(0, m.Y(11)).map((r) => [...r]) : null;
+    fn(draw(g), m, g);
+    head?.forEach((r, y) => r.forEach((c, x) => c !== '.' && (g[y][x] = c)));
+  });
 }
 
 // ---------- Things set down on the ground beside someone ----------
@@ -2379,8 +2418,10 @@ const POSE_DRAW = {
     arm(d, [16, top + 15], [18, top + 16]);
     d.line(19, top + 17, 29, top + 2, 'N');
     d.px(18, top + 18, 'A');
-    d.line(29, top + 3, 30, gy - 2, 'l');
-    d.pic(30, gy - (f ? 2 : 1), ['x', 'Q']);
+    for (let y = top + 3; y < gy - 3; y += 2) d.px(y < (top + gy) / 2 ? 29 : 30, y, 'f');
+    d.pic(30, gy - (f ? 3 : 2), ['x', 'Q'], null);
+    d.px(29, gy - 1, 'v');
+    d.px(31, gy - 1, 'v');
   },
   castnet: (d, m, f, g) => {
     tuck(g, m);
@@ -2605,9 +2646,9 @@ const POSE_DRAW = {
   tvcamera: (d, m, f, g) => {
     tuck(g, m);
     const { top } = m;
-    d.pic(12, top + 7, ['kkkkkkkkk', 'kkkkkkkAA', 'kkkkkkkAA', 'kkkkkkkkk']);
-    if (f) d.px(13, top + 6, 'x');
-    hands(d, [[18, top + 11]]);
+    d.pic(16, top + 9, ['AAAAAAA  ', 'AaAAAAAkk', 'AAAAAAA  ']);
+    if (f) d.px(17, top + 8, 'x');
+    hands(d, [[18, top + 12]]);
   },
   magnify: (d, m, f, g) => {
     tuck(g, m);
@@ -3147,8 +3188,23 @@ export function poseFrames(pose, base, look) {
       const d = draw(g);
       d.sleeve = sleeveOf(g, m);
       fn(d, m, f, g);
+      if (view === 'sit') chair(g, m);
     });
   });
+}
+// a wooden chair under someone sitting at work: its back posts and seat show either side of them
+// (drawn only where nothing else is, so it stays behind them)
+function chair(g, m) {
+  const d = draw(g);
+  const L = 8 - m.wide;
+  const R = 23 + m.wide;
+  const lap = m.gy - 3;
+  const cells = [];
+  for (let y = m.Y(12); y <= m.gy; y++) [L, R].forEach((x) => cells.push([x, y, y >= lap && y <= lap + 1 ? 'N' : 'n']));
+  for (let x = L - 1; x <= R + 1; x++) cells.push([x, lap, 'n'], [x, lap + 1, 'N']);
+  const put = cells.filter(([x, y]) => d.get(x, y) === '.');
+  put.forEach(([x, y, c]) => d.px(x, y, c));
+  put.forEach(([x, y]) => [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(([dx, dy]) => d.get(x + dx, y + dy) === '.' && d.px(x + dx, y + dy, 'o')));
 }
 // the colour of the arm just above the hanging hand, so a raised arm keeps its sleeve (or bare skin)
 function sleeveOf(g, m) {
