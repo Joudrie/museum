@@ -51,6 +51,8 @@ import { runDialogue } from './dialogue.js';
 import { progression } from './progression/index.js';
 import { wornLooks } from './progression/ui/lookfx.js';
 import { dressCurator } from './people/wardrobe.js';
+import { personFor } from './people/index.js';
+import { STAFF_WEAR, BREAK_WEAR } from './people/placement.js';
 import { list as listEntries } from './collections/index.js';
 import { collect as collectEntry } from './collections/codex.js';
 import { load as loadStore, save as saveStore } from './storage.js';
@@ -883,30 +885,24 @@ export class RoomScene extends Phaser.Scene {
       });
   }
 
-  // The barista behind a coffee counter, and sometimes a janitor on their rounds.
-  makeStaff(kind, seed, x, y) {
-    const { colors, look, scale } = visitorLook(kind, (k) => hash(seed, k, 53));
+  // Someone on the staff. They wear their job (a class variant, people/placement.js; at work in its
+  // pose if it has one) and keep their kind's names and way of talking. `wear` picks the outfit list.
+  makeStaff(kind, seed, x, y, wear = STAFF_WEAR) {
+    const r = (k) => hash(seed, k, 53);
+    const job = wear[kind] && personFor(wear[kind], r);
+    const { colors, look, scale } = job ? { colors: job.colors, look: job.look, scale: PLAYER_SCALE } : visitorLook(kind, r);
     const prefix = `staff${seed}`;
     makeCharacter(this, prefix, colors, look);
     const names = PERSONALITIES[kind].names;
-    const s = this.add.sprite(x, y, `${prefix}_down`).setOrigin(0.5, 1).setScale(scale);
-    const n = { s, prefix, kind, staff: true, skin: colors.s, name: names[Math.floor(hash(seed, 6, 50) * names.length)], wait: 1000, target: null };
+    const s = this.add.sprite(x, y, job?.pose ? `${prefix}_pose_0` : `${prefix}_down`).setOrigin(0.5, 1).setScale(scale);
+    const n = { s, prefix, kind, staff: true, skin: colors.s, name: names[Math.floor(hash(seed, 6, 50) * names.length)], wait: 1000, target: null, pose: job?.pose || null, rate: job?.rate || 2 };
     this.npcs.push(n);
     return n;
   }
 
   spawnStaff() {
     const { g } = this;
-    const make = (kind, seed, x, y) => {
-      const { colors, look, scale } = visitorLook(kind, (k) => hash(seed, k, 53));
-      const prefix = `staff${seed}`;
-      makeCharacter(this, prefix, colors, look);
-      const names = PERSONALITIES[kind].names;
-      const s = this.add.sprite(x, y, `${prefix}_down`).setOrigin(0.5, 1).setScale(scale);
-      const n = { s, prefix, kind, staff: true, skin: colors.s, name: names[Math.floor(hash(seed, 6, 50) * names.length)], wait: 1000, target: null };
-      this.npcs.push(n);
-      return n;
-    };
+    const make = (kind, seed, x, y) => this.makeStaff(kind, seed, x, y);
     if (this.deskSpot) make('caretaker', 900, g.xL + this.deskSpot.c * T + T, g.y0 + this.deskSpot.r * T + 2).fixed = true;
     const counter = this.items.find((it) => it.type === 'counter');
     if (counter) {
@@ -922,7 +918,7 @@ export class RoomScene extends Phaser.Scene {
       }
       const n = make('janitor', 800 + this.roomIndex, x, y);
       n.fixed = true;
-      n.mop = this.add.image(x + 12, y, 'mop').setOrigin(0.5, 1);
+      if (!n.pose) n.mop = this.add.image(x + 12, y, 'mop').setOrigin(0.5, 1); // (the mopping pose has its own mop)
       n.puddle = this.add.image(x + 24, y - 4, 'dirt_puddle').setDepth(1);
     }
     if (this.isBreak) this.spawnWorkers();
@@ -953,7 +949,7 @@ export class RoomScene extends Phaser.Scene {
     const spots = [[1.5, 2.5], [3.5, 3.6], [5.2, 3.2], [1.8, 4.6], [4.6, 4.8], [6.2, 2.2]];
     kinds.forEach((kind, k) => {
       const [c, r] = spots[k];
-      const n = this.makeStaff(kind, 1100 + k, g.xL + c * T, g.y0 + r * T);
+      const n = this.makeStaff(kind, 1100 + k, g.xL + c * T, g.y0 + r * T, BREAK_WEAR);
       n.wait = 2000 + k * 900; // they wander a little
     });
   }
@@ -2921,6 +2917,12 @@ export class RoomScene extends Phaser.Scene {
     this.socialize(dt);
     this.npcs.forEach((n) => {
       this.updateVisitor(n, dt);
+      // staff at work loop their two pose frames; talking, they turn to you as usual
+      if (n.pose && !n.talking && !n.target && !n.walking) {
+        n.poseT = (n.poseT || 0) + dt;
+        const want = `${n.prefix}_pose_${Math.floor(n.poseT * n.rate) % 2}`;
+        if (n.s.texture.key !== want) n.s.setTexture(want).setFlipX(false);
+      }
       this.animate(n.s, (!!n.target || !!n.walking) && !n.talking, dt);
       n.s.setDepth(n.s.y + (n.lift || 0));
       if (n.quipText?.active) n.quipText.setPosition(n.s.x, n.s.y - (n.emoteImg?.active ? 50 : 38));

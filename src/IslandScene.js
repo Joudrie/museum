@@ -61,6 +61,7 @@ import { addCoins } from './wallet.js';
 import { IslandLife } from './progression/ui/islandlife.js';
 import { PlayerLook, wornLooks } from './progression/ui/lookfx.js';
 import { dressCurator } from './people/wardrobe.js';
+import { townsperson } from './people/placement.js';
 import { progression } from './progression/index.js';
 import { regionOfMap, REGIONS, speciesOfRegion } from './progression/species.js';
 import { regionAccess } from './progression/access.js';
@@ -1050,7 +1051,16 @@ export class IslandScene extends Phaser.Scene {
       const y = Math.round((o.y + t.h) / T) - 1;
       if (x < 0 || y < 0 || x >= W || y >= H) return;
       if (name.startsWith('animal_') && ANIMALS[name.slice(7)]) return this.islanders.push(this.animal(name.slice(7), o.x + T / 2, o.y + t.h - 3, this.islanders.length));
-      if (PEOPLE[name] !== undefined) return this.islanders.push(this.islander(o.x + T / 2, o.y + t.h - 4, PEOPLE[name], this.islanders.length));
+      if (PEOPLE[name] !== undefined) {
+        // a plain person piece is someone who lives here: a job that fits the ground and the island (people/placement.js)
+        const px = o.x + T / 2;
+        const py = o.y + t.h - 4;
+        const still = PEOPLE[name] === 0;
+        const id = townsperson(this.ground_(px, py - 4), String(this.mapId || '').replace(/^exp-/, ''), still, Math.round(px * 7 + py * 13));
+        const n = this.islander(px, py, PEOPLE[name], this.islanders.length, id, x % 2 === 1);
+        if (!n.pose) n.range = PEOPLE[name] * T; // (they wander as far as the piece says)
+        return this.islanders.push(n);
+      }
       if (personOfTile(name)) return this.islanders.push(this.islander(o.x + T / 2, o.y + t.h - 4, 0, this.islanders.length, personOfTile(name).id, o.flip));
       const crew = crewOfTile(name);
       if (crew) {
@@ -1192,7 +1202,9 @@ export class IslandScene extends Phaser.Scene {
       return { s, prefix, kind: 'casual', home: { x, y }, range: p.range * T, name: p.name, title: p.title, lines: p.lines, pose: p.pose, rate: p.rate, flip: !!flip, wait: 500 + r(3) * 2500, target: null };
     }
     const kind = forced?.kind || KINDS[Math.floor(r(1) * KINDS.length)];
-    const { colors, look, scale } = visitorLook(kind, r);
+    // a named friend dresses for their job (npcs.json `wears`, a class variant); the rest by their kind
+    const dressed = forced?.wears && personFor(forced.wears, r);
+    const { colors, look, scale } = dressed ? { ...dressed, look: { ...dressed.look, pose: null, ground: null } } : visitorLook(kind, r);
     const prefix = `islander${seed}${forced ? forced.id : ''}`;
     if (!this.textures.exists(`${prefix}_down`)) makeCharacter(this, prefix, colors, look);
     const s = this.add.sprite(x, y, `${prefix}_down`).setOrigin(0.5, 1).setScale(scale).setDepth(y);

@@ -52,7 +52,8 @@
   "questItems": [
    "fish:koi",
    "gift:bread"
-  ]
+  ],
+  "wears": "keeper.bucket"
  },
  {
   "id": "mara",
@@ -80,7 +81,8 @@
   "questItems": [
    "fish:squid",
    "gift:shell"
-  ]
+  ],
+  "wears": "sailor.deckhand"
  },
  {
   "id": "tal",
@@ -108,7 +110,8 @@
   "questItems": [
    "fish:sardine",
    "gift:berry"
-  ]
+  ],
+  "wears": "castaway.wander"
  },
  {
   "id": "rook",
@@ -135,7 +138,8 @@
   "questItems": [
    "gift:pinecone",
    "fish:barracuda"
-  ]
+  ],
+  "wears": "piratecrew.patch"
  },
  {
   "id": "ines",
@@ -162,7 +166,8 @@
   "questItems": [
    "fish:seahorse",
    "gift:shell"
-  ]
+  ],
+  "wears": "diver.tank"
  },
  {
   "id": "oda",
@@ -190,7 +195,8 @@
   "questItems": [
    "fish:char",
    "gift:snowcrystal"
-  ]
+  ],
+  "wears": "arctictrapper.lantern"
  },
  {
   "id": "bram",
@@ -217,7 +223,8 @@
   "questItems": [
    "fish:cod",
    "gift:tea"
-  ]
+  ],
+  "wears": "fisherman.walker"
  },
  {
   "id": "sefu",
@@ -244,7 +251,8 @@
   "questItems": [
    "fish:snapper",
    "gift:book"
-  ]
+  ],
+  "wears": "harbourmaster.clipboard"
  },
  {
   "id": "dune",
@@ -271,7 +279,8 @@
   "questItems": [
    "fish:sardine",
    "gift:pinecone"
-  ]
+  ],
+  "wears": "desertguide.flask"
  },
  {
   "id": "yuki",
@@ -299,6 +308,7 @@
   "questItems": [
    "fish:tarpon",
    "gift:flower"
-  ]
+  ],
+  "wears": "templekeeper.lantern"
  }
 ]

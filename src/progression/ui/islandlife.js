@@ -45,7 +45,7 @@ export class IslandLife {
           const y = o.y + Math.sin(a) * r;
           if (x < 2 * T || y < 2 * T || x > (s.tilesW - 2) * T || y > (s.tilesH - 2) * T) continue;
           if (s.ground_(x, y) === 'water' || !s.free(x, y) || !s.free(x + T, y) || !s.free(x - T, y)) continue;
-          s.islanders.push(s.islander(x, y, 2, s.islanders.length, null, false, { id: npc.id, name: npc.name, kind: npc.kind === 'caretaker' ? 'elder' : npc.kind }));
+          s.islanders.push(s.islander(x, y, 2, s.islanders.length, null, false, { id: npc.id, name: npc.name, kind: npc.kind === 'caretaker' ? 'elder' : npc.kind, wears: npc.wears }));
           return;
         }
     });
