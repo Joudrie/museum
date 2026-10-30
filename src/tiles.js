@@ -573,7 +573,7 @@ function addCliffs(add) {
     if (y > 44 && Math.abs(cx) < 22) return y > 58 ? hex('#1a120c') : hex('#0e0a08');
     if (r < 1) return r > 0.92 ? hex(OUT) : r > 0.8 ? hex('#2a1e14') : hex('#0e0a08');
     return cliffFace(x % T, y % T, 400);
-  }), { group: 'Cliffs & ledges', label: 'Cave (2×2)', w: 2 * T, h: 2 * T, walk: 'walk' });
+  }), { group: 'Cliffs & ledges', label: 'Brown cave (2×2)', w: 2 * T, h: 2 * T, walk: 'walk' });
 }
 
 // ---------- Plants ----------

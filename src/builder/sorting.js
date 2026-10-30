@@ -38,11 +38,11 @@ const MOVE = {
 // the Cliffs list is long: a small heading over each set, in this order
 export const HEAD_ORDER = ['Dark grey cliffs (any ground)', 'Brown cliffs (any ground)', 'Brown cliffs (on grass)', 'Ledges (hop down)', 'Mountain walls', 'Caves'];
 const CLIFF_HEAD = (name, group) => {
+  if (name === 'cave' || name.endsWith('_cave')) return 'Caves';
   if (group === 'Dark grey cliffs') return 'Dark grey cliffs (any ground)';
   if (group === 'Brown cliffs (any ground)') return 'Brown cliffs (any ground)';
   if (name.startsWith('ledge')) return 'Ledges (hop down)';
   if (name.startsWith('mountain')) return 'Mountain walls';
-  if (name === 'cave') return 'Caves';
   return 'Brown cliffs (on grass)';
 };
 
