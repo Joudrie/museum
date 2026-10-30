@@ -5,6 +5,7 @@ import { progression } from '../index.js';
 import { cumXp } from '../rank.js';
 import { skillCum, skillIds } from '../skills.js';
 import { allSpecies } from '../species.js';
+import { COMPANION_IDS } from '../companions.js';
 
 export function mountDebug() {
   const on = /[?&]debug=1/.test(location.search) || (() => { try { return !!localStorage.getItem('curation.debug'); } catch { return false; } })();
@@ -55,6 +56,12 @@ export function mountDebug() {
       row('golden next', () => (p.debug.force = { ...(p.debug.force || {}), variant: 'golden' })),
       row('clear force', () => (p.debug.force = null)),
       row('reveal all chunks', () => {}),
+      // companions: every friend at ten hearts with their favour done, so the phone has everyone
+      row('friends: all numbers', () => COMPANION_IDS.forEach((id) => {
+        const f = (p.state.friends[id] ||= { points: 0, hearts: 0, talkDay: 0, giftDay: 0, reactions: {}, unlocks: {}, met: p.clock.now(), shares: '' });
+        Object.assign(f, { points: 1000, hearts: 10, quest: { step: 1, items: [], done: true }, numberGiven: true });
+      })),
+      row('phone: reset', () => Object.assign(p.state.companion, { id: '', left: 0, cool: 0, days: {} })),
     );
     const sel = document.createElement('select');
     sel.style.cssText = 'font:11px monospace;max-width:160px';

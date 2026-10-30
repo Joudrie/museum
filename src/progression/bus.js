@@ -21,6 +21,8 @@ export const EVENTS = {
   REQUEST_DONE: ['npcId'],
   TASK_DONE: ['taskId'],
   HEART_UP: ['npcId', 'hearts'],
+  COMPANION_CALLED: ['npcId'], // a friend came to hang out (companions.js)
+  COMPANION_LEFT: ['npcId'],
   RANK_UP: ['rank'],
   SKILL_UP: ['skill', 'level'],
   VIEWPOINT: ['region', 'id'],

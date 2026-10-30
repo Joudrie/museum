@@ -73,6 +73,7 @@ export function defaults(now = 0) {
     renown: { tokens: 0 },
     flags: { firstHour: {}, introduced: {}, paywallSeen: {}, notify: false },
     unlocks: {}, // 'rod:cork', 'boat:sailboat', 'recipe:x' … everything a rank, skill or purchase has opened
+    companion: { id: '', left: 0, cool: 0, days: {} }, // the friend hanging out with you (companions.js)
     pinned: null, // goal id the player pinned
     away: { lastCardAt: 0, mail: null },
     sub: { active: false, since: 0, ever: false },

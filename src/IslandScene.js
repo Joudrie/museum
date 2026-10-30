@@ -66,6 +66,8 @@ import { progression } from './progression/index.js';
 import { regionOfMap, REGIONS, speciesOfRegion } from './progression/species.js';
 import { regionAccess } from './progression/access.js';
 import { frameDt } from './frametime.js';
+import { friendLook } from './people/friendlook.js';
+import { phoneButton, openPhone, closePhone } from './ui/phone.js';
 
 // Islands drawn in the map builder (builder.html), reached by boat from the
 // main island's dock. Each is a 'curation-map' file (see src/builder/main.js).
@@ -213,6 +215,15 @@ export class IslandScene extends Phaser.Scene {
       if (this.row.allowed()) this.row.placeBoat();
     });
     this.events.once('shutdown', () => document.getElementById('rowbtn')?.classList.add('hidden'));
+    // a friend hanging out with you comes along (src/companion.js); the phone calls one (src/ui/phone.js)
+    this.buddy = null;
+    const along = progression().companions?.current();
+    if (along) import('./companion.js').then(({ Companion }) => this.visit === visit && !this.buddy && (this.buddy = new Companion(this, along)));
+    this.phoneT = 0;
+    this.events.once('shutdown', () => {
+      phoneButton(false);
+      closePhone();
+    });
     if (ch.pet && ch.pet !== 'none') this.pet = new Pet(this, ch.pet, ch.petColor, this.player);
     this.doorLock = this.spawnAt !== 'cottage' && this.spawnAt !== 'dock'; // don't walk straight back in
     this.cottageLock = this.spawnAt === 'cottage';
@@ -1209,7 +1220,7 @@ export class IslandScene extends Phaser.Scene {
     }
     const kind = forced?.kind || KINDS[Math.floor(r(1) * KINDS.length)];
     // a named friend dresses for their job (npcs.json `wears`, a class variant); the rest by their kind
-    const dressed = forced?.wears && personFor(forced.wears, r);
+    const dressed = forced?.wears && (forced.id ? friendLook(forced.id, forced.wears) : personFor(forced.wears, r));
     const { colors, look, scale } = dressed ? { ...dressed, look: { ...dressed.look, pose: null, ground: null } } : visitorLook(kind, r);
     const prefix = `islander${seed}${forced?.id || forced?.wears || ''}`;
     if (!this.textures.exists(`${prefix}_down`)) makeCharacter(this, prefix, colors, look);
@@ -1643,6 +1654,7 @@ export class IslandScene extends Phaser.Scene {
       const pz = this.puzzles.focusAt(x, y);
       if (pz) consider(34, Math.hypot(x - pz.puzzle.cx, y - pz.puzzle.cy), pz, ...(pz.kind === 'x' || pz.kind === 'buried' ? [] : [pz.puzzle.cx, pz.puzzle.cy]));
     }
+    if (this.buddy && !this.buddy.gone && !this.row?.on) consider(28, Math.hypot(x - this.buddy.s.x, y - this.buddy.s.y), { buddy: true, icon: 'talk' }, this.buddy.s.x, this.buddy.s.y - 8);
     if (this.pet && !this.row?.on) consider(30, Math.hypot(x - this.pet.s.x, y - this.pet.s.y) + 4, { pet: true, icon: 'talk' }, this.pet.s.x, this.pet.s.y - 4);
     if (this.map) {
       // by a boat, or back where you stepped off
@@ -1671,6 +1683,7 @@ export class IslandScene extends Phaser.Scene {
     const over = (s, n) => ({ x: s.x, y: headY(s) - (n?.emoteImg?.active ? 18 : 6) });
     if (f.npc || f.animal) return over((f.npc || f.animal).s, f.npc || f.animal);
     if (f.pet) return over(this.pet.s);
+    if (f.buddy) return this.buddy ? over(this.buddy.s) : null;
     if (f.skiff) return this.row?.moored ? { x: this.row.moored.x, y: this.row.moored.top - 8 } : null;
     if (f.boat) {
       const { x, y } = this.player;
@@ -1695,6 +1708,7 @@ export class IslandScene extends Phaser.Scene {
     if (f.dig) return 'Dig';
     if (f.npc) return this.talkingTo === f.npc || (talking() && this.bubbleNpc === f.npc) ? 'Bye' : 'Talk';
     if (f.animal || f.pet) return 'Pet';
+    if (f.buddy) return 'Talk';
     if (f.skiff) return 'Hop in';
     if (f.boat) return 'Sail';
     if (f.door || f.cottage) return 'Enter';
@@ -1741,11 +1755,48 @@ export class IslandScene extends Phaser.Scene {
       return;
     }
     if (f.pet) return this.pet.pet();
+    if (f.buddy) return this.buddy?.talk();
     if (f.npc) return this.talkingTo === f.npc ? this.endTalk() : this.talkTo(f.npc);
     if (talking()) return hideTalk();
     sfx('talk');
     const t = f.thing;
     showTalk(t.name === 'chest' ? 'Treasure chest' : 'Sign', 'The island', t.text, () => (this.sys.isActive() ? this.screenAt(t.x, t.y - 30) : null), undefined, () => Math.hypot(this.player.x - t.x, this.player.y - t.y) > 52);
+  }
+
+  // ---------- friends you can call (src/companion.js, src/ui/phone.js) ----------
+  openPhone() {
+    if (this.fishing.busy || this.paused || this.leaving) return;
+    sfx('open');
+    this.paused = true;
+    openPhone({ call: (id) => this.callFriend(id), home: () => this.sendFriendHome(), onClose: () => (this.paused = false) });
+  }
+
+  // they're on their way: a quick blink to black and they're standing in front of you
+  callFriend(id) {
+    const pr = progression();
+    if (this.buddy || this.leaving || !pr.companions.call(id).ok) return;
+    sfx('tap');
+    const cam = this.cameras.main;
+    this.paused = true;
+    const come = import('./companion.js'); // (their lines load with them)
+    cam.fadeOut(120, 0, 0, 0);
+    cam.once('camerafadeoutcomplete', () =>
+      come.then(({ Companion }) => {
+        if (!this.sys.isActive()) return;
+        this.buddy = new Companion(this, id, { arrive: true });
+        cam.fadeIn(160, 0, 0, 0);
+        this.paused = false;
+      }),
+    );
+  }
+
+  sendFriendHome() {
+    if (this.buddy && !this.buddy.gone) this.buddy.leave('See you! Call me again tomorrow.');
+    else progression().companions.end();
+  }
+
+  buddyGone(b) {
+    if (this.buddy === b) this.time.delayedCall(2800, () => this.buddy === b && (this.buddy = null));
   }
 
   // A speech bubble's anchor: the top of someone's head, followed as they (or the camera) move.
@@ -1949,6 +2000,13 @@ export class IslandScene extends Phaser.Scene {
     if (!rowing && animateWalker(this, p, len > 0 || !!this.puzzles.sliding, dt, 0.8 + pace * 0.5)) this.onStep(p, pace, vx, vy);
     if (rowing) this.row.carryPet(this.pet);
     else this.pet?.update(dt);
+    this.buddy?.update(dt);
+    // the phone shows once a friend has given you their number
+    this.phoneT -= dt;
+    if (this.phoneT <= 0) {
+      this.phoneT = 1;
+      phoneButton(!this.leaving && progression().companions?.contacts().length > 0, () => this.openPhone());
+    }
     this.exp?.update(dt);
     this.critters.update(dt, p);
     this.ambient.update(dt, p);

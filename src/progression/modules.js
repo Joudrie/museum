@@ -13,6 +13,7 @@ import { installEvents } from './events.js';
 import { installStreak } from './streak.js';
 import { installAway } from './away.js';
 import { installSub } from './sub.js';
+import { installCompanions } from './companions.js';
 
 export const CORE = [
   { name: 'fish', install: installFish },
@@ -28,6 +29,7 @@ export const CORE = [
   { name: 'goals-m', install: installGoals },
   { name: 'away-m', install: installAway },
   { name: 'sub-m', install: installSub },
+  { name: 'companions-m', install: installCompanions },
 ];
 export function standardModules() {
   return [...CORE];

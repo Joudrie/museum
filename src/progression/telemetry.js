@@ -7,7 +7,7 @@ import { TUNING } from './config.js';
 export const TELEMETRY_EVENTS = [
   'install', 'session_start', 'session_end', 'rank_up', 'first_catch', 'species_discovered', 'journal_pct', 'heart_up',
   'task_complete', 'streak_saved', 'streak_broken', 'rested_consumed', 'paywall_view', 'sub_start', 'sub_cancel', 'last_action',
-  'goal_pinned', 'goal_completed', 'traversal_unlock', 'hotspot_cast', 'legend_caught', 'purchase', 'event_joined',
+  'goal_pinned', 'goal_completed', 'traversal_unlock', 'hotspot_cast', 'legend_caught', 'purchase', 'event_joined', 'companion_called',
 ];
 
 export function createTelemetry(p, sink = null) {

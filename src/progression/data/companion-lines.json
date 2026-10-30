@@ -1,0 +1,366 @@
+{
+  "_about": "What each friend says when they hang out with you (src/companion.js, loaded only then): hello and late (arriving), bye (going home), stories, facts (true ones) and sayings (told while you fish), walk (now and then on foot).",
+  "bram": {
+    "hello": [
+      "Rods ready? Good. Me too.",
+      "There you are. The fish have been asking about you.",
+      "Right. Where are we fishing?"
+    ],
+    "late": [
+      "Sorry I took so long. Had to find my lucky hat.",
+      "Made it. Rowed the last bit with one oar."
+    ],
+    "bye": [
+      "That is my time. I have to go. See you tomorrow.",
+      "Light's going, and so am I. Same time tomorrow?",
+      "My knees say home. See you tomorrow, friend."
+    ],
+    "stories": [
+      "This reminds me of the time I hooked a cod so big it towed me round the point. I let it win. It earned it.",
+      "My father fished these rocks with a line and a bent nail. He caught more than I do with all this gear.",
+      "Once I sat here eight hours and caught one sardine. Best day of that whole year. Do not ask me why.",
+      "I lost a ring off this very rock. Twenty years later a gull dropped it on my boat. I am still not sure I believe it.",
+      "First fish I ever caught, I cried and put it back. Still do that with the small ones."
+    ],
+    "facts": [
+      "A single cod can lay millions of eggs in one season. Not many make it, mind.",
+      "Most fish have no eyelids. They cannot blink at you, but they are watching."
+    ],
+    "sayings": [
+      "A quiet line is not an empty line.",
+      "You do not catch the fish. You let it find you.",
+      "Bad days fishing still beat good days doing almost anything else."
+    ],
+    "walk": [
+      "Mind the wet rocks.",
+      "Smell that? Rain by evening.",
+      "You walk fast for someone with nowhere to be."
+    ]
+  },
+  "oda": {
+    "hello": [
+      "I am here. Let us be quiet together.",
+      "Ah. A good day for the water.",
+      "Hello, little friend. Lead the way."
+    ],
+    "late": [
+      "Forgive me. The snow does not hurry, and neither do I.",
+      "Old legs, long road. But I came."
+    ],
+    "bye": [
+      "The light is going. I must go home. See you tomorrow.",
+      "Enough for one day. Come find me tomorrow.",
+      "My fire will be cold. Tomorrow, then."
+    ],
+    "stories": [
+      "When I was small, my grandmother cut a hole in the ice and we waited all day. She said waiting was the catch. I thought she was teasing.",
+      "One winter the ice sang all night, long low notes. In the morning a seal looked up at me through the hole, as if to ask if I heard it too.",
+      "I have fished through forty winters. Each one I thought, this is the last. Here I am.",
+      "I once followed a fox across the ice for an hour. It led me to the best fishing hole I ever found."
+    ],
+    "facts": [
+      "The Arctic char lives farther north than any other freshwater fish.",
+      "A polar bear's skin is black under all that white fur."
+    ],
+    "sayings": [
+      "The ice remembers what we forget.",
+      "Cold makes you honest. There is no time for anything else.",
+      "Patience is warm, if you wear it long enough."
+    ],
+    "walk": [
+      "Slower. The ground tells you things.",
+      "Hear that? Nothing. Good.",
+      "You are kind to walk with an old woman."
+    ]
+  },
+  "wen": {
+    "hello": [
+      "I brought bread. For the fish. Mostly.",
+      "Hello! Shall we sit by the water?",
+      "Oh good, I needed a walk."
+    ],
+    "late": [
+      "Sorry, sorry. The ducks would not let me leave.",
+      "I am here! The pond needed one more look."
+    ],
+    "bye": [
+      "I have to go and feed the pond. See you tomorrow!",
+      "That was lovely. Same again tomorrow?",
+      "The koi will miss me. Tomorrow, dear."
+    ],
+    "stories": [
+      "I named my first koi Pebble. She lived longer than my first three teapots.",
+      "Once a heron stole a fish right out of my bucket and then stared at me like I owed it another.",
+      "When it rains on the pond, I stand under the willow and watch the rings. Hours, sometimes. Do not tell anyone.",
+      "A boy once asked me if fish get bored. I said only if you are boring around them."
+    ],
+    "facts": [
+      "Koi were bred from ordinary carp, for their colours, in Japan.",
+      "Goldfish remember things for months. The three-second memory is a myth."
+    ],
+    "sayings": [
+      "Feed the pond and the pond feeds you back.",
+      "Still water is busy underneath.",
+      "Be gentle with slow things."
+    ],
+    "walk": [
+      "Look, dragonflies.",
+      "Careful, there is a frog somewhere about.",
+      "I do love a walk with someone."
+    ]
+  },
+  "ines": {
+    "hello": [
+      "Ready to get wet? Kidding. Mostly.",
+      "Hi! I have so many fish facts saved up.",
+      "Let us go see something."
+    ],
+    "late": [
+      "Sorry! My hair is still drying.",
+      "I came straight from a dive. You would not believe the eel."
+    ],
+    "bye": [
+      "Air's low, I have to go up. See you tomorrow!",
+      "I have to log my dive. Tomorrow?",
+      "That was great. Same time tomorrow?"
+    ],
+    "stories": [
+      "On my first dive I forgot to breathe out and my ears popped like corks. Now I hum the whole way down.",
+      "There is a wreck out past the reef with a piano in it. Still has three keys that work. I checked.",
+      "An octopus once took my glove and would not give it back. I let it keep it. It looked happier with it.",
+      "I saw a whale shark once. It went by so slowly I had time to cry and stop crying."
+    ],
+    "facts": [
+      "Seahorse dads carry the babies until they hatch.",
+      "An octopus has three hearts.",
+      "Red is the first colour to fade as you dive. Deep down, blood looks green."
+    ],
+    "sayings": [
+      "Down there the light comes in sideways. So does everything good.",
+      "Breathe slow, look long.",
+      "The sea is mostly unexplored. So is most of anything."
+    ],
+    "walk": [
+      "I am much faster in fins.",
+      "Ooh, a tide pool.",
+      "Everything up here is so dry."
+    ]
+  },
+  "mara": {
+    "hello": [
+      "Ahoy. Where are we headed?",
+      "Wind's good. Let us go.",
+      "Hey you. Need a deckhand?"
+    ],
+    "late": [
+      "Sorry I am late. The tide had other plans.",
+      "Here! Tied up two boats on the way."
+    ],
+    "bye": [
+      "Tide's turning. I have to get back. See you tomorrow.",
+      "My watch starts soon. Tomorrow, sailor.",
+      "Back to the harbour for me. Tomorrow?"
+    ],
+    "stories": [
+      "My first boat leaked so much I named her Teacup. She got me everywhere, slowly.",
+      "Once in a fog we followed the sound of a bell for an hour. It was a goat. We still laugh about it.",
+      "I sailed through a storm so bad the gulls were walking. Came out the other side to a rainbow. Typical.",
+      "A dolphin rode our bow wave for a whole afternoon once. I talked to it the entire time."
+    ],
+    "facts": [
+      "A knot is one nautical mile an hour. Sailors used to count knots on a rope as it ran out.",
+      "A nautical mile is a bit longer than a land mile."
+    ],
+    "sayings": [
+      "Harbours are for leaving, and for coming home to.",
+      "You cannot change the wind. You can change the sail.",
+      "Every good trip starts with leaving the rope behind."
+    ],
+    "walk": [
+      "Land legs, land legs.",
+      "Feels odd when the ground does not move.",
+      "Right behind you."
+    ]
+  },
+  "tal": {
+    "hello": [
+      "Hello hello! I found a shell shaped like a boot.",
+      "Adventure time?",
+      "I packed snacks. Berries. It is always berries."
+    ],
+    "late": [
+      "Sorry! I got lost. On an island. Again.",
+      "Made it! Only fell in the water once."
+    ],
+    "bye": [
+      "Sun's going, I have to get back to my hut. See you tomorrow!",
+      "I have to check my coconuts. Tomorrow?",
+      "Bye for now! Tomorrow, same island."
+    ],
+    "stories": [
+      "I came here for a day trip. My boat drifted off while I napped. That was three summers ago, and I have never been happier.",
+      "I built a hut out of driftwood. Then a better hut. The first hut is now a crab's house.",
+      "I once traded a song for a fishing hook with a sailor. Best song I ever made up.",
+      "I keep a list of every bird I see. I have no idea what most of them are called, so I name them."
+    ],
+    "facts": [
+      "A coconut can float across an ocean and still sprout on the other side.",
+      "Sea turtles swim back to the beach where they hatched to lay their own eggs."
+    ],
+    "sayings": [
+      "I came for a day. That was three summers ago.",
+      "Getting lost is just finding somewhere early.",
+      "You do not need much. You need a little, and a view."
+    ],
+    "walk": [
+      "Ooh, what is that? Oh. A rock.",
+      "Shortcut! Probably.",
+      "Smell the salt. Lovely."
+    ]
+  },
+  "rook": {
+    "hello": [
+      "Keep your voice down.",
+      "You called. I came. Lead on.",
+      "I see you. I see everything."
+    ],
+    "late": [
+      "Took the long way. Someone might have been following.",
+      "Late. Had to lose a tail."
+    ],
+    "bye": [
+      "I have watch. Time to go. Tomorrow.",
+      "Sun's down. Lookouts look out at night. Tomorrow.",
+      "Enough. Tomorrow, same signal."
+    ],
+    "stories": [
+      "Spent a whole season up a mast. Came down and the ground felt like a lie.",
+      "Spotted a ship on the horizon once and shouted so loud the captain dropped his soup. It was a cloud.",
+      "Had a parrot once. Knew more swear words than the crew. Then he learned to say please. Ruined him.",
+      "Captain hid a chest on a beach. Drew the map himself. Nobody has found it. Not even the captain."
+    ],
+    "facts": [
+      "The lookout's perch at the top of a mast is called the crow's nest.",
+      "Real pirates hardly ever buried treasure. They spent it."
+    ],
+    "sayings": [
+      "Watch the horizon. Trouble always waves first.",
+      "The jungle listens.",
+      "Look twice. Speak once."
+    ],
+    "walk": [
+      "Something moved over there.",
+      "Stay sharp.",
+      "Hm."
+    ]
+  },
+  "dune": {
+    "hello": [
+      "Hey! Got water? Good.",
+      "Let us go find a view.",
+      "Ready when you are."
+    ],
+    "late": [
+      "Sorry, a dust devil chased me half the way.",
+      "Made it. Red sand everywhere, as usual."
+    ],
+    "bye": [
+      "Gotta get back before dark. See you tomorrow!",
+      "Canyon's calling me home. Tomorrow?",
+      "That was great. Same again tomorrow."
+    ],
+    "stories": [
+      "I got stuck on a ledge once for a whole night. Best stars I ever saw. Would not recommend.",
+      "Found a fossil fish in the red rock, miles from any sea. Made me feel very small, in a nice way.",
+      "I guide people up the cliffs. Most get halfway, sit down, and say this is fine actually. They are right.",
+      "A lizard rode on my hat for a whole afternoon. I named him Captain."
+    ],
+    "facts": [
+      "Red rock gets its colour from iron. Basically, rust.",
+      "Each layer in a cliff can hold thousands of years.",
+      "Deserts can freeze at night, even after a scorching day."
+    ],
+    "sayings": [
+      "Red rock gets under your nails and into your heart.",
+      "The view is worth the climb, every time.",
+      "Drink before you're thirsty."
+    ],
+    "walk": [
+      "Watch your step here.",
+      "Great light today.",
+      "Almost there. Probably."
+    ]
+  },
+  "sefu": {
+    "hello": [
+      "Good day to you. Shall we?",
+      "Ah, a friend. Where to?",
+      "I am at your service."
+    ],
+    "late": [
+      "My apologies. The ledger would not balance itself.",
+      "Forgive the delay. I locked the dock twice to be sure."
+    ],
+    "bye": [
+      "The dock needs its keeper. I must go. Until tomorrow.",
+      "Time to lock up. See you tomorrow.",
+      "A good day. Tomorrow, friend."
+    ],
+    "stories": [
+      "My grandfather kept this dock, and his father before him. I found their names carved under the third plank.",
+      "A merchant once paid his mooring fee in figs. I accepted. They were very good figs.",
+      "I watched a sandstorm swallow a boat once. When it cleared, the boat was fine and covered in sand like a cake.",
+      "The stones of the old tomb hum on hot days. Science says expansion. I say they are remembering."
+    ],
+    "facts": [
+      "The Great Pyramid was the tallest building in the world for nearly four thousand years.",
+      "The ancient Egyptians made paper, and even boats, from the papyrus plant."
+    ],
+    "sayings": [
+      "The stones are older than the sea, I think.",
+      "Write it down. Memory is a leaky boat.",
+      "Keep the small promises. The big ones get easier."
+    ],
+    "walk": [
+      "Careful on the old steps.",
+      "A fine day for a walk.",
+      "After you."
+    ]
+  },
+  "yuki": {
+    "hello": [
+      "Hello! I swept the steps twice, so I am free.",
+      "Oh, I am so glad you called!",
+      "Let us go somewhere green."
+    ],
+    "late": [
+      "Sorry, sorry, it rained and the steps needed me.",
+      "I am here! I ran the whole way."
+    ],
+    "bye": [
+      "I have to sweep the temple steps. See you tomorrow!",
+      "The rain is coming in. Tomorrow?",
+      "Thank you for today. Tomorrow!"
+    ],
+    "stories": [
+      "I sweep the same hundred steps every day. Every day they are a little different. I think that is the point.",
+      "A monkey once stole my broom and swept a step with it. Badly. But it tried.",
+      "When the big rain comes, the temple sounds like a drum. I lie on the floor and listen.",
+      "I found a tiny frog sitting in the stone bell once. I rang it very, very gently."
+    ],
+    "facts": [
+      "Rainforests cover a small part of the Earth but are home to over half its kinds of plants and animals.",
+      "A tarpon can gulp air from the surface, like a breath."
+    ],
+    "sayings": [
+      "It rains, and the steps shine, and I sweep them again.",
+      "Small work, done kindly, is not small.",
+      "Let the day be the size it is."
+    ],
+    "walk": [
+      "Listen to the birds.",
+      "So green today.",
+      "Mind the moss, it is slippery."
+    ]
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "_about": "Friends you can call to hang out (src/progression/companions.js). Unlocked at 10 hearts once their favour (npcs.json questItems) is done. boost: luck (rarer fish), quick (bites sooner), skill (+25% that skill's XP) or xp (+10% XP). number: what they say when they give it. Their hangout lines are in companion-lines.json.",
+  "bram": {
+    "boost": {
+      "kind": "luck",
+      "mult": 1.25,
+      "text": "Rarer fish bite more often"
+    },
+    "number": "You did it. Not many would bother. Here, my number. Call me up if you ever want to fish together."
+  },
+  "oda": {
+    "boost": {
+      "kind": "luck",
+      "mult": 1.25,
+      "text": "Rarer fish bite more often"
+    },
+    "number": "You brought it all. You listen to the cold. Here is my number. Call for me when you want company on the water."
+  },
+  "wen": {
+    "boost": {
+      "kind": "quick",
+      "mult": 0.8,
+      "text": "Fish bite sooner"
+    },
+    "number": "You remembered! Take my number. Call me and we will feed the water together."
+  },
+  "ines": {
+    "boost": {
+      "kind": "skill",
+      "skill": "fishing",
+      "mult": 1.25,
+      "text": "+25% Fishing skill XP"
+    },
+    "number": "You are the best. Here, my number. Call me, and I will tell you what is down there."
+  },
+  "mara": {
+    "boost": {
+      "kind": "skill",
+      "skill": "sailing",
+      "mult": 1.25,
+      "text": "+25% Sailing skill XP"
+    },
+    "number": "That's everything. You're a proper friend. My number. Shout if you ever want a hand on the water."
+  },
+  "tal": {
+    "boost": {
+      "kind": "skill",
+      "skill": "foraging",
+      "mult": 1.25,
+      "text": "+25% Foraging skill XP"
+    },
+    "number": "A feast! Take my number. Call me if you want to find good stuff."
+  },
+  "rook": {
+    "boost": {
+      "kind": "skill",
+      "skill": "exploring",
+      "mult": 1.25,
+      "text": "+25% Exploring skill XP"
+    },
+    "number": "Hm. Not bad. Fine. My number. Call if you need a lookout."
+  },
+  "dune": {
+    "boost": {
+      "kind": "skill",
+      "skill": "exploring",
+      "mult": 1.25,
+      "text": "+25% Exploring skill XP"
+    },
+    "number": "You actually found it all. Here's my number. Call me and I'll show you places."
+  },
+  "sefu": {
+    "boost": {
+      "kind": "xp",
+      "mult": 1.1,
+      "text": "+10% XP"
+    },
+    "number": "You kept your word. Here, my number. Call me, and I will bring my stories."
+  },
+  "yuki": {
+    "boost": {
+      "kind": "skill",
+      "skill": "friendship",
+      "mult": 1.25,
+      "text": "+25% Friendship skill XP"
+    },
+    "number": "You are wonderful. Here is my number. Call me, I would love to come along."
+  }
+}

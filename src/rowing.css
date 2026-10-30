@@ -65,6 +65,10 @@ body:has(#rowask:not(.hidden)) #prog-pill {
   font-size: calc(16px * var(--ui-text-scale, 1));
   transition: opacity 0.12s, transform 0.12s;
 }
+html[data-hand='left'] body #rowbtn {
+  right: auto;
+  left: max(16px, calc((100vw - min(100vw, 100dvh * 9 / 16)) / 2 + 16px));
+}
 #rowbtn.stacked {
   bottom: calc(max(20px, calc(env(safe-area-inset-bottom) + 12px)) + 62px);
 }

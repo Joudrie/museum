@@ -87,7 +87,7 @@ export function prepareCast(p, o) {
   const water = o.water === 'pond' && (o.season === 'winter' && info.freezes) ? 'ice' : info.iceAlways ? 'ice' : o.water;
   const frenzy = !!o.hotNear && frenzyNow(p);
   const rumor = o.rumorHere && s.fish.weeklyRumor && !s.fish.weeklyRumor.caught ? { speciesId: s.fish.weeklyRumor.speciesId } : null;
-  const ctx = makeContext({ region, wild: !!info.wild, water, hour: o.hour, weather: o.weather, season: o.season, bait, lure, hot: !!o.hotNear, frenzy, perks, events: p.activeEventIds?.() || [], rumor });
+  const ctx = makeContext({ region, wild: !!info.wild, water, hour: o.hour, weather: o.weather, season: o.season, bait, lure, hot: !!o.hotNear, frenzy, perks, events: p.activeEventIds?.() || [], rumor, luck: p.companions?.luck(), quick: p.companions?.quick() });
   const first = f.catches === 0 && !f.pending;
   let roll;
   if (first) {
