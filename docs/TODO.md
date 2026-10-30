@@ -220,6 +220,14 @@ Owns: new `docs/progression/` (write-ups, CSV, Python models and analysis), new 
 - [ ] Pre-registered hypotheses with thresholds; every reward labelled; event bus and flags only.
 - [ ] Telemetry schema (opt-in, off by default), analysis scripts, playtest and diary-study protocol, experiment plan with sample sizes.
 
+### Chat 16 handoff (UI) — what the next UI chat should pick up first
+New rules in CLAUDE.md came in after most of this work, so check these first:
+- [ ] **Popups in the top third.** The celebration card (`#celebrate`, `src/ui.js`) and the catch card (`#catch`) are centred; only a rank-up should be. Move them to the top third and make them smaller (CSS in `src/ui/skin.css`, "reward cards"). Re-run `node tests/ui-layout.cjs`.
+- [ ] **No emojis / symbol glyphs.** Left in UI code (all text symbols, not colour emoji, but swap for `src/ui/icons.js` icons or words): rating stars `★ ☆` (`viewer.js`, `rating.js`, `collections/tab.js`, builder), `✓` (`daily.js`, `share.js`), `✎` (`collections/tab.js`), `☰` and `★ ☆` in the builder (`builder.html`, `src/builder/main.js`), `✦` (`progression/ui/fieldjournal.js`). `✕` is already swapped at run time by `src/ui/chrome.js`.
+- [ ] The two small questions under Needs Sean (Field Journal into the Journal overview; one reward queue).
+- Not done on purpose: a "what's new" card; swipe-down to close the painting viewer.
+How to work: `npm run build`, `npx vite preview --port 4173 --base /`, then `node tests/ui-layout.cjs` (all screens, 3 phone sizes) and `node tests/ui-flows.cjs`; screenshots with `node tests/ui-shots.cjs <dir> --only <name>`. Everything else is in `docs/UI.md` and `docs/UI-FLOWS.md`.
+
 ## Hold list (parked by the user; no chat builds these)
 Mini-games (Mop Rush, No Flash!, Restoration-as-minigame, Crate Tetris, Hang it Straight, Tour Guide, Night Watch, Catch the Thief, Paparazzi) · gems, ads, cosmetics, exhibition pass, crates · multiplayer / auctions · a sequel where the museum is part of a city · menu redesign · art direction and hiring.
 

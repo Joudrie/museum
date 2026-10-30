@@ -74,6 +74,25 @@ const letGo = () => {
 document.addEventListener('pointerup', letGo);
 document.addEventListener('pointercancel', letGo);
 
+// ---- focus follows the panel: opening moves focus onto its close button, closing gives it back (keyboard and screen readers) ----
+const opener = new WeakMap();
+new MutationObserver((muts) => {
+  for (const m of muts) {
+    const o = m.target;
+    if (!o.classList?.contains('overlay')) continue;
+    const was = m.oldValue?.includes('hidden');
+    const now = o.classList.contains('hidden');
+    if (was && !now) {
+      opener.set(o, document.activeElement);
+      requestAnimationFrame(() => closeOf(o)?.focus?.({ preventScroll: true }));
+    } else if (!was && now) {
+      const back = opener.get(o);
+      opener.delete(o);
+      if (back && document.contains(back) && o.contains(document.activeElement)) back.focus?.({ preventScroll: true });
+    }
+  }
+}).observe(document.body, { attributes: true, attributeFilter: ['class'], attributeOldValue: true, subtree: true });
+
 // Escape closes the panel on top (keyboards, tablets with a keyboard, screen readers)
 document.addEventListener('keydown', (e) => {
   if (e.key !== 'Escape' || e.defaultPrevented || e.target?.matches?.('input, textarea, select')) return;

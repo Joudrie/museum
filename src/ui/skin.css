@@ -631,3 +631,22 @@ body .sail-qs {
   gap: var(--sp-1);
   margin-top: var(--sp-1);
 }
+
+/* ---- keyboard focus: a clear gold ring on anything you can tab to (touch users never see it) ---- */
+body button:focus-visible,
+body [role='button']:focus-visible,
+body summary:focus-visible,
+body input:focus-visible,
+body textarea:focus-visible,
+body select:focus-visible {
+  outline: 3px solid var(--ui-gold-hi);
+  outline-offset: 2px;
+}
+
+/* ---- Customize: option buttons sit on an even grid (three across), however long the names ---- */
+body #decor .choices:not(.toolkit-cats) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+  gap: var(--sp-2);
+}
+body #decor .choices:not(.toolkit-cats) button { min-width: 0; width: 100%; }

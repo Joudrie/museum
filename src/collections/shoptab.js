@@ -42,7 +42,7 @@ const btn = (html, onclick, disabled) => {
 export function shopTab(ctx, refresh) {
   const now = Date.now();
   const snap = snapshot();
-  const say = el('p', 'toolkit-note shop-say', `You have ${coins().toLocaleString()} gold. Sell for half, buy back after a week, or browse today’s shelf.`);
+  const say = el('p', 'toolkit-note shop-say', `You have ${coins().toLocaleString()} gold. Every piece on the shelf is one of a kind: once it is yours, it leaves the shelf. Sell for half, buy back after a week.`);
   const done = (res, text) => {
     say.textContent = res.ok ? text(res) : res.why;
     if (res.ok) refresh();
@@ -53,7 +53,7 @@ export function shopTab(ctx, refresh) {
   nodes.push(el('h3', 'fish-h', `Gallery Shop · new pieces in ${span(nextRefresh(now) - now)}`));
   const stock = el('div', 'gallery-grid book shop-list');
   shelf(now, snap).forEach((r) => {
-    stock.appendChild(row(r.entry, r.owned ? 'You already have this one' : 'One of a kind: once it is yours, it leaves the shelf', btn(r.owned ? 'Owned' : `Buy ${gold(r.price)}`, () => done(buy(r.entry.id, wallet), (x) => `Bought ${r.entry.title} for ${x.gold}.`), r.owned)));
+    stock.appendChild(row(r.entry, r.owned ? 'You already have this one' : 'One of a kind', btn(r.owned ? 'Owned' : `Buy ${gold(r.price)}`, () => done(buy(r.entry.id, wallet), (x) => `Bought ${r.entry.title} for ${x.gold}.`), r.owned)));
   });
   nodes.push(stock);
 
