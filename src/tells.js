@@ -8,7 +8,9 @@ import { FACE } from './art.js';
 // `view`: the camera's worldView (a rectangle); people far outside it are skipped.
 const EYES = [13, 18]; // x of each eye in the 32×32 picture (front view); the eye is 1×2 px at y 10..11
 const EYE_Y = 10;
-const STILL = /^(.*)_(down|side)$/;
+const STILL = /^(.*)_(down|side)(_b)?$/;
+const BREATH = STILL;
+const ANY = /^(.*)_(down|up|side)(?:_[12]|_b)?$/;
 
 export class Tells {
   constructor(scene) {
@@ -22,12 +24,24 @@ export class Tells {
   update(dt, people, view) {
     this.t += dt;
     const near = (n) => n.s.active && n.s.x > view.x - 24 && n.s.x < view.right + 24 && n.s.y > view.y - 24 && n.s.y < view.bottom + 48;
-    // breathing: a slow 1% rise and fall, each person on their own beat
+    // breathing, each person on their own beat: standing still, people from makeCharacter swap in
+    // their breath-in picture (chest and head up exactly a pixel, art.js); anyone drawn some other
+    // way gets the old slow 1% stretch
     people.forEach((n) => {
       if (n.animal || !near(n)) return;
       const s = n.s;
-      if (n.baseScale === undefined) n.baseScale = s.scaleY;
       n.phase ??= (s.x * 0.37 + s.y * 0.11) % 6.28;
+      const key = s.texture.key;
+      const m = ANY.exec(key);
+      if (FACE[n.prefix] || (m && FACE[m[1]])) {
+        // (work poses, phones and seats: no breathing, and never stretched)
+        const still = BREATH.exec(key);
+        if (!still || n.seat || !FACE[m[1]][`${still[2]}_b`]) return;
+        const want = `${still[1]}_${still[2]}${Math.sin(this.t * 2.2 + n.phase) > 0.35 ? '_b' : ''}`;
+        if (want !== key) s.setTexture(want);
+        return;
+      }
+      if (n.baseScale === undefined) n.baseScale = s.scaleY;
       if (!n.seat) s.scaleY = n.baseScale * (1 + 0.011 * Math.sin(this.t * 2.2 + n.phase));
     });
     // blinking: every so often someone facing us closes their eyes for a moment
@@ -54,7 +68,7 @@ export class Tells {
       const s = n.s;
       const k = Math.abs(s.scaleX);
       const m = STILL.exec(key);
-      const face = FACE[m[1]]?.[m[2]];
+      const face = FACE[m[1]]?.[m[2] + (m[3] || '')];
       if (face) {
         g.fillStyle(Phaser.Display.Color.HexStringToColor(face.lid).color, 1);
         face.cells.forEach(([x, y]) => {

@@ -33,10 +33,12 @@ Ranked worst first. **Fixed** = done in this pass. **Open** = still to do.
    shoulder to the hand (`armLine` in `art.js`), standing and walking, and it tilts as the arm
    swings. It is only drawn over clothes (never the collar, tie, skin or outline), so it works for
    every outfit and costume.
-7. **Open: breathing is a 1% vertical stretch** (`tells.js`). On pixel art that is under half a
-   pixel, so at some zooms one row of the body doubles and the doubled row crawls. A better idea is
-   a separate "breath in" frame (shoulders up a pixel) swapped in slowly, which needs a careful
-   check of every place that reads `texture.key`.
+7. **Fixed: breathing was a 1% stretch.** On pixel art that is under half a pixel, and with the
+   game's 1.35 zoom it made rows of the body shimmer and crawl. Now everyone drawn by
+   `makeCharacter` has a breath-in picture (`_down_b`, `_side_b`): the chest grows one row, so the
+   shoulders, head and hat rise exactly a pixel while the hands and feet stay. `tells.js` swaps it
+   in and out on each person's own beat while they stand still, and blinks still land on the eyes.
+   People drawn some other way keep the stretch.
 8. **Open: turning is instant.** Going from left to right flips the picture in one frame. Pokémon
    does the same, so this is fine for the player; visitors could glance first (one frame facing
    front) when they turn round.

@@ -260,12 +260,15 @@ const check = (cond, good, bad) => (cond ? ok(good) : fail(bad));
     who.wait = 99999;
     who.s.setPosition(v0.x + v0.width / 2, v0.y + v0.height / 2).setTexture(`${who.prefix}_down`);
     let blinks = 0;
+    let breathIn = false; // people from makeCharacter swap in their breath-in picture (`_down_b`)
     for (let i = 0; i < 600; i++) {
       who.s.setTexture(`${who.prefix}_down`);
       s.tells.update(0.05, s.islanders, s.cameras.main.worldView);
       blinks = Math.max(blinks, s.tells.blinks.length);
+      breathIn ||= who.s.texture.key === `${who.prefix}_down_b`;
     }
-    const breathing = s.islanders.some((n) => !n.animal && n.baseScale !== undefined && n.s.scaleY !== n.baseScale);
+    // (anyone drawn some other way still gets the old slow stretch)
+    const breathing = breathIn || s.islanders.some((n) => !n.animal && n.baseScale !== undefined && n.s.scaleY !== n.baseScale);
     return { blinks, breathing, smoke: s.wind.spots.length };
   });
   check(life.blinks > 0 && life.breathing, 'people blink and breathe', `blink/breath ${JSON.stringify(life)}`);
