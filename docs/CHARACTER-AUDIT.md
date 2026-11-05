@@ -44,9 +44,10 @@ Ranked worst first. **Fixed** = done in this pass. **Open** = still to do.
    front) when they turn round.
 9. **Open: talking has no gesture.** People in a chat stand still. A two-frame "hand up" talking
    pose (the `present` pose is close) while their line is on screen would sell it.
-10. **Open: the near and far leg look the same from the side.** Pokémon shades the far leg darker;
-   ours share one trouser colour. It needs a darker trouser shade in the palette for every
-   leg colour.
+10. **Fixed: the near and far leg looked the same from the side.** The far trouser leg is now in
+   shadow (palette letter `q`, a darker `p`): the front leg while the near arm swings forward, then
+   the back leg, so the two steps read as one leg passing the other. Only plain trousers are
+   shaded. Shorts, boots and skirts are left as they are.
 11. **Fine as it is:** pets (cats, dogs, bunnies, parrots) already have walk frames, a hop for
    bunnies and a sit; critters (gulls, crabs, butterflies, frogs, ducks) have their own frames.
    Emotes pop and follow the head. Shadows sit under everyone (`shadows.js`).

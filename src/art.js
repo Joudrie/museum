@@ -1974,6 +1974,7 @@ export function personPalette(colors = {}) {
   pal.D = toHex(shade(hex(pal.T), 0.7));
   if (colors.s && !colors.S) pal.S = toHex(shade(hex(colors.s), 0.85));
   pal.u = colors.u || pal.g; // the curator's second outfit color (see outfitAccent)
+  pal.q = toHex(shade(hex(pal.p), 0.72)); // the far trouser leg, walking side-on (stepFrames)
   pal.Z = toHex(shade(hex(pal.s), 0.72)); // freckles
   pal.m = toHex(mix(hex(pal.s), hex(pal.F), 0.45)); // stubble
   return pal;
@@ -2176,8 +2177,9 @@ function stepFrames(rows, view, look = {}, plain = false) {
     // the back leg (left half) steps back and the front leg forward, wider towards the feet;
     // a skirt's hem stays put and only the feet stride out from under it
     const xsHip = abs[n - 5].map((c, x) => (filled(c) ? x : -1)).filter((x) => x >= 0);
+    let mid = null;
     if (xsHip.length >= 4) {
-      const mid = Math.floor((xsHip[0] + xsHip[xsHip.length - 1]) / 2) + 1; // front half starts here
+      mid = Math.floor((xsHip[0] + xsHip[xsHip.length - 1]) / 2) + 1; // front half starts here
       [[n - 4, 1], [n - 3, 1], [n - 2, 2], [n - 1, 2]].forEach(([y, k]) => {
         const row = abs[y];
         const inner = row.filter(filled);
@@ -2198,6 +2200,9 @@ function stepFrames(rows, view, look = {}, plain = false) {
     }
     const frame = (dx) => {
       const a = legs.map((r) => [...r]);
+      // the far leg is in shadow: the front one while the near arm swings forward, then the
+      // back one, so the two steps read as one leg passing the other (trousers only)
+      if (mid !== null) for (let y = n - 5; y < n - 2; y++) a[y].forEach((c, x) => c === 'p' && (x >= mid) === dx > 0 && (a[y][x] = 'q'));
       if (!plain && !holding) {
         const cells = hands();
         move(a, cells, dx, 0);

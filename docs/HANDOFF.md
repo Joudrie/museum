@@ -338,6 +338,7 @@ island scene streams ground chunks around the player.
 - Blinks use each character's own eye map (`FACE[prefix].down/.side`, made in `makeCharacter`), so they land right for tall, short, hats and glasses, side-on too (mirrored when flipped). `tells.js` falls back to the old fixed spots for anyone drawn another way.
 - From the side, the arm is a dark line down its back edge from shoulder to hand (`armLine`, `sideStand` in `art.js`), tilting with the swing; drawn only over clothes.
 - Breathing: standing people swap in `${prefix}_down_b` / `_side_b` (chest a row taller, so the head rises exactly a pixel; `breathIn` in `art.js`, swapped by `tells.js`). `_b` keys count as standing in `motion.js` and `focus.js`; anything that checks a texture key for a view should allow `_b` too.
+- Walking side-on, the far trouser leg is shaded with palette letter `q` (a darker `p`, set in `personPalette`), swapping legs between the two steps. `q` is taken: don't reuse it in part pictures.
 - Known red on plain `main` too: smoke's "Break room: NPCs in walls" (a guard at 112,176 inside an item).
 
 ### Art swap and placeholder list (Chat 15)
