@@ -215,7 +215,8 @@ Owns: new `src/people/`, the character section of `src/art.js` (looks, `makeChar
 - [x] (this PR) From the side, an arm from shoulder to hand (a dark back-edge line that swings), so the hand is no longer a patch on the shirt. (#234)
 - [x] (this PR) Breathing without the shimmer: a breath-in picture where the head rises exactly a pixel, instead of a 1% stretch. (#237)
 - [x] (this PR) The far trouser leg in shadow when walking side-on, so the two steps read as legs passing. (#238)
-- [x] (this PR) A talking gesture: facing you in a chat, a guest's hand comes up now and then.
+- [x] (this PR) A talking gesture: facing you in a chat, a guest's hand comes up now and then. (#239)
+- [x] (this PR) Visitors turning right round glance at you on the way instead of flipping in one frame.
 
 ## CHAT 18: Progression evidence (measure first, then design)
 Owns: new `docs/progression/` (write-ups, CSV, models and analysis), new `src/measure/` (build flags, event log, telemetry adapter), new `tests/measure.cjs`. Small additive edits only in shared files to emit events and read the flags: `onSave` in `src/storage.js`; one guarded line each in `dig.js`, `puzzles-hunt.js`, `main.js`, and in the progression layer's `grants.js`, `access.js`, `angling.js`, `skills.js`, `fishroll.js`, `index.js`, `ui/fieldoverlay.js` (every one a no-op unless a `?progression=off` or `?flags=` link is used). Builds no progression features; it measures what exists and sets the tests a progression design must pass. Claim: `claimed: 2026-10-29`

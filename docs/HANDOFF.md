@@ -340,7 +340,8 @@ island scene streams ground chunks around the player.
 - Breathing: standing people swap in `${prefix}_down_b` / `_side_b` (chest a row taller, so the head rises exactly a pixel; `breathIn` in `art.js`, swapped by `tells.js`). `_b` keys count as standing in `motion.js` and `focus.js`; anything that checks a texture key for a view should allow `_b` too.
 - Walking side-on, the far trouser leg is shaded with palette letter `q` (a darker `p`, set in `personPalette`), swapping legs between the two steps. `q` is taken: don't reuse it in part pictures.
 - Talking, facing you, a guest raises a hand now and then (`${prefix}_down_t`, `gestureRows` in `art.js`, swapped by `tells.js` while `n.talking`). Like `_b`, `_t` counts as standing in `motion.js`, `focus.js` and `tells.js`.
-- Known red on plain `main` too: smoke's "Break room: NPCs in walls" (a guard at 112,176 inside an item).
+- Turning right round, visitors and islanders glance at you for 0.1 s (`glance` in `motion.js`; `s.turnUntil` holds off new facings meanwhile). The player is left out on purpose.
+- Smoke's "Break room: NPCs in walls" (a guard at 112,176 inside an item) fails now and then on plain `main` too: re-run before blaming your change.
 
 ### Art swap and placeholder list (Chat 15)
 - **Drop-in swap:** a PNG with the same name as a placeholder, put in `public/swap/` (`tiles/<name>.png`, `sprites/<name>.png`, `pieces/<group>/<n>.png`), overrides it with no code change. See `public/swap/README.md`. Code: `src/swap.js`; `vite.config.js` writes `swap/index.json`; `src/boot.js` waits for it before the game starts. A wrong-size file is ignored with a console warning.

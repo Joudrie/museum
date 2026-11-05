@@ -31,6 +31,21 @@ export function animateWalker(scene, s, moving, dt, rate = 1) {
   return step !== before && phase % 2 === 1;
 }
 
+// Someone turning right round (side-on, to face the other way) glances at you on the way: a
+// tenth of a second facing front, the way people really turn. Returns true while the glance
+// lasts, so the caller holds off setting the new facing. Not for the player (their turns stay
+// instant, so the controls feel sharp).
+export function glance(scene, s, prefix, flip) {
+  const now = scene.time.now;
+  if (s.turnUntil > now) return true;
+  if (/_side(?:_[12]|_b|_t)?$/.test(s.texture.key) && s.flipX !== flip && scene.textures.exists(`${prefix}_down`)) {
+    s.setTexture(`${prefix}_down`).setFlipX(false);
+    s.turnUntil = now + 100;
+    return true;
+  }
+  return false;
+}
+
 // A soft footstep (player only).
 export function footstep(surface = 'floor') {
   sfx(surface === 'snow' ? 'stepSnow' : surface === 'sand' ? 'stepSoft' : surface === 'grass' ? 'stepGrass' : 'step');

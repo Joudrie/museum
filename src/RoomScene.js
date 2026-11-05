@@ -82,7 +82,7 @@ import { FocusMark } from './focusmark.js';
 import { Tells } from './tells.js';
 import { Shadows } from './shadows.js';
 import { Lighting, timeOfDay, makeTextures as lightTextures } from './lighting.js';
-import { animateWalker, footstep, dust } from './motion.js';
+import { animateWalker, footstep, dust, glance } from './motion.js';
 import { Pet, PET_COLORS } from './pets.js';
 import { openSettings, closeSettings } from './settingsmenu.js';
 import { openIncome } from './incomemenu.js';
@@ -2442,6 +2442,8 @@ export class RoomScene extends Phaser.Scene {
     // staff at work keep their tools: they pause on their first frame, turned your way
     const pose = s.getData?.('pose');
     if (pose) return s.setTexture(`${prefix}_pose_0`).setFlipX(poseView(pose) === 'side' && vx < 0);
+    // visitors turning right round glance at you on the way (motion.js); the player turns at once
+    if (prefix !== 'player' && (s.turnUntil > this.time.now || (Math.abs(vx) > Math.abs(vy) && glance(this, s, prefix, vx < 0)))) return;
     if (Math.abs(vx) > Math.abs(vy)) s.setTexture(`${prefix}_side`).setFlipX(vx < 0);
     else if (vy !== 0) s.setTexture(vy < 0 ? `${prefix}_up` : `${prefix}_down`).setFlipX(false);
   }
