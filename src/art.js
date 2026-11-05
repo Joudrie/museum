@@ -1936,7 +1936,7 @@ const baseRows = (view, look) => applyBuild(withLooks(view === 'down' ? FRONT : 
 const held = (rows, view, look) => drawBuddy(drawCarry(drawGround(rows, view, look), view, look), view, look);
 export function personRows(view, look = {}, frame = 0, plain = false) {
   const rows = baseRows(view, look);
-  return held(frame ? stepFrames(rows, view, look, plain)[frame - 1] : rows, view, look);
+  return held(frame ? stepFrames(rows, view, look, plain)[frame - 1] : view === 'side' && !plain ? sideStand(rows) : rows, view, look);
 }
 
 // Sitting: the legs fold forward under the body.
@@ -2016,7 +2016,7 @@ export function makeCharacter(scene, prefix, colors = {}, look = {}) {
     if (view === 'down') down = rows;
     // Walking: two step frames per view.
     const [a, b] = stepFrames(rows, view, look);
-    const stand = held(rows, view, look);
+    const stand = held(view === 'side' ? sideStand(rows) : rows, view, look);
     if (view !== 'up') face[view] = eyesOf(stand, pal);
     if (!look.buddy && look.build !== 'short') DIPPED.add(`${prefix}_${view}`);
     sprite(scene, `${prefix}_${view}`, stand, pal);
@@ -2063,6 +2063,35 @@ function eyesOf(rows, pal) {
 // keeps just the legs. Rows are spread to the full tile width first so every row lines up.
 const SKIN = new Set(['s', 'S']);
 const TORSO = new Set(['c', 'C', 'd']);
+// From the side, the arm: a dark line along its back edge from the shoulder down to the
+// hand (`cells`, where the hand was before it moved `dx`), so the hand reads as the end of an
+// arm and not a patch on the shirt. It tilts with the swing. Only drawn over the clothes.
+function armLine(a, cells, dx) {
+  if (!cells.length || cells.length > 6) return;
+  const x0 = Math.min(...cells.map(([x]) => x)) - 1;
+  const y1 = Math.min(...cells.map(([, y]) => y)) - 1;
+  const y0 = y1 - 3;
+  for (let y = y0; y <= y1; y++) {
+    const x = Math.round(x0 + (dx * (y - y0)) / (y1 - y0));
+    const c = a[y]?.[x];
+    if (c && c !== '.' && c !== 'o' && !SKIN.has(c) && c !== 'e' && c !== 'w' && c !== 'g') a[y][x] = 'o';
+  }
+}
+// The standing picture from the side with its arm drawn in (see armLine).
+function sideStand(rows) {
+  const g = rows.map((r) => {
+    const off = Math.floor((T - r.length) / 2);
+    return Array.from({ length: T }, (_, x) => r[x - off] ?? '.');
+  });
+  const n = g.length;
+  const cells = [];
+  for (let y = Math.max(0, n - 13); y < n - 5; y++) {
+    const xs = g[y].map((c, x) => (c !== '.' ? x : -1)).filter((x) => x >= 0);
+    if (xs.length) g[y].forEach((c, x) => SKIN.has(c) && x > xs[0] && x < xs[xs.length - 1] && cells.push([x, y]));
+  }
+  armLine(g, cells, 0);
+  return g.map((r) => r.join(''));
+}
 function stepFrames(rows, view, look = {}, plain = false) {
   const abs = rows.map((r) => {
     const off = Math.floor((T - r.length) / 2);
@@ -2148,7 +2177,11 @@ function stepFrames(rows, view, look = {}, plain = false) {
     }
     const frame = (dx) => {
       const a = legs.map((r) => [...r]);
-      if (!plain && !holding) move(a, hands(), dx, 0);
+      if (!plain && !holding) {
+        const cells = hands();
+        move(a, cells, dx, 0);
+        armLine(a, cells, dx);
+      } else if (!plain) armLine(a, hands(), 0);
       return out(dip(a));
     };
     return [frame(2), frame(-2)];
