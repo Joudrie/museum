@@ -958,7 +958,17 @@ export class RoomScene extends Phaser.Scene {
     const spots = [[1.5, 2.5], [3.5, 3.6], [5.2, 3.2], [1.8, 4.6], [4.6, 4.8], [6.2, 2.2]];
     kinds.forEach((kind, k) => {
       const [c, r] = spots[k];
-      const n = this.makeStaff(kind, 1100 + k, g.xL + c * T, g.y0 + r * T, BREAK_WEAR);
+      let x = g.xL + c * T;
+      let y = g.y0 + r * T;
+      // (a stool or sofa may stand on a spot, the seeded stool does on the first one: step to the nearest free floor)
+      for (let d = 8; d <= 3 * T && this.blocked(x, y); d += 8) {
+        const free = [[d, 0], [-d, 0], [0, d], [0, -d], [d, d], [-d, d], [d, -d], [-d, -d]].find(([dx, dy]) => !this.blocked(x + dx, y + dy));
+        if (free) {
+          x += free[0];
+          y += free[1];
+        }
+      }
+      const n = this.makeStaff(kind, 1100 + k, x, y, BREAK_WEAR);
       n.wait = 2000 + k * 900; // they wander a little
     });
   }
