@@ -28,19 +28,24 @@ Ranked worst first. **Fixed** = done in this pass. **Open** = still to do.
    for every build, hat and pair of glasses.
 5. **Fixed: only front-facing people blinked.** Side-on people now blink too (mirrored when they
    face left), and now and then someone blinks twice.
-6. **Open: breathing is a 1% vertical stretch** (`tells.js`). On pixel art that is under half a
+6. **Fixed: from the side the hand was a skin patch on the shirt.** There was no arm, just a
+   square of skin in the middle of the body. Now a dark line runs down the arm's back edge from the
+   shoulder to the hand (`armLine` in `art.js`), standing and walking, and it tilts as the arm
+   swings. It is only drawn over clothes (never the collar, tie, skin or outline), so it works for
+   every outfit and costume.
+7. **Open: breathing is a 1% vertical stretch** (`tells.js`). On pixel art that is under half a
    pixel, so at some zooms one row of the body doubles and the doubled row crawls. A better idea is
    a separate "breath in" frame (shoulders up a pixel) swapped in slowly, which needs a careful
    check of every place that reads `texture.key`.
-7. **Open: turning is instant.** Going from left to right flips the picture in one frame. Pokémon
+8. **Open: turning is instant.** Going from left to right flips the picture in one frame. Pokémon
    does the same, so this is fine for the player; visitors could glance first (one frame facing
    front) when they turn round.
-8. **Open: talking has no gesture.** People in a chat stand still. A two-frame "hand up" talking
+9. **Open: talking has no gesture.** People in a chat stand still. A two-frame "hand up" talking
    pose (the `present` pose is close) while their line is on screen would sell it.
-9. **Open: the near and far leg look the same from the side.** Pokémon shades the far leg darker;
+10. **Open: the near and far leg look the same from the side.** Pokémon shades the far leg darker;
    ours share one trouser colour. It needs a darker trouser shade in the palette for every
    leg colour.
-10. **Fine as it is:** pets (cats, dogs, bunnies, parrots) already have walk frames, a hop for
+11. **Fine as it is:** pets (cats, dogs, bunnies, parrots) already have walk frames, a hop for
    bunnies and a sit; critters (gulls, crabs, butterflies, frogs, ducks) have their own frames.
    Emotes pop and follow the head. Shadows sit under everyone (`shadows.js`).
 

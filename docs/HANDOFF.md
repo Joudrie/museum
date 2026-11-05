@@ -336,6 +336,7 @@ island scene streams ground chunks around the player.
 - Gallery: `art.html` → People. Test: `node tests/people-sprites.cjs` (in `npm test`). The builder hides groups with "on " in the name, so group labels must avoid it. Class names must be unique: a second `painter:` silently replaces the first (the test checks).
 - **Walk cycle and blinks** (audit in `docs/CHARACTER-AUDIT.md`): `stepFrames` in `art.js` makes real steps. From the side the legs open into an A and the hand swings 2 px forward, then back; from the front or back the foot lifts and the hands swing 1 px. On both steps one straight leg row drops out, so the body dips onto planted feet. Characters with that dip are in `DIPPED`, and `motion.js` skips its old whole-sprite bob for them. Carriers and phone users keep their hands still. Work poses get `plain` frames (legs only).
 - Blinks use each character's own eye map (`FACE[prefix].down/.side`, made in `makeCharacter`), so they land right for tall, short, hats and glasses, side-on too (mirrored when flipped). `tells.js` falls back to the old fixed spots for anyone drawn another way.
+- From the side, the arm is a dark line down its back edge from shoulder to hand (`armLine`, `sideStand` in `art.js`), tilting with the swing; drawn only over clothes.
 - Known red on plain `main` too: smoke's "Break room: NPCs in walls" (a guard at 112,176 inside an item).
 
 ### Art swap and placeholder list (Chat 15)
