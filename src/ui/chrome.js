@@ -98,7 +98,7 @@ document.addEventListener('keydown', (e) => {
   if (e.key !== 'Escape' || e.defaultPrevented || e.target?.matches?.('input, textarea, select')) return;
   if (document.querySelector('#viewer:not(.hidden)')) return; // the viewer closes itself first
   const open = [...document.querySelectorAll('.overlay:not(.hidden), #toolkit:not(.hidden)')].pop();
-  open?.querySelector('.ui-close, [class*="-close"], [class*="-cancel"], .toolkit-done')?.click();
+  open?.querySelector('.ui-close, [class*="-close"], [class*="-cancel"], .toolkit-done, .sail-stay, .ask-no:not([hidden])')?.click(); // (Stay here, Not now)
 });
 
 function init() {

@@ -170,7 +170,7 @@ function setup(key, { onClose, onFound, entry, tool }) {
 
   const dirt = document.createElement('canvas');
   dirt.width = dirt.height = SIZE;
-  const d = dirt.getContext('2d');
+  const d = dirt.getContext('2d', { willReadFrequently: true }); // (read back after every brush stroke)
   d.fillStyle = '#ad7c50';
   d.fillRect(0, 0, SIZE, SIZE);
   for (let i = 0; i < 260; i++) {

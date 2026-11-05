@@ -1,6 +1,7 @@
 // "Take a break": the Next time card (up to three open loops, never an empty list), and a paywall-free
 // recap of where you stand. Closing it saves; there is nothing to lose by quitting.
 import { progression } from '../index.js';
+import { uiIcon } from '../../ui/icons.js';
 
 export function openBreak() {
   const p = progression();
@@ -9,8 +10,11 @@ export function openBreak() {
     el = document.createElement('div');
     el.id = 'break-card';
     el.className = 'overlay hidden';
-    el.innerHTML = '<div class="decor-sheet sheet"><div class="ui-head"><h2 class="ui-title">Next time</h2></div><div class="bk-body"></div><button class="ui-btn ui-btn--wide bk-ok">See you soon</button></div>';
+    el.innerHTML = '<div class="decor-sheet sheet"><div class="ui-head"><h2 class="ui-title">Next time</h2><button class="ui-btn ui-close bk-close" aria-label="Close"></button></div><div class="bk-body"></div><button class="ui-btn ui-btn--wide bk-ok">See you soon</button></div>';
     document.body.appendChild(el);
+    // just looking: close goes back to the game; only "See you soon" ends the session
+    el.querySelector('.bk-close').innerHTML = uiIcon('close');
+    el.querySelector('.bk-close').onclick = () => el.classList.add('hidden');
     el.querySelector('.bk-ok').onclick = () => {
       el.classList.add('hidden');
       p.end();

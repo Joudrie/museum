@@ -73,6 +73,8 @@ body #collect-all {
   z-index: 9;
 }
 body #toast { top: calc(var(--hud-bottom, 64px) + 58px); }
+/* in the painting viewer the toast sits above the frame (and clear of the close button), never across the picture */
+body:has(#viewer:not(.hidden)) #toast { top: calc(env(safe-area-inset-top, 0px) + 12px); max-width: calc(100vw - 132px); }
 /* the goal pill (progression) sits under Collect all, or right under the strip on islands */
 html body:not(.outside) #prog-pill { top: calc(var(--hud-bottom, 64px) + 58px); }
 html body.outside #prog-pill { top: calc(var(--hud-bottom, 64px) + 4px); }

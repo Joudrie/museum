@@ -45,6 +45,7 @@ export function activeQuests(ctx) {
 
 export function claim(id) {
   const s = state();
+  if (s.claimed?.[id]) return 0; // (paid already: a second tap on an old button pays nothing)
   s.claimed = { ...s.claimed, [id]: true };
   save(KEY, s);
   return QUESTS.find((q) => q.id === id)?.reward || 0;
