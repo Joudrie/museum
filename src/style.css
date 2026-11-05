@@ -719,6 +719,9 @@ body {
   font-size: var(--fs-lead);
 }
 .build-buy {
+  position: sticky; /* always on screen, even when the sheet scrolls */
+  bottom: 0;
+  z-index: 2;
   width: 100%;
   padding: 14px;
   font-size: var(--fs-body);
@@ -2280,14 +2283,17 @@ body.outside #hud {
 #back-builder {
   position: fixed;
   right: 10px;
-  top: calc(64px + env(safe-area-inset-top, 0px));
+  top: calc(82px + env(safe-area-inset-top, 0px)); /* (below the Menu button, not touching it) */
   z-index: 20;
-  padding: 9px 16px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 16px;
   border-radius: 20px;
   background: rgba(29, 23, 20, 0.85);
   border: 1px solid #e8c867;
   color: #f2e8d8;
-  font: 600 14px system-ui, sans-serif;
+  font: 600 var(--fs-body, 15px) var(--ui-font, system-ui, sans-serif);
   text-decoration: none;
 }
 
