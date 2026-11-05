@@ -306,6 +306,15 @@ const loadList = (k) => {
     return [];
   }
 };
+// a write that can't fail the page: a full phone must never stop the builder from opening (it keeps the map in memory and in the vault)
+const setLS = (k, v) => {
+  try {
+    localStorage.setItem(k, v);
+    return true;
+  } catch {
+    return false;
+  }
+};
 const saveList = (k, v) => {
   try {
     localStorage.setItem(k, JSON.stringify(v));
@@ -1269,7 +1278,7 @@ function renderSaved() {
         return;
       }
       delete all[n];
-      localStorage.setItem(STORE, JSON.stringify(all));
+      if (!setLS(STORE, JSON.stringify(all))) return toast('Phone storage is full.');
       renderSaved();
     };
     row.append(open, del);
@@ -1377,7 +1386,7 @@ const newMap = (kind) => {
   const base = m.name;
   while (all[m.name]) m.name = `${base} ${++n}`;
   loadMap(m);
-  toast('Your other maps are in ☰ My maps.');
+  toast('Your other maps are in Menu → My maps.');
   undoStack.length = redoStack.length = 0;
   changed();
   $('menu').hidden = true;
@@ -1447,7 +1456,7 @@ async function boot() {
   if (!all[cur]) cur = newest;
   // the island recovered from the map file sent in October 2026 (added once)
   if (!localStorage.getItem('curation.mapbuilder.recovered1')) {
-    localStorage.setItem('curation.mapbuilder.recovered1', '1');
+    setLS('curation.mapbuilder.recovered1', '1');
     if (!all[recovered.name]) {
       all[recovered.name] = { ...recovered, saved: 1 };
       try {
@@ -1461,7 +1470,7 @@ async function boot() {
   // Wakefield is no longer a tile map (it is drawn from real shapes in the game): clear the first
   // version that was added here, unless it was edited
   if (!localStorage.getItem('curation.mapbuilder.wakefield3')) {
-    localStorage.setItem('curation.mapbuilder.wakefield3', '1');
+    setLS('curation.mapbuilder.wakefield3', '1');
     const old = all['Wakefield, MA'];
     if (old && old.saved <= 1 && /wakefield/.test(old.overlay?.src || '')) {
       delete all['Wakefield, MA'];
@@ -1492,7 +1501,7 @@ async function boot() {
   } catch {
     // fine
   }
-  localStorage.setItem(CURRENT, map.name);
+  setLS(CURRENT, map.name);
   choose('m:2');
   setTool('paint');
   draw();

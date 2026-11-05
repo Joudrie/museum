@@ -46,7 +46,7 @@ export function stormRumble(scene, kind) {
   if (Math.abs(Math.sin(day * 78.233) * 4375.5) % 1 > 0.4 && !/[?&]weather=rain/.test(location.search)) return; // not every wet day is stormy
   const next = () => {
     const ev = scene.time.delayedCall(18000 + Math.random() * 40000, () => {
-      scene.cameras.main.flash(160, 235, 240, 255, true);
+      if (document.documentElement.dataset.motion !== 'reduce') scene.cameras.main.flash(160, 235, 240, 255, true); // (no lightning flash with Reduce motion; the thunder still rolls)
       scene.time.delayedCall(700 + Math.random() * 900, () => sfx('thunder'));
       next();
     });
