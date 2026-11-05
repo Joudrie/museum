@@ -136,7 +136,7 @@ select {
 }
 #areabar {
   display: grid;
-  grid-template-columns: 1fr repeat(5, auto);
+  grid-template-columns: repeat(5, 1fr);
   gap: 4px;
   align-items: center;
   padding: 6px 8px;
@@ -144,11 +144,10 @@ select {
   border-top: 1px solid var(--line);
 }
 #area-text {
+  grid-column: 1 / -1; /* its own row: the whole hint shows */
+  text-align: center;
   font-size: 13px;
   color: var(--muted);
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 }
 #areabar button {
   padding: 6px 7px;
@@ -510,4 +509,11 @@ button.link {
   background: none;
   border: 0;
   color: #e8c867;
+}
+
+/* credits links are tap-sized */
+#credits-list a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
 }

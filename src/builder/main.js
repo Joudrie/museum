@@ -12,6 +12,7 @@ import { swapReady, patchSheet } from '../swap.js';
 import { backup, backupsFor, latestBackup, keepStorage } from './vault.js';
 import recovered from './recovered.json';
 import { blendAt } from '../groundblend.js';
+import { uiIcon } from '../ui/icons.js';
 import { BIG_MAP, packCells, withTiles, hasTiles } from '../mapformat.js';
 
 const $ = (id) => document.getElementById(id);
@@ -207,7 +208,7 @@ function pieceButton(ref) {
   if (FAMILY[ref]) {
     const badge = document.createElement('i');
     badge.className = 'turnbadge';
-    badge.textContent = '⟳';
+    badge.innerHTML = uiIcon('turn', 's');
     pic.appendChild(badge);
   }
   b.appendChild(pic);
@@ -390,7 +391,7 @@ function showChosen() {
   $('chosen-fav').textContent = loadList('curation.mapbuilder.favs').includes(chosen) ? '★' : '☆';
   $('chosen-fav').hidden = false;
   const p = PIECES[chosen];
-  $('chosen-meta').textContent = chosen.startsWith('m:') ? 'Terrain · shores and edges draw themselves' : p.layer === 'tile' ? 'Ground tile · drag to paint' : `Piece · ${Math.ceil(p.w / T)}×${Math.ceil(p.h / T)} tiles · tap to place${flip ? ' · flipped' : ''}${FAMILY[chosen] ? ' · ⟳ turns it' : ''}`;
+  $('chosen-meta').textContent = chosen.startsWith('m:') ? 'Terrain · shores and edges draw themselves' : p.layer === 'tile' ? 'Ground tile · drag to paint' : `Piece · ${Math.ceil(p.w / T)}×${Math.ceil(p.h / T)} tiles · tap to place${flip ? ' · flipped' : ''}${FAMILY[chosen] ? ' · the turn button turns it' : ''}`;
 }
 
 // ---------- drawing ----------
@@ -505,7 +506,13 @@ let clip = null; // copied region: { w, h, tiles, corners, objects }
 let pasteArmed = false;
 let ghost = null; // a piece being placed: { ref, x, y, flip }
 let raf = 0;
+// undo and redo grey out when there is nothing to step back or forward to
+function syncHistory() {
+  $('undo').disabled = !undoStack.length;
+  $('redo').disabled = !redoStack.length;
+}
 function draw() {
+  syncHistory();
   if (raf) return;
   raf = requestAnimationFrame(() => {
     raf = 0;
@@ -1403,7 +1410,10 @@ $('back-game').onclick = () => {
   saveLocal();
   location.href = './index.html';
 };
-$('credits-close').onclick = () => ($('credits').hidden = true);
+$('credits-close').onclick = () => {
+  $('credits').hidden = true;
+  $('menu').hidden = false; // back to the menu the credits were opened from
+};
 window.addEventListener('resize', resize);
 // paste a map's code anywhere to open it
 window.addEventListener('paste', (e) => {

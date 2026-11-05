@@ -90,9 +90,9 @@ function render() {
 
   // Fit the whole room in the preview box.
   const availW = preview.clientWidth - 28;
-  const availH = window.innerHeight * 0.44;
-  const scale = Math.min(availW / g.w, availH / g.h);
   const vertical = orient !== 'horizontal'; // big halls end at the top like vertical rooms
+  const availH = window.innerHeight * (vertical ? 0.37 : 0.44); // (tall rooms leave room for the Build button)
+  const scale = Math.min(availW / g.w, availH / g.h);
   preview.classList.toggle('vertical', vertical);
 
   let pieceW;

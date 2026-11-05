@@ -92,6 +92,13 @@
 - Seen in the browser: the painting images (hot-linked from Wikimedia) sometimes answer 429 (their robot policy) and some links 404 (`content/image-fixes.json`). Hosting our own resized copies would fix both.
 - The playtest and the smoke cottage check are flaky on a plain `main` build (same failures without the dig change).
 
+## From the 5 Nov polish pass (not done)
+- Lazy-load `examine.js` and the little-scene vignettes to win back the ~17 KB gzip main grew by (#226-#230).
+- `FREE = true` in wallet.js shows "Free (X gold)" to players; switch off before any player-facing release.
+- Toolkit categories are one scrolling row (now with an edge fade); a category picker would show all 12 at once.
+- `IslandScene` reads the ground texture back once per visit (a Phaser canvas can't take `willReadFrequently`); cache it if island load is ever slow.
+- The Escape handler closes the last open overlay in page order, not the one opened last (no flow hits this today).
+
 ## Needs Sean
 - **West Wing**: waiting for your outline.
 - **Semi-mythological famous visitors** (you said maybe later).

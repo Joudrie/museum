@@ -100,6 +100,7 @@ body #palette details[open] summary::after { content: ''; transform: rotate(45de
 body .piece { border: 2px solid var(--ui-line); border-radius: var(--ui-r); }
 body .piece.on { border-color: var(--ui-gold); box-shadow: 0 0 0 2px var(--ui-gold); }
 body .piece span { font: 400 var(--fs-small) / 1.2 var(--ui-font); }
+body .piece.on span { color: var(--ui-on-gold); } /* (the selected cell is gold: its label must stay readable) */
 body #chosen-name { font: 600 var(--fs-body) / 1.2 var(--ui-font); }
 body #chosen small { font: 400 var(--fs-small) / 1.2 var(--ui-font); }
 
