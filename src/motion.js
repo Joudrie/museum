@@ -3,7 +3,7 @@
 import { sfx } from './music.js';
 import { DIPPED } from './art.js';
 
-const VIEW = /^(.*)_(down|up|side)(?:_[12])?$/;
+const VIEW = /^(.*)_(down|up|side)(?:_[12]|_b)?$/; // _b: breathing in (tells.js)
 
 // Advance a character's walk cycle. Returns true on the frame a foot lands.
 export function animateWalker(scene, s, moving, dt, rate = 1) {
@@ -17,7 +17,7 @@ export function animateWalker(scene, s, moving, dt, rate = 1) {
   if (!moving) {
     s.walkT = 0;
     s.setOrigin(0.5, 1);
-    if (key !== base) s.setTexture(base);
+    if (key !== base && key !== `${base}_b`) s.setTexture(base);
     return false;
   }
   const before = Math.floor((s.walkT || 0) * 8);

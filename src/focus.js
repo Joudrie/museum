@@ -8,8 +8,8 @@ export const facingVec = (f) => V[f] || V.down;
 // Which way a character sprite is looking, from its texture ('player_up', 'x_side' + flip...).
 export function facingOf(s) {
   const k = s.texture.key;
-  if (/_up(_\d)?$/.test(k)) return 'up';
-  if (/_side(_\d)?$/.test(k)) return s.flipX ? 'left' : 'right';
+  if (/_up(_\d|_b)?$/.test(k)) return 'up';
+  if (/_side(_\d|_b)?$/.test(k)) return s.flipX ? 'left' : 'right';
   return 'down';
 }
 

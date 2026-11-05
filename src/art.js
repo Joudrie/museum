@@ -2017,7 +2017,15 @@ export function makeCharacter(scene, prefix, colors = {}, look = {}) {
     // Walking: two step frames per view.
     const [a, b] = stepFrames(rows, view, look);
     const stand = held(view === 'side' ? sideStand(rows) : rows, view, look);
-    if (view !== 'up') face[view] = eyesOf(stand, pal);
+    if (view !== 'up') {
+      face[view] = eyesOf(stand, pal);
+      // breathing in: the chest and head rise a pixel (tells.js swaps it in and out slowly)
+      const breath = breathIn(stand);
+      if (breath) {
+        sprite(scene, `${prefix}_${view}_b`, breath, pal);
+        face[`${view}_b`] = eyesOf(breath, pal);
+      }
+    }
     if (!look.buddy && look.build !== 'short') DIPPED.add(`${prefix}_${view}`);
     sprite(scene, `${prefix}_${view}`, stand, pal);
     sprite(scene, `${prefix}_${view}_1`, held(a, view, look), pal);
@@ -2033,6 +2041,19 @@ export function makeCharacter(scene, prefix, colors = {}, look = {}) {
 // { cells: [[x, y]], lid, h } in the standing picture (h tall, 32 wide): the top pixel of each
 // eye, and the skin colour that covers it. Works for every build, hat and pair of glasses.
 export const FACE = {};
+// A standing picture breathing in: one chest row repeats, so everything above it (shoulders,
+// head, hat) rises exactly a pixel and the hands and feet stay. The row is the lowest straight
+// stretch of shirt if there is one, else any straight stretch, else the row above the hands.
+function breathIn(rows) {
+  const n = rows.length;
+  if (n < 24) return null;
+  const grow = (y) => [...rows.slice(0, y), rows[y], ...rows.slice(y)];
+  for (const test of [(r) => /[cCd]/.test(r), () => true])
+    for (let y = n - 8; y > n - 15; y--) if (rows[y] === rows[y - 1] && test(rows[y])) return grow(y);
+  // no straight stretch: the row just above the hands, so the hands keep their size
+  for (let y = n - 9; y > n - 15; y--) if (!/[sS]/.test(rows[y]) && /[sS]/.test(rows[y + 1])) return grow(y);
+  return grow(n - 10);
+}
 // Characters whose step frames dip the body (motion.js then skips its whole-sprite bob).
 export const DIPPED = new Set();
 function eyesOf(rows, pal) {
