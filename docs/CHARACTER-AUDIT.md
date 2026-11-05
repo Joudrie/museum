@@ -39,9 +39,10 @@ Ranked worst first. **Fixed** = done in this pass. **Open** = still to do.
    shoulders, head and hat rise exactly a pixel while the hands and feet stay. `tells.js` swaps it
    in and out on each person's own beat while they stand still, and blinks still land on the eyes.
    People drawn some other way keep the stretch.
-8. **Open: turning is instant.** Going from left to right flips the picture in one frame. Pokémon
-   does the same, so this is fine for the player; visitors could glance first (one frame facing
-   front) when they turn round.
+8. **Fixed: visitors flipped round in one frame.** Now a visitor or islander turning right round
+   (side-on to the other side) glances at you for a tenth of a second on the way (`glance` in
+   `motion.js`, used by `faceSprite` in RoomScene and the islanders' walk). The player still turns
+   at once, so the controls stay sharp.
 9. **Fixed: talking had no gesture.** People in a chat stood stock still. Now, facing you, a
    guest's hand comes up to their chest now and then while they talk (`_down_t`, made by
    `gestureRows` in `art.js`, swapped in by `tells.js` while `n.talking`), and drops when the chat

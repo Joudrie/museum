@@ -19,7 +19,7 @@ import { Ambient } from './ambient.js';
 import { seasonFrames, seasonTile, TILE_LIGHTS } from './scenery.js';
 import { layoutShowcase } from './showcase.js';
 import { settings, hourNow } from './settings.js';
-import { animateWalker, footstep, dust } from './motion.js';
+import { animateWalker, footstep, dust, glance } from './motion.js';
 import { Pet } from './pets.js';
 import { Fishing, catchOpen } from './fishing.js';
 import { say } from './ui/toast.js';
@@ -1310,7 +1310,9 @@ export class IslandScene extends Phaser.Scene {
         const view = g.dy ? (g.dy < 0 && a.pet !== 'parrot' ? 'up' : 'down') : 'side';
         s.setTexture(`${n.prefix}_${a.pet === 'parrot' ? 'side' : view}${step ? '_1' : ''}`).setFlipX(g.dx < 0);
       } else {
-        if (g.dy) s.setTexture(g.dy < 0 ? `${n.prefix}_up` : `${n.prefix}_down`).setFlipX(false);
+        // turning right round, they glance at you on the way (motion.js)
+        if (s.turnUntil > this.time.now || (!g.dy && glance(this, s, n.prefix, g.dx < 0)));
+        else if (g.dy) s.setTexture(g.dy < 0 ? `${n.prefix}_up` : `${n.prefix}_down`).setFlipX(false);
         else s.setTexture(`${n.prefix}_side`).setFlipX(g.dx < 0);
         if (animateWalker(this, s, true, dt) && this.snowAt(s.x, s.y - 2)) this.prints.step(s.x, s.y - 2, g.dx, g.dy, (n.leftFoot = !n.leftFoot), 'snow');
       }
