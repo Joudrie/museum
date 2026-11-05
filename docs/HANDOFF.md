@@ -291,6 +291,15 @@ island scene streams ground chunks around the player.
 - `docs/AESTHETICS-AUDIT.md`: 860 visual flaws found for the overhaul (none fixed; a second pass covered main up to #195), with the cross-cutting problems, quick bugs that look like art problems, and a redesign order. Per-area detail with code locations and screenshots in `docs/aesthetics/` (people, terrain/water, structures, interiors, creatures/items, ui). IDs P-, T-, S-, R-, C-, U-.
 - Read it before redrawing anything: it says what each sprite should become (e.g. P-23/P-24 glasses, S-45 scarecrow, S-51 fountain statues).
 
+### Polish pass (5 Nov 2026, PRs #231, #233, #235, #236)
+- **CI was red from #226 to #230** (bundle over budget, and the break-room guard always spawning on the seeded stool). #231 fixed both and CI is green again. **Check the Actions tab before merging**: a red run on main means every later PR is red too.
+- Break-room staff spots step to the nearest free floor if furniture stands on them (`spawnWorkers`). Bundle budget: main 290, total 865 (raise on purpose, with the reason, in tests/bundle.cjs).
+- UI: toasts sit above the frame in the viewer; the reward card fits between the HUD columns (`min(300px, 100vw - 164px)`); tips ignore hidden buttons; toggles say On/Off; scrolling chip rows fade at the edge; Escape closes Sail (Stay here), Ask (Not now) and Take a break (which has a close button now).
+- Reduce motion (`html[data-motion=reduce]`) also stops the room-change camera zoom and the storm flash. Canvases read back pixel by pixel use `willReadFrequently`.
+- Builder: every localStorage write is guarded (a full phone used to open a blank map). The Build-room button is sticky (vertical rooms pushed it off screen).
+- The reward queue already waits for open sheets (`BLOCKERS` in progression/index.js); a ceremony over a sheet in a ui-shots screenshot is the harness opening the sheet under it, not a bug.
+- Audit tools that work well: `node tests/ui-shots.cjs <dir>` (8 min, every screen + metrics) and read-only agents driving Playwright. Build into a separate `--outDir` and serve it on another port while other browsers use :4173, so a rebuild never pulls files out from under them.
+
 ### Gotchas we hit
 - **Phaser reuses the previous scene data** if you call `scene.start('island')` with no data.
   Always pass data explicitly, e.g. `{ map: 'main' }`. Leaving the museum once dropped you on
