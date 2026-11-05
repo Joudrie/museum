@@ -109,6 +109,8 @@ const HD = 4; // resolution multiplier for paintings on the wall
 
 const DECOR_KEY = 'curation.roomDecor'; // { [roomIndex]: decor }
 // The curator's chosen hat, facial hair and glasses.
+// Settings → Reduce motion (or the phone's own setting, folded in by ui/prefs.js): no camera zooms
+const stillMotion = () => document.documentElement.dataset.motion === 'reduce';
 const TUTORIAL_KEY = 'curation.tutorial'; // how far the first-time walkthrough has got
 const BREAK_SEEDED_KEY = 'curation.breakSeeded';
 const CHARACTER_KEY = 'curation.character';
@@ -430,7 +432,7 @@ export class RoomScene extends Phaser.Scene {
     if (!this.instant) {
       const cam = this.cameras.main;
       const zoom = cam.zoom;
-      cam.setZoom(zoom * 1.05).zoomTo(zoom, 320, 'Sine.easeOut');
+      if (!stillMotion()) cam.setZoom(zoom * 1.05).zoomTo(zoom, 320, 'Sine.easeOut'); // (Reduce motion: just the fade)
       cam.fadeIn(250, 29, 21, 18);
     }
     this.archLock = true; // don't bounce straight back through the doorway we arrived by
@@ -2276,7 +2278,7 @@ export class RoomScene extends Phaser.Scene {
       return;
     }
     const cam = this.cameras.main;
-    cam.zoomTo(cam.zoom * 1.08, 220, 'Sine.easeIn'); // a little step forward
+    if (!stillMotion()) cam.zoomTo(cam.zoom * 1.08, 220, 'Sine.easeIn'); // a little step forward
     cam.fadeOut(220, 29, 21, 18);
     this.cameras.main.once('camerafadeoutcomplete', () => this.scene.restart({ room, spawn }));
   }

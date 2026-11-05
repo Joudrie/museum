@@ -6,6 +6,7 @@ import { claimSet, setProgress, snapshot } from './codex.js';
 import { fillPicture } from './render.js';
 import { load, save } from '../storage.js';
 import { openViewer } from '../viewer.js';
+import { uiIcon } from '../ui/icons.js';
 
 const EXTRAS = {};
 const HINTS = {};
@@ -55,7 +56,12 @@ function marks(e, snap, tabId) {
   const bits = [];
   if (isNew(e, snap, tabId)) bits.push(el('span', 'mark-new', 'NEW'));
   if (m.rating) bits.push(el('span', 'mark-stars', '★'.repeat(m.rating)));
-  if (m.note) bits.push(el('span', 'mark-note', '✎'));
+  if (m.note) {
+    const n = el('span', 'mark-note'); // (a pixel icon, not a pictograph glyph)
+    n.innerHTML = uiIcon('book', 's');
+    n.setAttribute('aria-label', 'Has a note');
+    bits.push(n);
+  }
   if (!bits.length) return null;
   const box = el('span', 'marks');
   box.append(...bits);

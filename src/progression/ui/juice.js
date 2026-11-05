@@ -20,7 +20,7 @@ const el = (tag, cls, html) => {
   return n;
 };
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
-const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+const reduced = () => document.documentElement.dataset.motion === 'reduce' || matchMedia('(prefers-reduced-motion: reduce)').matches; // (the Settings switch, or the phone's)
 export const rarityClass = (r, variant) => (variant ? 'rv' : `r${r}`);
 
 let layer, pill, pops, skillBar, card, rankEl;
