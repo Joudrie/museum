@@ -42,8 +42,10 @@ Ranked worst first. **Fixed** = done in this pass. **Open** = still to do.
 8. **Open: turning is instant.** Going from left to right flips the picture in one frame. Pokémon
    does the same, so this is fine for the player; visitors could glance first (one frame facing
    front) when they turn round.
-9. **Open: talking has no gesture.** People in a chat stand still. A two-frame "hand up" talking
-   pose (the `present` pose is close) while their line is on screen would sell it.
+9. **Fixed: talking had no gesture.** People in a chat stood stock still. Now, facing you, a
+   guest's hand comes up to their chest now and then while they talk (`_down_t`, made by
+   `gestureRows` in `art.js`, swapped in by `tells.js` while `n.talking`), and drops when the chat
+   ends. Anyone holding something keeps still.
 10. **Fixed: the near and far leg looked the same from the side.** The far trouser leg is now in
    shadow (palette letter `q`, a darker `p`): the front leg while the near arm swings forward, then
    the back leg, so the two steps read as one leg passing the other. Only plain trousers are
