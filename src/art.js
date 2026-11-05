@@ -1934,9 +1934,9 @@ function withLooks(rows, view, look) {
 // down, carry or have on their shoulder. frame 0 stands, 1 and 2 are walking steps.
 const baseRows = (view, look) => applyBuild(withLooks(view === 'down' ? FRONT : view === 'up' ? BACK : SIDE, view, look), look.build);
 const held = (rows, view, look) => drawBuddy(drawCarry(drawGround(rows, view, look), view, look), view, look);
-export function personRows(view, look = {}, frame = 0) {
+export function personRows(view, look = {}, frame = 0, plain = false) {
   const rows = baseRows(view, look);
-  return held(frame ? stepFrames(rows, view)[frame - 1] : rows, view, look);
+  return held(frame ? stepFrames(rows, view, look, plain)[frame - 1] : view === 'side' && !plain ? sideStand(rows) : rows, view, look);
 }
 
 // Sitting: the legs fold forward under the body.
@@ -1950,7 +1950,7 @@ function sitRows(look, down = baseRows('down', look)) {
 export function poseRows(look) {
   if (!look.pose) return null;
   const held = { ...look, carry: null, hat: look.pose === 'weld' && look.hat === 'welder' ? 'welderdown' : look.hat };
-  return poseFrames(look.pose, (v, f = 0) => (v === 'sit' ? sitRows(held) : personRows(v, held, f)), look);
+  return poseFrames(look.pose, (v, f = 0) => (v === 'sit' ? sitRows(held) : personRows(v, held, f, true)), look);
 }
 export { poseView };
 
@@ -2010,24 +2010,89 @@ export function drawRows(ctx, rows, pal, bottom, left = 0, flip = false) {
 export function makeCharacter(scene, prefix, colors = {}, look = {}) {
   const pal = personPalette(colors);
   let down = null;
+  const face = {};
   ['down', 'up', 'side'].forEach((view) => {
     const rows = baseRows(view, look);
     if (view === 'down') down = rows;
     // Walking: two step frames per view.
-    const [a, b] = stepFrames(rows, view);
-    sprite(scene, `${prefix}_${view}`, held(rows, view, look), pal);
+    const [a, b] = stepFrames(rows, view, look);
+    const stand = held(view === 'side' ? sideStand(rows) : rows, view, look);
+    if (view !== 'up') face[view] = eyesOf(stand, pal);
+    if (!look.buddy && look.build !== 'short') DIPPED.add(`${prefix}_${view}`);
+    sprite(scene, `${prefix}_${view}`, stand, pal);
     sprite(scene, `${prefix}_${view}_1`, held(a, view, look), pal);
     sprite(scene, `${prefix}_${view}_2`, held(b, view, look), pal);
   });
   sprite(scene, `${prefix}_phone`, personRows('down', { ...look, phone: true, carry: null, ground: null }), pal);
   sprite(scene, `${prefix}_sit`, sitRows(look, down), pal);
   poseRows(look)?.forEach((rows, i) => sprite(scene, `${prefix}_pose_${i}`, rows, pal));
+  FACE[prefix] = face;
 }
 
-// Step frames for walking. Facing front or back, one foot lifts off the
-// ground (left, then right); from the side, the legs open into a stride.
-// Rows are spread to the full tile width first so every row lines up.
-function stepFrames(rows, view) {
+// Where each character's eyes are, for blinking (tells.js): FACE[prefix].down / .side is
+// { cells: [[x, y]], lid, h } in the standing picture (h tall, 32 wide): the top pixel of each
+// eye, and the skin colour that covers it. Works for every build, hat and pair of glasses.
+export const FACE = {};
+// Characters whose step frames dip the body (motion.js then skips its whole-sprite bob).
+export const DIPPED = new Set();
+function eyesOf(rows, pal) {
+  const h = Math.max(T, rows.length + 1);
+  const top = h - rows.length - 1;
+  const cells = [];
+  let lid = null;
+  const at = (j, i) => rows[j]?.[i - Math.floor((T - rows[j].length) / 2)];
+  rows.slice(0, Math.max(0, rows.length - 15)).forEach((row, j) => {
+    const off = Math.floor((T - row.length) / 2);
+    [...row].forEach((c, i) => {
+      const x = off + i;
+      if (c !== 'e' || at(j + 1, x) !== 'e' || at(j + 2, x) === 'e') return;
+      cells.push([x, top + j]);
+      const side = [at(j, x - 1), at(j, x + 1)].find((n) => n === 's' || n === 'S');
+      if (side && !lid) lid = pal[side];
+    });
+  });
+  return cells.length && cells.length <= 2 ? { cells, lid: lid || pal.s, h } : null;
+}
+
+// Step frames for walking (a stand, step one, stand, step two cycle; see motion.js).
+// Facing front or back: one foot lifts while the other arm swings forward (its hand drops
+// a pixel) and the near one swings back. From the side: the legs open into an A-shaped
+// stride with the feet planted wide, and the hand swings forward on one step and back on
+// the other. On both steps the body dips a pixel (the legs bend) while the feet stay on the
+// ground, so the head bobs the way a walk does. `plain` (work poses that draw their own arms)
+// keeps just the legs. Rows are spread to the full tile width first so every row lines up.
+const SKIN = new Set(['s', 'S']);
+const TORSO = new Set(['c', 'C', 'd']);
+// From the side, the arm: a dark line along its back edge from the shoulder down to the
+// hand (`cells`, where the hand was before it moved `dx`), so the hand reads as the end of an
+// arm and not a patch on the shirt. It tilts with the swing. Only drawn over the clothes.
+function armLine(a, cells, dx) {
+  if (!cells.length || cells.length > 6) return;
+  const x0 = Math.min(...cells.map(([x]) => x)) - 1;
+  const y1 = Math.min(...cells.map(([, y]) => y)) - 1;
+  const y0 = y1 - 3;
+  for (let y = y0; y <= y1; y++) {
+    const x = Math.round(x0 + (dx * (y - y0)) / (y1 - y0));
+    const c = a[y]?.[x];
+    if (c && c !== '.' && c !== 'o' && !SKIN.has(c) && c !== 'e' && c !== 'w' && c !== 'g') a[y][x] = 'o';
+  }
+}
+// The standing picture from the side with its arm drawn in (see armLine).
+function sideStand(rows) {
+  const g = rows.map((r) => {
+    const off = Math.floor((T - r.length) / 2);
+    return Array.from({ length: T }, (_, x) => r[x - off] ?? '.');
+  });
+  const n = g.length;
+  const cells = [];
+  for (let y = Math.max(0, n - 13); y < n - 5; y++) {
+    const xs = g[y].map((c, x) => (c !== '.' ? x : -1)).filter((x) => x >= 0);
+    if (xs.length) g[y].forEach((c, x) => SKIN.has(c) && x > xs[0] && x < xs[xs.length - 1] && cells.push([x, y]));
+  }
+  armLine(g, cells, 0);
+  return g.map((r) => r.join(''));
+}
+function stepFrames(rows, view, look = {}, plain = false) {
   const abs = rows.map((r) => {
     const off = Math.floor((T - r.length) / 2);
     return Array.from({ length: T }, (_, x) => r[x - off] ?? '.');
@@ -2035,25 +2100,91 @@ function stepFrames(rows, view) {
   const n = abs.length; // n-1: bottom outline, n-2: shoes, n-3..n-6: legs
   const copy = () => abs.map((r) => [...r]);
   const out = (a) => a.map((r) => r.join(''));
-  if (view === 'side') {
-    const a = copy();
-    [n - 4, n - 3, n - 2].forEach((i) => {
-      const xs = a[i].map((c, x) => (c !== '.' && c !== 'o' ? x : -1)).filter((x) => x >= 0);
-      if (xs.length < 4) return;
-      const mid = Math.floor((xs[0] + xs[xs.length - 1]) / 2);
-      a[i][mid] = 'o';
-      a[i][mid + 1] = 'o';
-    });
-    // the back foot lifts a little
-    const shoes = a[n - 2].map((c, x) => (c !== '.' && c !== 'o' ? x : -1)).filter((x) => x >= 0);
-    if (shoes.length) {
-      const back = shoes[0];
-      for (let x = back - 1; x < back + 2; x++) {
-        a[n - 1][x] = '.';
-        if (a[n - 2][x] !== '.') a[n - 1][x] = a[n - 2][x] === 'o' ? '.' : 'o';
-      }
+  const filled = (c) => c !== '.' && c !== 'o';
+  const holding = !!(look.carry || look.phone);
+  // the hands: skin just inside the outline on the torso rows (front and back), or anywhere
+  // on the torso rows from the side; grouped by which side of the body they are on
+  const hands = () => {
+    const cells = [];
+    for (let y = Math.max(0, n - 13); y < n - 5; y++) {
+      const xs = abs[y].map((c, x) => (c !== '.' ? x : -1)).filter((x) => x >= 0);
+      if (!xs.length) continue;
+      const L = xs[0];
+      const R = xs[xs.length - 1];
+      abs[y].forEach((c, x) => {
+        if (!SKIN.has(c)) return;
+        if (view === 'side' ? x > L && x < R : x === L + 1 || x === R - 1) cells.push([x, y]);
+      });
     }
-    return [out(a), out(a)];
+    return cells;
+  };
+  // moves some cells by dx, dy: the space they leave takes the colour above it (the sleeve)
+  const move = (a, cells, dx, dy) => {
+    if (!cells.length) return;
+    const key = new Set(cells.map(([x, y]) => x + ',' + y));
+    const col = cells.map(([x, y]) => a[y][x]);
+    cells.forEach(([x, y]) => {
+      let k = y - 1;
+      while (k > 0 && key.has(x + ',' + k)) k--;
+      a[y][x] = abs[k][x] === '.' ? 'o' : abs[k][x];
+    });
+    cells.forEach(([x, y], i) => {
+      const X = x + dx;
+      const Y = y + dy;
+      if (Y < 0 || Y >= n || X < 0 || X >= T) return;
+      if (a[Y][X] === '.') {
+        // a hand out past the body gets its own outline
+        a[Y][X] = col[i];
+        [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(([u, v]) => a[Y + v]?.[X + u] === '.' && (a[Y + v][X + u] = 'o'));
+      } else a[Y][X] = col[i];
+    });
+  };
+  // the dip: one leg row goes, and the body above drops a pixel onto the planted feet
+  const dip = (a) => {
+    if (plain || look.buddy || look.build === 'short' || n < 24) return a;
+    // the row to drop: the lowest one that repeats the row above it (a straight bit of leg or
+    // skirt), so nothing that shows, like a hem or a belt, goes missing
+    let y = n - 4;
+    while (y > n - 13 && a[y].join('') !== a[y - 1].join('')) y--;
+    a.splice(y > n - 13 ? y : n - 5, 1);
+    a.unshift(Array(T).fill('.'));
+    return a;
+  };
+  if (view === 'side') {
+    const legs = copy();
+    // the back leg (left half) steps back and the front leg forward, wider towards the feet;
+    // a skirt's hem stays put and only the feet stride out from under it
+    const xsHip = abs[n - 5].map((c, x) => (filled(c) ? x : -1)).filter((x) => x >= 0);
+    if (xsHip.length >= 4) {
+      const mid = Math.floor((xsHip[0] + xsHip[xsHip.length - 1]) / 2) + 1; // front half starts here
+      [[n - 4, 1], [n - 3, 1], [n - 2, 2], [n - 1, 2]].forEach(([y, k]) => {
+        const row = abs[y];
+        const inner = row.filter(filled);
+        if (y < n - 2 && inner.length && inner.filter((c) => TORSO.has(c)).length > inner.length / 2) k = 0; // a dress
+        if (!k) return;
+        const next = Array(T).fill('.');
+        row.forEach((c, x) => {
+          if (c === '.') return;
+          const X = x < mid ? x - k : x + k;
+          if (X >= 0 && X < T) next[X] = c;
+        });
+        // close the gap between the legs with an outline on each inner edge
+        for (let x = mid - k; x < mid + k; x++) if (next[x] === '.' && (filled(next[x - 1] || '.') || filled(next[x + 1] || '.'))) next[x] = 'o';
+        legs[y] = next;
+      });
+      // the outline under each foot
+      for (let x = 0; x < T; x++) if (filled(legs[n - 2][x]) && legs[n - 1][x] === '.') legs[n - 1][x] = 'o';
+    }
+    const frame = (dx) => {
+      const a = legs.map((r) => [...r]);
+      if (!plain && !holding) {
+        const cells = hands();
+        move(a, cells, dx, 0);
+        armLine(a, cells, dx);
+      } else if (!plain) armLine(a, hands(), 0);
+      return out(dip(a));
+    };
+    return [frame(2), frame(-2)];
   }
   const lift = (left) => {
     const a = copy();
@@ -2063,7 +2194,14 @@ function stepFrames(rows, view) {
       a[n - 2][x] = abs[n - 1][x];
       a[n - 1][x] = '.';
     }
-    return out(a);
+    if (!plain && !holding) {
+      // the arm opposite the lifted foot swings forward, the other back (from behind, the other way round)
+      const cells = hands();
+      const fwdRight = left === (view === 'down');
+      move(a, cells.filter(([x]) => (x >= T / 2) === fwdRight), 0, 1);
+      move(a, cells.filter(([x]) => (x >= T / 2) !== fwdRight), 0, -1);
+    }
+    return out(dip(a));
   };
   return [lift(true), lift(false)];
 }
