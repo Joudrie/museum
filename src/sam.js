@@ -35,7 +35,7 @@ export const SAM = {
     [
       'Can I even vote? I know I tell people to vote. But I don’t have any identification at all.',
       'Is my birthday the Fourth of July? Because I am America. Kinda.',
-      'Which would make me, what, two hundred and fifty? That tracks, honestly. My knees agree.',
+      'Which would make me, what, two hundred and fifty?',
       'I was just born an old man. Why couldn’t they have drawn me a little younger?',
     ],
     [
@@ -76,7 +76,6 @@ export const SAM = {
     ],
     [
       'I don’t really believe in magic. But like, what am I, then?',
-      'Somebody drew a guy and now the guy is walking around a museum. What the heck.',
       'If a drawing can be real, then is that painting over there gonna start talking? Please say no.',
     ],
     [
@@ -87,7 +86,6 @@ export const SAM = {
     [
       'Can I tell you something? I don’t know how to sit down in this coat.',
       'There’s tails. On the back. Like a bird. Who designed this?',
-      'I think I designed this. I genuinely can’t remember.',
     ],
     [
       'Do you ever think about the guy who has to paint the cracks back into an old painting? Like on purpose?',
@@ -97,7 +95,6 @@ export const SAM = {
     [
       'I tried to get a library card once. They asked for proof of address.',
       'I handed them a map.',
-      'They did not give me a library card.',
     ],
   ],
 
@@ -105,7 +102,6 @@ export const SAM = {
   oneLiners: [
     'People keep looking at the hat. I get it. I’d look at the hat too.',
     'Still here. Still weird.',
-    'If you figure out why I’m here, let me know.',
     'I keep pointing at people by accident. It’s a reflex. I don’t know where it came from.',
     'Do you ever think about how a painting of a guy is kind of more real than me? I do. A lot.',
     'Honestly the ticket desk guy is the only one here who seems to have it together.',
@@ -113,20 +109,15 @@ export const SAM = {
     'You know what, it’s fine. We’re all just kind of here.',
     'I don’t remember putting this outfit on. I think I’ve just always been wearing it.',
     'I tried to buy a ticket and the guy just waved me in. Is that a me thing?',
-    'Okay, new theory: maybe the paintings are real and we’re the ones on the wall somewhere.',
     'Nice museum. Genuinely.',
     'I’ve never taken this hat off. I’m scared of what’s under there. Probably more hat.',
-    'Somebody asked for a selfie and then asked me to point at them. I did. I don’t know why I did.',
     'Is it weird that I don’t know my own height? I feel like it changes depending on who’s drawing.',
-    'I’ve been on a lot of posters. I’ve never once been asked if I wanted to be on a poster.',
     'If someone ever paints me for this museum, I want to look relaxed. Like, chill Sam.',
     'Every time someone says “Uncle” I turn around. Every time. Even at Thanksgiving. Especially at Thanksgiving.',
     'I don’t have a phone. Who would I call? Myself? I’m everybody.',
     'I tried to grow the beard out. It just stays exactly like this. Forever.',
     'Do you think the red pants are too much? Be honest. Actually, don’t be honest.',
-    'Do I eat? I think I eat. I had a hot dog once. Or I was at a hot dog. Hard to say.',
     'Sometimes I just stand by the potted tree and pretend I’m a statue. Nobody notices. That kind of hurts.',
-    'I keep wanting to say “I want YOU.” I have no idea for what. It just comes up.',
     'I get recognized everywhere, but nobody knows my last name. Do I have a last name? Is it “Sam”?',
     'I feel like I should have a hobby. Birdwatching? There’s an eagle I think I’m supposed to know.',
     'I’m not a morning person. I’m not really a person. But still.',
@@ -138,10 +129,8 @@ export const SAM = {
     'Every portrait in here is looking at me. Or I’m looking at them. One of those.',
     'I tried meditation. I just kept seeing fireworks. Every time.',
     'I don’t own a single pair of shoes that aren’t these. Is that a problem? Feels like a problem.',
-    'If I sit really still, people think I’m part of the exhibit. I’ve made eleven dollars that way.',
     'My favorite color is blue. Or red. Or white. I’ve been told I can’t pick.',
     'Is it weird to have a favorite painting if you’re basically a drawing? Like, is that a crush? Never mind.',
-    'I went to the beach once. Everybody saluted. I just wanted to swim.',
     'You know what I like about museums? Everything here is old too. I fit in.',
   ],
 
@@ -170,7 +159,13 @@ export function samLine() {
     st.gap = false;
     line = SAM.oneLiners[Math.floor(Math.random() * SAM.oneLiners.length)];
   } else {
-    const run = SAM.runs[st.run % SAM.runs.length];
+    let run = SAM.runs[st.run % SAM.runs.length];
+    if (st.step >= run.length) {
+      // (a ramble got shorter since this phone saved its place: go on to the next one)
+      st.step = 0;
+      st.run++;
+      run = SAM.runs[st.run % SAM.runs.length];
+    }
     line = run[st.step++];
     if (st.step >= run.length) {
       st.step = 0;
