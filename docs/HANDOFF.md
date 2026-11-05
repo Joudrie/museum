@@ -339,6 +339,7 @@ island scene streams ground chunks around the player.
 - From the side, the arm is a dark line down its back edge from shoulder to hand (`armLine`, `sideStand` in `art.js`), tilting with the swing; drawn only over clothes.
 - Breathing: standing people swap in `${prefix}_down_b` / `_side_b` (chest a row taller, so the head rises exactly a pixel; `breathIn` in `art.js`, swapped by `tells.js`). `_b` keys count as standing in `motion.js` and `focus.js`; anything that checks a texture key for a view should allow `_b` too.
 - Walking side-on, the far trouser leg is shaded with palette letter `q` (a darker `p`, set in `personPalette`), swapping legs between the two steps. `q` is taken: don't reuse it in part pictures.
+- Talking, facing you, a guest raises a hand now and then (`${prefix}_down_t`, `gestureRows` in `art.js`, swapped by `tells.js` while `n.talking`). Like `_b`, `_t` counts as standing in `motion.js`, `focus.js` and `tells.js`.
 - Known red on plain `main` too: smoke's "Break room: NPCs in walls" (a guard at 112,176 inside an item).
 
 ### Art swap and placeholder list (Chat 15)

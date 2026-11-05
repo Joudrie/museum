@@ -8,9 +8,9 @@ import { FACE } from './art.js';
 // `view`: the camera's worldView (a rectangle); people far outside it are skipped.
 const EYES = [13, 18]; // x of each eye in the 32×32 picture (front view); the eye is 1×2 px at y 10..11
 const EYE_Y = 10;
-const STILL = /^(.*)_(down|side)(_b)?$/;
+const STILL = /^(.*)_(down|side)(_b|_t)?$/;
 const BREATH = STILL;
-const ANY = /^(.*)_(down|up|side)(?:_[12]|_b)?$/;
+const ANY = /^(.*)_(down|up|side)(?:_[12]|_b|_t)?$/;
 
 export class Tells {
   constructor(scene) {
@@ -36,8 +36,12 @@ export class Tells {
       if (FACE[n.prefix] || (m && FACE[m[1]])) {
         // (work poses, phones and seats: no breathing, and never stretched)
         const still = BREATH.exec(key);
-        if (!still || n.seat || !FACE[m[1]][`${still[2]}_b`]) return;
-        const want = `${still[1]}_${still[2]}${Math.sin(this.t * 2.2 + n.phase) > 0.35 ? '_b' : ''}`;
+        if (!still || n.seat) return;
+        const face = FACE[still[1]] || {};
+        // talking to you, facing you: now and then a hand comes up while they speak
+        const gesture = n.talking && still[2] === 'down' && face.down_t && Math.floor(this.t * 1.6 + n.phase) % 3 === 0;
+        const breath = face[`${still[2]}_b`] && Math.sin(this.t * 2.2 + n.phase) > 0.35;
+        const want = `${still[1]}_${still[2]}${gesture ? '_t' : breath ? '_b' : ''}`;
         if (want !== key) s.setTexture(want);
         return;
       }

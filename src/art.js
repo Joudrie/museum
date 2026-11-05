@@ -2026,6 +2026,12 @@ export function makeCharacter(scene, prefix, colors = {}, look = {}) {
         sprite(scene, `${prefix}_${view}_b`, breath, pal);
         face[`${view}_b`] = eyesOf(breath, pal);
       }
+      // talking, a hand comes up now and then (tells.js)
+      const talk = view === 'down' && gestureRows(stand, look);
+      if (talk) {
+        sprite(scene, `${prefix}_down_t`, talk, pal);
+        face.down_t = eyesOf(talk, pal);
+      }
     }
     if (!look.buddy && look.build !== 'short') DIPPED.add(`${prefix}_${view}`);
     sprite(scene, `${prefix}_${view}`, stand, pal);
@@ -2042,6 +2048,30 @@ export function makeCharacter(scene, prefix, colors = {}, look = {}) {
 // { cells: [[x, y]], lid, h } in the standing picture (h tall, 32 wide): the top pixel of each
 // eye, and the skin colour that covers it. Works for every build, hat and pair of glasses.
 export const FACE = {};
+// Talking, facing us: one hand comes up to the chest (the screen-left one, three pixels up), the
+// sleeve filling in below it. Null if the hands can't be found or are holding something.
+function gestureRows(rows, look) {
+  if (look.carry || look.phone) return null;
+  const n = rows.length;
+  const g = rows.map((r) => {
+    const off = Math.floor((T - r.length) / 2);
+    return Array.from({ length: T }, (_, x) => r[x - off] ?? '.');
+  });
+  const cells = [];
+  for (let y = Math.max(0, n - 13); y < n - 5; y++) {
+    const xs = g[y].map((c, x) => (c !== '.' ? x : -1)).filter((x) => x >= 0);
+    if (xs.length && SKIN.has(g[y][xs[0] + 1]) && xs[0] + 1 < T / 2) cells.push([xs[0] + 1, y]);
+  }
+  if (!cells.length || cells.length > 3) return null;
+  const top = Math.min(...cells.map(([, y]) => y));
+  const sleeve = g[top - 1][cells[0][0]];
+  if (!sleeve || sleeve === '.' || sleeve === 'o') return null;
+  const skin = cells.map(([x, y]) => g[y][x]);
+  cells.forEach(([x, y]) => (g[y][x] = sleeve));
+  cells.forEach(([x, y], i) => (g[y - 3][x] = skin[i]));
+  return g.map((r) => r.join(''));
+}
+
 // A standing picture breathing in: one chest row repeats, so everything above it (shoulders,
 // head, hat) rises exactly a pixel and the hands and feet stay. The row is the lowest straight
 // stretch of shirt if there is one, else any straight stretch, else the row above the hands.
