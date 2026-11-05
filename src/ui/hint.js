@@ -11,7 +11,9 @@ const mark = (id) => save(KEY, { ...load(KEY, {}), [id]: Date.now() });
 const calm = () => !popupsShown() && !document.querySelector('.overlay:not(.hidden), #viewer:not(.hidden), #talk:not(.hidden), #chat:not(.hidden), #ask:not(.hidden), #dig:not(.hidden)');
 const visible = (e) => {
   const r = e?.getBoundingClientRect();
-  return !!r && r.width > 0 && r.height > 0 && getComputedStyle(e).display !== 'none';
+  if (!r || !r.width || !r.height) return false;
+  const cs = getComputedStyle(e); // (the HUD hides its buttons with visibility while you place an item)
+  return cs.display !== 'none' && cs.visibility !== 'hidden' && Number(cs.opacity) > 0;
 };
 
 let open = null;
@@ -64,7 +66,7 @@ export function hint(id, text, anchor, { ms = 8000, tries = 8, side: wanted = 'b
     };
     const watch = setInterval(() => {
       if (open !== tip) clearInterval(watch);
-      else if (!calm()) off(); // a panel opened over it: put the tip away
+      else if (!calm() || !visible(a)) off(); // a panel opened over it, or its button went away: put the tip away
     }, 400);
     document.addEventListener('pointerdown', off, { once: true, capture: true }); // any touch puts it away; the touch still works
     a.addEventListener('click', off, { once: true });

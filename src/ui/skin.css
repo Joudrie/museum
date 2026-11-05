@@ -650,3 +650,11 @@ body #decor .choices:not(.toolkit-cats) {
   gap: var(--sp-2);
 }
 body #decor .choices:not(.toolkit-cats) button { min-width: 0; width: 100%; }
+
+/* ---- Scrolling chip rows show that they scroll: the far edge fades instead of cutting a chip in half ---- */
+body #toolkit .toolkit-cats.choices,
+body .gallery-eras.choices,
+.strip {
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 5px, #000 calc(100% - 34px), transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 5px, #000 calc(100% - 34px), transparent 100%);
+}

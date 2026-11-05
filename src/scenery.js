@@ -1254,7 +1254,7 @@ function copy(src) {
   const c = document.createElement('canvas');
   c.width = src.width;
   c.height = src.height;
-  c.getContext('2d').drawImage(src, 0, 0);
+  c.getContext('2d', { willReadFrequently: true }).drawImage(src, 0, 0); // (recolor, blossom and snowify read it back)
   return c;
 }
 
