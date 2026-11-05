@@ -1,6 +1,7 @@
 // Walking feel shared by the museum and the island: step frames, a little
 // bounce, footstep clicks and dust when running.
 import { sfx } from './music.js';
+import { DIPPED } from './art.js';
 
 const VIEW = /^(.*)_(down|up|side)(?:_[12])?$/;
 
@@ -25,7 +26,8 @@ export function animateWalker(scene, s, moving, dt, rate = 1) {
   const phase = step % 4; // stand, step one, stand, step two
   const want = phase === 1 ? `${base}_1` : phase === 3 ? `${base}_2` : base;
   if (want !== key && scene.textures.exists(want)) s.setTexture(want);
-  s.setOrigin(0.5, 1 + (phase % 2) / 32);
+  // people's step frames already dip the body onto planted feet; anyone else bobs a pixel
+  s.setOrigin(0.5, DIPPED.has(base) ? 1 : 1 + (phase % 2) / 32);
   return step !== before && phase % 2 === 1;
 }
 
