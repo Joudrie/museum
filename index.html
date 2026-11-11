@@ -2,6 +2,35 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      // After an update, the game's old code files are gone. A page the phone kept from before (Safari
+      // reopening a tab after a day) still asks for them and gets a 404: load the page again, fresh,
+      // once (never in a loop), and it picks up the new files. Saves are untouched.
+      (function () {
+        var KEY = 'curation.staleReload';
+        function fresh() {
+          try {
+            if (Date.now() - (+sessionStorage.getItem(KEY) || 0) < 30000) return;
+            sessionStorage.setItem(KEY, String(Date.now()));
+          } catch (e) {}
+          var u = new URL(location.href);
+          u.searchParams.set('v', Date.now().toString(36));
+          location.replace(u.toString());
+        }
+        window.addEventListener('error', function (e) {
+          var el = e.target;
+          if (el && (el.tagName === 'SCRIPT' || el.tagName === 'LINK') && /\/assets\//.test(el.src || el.href || '')) fresh();
+        }, true);
+        window.addEventListener('vite:preloadError', function (e) {
+          e.preventDefault();
+          fresh();
+        });
+        window.addEventListener('unhandledrejection', function (e) {
+          var m = String((e.reason && e.reason.message) || e.reason || '');
+          if (/dynamically imported module|Importing a module script failed|error loading dynamically/i.test(m)) fresh();
+        });
+      })();
+    </script>
     <!-- home-screen icon: it opens in the browser as usual (display: browser), so saves stay where they are -->
     <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png" />
